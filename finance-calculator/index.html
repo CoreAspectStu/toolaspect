@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Payoff Calculator — Calculate Extra Payment Savings</title>
+    <meta name="description" content="Free loan payoff calculator. See how extra payments save you thousands in interest and years off your mortgage, auto, or personal loan.">
+    <link rel="canonical" href="">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Loan Payoff Calculator",
+        "description": "Calculate how extra payments reduce your loan term and total interest",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
+            --text: #e4e4e7; --muted: #9ca3af; --primary: #6366f1;
+            --primary-hover: #818cf8; --success: #22c55e; --danger: #ef4444;
+            --accent: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg); color: var(--text); min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+        /* Header */
+        header {
+            text-align: center; padding: 40px 20px 30px;
+            border-bottom: 1px solid var(--border); margin-bottom: 30px;
+        }
+        header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; }
+        header p { color: var(--muted); font-size: 0.95rem; }
+
+        /* Tabs */
+        .tabs {
+            display: flex; gap: 4px; margin-bottom: 24px;
+            background: var(--surface); border-radius: 12px; padding: 4px;
+        }
+        .tab {
+            flex: 1; padding: 10px 16px; border: none; background: transparent;
+            color: var(--muted); font-size: 0.875rem; font-weight: 500;
+            cursor: pointer; border-radius: 8px; transition: all 0.2s;
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active { background: var(--primary); color: #fff; }
+
+        /* Form */
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; margin-bottom: 24px;
+        }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+        .field input, .field select {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; padding: 10px 12px; color: var(--text);
+            font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+        }
+        .field input:focus, .field select:focus { border-color: var(--primary); }
+        .field .prefix { position: relative; }
+        .field .prefix span {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            color: var(--muted); font-size: 0.9rem;
+        }
+        .field .prefix input { padding-left: 28px; }
+
+        /* Calculate button */
+        .calc-btn {
+            width: 100%; padding: 14px; border: none; border-radius: 10px;
+            background: var(--primary); color: #fff; font-size: 1rem;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+            margin-bottom: 24px;
+        }
+        .calc-btn:hover { background: var(--primary-hover); }
+
+        /* Results */
+        .results { display: none; }
+        .results.show { display: block; }
+        .summary-cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px; margin-bottom: 24px;
+        }
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px;
+        }
+        .card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .card .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
+        .card .value.green { color: var(--success); }
+        .card .value.amber { color: var(--accent); }
+        .card .value.red { color: var(--danger); }
+
+        /* Comparison table */
+        .comparison {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; margin-bottom: 24px;
+        }
+        .comparison h3 {
+            padding: 14px 16px; font-size: 0.9rem; font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        .comparison table { width: 100%; border-collapse: collapse; }
+        .comparison th {
+            padding: 10px 16px; font-size: 0.75rem; color: var(--muted);
+            text-transform: uppercase; text-align: left; border-bottom: 1px solid var(--border);
+            background: rgba(99,102,241,0.05);
+        }
+        .comparison td {
+            padding: 10px 16px; font-size: 0.9rem; border-bottom: 1px solid var(--border);
+        }
+        .comparison tr:last-child td { border-bottom: none; }
+        .comparison td.green { color: var(--success); font-weight: 600; }
+
+        /* Chart */
+        .chart-container {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; margin-bottom: 24px;
+        }
+        .chart-container h3 { font-size: 0.9rem; margin-bottom: 16px; }
+        canvas { width: 100% !important; height: 300px !important; }
+
+        /* Amortization schedule */
+        .amort-toggle {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--muted); padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-size: 0.85rem; margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .amort-toggle:hover { border-color: var(--primary); color: var(--text); }
+        .amort-table {
+            display: none; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 12px;
+            overflow: hidden; margin-bottom: 24px;
+        }
+        .amort-table.show { display: block; max-height: 400px; overflow-y: auto; }
+        .amort-table table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .amort-table th {
+            position: sticky; top: 0; background: var(--surface);
+            padding: 8px 12px; text-align: left; color: var(--muted);
+            border-bottom: 1px solid var(--border); font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        .amort-table td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+
+        /* Ad slots */
+        .ad-slot {
+            background: var(--surface); border: 1px dashed var(--border);
+            border-radius: 8px; min-height: 90px; display: flex;
+            align-items: center; justify-content: center;
+            color: var(--muted); font-size: 0.75rem; margin: 20px 0;
+        }
+
+        /* Related tools */
+        .related {
+            border-top: 1px solid var(--border); padding: 30px 0;
+            margin-top: 30px;
+        }
+        .related h3 { font-size: 0.9rem; margin-bottom: 16px; color: var(--muted); }
+        .related-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .related a {
+            display: block; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; padding: 12px 14px; color: var(--text);
+            text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s;
+        }
+        .related a:hover { border-color: var(--primary); }
+
+        /* SEO content */
+        .seo-content {
+            border-top: 1px solid var(--border); padding: 30px 0;
+            color: var(--muted); font-size: 0.9rem;
+        }
+        .seo-content h2 { color: var(--text); font-size: 1.1rem; margin-bottom: 12px; }
+        .seo-content p { margin-bottom: 12px; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border); padding: 20px;
+            text-align: center; color: var(--muted); font-size: 0.75rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.3rem; }
+            .summary-cards { grid-template-columns: 1fr 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Loan Payoff Calculator</h1>
+            <p>See how extra payments save you thousands in interest and years off your loan</p>
+        </header>
+
+        <div class="ad-slot">Advertisement</div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('payoff')">Loan Payoff</button>
+            <button class="tab" onclick="switchTab('mortgage')">Mortgage</button>
+            <button class="tab" onclick="switchTab('compound')">Compound Interest</button>
+        </div>
+
+        <!-- Loan Payoff Calculator -->
+        <div id="tab-payoff" class="tab-content">
+            <div class="form-grid">
+                <div class="field">
+                    <label>Loan Amount</label>
+                    <div class="prefix"><span>$</span><input type="number" id="p-loan" value="250000" min="0" step="1000"></div>
+                </div>
+                <div class="field">
+                    <label>Annual Interest Rate</label>
+                    <div class="prefix"><span>%</span><input type="number" id="p-rate" value="6.5" min="0" max="30" step="0.1"></div>
+                </div>
+                <div class="field">
+                    <label>Loan Term (years)</label>
+                    <input type="number" id="p-term" value="30" min="1" max="50">
+                </div>
+                <div class="field">
+                    <label>Extra Monthly Payment</label>
+                    <div class="prefix"><span>$</span><input type="number" id="p-extra" value="200" min="0" step="50"></div>
+                </div>
+            </div>
+            <button class="calc-btn" onclick="calculate()">Calculate Savings</button>
+        </div>
+
+        <!-- Mortgage Calculator -->
+        <div id="tab-mortgage" class="tab-content" style="display:none">
+            <div class="form-grid">
+                <div class="field">
+                    <label>Home Price</label>
+                    <div class="prefix"><span>$</span><input type="number" id="m-price" value="400000" min="0" step="1000"></div>
+                </div>
+                <div class="field">
+                    <label>Down Payment</label>
+                    <div class="prefix"><span>$</span><input type="number" id="m-down" value="80000" min="0" step="1000"></div>
+                </div>
+                <div class="field">
+                    <label>Interest Rate</label>
+                    <div class="prefix"><span>%</span><input type="number" id="m-rate" value="6.5" min="0" max="30" step="0.1"></div>
+                </div>
+                <div class="field">
+                    <label>Loan Term</label>
+                    <select id="m-term">
+                        <option value="30">30 years</option>
+                        <option value="20">20 years</option>
+                        <option value="15">15 years</option>
+                        <option value="10">10 years</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Property Tax ($/yr)</label>
+                    <div class="prefix"><span>$</span><input type="number" id="m-tax" value="4000" min="0"></div>
+                </div>
+                <div class="field">
+                    <label>Insurance ($/yr)</label>
+                    <div class="prefix"><span>$</span><input type="number" id="m-ins" value="1200" min="0"></div>
+                </div>
+            </div>
+            <button class="calc-btn" onclick="calcMortgage()">Calculate Monthly Payment</button>
+        </div>
+
+        <!-- Compound Interest -->
+        <div id="tab-compound" class="tab-content" style="display:none">
+            <div class="form-grid">
+                <div class="field">
+                    <label>Initial Investment</label>
+                    <div class="prefix"><span>$</span><input type="number" id="c-principal" value="10000" min="0" step="1000"></div>
+                </div>
+                <div class="field">
+                    <label>Monthly Contribution</label>
+                    <div class="prefix"><span>$</span><input type="number" id="c-monthly" value="500" min="0" step="50"></div>
+                </div>
+                <div class="field">
+                    <label>Annual Return Rate</label>
+                    <div class="prefix"><span>%</span><input type="number" id="c-rate" value="8" min="0" max="100" step="0.1"></div>
+                </div>
+                <div class="field">
+                    <label>Time Period (years)</label>
+                    <input type="number" id="c-years" value="20" min="1" max="50">
+                </div>
+            </div>
+            <button class="calc-btn" onclick="calcCompound()">Calculate Growth</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="summary-cards" id="summary-cards"></div>
+            <div class="comparison" id="comparison-section">
+                <h3>Before vs. After Extra Payments</h3>
+                <table id="comparison-table"></table>
+            </div>
+            <div class="chart-container">
+                <h3>Balance Over Time</h3>
+                <canvas id="balanceChart"></canvas>
+            </div>
+            <div class="ad-slot">Advertisement</div>
+            <button class="amort-toggle" onclick="toggleAmort()">Show Amortization Schedule</button>
+            <div class="amort-table" id="amort-table">
+                <table id="amort-body"></table>
+            </div>
+        </div>
+
+        <div class="ad-slot">Advertisement</div>
+
+        <div class="related">
+            <h3>Related Tools</h3>
+            <div class="related-grid">
+                <a href="/currency-converter">Currency Converter</a>
+                <a href="/compound-interest">Compound Interest Calculator</a>
+                <a href="/age-calculator">Age Calculator</a>
+                <a href="/unit-converter">Unit Converter</a>
+            </div>
+        </div>
+
+        <div class="seo-content">
+            <h2>How to Pay Off Your Loan Faster</h2>
+            <p>Making extra payments on your loan is one of the most effective ways to save money. Even small additional amounts applied directly to your principal can dramatically reduce the total interest you pay over the life of the loan and shorten your repayment term by years.</p>
+            <p>For example, adding just $200/month extra to a $250,000 mortgage at 6.5% interest can save you over $70,000 in interest and pay off your loan 6 years early. The earlier you start making extra payments, the greater the impact thanks to the way compound interest works against you on a loan.</p>
+            <h2>How the Loan Payoff Calculator Works</h2>
+            <p>This calculator uses standard amortization math to compute your monthly payment, then simulates what happens when you add extra money each month. It shows you exactly how much interest you save, how many years you cut off the loan, and provides a full month-by-month amortization schedule so you can see the impact over time.</p>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 UtilityTools &mdash; Free online calculators and tools</p>
+        </footer>
+    </div>
+
+    <script>
+    let chartInstance = null;
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        event.target.classList.add('active');
+        document.getElementById('tab-' + tab).style.display = 'block';
+        document.getElementById('results').classList.remove('show');
+    }
+
+    function fmt(n) { return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n); }
+    function fmtD(n) { return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(n); }
+
+    function amortize(balance, monthlyRate, payment, extra) {
+        const schedule = [];
+        let b = balance, totalInterest = 0, month = 0;
+        while (b > 0 && month < 600) {
+            month++;
+            const interest = b * monthlyRate;
+            let principal = payment - interest + extra;
+            if (principal >= b) { principal = b; }
+            totalInterest += interest;
+            b -= principal;
+            if (b < 0) b = 0;
+            schedule.push({ month, payment: payment + extra, principal, interest, balance: b, totalInterest });
+            if (b <= 0) break;
+        }
+        return { schedule, totalInterest, months: month };
+    }
+
+    function calculate() {
+        const loan = parseFloat(document.getElementById('p-loan').value);
+        const annualRate = parseFloat(document.getElementById('p-rate').value);
+        const years = parseInt(document.getElementById('p-term').value);
+        const extra = parseFloat(document.getElementById('p-extra').value) || 0;
+
+        const monthlyRate = annualRate / 100 / 12;
+        const n = years * 12;
+        const payment = loan * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1);
+
+        const base = amortize(loan, monthlyRate, payment, 0);
+        const withExtra = amortize(loan, monthlyRate, payment, extra);
+
+        const savings = base.totalInterest - withExtra.totalInterest;
+        const yearsSaved = (base.months - withExtra.months) / 12;
+
+        // Summary cards
+        document.getElementById('summary-cards').innerHTML = `
+            <div class="card"><div class="label">Monthly Payment</div><div class="value">${fmtD(payment)}</div></div>
+            <div class="card"><div class="label">With Extra Payment</div><div class="value">${fmtD(payment + extra)}</div></div>
+            <div class="card"><div class="label">Interest Saved</div><div class="value green">${fmt(savings)}</div></div>
+            <div class="card"><div class="label">Years Saved</div><div class="value amber">${yearsSaved.toFixed(1)} yrs</div></div>
+            <div class="card"><div class="label">Payoff Time (normal)</div><div class="value red">${(base.months/12).toFixed(1)} yrs</div></div>
+            <div class="card"><div class="label">Payoff Time (with extra)</div><div class="value green">${(withExtra.months/12).toFixed(1)} yrs</div></div>
+        `;
+
+        // Comparison table
+        document.getElementById('comparison-table').innerHTML = `
+            <thead><tr><th></th><th>Standard</th><th>With Extra Payments</th></tr></thead>
+            <tbody>
+                <tr><td>Monthly Payment</td><td>${fmtD(payment)}</td><td>${fmtD(payment + extra)}</td></tr>
+                <tr><td>Total Paid</td><td>${fmt(base.totalInterest + loan)}</td><td class="green">${fmt(withExtra.totalInterest + loan)}</td></tr>
+                <tr><td>Total Interest</td><td>${fmt(base.totalInterest)}</td><td class="green">${fmt(withExtra.totalInterest)}</td></tr>
+                <tr><td>Payoff Time</td><td>${(base.months/12).toFixed(1)} years</td><td class="green">${(withExtra.months/12).toFixed(1)} years</td></tr>
+            </tbody>
+        `;
+
+        drawChart(base.schedule, withExtra.schedule);
+        buildAmortTable(withExtra.schedule);
+        document.getElementById('results').classList.add('show');
+    }
+
+    function calcMortgage() {
+        const price = parseFloat(document.getElementById('m-price').value);
+        const down = parseFloat(document.getElementById('m-down').value);
+        const rate = parseFloat(document.getElementById('m-rate').value);
+        const years = parseInt(document.getElementById('m-term').value);
+        const tax = parseFloat(document.getElementById('m-tax').value) || 0;
+        const ins = parseFloat(document.getElementById('m-ins').value) || 0;
+
+        const loan = price - down;
+        const mr = rate / 100 / 12;
+        const n = years * 12;
+        const pi = loan * (mr * Math.pow(1+mr,n)) / (Math.pow(1+mr,n)-1);
+        const monthly = pi + tax/12 + ins/12;
+
+        const { totalInterest, schedule } = amortize(loan, mr, pi, 0);
+
+        document.getElementById('summary-cards').innerHTML = `
+            <div class="card"><div class="label">Monthly Payment (P&I)</div><div class="value">${fmtD(pi)}</div></div>
+            <div class="card"><div class="label">Monthly Payment (total)</div><div class="value">${fmtD(monthly)}</div></div>
+            <div class="card"><div class="label">Loan Amount</div><div class="value">${fmt(loan)}</div></div>
+            <div class="card"><div class="label">Total Interest</div><div class="value red">${fmt(totalInterest)}</div></div>
+            <div class="card"><div class="label">Total Cost</div><div class="value">${fmt(totalInterest + loan)}</div></div>
+            <div class="card"><div class="label">Down Payment</div><div class="value">${fmt(down)}</div></div>
+        `;
+
+        document.getElementById('comparison-section').style.display = 'none';
+        drawChart(schedule);
+        buildAmortTable(schedule);
+        document.getElementById('results').classList.add('show');
+    }
+
+    function calcCompound() {
+        const P = parseFloat(document.getElementById('c-principal').value);
+        const M = parseFloat(document.getElementById('c-monthly').value) || 0;
+        const rate = parseFloat(document.getElementById('c-rate').value);
+        const years = parseInt(document.getElementById('c-years').value);
+
+        const mr = rate / 100 / 12;
+        const n = years * 12;
+        const futureValue = P * Math.pow(1+mr, n) + M * ((Math.pow(1+mr, n) - 1) / mr);
+        const totalContributed = P + M * n;
+        const interestEarned = futureValue - totalContributed;
+
+        // Build yearly schedule for chart
+        const schedule = [];
+        let bal = P;
+        for (let y = 1; y <= years; y++) {
+            for (let m = 0; m < 12; m++) { bal = bal * (1 + mr) + M; }
+            schedule.push({ month: y * 12, balance: bal });
+        }
+
+        document.getElementById('summary-cards').innerHTML = `
+            <div class="card"><div class="label">Future Value</div><div class="value green">${fmt(futureValue)}</div></div>
+            <div class="card"><div class="label">Total Contributed</div><div class="value">${fmt(totalContributed)}</div></div>
+            <div class="card"><div class="label">Interest Earned</div><div class="value green">${fmt(interestEarned)}</div></div>
+            <div class="card"><div class="label">Growth Multiple</div><div class="value amber">${(futureValue/totalContributed).toFixed(1)}x</div></div>
+        `;
+
+        document.getElementById('comparison-section').style.display = 'none';
+        drawCompoundChart(schedule, totalContributed);
+        document.getElementById('amort-table').classList.remove('show');
+        document.getElementById('results').classList.add('show');
+    }
+
+    function drawChart(baseSchedule, extraSchedule) {
+        if (chartInstance) chartInstance.destroy();
+        const ctx = document.getElementById('balanceChart').getContext('2d');
+        const step = Math.max(1, Math.floor(baseSchedule.length / 60));
+        const labels = [], baseData = [], extraData = [];
+        for (let i = 0; i < baseSchedule.length; i += step) {
+            labels.push('Yr ' + (baseSchedule[i].month / 12).toFixed(1));
+            baseData.push(baseSchedule[i].balance);
+            if (extraSchedule) {
+                const ei = Math.min(i, extraSchedule.length - 1);
+                extraData.push(i < extraSchedule.length ? extraSchedule[ei].balance : 0);
+            }
+        }
+        const datasets = [{
+            label: 'Standard', data: baseData,
+            borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)',
+            fill: true, tension: 0.3, pointRadius: 0
+        }];
+        if (extraSchedule) {
+            datasets.push({
+                label: 'With Extra Payments', data: extraData,
+                borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)',
+                fill: true, tension: 0.3, pointRadius: 0
+            });
+        }
+        chartInstance = new Chart(ctx, {
+            type: 'line', data: { labels, datasets },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#9ca3af' } } },
+                scales: {
+                    x: { ticks: { color: '#6b7280', maxTicksLimit: 10 }, grid: { color: '#1f2937' } },
+                    y: { ticks: { color: '#6b7280', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1f2937' } }
+                }
+            }
+        });
+    }
+
+    function drawCompoundChart(schedule, contributed) {
+        if (chartInstance) chartInstance.destroy();
+        const ctx = document.getElementById('balanceChart').getContext('2d');
+        const labels = schedule.map(s => 'Yr ' + (s.month/12));
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Portfolio Value', data: schedule.map(s => s.balance),
+                    borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)',
+                    fill: true, tension: 0.3, pointRadius: 0
+                }, {
+                    label: 'Contributions', data: schedule.map((s, i) => {
+                        const n = s.month;
+                        const P = parseFloat(document.getElementById('c-principal').value);
+                        const M = parseFloat(document.getElementById('c-monthly').value) || 0;
+                        return P + M * n;
+                    }),
+                    borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)',
+                    fill: true, tension: 0.3, pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#9ca3af' } } },
+                scales: {
+                    x: { ticks: { color: '#6b7280', maxTicksLimit: 10 }, grid: { color: '#1f2937' } },
+                    y: { ticks: { color: '#6b7280', callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: '#1f2937' } }
+                }
+            }
+        });
+    }
+
+    function buildAmortTable(schedule) {
+        const step = Math.max(1, Math.floor(schedule.length / 120));
+        let html = '<thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>';
+        for (let i = 0; i < schedule.length; i += step) {
+            const r = schedule[i];
+            html += `<tr><td>${r.month}</td><td>${fmtD(r.payment)}</td><td>${fmtD(r.principal)}</td><td>${fmtD(r.interest)}</td><td>${fmtD(r.balance)}</td></tr>`;
+        }
+        html += '</tbody>';
+        document.getElementById('amort-body').innerHTML = html;
+    }
+
+    function toggleAmort() {
+        document.getElementById('amort-table').classList.toggle('show');
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</body>
+</html>
