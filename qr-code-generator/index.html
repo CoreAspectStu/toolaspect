@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>QR Code Generator — Create Free QR Codes for URL, WiFi, Text, vCard</title>
+<meta name="description" content="Free QR code generator. Create QR codes for URLs, text, WiFi credentials, and vCards. Download as PNG. No signup required.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"QR Code Generator","description":"Generate QR codes for URLs, text, WiFi, and vCards","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:20px}
+header{text-align:center;padding:40px 20px 30px;border-bottom:1px solid var(--border);margin-bottom:24px}
+header h1{font-size:1.75rem;font-weight:700;margin-bottom:8px}
+header p{color:var(--muted);font-size:0.95rem}
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);border-radius:12px;padding:4px}
+.tab{flex:1;padding:10px;border:none;background:transparent;color:var(--muted);font-size:.85rem;font-weight:500;cursor:pointer;border-radius:8px;transition:all .2s}
+.tab:hover{color:var(--text)}
+.tab.active{background:var(--primary);color:#fff}
+.form-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:20px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.8rem;color:var(--muted);font-weight:500}
+.field input,.field textarea,.field select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:.9rem;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--primary)}
+.field textarea{resize:vertical;min-height:80px}
+.field-inline{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.options{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.options label{font-size:.8rem;color:var(--muted)}
+.options select,.options input[type="color"]{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:.85rem}
+.gen-btn{width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:24px}
+.gen-btn:hover{background:var(--primary-hover)}
+.qr-output{text-align:center;margin-bottom:24px;display:none}
+.qr-output.show{display:block}
+.qr-output canvas{border-radius:12px;background:#fff;padding:16px;max-width:100%}
+.qr-output .actions{margin-top:12px;display:flex;justify-content:center;gap:10px}
+.qr-output .actions button{padding:8px 20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-size:.85rem}
+.qr-output .actions button:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:8px;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.75rem;margin:20px 0}
+.related{border-top:1px solid var(--border);padding:30px 0;margin-top:30px}
+.related h3{font-size:.9rem;margin-bottom:16px;color:var(--muted)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);text-decoration:none;font-size:.85rem}
+.related a:hover{border-color:var(--primary)}
+.seo-content{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);font-size:.9rem}
+.seo-content h2{color:var(--text);font-size:1.1rem;margin-bottom:12px}
+.seo-content p{margin-bottom:12px}
+footer{border-top:1px solid var(--border);padding:20px;text-align:center;color:var(--muted);font-size:.75rem}
+@media(max-width:600px){header h1{font-size:1.3rem}.field-inline{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h1>QR Code Generator</h1><p>Create free QR codes for URLs, text, WiFi, and vCards</p></header>
+<div class="ad-slot">Advertisement</div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab('url',this)">URL</button>
+<button class="tab" onclick="switchTab('text',this)">Text</button>
+<button class="tab" onclick="switchTab('wifi',this)">WiFi</button>
+<button class="tab" onclick="switchTab('vcard',this)">vCard</button>
+</div>
+<div id="tab-url" class="tab-content">
+<div class="form-grid"><div class="field"><label>URL</label><input type="url" id="url-input" placeholder="https://example.com" value="https://"></div></div>
+</div>
+<div id="tab-text" class="tab-content" style="display:none">
+<div class="form-grid"><div class="field"><label>Text</label><textarea id="text-input" placeholder="Enter any text..."></textarea></div></div>
+</div>
+<div id="tab-wifi" class="tab-content" style="display:none">
+<div class="form-grid">
+<div class="field"><label>Network Name (SSID)</label><input type="text" id="wifi-ssid" placeholder="MyNetwork"></div>
+<div class="field"><label>Password</label><input type="text" id="wifi-pass" placeholder="password123"></div>
+<div class="field"><label>Encryption</label><select id="wifi-enc"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">None</option></select></div>
+</div>
+</div>
+<div id="tab-vcard" class="tab-content" style="display:none">
+<div class="form-grid">
+<div class="field-inline"><div class="field"><label>First Name</label><input type="text" id="vc-first"></div><div class="field"><label>Last Name</label><input type="text" id="vc-last"></div></div>
+<div class="field-inline"><div class="field"><label>Phone</label><input type="tel" id="vc-phone"></div><div class="field"><label>Email</label><input type="email" id="vc-email"></div></div>
+<div class="field"><label>Company</label><input type="text" id="vc-company"></div>
+</div>
+</div>
+<div class="options">
+<div><label>Size: </label><select id="qr-size"><option value="128">128px</option><option value="256" selected>256px</option><option value="512">512px</option></select></div>
+<div><label>Color: </label><input type="color" id="qr-color" value="#000000"></div>
+</div>
+<button class="gen-btn" onclick="generate()">Generate QR Code</button>
+<div class="qr-output" id="qr-output">
+<canvas id="qr-canvas"></canvas>
+<div class="actions"><button onclick="download()">Download PNG</button></div>
+</div>
+<div class="ad-slot">Advertisement</div>
+<div class="related"><h3>Related Tools</h3><div class="related-grid">
+<a href="/password-generator">Password Generator</a><a href="/finance-calculator">Finance Calculator</a><a href="/word-unscrambler">Word Unscrambler</a><a href="/json-formatter">JSON Formatter</a>
+</div></div>
+<div class="seo-content">
+<h2>How QR Codes Work</h2>
+<p>QR (Quick Response) codes are two-dimensional barcodes that store data in a grid of black and white squares. They can encode URLs, text, WiFi credentials, contact information, and more. Any smartphone camera can scan them instantly.</p>
+<p>This generator creates QR codes entirely in your browser — your data never leaves your device. Choose from URL, plain text, WiFi network sharing, or vCard contact cards. Customize the size and color, then download as PNG for printing or digital use.</p>
+<h2>Common Uses for QR Codes</h2>
+<p>Share your WiFi password with guests without typing it out. Add a QR code to business cards linking to your portfolio. Create scannable links for posters, flyers, and restaurant menus. Encode contact details for instant address book entry on any phone.</p>
+</div>
+<footer><p>&copy; 2026 UtilityTools &mdash; Free online tools</p></footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+let currentTab='url';
+function switchTab(t,btn){currentTab=t;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-content').forEach(x=>x.style.display='none');document.getElementById('tab-'+t).style.display='block';document.getElementById('qr-output').classList.remove('show')}
+function getData(){
+switch(currentTab){
+case'url':return document.getElementById('url-input').value;
+case'text':return document.getElementById('text-input').value;
+case'wifi':const s=document.getElementById('wifi-ssid').value,p=document.getElementById('wifi-pass').value,e=document.getElementById('wifi-enc').value;return'WIFI:T:'+e+';S:'+s+';P:'+p+';;';
+case'vcard':const f=document.getElementById('vc-first').value,l=document.getElementById('vc-last').value,ph=document.getElementById('vc-phone').value,em=document.getElementById('vc-email').value,co=document.getElementById('vc-company').value;return'BEGIN:VCARD\nVERSION:3.0\nN:'+l+';'+f+'\nFN:'+f+' '+l+(ph?'\nTEL:'+ph:'')+(em?'\nEMAIL:'+em:'')+(co?'\nORG:'+co:'')+'\nEND:VCARD';
+}}
+function generate(){
+const data=getData();if(!data){alert('Please enter some data');return}
+const size=parseInt(document.getElementById('qr-size').value);
+const color=document.getElementById('qr-color').value;
+const qr=qrcode(0,'M');qr.addData(data);qr.make();
+const mc=qr.getModuleCount();const canvas=document.getElementById('qr-canvas');
+canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d');
+const cell=size/mc;ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);
+ctx.fillStyle=color;
+for(let r=0;r<mc;r++)for(let c=0;c<mc;c++)if(qr.isDark(r,c))ctx.fillRect(c*cell,r*cell,cell+.5,cell+.5);
+document.getElementById('qr-output').classList.add('show');
+}
+function download(){const c=document.getElementById('qr-canvas');const a=document.createElement('a');a.download='qrcode.png';a.href=c.toDataURL('image/png');a.click()}
+document.querySelectorAll('.tab-content input,.tab-content textarea').forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')generate()}));
+</script>
+</body>
+</html>

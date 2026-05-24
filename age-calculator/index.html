@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Age Calculator - Calculate Your Exact Age in Years, Months, Days & More</title>
+<meta name="description" content="Free online age calculator. Calculate your exact age in years, months, days, hours, and minutes. Also includes date difference calculator and birthday countdown timer.">
+<meta name="keywords" content="age calculator, date difference, birthday countdown, how old am I, exact age calculator">
+<link rel="canonical" href="https://utilitytools.com/age-calculator">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Age Calculator",
+  "description": "Calculate your exact age in years, months, days, hours, and minutes. Includes date difference calculator and birthday countdown.",
+  "url": "https://utilitytools.com/age-calculator",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+a:hover{color:var(--primary-hover);text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+
+/* Header */
+header{padding:30px 0 10px;text-align:center}
+header h1{font-size:2rem;font-weight:700;margin-bottom:6px}
+header p{color:var(--muted);font-size:1rem}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin:24px 0 0;background:var(--surface);border-radius:var(--radius);padding:4px;border:1px solid var(--border)}
+.tab-btn{flex:1;padding:12px 8px;background:transparent;border:none;color:var(--muted);font-size:.95rem;font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{background:var(--primary);color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Tool card */
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-top:20px}
+.tool-card h2{font-size:1.25rem;margin-bottom:18px}
+
+/* Form */
+form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:180px}
+.form-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.form-group input[type="date"]{padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;font-family:inherit}
+.form-group input[type="date"]:focus{outline:none;border-color:var(--primary)}
+.btn{padding:10px 24px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap}
+.btn:hover{background:var(--primary-hover)}
+
+/* Result cards */
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:22px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.result-card .value{font-size:1.6rem;font-weight:700;color:var(--primary)}
+.result-card .label{font-size:.8rem;color:var(--muted);margin-top:2px}
+
+/* Extra info */
+.info-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:18px}
+.info-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:10px}
+.info-card .icon{font-size:1.5rem}
+.info-card .info-text .info-label{font-size:.75rem;color:var(--muted)}
+.info-card .info-text .info-value{font-weight:600;font-size:1rem}
+
+/* Ad slot */
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;color:var(--muted);font-size:.9rem;margin:28px 0}
+
+/* Related tools */
+.related{margin:28px 0}
+.related h3{font-size:1.1rem;margin-bottom:12px}
+.related-links{display:flex;flex-wrap:wrap;gap:10px}
+.related-links a{display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary);text-decoration:none}
+
+/* SEO content */
+.seo{margin:32px 0;line-height:1.8;color:var(--muted)}
+.seo h3{color:var(--text);margin-bottom:8px;font-size:1.15rem}
+.seo p{margin-bottom:14px}
+
+/* Footer */
+footer{text-align:center;padding:30px 0;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);margin-top:20px}
+
+/* Hide result section until calculated */
+.hidden{display:none!important}
+
+/* Responsive */
+@media(max-width:600px){
+  header h1{font-size:1.5rem}
+  .tabs{flex-direction:column}
+  .tab-btn{padding:10px}
+  .tool-card{padding:18px}
+  .results{grid-template-columns:repeat(2,1fr)}
+  .form-group{min-width:100%}
+  form .btn{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>🕐 Age Calculator</h1>
+    <p>Calculate your exact age, date differences, and birthday countdowns</p>
+  </div>
+</header>
+
+<main class="container">
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="age">Age Calculator</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="diff">Date Difference</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="countdown">Birthday Countdown</button>
+  </div>
+
+  <!-- Tab 1: Age Calculator -->
+  <div class="tab-panel active" id="panel-age">
+    <div class="tool-card">
+      <h2>Calculate Your Exact Age</h2>
+      <form id="ageForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="birthdate">Date of Birth</label>
+          <input type="date" id="birthdate" required>
+        </div>
+        <button class="btn" type="button" onclick="calculateAge()">Calculate Age</button>
+      </form>
+      <div id="ageResults" class="hidden">
+        <div class="results">
+          <div class="result-card"><div class="value" id="ageYears">-</div><div class="label">Years</div></div>
+          <div class="result-card"><div class="value" id="ageMonths">-</div><div class="label">Months</div></div>
+          <div class="result-card"><div class="value" id="ageDays">-</div><div class="label">Days</div></div>
+          <div class="result-card"><div class="value" id="ageHours">-</div><div class="label">Hours</div></div>
+          <div class="result-card"><div class="value" id="ageMinutes">-</div><div class="label">Minutes</div></div>
+          <div class="result-card"><div class="value" id="nextBday">-</div><div class="label">Days to Next Birthday</div></div>
+        </div>
+        <div class="info-row" style="margin-top:18px">
+          <div class="info-card"><div class="icon">📅</div><div class="info-text"><div class="info-label">Born on</div><div class="info-value" id="bornDay">-</div></div></div>
+          <div class="info-card"><div class="icon">⭐</div><div class="info-text"><div class="info-label">Zodiac Sign</div><div class="info-value" id="zodiac">-</div></div></div>
+          <div class="info-card"><div class="icon">💎</div><div class="info-text"><div class="info-label">Birthstone</div><div class="info-value" id="birthstone">-</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Date Difference -->
+  <div class="tab-panel" id="panel-diff">
+    <div class="tool-card">
+      <h2>Calculate Date Difference</h2>
+      <form id="diffForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="date1">Start Date</label>
+          <input type="date" id="date1" required>
+        </div>
+        <div class="form-group">
+          <label for="date2">End Date</label>
+          <input type="date" id="date2" required>
+        </div>
+        <button class="btn" type="button" onclick="calculateDiff()">Calculate Difference</button>
+      </form>
+      <div id="diffResults" class="hidden">
+        <div class="results">
+          <div class="result-card"><div class="value" id="diffYears">-</div><div class="label">Years</div></div>
+          <div class="result-card"><div class="value" id="diffMonths">-</div><div class="label">Months</div></div>
+          <div class="result-card"><div class="value" id="diffDays">-</div><div class="label">Days</div></div>
+          <div class="result-card"><div class="value" id="diffWeeks">-</div><div class="label">Weeks</div></div>
+          <div class="result-card"><div class="value" id="diffTotalDays">-</div><div class="label">Total Days</div></div>
+          <div class="result-card"><div class="value" id="diffHours">-</div><div class="label">Total Hours</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Birthday Countdown -->
+  <div class="tab-panel" id="panel-countdown">
+    <div class="tool-card">
+      <h2>Birthday Countdown</h2>
+      <form id="countdownForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="cdBirthdate">Your Birthdate</label>
+          <input type="date" id="cdBirthdate" required>
+        </div>
+        <button class="btn" type="button" onclick="calculateCountdown()">Start Countdown</button>
+      </form>
+      <div id="countdownResults" class="hidden">
+        <div class="results">
+          <div class="result-card"><div class="value" id="cdDays">-</div><div class="label">Days Until Birthday</div></div>
+          <div class="result-card"><div class="value" id="cdHours">-</div><div class="label">Hours</div></div>
+          <div class="result-card"><div class="value" id="cdMinutes">-</div><div class="label">Minutes</div></div>
+          <div class="result-card"><div class="value" id="cdDayOfWeek">-</div><div class="label">Falls On</div></div>
+        </div>
+        <div class="info-row" style="margin-top:18px">
+          <div class="info-card"><div class="icon">🎂</div><div class="info-text"><div class="info-label">Next Birthday</div><div class="info-value" id="cdNextDate">-</div></div></div>
+          <div class="info-card"><div class="icon">🔢</div><div class="info-text"><div class="info-label">Turning</div><div class="info-value" id="cdTurningAge">-</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad slot -->
+  <div class="ad-slot">Advertisement</div>
+
+  <!-- Related Tools -->
+  <div class="related">
+    <h3>Related Tools</h3>
+    <div class="related-links">
+      <a href="/finance-calculator">💰 Finance Calculator</a>
+      <a href="/word-unscrambler">🔤 Word Unscrambler</a>
+      <a href="/json-formatter">📋 JSON Formatter</a>
+      <a href="/unit-converter">📐 Unit Converter</a>
+    </div>
+  </div>
+
+  <!-- SEO Content -->
+  <section class="seo">
+    <h3>About the Age Calculator</h3>
+    <p>Our age calculator is a free online tool that lets you determine your exact age down to the very minute. Simply enter your date of birth and instantly see your age expressed in years, months, days, hours, and minutes. Whether you need to know your precise age for official documents, health assessments, or just out of curiosity, this calculator provides accurate results in seconds. It also reveals fun facts like the day of the week you were born, your zodiac sign, and your birthstone.</p>
+    <p>The date difference calculator goes beyond simple age computation. Use it to find the exact span between any two dates — perfect for project planning, counting down to an event, or tracking milestones. Results are displayed in multiple formats including total years, months, weeks, days, and hours, giving you a comprehensive view of the time elapsed.</p>
+    <p>Planning a celebration? The birthday countdown tool tells you exactly how many days remain until your next birthday, what day of the week it falls on, and which birthday number you are celebrating. All calculations are performed entirely in your browser — no data is sent to any server — so your personal information stays completely private.</p>
+  </section>
+
+  <!-- Ad slot -->
+  <div class="ad-slot">Advertisement</div>
+</main>
+
+<footer>
+  <div class="container">&copy; 2026 UtilityTools</div>
+</footer>
+
+<script>
+// ---- Tab switching ----
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected','true');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---- Helpers ----
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function diffYMD(from,to){
+  let y=to.getFullYear()-from.getFullYear();
+  let m=to.getMonth()-from.getMonth();
+  let d=to.getDate()-from.getDate();
+  if(d<0){m--;const prev=new Date(to.getFullYear(),to.getMonth(),0);d+=prev.getDate()}
+  if(m<0){y--;m+=12}
+  return{y,m,d};
+}
+
+function getZodiac(month,day){
+  const signs=[
+    {s:'Capricorn',e:[1,19]},{s:'Aquarius',e:[2,18]},{s:'Pisces',e:[3,20]},
+    {s:'Aries',e:[4,19]},{s:'Taurus',e:[5,20]},{s:'Gemini',e:[6,20]},
+    {s:'Cancer',e:[7,22]},{s:'Leo',e:[8,22]},{s:'Virgo',e:[9,22]},
+    {s:'Libra',e:[10,22]},{s:'Scorpio',e:[11,21]},{s:'Sagittarius',e:[12,21]},
+    {s:'Capricorn',e:[12,31]}
+  ];
+  for(let i=0;i<signs.length;i++){
+    if(month<signs[i].e[0]||(month===signs[i].e[0]&&day<=signs[i].e[1]))return signs[i].s;
+  }
+  return'Capricorn';
+}
+
+function getBirthstone(month){
+  const stones=['','Garnet','Amethyst','Aquamarine','Diamond','Emerald','Pearl','Ruby','Peridot','Sapphire','Opal','Topaz','Turquoise'];
+  return stones[month];
+}
+
+function formatNum(n){return n.toLocaleString()}
+
+// ---- Age Calculator ----
+function calculateAge(){
+  const val=document.getElementById('birthdate').value;
+  if(!val)return;
+  const birth=new Date(val);
+  const now=new Date();
+  if(birth>now){alert('Birthdate cannot be in the future.');return}
+  const{y,m,d}=diffYMD(birth,now);
+  const totalMs=now-birth;
+  const totalDays=Math.floor(totalMs/864e5);
+  const totalHours=Math.floor(totalMs/36e5);
+  const totalMinutes=Math.floor(totalMs/6e4);
+
+  // Next birthday
+  let nextBday=new Date(now.getFullYear(),birth.getMonth(),birth.getDate());
+  if(nextBday<=now)nextBday.setFullYear(nextBday.getFullYear()+1);
+  const daysToNext=Math.ceil((nextBday-now)/864e5);
+
+  document.getElementById('ageYears').textContent=y;
+  document.getElementById('ageMonths').textContent=m;
+  document.getElementById('ageDays').textContent=d;
+  document.getElementById('ageHours').textContent=formatNum(totalHours);
+  document.getElementById('ageMinutes').textContent=formatNum(totalMinutes);
+  document.getElementById('nextBday').textContent=daysToNext;
+  document.getElementById('bornDay').textContent=DAYS[birth.getDay()]+', '+MONTHS[birth.getMonth()]+' '+birth.getDate()+', '+birth.getFullYear();
+  document.getElementById('zodiac').textContent=getZodiac(birth.getMonth()+1,birth.getDate());
+  document.getElementById('birthstone').textContent=getBirthstone(birth.getMonth()+1);
+  document.getElementById('ageResults').classList.remove('hidden');
+}
+
+// ---- Date Difference ----
+function calculateDiff(){
+  const v1=document.getElementById('date1').value;
+  const v2=document.getElementById('date2').value;
+  if(!v1||!v2)return;
+  let d1=new Date(v1),d2=new Date(v2);
+  if(d1>d2)[d1,d2]=[d2,d1];
+  const{y,m,d}=diffYMD(d1,d2);
+  const totalMs=d2-d1;
+  const totalDays=Math.floor(totalMs/864e5);
+  const totalWeeks=Math.floor(totalDays/7);
+  const totalHours=Math.floor(totalMs/36e5);
+
+  document.getElementById('diffYears').textContent=y;
+  document.getElementById('diffMonths').textContent=m;
+  document.getElementById('diffDays').textContent=d;
+  document.getElementById('diffWeeks').textContent=formatNum(totalWeeks);
+  document.getElementById('diffTotalDays').textContent=formatNum(totalDays);
+  document.getElementById('diffHours').textContent=formatNum(totalHours);
+  document.getElementById('diffResults').classList.remove('hidden');
+}
+
+// ---- Birthday Countdown ----
+function calculateCountdown(){
+  const val=document.getElementById('cdBirthdate').value;
+  if(!val)return;
+  const birth=new Date(val);
+  const now=new Date();
+  let nextBday=new Date(now.getFullYear(),birth.getMonth(),birth.getDate());
+  let turningAge=now.getFullYear()-birth.getFullYear();
+  if(nextBday<=now){nextBday.setFullYear(nextBday.getFullYear()+1);turningAge++}
+  const diffMs=nextBday-now;
+  const daysLeft=Math.ceil(diffMs/864e5);
+  const hoursLeft=Math.floor(diffMs/36e5);
+  const minsLeft=Math.floor(diffMs/6e4);
+
+  document.getElementById('cdDays').textContent=daysLeft;
+  document.getElementById('cdHours').textContent=formatNum(hoursLeft);
+  document.getElementById('cdMinutes').textContent=formatNum(minsLeft);
+  document.getElementById('cdDayOfWeek').textContent=DAYS[nextBday.getDay()];
+  document.getElementById('cdNextDate').textContent=MONTHS[nextBday.getMonth()]+' '+nextBday.getDate()+', '+nextBday.getFullYear();
+  document.getElementById('cdTurningAge').textContent=turningAge+' years old';
+  document.getElementById('countdownResults').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency Converter - Free Online Exchange Rate Calculator | UtilityTools</title>
+<meta name="description" content="Free online currency converter with real-time exchange rates. Convert between 150+ currencies including USD, EUR, GBP, JPY, and more. Accurate, fast, and easy to use.">
+<meta name="keywords" content="currency converter, exchange rate, forex, money conversion, USD to EUR, GBP to USD, online calculator">
+<link rel="canonical" href="https://utilitytools.com/currency-converter">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Currency Converter",
+  "description": "Free online currency converter with real-time exchange rates for 150+ currencies.",
+  "url": "https://utilitytools.com/currency-converter",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:#0f1117;color:#e4e4e7;line-height:1.6;min-height:100vh}
+.container{max-width:720px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.75rem;font-weight:700;text-align:center;margin-bottom:8px;color:#e4e4e7}
+.subtitle{text-align:center;color:#9ca3af;margin-bottom:28px;font-size:.95rem}
+.converter-card{background:#1a1d27;border:1px solid #2a2d3a;border-radius:16px;padding:28px 24px;margin-bottom:20px}
+.field-row{display:flex;gap:10px;align-items:center;margin-bottom:4px}
+.field-group{flex:1}
+.field-group label{display:block;font-size:.8rem;color:#9ca3af;margin-bottom:6px;font-weight:500}
+.field-group input,.field-group select{width:100%;background:#0f1117;border:1px solid #2a2d3a;color:#e4e4e7;border-radius:10px;padding:14px 16px;font-size:1.1rem;outline:none;transition:border-color .2s}
+.field-group select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239ca3af' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field-group input:focus,.field-group select:focus{border-color:#6366f1}
+.swap-row{display:flex;justify-content:center;margin:16px 0}
+.swap-btn{background:#6366f1;border:none;color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s}
+.swap-btn:hover{background:#4f46e5;transform:rotate(180deg)}
+.rate-info{text-align:center;color:#9ca3af;font-size:.85rem;margin-top:14px}
+.rate-info strong{color:#e4e4e7}
+.quick-pairs{margin-bottom:20px}
+.quick-pairs h3{font-size:.9rem;color:#9ca3af;margin-bottom:10px;font-weight:500}
+.pair-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.pair-btn{background:#1a1d27;border:1px solid #2a2d3a;color:#e4e4e7;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.82rem;transition:border-color .2s,background .2s}
+.pair-btn:hover,.pair-btn.active{border-color:#6366f1;background:#1e2030}
+.ad-slot{background:#1a1d27;border:1px dashed #2a2d3a;border-radius:10px;padding:40px 20px;text-align:center;color:#9ca3af;font-size:.85rem;margin-bottom:20px}
+.related-tools{margin-bottom:20px}
+.related-tools h3{font-size:1rem;color:#e4e4e7;margin-bottom:12px}
+.tool-links{display:flex;flex-wrap:wrap;gap:10px}
+.tool-links a{background:#1a1d27;border:1px solid #2a2d3a;color:#9ca3af;border-radius:8px;padding:10px 18px;text-decoration:none;font-size:.88rem;transition:border-color .2s,color .2s}
+.tool-links a:hover{border-color:#6366f1;color:#e4e4e7}
+.seo-content{margin-bottom:24px}
+.seo-content h2{font-size:1.15rem;color:#e4e4e7;margin-bottom:10px}
+.seo-content p{color:#9ca3af;font-size:.9rem;margin-bottom:12px}
+footer{text-align:center;color:#9ca3af;font-size:.8rem;padding:20px 0;border-top:1px solid #2a2d3a}
+@media(max-width:600px){
+  .container{padding:14px 10px}
+  .converter-card{padding:20px 14px}
+  .field-row{flex-direction:column}
+  .field-group input,.field-group select{font-size:1rem;padding:12px 14px}
+  h1{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Currency Converter</h1>
+  <p class="subtitle">Real-time exchange rates for 150+ world currencies</p>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="converter-card">
+    <div class="field-row">
+      <div class="field-group">
+        <label for="fromCurrency">From</label>
+        <select id="fromCurrency"></select>
+      </div>
+      <div class="field-group">
+        <label for="fromAmount">Amount</label>
+        <input type="number" id="fromAmount" value="1" min="0" step="any">
+      </div>
+    </div>
+
+    <div class="swap-row">
+      <button class="swap-btn" id="swapBtn" title="Swap currencies">&#8646;</button>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label for="toCurrency">To</label>
+        <select id="toCurrency"></select>
+      </div>
+      <div class="field-group">
+        <label for="toAmount">Amount</label>
+        <input type="number" id="toAmount" value="" min="0" step="any">
+      </div>
+    </div>
+
+    <div class="rate-info" id="rateInfo">Loading rates...</div>
+  </div>
+
+  <div class="quick-pairs">
+    <h3>Popular Currency Pairs</h3>
+    <div class="pair-buttons" id="pairButtons"></div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="related-tools">
+    <h3>Related Tools</h3>
+    <div class="tool-links">
+      <a href="/finance-calculator">Finance Calculator</a>
+      <a href="/unit-converter">Unit Converter</a>
+      <a href="/age-calculator">Age Calculator</a>
+      <a href="/json-formatter">JSON Formatter</a>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>About Currency Conversion</h2>
+    <p>Currency conversion is the process of exchanging one country's currency for another based on current market exchange rates. Whether you're traveling abroad, sending money internationally, or conducting cross-border business, knowing the accurate exchange rate is essential. Our free currency converter uses real-time data from the European Central Bank to provide you with up-to-date rates for over 150 world currencies, including major pairs like USD/EUR, GBP/USD, and USD/JPY.</p>
+    <p>Exchange rates fluctuate constantly due to factors such as interest rate changes, geopolitical events, trade balances, and market speculation. Our tool fetches the latest rates from reliable sources and caches them for one hour to balance accuracy with performance. Simply enter the amount you wish to convert, select your source and target currencies, and get an instant result — no sign-up or API key required.</p>
+    <p>This currency converter supports all ISO 4217 currency codes, from widely traded currencies like the US Dollar (USD) and Euro (EUR) to less common ones like the Icelandic Króna (ISK) and Bulgarian Lev (BGN). Bookmark this page for quick access whenever you need a reliable, free foreign exchange calculator.</p>
+  </div>
+
+  <footer>&copy; 2026 UtilityTools</footer>
+</div>
+
+<script>
+(function(){
+  const CURRENCIES = {"AED":"United Arab Emirates Dirham","AFN":"Afghan Afghani","ALL":"Albanian Lek","AMD":"Armenian Dram","ANG":"Netherlands Antillean Guilder","AOA":"Angolan Kwanza","ARS":"Argentine Peso","AUD":"Australian Dollar","AWG":"Aruban Florin","AZN":"Azerbaijani Manat","BAM":"Bosnia-Herzegovina Convertible Mark","BBD":"Barbadian Dollar","BDT":"Bangladeshi Taka","BGN":"Bulgarian Lev","BHD":"Bahraini Dinar","BIF":"Burundian Franc","BMD":"Bermudian Dollar","BND":"Brunei Dollar","BOB":"Bolivian Boliviano","BRL":"Brazilian Real","BSD":"Bahamian Dollar","BTC":"Bitcoin","BTN":"Bhutanese Ngultrum","BWP":"Botswanan Pula","BYN":"Belarusian Ruble","BZD":"Belize Dollar","CAD":"Canadian Dollar","CDF":"Congolese Franc","CHF":"Swiss Franc","CLF":"Chilean Unit of Account (UF)","CLP":"Chilean Peso","CNH":"Chinese Yuan (Offshore)","CNY":"Chinese Yuan","COP":"Colombian Peso","CRC":"Costa Rican Colón","CUC":"Cuban Convertible Peso","CUP":"Cuban Peso","CVE":"Cape Verdean Escudo","CZK":"Czech Republic Koruna","DJF":"Djiboutian Franc","DKK":"Danish Krone","DOP":"Dominican Peso","DZD":"Algerian Dinar","EGP":"Egyptian Pound","ERN":"Eritrean Nakfa","ETB":"Ethiopian Birr","EUR":"Euro","FJD":"Fijian Dollar","FKP":"Falkland Islands Pound","GBP":"British Pound Sterling","GEL":"Georgian Lari","GGP":"Guernsey Pound","GHS":"Ghanaian Cedi","GIP":"Gibraltar Pound","GMD":"Gambian Dalasi","GNF":"Guinean Franc","GTQ":"Guatemalan Quetzal","GYD":"Guyanaese Dollar","HKD":"Hong Kong Dollar","HNL":"Honduran Lempira","HRK":"Croatian Kuna","HTG":"Haitian Gourde","HUF":"Hungarian Forint","IDR":"Indonesian Rupiah","ILS":"Israeli New Sheqel","IMP":"Manx pound","INR":"Indian Rupee","IQD":"Iraqi Dinar","IRR":"Iranian Rial","ISK":"Icelandic Króna","JEP":"Jersey Pound","JMD":"Jamaican Dollar","JOD":"Jordanian Dinar","JPY":"Japanese Yen","KES":"Kenyan Shilling","KGS":"Kyrgystani Som","KHR":"Cambodian Riel","KMF":"Comorian Franc","KPW":"North Korean Won","KRW":"South Korean Won","KWD":"Kuwaiti Dinar","KYD":"Cayman Islands Dollar","KZT":"Kazakhstani Tenge","LAK":"Laotian Kip","LBP":"Lebanese Pound","LKR":"Sri Lankan Rupee","LRD":"Liberian Dollar","LSL":"Lesotho Loti","LYD":"Libyan Dinar","MAD":"Moroccan Dirham","MDL":"Moldovan Leu","MGA":"Malagasy Ariary","MKD":"Macedonian Denar","MMK":"Myanma Kyat","MNT":"Mongolian Tugrik","MOP":"Macanese Pataca","MRO":"Mauritanian Ouguiya (pre-2018)","MRU":"Mauritanian Ouguiya","MUR":"Mauritian Rupee","MVR":"Maldivian Rufiyaa","MWK":"Malawian Kwacha","MXN":"Mexican Peso","MYR":"Malaysian Ringgit","MZN":"Mozambican Metical","NAD":"Namibian Dollar","NGN":"Nigerian Naira","NIO":"Nicaraguan Córdoba","NOK":"Norwegian Krone","NPR":"Nepalese Rupee","NZD":"New Zealand Dollar","OMR":"Omani Rial","PAB":"Panamanian Balboa","PEN":"Peruvian Nuevo Sol","PGK":"Papua New Guinean Kina","PHP":"Philippine Peso","PKR":"Pakistani Rupee","PLN":"Polish Zloty","PYG":"Paraguayan Guarani","QAR":"Qatari Rial","RON":"Romanian Leu","RSD":"Serbian Dinar","RUB":"Russian Ruble","RWF":"Rwandan Franc","SAR":"Saudi Riyal","SBD":"Solomon Islands Dollar","SCR":"Seychellois Rupee","SDG":"Sudanese Pound","SEK":"Swedish Krona","SGD":"Singapore Dollar","SHP":"Saint Helena Pound","SLL":"Sierra Leonean Leone","SOS":"Somali Shilling","SRD":"Surinamese Dollar","SSP":"South Sudanese Pound","STD":"São Tomé and Príncipe Dobra (pre-2018)","STN":"São Tomé and Príncipe Dobra","SVC":"Salvadoran Colón","SYP":"Syrian Pound","SZL":"Swazi Lilangeni","THB":"Thai Baht","TJS":"Tajikistani Somoni","TMT":"Turkmenistani Manat","TND":"Tunisian Dinar","TOP":"Tongan Pa'anga","TRY":"Turkish Lira","TTD":"Trinidad and Tobago Dollar","TWD":"New Taiwan Dollar","TZS":"Tanzanian Shilling","UAH":"Ukrainian Hryvnia","UGX":"Ugandan Shilling","USD":"US Dollar","UYU":"Uruguayan Peso","UZS":"Uzbekistan Som","VEF":"Venezuelan Bolívar (pre-2018)","VES":"Venezuelan Bolívar","VND":"Vietnamese Dong","VUV":"Vanuatu Vatu","WST":"Samoan Tala","XAF":"CFA Franc BEAC","XAG":"Silver (troy ounce)","XAU":"Gold (troy ounce)","XCD":"East Caribbean Dollar","XDR":"Special Drawing Rights","XOF":"CFA Franc BCEAO","XPF":"CFP Franc","YER":"Yemeni Rial","ZAR":"South African Rand","ZMW":"Zambian Kwacha","ZWL":"Zimbabwean Dollar"};
+
+  const POPULAR_PAIRS = [
+    ["USD","EUR"],["EUR","GBP"],["GBP","USD"],["USD","JPY"],["USD","CAD"],
+    ["USD","CHF"],["AUD","USD"],["USD","INR"],["EUR","CHF"],["GBP","EUR"],
+    ["USD","CNY"],["USD","MXN"],["EUR","JPY"],["USD","BRL"],["USD","KRW"]
+  ];
+
+  const CACHE_KEY = "currency_rates_cache";
+  const CACHE_TTL = 3600000; // 1 hour
+
+  const fromCurrency = document.getElementById("fromCurrency");
+  const toCurrency = document.getElementById("toCurrency");
+  const fromAmount = document.getElementById("fromAmount");
+  const toAmount = document.getElementById("toAmount");
+  const rateInfo = document.getElementById("rateInfo");
+  const swapBtn = document.getElementById("swapBtn");
+  const pairButtons = document.getElementById("pairButtons");
+
+  let rates = {};
+  let lastUpdated = null;
+  let updating = false;
+  let lastEdited = "from";
+
+  function populateSelects() {
+    const sorted = Object.keys(CURRENCIES).sort((a, b) =>
+      CURRENCIES[a].localeCompare(CURRENCIES[b])
+    );
+    sorted.forEach(code => {
+      const opt1 = new Option(code + " – " + CURRENCIES[code], code);
+      const opt2 = new Option(code + " – " + CURRENCIES[code], code);
+      fromCurrency.appendChild(opt1);
+      toCurrency.appendChild(opt2);
+    });
+    fromCurrency.value = "USD";
+    toCurrency.value = "EUR";
+  }
+
+  function buildPairButtons() {
+    POPULAR_PAIRS.forEach(([from, to]) => {
+      const btn = document.createElement("button");
+      btn.className = "pair-btn";
+      btn.textContent = from + " / " + to;
+      btn.addEventListener("click", () => {
+        fromCurrency.value = from;
+        toCurrency.value = to;
+        updateActivePair();
+        convert();
+      });
+      pairButtons.appendChild(btn);
+    });
+  }
+
+  function updateActivePair() {
+    const from = fromCurrency.value;
+    const to = toCurrency.value;
+    document.querySelectorAll(".pair-btn").forEach((btn, i) => {
+      const [pf, pt] = POPULAR_PAIRS[i];
+      btn.classList.toggle("active", pf === from && pt === to);
+    });
+  }
+
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (Date.now() - data.ts < CACHE_TTL && data.rates) return data;
+    } catch(e) {}
+    return null;
+  }
+
+  function saveCache(ratesObj) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: ratesObj }));
+    } catch(e) {}
+  }
+
+  async function fetchRates() {
+    if (updating) return;
+    updating = true;
+    rateInfo.textContent = "Fetching latest rates...";
+    try {
+      const res = await fetch("https://api.frankfurter.app/latest");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      rates = data.rates || {};
+      rates["EUR"] = 1;
+      lastUpdated = data.date || new Date().toISOString().slice(0, 10);
+      saveCache({ ...rates });
+      convert();
+    } catch(e) {
+      const cache = loadCache();
+      if (cache) {
+        rates = cache.rates;
+        convert();
+      } else {
+        rateInfo.textContent = "Failed to load rates. Please try again later.";
+      }
+    }
+    updating = false;
+  }
+
+  function convertToEUR(amount, currency) {
+    if (currency === "EUR") return amount;
+    if (!rates[currency]) return null;
+    return amount / rates[currency];
+  }
+
+  function convertFromEUR(eurAmount, currency) {
+    if (currency === "EUR") return eurAmount;
+    if (!rates[currency]) return null;
+    return eurAmount * rates[currency];
+  }
+
+  function convert() {
+    if (!Object.keys(rates).length) return;
+    updateActivePair();
+
+    if (lastEdited === "from") {
+      const val = parseFloat(fromAmount.value);
+      if (isNaN(val) || val < 0) { toAmount.value = ""; updateRateInfo(); return; }
+      const eur = convertToEUR(val, fromCurrency.value);
+      if (eur === null) { toAmount.value = "N/A"; return; }
+      const result = convertFromEUR(eur, toCurrency.value);
+      toAmount.value = result !== null ? (Math.round(result * 1000000) / 1000000) : "N/A";
+    } else {
+      const val = parseFloat(toAmount.value);
+      if (isNaN(val) || val < 0) { fromAmount.value = ""; updateRateInfo(); return; }
+      const eur = convertToEUR(val, toCurrency.value);
+      if (eur === null) { fromAmount.value = "N/A"; return; }
+      const result = convertFromEUR(eur, fromCurrency.value);
+      fromAmount.value = result !== null ? (Math.round(result * 1000000) / 1000000) : "N/A";
+    }
+    updateRateInfo();
+  }
+
+  function updateRateInfo() {
+    const from = fromCurrency.value;
+    const to = toCurrency.value;
+    if (!rates[from] && from !== "EUR") {
+      rateInfo.textContent = "Rate not available for " + from;
+      return;
+    }
+    const eurAmt = 1;
+    const fromInEUR = from === "EUR" ? 1 : (1 / rates[from]);
+    const result = fromInEUR * (rates[to] || (to === "EUR" ? 1 : 0));
+    const ts = lastUpdated ? " — Updated " + lastUpdated : "";
+    if (result) {
+      rateInfo.innerHTML = "1 " + from + " = <strong>" + result.toFixed(6).replace(/\.?0+$/, "") + " " + to + "</strong>" + ts;
+    } else {
+      rateInfo.textContent = "Select two currencies to convert" + ts;
+    }
+  }
+
+  // Events
+  fromAmount.addEventListener("input", () => { lastEdited = "from"; convert(); });
+  toAmount.addEventListener("input", () => { lastEdited = "to"; convert(); });
+  fromCurrency.addEventListener("change", () => { lastEdited = "from"; convert(); });
+  toCurrency.addEventListener("change", () => { lastEdited = "from"; convert(); });
+
+  swapBtn.addEventListener("click", () => {
+    const tmpC = fromCurrency.value;
+    const tmpA = fromAmount.value;
+    fromCurrency.value = toCurrency.value;
+    toCurrency.value = tmpC;
+    fromAmount.value = toAmount.value;
+    lastEdited = "from";
+    convert();
+  });
+
+  // Init
+  populateSelects();
+  buildPairButtons();
+
+  const cached = loadCache();
+  if (cached) {
+    rates = cached.rates;
+    lastUpdated = new Date(cached.ts).toISOString().slice(0, 10);
+    convert();
+    // Refresh in background if cache is > 30 min old
+    if (Date.now() - cached.ts > 1800000) fetchRates();
+  } else {
+    fetchRates();
+  }
+})();
+</script>
+</body>
+</html>

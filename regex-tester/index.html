@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex Tester & Cheat Sheet – Test Regular Expressions Online | UtilityTools</title>
+<meta name="description" content="Free online regex tester with real-time matching, syntax highlighting, and a built-in cheat sheet. Test regular expressions with flags, capture groups, and instant feedback.">
+<meta name="keywords" content="regex tester, regular expression, regex cheat sheet, regex online, pattern matching, regex validator">
+<link rel="canonical" href="https://utilitytools.com/regex-tester">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Regex Tester & Cheat Sheet",
+  "url": "https://utilitytools.com/regex-tester",
+  "description": "Free online regex tester with real-time matching, syntax highlighting, and a built-in cheat sheet.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--error:#ef4444;--success:#22c55e;--highlight-bg:rgba(99,102,241,0.25);--highlight-border:#818cf8;--radius:8px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+a:hover{color:var(--primary-hover);text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 16px}
+header{text-align:center;padding:32px 0 16px}
+header h1{font-size:1.75rem;font-weight:700;margin-bottom:4px}
+header p{color:var(--muted);font-size:0.95rem}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card h2{font-size:1.1rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .badge{font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 8px;border-radius:9999px;font-weight:500}
+
+/* Regex Input Row */
+.regex-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.regex-input-wrap{flex:1;min-width:0;position:relative}
+.regex-input-wrap input{width:100%;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);padding:10px 40px 10px 14px;color:var(--text);font-size:1rem;font-family:'Fira Code',Consolas,Monaco,monospace;outline:none;transition:border-color .2s}
+.regex-input-wrap input:focus{border-color:var(--primary)}
+.regex-input-wrap input.has-error{border-color:var(--error)}
+.regex-input-wrap .slash{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;pointer-events:none}
+#regexInput{padding-left:24px}
+.copy-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:4px;display:flex;align-items:center}
+.copy-btn:hover{color:var(--primary)}
+.copy-btn svg{width:18px;height:18px}
+
+/* Flags */
+.flags{display:flex;gap:6px;align-items:center}
+.flags label{display:flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;cursor:pointer;font-size:0.85rem;font-family:monospace;color:var(--muted);transition:all .2s;user-select:none}
+.flags label:has(input:checked){border-color:var(--primary);color:var(--primary);background:rgba(99,102,241,0.1)}
+.flags input{display:none}
+
+/* Textarea */
+textarea{width:100%;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);padding:12px 14px;color:var(--text);font-size:0.95rem;font-family:'Fira Code',Consolas,Monaco,monospace;outline:none;resize:vertical;min-height:120px;transition:border-color .2s}
+textarea:focus{border-color:var(--primary)}
+
+/* Error */
+.error-msg{color:var(--error);font-size:0.85rem;margin-top:8px;display:none;align-items:center;gap:6px}
+.error-msg.visible{display:flex}
+
+/* Results Panel */
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.match-count{font-size:0.85rem;color:var(--muted)}
+.match-count strong{color:var(--primary)}
+.highlighted-result{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-family:'Fira Code',Consolas,Monaco,monospace;font-size:0.95rem;line-height:1.8;white-space:pre-wrap;word-break:break-word;min-height:48px;color:var(--muted)}
+.highlighted-result mark{background:var(--highlight-bg);border-bottom:2px solid var(--highlight-border);color:var(--text);border-radius:2px;padding:1px 0}
+
+/* Match List */
+.match-list{margin-top:12px}
+.match-item{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:6px;font-size:0.85rem}
+.match-item .match-header{display:flex;gap:12px;align-items:center;margin-bottom:4px}
+.match-item .match-index{color:var(--primary);font-weight:600;font-family:monospace}
+.match-item .match-value{color:var(--text);font-family:monospace}
+.match-item .match-pos{color:var(--muted);font-size:0.8rem}
+.match-item .groups{margin-top:6px;padding-left:16px;border-left:2px solid var(--border)}
+.match-item .group-item{color:var(--muted);font-size:0.82rem;margin-top:2px}
+.match-item .group-item span{color:var(--text)}
+
+/* Ad Slot */
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:40px 16px;text-align:center;color:var(--muted);font-size:0.85rem;margin:20px 0}
+
+/* Cheat Sheet */
+.cheat-sheet h2{text-align:center;margin-bottom:16px}
+.cs-group{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.cs-group-header{background:var(--surface);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:0.95rem;user-select:none;transition:background .2s}
+.cs-group-header:hover{background:var(--border)}
+.cs-group-header .arrow{transition:transform .2s;font-size:0.8rem;color:var(--muted)}
+.cs-group.open .cs-group-header .arrow{transform:rotate(90deg)}
+.cs-group-body{display:none;padding:8px 12px;background:var(--bg)}
+.cs-group.open .cs-group-body{display:block}
+.cs-row{display:grid;grid-template-columns:110px 1fr 40px;gap:8px;align-items:center;padding:6px 8px;border-radius:4px;cursor:pointer;transition:background .15s;font-size:0.88rem}
+.cs-row:hover{background:var(--surface)}
+.cs-pattern{font-family:'Fira Code',Consolas,Monaco,monospace;color:var(--primary);font-size:0.88rem}
+.cs-desc{color:var(--muted)}
+.cs-action{color:var(--muted);text-align:center;font-size:0.8rem}
+.cs-row:hover .cs-action{color:var(--primary)}
+
+/* SEO */
+.seo-section{margin:28px 0;line-height:1.8;color:var(--muted);font-size:0.92rem}
+.seo-section h2{color:var(--text);font-size:1.15rem;margin-bottom:10px}
+.seo-section p{margin-bottom:12px}
+
+/* Related Tools */
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+.related-tools a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;font-size:0.9rem;transition:border-color .2s}
+.related-tools a:hover{border-color:var(--primary);text-decoration:none}
+
+/* Footer */
+footer{text-align:center;padding:24px 0 32px;color:var(--muted);font-size:0.82rem;border-top:1px solid var(--border);margin-top:24px}
+
+/* Responsive */
+@media(max-width:640px){
+  header h1{font-size:1.35rem}
+  .regex-row{flex-direction:column;align-items:stretch}
+  .flags{justify-content:center}
+  .card{padding:14px}
+  .cs-row{grid-template-columns:90px 1fr 30px;font-size:0.82rem}
+  .related-tools{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Regex Tester &amp; Cheat Sheet</h1>
+  <p>Test regular expressions in real time with instant match highlighting</p>
+</header>
+
+<!-- Regex Input -->
+<div class="card">
+  <h2>Regular Expression</h2>
+  <div class="regex-row">
+    <div class="regex-input-wrap">
+      <span class="slash">/</span>
+      <input type="text" id="regexInput" placeholder="Enter regex pattern…" autocomplete="off" spellcheck="false">
+      <button class="copy-btn" id="copyBtn" title="Copy regex">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+    <div class="flags">
+      <label><input type="checkbox" id="flagG" checked>g</label>
+      <label><input type="checkbox" id="flagI">i</label>
+      <label><input type="checkbox" id="flagM">m</label>
+      <label><input type="checkbox" id="flagS">s</label>
+    </div>
+  </div>
+  <div class="error-msg" id="errorMsg">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <span id="errorText"></span>
+  </div>
+</div>
+
+<!-- Test String -->
+<div class="card">
+  <h2>Test String</h2>
+  <textarea id="testInput" placeholder="Enter test string here…" spellcheck="false">The quick brown fox jumps over the lazy dog. Foxes are clever, and dogs are loyal.
+Contact us at test@example.com or sales@company.org.
+Phone: +1 (555) 123-4567 or 555.987.6543
+Date: 2025-01-15 and 2024-12-25
+Prices: $19.99, $49.50, $199.00</textarea>
+</div>
+
+<!-- Results -->
+<div class="card">
+  <div class="results-header">
+    <h2 style="margin-bottom:0">Match Results</h2>
+    <div class="match-count"><strong id="matchNum">0</strong> matches</div>
+  </div>
+  <div class="highlighted-result" id="highlighted"></div>
+  <div class="match-list" id="matchList"></div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<!-- Cheat Sheet -->
+<div class="card cheat-sheet">
+  <h2 style="text-align:center;justify-content:center">Regex Cheat Sheet <span class="badge">Click to insert</span></h2>
+  <div id="cheatSheet"></div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<!-- Related Tools -->
+<div class="card">
+  <h2>Related Tools</h2>
+  <div class="related-tools">
+    <a href="/json-formatter">JSON Formatter</a>
+    <a href="/word-unscrambler">Word Unscrambler</a>
+    <a href="/password-generator">Password Generator</a>
+    <a href="/finance-calculator">Finance Calculator</a>
+  </div>
+</div>
+
+<!-- SEO Content -->
+<div class="seo-section">
+  <h2>About Regular Expressions</h2>
+  <p>Regular expressions (regex) are powerful pattern-matching tools used across nearly every programming language and text editor. They allow developers to search, validate, extract, and replace text using concise pattern syntax. Whether you're validating email addresses, parsing log files, scraping web content, or building search features, regular expressions provide a flexible and efficient way to work with string data. Our regex tester lets you experiment with patterns in real time, so you can see exactly what your expression matches before deploying it in your code.</p>
+  <p>Learning regex syntax can feel daunting at first, but mastering a handful of core concepts—literal characters, character classes, quantifiers, anchors, and groups—unlocks an enormous amount of power. Our built-in cheat sheet organizes the most common patterns into collapsible groups, making it easy to look up syntax while you work. Each entry is clickable and inserts directly into the pattern input, so you can build complex expressions piece by piece without memorizing every token.</p>
+  <p>This regex tester runs entirely in your browser with zero server-side processing. Your test strings and patterns never leave your device, making it safe for sensitive data like passwords, API keys, and personal information. It supports all standard JavaScript regex flags—including global (g), case-insensitive (i), multiline (m), and dotAll (s)—and displays captured groups for each match, making it an essential tool for both learning and day-to-day development.</p>
+</div>
+
+<footer>© 2026 UtilityTools</footer>
+
+</div>
+
+<script>
+(function(){
+  const regexInput = document.getElementById('regexInput');
+  const testInput  = document.getElementById('testInput');
+  const flagG      = document.getElementById('flagG');
+  const flagI      = document.getElementById('flagI');
+  const flagM      = document.getElementById('flagM');
+  const flagS      = document.getElementById('flagS');
+  const errorMsg   = document.getElementById('errorMsg');
+  const errorText  = document.getElementById('errorText');
+  const highlighted= document.getElementById('highlighted');
+  const matchNum   = document.getElementById('matchNum');
+  const matchList  = document.getElementById('matchList');
+  const copyBtn    = document.getElementById('copyBtn');
+  const cheatEl    = document.getElementById('cheatSheet');
+
+  /* ---- Cheat Sheet Data ---- */
+  const cheatData = [
+    { title:'Characters', items:[
+      ['.','Any character (except newline)'],
+      ['\\d','Digit [0-9]'],
+      ['\\D','Non-digit'],
+      ['\\w','Word character [a-zA-Z0-9_]'],
+      ['\\W','Non-word character'],
+      ['\\s','Whitespace'],
+      ['\\S','Non-whitespace'],
+      ['[abc]','Any of a, b, or c'],
+      ['[^abc]','Not a, b, or c'],
+      ['[a-z]','Character range a–z'],
+      ['\\b','Word boundary'],
+      ['\\B','Non-word boundary'],
+    ]},
+    { title:'Quantifiers', items:[
+      ['*','0 or more'],
+      ['+','1 or more'],
+      ['?','0 or 1 (optional)'],
+      ['{n}','Exactly n'],
+      ['{n,}','n or more'],
+      ['{n,m}','Between n and m'],
+      ['*?','0 or more (lazy)'],
+      ['+?','1 or more (lazy)'],
+    ]},
+    { title:'Anchors', items:[
+      ['^','Start of string / line'],
+      ['$','End of string / line'],
+      ['\\b','Word boundary'],
+    ]},
+    { title:'Groups & Ranges', items:[
+      ['(abc)','Capture group'],
+      ['(?:abc)','Non-capturing group'],
+      ['(?<name>abc)','Named group'],
+      ['\\1','Backreference to group 1'],
+      ['a|b','Alternation (a or b)'],
+    ]},
+    { title:'Lookahead / Lookbehind', items:[
+      ['(?=foo)','Positive lookahead'],
+      ['(?!foo)','Negative lookahead'],
+      ['(?<=foo)','Positive lookbehind'],
+      ['(?<!foo)','Negative lookbehind'],
+    ]},
+    { title:'Flags', items:[
+      ['g','Global – find all matches'],
+      ['i','Case-insensitive'],
+      ['m','Multiline – ^ and $ match line starts/ends'],
+      ['s','DotAll – . matches newlines'],
+    ]},
+  ];
+
+  /* ---- Build Cheat Sheet ---- */
+  cheatData.forEach(function(group){
+    const div = document.createElement('div');
+    div.className = 'cs-group';
+    div.innerHTML =
+      '<div class="cs-group-header"><span>'+group.title+'</span><span class="arrow">&#9654;</span></div>'+
+      '<div class="cs-group-body">'+group.items.map(function(it){
+        return '<div class="cs-row" data-pattern="'+it[0].replace(/"/g,'&quot;')+'"><span class="cs-pattern">'+escHtml(it[0])+'</span><span class="cs-desc">'+escHtml(it[1])+'</span><span class="cs-action">+</span></div>';
+      }).join('')+'</div>';
+    cheatEl.appendChild(div);
+  });
+
+  /* Toggle groups */
+  cheatEl.addEventListener('click', function(e){
+    const header = e.target.closest('.cs-group-header');
+    if(header) return header.parentElement.classList.toggle('open');
+    const row = e.target.closest('.cs-row');
+    if(row){
+      const p = row.getAttribute('data-pattern');
+      const start = regexInput.selectionStart;
+      const val = regexInput.value;
+      regexInput.value = val.slice(0,start)+p+val.slice(start);
+      regexInput.focus();
+      regexInput.selectionStart = regexInput.selectionEnd = start + p.length;
+      runTest();
+    }
+  });
+
+  /* ---- Escaping helpers ---- */
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  /* ---- Core Tester ---- */
+  function runTest(){
+    const pattern = regexInput.value;
+    const text    = testInput.value;
+    errorMsg.classList.remove('visible');
+    regexInput.classList.remove('has-error');
+
+    if(!pattern){
+      highlighted.innerHTML = escHtml(text);
+      matchNum.textContent = '0';
+      matchList.innerHTML = '';
+      return;
+    }
+
+    let flags = '';
+    if(flagG.checked) flags += 'g';
+    if(flagI.checked) flags += 'i';
+    if(flagM.checked) flags += 'm';
+    if(flagS.checked) flags += 's';
+
+    let re;
+    try{ re = new RegExp(pattern, flags); }
+    catch(err){
+      regexInput.classList.add('has-error');
+      errorText.textContent = err.message;
+      errorMsg.classList.add('visible');
+      highlighted.innerHTML = escHtml(text);
+      matchNum.textContent = '0';
+      matchList.innerHTML = '';
+      return;
+    }
+
+    /* Collect all matches */
+    const matches = [];
+    if(flags.indexOf('g') !== -1){
+      let m;
+      /* Reset lastIndex */
+      re.lastIndex = 0;
+      while((m = re.exec(text)) !== null){
+        matches.push({match:m[0], index:m.index, groups:Array.from(m).slice(1), named:m.groups||{}});
+        if(m[0].length === 0) re.lastIndex++;
+      }
+    } else {
+      const m = re.exec(text);
+      if(m) matches.push({match:m[0], index:m.index, groups:Array.from(m).slice(1), named:m.groups||{}});
+    }
+
+    matchNum.textContent = matches.length;
+
+    /* Build highlighted string */
+    if(matches.length === 0){
+      highlighted.innerHTML = escHtml(text);
+      matchList.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:8px 0">No matches found.</div>';
+      return;
+    }
+
+    let html = '';
+    let last = 0;
+    matches.forEach(function(m){
+      html += escHtml(text.slice(last, m.index));
+      html += '<mark>' + escHtml(m.match) + '</mark>';
+      last = m.index + m.match.length;
+    });
+    html += escHtml(text.slice(last));
+    highlighted.innerHTML = html;
+
+    /* Build match list */
+    let listHtml = '';
+    matches.forEach(function(m,i){
+      listHtml += '<div class="match-item"><div class="match-header"><span class="match-index">#'+(i+1)+'</span><span class="match-value">'+escHtml(m.match)+'</span><span class="match-pos">index '+m.index+'</span></div>';
+      if(m.groups.length > 0 || Object.keys(m.named).length > 0){
+        listHtml += '<div class="groups">';
+        m.groups.forEach(function(g,gi){
+          if(g !== undefined) listHtml += '<div class="group-item">Group '+(gi+1)+': <span>'+escHtml(g)+'</span></div>';
+        });
+        Object.keys(m.named).forEach(function(k){
+          if(m.named[k] !== undefined) listHtml += '<div class="group-item">'+k+': <span>'+escHtml(m.named[k])+'</span></div>';
+        });
+        listHtml += '</div>';
+      }
+      listHtml += '</div>';
+    });
+    matchList.innerHTML = listHtml;
+  }
+
+  /* ---- Event Binding ---- */
+  regexInput.addEventListener('input', runTest);
+  testInput.addEventListener('input', runTest);
+  [flagG,flagI,flagM,flagS].forEach(function(el){ el.addEventListener('change', runTest); });
+
+  /* ---- Copy ---- */
+  copyBtn.addEventListener('click', function(){
+    const p = regexInput.value;
+    if(!p) return;
+    let flags = '';
+    if(flagG.checked) flags += 'g';
+    if(flagI.checked) flags += 'i';
+    if(flagM.checked) flags += 'm';
+    if(flagS.checked) flags += 's';
+    const str = '/' + p + '/' + flags;
+    navigator.clipboard.writeText(str).then(function(){
+      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(function(){
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      },1500);
+    });
+  });
+
+  /* Initial run */
+  runTest();
+})();
+</script>
+</body>
+</html>
