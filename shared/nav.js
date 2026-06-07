@@ -128,7 +128,7 @@
       var name = user.displayName || user.email || 'User';
       var initials = name.charAt(0).toUpperCase();
       var avatarEl = avatar
-        ? '<img src="' + avatar + '" alt="" class="uh-avatar-img">'
+        ? '<img src="' + escAttr(avatar) + '" alt="" class="uh-avatar-img">'
         : '<span class="uh-avatar-init">' + initials + '</span>';
       return '' +
         '<div class="uh-auth-wrap">' +
@@ -147,6 +147,10 @@
   }
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  // Attribute-safe escape (esc() via textContent does NOT encode quotes, so it can't
+  // protect an HTML attribute). Used for user.photoURL in the avatar <img src> to
+  // prevent DOM XSS via attribute breakout. 2026-06-08.
+  function escAttr(s) { return String(s == null ? '' : s).replace(/[&"'<>]/g, function (c) { return { '&': '&amp;', '"': '&quot;', "'": '&#39;', '<': '&lt;', '>': '&gt;' }[c]; }); }
 
   /* --- Scoped CSS --- */
   var NAV_CSS = '' +
