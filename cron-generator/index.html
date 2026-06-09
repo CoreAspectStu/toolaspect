@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression Generator & Parser – Build & Decode Cron Schedules Online | UtilityTools</title>
+<meta name="description" content="Free online cron expression generator and parser. Visually build cron schedules with a point-and-click builder, or paste any cron expression to see a human-readable description and next run times.">
+<meta name="keywords" content="cron expression generator, cron parser, cron schedule builder, crontab generator, cron next run time, cron to human readable, cron calculator, cron job scheduler">
+<link rel="canonical" href="https://utilitytools.com/cron-generator">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Cron Expression Generator & Parser",
+  "url": "https://utilitytools.com/cron-generator",
+  "description": "Free online cron expression generator and parser with visual builder, human-readable descriptions, and next run time calculation.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--error:#ef4444;--success:#22c55e;--highlight-bg:rgba(99,102,241,0.25);--highlight-border:#818cf8;--radius:8px}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+a:hover{color:var(--primary-hover);text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 16px}
+header{text-align:center;padding:32px 0 16px}
+header h1{font-size:1.75rem;font-weight:700;margin-bottom:4px}
+header p{color:var(--muted);font-size:0.95rem}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card h2{font-size:1.1rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .badge{font-size:0.75rem;background:var(--primary);color:#fff;padding:2px 8px;border-radius:9999px;font-weight:500}
+
+/* Expression Display */
+.expr-display{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.expr-output{flex:1;min-width:0;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-family:'Fira Code',Consolas,Monaco,monospace;font-size:1.15rem;color:var(--primary);letter-spacing:1px;word-break:break-all}
+.expr-output.empty{color:var(--muted)}
+
+/* Copy Button */
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:10px 18px;cursor:pointer;font-size:0.9rem;font-weight:500;transition:background .2s;white-space:nowrap}
+.copy-btn:hover{background:var(--primary-hover)}
+.copy-btn svg{width:16px;height:16px}
+
+/* Presets */
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.preset-btn{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--muted);font-size:0.85rem;transition:all .2s;font-family:inherit}
+.preset-btn:hover,.preset-btn.active{border-color:var(--primary);color:var(--primary);background:rgba(99,102,241,0.1)}
+
+/* Builder Grid */
+.builder-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:4px}
+@media(max-width:700px){.builder-grid{grid-template-columns:1fr 1fr}}
+.builder-field{display:flex;flex-direction:column;gap:4px}
+.builder-field label{font-size:0.8rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.builder-field select,.builder-field input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;color:var(--text);font-size:0.9rem;font-family:inherit;outline:none;transition:border-color .2s}
+.builder-field select:focus,.builder-field input:focus{border-color:var(--primary)}
+.builder-field select{cursor:pointer}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:10px 20px;cursor:pointer;font-size:0.95rem;font-weight:500;font-family:inherit;transition:all .2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+
+/* Parser Input */
+.parser-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.parser-input{flex:1;min-width:0;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-size:1rem;font-family:'Fira Code',Consolas,Monaco,monospace;outline:none;transition:border-color .2s}
+.parser-input:focus{border-color:var(--primary)}
+.parse-btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:10px 20px;cursor:pointer;font-size:0.9rem;font-weight:500;transition:background .2s;white-space:nowrap;font-family:inherit}
+.parse-btn:hover{background:var(--primary-hover)}
+
+/* Parse Results */
+.parse-results{margin-top:16px}
+.human-readable{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;font-size:1rem;margin-bottom:12px;line-height:1.6}
+.human-readable strong{color:var(--primary)}
+.next-runs h3{font-size:0.95rem;font-weight:600;margin-bottom:8px;color:var(--muted)}
+.next-runs ul{list-style:none;padding:0}
+.next-runs li{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:6px;font-family:'Fira Code',Consolas,Monaco,monospace;font-size:0.88rem;display:flex;align-items:center;gap:10px}
+.next-runs li .run-num{color:var(--primary);font-weight:600;min-width:28px}
+.next-runs li .run-time{color:var(--text)}
+.next-runs li .run-relative{color:var(--muted);font-size:0.8rem;margin-left:auto;font-family:inherit}
+
+/* Error */
+.error-msg{color:var(--error);font-size:0.85rem;margin-top:8px;display:none;align-items:center;gap:6px}
+.error-msg.visible{display:flex}
+
+/* Section label */
+.section-label{font-size:0.85rem;color:var(--muted);margin-bottom:8px;font-weight:500}
+
+/* Ad Slot */
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:40px 16px;text-align:center;color:var(--muted);font-size:0.85rem;margin:20px 0}
+
+/* SEO */
+.seo-section{margin:28px 0;line-height:1.8;color:var(--muted);font-size:0.92rem}
+.seo-section h2{color:var(--text);font-size:1.15rem;margin-bottom:10px}
+.seo-section p{margin-bottom:12px}
+
+/* Related Tools */
+.related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+.related-tools a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;font-size:0.9rem;transition:border-color .2s}
+.related-tools a:hover{border-color:var(--primary);text-decoration:none}
+
+/* Footer */
+footer{text-align:center;padding:24px 0 32px;color:var(--muted);font-size:0.82rem;border-top:1px solid var(--border);margin-top:24px}
+
+/* Responsive */
+@media(max-width:640px){
+  header h1{font-size:1.35rem}
+  .card{padding:14px}
+  .builder-grid{grid-template-columns:1fr 1fr}
+  .parser-row{flex-direction:column;align-items:stretch}
+  .expr-display{flex-direction:column;align-items:stretch}
+  .related-tools{grid-template-columns:1fr 1fr}
+  .tab-btn{padding:8px 14px;font-size:0.88rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Cron Expression Generator &amp; Parser</h1>
+  <p>Visually build cron schedules or decode any cron expression into plain English</p>
+</header>
+
+<!-- Expression Output -->
+<div class="card">
+  <h2>Generated Expression</h2>
+  <div class="expr-display">
+    <div class="expr-output" id="exprOutput">* * * * *</div>
+    <button class="copy-btn" id="copyBtn" title="Copy cron expression">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy
+    </button>
+  </div>
+</div>
+
+<!-- Tabs: Builder / Parser -->
+<div class="card">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="builder">Visual Builder</button>
+    <button class="tab-btn" data-tab="parser">Expression Parser</button>
+  </div>
+
+  <!-- Builder Tab -->
+  <div id="builderTab">
+    <p class="section-label">Quick Presets</p>
+    <div class="presets">
+      <button class="preset-btn" data-expr="* * * * *">Every minute</button>
+      <button class="preset-btn" data-expr="*/5 * * * *">Every 5 min</button>
+      <button class="preset-btn" data-expr="*/15 * * * *">Every 15 min</button>
+      <button class="preset-btn" data-expr="*/30 * * * *">Every 30 min</button>
+      <button class="preset-btn" data-expr="0 * * * *">Every hour</button>
+      <button class="preset-btn" data-expr="0 0 * * *">Daily midnight</button>
+      <button class="preset-btn" data-expr="0 9 * * 1-5">Weekdays 9 AM</button>
+      <button class="preset-btn" data-expr="0 0 * * 1">Weekly Mon</button>
+      <button class="preset-btn" data-expr="0 0 1 * *">Monthly 1st</button>
+      <button class="preset-btn" data-expr="0 0 1 1 *">Yearly Jan 1</button>
+    </div>
+
+    <p class="section-label" style="margin-top:16px">Custom Schedule</p>
+    <div class="builder-grid">
+      <div class="builder-field">
+        <label for="bMin">Minute</label>
+        <select id="bMin"></select>
+      </div>
+      <div class="builder-field">
+        <label for="bHour">Hour</label>
+        <select id="bHour"></select>
+      </div>
+      <div class="builder-field">
+        <label for="bDom">Day of Month</label>
+        <select id="bDom"></select>
+      </div>
+      <div class="builder-field">
+        <label for="bMon">Month</label>
+        <select id="bMon"></select>
+      </div>
+      <div class="builder-field">
+        <label for="bDow">Day of Week</label>
+        <select id="bDow"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parser Tab -->
+  <div id="parserTab" style="display:none">
+    <div class="parser-row">
+      <input type="text" class="parser-input" id="parserInput" placeholder="e.g. 0 9 * * 1-5" spellcheck="false" autocomplete="off">
+      <button class="parse-btn" id="parseBtn">Parse</button>
+    </div>
+    <div class="error-msg" id="parseError">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <span id="parseErrorText"></span>
+    </div>
+    <div class="parse-results" id="parseResults" style="display:none">
+      <div class="human-readable" id="humanReadable"></div>
+      <div class="next-runs">
+        <h3>Next 5 Execution Times</h3>
+        <ul id="nextRunsList"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<!-- Related Tools -->
+<div class="card">
+  <h2>Related Tools</h2>
+  <div class="related-tools">
+    <a href="/regex-tester">Regex Tester</a>
+    <a href="/json-formatter">JSON Formatter</a>
+    <a href="/password-generator">Password Generator</a>
+    <a href="/unit-converter">Unit Converter</a>
+  </div>
+</div>
+
+<!-- SEO Content -->
+<div class="seo-section">
+  <h2>About Cron Expressions</h2>
+  <p>Cron expressions are the standard way to define scheduled tasks on Unix-like operating systems and in many job-scheduling frameworks. A standard cron expression consists of five fields—minute, hour, day of month, month, and day of week—separated by spaces. Each field can contain a single value, a range (e.g., 1-5), a list (e.g., 0,15,30), a step (e.g., */5), or an asterisk (*) meaning "every." Our visual builder lets you construct cron expressions without memorizing syntax, while the parser instantly translates any valid expression into plain English.</p>
+  <p>Understanding when a cron job will actually execute is critical for debugging and operations. This tool calculates the next five run times for any given expression starting from the current moment, using pure JavaScript date arithmetic. No external libraries or server-side calls are needed—everything runs in your browser, ensuring your schedule data never leaves your device.</p>
+  <p>Whether you're setting up automated backups, scheduling report generation, configuring CI/CD pipelines, or managing cloud function triggers, this cron expression generator simplifies the process. Use the quick presets for common schedules like "every 5 minutes" or "weekdays at 9 AM," or build a completely custom schedule field by field. The copy button lets you grab the expression and paste it directly into your crontab, AWS EventBridge, Kubernetes CronJob, or any other scheduling system.</p>
+</div>
+
+<footer>&copy; 2026 UtilityTools</footer>
+
+</div>
+
+<script>
+(function(){
+  /* ---- DOM refs ---- */
+  var exprOutput = document.getElementById('exprOutput');
+  var copyBtn = document.getElementById('copyBtn');
+  var bMin = document.getElementById('bMin');
+  var bHour = document.getElementById('bHour');
+  var bDom = document.getElementById('bDom');
+  var bMon = document.getElementById('bMon');
+  var bDow = document.getElementById('bDow');
+  var parserInput = document.getElementById('parserInput');
+  var parseBtn = document.getElementById('parseBtn');
+  var parseError = document.getElementById('parseError');
+  var parseErrorText = document.getElementById('parseErrorText');
+  var parseResults = document.getElementById('parseResults');
+  var humanReadable = document.getElementById('humanReadable');
+  var nextRunsList = document.getElementById('nextRunsList');
+
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var dayNamesShort = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var monthNames = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthNamesShort = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  /* ---- Populate builder dropdowns ---- */
+  function addOpt(sel, val, label){
+    var o = document.createElement('option');
+    o.value = val;
+    o.textContent = label;
+    sel.appendChild(o);
+  }
+
+  /* Minute: every, specific, step */
+  addOpt(bMin,'*','Every minute');
+  addOpt(bMin,'*/1','Every 1 min');
+  addOpt(bMin,'*/2','Every 2 min');
+  addOpt(bMin,'*/5','Every 5 min');
+  addOpt(bMin,'*/10','Every 10 min');
+  addOpt(bMin,'*/15','Every 15 min');
+  addOpt(bMin,'*/30','Every 30 min');
+  for(var i=0;i<60;i++) addOpt(bMin, String(i), String(i));
+
+  /* Hour */
+  addOpt(bHour,'*','Every hour');
+  for(var h=0;h<24;h++){
+    var h12 = h===0?'12 AM':h<12?h+' AM':h===12?'12 PM':(h-12)+' PM';
+    addOpt(bHour, String(h), h+' ('+h12+')');
+  }
+
+  /* Day of Month */
+  addOpt(bDom,'*','Every day');
+  for(var d=1;d<=31;d++) addOpt(bDom, String(d), String(d));
+
+  /* Month */
+  addOpt(bMon,'*','Every month');
+  for(var m=1;m<=12;m++) addOpt(bMon, String(m), monthNames[m]);
+
+  /* Day of Week */
+  addOpt(bDow,'*','Every day');
+  addOpt(bDow,'0','Sunday');
+  addOpt(bDow,'1','Monday');
+  addOpt(bDow,'2','Tuesday');
+  addOpt(bDow,'3','Wednesday');
+  addOpt(bDow,'4','Thursday');
+  addOpt(bDow,'5','Friday');
+  addOpt(bDow,'6','Saturday');
+  addOpt(bDow,'1-5','Mon–Fri');
+  addOpt(bDow,'0,6','Sat & Sun');
+
+  /* ---- Builder → Expression ---- */
+  function getExpression(){
+    return [bMin.value, bHour.value, bDom.value, bMon.value, bDow.value].join(' ');
+  }
+
+  function updateExpr(){
+    var expr = getExpression();
+    exprOutput.textContent = expr;
+    exprOutput.classList.remove('empty');
+    clearActivePreset();
+  }
+
+  bMin.addEventListener('change', updateExpr);
+  bHour.addEventListener('change', updateExpr);
+  bDom.addEventListener('change', updateExpr);
+  bMon.addEventListener('change', updateExpr);
+  bDow.addEventListener('change', updateExpr);
+
+  /* ---- Presets ---- */
+  function clearActivePreset(){
+    var btns = document.querySelectorAll('.preset-btn');
+    for(var i=0;i<btns.length;i++) btns[i].classList.remove('active');
+  }
+
+  function applyPreset(expr){
+    var parts = expr.split(' ');
+    bMin.value = parts[0];
+    bHour.value = parts[1];
+    bDom.value = parts[2];
+    bMon.value = parts[3];
+    bDow.value = parts[4];
+    updateExpr();
+  }
+
+  document.querySelector('.presets').addEventListener('click', function(e){
+    var btn = e.target.closest('.preset-btn');
+    if(!btn) return;
+    clearActivePreset();
+    btn.classList.add('active');
+    applyPreset(btn.getAttribute('data-expr'));
+  });
+
+  /* ---- Tabs ---- */
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('builderTab').style.display = btn.getAttribute('data-tab')==='builder'?'block':'none';
+      document.getElementById('parserTab').style.display = btn.getAttribute('data-tab')==='parser'?'block':'none';
+    });
+  });
+
+  /* ---- Copy ---- */
+  copyBtn.addEventListener('click', function(){
+    var text = exprOutput.textContent;
+    if(!text) return;
+    navigator.clipboard.writeText(text).then(function(){
+      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(function(){
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+      },1500);
+      console.log('Copied to clipboard:', text);
+    });
+  });
+
+  /* ================================================================
+     PARSER — cron expression → human readable + next 5 run times
+     ================================================================ */
+
+  function parseField(field, min, max){
+    /* Returns an array of matching integers for this field */
+    if(field === '*') {
+      var arr = [];
+      for(var i=min;i<=max;i++) arr.push(i);
+      return arr;
+    }
+    var result = {};
+    var parts = field.split(',');
+    for(var p=0;p<parts.length;p++){
+      var part = parts[p];
+      if(part.indexOf('/') !== -1){
+        var sp = part.split('/');
+        var base = sp[0];
+        var step = parseInt(sp[1],10);
+        var start = base==='*' ? min : parseInt(base,10);
+        for(var s=start;s<=max;s+=step) result[s]=true;
+      } else if(part.indexOf('-') !== -1){
+        var rp = part.split('-');
+        var rs = parseInt(rp[0],10);
+        var re = parseInt(rp[1],10);
+        for(var r=rs;r<=re;r++) result[r]=true;
+      } else {
+        result[parseInt(part,10)] = true;
+      }
+    }
+    var out = [];
+    for(var k=min;k<=max;k++) if(result[k]) out.push(k);
+    return out;
+  }
+
+  function describeField(values, min, max){
+    if(values.length === max-min+1) return null; /* "every" */
+    return values;
+  }
+
+  function humanDescribe(parts){
+    var minVals = parseField(parts[0],0,59);
+    var hourVals = parseField(parts[1],0,23);
+    var domVals = parseField(parts[2],1,31);
+    var monVals = parseField(parts[3],1,12);
+    var dowVals = parseField(parts[4],0,6);
+
+    var pieces = [];
+
+    /* Minutes */
+    if(minVals.length < 60){
+      pieces.push('at minute ' + minVals.join(', '));
+    }
+
+    /* Hours */
+    if(hourVals.length < 24){
+      var hStr = hourVals.map(function(h){
+        var ampm = h < 12 ? 'AM' : 'PM';
+        var h12 = h === 0 ? 12 : h > 12 ? h-12 : h;
+        return h12 + ':00 ' + ampm;
+      }).join(', ');
+      pieces.unshift(hStr);
+    }
+
+    /* Day of month */
+    var everyDom = domVals.length === 31;
+    var everyDow = dowVals.length === 7;
+    var everyMon = monVals.length === 12;
+
+    if(!everyDow && everyDom){
+      pieces.push('on ' + dowVals.map(function(d){ return dayNames[d]; }).join(', '));
+    } else if(!everyDom && everyDow){
+      pieces.push('on day ' + domVals.join(', ') + ' of the month');
+    } else if(!everyDom && !everyDow){
+      pieces.push('on day ' + domVals.join(', ') + ' of the month');
+    }
+
+    if(!everyMon){
+      pieces.push('in ' + monVals.map(function(m){ return monthNames[m]; }).join(', '));
+    }
+
+    if(pieces.length === 0) return 'Every minute, every hour, every day';
+
+    var desc = pieces.join(', ');
+    /* capitalize first letter */
+    return desc.charAt(0).toUpperCase() + desc.slice(1);
+  }
+
+  /* ---- Next Run Time Calculator ---- */
+  function findNextRun(parts, after){
+    var minVals = parseField(parts[0],0,59);
+    var hourVals = parseField(parts[1],0,23);
+    var domVals = parseField(parts[2],1,31);
+    var monVals = parseField(parts[3],1,12);
+    var dowVals = parseField(parts[4],0,6);
+
+    var minSet = {}; minVals.forEach(function(v){ minSet[v]=true; });
+    var hourSet = {}; hourVals.forEach(function(v){ hourSet[v]=true; });
+    var domSet = {}; domVals.forEach(function(v){ domSet[v]=true; });
+    var monSet = {}; monVals.forEach(function(v){ monSet[v]=true; });
+    var dowSet = {}; dowVals.forEach(function(v){ dowSet[v]=true; });
+
+    /* Start from next minute */
+    var d = new Date(after.getTime());
+    d.setSeconds(0,0);
+    d.setMinutes(d.getMinutes()+1);
+
+    /* Search forward, max 4 years (to handle leap year edge cases) */
+    var limit = new Date(after.getTime());
+    limit.setFullYear(limit.getFullYear()+5);
+
+    while(d < limit){
+      if(!monSet[d.getMonth()+1]){ d.setMonth(d.getMonth()+1); d.setDate(1); d.setHours(0,0,0,0); continue; }
+      var daysInMonth = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+      if(d.getDate() > daysInMonth){ d.setMonth(d.getMonth()+1); d.setDate(1); d.setHours(0,0,0,0); continue; }
+      if(!domSet[d.getDate()]){ d.setDate(d.getDate()+1); d.setHours(0,0,0,0); continue; }
+      if(!dowSet[d.getDay()]){ d.setDate(d.getDate()+1); d.setHours(0,0,0,0); continue; }
+      if(!hourSet[d.getHours()]){ d.setHours(d.getHours()+1,0,0,0); continue; }
+      if(!minSet[d.getMinutes()]){ d.setMinutes(d.getMinutes()+1,0,0); continue; }
+      return d;
+    }
+    return null;
+  }
+
+  function getNextRuns(expr, count){
+    var parts = expr.trim().split(/\s+/);
+    if(parts.length < 5) return [];
+    /* Trim to 5 fields */
+    parts = parts.slice(0,5);
+    var runs = [];
+    var after = new Date();
+    for(var i=0;i<count;i++){
+      var next = findNextRun(parts, after);
+      if(!next) break;
+      runs.push(next);
+      after = next;
+    }
+    return runs;
+  }
+
+  function formatTimeUntil(future){
+    var now = new Date();
+    var diff = future.getTime() - now.getTime();
+    if(diff < 0) diff = 0;
+    var secs = Math.floor(diff/1000);
+    var mins = Math.floor(secs/60);
+    var hrs = Math.floor(mins/60);
+    var days = Math.floor(hrs/24);
+    if(days > 0) return 'in '+days+'d '+hrs%24+'h';
+    if(hrs > 0) return 'in '+hrs+'h '+mins%60+'m';
+    if(mins > 0) return 'in '+mins+'m '+secs%60+'s';
+    return 'in '+secs+'s';
+  }
+
+  function formatDate(d){
+    return d.getFullYear()+'-'+
+      String(d.getMonth()+1).padStart(2,'0')+'-'+
+      String(d.getDate()).padStart(2,'0')+' '+
+      String(d.getHours()).padStart(2,'0')+':'+
+      String(d.getMinutes()).padStart(2,'0')+':'+
+      String(d.getSeconds()).padStart(2,'0');
+  }
+
+  /* ---- Parse Action ---- */
+  function runParse(){
+    var expr = parserInput.value.trim();
+    parseError.classList.remove('visible');
+    parseResults.style.display = 'none';
+
+    if(!expr){
+      parseErrorText.textContent = 'Please enter a cron expression.';
+      parseError.classList.add('visible');
+      return;
+    }
+
+    var parts = expr.split(/\s+/);
+    if(parts.length < 5){
+      parseErrorText.textContent = 'A cron expression must have 5 fields: minute hour day-of-month month day-of-week.';
+      parseError.classList.add('visible');
+      return;
+    }
+    parts = parts.slice(0,5);
+
+    /* Validate fields */
+    try {
+      for(var i=0;i<5;i++){
+        parseField(parts[i], [0,0,1,1,0][i], [59,23,31,12,6][i]);
+      }
+    } catch(e){
+      parseErrorText.textContent = 'Invalid field "'+parts[i]+'": '+e.message;
+      parseError.classList.add('visible');
+      return;
+    }
+
+    /* Human-readable description */
+    var desc = humanDescribe(parts);
+    humanReadable.innerHTML = '<strong>Description:</strong> ' + escHtml(desc);
+
+    /* Next 5 runs */
+    var runs = getNextRuns(expr, 5);
+    if(runs.length === 0){
+      nextRunsList.innerHTML = '<li style="color:var(--muted)">No upcoming execution times found.</li>';
+    } else {
+      var html = '';
+      for(var r=0;r<runs.length;r++){
+        html += '<li><span class="run-num">#'+(r+1)+'</span><span class="run-time">'+formatDate(runs[r])+'</span><span class="run-relative">'+formatTimeUntil(runs[r])+'</span></li>';
+      }
+      nextRunsList.innerHTML = html;
+    }
+
+    parseResults.style.display = 'block';
+
+    /* Also update the main expression display */
+    exprOutput.textContent = expr;
+    exprOutput.classList.remove('empty');
+  }
+
+  parseBtn.addEventListener('click', runParse);
+  parserInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') runParse();
+  });
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  /* ---- Initialize ---- */
+  updateExpr();
+})();
+</script>
+</body>
+</html>

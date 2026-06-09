@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Percentage Calculator - Calculate Percentages Instantly | UtilityHub</title>
+<meta name="description" content="Free online percentage calculator. Calculate percentage of a number, percentage difference, percentage increase/decrease, and more. Real-time results as you type.">
+<meta name="keywords" content="percentage calculator, percent of number, percentage increase, percentage decrease, percentage difference, percent change, add percent, subtract percent">
+<meta property="og:title" content="Percentage Calculator - Calculate Percentages Instantly | UtilityHub">
+<meta property="og:description" content="Free online percentage calculator with real-time results. Supports all common percentage operations including percentage of a number, percentage change, and more.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://utilityhub.com/percentage-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Percentage Calculator | UtilityHub">
+<meta name="twitter:description" content="Free online percentage calculator with real-time results. Supports all common percentage operations.">
+<link rel="canonical" href="https://utilityhub.com/percentage-calculator/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Percentage Calculator",
+  "description": "Free online percentage calculator. Calculate percentage of a number, percentage difference, percentage increase/decrease, and more.",
+  "url": "https://utilityhub.com/percentage-calculator/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+/* --- Page-level overrides & extras --- */
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #9ca3af;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow: 0 2px 12px rgba(0,0,0,.4);
+}
+
+.page-container { max-width: 920px; margin: 0 auto; padding: 0 1rem; }
+
+/* Header */
+.page-header { padding: 2rem 0 0.5rem; text-align: center; }
+.page-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.3rem; }
+.page-header p { color: var(--muted); font-size: 0.95rem; }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 4px; margin-top: 1.25rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 4px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1; min-width: 0; padding: 10px 8px;
+  background: transparent; border: none; color: var(--muted);
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  border-radius: 8px; transition: all .2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { background: var(--primary); color: #fff; }
+
+/* Tab panels */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Calculator card */
+.calc-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+  margin-top: 1.25rem; box-shadow: var(--shadow);
+}
+.calc-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.calc-card .description { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.15rem; }
+
+/* Input row */
+.calc-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  flex-wrap: wrap; margin-bottom: 0.85rem;
+}
+.calc-row .label-text {
+  font-size: 0.92rem; color: var(--text); white-space: nowrap;
+}
+.calc-row input[type="number"] {
+  width: 130px; padding: 0.55rem 0.75rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-size: 0.95rem; font-family: inherit;
+  transition: border-color .2s, box-shadow .2s;
+  -moz-appearance: textfield;
+}
+.calc-row input[type="number"]::-webkit-inner-spin-button,
+.calc-row input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+.calc-row input[type="number"]:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99,102,241,.25);
+}
+.calc-row input.full { flex: 1; width: auto; min-width: 100px; }
+
+/* Result */
+.result-area {
+  margin-top: 1.25rem; padding: 1rem 1.25rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); display: flex;
+  align-items: center; justify-content: space-between;
+  gap: 0.75rem; min-height: 56px;
+}
+.result-area .result-text {
+  font-size: 1.1rem; font-weight: 600; color: var(--primary);
+  word-break: break-word;
+}
+.result-area .result-text.empty { color: var(--muted); font-weight: 400; font-size: 0.9rem; }
+.copy-btn {
+  padding: 0.4rem 0.7rem; background: transparent;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--muted); font-size: 0.8rem; cursor: pointer;
+  transition: all .2s; white-space: nowrap; flex-shrink: 0;
+}
+.copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+.copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+/* History */
+.history-section { margin-top: 1.5rem; }
+.history-section h3 {
+  font-size: 1rem; font-weight: 600; margin-bottom: 0.65rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.clear-history-btn {
+  font-size: 0.78rem; color: var(--muted); background: none;
+  border: none; cursor: pointer; transition: color .2s;
+}
+.clear-history-btn:hover { color: var(--danger); }
+.history-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.history-item {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.65rem 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.5rem; cursor: pointer; transition: border-color .2s;
+}
+.history-item:hover { border-color: var(--primary); }
+.history-item .hist-label { font-size: 0.85rem; color: var(--muted); flex: 1; }
+.history-item .hist-result { font-size: 0.9rem; font-weight: 600; color: var(--primary); white-space: nowrap; }
+.history-item .hist-time { font-size: 0.72rem; color: var(--border); white-space: nowrap; }
+.no-history { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+
+/* Footer */
+.page-footer {
+  margin-top: 3rem; padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center; color: var(--muted); font-size: 0.85rem;
+}
+.page-footer a { color: var(--primary); transition: color .2s; }
+.page-footer a:hover { color: var(--primary-hover); text-decoration: underline; }
+
+/* Toast */
+.toast-container {
+  position: fixed; bottom: 1.25rem; right: 1.25rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  z-index: 2000; pointer-events: none;
+}
+.toast {
+  padding: 0.65rem 1rem; background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--success);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  font-size: 0.85rem; color: var(--text); pointer-events: auto;
+  animation: toast-in .25s ease forwards;
+}
+.toast.removing { animation: toast-out .2s ease forwards; }
+@keyframes toast-in { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(30px); } }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page-header h1 { font-size: 1.35rem; }
+  .tab-btn { font-size: 0.75rem; padding: 8px 6px; }
+  .calc-card { padding: 1.1rem; }
+  .calc-row { gap: 0.4rem; }
+  .calc-row input[type="number"] { width: 100px; }
+  .result-area { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+
+<div class="page-container">
+  <header class="page-header">
+    <h1>Percentage Calculator</h1>
+    <p>Fast, free percentage calculations — results update as you type</p>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="pct-of" aria-selected="true">% of Number</button>
+    <button class="tab-btn" role="tab" data-tab="pct-is" aria-selected="false">What %?</button>
+    <button class="tab-btn" role="tab" data-tab="pct-change" aria-selected="false">% Change</button>
+    <button class="tab-btn" role="tab" data-tab="pct-add" aria-selected="false">Add / Sub %</button>
+  </div>
+
+  <!-- Tab 1: What is X% of Y? -->
+  <div class="tab-panel active" id="panel-pct-of" role="tabpanel">
+    <div class="calc-card">
+      <h2>What is X% of Y?</h2>
+      <p class="description">Find a specific percentage of any number. Example: What is 15% of 200?</p>
+      <div class="calc-row">
+        <span class="label-text">What is</span>
+        <input type="number" id="pof-x" placeholder="15" step="any" aria-label="Percentage">
+        <span class="label-text">% of</span>
+        <input type="number" id="pof-y" placeholder="200" step="any" aria-label="Number">
+        <span class="label-text">?</span>
+      </div>
+      <div class="result-area">
+        <span class="result-text empty" id="res-pof">Enter values to calculate</span>
+        <button class="copy-btn" id="copy-pof" style="display:none">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: X is what % of Y? -->
+  <div class="tab-panel" id="panel-pct-is" role="tabpanel">
+    <div class="calc-card">
+      <h2>X is what % of Y?</h2>
+      <p class="description">Find what percentage one number is of another. Example: 30 is what % of 150?</p>
+      <div class="calc-row">
+        <input type="number" id="pis-x" placeholder="30" step="any" aria-label="Value">
+        <span class="label-text">is what % of</span>
+        <input type="number" id="pis-y" placeholder="150" step="any" aria-label="Total">
+        <span class="label-text">?</span>
+      </div>
+      <div class="result-area">
+        <span class="result-text empty" id="res-pis">Enter values to calculate</span>
+        <button class="copy-btn" id="copy-pis" style="display:none">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Percentage change from X to Y -->
+  <div class="tab-panel" id="panel-pct-change" role="tabpanel">
+    <div class="calc-card">
+      <h2>Percentage Change</h2>
+      <p class="description">Calculate the percentage increase or decrease from one value to another.</p>
+      <div class="calc-row">
+        <span class="label-text">From</span>
+        <input type="number" id="pch-from" placeholder="80" step="any" aria-label="Original value">
+        <span class="label-text">to</span>
+        <input type="number" id="pch-to" placeholder="100" step="any" aria-label="New value">
+      </div>
+      <div class="result-area">
+        <span class="result-text empty" id="res-pch">Enter values to calculate</span>
+        <button class="copy-btn" id="copy-pch" style="display:none">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Add/Subtract X% from Y -->
+  <div class="tab-panel" id="panel-pct-add" role="tabpanel">
+    <div class="calc-card">
+      <h2>Add / Subtract a Percentage</h2>
+      <p class="description">Add or subtract a percentage from a number. Great for tips, discounts, and tax calculations.</p>
+      <div class="calc-row" style="margin-bottom:0.5rem">
+        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer">
+          <input type="radio" name="addsub" value="add" checked style="accent-color:var(--primary)"> Add
+        </label>
+        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer">
+          <input type="radio" name="addsub" value="sub" style="accent-color:var(--primary)"> Subtract
+        </label>
+      </div>
+      <div class="calc-row">
+        <input type="number" id="pad-pct" placeholder="10" step="any" aria-label="Percentage to add/subtract">
+        <span class="label-text">% to</span>
+        <input type="number" id="pad-val" placeholder="250" step="any" aria-label="Base value">
+      </div>
+      <div class="result-area">
+        <span class="result-text empty" id="res-pad">Enter values to calculate</span>
+        <button class="copy-btn" id="copy-pad" style="display:none">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <section class="history-section" id="history-section">
+    <h3>
+      Recent Calculations
+      <button class="clear-history-btn" id="clear-history">Clear All</button>
+    </h3>
+    <div class="history-list" id="history-list"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p>Percentage Calculator by <a href="/">UtilityHub</a> — Free online tools for everyone.</p>
+  </footer>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ========== Tab Switching ========== */
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+
+  tabBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      tabBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      var target = document.getElementById('panel-' + btn.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+    });
+  });
+
+  /* ========== Formatting Helpers ========== */
+  function fmt(n) {
+    if (n === Infinity || n === -Infinity) return '∞';
+    // Up to 8 decimal places, strip trailing zeros
+    var s = parseFloat(n.toFixed(8)).toString();
+    return s;
+  }
+
+  function fmtPct(n) {
+    return fmt(n) + '%';
+  }
+
+  function showToast(msg) {
+    var container = document.getElementById('toast-container');
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('removing');
+      setTimeout(function() { toast.remove(); }, 200);
+    }, 1500);
+  }
+
+  /* ========== History (localStorage, last 10) ========== */
+  var HISTORY_KEY = 'pct-calc-history';
+
+  function loadHistory() {
+    try {
+      var data = localStorage.getItem(HISTORY_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch(e) { return []; }
+  }
+
+  function saveHistory(items) {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 10)));
+    } catch(e) {}
+  }
+
+  function addHistory(label, result) {
+    var items = loadHistory();
+    items.unshift({ label: label, result: result, time: Date.now() });
+    if (items.length > 10) items = items.slice(0, 10);
+    saveHistory(items);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    var list = document.getElementById('history-list');
+    var items = loadHistory();
+    if (items.length === 0) {
+      list.innerHTML = '<div class="no-history">No calculations yet — start typing above!</div>';
+      return;
+    }
+    list.innerHTML = '';
+    items.forEach(function(item) {
+      var el = document.createElement('div');
+      el.className = 'history-item';
+      var timeStr = '';
+      try {
+        var d = new Date(item.time);
+        var now = new Date();
+        if (d.toDateString() === now.toDateString()) {
+          timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } else {
+          timeStr = d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+      } catch(e) {}
+      el.innerHTML =
+        '<span class="hist-label">' + escHTML(item.label) + '</span>' +
+        '<span class="hist-result">' + escHTML(item.result) + '</span>' +
+        '<span class="hist-time">' + timeStr + '</span>';
+      el.addEventListener('click', function() {
+        copyText(item.result);
+        showToast('Copied: ' + item.result);
+      });
+      list.appendChild(el);
+    });
+  }
+
+  function escHTML(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  document.getElementById('clear-history').addEventListener('click', function() {
+    saveHistory([]);
+    renderHistory();
+  });
+
+  renderHistory();
+
+  /* ========== Copy to Clipboard ========== */
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(function() { fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  function setupCopy(btnId, resultId) {
+    var btn = document.getElementById(btnId);
+    var res = document.getElementById(resultId);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var text = res.textContent;
+      if (!text || text === 'Enter values to calculate') return;
+      copyText(text);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      showToast('Copied: ' + text);
+      setTimeout(function() {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  setupCopy('copy-pof', 'res-pof');
+  setupCopy('copy-pis', 'res-pis');
+  setupCopy('copy-pch', 'res-pch');
+  setupCopy('copy-pad', 'res-pad');
+
+  /* ========== Real-Time Calculations ========== */
+
+  // 1. What is X% of Y?
+  var pofX = document.getElementById('pof-x');
+  var pofY = document.getElementById('pof-y');
+  var resPof = document.getElementById('res-pof');
+  var copyPof = document.getElementById('copy-pof');
+
+  function calcPof() {
+    var x = parseFloat(pofX.value);
+    var y = parseFloat(pofY.value);
+    if (isNaN(x) || isNaN(y)) {
+      resPof.textContent = 'Enter values to calculate';
+      resPof.className = 'result-text empty';
+      copyPof.style.display = 'none';
+      return;
+    }
+    var result = (x / 100) * y;
+    var display = fmt(result);
+    resPof.textContent = display;
+    resPof.className = 'result-text';
+    copyPof.style.display = '';
+    // History
+    addHistory(x + '% of ' + y, display);
+  }
+
+  pofX.addEventListener('input', debounce(calcPof, 300));
+  pofY.addEventListener('input', debounce(calcPof, 300));
+
+  // 2. X is what % of Y?
+  var pisX = document.getElementById('pis-x');
+  var pisY = document.getElementById('pis-y');
+  var resPis = document.getElementById('res-pis');
+  var copyPis = document.getElementById('copy-pis');
+
+  function calcPis() {
+    var x = parseFloat(pisX.value);
+    var y = parseFloat(pisY.value);
+    if (isNaN(x) || isNaN(y)) {
+      resPis.textContent = 'Enter values to calculate';
+      resPis.className = 'result-text empty';
+      copyPis.style.display = 'none';
+      return;
+    }
+    if (y === 0) {
+      resPis.textContent = 'Cannot divide by zero';
+      resPis.className = 'result-text empty';
+      copyPis.style.display = 'none';
+      return;
+    }
+    var result = (x / y) * 100;
+    var display = fmtPct(result);
+    resPis.textContent = display;
+    resPis.className = 'result-text';
+    copyPis.style.display = '';
+    addHistory(x + ' is what % of ' + y, display);
+  }
+
+  pisX.addEventListener('input', debounce(calcPis, 300));
+  pisY.addEventListener('input', debounce(calcPis, 300));
+
+  // 3. Percentage change from X to Y
+  var pchFrom = document.getElementById('pch-from');
+  var pchTo = document.getElementById('pch-to');
+  var resPch = document.getElementById('res-pch');
+  var copyPch = document.getElementById('copy-pch');
+
+  function calcPch() {
+    var from = parseFloat(pchFrom.value);
+    var to = parseFloat(pchTo.value);
+    if (isNaN(from) || isNaN(to)) {
+      resPch.textContent = 'Enter values to calculate';
+      resPch.className = 'result-text empty';
+      copyPch.style.display = 'none';
+      return;
+    }
+    if (from === 0) {
+      resPch.textContent = 'Original value cannot be zero';
+      resPis.className = 'result-text empty';
+      copyPch.style.display = 'none';
+      return;
+    }
+    var change = ((to - from) / Math.abs(from)) * 100;
+    var sign = change >= 0 ? '+' : '';
+    var display = sign + fmtPct(change);
+    var word = change >= 0 ? 'increase' : 'decrease';
+    resPch.textContent = display + ' (' + word + ')';
+    resPch.className = 'result-text';
+    copyPch.style.display = '';
+    addHistory('Change from ' + from + ' to ' + to, display);
+  }
+
+  pchFrom.addEventListener('input', debounce(calcPch, 300));
+  pchTo.addEventListener('input', debounce(calcPch, 300));
+
+  // 4. Add/Subtract X% to/from Y
+  var padPct = document.getElementById('pad-pct');
+  var padVal = document.getElementById('pad-val');
+  var resPad = document.getElementById('res-pad');
+  var copyPad = document.getElementById('copy-pad');
+
+  function calcPad() {
+    var pct = parseFloat(padPct.value);
+    var val = parseFloat(padVal.value);
+    var mode = document.querySelector('input[name="addsub"]:checked').value;
+    if (isNaN(pct) || isNaN(val)) {
+      resPad.textContent = 'Enter values to calculate';
+      resPad.className = 'result-text empty';
+      copyPad.style.display = 'none';
+      return;
+    }
+    var result;
+    var label;
+    if (mode === 'add') {
+      result = val + (pct / 100) * val;
+      label = 'Add ' + pct + '% to ' + val;
+    } else {
+      result = val - (pct / 100) * val;
+      label = 'Subtract ' + pct + '% from ' + val;
+    }
+    var display = fmt(result);
+    resPad.textContent = display;
+    resPad.className = 'result-text';
+    copyPad.style.display = '';
+    addHistory(label, display);
+  }
+
+  padPct.addEventListener('input', debounce(calcPad, 300));
+  padVal.addEventListener('input', debounce(calcPad, 300));
+  document.querySelectorAll('input[name="addsub"]').forEach(function(radio) {
+    radio.addEventListener('change', calcPad);
+  });
+
+  /* ========== Debounce ========== */
+  function debounce(fn, delay) {
+    var timer = null;
+    return function() {
+      var ctx = this, args = arguments;
+      clearTimeout(timer);
+      timer = setTimeout(function() { fn.apply(ctx, args); }, delay);
+    };
+  }
+
+})();
+</script>
+</body>
+</html>
