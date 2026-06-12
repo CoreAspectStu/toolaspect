@@ -40,7 +40,9 @@
     { label: 'Currency Conv',     href: '/currency-converter/' },
     { label: 'Age Calc',          href: '/age-calculator/' },
     { label: 'Unit Conv',         href: '/unit-converter/' },
-    { label: 'Regex Tester',      href: '/regex-tester/' }
+    { label: 'Regex Tester',      href: '/regex-tester/' },
+    { label: 'Pct Calc',          href: '/percentage-calculator/' },
+    { label: 'Cron Gen',          href: '/cron-generator/' }
   ];
 
   /* --- Detect current path for active highlighting --- */
