@@ -154,6 +154,35 @@
   // prevent DOM XSS via attribute breakout. 2026-06-08.
   function escAttr(s) { return String(s == null ? '' : s).replace(/[&"'<>]/g, function (c) { return { '&': '&amp;', '"': '&quot;', "'": '&#39;', '<': '&lt;', '>': '&gt;' }[c]; }); }
 
+  /* --- Site-wide footer with legal links (only if page has no footer) --- */
+  if (!document.querySelector('footer')) {
+    var f = document.createElement('footer');
+    f.className = 'uh-footer';
+    f.innerHTML =
+      '<div class="uh-footer-inner">' +
+        '<a class="uh-footer-logo" href="/">UtilityHub</a>' +
+        '<div class="uh-footer-links">' +
+          '<a href="/about.html">About</a>' +
+          '<a href="/contact.html">Contact</a>' +
+          '<a href="/privacy.html">Privacy Policy</a>' +
+          '<a href="/terms.html">Terms of Service</a>' +
+          '<a href="/disclaimer.html">Disclaimer</a>' +
+        '</div>' +
+        '<p class="uh-footer-copy">\u00A9 ' + new Date().getFullYear() + ' UtilityHub \u2014 All tools run in your browser, no data collected.</p>' +
+      '</div>';
+    var fStyle = document.createElement('style');
+    fStyle.textContent =
+      '.uh-footer{border-top:1px solid var(--border);padding:2rem 1rem;text-align:center}' +
+      '.uh-footer-inner{max-width:var(--max-w);margin:0 auto}' +
+      '.uh-footer-logo{font-weight:700;font-size:1rem;color:var(--primary);display:block;margin-bottom:.75rem}' +
+      '.uh-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1rem;margin-bottom:1rem}' +
+      '.uh-footer-links a{font-size:.82rem;color:var(--muted);transition:color .15s}' +
+      '.uh-footer-links a:hover{color:var(--primary)}' +
+      '.uh-footer-copy{font-size:.78rem;color:var(--muted);line-height:1.5}';
+    document.head.appendChild(fStyle);
+    document.body.appendChild(f);
+  }
+
   /* --- Scoped CSS --- */
   var NAV_CSS = '' +
   '.uh-nav{' +
