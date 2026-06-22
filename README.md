@@ -1,3 +1,3 @@
-# utility-sites
+## Utility Sites
 
-Project created by POL on 2026-05-24.
+A collection of 12 free online utility tools, deployed via GitHub Actions to Cloudflare Pages.

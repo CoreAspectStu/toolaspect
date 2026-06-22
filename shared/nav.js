@@ -42,7 +42,8 @@
     { label: 'Unit Conv',         href: '/unit-converter/' },
     { label: 'Regex Tester',      href: '/regex-tester/' },
     { label: 'Pct Calc',          href: '/percentage-calculator/' },
-    { label: 'Cron Gen',          href: '/cron-generator/' }
+    { label: 'Cron Gen',          href: '/cron-generator/' },
+    { label: 'Base64',            href: '/base64-encoder/' }
   ];
 
   /* --- Detect current path for active highlighting --- */
