@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UUID Generator — Free Online GUID Generator | UtilityHub</title>
+<meta name="description" content="Free online UUID v4 generator. Create multiple unique identifiers at once. Copy individual or bulk UUIDs. RFC 4122 compliant. No signup required.">
+<link rel="canonical" href="https://utility-sites.pages.dev/uuid-generator/">
+<meta property="og:title" content="UUID Generator — Free Online GUID Generator | UtilityHub">
+<meta property="og:description" content="Free UUID v4 generator. Create multiple unique identifiers instantly. RFC 4122 compliant.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://utility-sites.pages.dev/uuid-generator/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"UUID Generator","description":"Generate RFC 4122 compliant UUID v4 identifiers. Bulk generation supported.","url":"https://utility-sites.pages.dev/uuid-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<style>
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:1.5rem 0}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:.8rem;color:var(--muted);font-weight:500}
+.field input,.field select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:.9rem;outline:none}
+.gen-btn{padding:12px 24px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer}
+.gen-btn:hover{background:var(--primary-hover)}
+.opt-btn{padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer;font-size:.85rem}
+.opt-btn:hover{border-color:var(--primary);color:var(--text)}
+.uuid-list{margin:1.5rem 0;display:flex;flex-direction:column;gap:8px}
+.uuid-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px}
+.uuid-row code{flex:1;font-size:.9rem;color:var(--text);font-family:'SF Mono',Monaco,Consolas,monospace;overflow-x:auto}
+.uuid-row button{padding:4px 10px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:.75rem;white-space:nowrap}
+.uuid-row button:hover{border-color:var(--primary);color:var(--text)}
+.checkbox-row{display:flex;gap:16px;flex-wrap:wrap;margin:.75rem 0}
+.checkbox-row label{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+<header><h1>🆔 UUID Generator</h1><p>Generate RFC 4122 compliant UUID v4 identifiers</p></header>
+<div class="controls">
+<div class="field"><label>Count</label><input type="number" id="count" value="5" min="1" max="500" style="width:100px"></div>
+<div class="field"><label>Format</label><select id="format"><option value="default">Standard (lowercase)</option><option value="uppercase">Uppercase</option><option value="braces">{Braces}</option><option value="hyphenless">No hyphens</option><option value="urn">URN</option></select></div>
+<button class="gen-btn" onclick="generate()">Generate</button>
+</div>
+<div class="checkbox-row">
+<label><input type="checkbox" id="csv-mode"> CSV format (comma-separated)</label>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:1rem">
+<button class="opt-btn" onclick="copyAll()">Copy All</button>
+<button class="opt-btn" onclick="downloadCSV()">Download CSV</button>
+</div>
+<div class="uuid-list" id="list"></div>
+<div class="related"><h3>Related Tools</h3><div class="related-grid">
+<a href="/password-generator">Password Generator</a><a href="/base64-encoder">Base64 Encoder</a><a href="/json-formatter">JSON Formatter</a><a href="/qr-code-generator">QR Code Generator</a><a href="/regex-tester">Regex Tester</a><a href="/cron-generator">Cron Generator</a><a href="/word-counter">Word Counter</a><a href="/case-converter">Case Converter</a>
+</div></div>
+<div class="seo-content">
+<h2>What is a UUID?</h2>
+<p>A UUID (Universally Unique Identifier), also known as a GUID (Globally Unique Identifier), is a 128-bit number used to uniquely identify information in computer systems. UUIDs are standardized by RFC 4122 and are represented as 32 hexadecimal digits displayed in five groups separated by hyphens: <code>xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx</code>. The total number of possible UUIDs is 2^128, which is approximately 3.4 × 10^38 — so large that the probability of generating a duplicate is effectively zero.</p>
+<p>This generator creates UUID version 4 (random), which uses random or pseudo-random bits for all 122 variable bits. The version digit (M) is set to 4 and the variant bits (N) are set to 8, 9, a, or b. Version 4 is the most commonly used UUID version because it requires no coordination between systems and works on any machine.</p>
+<h2>UUID Format Breakdown</h2>
+<p>A UUID looks like this: <code>550e8400-e29b-41d4-a716-446655440000</code></p>
+<ul>
+<li><strong>550e8400</strong> — time_low (8 hex digits)</li>
+<li><strong>e29b</strong> — time_mid (4 hex digits)</li>
+<li><strong>41d4</strong> — time_hi_and_version (4 hex digits; the "4" indicates version 4)</li>
+<li><strong>a716</strong> — clock_seq_hi_and_reserved + clock_seq_low (4 hex digits; the "a" indicates RFC 4122 variant)</li>
+<li><strong>446655440000</strong> — node (12 hex digits)</li>
+</ul>
+<h2>Common UUID Use Cases</h2>
+<ul>
+<li><strong>Database primary keys:</strong> Avoid auto-increment integer conflicts when merging databases or distributing across servers.</li>
+<li><strong>Distributed systems:</strong> Generate unique IDs across multiple servers without a central coordinator.</li>
+<li><strong>API responses:</strong> Return stable resource identifiers that don't leak record counts (unlike sequential IDs).</li>
+<li><strong>File naming:</strong> Generate unique filenames for uploads to prevent collisions in shared storage.</li>
+<li><strong>Session tokens:</strong> Use as session identifiers or temporary access tokens in web applications.</li>
+<li><strong>Message queue correlation:</strong> Track messages across microservices with unique correlation IDs.</li>
+<li><strong>Test data generation:</strong> Create realistic unique identifiers for database seeding and testing.</li>
+</ul>
+<h2>UUID Versions Explained</h2>
+<h3>Version 1 (Time-based)</h3>
+<p>Generated from the current timestamp and the machine's MAC address. The concern with v1 is that it can reveal the MAC address and when the UUID was created. Not recommended for security-sensitive applications.</p>
+<h3>Version 3 (Name-based, MD5)</h3>
+<p>Generated from a namespace UUID and a name string using MD5 hashing. The same inputs always produce the same UUID, making it deterministic.</p>
+<h3>Version 4 (Random) — What we generate</h3>
+<p>Uses random numbers for all variable bits. The probability of a collision is astronomically low — you'd need to generate over 2.71 quintillion UUIDs to have a 50% chance of a single duplicate. This makes v4 ideal for almost all use cases.</p>
+<h3>Version 5 (Name-based, SHA-1)</h3>
+<p>Same as v3 but uses SHA-1 hashing instead of MD5. Preferred over v3 for new applications.</p>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between UUID and GUID?","acceptedAnswer":{"@type":"Answer","text":"They are the same thing. UUID (Universally Unique Identifier) is the RFC 4122 standard name. GUID (Globally Unique Identifier) is Microsoft's name for the same concept. Both are 128-bit identifiers formatted the same way."}},{"@type":"Question","name":"Are UUID v4 collisions possible?","acceptedAnswer":{"@type":"Answer","text":"Theoretically yes, but practically no. With 122 random bits, you'd need to generate 2.71 quintillion UUIDs to have a 50% chance of a single collision. This is why UUID v4 is considered safe for all practical identification purposes."}},{"@type":"Question","name":"Should I use UUID as a database primary key?","acceptedAnswer":{"@type":"Answer","text":"UUIDs work well as primary keys, especially in distributed systems. They prevent enumeration attacks (unlike sequential IDs) and enable database merging without conflicts. The tradeoff is that UUIDs take more storage (16 bytes vs 4 bytes for integers) and may cause index fragmentation. For large-scale systems, consider UUID v7 or v8 which are time-ordered."}},{"@type":"Question","name":"Are UUID v4 truly random?","acceptedAnswer":{"@type":"Answer","text":"UUID v4 uses the browser's crypto.getRandomValues() API, which provides cryptographically strong pseudo-random numbers. They are not suitable for cryptographic keys (too few entropy bits after fixed positions), but they are excellent for unique identification."}},{"@type":"Question","name":"Can I generate UUIDs offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. This generator runs entirely in your browser using the Web Crypto API. No server calls are made, and your UUIDs are generated locally. This makes it safe for generating IDs for sensitive applications."}}]}</script>
+<h3>What is the difference between UUID and GUID?</h3>
+<p>Same thing. UUID is the RFC 4122 name, GUID is Microsoft's name. Both are 128-bit identifiers.</p>
+<h3>Are UUID v4 collisions possible?</h3>
+<p>Theoretically yes, but you'd need 2.71 quintillion UUIDs for a 50% chance of one collision. Practically impossible.</p>
+<h3>Should I use UUID as a database primary key?</h3>
+<p>Works well for distributed systems. Prevents enumeration and enables merging. Tradeoff: 16 bytes vs 4 bytes, potential index fragmentation.</p>
+<h3>Are UUID v4 truly random?</h3>
+<p>Uses crypto.getRandomValues() — cryptographically strong PRNG. Not suitable for crypto keys but excellent for unique IDs.</p>
+<h3>Can I generate UUIDs offline?</h3>
+<p>Yes — entirely browser-based using Web Crypto API. No server calls, safe for sensitive applications.</p>
+</div>
+<footer><p>&copy; 2026 UtilityHub &mdash; Free online tools</p></footer>
+</div>
+<script>
+function uuidv4(){return([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(c){return(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)})}
+function formatUuid(uuid){var fmt=document.getElementById('format').value;if(fmt==='uppercase')return uuid.toUpperCase();if(fmt==='braces')return'{'+uuid+'}';if(fmt==='hyphenless')return uuid.replace(/-/g,'');if(fmt==='urn')return'urn:uuid:'+uuid;return uuid}
+function generate(){var count=Math.min(500,Math.max(1,parseInt(document.getElementById('count').value)||5));var csv=document.getElementById('csv-mode').checked;var uuids=[];for(var i=0;i<count;i++)uuids.push(formatUuid(uuidv4()));if(csv){var list=document.getElementById('list');list.innerHTML='<div class="uuid-row"><code>'+uuids.join(', ')+'</code><button onclick="copyIdx(this)">Copy</button></div>';return}var list=document.getElementById('list');list.innerHTML='';uuids.forEach(function(u){var row=document.createElement('div');row.className='uuid-row';var code=document.createElement('code');code.textContent=u;var btn=document.createElement('button');btn.textContent='Copy';btn.onclick=function(){navigator.clipboard.writeText(u)};row.appendChild(code);row.appendChild(btn);list.appendChild(row)})}
+function copyAll(){var text=Array.from(document.querySelectorAll('.uuid-row code')).map(function(e){return e.textContent}).join('\n');navigator.clipboard.writeText(text)}
+function copyIdx(btn){navigator.clipboard.writeText(btn.previousElementSibling.textContent)}
+function downloadCSV(){var uuids=Array.from(document.querySelectorAll('.uuid-row code')).map(function(e){return e.textContent});var csv='uuid\n'+uuids.map(function(u){return'"'+u+'"'}).join('\n');var blob=new Blob([csv],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='uuids.csv';a.click()}
+generate();
+</script>
+</body>
+</html>

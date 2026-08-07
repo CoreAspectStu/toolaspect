@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Counter - Free Online Word & Character Counter | UtilityHub</title>
+<meta name="description" content="Free online word counter. Count words, characters, sentences, paragraphs, and reading time in real-time. No signup, no limits — just paste your text and get instant results.">
+<link rel="canonical" href="https://utility-sites.pages.dev/word-counter/">
+<meta property="og:title" content="Word Counter - Free Online Word & Character Counter | UtilityHub">
+<meta property="og:description" content="Free online word counter. Count words, characters, sentences, paragraphs, and reading time in real-time. No signup, no limits.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://utility-sites.pages.dev/word-counter/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Word Counter | UtilityHub">
+<meta name="twitter:description" content="Free online word counter with real-time word, character, sentence, paragraph, and reading time counts.">
+<meta name="keywords" content="word counter, word count, character counter, word counter online, count words, text word count, sentence counter, paragraph counter, reading time calculator">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Word Counter",
+  "description": "Free online word counter. Count words, characters, sentences, paragraphs, and reading time in real-time.",
+  "url": "https://utility-sites.pages.dev/word-counter/",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e4e4e7;
+  --muted: #9ca3af;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow: 0 2px 12px rgba(0,0,0,.4);
+}
+.page-container { max-width: 920px; margin: 0 auto; padding: 0 1rem; }
+.page-header { padding: 2rem 0 0.5rem; text-align: center; }
+.page-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.3rem; }
+.page-header p { color: var(--muted); font-size: 0.95rem; }
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem; margin-top: 1.5rem;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem 1rem; text-align: center;
+  box-shadow: var(--shadow); transition: border-color .2s;
+}
+.stat-card:hover { border-color: var(--primary); }
+.stat-card .stat-value {
+  font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1.2;
+}
+.stat-card .stat-label {
+  font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.03em;
+}
+
+.input-area { margin-top: 1.5rem; }
+.input-area textarea {
+  width: 100%; min-height: 280px; padding: 1rem 1.25rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); color: var(--text);
+  font-size: 1rem; font-family: inherit; line-height: 1.6; resize: vertical;
+  transition: border-color .2s, box-shadow .2s;
+}
+.input-area textarea:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99,102,241,.25);
+}
+.input-area textarea::placeholder { color: var(--muted); }
+
+.toolbar {
+  display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap;
+}
+.tool-btn {
+  padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--muted); font-size: 0.85rem;
+  cursor: pointer; transition: all .2s; font-weight: 500;
+}
+.tool-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.related-tools {
+  margin-top: 2.5rem;
+}
+.related-tools h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+.related-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.6rem;
+}
+.related-grid a {
+  padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 0.85rem; color: var(--muted);
+  transition: all .2s; text-decoration: none;
+}
+.related-grid a:hover { border-color: var(--primary); color: var(--primary); }
+
+.page-footer {
+  margin-top: 3rem; padding: 1.5rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center; color: var(--muted); font-size: 0.85rem;
+}
+.page-footer a { color: var(--primary); transition: color .2s; }
+.page-footer a:hover { color: var(--primary-hover); text-decoration: underline; }
+
+.toast-container {
+  position: fixed; bottom: 1.25rem; right: 1.25rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+  z-index: 2000; pointer-events: none;
+}
+.toast {
+  padding: 0.65rem 1rem; background: var(--surface);
+  border: 1px solid var(--border); border-left: 3px solid var(--success);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  font-size: 0.85rem; color: var(--text); pointer-events: auto;
+  animation: toast-in .25s ease forwards;
+}
+.toast.removing { animation: toast-out .2s ease forwards; }
+@keyframes toast-in { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(30px); } }
+
+@media (max-width: 640px) {
+  .page-header h1 { font-size: 1.35rem; }
+  .stat-card { padding: 1rem 0.75rem; }
+  .stat-card .stat-value { font-size: 1.5rem; }
+}
+</style>
+  <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+
+<div class="page-container">
+  <header class="page-header">
+    <h1>Word Counter</h1>
+    <p>Count words, characters, sentences, paragraphs &amp; reading time — instantly as you type</p>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value" id="stat-words">0</div><div class="stat-label">Words</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-chars">0</div><div class="stat-label">Characters</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-chars-nospace">0</div><div class="stat-label">No Spaces</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-sentences">0</div><div class="stat-label">Sentences</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-paragraphs">0</div><div class="stat-label">Paragraphs</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-reading">0s</div><div class="stat-label">Reading Time</div></div>
+  </div>
+
+  <!-- Text Input -->
+  <div class="input-area">
+    <textarea id="text-input" placeholder="Start typing or paste your text here..."></textarea>
+    <div class="toolbar">
+      <button class="tool-btn" id="btn-copy">Copy Text</button>
+      <button class="tool-btn" id="btn-clear">Clear</button>
+      <button class="tool-btn" id="btn-download">Download .txt</button>
+    </div>
+  </div>
+
+  <!-- Related Tools -->
+  <section class="related-tools">
+    <h3>Related Tools</h3>
+    <div class="related-grid">
+      <a href="/case-converter/">Case Converter</a>
+      <a href="/lorem-ipsum/">Lorem Ipsum Generator</a>
+      <a href="/percentage-calculator/">Percentage Calculator</a>
+      <a href="/json-formatter/">JSON Formatter</a>
+      <a href="/base64-encoder/">Base64 Encoder</a>
+      <a href="/uuid-generator/">UUID Generator</a>
+    </div>
+  </section>
+
+  <!-- SEO Content -->
+  <div class="seo-section" style="max-width:920px;margin:2rem auto;padding:0 1rem;line-height:1.8;color:var(--muted);font-size:0.92rem">
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px">About the Word Counter Tool</h2>
+    <p>Our free online word counter is a fast, accurate, and privacy-first tool designed to help you count words, characters, sentences, paragraphs, and estimated reading time in real-time. Whether you're writing an essay with a strict word limit, crafting a social media post within character constraints, optimizing meta descriptions for SEO, or drafting a blog post, this word counter provides instant feedback as you type. Everything runs entirely in your browser—no text is ever sent to a server, ensuring complete privacy and confidentiality of your content.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">How Does the Word Counter Work?</h2>
+    <p>The word counter analyzes your text in real-time as you type or paste it into the text area. It uses intelligent parsing to break down your text into its constituent components. Words are counted by splitting the text on whitespace boundaries, so "hello world" counts as two words while "hello-world" counts as a single word. Characters are counted both with spaces (total characters) and without spaces (for when you need precise character limits like Twitter posts or SMS messages).</p>
+    <p>Sentences are detected by looking for terminal punctuation marks (periods, exclamation points, and question marks). Paragraphs are identified by line breaks—any section of text separated by one or more newlines counts as a distinct paragraph. Reading time is calculated based on an average reading speed of 200 words per minute, which is the widely accepted standard for adult silent reading of English text.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Why Use a Word Counter?</h2>
+    <p>Word counting is essential in many professional and academic contexts. Students frequently face strict word count requirements for essays, research papers, and assignments—typically ranging from 250 words for short responses to 5,000+ words for dissertations. Going under or over the limit can result in lost marks or rejected submissions. A reliable word counter ensures you stay within bounds while writing.</p>
+    <p>Content creators and digital marketers rely on word counts for SEO optimization. Blog posts between 1,500 and 2,500 words tend to perform best in search engine rankings, while meta descriptions should be between 120-160 characters. Social media managers need to respect platform limits: 280 characters on Twitter/X, 2,200 characters on Instagram captions, and 3,000 characters on Facebook posts. Our word counter helps you craft content that fits perfectly within these constraints.</p>
+    <p>Professional writers, journalists, and copywriters often bill by the word or have specific word count targets for articles, press releases, and advertising copy. Novelists and authors track progress by daily word count goals. NaNoWriMo participants aim for 50,000 words in November—that's 1,667 words per day. translators count words to estimate project scope and pricing. Lawyers and contract writers need precise word counts for legal documents.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Word Count Limits for Common Use Cases</h2>
+    <p>Understanding typical word and character count limits helps you plan your writing effectively. Here are the most common constraints you might encounter:</p>
+    <p><strong>Academic writing:</strong> Abstract (150-300 words), short essay (500-1,000 words), term paper (2,500-5,000 words), master's thesis (15,000-25,000 words), doctoral dissertation (70,000-100,000 words).</p>
+    <p><strong>Social media:</strong> Twitter/X post (280 characters), Instagram caption (2,200 characters), Facebook post (63,206 characters), LinkedIn post (3,000 characters), YouTube description (5,000 characters).</p>
+    <p><strong>SEO content:</strong> Meta title (50-60 characters), meta description (120-160 characters), blog post (1,500-2,500 words), product description (300-500 words), landing page (500-1,000 words).</p>
+    <p><strong>Advertising:</strong> Google Ads headline (30 characters), Google Ads description (90 characters), Facebook ad primary text (125 characters before truncation), email subject line (40-50 characters optimal).</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">How Reading Time Is Calculated</h2>
+    <p>Reading time estimation is based on the average silent reading speed for adult English speakers, which research has established at approximately 200-250 words per minute. Our calculator uses 200 words per minute as the baseline, which provides a conservative estimate suitable for most general-purpose content. Technical content, academic papers, and material with complex vocabulary may take longer to read, while casual blog posts and news articles may be read faster.</p>
+    <p>For presentations and speech writing, the average speaking rate is about 130-150 words per minute. If you're preparing a talk or a script, you can use the word count to estimate speaking time by dividing the total words by 140. A 10-minute presentation typically requires about 1,400 words of script.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Tips for Effective Writing with Word Count Targets</h2>
+    <p>When writing toward a word count goal, focus on quality over quantity. For shorter pieces, every word must earn its place—cut unnecessary adverbs, eliminate redundant phrases, and use active voice to convey ideas concisely. For longer pieces, structure your argument or narrative across clearly defined sections, using subheadings to break up the text and maintain reader engagement.</p>
+    <p>If you need to expand your word count, avoid filler content. Instead, add depth: provide concrete examples, cite supporting research, include relevant data points, and address counterarguments. If you need to trim, look for tangents that don't serve your main thesis, condense multi-sentence explanations into single clear statements, and remove qualifiers that weaken your message.</p>
+    <p>Always proofread with the word counter visible. Knowing your current count helps you make real-time decisions about what to expand or condense as you write, rather than facing a massive editing task at the end.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Privacy and Security</h2>
+    <p>This word counter runs entirely client-side in your browser using JavaScript. Your text never leaves your device—it is not transmitted to any server, stored in any database, or processed by any third-party service. This makes our tool safe to use with confidential documents, proprietary content, personal letters, sensitive business communications, and any other text you need to keep private. You can even use it offline once the page has loaded.</p>
+
+    <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Frequently Asked Questions</h2>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I count words in my text?</h3>
+    <p>Simply paste or type your text into the text area above. The word counter updates instantly, showing you the total number of words, characters (with and without spaces), sentences, paragraphs, and estimated reading time. No buttons to click—everything happens in real-time as you type.</p>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">What is the character limit for different platforms?</h3>
+    <p>Twitter/X allows 280 characters per tweet. Instagram captions can be up to 2,200 characters (but only the first 125 are visible before truncation). Facebook posts allow up to 63,206 characters. Meta descriptions for SEO should be 120-160 characters. Google Ads headlines are limited to 30 characters and descriptions to 90 characters each.</p>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How is reading time calculated?</h3>
+    <p>Reading time is estimated using an average silent reading speed of 200 words per minute, which is the standard for adult readers of English. For example, a 1,000-word article would take approximately 5 minutes to read. Speaking time uses a slower rate of about 140 words per minute.</p>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">Is this word counter free to use?</h3>
+    <p>Yes, completely free with no limits. There are no word count caps, no usage limits, no signup required, and no ads. You can use it as many times as you want with text of any length.</p>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">Does hyphenated text count as one word or two?</h3>
+    <p>Hyphenated words like "well-known" are counted as a single word because there is no space between the parts. However, "well known" (with a space) counts as two words. This follows the standard convention used by most word processors including Microsoft Word and Google Docs.</p>
+    <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">Is my text stored or sent anywhere?</h3>
+    <p>No. This word counter processes all text entirely in your browser using client-side JavaScript. Your text is never transmitted to any server, stored in a database, or accessible to anyone but you. It is completely private and secure.</p>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I count words in my text?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply paste or type your text into the text area. The word counter updates instantly, showing total words, characters, sentences, paragraphs, and reading time in real-time."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the character limit for different platforms?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Twitter/X allows 280 characters, Instagram captions up to 2,200, Facebook posts up to 63,206, meta descriptions should be 120-160 characters, and Google Ads headlines are limited to 30 characters."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is reading time calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reading time is estimated using an average silent reading speed of 200 words per minute for adult English readers. A 1,000-word article takes approximately 5 minutes to read."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this word counter free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, completely free with no limits. No word count caps, no usage limits, no signup required, and no ads."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does hyphenated text count as one word or two?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hyphenated words like 'well-known' count as one word since there is no space. 'Well known' with a space counts as two words, following standard word processor conventions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my text stored or sent anywhere?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. This word counter processes all text entirely in your browser using client-side JavaScript. Your text is never transmitted to any server or stored in a database."
+        }
+      }
+    ]
+  }
+  </script>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer">
+<p>Word Counter by <a href="/">UtilityHub</a> — Free online tools for everyone.</p>
+</footer>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var textarea = document.getElementById('text-input');
+  var statWords = document.getElementById('stat-words');
+  var statChars = document.getElementById('stat-chars');
+  var statCharsNoSpace = document.getElementById('stat-chars-nospace');
+  var statSentences = document.getElementById('stat-sentences');
+  var statParagraphs = document.getElementById('stat-paragraphs');
+  var statReading = document.getElementById('stat-reading');
+
+  function countWords(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\s+/).length;
+  }
+
+  function countSentences(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return 0;
+    var matches = trimmed.match(/[.!?]+(?:\s|$)/g);
+    return matches ? matches.length : (trimmed.length > 0 ? 1 : 0);
+  }
+
+  function countParagraphs(text) {
+    if (!text.trim()) return 0;
+    var paras = text.trim().split(/\n\s*\n/).filter(function(p) { return p.trim().length > 0; });
+    return paras.length;
+  }
+
+  function formatReadingTime(seconds) {
+    if (seconds < 1) return '< 1s';
+    if (seconds < 60) return Math.ceil(seconds) + 's';
+    var mins = Math.floor(seconds / 60);
+    var secs = Math.ceil(seconds % 60);
+    if (secs === 60) return (mins + 1) + 'm';
+    return mins + 'm ' + secs + 's';
+  }
+
+  function update() {
+    var text = textarea.value;
+    var words = countWords(text);
+    var chars = text.length;
+    var charsNoSpace = text.replace(/\s/g, '').length;
+    var sentences = countSentences(text);
+    var paragraphs = countParagraphs(text);
+    var readingSec = words / 200 * 60;
+
+    statWords.textContent = words.toLocaleString();
+    statChars.textContent = chars.toLocaleString();
+    statCharsNoSpace.textContent = charsNoSpace.toLocaleString();
+    statSentences.textContent = sentences.toLocaleString();
+    statParagraphs.textContent = paragraphs.toLocaleString();
+    statReading.textContent = formatReadingTime(readingSec);
+  }
+
+  textarea.addEventListener('input', update);
+
+  function showToast(msg) {
+    var container = document.getElementById('toast-container');
+    var toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('removing');
+      setTimeout(function() { toast.remove(); }, 200);
+    }, 1500);
+  }
+
+  document.getElementById('btn-copy').addEventListener('click', function() {
+    if (!textarea.value) { showToast('Nothing to copy'); return; }
+    textarea.select();
+    document.execCommand('copy');
+    showToast('Text copied to clipboard');
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', function() {
+    textarea.value = '';
+    update();
+    textarea.focus();
+  });
+
+  document.getElementById('btn-download').addEventListener('click', function() {
+    if (!textarea.value) { showToast('Nothing to download'); return; }
+    var blob = new Blob([textarea.value], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'text.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('Downloaded as text.txt');
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

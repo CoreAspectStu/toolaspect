@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Color Picker & Converter — Hex, RGB, HSL | UtilityHub</title>
+<meta name="description" content="Free online color picker and converter. Convert between hex, RGB, HSL, and CMYK color formats. Pick colors visually and copy color codes instantly.">
+<link rel="canonical" href="https://utility-sites.pages.dev/color-picker/">
+<meta property="og:title" content="Color Picker & Converter — Hex, RGB, HSL | UtilityHub">
+<meta property="og:description" content="Free online color picker and converter. Convert between hex, RGB, HSL, and CMYK. Pick colors visually and copy color codes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://utility-sites.pages.dev/color-picker/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Color Picker & Converter","description":"Free online color picker and converter. Convert between hex, RGB, HSL, and CMYK color formats.","url":"https://utility-sites.pages.dev/color-picker/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<style>
+.picker-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+@media(max-width:600px){.picker-wrap{grid-template-columns:1fr}}
+.color-preview{height:120px;border-radius:var(--radius);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);transition:background .2s}
+input[type="color"]{width:100%;height:60px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer}
+.field label{font-size:.8rem;color:var(--muted);font-weight:500;display:block;margin-bottom:4px}
+.field input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:.9rem;font-family:monospace;outline:none}
+.field input:focus{border-color:var(--primary)}
+.copy-btn{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:.75rem;margin-left:8px;transition:all .2s}
+.copy-btn:hover{border-color:var(--primary);color:var(--text)}
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:4px;margin:1rem 0}
+.swatch{height:36px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+.swatch:hover{border-color:var(--text)}
+.shades{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:1rem 0}
+.shade-box{height:50px;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:.65rem;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+<header><h1>🎨 Color Picker & Converter</h1><p>Pick colors and convert between hex, RGB, HSL, and more</p></header>
+<div class="picker-wrap">
+<div>
+<label style="font-size:.8rem;color:var(--muted);font-weight:500;display:block;margin-bottom:6px">Visual Picker</label>
+<input type="color" id="color-input" value="#6366f1">
+<div class="color-preview" id="preview" style="background:#6366f1">#6366F1</div>
+</div>
+<div>
+<div class="field" style="margin-bottom:10px"><label>HEX <button class="copy-btn" onclick="copyVal('hex')">Copy</button></label><input type="text" id="hex" value="#6366f1"></div>
+<div class="field" style="margin-bottom:10px"><label>RGB <button class="copy-btn" onclick="copyVal('rgb')">Copy</button></label><input type="text" id="rgb" readonly></div>
+<div class="field" style="margin-bottom:10px"><label>HSL <button class="copy-btn" onclick="copyVal('hsl')">Copy</button></label><input type="text" id="hsl" readonly></div>
+<div class="field" style="margin-bottom:10px"><label>CMYK <button class="copy-btn" onclick="copyVal('cmyk')">Copy</button></label><input type="text" id="cmyk" readonly></div>
+</div>
+</div>
+<h3 style="font-size:.9rem;color:var(--muted);margin:1.5rem 0 .5rem">Shades & Tints</h3>
+<div class="shades" id="shades"></div>
+<h3 style="font-size:.9rem;color:var(--muted);margin:1.5rem 0 .5rem">Recent Colors</h3>
+<div class="color-grid" id="recent"></div>
+<div class="related"><h3>Related Tools</h3><div class="related-grid">
+<a href="/image-compressor">Image Compressor</a><a href="/base64-encoder">Base64 Encoder</a><a href="/qr-code-generator">QR Code Generator</a><a href="/password-generator">Password Generator</a><a href="/json-formatter">JSON Formatter</a><a href="/regex-tester">Regex Tester</a><a href="/word-counter">Word Counter</a><a href="/case-converter">Case Converter</a>
+</div></div>
+<div class="seo-content">
+<h2>How to Use the Color Picker</h2>
+<p>Using our color picker is straightforward. Click the color input field to open your browser's native color picker, or type a hex code directly into the HEX field. The tool instantly converts and displays the equivalent RGB, HSL, and CMYK values. Click "Copy" next to any format to copy it to your clipboard. The shades panel shows lighter and darker variants of your selected color for creating palettes.</p>
+<h2>Color Format Reference</h2>
+<h3>HEX (Hexadecimal)</h3>
+<p>Hex color codes are six-digit hexadecimal numbers preceded by a hash (#), like #FF5733. Each pair of digits represents the intensity of red, green, and blue respectively, from 00 (no intensity) to FF (full intensity). For example, #FF0000 is pure red, #00FF00 is pure green, and #0000FF is pure blue. Hex is the most common format used in web design, CSS, and graphics software.</p>
+<h3>RGB (Red, Green, Blue)</h3>
+<p>RGB defines colors using three numbers from 0-255, representing the intensity of red, green, and blue light. White is rgb(255, 255, 255) and black is rgb(0, 0, 0). This additive color model matches how screens emit light. RGB is used in CSS, image processing, and digital displays.</p>
+<h3>HSL (Hue, Saturation, Lightness)</h3>
+<p>HSL describes colors using hue (0-360 degrees on the color wheel), saturation (0-100% intensity), and lightness (0-100%). It's more intuitive for humans — to make a color darker, decrease lightness; to make it less vivid, decrease saturation. Pure red is hsl(0, 100%, 50%), green is hsl(120, 100%, 50%), blue is hsl(240, 100%, 50%).</p>
+<h3>CMYK (Cyan, Magenta, Yellow, Key/Black)</h3>
+<p>CMYK is a subtractive color model used in printing. Unlike RGB which adds light, CMYK subtracts from white. Percentages range from 0-100% for each channel. Pure black is cmyk(0%, 0%, 0%, 100%). If you're designing for print, convert your colors to CMYK to see how they'll actually appear on paper.</p>
+<h2>Common Color Conversion Questions</h2>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert hex to RGB?","acceptedAnswer":{"@type":"Answer","text":"To convert hex to RGB, split the 6-character hex code into three pairs. Convert each pair from hexadecimal to decimal. For example, #FF5733 splits into FF (255), 57 (87), and 33 (51), giving rgb(255, 87, 51)."}},{"@type":"Question","name":"What is the difference between RGB and HSL?","acceptedAnswer":{"@type":"Answer","text":"RGB represents colors as combinations of red, green, and blue light intensities (0-255 each). HSL represents colors using hue (angle on color wheel), saturation (intensity), and lightness (brightness). HSL is more intuitive for creating color variations because you can adjust lightness or saturation independently."}},{"@type":"Question","name":"Why does my color look different in print?","acceptedAnswer":{"@type":"Answer","text":"Screens use RGB (additive color) while printers use CMYK (subtractive color). The RGB gamut is larger than CMYK, so some vibrant screen colors cannot be reproduced in print. Always convert to CMYK and do a test print for color-critical projects."}},{"@type":"Question","name":"What hex code is white?","acceptedAnswer":{"@type":"Answer","text":"Pure white is #FFFFFF (rgb 255, 255, 255). Pure black is #000000 (rgb 0, 0, 0). Web-safe white and black are the most commonly used colors in web design."}},{"@type":"Question","name":"How do I find the complementary color?","acceptedAnswer":{"@type":"Answer","text":"A complementary color is directly opposite on the color wheel. In HSL, add 180 degrees to the hue value (mod 360). For example, the complement of hsl(30, 100%, 50%) is hsl(210, 100%, 50%)."}},{"@type":"Question","name":"What is alpha transparency in colors?","acceptedAnswer":{"@type":"Answer","text":"Alpha transparency defines how opaque a color is. In CSS, you can use rgba() or hsla() with a fourth value from 0 (fully transparent) to 1 (fully opaque). Hex can include an alpha channel as an 8-digit code (#RRGGBBAA)."}}]}</script>
+<h3>How do I convert hex to RGB?</h3>
+<p>Split the 6-character hex into three pairs, convert each from hex to decimal. #FF5733 → FF(255), 57(87), 33(51) → rgb(255, 87, 51).</p>
+<h3>What is the difference between RGB and HSL?</h3>
+<p>RGB uses red/green/blue intensities (0-255). HSL uses hue angle, saturation, and lightness percentages. HSL is more intuitive for creating color variations.</p>
+<h3>Why does my color look different in print?</h3>
+<p>Screens use RGB (additive), printers use CMYK (subtractive). RGB has a wider gamut, so some vibrant colors can't be printed. Always test in CMYK for print work.</p>
+<h3>What hex code is white?</h3>
+<p>Pure white is #FFFFFF. Pure black is #000000.</p>
+<h3>How do I find the complementary color?</h3>
+<p>Add 180 degrees to the hue in HSL. The complement of hsl(30, 100%, 50%) is hsl(210, 100%, 50%).</p>
+<h3>What is alpha transparency in colors?</h3>
+<p>Alpha defines opacity from 0 (transparent) to 1 (opaque). Use rgba() or 8-digit hex (#RRGGBBAA).</p>
+</div>
+<footer><p>&copy; 2026 UtilityHub &mdash; Free online tools</p></footer>
+</div>
+<script>
+var recent=[];
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(function(c){return c+c}).join('');var n=parseInt(h,16);return{r:(n>>16)&255,g:(n>>8)&255,b:n&255}}
+function rgbToHex(r,g,b){return'#'+[r,g,b].map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;var mx=Math.max(r,g,b),mn=Math.min(r,g,b),h,s,l=(mx+mn)/2;if(mx===mn){h=s=0}else{var d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4}h/=6}return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)}}
+function rgbToCmyk(r,g,b){r/=255;g/=255;b/=255;var k=1-Math.max(r,g,b);if(k===1)return{c:0,m:0,y:0,k:100};return{c:Math.round((1-r-k)/(1-k)*100),m:Math.round((1-g-k)/(1-k)*100),y:Math.round((1-b-k)/(1-k)*100),k:Math.round(k*100)}}
+function update(hex){hex=hex.replace('#','');if(!/^[0-9a-fA-F]{6}$/.test(hex))return;var r=hexToRgb(hex);document.getElementById('rgb').value='rgb('+r.r+', '+r.g+', '+r.b+')';var h=rgbToHsl(r.r,r.g,r.b);document.getElementById('hsl').value='hsl('+h.h+', '+h.s+'%, '+h.l+'%)';var c=rgbToCmyk(r.r,r.g,r.b);document.getElementById('cmyk').value='cmyk('+c.c+'%, '+c.m+'%, '+c.y+'%, '+c.k+'%)';var p=document.getElementById('preview');p.style.background='#'+hex;p.textContent='#'+hex.toUpperCase();document.getElementById('color-input').value='#'+hex;renderShades(h)}
+function renderShades(hsl){var el=document.getElementById('shades');el.innerHTML='';for(var i=0;i<5;i++){var l=Math.max(10,Math.min(90,hsl.l-40+i*20));var c='hsl('+hsl.h+', '+hsl.s+'%, '+l+'%)';var box=document.createElement('div');box.className='shade-box';box.style.background=c;box.textContent=Math.round(l)+'%';el.appendChild(box)}}
+function addToRecent(hex){recent=recent.filter(function(c){return c!==hex});recent.unshift(hex);if(recent.length>20)recent.pop();var el=document.getElementById('recent');el.innerHTML='';recent.forEach(function(c){var s=document.createElement('div');s.className='swatch';s.style.background=c;s.title=c;s.onclick=function(){document.getElementById('hex').value=c;update(c)};el.appendChild(s)})}
+function copyVal(id){var v=document.getElementById(id).value;navigator.clipboard.writeText(v)}
+document.getElementById('color-input').addEventListener('input',function(e){var h='#'+e.target.value.slice(1).toLowerCase();document.getElementById('hex').value=h;update(h);addToRecent(h)});
+document.getElementById('hex').addEventListener('input',function(e){var v=e.target.value;if(v[0]!=='#')v='#'+v;if(/#[0-9a-fA-F]{6}$/.test(v)){update(v);addToRecent(v)}});
+update('#6366f1');addToRecent('#6366f1');
+</script>
+</body>
+</html>
