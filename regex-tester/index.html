@@ -213,7 +213,107 @@ Prices: $19.99, $49.50, $199.00</textarea>
   <p>Regular expressions (regex) are powerful pattern-matching tools used across nearly every programming language and text editor. They allow developers to search, validate, extract, and replace text using concise pattern syntax. Whether you're validating email addresses, parsing log files, scraping web content, or building search features, regular expressions provide a flexible and efficient way to work with string data. Our regex tester lets you experiment with patterns in real time, so you can see exactly what your expression matches before deploying it in your code.</p>
   <p>Learning regex syntax can feel daunting at first, but mastering a handful of core concepts—literal characters, character classes, quantifiers, anchors, and groups—unlocks an enormous amount of power. Our built-in cheat sheet organizes the most common patterns into collapsible groups, making it easy to look up syntax while you work. Each entry is clickable and inserts directly into the pattern input, so you can build complex expressions piece by piece without memorizing every token.</p>
   <p>This regex tester runs entirely in your browser with zero server-side processing. Your test strings and patterns never leave your device, making it safe for sensitive data like passwords, API keys, and personal information. It supports all standard JavaScript regex flags—including global (g), case-insensitive (i), multiline (m), and dotAll (s)—and displays captured groups for each match, making it an essential tool for both learning and day-to-day development.</p>
+
+  <h2>How to Test Regular Expressions: A Beginner's Guide</h2>
+  <p>If you're new to regex, getting started is straightforward. Begin by entering a pattern in the input field at the top of this page—you'll see matches highlighted instantly in the results panel below. The pattern field accepts any valid JavaScript regular expression syntax without the surrounding slashes (those are added automatically). For example, typing <code>\d+</code> will match all sequences of one or more digits in your test string.</p>
+  <p>Once you have a basic match working, experiment with the four flag toggles to modify how your pattern behaves. The <strong>global (g)</strong> flag finds every match rather than stopping at the first one. The <strong>case-insensitive (i)</strong> flag makes patterns like <code>[a-z]</code> also match uppercase letters. The <strong>multiline (m)</strong> flag changes <code>^</code> and <code>$</code> to match the start and end of each line rather than the entire string. The <strong>dotAll (s)</strong> flag allows the <code>.</code> metacharacter to match newline characters, which is essential when working with multi-line text blocks.</p>
+  <p>To build more complex expressions, click on any pattern in the cheat sheet below to insert it at your cursor position in the regex input. You can combine multiple tokens—for example, <code>\b\w+@\w+\.\w+\b</code> matches simple email addresses. The match list beneath the highlighted results shows each individual match along with its position and any captured groups, making it easy to debug patterns with parentheses-based grouping.</p>
+
+  <h2>Common Regex Patterns You Should Know</h2>
+  <p>Certain regular expression patterns come up again and again in real-world development. Here are some of the most frequently used ones, along with explanations of how each one works:</p>
+  <p><strong>Email validation:</strong> <code>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</code> — Matches most standard email addresses. The local part allows letters, digits, dots, underscores, percent signs, plus signs, and hyphens before the <code>@</code>, and the domain requires at least a two-letter TLD. For production email validation, always combine regex with a confirmation email since the full RFC 5322 specification is too complex for practical regex matching.</p>
+  <p><strong>Phone number (US):</strong> <code>\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}</code> — Matches US phone numbers in various formats including <code>+1 (555) 123-4567</code>, <code>555-123-4567</code>, <code>555.123.4567</code>, and <code>5551234567</code>. The pattern optionally matches a country code, area code in parentheses, and flexible separators.</p>
+  <p><strong>URL detection:</strong> <code>https?://[^\s/$.?#].[^\s]*</code> — Matches HTTP and HTTPS URLs. The pattern starts with the protocol, requires a non-whitespace character after the domain, and then captures everything up to the next whitespace. For full URL parsing including query parameters and fragments, consider using the browser's built-in <code>URL</code> constructor instead.</p>
+  <p><strong>IP address (IPv4):</strong> <code>\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b</code> — Validates IPv4 addresses from <code>0.0.0.0</code> to <code>255.255.255.255</code>, correctly rejecting invalid octets like <code>256</code> or <code>999</code>.</p>
+  <p><strong>Date (YYYY-MM-DD):</strong> <code>\d{4}-\d{2}-\d{2}</code> — Matches ISO 8601 date strings. For stricter validation including month/day range checking, use <code>\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])</code>.</p>
+  <p><strong>Strong password:</strong> <code>^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$</code> — Enforces at least 8 characters with one lowercase, one uppercase, one digit, and one special character using lookahead assertions.</p>
+
+  <h2>Regex Flags Explained in Detail</h2>
+  <p>Flags modify the overall behavior of a regular expression. In JavaScript, flags are appended after the closing slash (e.g., <code>/pattern/gi</code>) or passed as the second argument to <code>new RegExp()</code>. Understanding each flag is essential for writing effective patterns:</p>
+  <p><strong>g (global):</strong> Without this flag, <code>String.match()</code> and <code>RegExp.exec()</code> return only the first match. With <code>g</code>, the regex engine finds all matches in the string. This is essential when you need to count, extract, or replace every occurrence. Note that with <code>g</code> enabled, <code>RegExp.exec()</code> maintains a <code>lastIndex</code> pointer between calls, which can cause subtle bugs if not reset.</p>
+  <p><strong>i (case-insensitive):</strong> Makes the pattern match regardless of letter case. <code>/hello/i</code> matches "hello", "Hello", "HELLO", and "hElLo". This is particularly useful when matching user input where casing may vary, or when searching for case-insensitive keywords in text.</p>
+  <p><strong>m (multiline):</strong> By default, <code>^</code> and <code>$</code> match only the start and end of the entire string. With <code>m</code>, they also match at the start and end of each line (after and before newline characters). This is critical when processing multi-line text where you need line-level anchoring, such as extracting all lines that start with a specific prefix.</p>
+  <p><strong>s (dotAll):</strong> Normally, the <code>.</code> metacharacter matches any character except newline. With <code>s</code>, <code>.</code> matches absolutely everything including newlines. This is useful when matching content that spans multiple lines, such as extracting text between HTML tags that contain line breaks.</p>
+
+  <h2>Regex Use Cases and Applications</h2>
+  <p>Regular expressions power countless features across the software ecosystem. Here are some of the most common real-world use cases where regex provides the most practical solution:</p>
+  <p><strong>Form input validation:</strong> Validate user-provided email addresses, phone numbers, postal codes, credit card numbers, usernames, and passwords before submitting forms. Server-side validation is always recommended, but client-side regex validation provides instant feedback that improves user experience.</p>
+  <p><strong>Log file analysis:</strong> Parse server access logs, application error logs, and security audit trails to extract IP addresses, timestamps, status codes, URLs, and error messages. Regex makes it possible to transform unstructured log text into structured data for analysis and alerting.</p>
+  <p><strong>Search and replace:</strong> Batch find-and-replace operations in code editors, word processors, and data processing pipelines all rely on regex. Common examples include converting date formats, normalizing phone numbers, redacting sensitive information, and refactoring code patterns across large codebases.</p>
+  <p><strong>Web scraping and data extraction:</strong> Extract prices, product names, ratings, contact information, or any structured data from HTML pages. While dedicated HTML parsers are generally preferred, regex remains useful for extracting specific data points from loosely structured content.</p>
+  <p><strong>Syntax highlighting:</strong> Code editors and syntax highlighters use regex patterns to identify keywords, strings, comments, numbers, and operators in source code. Tokenizers often combine regex with state machines to correctly handle nested structures and language-specific syntax rules.</p>
+
+  <h2>Frequently Asked Questions</h2>
+  <h3>What is a regular expression (regex)?</h3>
+  <p>A regular expression is a sequence of characters that defines a search pattern. It uses a specialized syntax to describe what text should match, enabling you to search for, validate, extract, replace, and split text with precision. Regular expressions are supported by virtually every programming language including JavaScript, Python, Java, C#, PHP, Ruby, Go, and Rust, as well as text editors like VS Code, Sublime Text, and Vim.</p>
+  <h3>How do I test a regex pattern online?</h3>
+  <p>Enter your regex pattern in the input field at the top of this page, then paste or type your test string in the text area. Matches are highlighted in real time with yellow markers. The match count, individual match values, positions, and captured groups are displayed in the results panel. Toggle the flags (g, i, m, s) to change matching behavior. Everything runs in your browser—no data is sent to any server.</p>
+  <h3>What regex flavor does this tester support?</h3>
+  <p>This tester uses the JavaScript <code>RegExp</code> engine, which supports the ECMAScript regex specification. This is the same engine used by all modern browsers and Node.js. It supports character classes, quantifiers, anchors, capture groups, non-capturing groups, named groups, backreferences, lookahead, and lookbehind assertions. Some advanced features available in PCRE (Perl Compatible Regular Expressions) like possessive quantifiers or atomic groups are not supported in standard JavaScript regex.</p>
+  <h3>What are the most common regex patterns?</h3>
+  <p>The most commonly used patterns match email addresses, phone numbers, URLs, IP addresses, dates, and passwords. See the "Common Regex Patterns" section above for ready-to-copy patterns with detailed explanations. For quick reference, the built-in cheat sheet on this page covers character classes, quantifiers, anchors, groups, and lookarounds with click-to-insert functionality.</p>
+  <h3>Are regex patterns the same across all programming languages?</h3>
+  <p>The core syntax is largely consistent across languages, but there are important differences in supported features, escape sequences, and behavior. For example, JavaScript supports <code>\d</code>, <code>\w</code>, and <code>\s</code> shorthand classes just like Python and Java. However, Python uses <code>(?P&lt;name&gt;...)</code> for named groups while JavaScript uses <code>(?&lt;name&gt;...)</code>. Always test your regex in the target language's environment to ensure compatibility.</p>
+  <h3>Is my data safe when using this regex tester?</h3>
+  <p>Yes, completely safe. This tool runs 100% client-side in your browser. Your regex patterns and test strings are never transmitted to any server, logged, or stored. You can safely test patterns against sensitive data like passwords, API keys, tokens, and personal information. There is no analytics or tracking of pattern content.</p>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a regular expression (regex)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A regular expression is a sequence of characters that defines a search pattern used to match, find, validate, extract, and replace text. Regex is supported by virtually every programming language including JavaScript, Python, Java, C#, PHP, Ruby, Go, and Rust, as well as most text editors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I test a regex pattern online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter your regex pattern in the input field, then provide a test string in the text area. Matches are highlighted in real time. The tool shows match count, individual matches, positions, and captured groups. Toggle flags (g, i, m, s) to change behavior. Everything runs in your browser with no server-side processing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What regex flavor does this tester support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This tester uses the JavaScript RegExp engine (ECMAScript specification), the same engine in all modern browsers and Node.js. It supports character classes, quantifiers, anchors, capture groups, named groups, backreferences, lookahead, and lookbehind assertions. Some PCRE-specific features like possessive quantifiers are not supported."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the most common regex patterns?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common patterns include email validation, phone number matching, URL detection, IP address validation, date parsing, and strong password enforcement. See the cheat sheet and common patterns sections on this page for ready-to-use examples with detailed explanations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are regex patterns the same across all programming languages?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Core syntax is largely consistent, but there are differences in supported features, escape sequences, and group naming conventions. For example, Python uses (?P<name>...) for named groups while JavaScript uses (?<name>...). Always test your regex in the target language's environment to ensure compatibility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data safe when using this regex tester?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. This tool runs 100% client-side in your browser. Your regex patterns and test strings are never transmitted to any server, logged, or stored. You can safely test patterns against sensitive data like passwords, API keys, and personal information."
+      }
+    }
+  ]
+}
+</script>
 
 <footer>© 2026 UtilityTools</footer>
 
