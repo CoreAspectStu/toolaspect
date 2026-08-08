@@ -222,6 +222,7 @@ function convertFiat(){{var f=parseFloat(document.getElementById('fiatAmount').v
 // Fetch live rate every 60s
 fetch('https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies={fiat_code}').then(r=>r.json()).then(d=>{{if(d['{coin_id}']&&d['{coin_id}']['{fiat_code}']){{exchangeRate=d['{coin_id}']['{fiat_code}'];convertCrypto();}}}}).catch(()=>{{}});
 </script>
+<script src="/shared/converter-dynamic.js"></script>
 <script async defer data-website-id="{ANALYTICS_ID}" src="https://analytics.coreaspectai.com/script.js"></script>
 </body>
 </html>'''
@@ -322,6 +323,7 @@ var exchangeRate={rate};
 function convertFrom(){{var f=parseFloat(document.getElementById('fromAmount').value)||0;document.getElementById('toAmount').value=(f*exchangeRate).toFixed(2);}}
 function convertTo(){{var t=parseFloat(document.getElementById('toAmount').value)||0;document.getElementById('fromAmount').value=(t/exchangeRate).toFixed(4);}}
 </script>
+<script src="/shared/converter-dynamic.js"></script>
 <script async defer data-website-id="{ANALYTICS_ID}" src="https://analytics.coreaspectai.com/script.js"></script>
 </body>
 </html>'''
