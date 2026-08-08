@@ -1,5 +1,5 @@
 /* ============================================================
-   UtilityHub — Stripe Checkout Integration  (stripe-checkout.js)
+   ToolAspect — Stripe Checkout Integration  (stripe-checkout.js)
    Include via <script src="shared/stripe-checkout.js">
    Requires: window.STRIPE_PK  (set before this script)
    If no key present, checkout silently disables.

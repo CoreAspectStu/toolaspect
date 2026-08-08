@@ -1,5 +1,5 @@
 /* ============================================================
-   UtilityHub — Shared Navigation  (nav.js)
+   ToolAspect — Shared Navigation  (nav.js)
    Self-rendering top nav.  Include via <script src="shared/nav.js">
    Auto-injects theme.css when loaded.
    ============================================================ */
@@ -38,12 +38,27 @@
     { label: 'Password Gen',      href: '/password-generator/' },
     { label: 'Word Unscrambler',  href: '/word-unscrambler/' },
     { label: 'Currency Conv',     href: '/currency-converter/' },
+    { label: 'Crypto Conv',       href: '/crypto-converter/' },
     { label: 'Age Calc',          href: '/age-calculator/' },
     { label: 'Unit Conv',         href: '/unit-converter/' },
     { label: 'Regex Tester',      href: '/regex-tester/' },
     { label: 'Pct Calc',          href: '/percentage-calculator/' },
     { label: 'Cron Gen',          href: '/cron-generator/' },
-    { label: 'Base64',            href: '/base64-encoder/' }
+    { label: 'Base64',            href: '/base64-encoder/' },
+    { label: 'BMI Calc',          href: '/bmi-calculator/' },
+    { label: 'Compound Interest', href: '/compound-interest-calculator/' },
+    { label: 'Discount Calc',     href: '/discount-calculator/' },
+    { label: 'Hours Calc',        href: '/hours-calculator/' },
+    { label: 'Loan Calc',         href: '/loan-calculator/' },
+    { label: 'Lorem Ipsum',       href: '/lorem-ipsum/' },
+    { label: 'Mortgage Calc',     href: '/mortgage-calculator/' },
+    { label: 'Sales Tax',         href: '/sales-tax-calculator/' },
+    { label: 'Tip Calc',          href: '/tip-calculator/' },
+    { label: 'UUID Gen',          href: '/uuid-generator/' },
+    { label: 'Case Conv',         href: '/case-converter/' },
+    { label: 'Color Picker',      href: '/color-picker/' },
+    { label: 'Word Counter',      href: '/word-counter/' },
+    { label: 'LLM Pricing',       href: '/llm-pricing-tracker/' }
   ];
 
   /* --- Detect current path for active highlighting --- */
@@ -116,7 +131,7 @@
 
     return '' +
       '<div class="uh-inner">' +
-        '<a class="uh-logo" href="/">UtilityHub</a>' +
+        '<a class="uh-logo" href="/">ToolAspect</a>' +
         '<button class="uh-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>' +
         '<div class="uh-menu">' +
           '<div class="uh-center">' + toolLinks + '</div>' +
@@ -161,7 +176,7 @@
     f.className = 'uh-footer';
     f.innerHTML =
       '<div class="uh-footer-inner">' +
-        '<a class="uh-footer-logo" href="/">UtilityHub</a>' +
+        '<a class="uh-footer-logo" href="/">ToolAspect</a>' +
         '<div class="uh-footer-links">' +
           '<a href="/about.html">About</a>' +
           '<a href="/contact.html">Contact</a>' +
@@ -169,7 +184,7 @@
           '<a href="/terms.html">Terms of Service</a>' +
           '<a href="/disclaimer.html">Disclaimer</a>' +
         '</div>' +
-        '<p class="uh-footer-copy">\u00A9 ' + new Date().getFullYear() + ' UtilityHub \u2014 All tools run in your browser, no data collected.</p>' +
+        '<p class="uh-footer-copy">\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
       '</div>';
     var fStyle = document.createElement('style');
     fStyle.textContent =

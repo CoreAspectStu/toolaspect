@@ -1,5 +1,5 @@
 /* ============================================================
-   UtilityHub — Firebase Auth Integration  (auth.js)
+   ToolAspect — Firebase Auth Integration  (auth.js)
    Include via <script src="shared/auth.js">
    Requires: window.FIREBASE_CONFIG  (set before this script)
    If no config present, auth silently disables.

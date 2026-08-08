@@ -1,5 +1,5 @@
 /* ============================================================
-   UtilityHub — Freemium Gate  (gate.js)
+   ToolAspect — Freemium Gate  (gate.js)
    Include via <script src="shared/gate.js">
    If no window.PREMIUM_CONFIG, the gate silently disables.
    ============================================================ */
