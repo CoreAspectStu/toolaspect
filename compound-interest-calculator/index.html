@@ -65,6 +65,14 @@
 .year-table td{text-align:right;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
 .year-table td:first-child{text-align:left;color:var(--muted)}
 .year-wrap{max-height:400px;overflow-y:auto;margin-top:.5rem}
+.growth-chart-container{margin-top:1rem}
+.growth-chart-container h2{font-size:1.1rem;font-weight:600;margin-bottom:.75rem}
+#growthChart{width:100%;height:auto;display:block}
+.chart-legend{display:flex;justify-content:center;gap:1.5rem;margin-top:.75rem;font-size:.82rem;color:var(--muted)}
+.chart-legend .legend-item{display:inline-flex;align-items:center;gap:.4rem}
+.chart-legend .legend-dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 .content-section{margin-top:2.5rem}
 .content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
 .content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
@@ -115,6 +123,14 @@
 </table>
 </div>
 </div>
+<div class="section-card">
+<h2>📈 Growth Chart</h2>
+<div id="growthChartContainer"></div>
+<div class="chart-legend">
+<span class="legend-item"><span class="legend-dot" style="background:var(--primary)"></span> Total Balance</span>
+<span class="legend-item"><span class="legend-dot" style="background:var(--muted)"></span> Total Contributions</span>
+</div>
+</div>
 <div class="content-section">
 <h2>Understanding Compound Interest</h2>
 <p>Compound interest is the most powerful force in finance — it's interest earned on both your principal and previously accumulated interest. Our calculator shows exactly how your money grows over time with optional monthly contributions.</p>
@@ -161,6 +177,51 @@
 </div>
 <script>
 function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function drawChart(yearData){
+  var W=800,H=320,padL=60,padR=20,padT=20,padB=40;
+  var plotW=W-padL-padR,plotH=H-padT-padB;
+  var maxVal=Math.max.apply(null,yearData.map(function(d){return d.balance}));
+  maxVal=maxVal>0?maxVal:1;
+  var years=yearData.length;
+  var xScale=function(i){return padL+(years<=1?plotW/2:(i/(years-1))*plotW)};
+  var yScale=function(v){return padT+plotH-(v/maxVal)*plotH};
+  var balancePts=yearData.map(function(d,i){return xScale(i)+','+yScale(d.balance)});
+  var contribPts=yearData.map(function(d,i){return xScale(i)+','+yScale(d.contrib)});
+  var balancePath='M'+balancePts.join(' L');
+  var contribPath='M'+contribPts.join(' L');
+  var areaPath='M'+xScale(0)+','+(padT+plotH)+' L'+balancePts.join(' L')+' L'+xScale(years-1)+','+(padT+plotH)+' Z';
+  var yTicks=[];
+  for(var ti=0;ti<=4;ti++){
+    var val=maxVal*ti/4;
+    var y=yScale(val);
+    yTicks.push('<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1" stroke-dasharray="2,4"/>');
+    yTicks.push('<text x="'+(padL-8)+'" y="'+(y+4)+'" text-anchor="end" fill="var(--muted)" font-size="11" font-family="sans-serif">$'+Math.round(val>=1000?(val/1000)+'k':val).toLocaleString('en-US')+'</text>');
+  }
+  var xLabels=yearData.map(function(d,i){
+    if(years<=10||i%Math.ceil(years/8)===0||i===years-1){
+      return '<text x="'+xScale(i)+'" y="'+(H-padB+20)+'" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="sans-serif">Yr '+d.year+'</text>';
+    }
+    return '';
+  });
+  var svg='<svg id="growthChart" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="balGrad" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="var(--primary)" stop-opacity="0.25"/>'
+    +'<stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>'
+    +'</linearGradient></defs>'
+    +yTicks.join('')
+    +'<path d="'+areaPath+'" fill="url(#balGrad)"/>'
+    +'<path d="'+contribPath+'" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linejoin="round"/>'
+    +'<path d="'+balancePath+'" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linejoin="round"/>'
+    +xLabels.join('')
+    +'</svg>';
+  document.getElementById('growthChartContainer').innerHTML=svg;
+}
 function calc(){
   var P=parseFloat(document.getElementById('principal').value)||0;
   var C=parseFloat(document.getElementById('monthly').value)||0;
@@ -170,9 +231,7 @@ function calc(){
   var ratePerPeriod=r/n;
   var periodsPerYear=n;
   var totalPeriods=n*t;
-  // Future value of principal
   var fvP=P*Math.pow(1+ratePerPeriod,totalPeriods);
-  // Future value of monthly contributions (convert to per-period)
   var periodContribution=C*(12/n);
   var fvC=0;
   if(ratePerPeriod>0){
@@ -183,12 +242,13 @@ function calc(){
   var fv=fvP+fvC;
   var totalContrib=P+C*12*t;
   var totalInterest=fv-totalContrib;
-  document.getElementById('futureValue').textContent=fmt(fv);
+  animateValue(document.getElementById('futureValue'),fmt(fv));
   document.getElementById('growth').textContent='+'+fmt(totalInterest)+' in interest';
-  document.getElementById('totalContrib').textContent=fmt(totalContrib);
-  document.getElementById('totalInterest').textContent='+'+fmt(totalInterest);
-  // Year-by-year
+  animateValue(document.getElementById('totalContrib'),fmt(totalContrib));
+  animateValue(document.getElementById('totalInterest'), '+'+fmt(totalInterest));
+  // Year-by-year + chart data
   var tbody=document.getElementById('yearBody');tbody.innerHTML='';
+  var yearData=[];
   var balance=P;var cumContrib=P;var cumInterest=0;
   for(var yr=1;yr<=t;yr++){
     var yearStartBalance=balance;
@@ -200,7 +260,9 @@ function calc(){
     cumInterest=balance-cumContrib;
     var yearInterest=balance-yearStartBalance-(cumContrib-yearStartContrib);
     tbody.innerHTML+='<tr><td>'+yr+'</td><td>'+fmt(balance)+'</td><td>'+fmt(cumContrib)+'</td><td>'+fmt(cumInterest)+'</td><td>'+fmt(yearInterest)+'</td></tr>';
+    yearData.push({year:yr,balance:balance,contrib:cumContrib});
   }
+  drawChart(yearData);
 }
 ['principal','monthly','rate','years','freq'].forEach(function(id){
   var el=document.getElementById(id);

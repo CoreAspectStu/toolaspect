@@ -75,6 +75,8 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
 .related-links a:hover{border-color:var(--primary)}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
@@ -197,24 +199,30 @@ function switchTab(e,tab){
   document.getElementById('tab-'+tab).classList.add('active');
 }
 function fmt(n){return '$'+n.toFixed(2)}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
 function calcForward(){
   var price=parseFloat(document.getElementById('priceBefore').value)||0;
   var sel=document.getElementById('stateSelect');
   var rate=sel.value==='custom'?(parseFloat(document.getElementById('customRate').value)||0):stateRates[sel.value];
   var tax=price*(rate/100);
   var total=price+tax;
-  document.getElementById('totalPrice').textContent=fmt(total);
-  document.getElementById('taxAmount').textContent=fmt(tax);
-  document.getElementById('effRate').textContent=rate.toFixed(2)+'%';
+  animateValue(document.getElementById('totalPrice'),fmt(total));
+  animateValue(document.getElementById('taxAmount'),fmt(tax));
+  animateValue(document.getElementById('effRate'),rate.toFixed(2)+'%');
 }
 function calcReverse(){
   var total=parseFloat(document.getElementById('totalPaid').value)||0;
   var rate=parseFloat(document.getElementById('reverseRate').value)||0;
   var original=total/(1+rate/100);
   var tax=total-original;
-  document.getElementById('originalPrice').textContent=fmt(original);
-  document.getElementById('reverseTax').textContent=fmt(tax);
-  document.getElementById('reverseRateDisplay').textContent=rate.toFixed(2)+'%';
+  animateValue(document.getElementById('originalPrice'),fmt(original));
+  animateValue(document.getElementById('reverseTax'),fmt(tax));
+  animateValue(document.getElementById('reverseRateDisplay'),rate.toFixed(2)+'%');
 }
 ['priceBefore','customRate'].forEach(function(id){
   var el=document.getElementById(id);if(el){el.addEventListener('input',calcForward)}

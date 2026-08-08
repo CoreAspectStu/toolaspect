@@ -82,6 +82,8 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
 .related-links a:hover{border-color:var(--primary)}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
@@ -165,6 +167,12 @@
 </div>
 <script>
 function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
 function calc(){
   var P=parseFloat(document.getElementById('loanAmount').value)||0;
   var r=(parseFloat(document.getElementById('rate').value)||0)/100/12;
@@ -174,10 +182,10 @@ function calc(){
   var totalInterest=M*n-P;
   var totalPaid=M*n;
   var principalPct=P>0?(P/totalPaid*100):50;
-  document.getElementById('monthly').textContent=fmt(M);
-  document.getElementById('totalInterest').textContent=fmt(totalInterest);
-  document.getElementById('totalPaid').textContent=fmt(totalPaid);
-  document.getElementById('numPayments').textContent=n;
+  animateValue(document.getElementById('monthly'),fmt(M));
+  animateValue(document.getElementById('totalInterest'),fmt(totalInterest));
+  animateValue(document.getElementById('totalPaid'),fmt(totalPaid));
+  animateValue(document.getElementById('numPayments'),n);
   document.getElementById('principalBar').style.width=Math.round(principalPct)+'%';
   buildSchedule(P,r,M,n);
 }

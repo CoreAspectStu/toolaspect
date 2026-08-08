@@ -75,6 +75,8 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
 .related-links a:hover{border-color:var(--primary)}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
@@ -184,6 +186,12 @@ function renderExtras(){
   }).join('');
 }
 function fmt(n){return '$'+n.toFixed(2)}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
 function calc(){
   var price=parseFloat(document.getElementById('originalPrice').value)||0;
   var mainPct=parseFloat(document.getElementById('discountPct').value)||0;
@@ -193,10 +201,10 @@ function calc(){
   });
   var savings=price-current;
   var effPct=price>0?((savings/price)*100):0;
-  document.getElementById('finalPrice').textContent=fmt(current);
-  document.getElementById('savings').textContent=fmt(savings);
+  animateValue(document.getElementById('finalPrice'),fmt(current));
+  animateValue(document.getElementById('savings'),fmt(savings));
   document.getElementById('savingsText').textContent='You save '+fmt(savings);
-  document.getElementById('effectiveDisc').textContent=effPct.toFixed(1)+'%';
+  animateValue(document.getElementById('effectiveDisc'),effPct.toFixed(1)+'%');
 }
 document.getElementById('originalPrice').addEventListener('input',calc);
 document.getElementById('discountPct').addEventListener('input',function(){

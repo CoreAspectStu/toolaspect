@@ -109,6 +109,8 @@
 .related-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .related-links a { padding: 0.4rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); text-decoration: none; font-size: 0.85rem; transition: border-color .2s; }
 .related-links a:hover { border-color: var(--primary); }
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
@@ -282,6 +284,12 @@
 function fmt(n) {
   return '$' + Math.round(n).toLocaleString('en-US');
 }
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
 function calculate() {
   var homePrice = parseFloat(document.getElementById('homePrice').value) || 0;
   var downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
@@ -313,10 +321,10 @@ function calculate() {
   var totalInterest = (principalInterest * numPayments) - loanAmount;
   var totalPaid = principalInterest * numPayments + (monthlyPropTax + monthlyInsurance + hoa + monthlyPMI) * numPayments;
 
-  document.getElementById('monthlyPayment').textContent = fmt(totalMonthly);
-  document.getElementById('loanAmount').textContent = fmt(loanAmount);
-  document.getElementById('totalInterest').textContent = fmt(totalInterest);
-  document.getElementById('totalPaid').textContent = fmt(totalPaid);
+  animateValue(document.getElementById('monthlyPayment'), fmt(totalMonthly));
+  animateValue(document.getElementById('loanAmount'), fmt(loanAmount));
+  animateValue(document.getElementById('totalInterest'), fmt(totalInterest));
+  animateValue(document.getElementById('totalPaid'), fmt(totalPaid));
 
   var payoffYear = new Date().getFullYear() + years;
   document.getElementById('payoffDate').textContent = payoffYear;

@@ -75,6 +75,8 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
 .related-links a:hover{border-color:var(--primary)}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
@@ -221,13 +223,19 @@ function calcDuration(){
   var brk=parseInt(document.getElementById('breakMin').value)||0;
   var diff=end-start;if(diff<0)diff+=1440;
   var net=Math.max(0,diff-brk);
-  document.getElementById('durHours').textContent=fmtMin(diff);
+  animateValue(document.getElementById('durHours'),fmtMin(diff));
   document.getElementById('durDecimal').textContent=(diff/60).toFixed(2)+' hours';
-  document.getElementById('durNet').textContent=fmtMin(net);
-  document.getElementById('durNetDec').textContent=(net/60).toFixed(2);
+  animateValue(document.getElementById('durNet'),fmtMin(net));
+  animateValue(document.getElementById('durNetDec'),(net/60).toFixed(2));
 }
 function fmtMin(m){
   var h=Math.floor(m/60);var mm=m%60;return h+'h '+mm+'m';
+}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
 }
 ['startTime','endTime','breakMin'].forEach(function(id){
   document.getElementById(id).addEventListener('input',calcDuration);
@@ -264,10 +272,10 @@ function calcTimesheet(){
       total+=Math.max(0,diff-breakMin);
     }
   });
-  document.getElementById('tsTotal').textContent=fmtMin(total);
+  animateValue(document.getElementById('tsTotal'),fmtMin(total));
   document.getElementById('tsDecimal').textContent=(total/60).toFixed(2)+' hours';
   var rate=parseFloat(document.getElementById('hourlyRate').value)||0;
-  document.getElementById('tsPay').textContent='$'+((total/60)*rate).toFixed(2);
+  animateValue(document.getElementById('tsPay'),'$'+((total/60)*rate).toFixed(2));
 }
 // Init with 5 weekday rows
 for(var i=0;i<5;i++)addTimesheetRow();
@@ -284,7 +292,7 @@ function calcAddSub(){
   while(result>=1440)result-=1440;
   var h=Math.floor(result/60);var m=result%60;
   var ampm=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;
-  document.getElementById('addResult').textContent=h12+':'+(m<10?'0':'')+m+' '+ampm;
+  animateValue(document.getElementById('addResult'),h12+':'+(m<10?'0':'')+m+' '+ampm);
 }
 ['addHours','addMinutes','addOp','addBaseTime'].forEach(function(id){
   var el=document.getElementById(id);
