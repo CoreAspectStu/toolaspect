@@ -222,10 +222,171 @@ body {
 .hidden { display: none !important; }
 
 /* ============================================================
-   Responsive
+   Mobile-First Responsive (all tools)
+   Phone-first: 320-480px is the base. Tablet 481-768. Desktop 769+.
    ============================================================ */
-@media (max-width: 640px) {
-  .container { padding: 0 .65rem; }
-  .btn       { padding: .5rem .9rem; font-size: .82rem; }
-  .modal     { width: 95%; padding: 1.15rem; }
+
+/* --- Phone: 320px base — everything stacks, large touch targets --- */
+@media (max-width: 480px) {
+  /* Tighter page padding but more vertical breathing room */
+  .container,
+  .page-container {
+    padding: 0 .75rem;
+  }
+
+  /* All grids collapse to single column */
+  .input-grid,
+  .result-grid {
+    grid-template-columns: 1fr !important;
+    gap: .75rem !important;
+  }
+
+  /* Inputs: bigger touch targets, prevent iOS zoom */
+  .input, .textarea, .select,
+  input[type="text"], input[type="number"], input[type="email"],
+  input[type="password"], input[type="url"], input[type="search"],
+  select, textarea {
+    font-size: 16px !important;  /* prevents iOS auto-zoom */
+    padding: .7rem .85rem !important;
+    min-height: 48px;            /* Apple HIG touch target */
+  }
+
+  /* Buttons: larger tap area */
+  .btn, button {
+    min-height: 44px;
+    padding: .6rem 1rem !important;
+    font-size: .9rem !important;
+  }
+
+  /* Preset button rows wrap nicely */
+  .preset-row, .preset-buttons, .tab-row {
+    flex-wrap: wrap;
+    gap: .4rem !important;
+  }
+  .preset-btn, .tab-btn {
+    flex: 1 1 auto !important;
+    min-width: 60px;
+    text-align: center;
+    min-height: 44px;
+  }
+
+  /* Results hero: scale down on tiny screens */
+  .result-hero .value,
+  .result-value,
+  .big-number {
+    font-size: 2rem !important;
+  }
+
+  /* Cards: reduce padding on mobile */
+  .card, .section-card {
+    padding: 1rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Tables: horizontal scroll if needed */
+  table, .tax-table, .amortization-table, .results-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    font-size: .82rem;
+  }
+
+  /* Page headers: smaller but still bold */
+  .page-header h1,
+  h1 {
+    font-size: 1.4rem !important;
+  }
+  .page-header p,
+  .page-header .subtitle {
+    font-size: .85rem !important;
+  }
+
+  /* Content sections: tighten up */
+  .content-section h2 { font-size: 1.1rem !important; }
+  .content-section h3 { font-size: .95rem !important; }
+  .content-section p { font-size: .88rem !important; line-height: 1.65; }
+  .content-section ul, .content-section ol { font-size: .88rem !important; }
+
+  /* Related tools links: full-width taps */
+  .related-links {
+    flex-direction: column;
+    gap: .4rem !important;
+  }
+  .related-links a {
+    display: block;
+    padding: .6rem .8rem !important;
+    text-align: center;
+  }
+
+  /* Modal: near-fullscreen on phone */
+  .modal {
+    width: 95% !important;
+    padding: 1.15rem !important;
+  }
+
+  /* Fix input prefix/suffix overlap */
+  .input-wrap .prefix { left: .6rem !important; font-size: .9rem !important; }
+  .input-wrap .suffix { right: .6rem !important; font-size: .8rem !important; }
+  .input-wrap input.with-prefix { padding-left: 1.5rem !important; }
+  .input-wrap input.with-suffix { padding-right: 2.2rem !important; }
+}
+
+/* --- Small phone: 320-360px (iPhone SE etc) --- */
+@media (max-width: 360px) {
+  .container, .page-container { padding: 0 .5rem; }
+  .result-hero .value, .result-value, .big-number { font-size: 1.7rem !important; }
+  .page-header h1, h1 { font-size: 1.2rem !important; }
+  .card, .section-card { padding: .85rem !important; }
+}
+
+/* --- Tablet: 481-768px — 2 columns where it makes sense --- */
+@media (min-width: 481px) and (max-width: 768px) {
+  .input-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- Desktop: 769px+ — constrain width, center content --- */
+@media (min-width: 769px) {
+  .page-container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+/* --- Prevent horizontal scroll on any device --- */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* --- Smooth input transitions for all tools --- */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- Better focus rings for accessibility --- */
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* --- Safe area insets for notched phones --- */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .toast-container {
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  }
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
