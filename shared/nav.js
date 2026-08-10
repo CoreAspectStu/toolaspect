@@ -29,37 +29,66 @@
     document.head.appendChild(el);
   }
 
-  /* --- Tool definitions --- */
-  var tools = [
-    { label: 'Finance Calc',      href: '/finance-calculator/' },
-    { label: 'JSON Formatter',    href: '/json-formatter/' },
-    { label: 'Image Compress',    href: '/image-compressor/' },
-    { label: 'QR Gen',            href: '/qr-code-generator/' },
-    { label: 'Password Gen',      href: '/password-generator/' },
-    { label: 'Word Unscrambler',  href: '/word-unscrambler/' },
-    { label: 'Currency Conv',     href: '/currency-converter/' },
-    { label: 'Crypto Conv',       href: '/crypto-converter/' },
-    { label: 'Age Calc',          href: '/age-calculator/' },
-    { label: 'Unit Conv',         href: '/unit-converter/' },
-    { label: 'Regex Tester',      href: '/regex-tester/' },
-    { label: 'Pct Calc',          href: '/percentage-calculator/' },
-    { label: 'Cron Gen',          href: '/cron-generator/' },
-    { label: 'Base64',            href: '/base64-encoder/' },
-    { label: 'BMI Calc',          href: '/bmi-calculator/' },
-    { label: 'Compound Interest', href: '/compound-interest-calculator/' },
-    { label: 'Discount Calc',     href: '/discount-calculator/' },
-    { label: 'Hours Calc',        href: '/hours-calculator/' },
-    { label: 'Loan Calc',         href: '/loan-calculator/' },
-    { label: 'Lorem Ipsum',       href: '/lorem-ipsum/' },
-    { label: 'Mortgage Calc',     href: '/mortgage-calculator/' },
-    { label: 'Sales Tax',         href: '/sales-tax-calculator/' },
-    { label: 'Tip Calc',          href: '/tip-calculator/' },
-    { label: 'UUID Gen',          href: '/uuid-generator/' },
-    { label: 'Case Conv',         href: '/case-converter/' },
-    { label: 'Color Picker',      href: '/color-picker/' },
-    { label: 'Word Counter',      href: '/word-counter/' },
-    { label: 'LLM Pricing',       href: '/llm-pricing-tracker/' }
+  /* --- Tool definitions grouped by category --- */
+  var categories = [
+    {
+      label: '💰 Finance',
+      tools: [
+        { label: 'Finance Calculator',     href: '/finance-calculator/' },
+        { label: 'Currency Converter',     href: '/currency-converter/', popular: true },
+        { label: 'Crypto Converter',       href: '/crypto-converter/', popular: true },
+        { label: 'Percentage Calculator',  href: '/percentage-calculator/', popular: true },
+        { label: 'Compound Interest',      href: '/compound-interest-calculator/' },
+        { label: 'Mortgage Calculator',    href: '/mortgage-calculator/' },
+        { label: 'Loan Calculator',        href: '/loan-calculator/' },
+        { label: 'BMI Calculator',         href: '/bmi-calculator/' },
+        { label: 'Discount Calculator',    href: '/discount-calculator/' },
+        { label: 'Sales Tax Calculator',   href: '/sales-tax-calculator/' },
+        { label: 'Tip Calculator',         href: '/tip-calculator/' },
+        { label: 'Hours Calculator',       href: '/hours-calculator/' },
+      ]
+    },
+    {
+      label: '⚙️ Developer',
+      tools: [
+        { label: 'JSON Formatter',    href: '/json-formatter/' },
+        { label: 'Regex Tester',      href: '/regex-tester/' },
+        { label: 'Base64 Encoder',    href: '/base64-encoder/' },
+        { label: 'Cron Generator',    href: '/cron-generator/' },
+        { label: 'UUID Generator',    href: '/uuid-generator/' },
+        { label: 'Color Picker',      href: '/color-picker/' },
+        { label: 'LLM Pricing Tracker', href: '/llm-pricing-tracker/', badge: 'New' },
+      ]
+    },
+    {
+      label: '📝 Text',
+      tools: [
+        { label: 'Word Counter',      href: '/word-counter/' },
+        { label: 'Case Converter',    href: '/case-converter/' },
+        { label: 'Lorem Ipsum',       href: '/lorem-ipsum/' },
+        { label: 'Word Unscrambler',  href: '/word-unscrambler/' },
+      ]
+    },
+    {
+      label: '✨ Generators',
+      tools: [
+        { label: 'QR Code Generator',  href: '/qr-code-generator/' },
+        { label: 'Password Generator', href: '/password-generator/' },
+        { label: 'Image Compressor',   href: '/image-compressor/' },
+      ]
+    },
+    {
+      label: '🔄 Converters',
+      tools: [
+        { label: 'Unit Converter', href: '/unit-converter/' },
+        { label: 'Age Calculator', href: '/age-calculator/' },
+      ]
+    },
   ];
+
+  /* Flat list for search */
+  var tools = [];
+  categories.forEach(function(c) { tools = tools.concat(c.tools); });
 
   /* --- Detect current path for active highlighting --- */
   var current = window.location.pathname.replace(/\/index\.html$/, '/');
@@ -83,6 +112,67 @@
   if (hamburger) {
     hamburger.addEventListener('click', function () {
       menu.classList.toggle('uh-open');
+    });
+  }
+
+  /* --- Mega menu (Tools dropdown) --- */
+  var toolsTrigger = nav.querySelector('.uh-tools-trigger');
+  var mega = nav.querySelector('.uh-mega');
+  if (toolsTrigger && mega) {
+    var megaTimeout;
+    toolsTrigger.addEventListener('mouseenter', function() {
+      clearTimeout(megaTimeout);
+      mega.classList.add('uh-mega-open');
+      toolsTrigger.classList.add('uh-trigger-active');
+    });
+    toolsTrigger.addEventListener('mouseleave', function() {
+      megaTimeout = setTimeout(function() {
+        mega.classList.remove('uh-mega-open');
+        toolsTrigger.classList.remove('uh-trigger-active');
+      }, 200);
+    });
+    mega.addEventListener('mouseenter', function() {
+      clearTimeout(megaTimeout);
+    });
+    mega.addEventListener('mouseleave', function() {
+      mega.classList.remove('uh-mega-open');
+      toolsTrigger.classList.remove('uh-trigger-active');
+    });
+    /* Click for mobile */
+    toolsTrigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      mega.classList.toggle('uh-mega-open');
+    });
+  }
+
+  /* --- Search functionality --- */
+  var searchInput = nav.querySelector('.uh-search');
+  var searchResults = nav.querySelector('.uh-search-results');
+  if (searchInput && searchResults) {
+    searchInput.addEventListener('input', function() {
+      var q = this.value.toLowerCase().trim();
+      if (!q || q.length < 1) {
+        searchResults.style.display = 'none';
+        return;
+      }
+      var matches = tools.filter(function(t) {
+        return t.label.toLowerCase().indexOf(q) !== -1;
+      }).slice(0, 6);
+      if (matches.length === 0) {
+        searchResults.innerHTML = '<div class="uh-sr-empty">No tools found</div>';
+        searchResults.style.display = 'block';
+        return;
+      }
+      searchResults.innerHTML = matches.map(function(t) {
+        return '<a href="' + t.href + '">' + esc(t.label) + '</a>';
+      }).join('');
+      searchResults.style.display = 'block';
+    });
+    /* Close search on outside click */
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.uh-search-wrap')) {
+        searchResults.style.display = 'none';
+      }
     });
   }
 
@@ -124,9 +214,22 @@
 
   /* --- Helper HTML builders --- */
   function buildHTML() {
-    var toolLinks = tools.map(function (t) {
-      var cls = current.indexOf(t.href.replace(/\/$/, '')) !== -1 ? ' class="uh-active"' : '';
-      return '<a href="' + t.href + '"' + cls + '>' + t.label + '</a>';
+    /* Category links for the top bar */
+    var catLinks = categories.map(function(c) {
+      return '<button class="uh-cat-btn" data-cat="' + escAttr(c.label) + '">' + c.label + '</button>';
+    }).join('');
+
+    /* Mega menu content (hidden, shows on hover) */
+    var megaContent = categories.map(function(c) {
+      var toolLinks = c.tools.map(function(t) {
+        var cls = current.indexOf(t.href.replace(/\/$/, '')) !== -1 ? ' class="uh-active"' : '';
+        var badge = t.popular ? ' <span class="uh-mini-badge">🔥</span>' : (t.badge ? ' <span class="uh-mini-badge-new">' + esc(t.badge) + '</span>' : '');
+        return '<a href="' + t.href + '"' + cls + '>' + esc(t.label) + badge + '</a>';
+      }).join('');
+      return '<div class="uh-mega-col">' +
+               '<div class="uh-mega-label">' + c.label + '</div>' +
+               '<div class="uh-mega-links">' + toolLinks + '</div>' +
+             '</div>';
     }).join('');
 
     return '' +
@@ -134,9 +237,22 @@
         '<a class="uh-logo" href="/">ToolAspect</a>' +
         '<button class="uh-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>' +
         '<div class="uh-menu">' +
-          '<div class="uh-center">' + toolLinks + '</div>' +
+          '<div class="uh-center">' +
+            '<button class="uh-tools-trigger">Tools <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
+            '<a href="/developer-tools/">Developer</a>' +
+            '<a href="/finance-tools/">Finance</a>' +
+            '<a href="/text-tools/">Text</a>' +
+            '<div class="uh-search-wrap">' +
+              '<input type="text" class="uh-search" placeholder="Search 28 tools..." autocomplete="off">' +
+              '<svg class="uh-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
+              '<div class="uh-search-results"></div>' +
+            '</div>' +
+          '</div>' +
           '<div class="uh-right">' + authHTML(null) + '</div>' +
         '</div>' +
+      '</div>' +
+      '<div class="uh-mega">' +
+        '<div class="uh-mega-grid">' + megaContent + '</div>' +
       '</div>';
   }
 
@@ -220,16 +336,61 @@
     'display:flex;align-items:center;gap:1rem;flex:1;min-width:0;' +
   '}' +
   '.uh-center{' +
-    'display:flex;align-items:center;gap:.5rem;overflow-x:auto;scrollbar-width:none;flex:1;' +
-    'mask-image:linear-gradient(90deg,#000 85%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);' +
+    'display:flex;align-items:center;gap:1.5rem;flex:1;min-width:0;' +
   '}' +
   '.uh-center::-webkit-scrollbar{display:none;}' +
-  '.uh-center a{' +
-    'font-size:.82rem;color:var(--muted);white-space:nowrap;padding:.3rem .5rem;border-radius:var(--radius);' +
-    'transition:color .15s,background .15s;' +
+  '.uh-tools-trigger{' +
+    'display:inline-flex;align-items:center;gap:.3rem;background:none;border:none;color:var(--text-secondary);' +
+    'font-size:.88rem;font-weight:500;cursor:pointer;padding:.4rem .6rem;border-radius:var(--radius);transition:color .15s,background .15s;' +
+    'white-space:nowrap;' +
   '}' +
-  '.uh-center a:hover{color:var(--text);background:rgba(99,102,241,.1);}' +
-  '.uh-center a.uh-active{color:var(--primary);background:rgba(99,102,241,.12);font-weight:600;}' +
+  '.uh-tools-trigger:hover,.uh-tools-trigger.uh-trigger-active{color:var(--text);background:var(--primary-glow);}' +
+  '.uh-center a{' +
+    'font-size:.88rem;color:var(--text-secondary);white-space:nowrap;padding:.4rem .6rem;border-radius:var(--radius);' +
+    'transition:color .15s,background .15s;font-weight:500;' +
+  '}' +
+  '.uh-center a:hover{color:var(--text);background:var(--primary-glow);}' +
+  '.uh-center a.uh-active{color:var(--primary);background:var(--primary-glow);font-weight:600;}' +
+  /* Search box */
+  '.uh-search-wrap{position:relative;margin-left:auto;}' +
+  '.uh-search{' +
+    'padding:.4rem .85rem .4rem 2rem;border:1px solid var(--border);border-radius:999px;' +
+    'background:var(--bg-elevated);color:var(--text);font-size:.82rem;width:200px;transition:width .2s,border-color .2s;' +
+  '}' +
+  '.uh-search:focus{outline:none;border-color:var(--primary);width:260px;box-shadow:0 0 0 3px rgba(99,102,241,.12);}' +
+  '.uh-search::placeholder{color:var(--muted);}' +
+  '.uh-search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}' +
+  '.uh-search-results{' +
+    'position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);' +
+    'border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:none;z-index:960;overflow:hidden;padding:.4rem;' +
+  '}' +
+  '.uh-search-results a{' +
+    'display:block;padding:.5rem .75rem;font-size:.85rem;color:var(--text-secondary);border-radius:var(--radius);' +
+    'transition:background .12s,color .12s;' +
+  '}' +
+  '.uh-search-results a:hover{background:var(--primary-glow);color:var(--text);}' +
+  '.uh-sr-empty{padding:.75rem;text-align:center;color:var(--muted);font-size:.82rem;}' +
+  /* Mega menu */
+  '.uh-mega{' +
+    'position:absolute;top:100%;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);' +
+    'box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-8px);' +
+    'transition:opacity .2s,transform .2s,visibility .2s;z-index:890;' +
+  '}' +
+  '.uh-mega.uh-mega-open{opacity:1;visibility:visible;transform:translateY(0);}' +
+  '.uh-mega-grid{' +
+    'max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1.5rem;padding:1.5rem;' +
+  '}' +
+  '.uh-mega-col{}' +
+  '.uh-mega-label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;padding-left:.4rem;}' +
+  '.uh-mega-links{display:flex;flex-direction:column;gap:.1rem;}' +
+  '.uh-mega-links a{' +
+    'display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .5rem;font-size:.82rem;color:var(--text-secondary);' +
+    'border-radius:var(--radius);transition:background .12s,color .12s;' +
+  '}' +
+  '.uh-mega-links a:hover{background:var(--primary-glow);color:var(--text);}' +
+  '.uh-mega-links a.uh-active{color:var(--primary);font-weight:600;}' +
+  '.uh-mini-badge{font-size:.7rem;}' +
+  '.uh-mini-badge-new{font-size:.6rem;background:var(--primary);color:#fff;padding:0 .35rem;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;}' +
   '.uh-right{flex-shrink:0;position:relative;}' +
   '.uh-avatar-trigger{' +
     'width:34px;height:34px;border-radius:50%;border:2px solid var(--border);overflow:hidden;cursor:pointer;background:var(--bg);display:flex;align-items:center;justify-content:center;' +
@@ -254,10 +415,16 @@
     '.uh-menu{' +
       'display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);' +
       'border-bottom:1px solid var(--border);flex-direction:column;padding:1rem;gap:.75rem;' +
+      'max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;' +
     '}' +
     '.uh-menu.uh-open{display:flex;}' +
-    '.uh-center{flex-wrap:wrap;mask-image:none;-webkit-mask-image:none;}' +
-    '.uh-center a{padding:.45rem .6rem;}' +
+    '.uh-center{flex-direction:column;align-items:stretch;gap:.5rem;}' +
+    '.uh-center a,.uh-tools-trigger{padding:.6rem .8rem;font-size:.95rem;}' +
+    '.uh-search-wrap{margin-left:0;width:100%;}' +
+    '.uh-search{width:100%!important;}' +
+    '.uh-mega{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;display:none;}' +
+    '.uh-mega.uh-mega-open{display:block;}' +
+    '.uh-mega-grid{grid-template-columns:1fr;gap:1rem;padding:0;}' +
   '}';
 
 })();
