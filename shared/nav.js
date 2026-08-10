@@ -104,11 +104,6 @@
   nav.className = 'ta-nav';
   nav.innerHTML = buildHTML();
 
-  /* Inject scoped styles */
-  var style = document.createElement('style');
-  style.textContent = NAV_CSS;
-  document.head.appendChild(style);
-
   /* Insert at top of body */
   document.body.insertBefore(nav, document.body.firstChild);
 
@@ -451,5 +446,10 @@
   '@media(max-width:480px){' +
     '.ta-nav-inner{padding:0 1rem;height:54px}' +
   '}';
+
+  /* Inject scoped styles — MUST be after NAV_CSS definition */
+  var style = document.createElement('style');
+  style.textContent = NAV_CSS;
+  document.head.appendChild(style);
 
 })();
