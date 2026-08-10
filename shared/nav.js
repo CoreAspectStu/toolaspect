@@ -265,7 +265,9 @@
   function escAttr(s) { return String(s == null ? '' : s).replace(/[&"'<>]/g, function (c) { return { '&': '&amp;', '"': '&quot;', "'": '&#39;', '<': '&lt;', '>': '&gt;' }[c]; }); }
 
   /* --- Site-wide footer with legal links (only if page has no footer) --- */
-  if (!document.querySelector('footer')) {
+  /* Defer until DOM is ready so we don't inject before page's own footer exists */
+  function injectFooter() {
+    if (document.querySelector('footer.ta-footer') || document.querySelector('footer:not(.ta-footer)')) return;
     var f = document.createElement('footer');
     f.className = 'ta-footer';
     f.innerHTML =
@@ -288,6 +290,11 @@
       '.ta-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.5rem;margin-top:.75rem}';
     document.head.appendChild(fStyle);
     document.body.appendChild(f);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectFooter);
+  } else {
+    injectFooter();
   }
 
   /* ============================================================
