@@ -202,13 +202,13 @@
   /* --- Scoped CSS --- */
   var NAV_CSS = '' +
   '.uh-nav{' +
-    'background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:900;' +
+    'background:rgba(8,9,13,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:900;' +
   '}' +
   '.uh-inner{' +
-    'max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;padding:.6rem 1rem;gap:.75rem;' +
+    'max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;padding:.7rem 1.5rem;gap:.75rem;' +
   '}' +
   '.uh-logo{' +
-    'font-weight:700;font-size:1.1rem;color:var(--primary);white-space:nowrap;flex-shrink:0;' +
+    'font-weight:800;font-size:1.15rem;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;flex-shrink:0;letter-spacing:-0.02em;' +
   '}' +
   '.uh-hamburger{' +
     'display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:4px;' +
