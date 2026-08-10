@@ -1,6 +1,7 @@
 /* ============================================================
-   ToolAspect — Shared Navigation  (nav.js)
-   Self-rendering top nav.  Include via <script src="shared/nav.js">
+   ToolAspect v3 — Shared Navigation (nav.js)
+   Clean, minimal nav matching the homepage redesign.
+   Self-rendering. Include via <script src="shared/nav.js">
    Auto-injects theme.css when loaded.
    ============================================================ */
 (function () {
@@ -13,7 +14,7 @@
     var m = scripts[i].src.match(/^(.*)shared\/nav\.js(\?.*)?$/);
     if (m) { base = m[1]; break; }
   }
-  if (!base) base = './';                       // fallback
+  if (!base) base = './';
 
   /* --- Inject theme.css if not already present --- */
   var cssHref = base + 'shared/theme.css';
@@ -32,7 +33,8 @@
   /* --- Tool definitions grouped by category --- */
   var categories = [
     {
-      label: '💰 Finance',
+      label: 'Finance',
+      dot: '#10b981',
       tools: [
         { label: 'Finance Calculator',     href: '/finance-calculator/' },
         { label: 'Currency Converter',     href: '/currency-converter/', popular: true },
@@ -49,7 +51,8 @@
       ]
     },
     {
-      label: '⚙️ Developer',
+      label: 'Developer',
+      dot: '#5e6ad2',
       tools: [
         { label: 'JSON Formatter',    href: '/json-formatter/' },
         { label: 'Regex Tester',      href: '/regex-tester/' },
@@ -61,7 +64,8 @@
       ]
     },
     {
-      label: '📝 Text',
+      label: 'Text',
+      dot: '#f59e0b',
       tools: [
         { label: 'Word Counter',      href: '/word-counter/' },
         { label: 'Case Converter',    href: '/case-converter/' },
@@ -70,7 +74,8 @@
       ]
     },
     {
-      label: '✨ Generators',
+      label: 'Generators',
+      dot: '#f472b6',
       tools: [
         { label: 'QR Code Generator',  href: '/qr-code-generator/' },
         { label: 'Password Generator', href: '/password-generator/' },
@@ -78,7 +83,8 @@
       ]
     },
     {
-      label: '🔄 Converters',
+      label: 'Converters',
+      dot: '#22d3ee',
       tools: [
         { label: 'Unit Converter', href: '/unit-converter/' },
         { label: 'Age Calculator', href: '/age-calculator/' },
@@ -87,15 +93,15 @@
   ];
 
   /* Flat list for search */
-  var tools = [];
-  categories.forEach(function(c) { tools = tools.concat(c.tools); });
+  var allTools = [];
+  categories.forEach(function(c) { allTools = allTools.concat(c.tools); });
 
   /* --- Detect current path for active highlighting --- */
   var current = window.location.pathname.replace(/\/index\.html$/, '/');
 
   /* --- Build DOM --- */
   var nav = document.createElement('nav');
-  nav.className = 'uh-nav';
+  nav.className = 'ta-nav';
   nav.innerHTML = buildHTML();
 
   /* Inject scoped styles */
@@ -107,47 +113,18 @@
   document.body.insertBefore(nav, document.body.firstChild);
 
   /* --- Hamburger toggle --- */
-  var hamburger = nav.querySelector('.uh-hamburger');
-  var menu = nav.querySelector('.uh-menu');
+  var hamburger = nav.querySelector('.ta-hamburger');
+  var mobileMenu = nav.querySelector('.ta-mobile-menu');
   if (hamburger) {
     hamburger.addEventListener('click', function () {
-      menu.classList.toggle('uh-open');
-    });
-  }
-
-  /* --- Mega menu (Tools dropdown) --- */
-  var toolsTrigger = nav.querySelector('.uh-tools-trigger');
-  var mega = nav.querySelector('.uh-mega');
-  if (toolsTrigger && mega) {
-    var megaTimeout;
-    toolsTrigger.addEventListener('mouseenter', function() {
-      clearTimeout(megaTimeout);
-      mega.classList.add('uh-mega-open');
-      toolsTrigger.classList.add('uh-trigger-active');
-    });
-    toolsTrigger.addEventListener('mouseleave', function() {
-      megaTimeout = setTimeout(function() {
-        mega.classList.remove('uh-mega-open');
-        toolsTrigger.classList.remove('uh-trigger-active');
-      }, 200);
-    });
-    mega.addEventListener('mouseenter', function() {
-      clearTimeout(megaTimeout);
-    });
-    mega.addEventListener('mouseleave', function() {
-      mega.classList.remove('uh-mega-open');
-      toolsTrigger.classList.remove('uh-trigger-active');
-    });
-    /* Click for mobile */
-    toolsTrigger.addEventListener('click', function(e) {
-      e.preventDefault();
-      mega.classList.toggle('uh-mega-open');
+      mobileMenu.classList.toggle('ta-open');
+      hamburger.classList.toggle('ta-active');
     });
   }
 
   /* --- Search functionality --- */
-  var searchInput = nav.querySelector('.uh-search');
-  var searchResults = nav.querySelector('.uh-search-results');
+  var searchInput = nav.querySelector('.ta-search-input');
+  var searchResults = nav.querySelector('.ta-search-results');
   if (searchInput && searchResults) {
     searchInput.addEventListener('input', function() {
       var q = this.value.toLowerCase().trim();
@@ -155,11 +132,11 @@
         searchResults.style.display = 'none';
         return;
       }
-      var matches = tools.filter(function(t) {
+      var matches = allTools.filter(function(t) {
         return t.label.toLowerCase().indexOf(q) !== -1;
       }).slice(0, 6);
       if (matches.length === 0) {
-        searchResults.innerHTML = '<div class="uh-sr-empty">No tools found</div>';
+        searchResults.innerHTML = '<div class="ta-sr-empty">No tools found</div>';
         searchResults.style.display = 'block';
         return;
       }
@@ -170,90 +147,99 @@
     });
     /* Close search on outside click */
     document.addEventListener('click', function(e) {
-      if (!e.target.closest('.uh-search-wrap')) {
+      if (!e.target.closest('.ta-search-wrap')) {
         searchResults.style.display = 'none';
+      }
+    });
+    /* Enter to go to first result */
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var firstLink = searchResults.querySelector('a');
+        if (firstLink) window.location.href = firstLink.href;
       }
     });
   }
 
+  /* --- Cmd+K shortcut --- */
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (searchInput) searchInput.focus();
+    }
+  });
+
   /* Close mobile menu on link click */
-  var links2 = nav.querySelectorAll('.uh-menu a');
-  for (var k = 0; k < links2.length; k++) {
-    links2[k].addEventListener('click', function () {
-      menu.classList.remove('uh-open');
+  var mobileLinks = nav.querySelectorAll('.ta-mobile-menu a');
+  for (var k = 0; k < mobileLinks.length; k++) {
+    mobileLinks[k].addEventListener('click', function () {
+      mobileMenu.classList.remove('ta-open');
+      hamburger.classList.remove('ta-active');
     });
   }
 
-  /* --- Listen for auth events to update Sign-In / Avatar --- */
+  /* --- Listen for auth events --- */
   document.addEventListener('auth:login', updateAuthUI);
   document.addEventListener('auth:logout', updateAuthUI);
   document.addEventListener('auth:premium', updateAuthUI);
 
   function updateAuthUI(e) {
-    var right = nav.querySelector('.uh-right');
+    var right = nav.querySelector('.ta-right');
     if (!right) return;
     right.innerHTML = authHTML(e.detail || null);
     bindAuthDropdown(right);
   }
 
   function bindAuthDropdown(container) {
-    var trigger = container.querySelector('.uh-avatar-trigger');
-    var dd = container.querySelector('.uh-dropdown');
+    var trigger = container.querySelector('.ta-avatar-trigger');
+    var dd = container.querySelector('.ta-dropdown');
     if (!trigger || !dd) return;
     trigger.addEventListener('click', function (ev) {
       ev.stopPropagation();
-      dd.classList.toggle('uh-dd-open');
+      dd.classList.toggle('ta-dd-open');
     });
     document.addEventListener('click', function () {
-      dd.classList.remove('uh-dd-open');
+      dd.classList.remove('ta-dd-open');
     });
   }
 
   /* Initial bind */
-  bindAuthDropdown(nav.querySelector('.uh-right'));
+  bindAuthDropdown(nav.querySelector('.ta-right'));
 
   /* --- Helper HTML builders --- */
   function buildHTML() {
-    /* Category links for the top bar */
-    var catLinks = categories.map(function(c) {
-      return '<button class="uh-cat-btn" data-cat="' + escAttr(c.label) + '">' + c.label + '</button>';
-    }).join('');
-
-    /* Mega menu content (hidden, shows on hover) */
-    var megaContent = categories.map(function(c) {
+    /* Mobile menu categories */
+    var mobileCats = categories.map(function(c) {
       var toolLinks = c.tools.map(function(t) {
-        var cls = current.indexOf(t.href.replace(/\/$/, '')) !== -1 ? ' class="uh-active"' : '';
-        var badge = t.popular ? ' <span class="uh-mini-badge">🔥</span>' : (t.badge ? ' <span class="uh-mini-badge-new">' + esc(t.badge) + '</span>' : '');
-        return '<a href="' + t.href + '"' + cls + '>' + esc(t.label) + badge + '</a>';
+        var badge = t.popular ? ' <span class="ta-badge-sm">🔥</span>' : (t.badge ? ' <span class="ta-badge-sm">' + esc(t.badge) + '</span>' : '');
+        return '<a href="' + t.href + '">' + esc(t.label) + badge + '</a>';
       }).join('');
-      return '<div class="uh-mega-col">' +
-               '<div class="uh-mega-label">' + c.label + '</div>' +
-               '<div class="uh-mega-links">' + toolLinks + '</div>' +
+      return '<div class="ta-mobile-cat">' +
+               '<div class="ta-mobile-cat-label"><span class="ta-cat-dot" style="background:' + c.dot + '"></span>' + esc(c.label) + '</div>' +
+               '<div class="ta-mobile-cat-links">' + toolLinks + '</div>' +
              '</div>';
     }).join('');
 
     return '' +
-      '<div class="uh-inner">' +
-        '<a class="uh-logo" href="/">ToolAspect</a>' +
-        '<button class="uh-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>' +
-        '<div class="uh-menu">' +
-          '<div class="uh-center">' +
-            '<button class="uh-tools-trigger">Tools <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
-            '<a href="/developer-tools/">Developer</a>' +
-            '<a href="/finance-tools/">Finance</a>' +
-            '<a href="/text-tools/">Text</a>' +
-            '<div class="uh-search-wrap">' +
-              '<input type="text" class="uh-search" placeholder="Search 28 tools..." autocomplete="off">' +
-              '<svg class="uh-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-              '<div class="uh-search-results"></div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="uh-right">' + authHTML(null) + '</div>' +
+      '<div class="ta-nav-inner">' +
+        '<a class="ta-logo" href="/">' +
+          '<span class="ta-logo-mark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>' +
+          'ToolAspect' +
+        '</a>' +
+        '<div class="ta-search-wrap">' +
+          '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
+          '<input type="text" class="ta-search-input" placeholder="Search 28 tools\u2026" autocomplete="off">' +
+          '<span class="ta-kbd">\u2318K</span>' +
+          '<div class="ta-search-results"></div>' +
         '</div>' +
+        '<div class="ta-nav-links">' +
+          '<a href="/">Tools</a>' +
+          '<a href="/about.html">About</a>' +
+          '<a href="https://github.com/CoreAspectStu/utility-sites">GitHub</a>' +
+        '</div>' +
+        '<div class="ta-right">' + authHTML(null) + '</div>' +
+        '<button class="ta-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>' +
       '</div>' +
-      '<div class="uh-mega">' +
-        '<div class="uh-mega-grid">' + megaContent + '</div>' +
-      '</div>';
+      '<div class="ta-mobile-menu">' + mobileCats + '</div>';
   }
 
   function authHTML(user) {
@@ -262,169 +248,208 @@
       var name = user.displayName || user.email || 'User';
       var initials = name.charAt(0).toUpperCase();
       var avatarEl = avatar
-        ? '<img src="' + escAttr(avatar) + '" alt="" class="uh-avatar-img">'
-        : '<span class="uh-avatar-init">' + initials + '</span>';
+        ? '<img src="' + escAttr(avatar) + '" alt="" class="ta-avatar-img">'
+        : '<span class="ta-avatar-init">' + initials + '</span>';
       return '' +
-        '<div class="uh-auth-wrap">' +
-          '<button class="uh-avatar-trigger">' + avatarEl + '</button>' +
-          '<div class="uh-dropdown">' +
-            '<div class="uh-dd-header">' +
-              '<div class="uh-dd-name">' + esc(name) + '</div>' +
-              '<div class="uh-dd-email">' + esc(user.email || '') + '</div>' +
+        '<div class="ta-auth-wrap">' +
+          '<button class="ta-avatar-trigger">' + avatarEl + '</button>' +
+          '<div class="ta-dropdown">' +
+            '<div class="ta-dd-header">' +
+              '<div class="ta-dd-name">' + esc(name) + '</div>' +
+              '<div class="ta-dd-email">' + esc(user.email || '') + '</div>' +
             '</div>' +
-            '<a href="/account/" class="uh-dd-item">Manage Subscription</a>' +
-            '<button class="uh-dd-item" onclick="document.dispatchEvent(new CustomEvent(\'auth:logout\'))">Sign Out</button>' +
+            '<a href="/account/" class="ta-dd-item">Manage Subscription</a>' +
+            '<button class="ta-dd-item" onclick="document.dispatchEvent(new CustomEvent(\'auth:logout\'))">Sign Out</button>' +
           '</div>' +
         '</div>';
     }
-    return '<button class="btn btn-primary btn-sm" onclick="document.dispatchEvent(new CustomEvent(\'auth:show-login\'))">Sign In</button>';
+    return '<button class="ta-signin" onclick="document.dispatchEvent(new CustomEvent(\'auth:show-login\'))">Sign In</button>';
   }
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  // Attribute-safe escape (esc() via textContent does NOT encode quotes, so it can't
-  // protect an HTML attribute). Used for user.photoURL in the avatar <img src> to
-  // prevent DOM XSS via attribute breakout. 2026-06-08.
   function escAttr(s) { return String(s == null ? '' : s).replace(/[&"'<>]/g, function (c) { return { '&': '&amp;', '"': '&quot;', "'": '&#39;', '<': '&lt;', '>': '&gt;' }[c]; }); }
 
   /* --- Site-wide footer with legal links (only if page has no footer) --- */
   if (!document.querySelector('footer')) {
     var f = document.createElement('footer');
-    f.className = 'uh-footer';
+    f.className = 'ta-footer';
     f.innerHTML =
-      '<div class="uh-footer-inner">' +
-        '<a class="uh-footer-logo" href="/">ToolAspect</a>' +
-        '<div class="uh-footer-links">' +
-          '<a href="/about.html">About</a>' +
-          '<a href="/contact.html">Contact</a>' +
-          '<a href="/privacy.html">Privacy Policy</a>' +
-          '<a href="/terms.html">Terms of Service</a>' +
-          '<a href="/disclaimer.html">Disclaimer</a>' +
-        '</div>' +
-        '<p class="uh-footer-copy">\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
+      '<p>\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
+      '<div class="ta-footer-links">' +
+        '<a href="/about.html">About</a>' +
+        '<a href="/contact.html">Contact</a>' +
+        '<a href="/privacy.html">Privacy</a>' +
+        '<a href="/terms.html">Terms</a>' +
+        '<a href="/disclaimer.html">Disclaimer</a>' +
+        '<a href="/developer-tools/">Developer</a>' +
+        '<a href="/finance-tools/">Finance</a>' +
+        '<a href="/text-tools/">Text</a>' +
       '</div>';
     var fStyle = document.createElement('style');
     fStyle.textContent =
-      '.uh-footer{border-top:1px solid var(--border);padding:2rem 1rem;text-align:center}' +
-      '.uh-footer-inner{max-width:var(--max-w);margin:0 auto}' +
-      '.uh-footer-logo{font-weight:700;font-size:1rem;color:var(--primary);display:block;margin-bottom:.75rem}' +
-      '.uh-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1rem;margin-bottom:1rem}' +
-      '.uh-footer-links a{font-size:.82rem;color:var(--muted);transition:color .15s}' +
-      '.uh-footer-links a:hover{color:var(--primary)}' +
-      '.uh-footer-copy{font-size:.78rem;color:var(--muted);line-height:1.5}';
+      '.ta-footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem;position:relative;z-index:1}' +
+      '.ta-footer a{color:var(--text-secondary);transition:color .15s}' +
+      '.ta-footer a:hover{color:var(--text)}' +
+      '.ta-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.5rem;margin-top:.75rem}';
     document.head.appendChild(fStyle);
     document.body.appendChild(f);
   }
 
-  /* --- Scoped CSS --- */
+  /* ============================================================
+     Scoped CSS — v3 Nav (Linear/Raycast inspired)
+     ============================================================ */
   var NAV_CSS = '' +
-  '.uh-nav{' +
-    'background:rgba(8,9,13,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:900;' +
+  '.ta-nav{' +
+    'position:sticky;top:0;z-index:900;' +
+    'background:rgba(8,9,10,0.72);' +
+    'backdrop-filter:blur(20px) saturate(1.5);' +
+    '-webkit-backdrop-filter:blur(20px) saturate(1.5);' +
+    'border-bottom:1px solid var(--border);' +
   '}' +
-  '.uh-inner{' +
-    'max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;padding:.7rem 1.5rem;gap:.75rem;' +
+  '.ta-nav-inner{' +
+    'max-width:1180px;margin:0 auto;' +
+    'display:flex;align-items:center;gap:1.25rem;' +
+    'padding:0 1.5rem;height:60px;' +
   '}' +
-  '.uh-logo{' +
-    'font-weight:800;font-size:1.15rem;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;flex-shrink:0;letter-spacing:-0.02em;' +
+  /* Logo */
+  '.ta-logo{' +
+    'font-size:1rem;font-weight:600;letter-spacing:-0.02em;' +
+    'display:flex;align-items:center;gap:.5rem;color:var(--text);flex-shrink:0;' +
   '}' +
-  '.uh-hamburger{' +
-    'display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:4px;' +
+  '.ta-logo-mark{' +
+    'width:24px;height:24px;border-radius:6px;' +
+    'background:linear-gradient(135deg, var(--primary), var(--primary-light));' +
+    'display:flex;align-items:center;justify-content:center;' +
+    'box-shadow:0 0 12px rgba(99,102,241,.3);flex-shrink:0;' +
   '}' +
-  '.uh-hamburger span{' +
-    'display:block;width:20px;height:2px;background:var(--text);border-radius:1px;' +
+  /* Search */
+  '.ta-search-wrap{' +
+    'flex:1;max-width:380px;position:relative;display:flex;align-items:center;' +
   '}' +
-  '.uh-menu{' +
-    'display:flex;align-items:center;gap:1rem;flex:1;min-width:0;' +
+  '.ta-search-icon{' +
+    'position:absolute;left:.65rem;opacity:.4;pointer-events:none;flex-shrink:0;' +
   '}' +
-  '.uh-center{' +
-    'display:flex;align-items:center;gap:1.5rem;flex:1;min-width:0;' +
+  '.ta-search-input{' +
+    'flex:1;width:100%;' +
+    'background:rgba(255,255,255,.03);' +
+    'border:1px solid var(--border);' +
+    'border-radius:8px;' +
+    'padding:.45rem .8rem .45rem 2rem;' +
+    'color:var(--text);font-size:.85rem;font-family:var(--font-sans);' +
+    'transition:border-color .2s,box-shadow .2s,background .2s;' +
   '}' +
-  '.uh-center::-webkit-scrollbar{display:none;}' +
-  '.uh-tools-trigger{' +
-    'display:inline-flex;align-items:center;gap:.3rem;background:none;border:none;color:var(--text-secondary);' +
-    'font-size:.88rem;font-weight:500;cursor:pointer;padding:.4rem .6rem;border-radius:var(--radius);transition:color .15s,background .15s;' +
-    'white-space:nowrap;' +
+  '.ta-search-input::placeholder{color:var(--muted)}' +
+  '.ta-search-input:focus{' +
+    'outline:none;' +
+    'border-color:rgba(99,102,241,.3);' +
+    'background:rgba(255,255,255,.04);' +
+    'box-shadow:0 0 0 3px rgba(99,102,241,.08);' +
   '}' +
-  '.uh-tools-trigger:hover,.uh-tools-trigger.uh-trigger-active{color:var(--text);background:var(--primary-glow);}' +
-  '.uh-center a{' +
-    'font-size:.88rem;color:var(--text-secondary);white-space:nowrap;padding:.4rem .6rem;border-radius:var(--radius);' +
-    'transition:color .15s,background .15s;font-weight:500;' +
+  '.ta-kbd{' +
+    'position:absolute;right:.5rem;' +
+    'font-family:var(--font-mono);font-size:.7rem;' +
+    'padding:.1rem .35rem;border-radius:4px;' +
+    'background:rgba(255,255,255,.06);border:1px solid var(--border);' +
+    'color:var(--muted);pointer-events:none;' +
   '}' +
-  '.uh-center a:hover{color:var(--text);background:var(--primary-glow);}' +
-  '.uh-center a.uh-active{color:var(--primary);background:var(--primary-glow);font-weight:600;}' +
-  /* Search box */
-  '.uh-search-wrap{position:relative;margin-left:auto;}' +
-  '.uh-search{' +
-    'padding:.4rem .85rem .4rem 2rem;border:1px solid var(--border);border-radius:999px;' +
-    'background:var(--bg-elevated);color:var(--text);font-size:.82rem;width:200px;transition:width .2s,border-color .2s;' +
+  '.ta-search-results{' +
+    'position:absolute;top:calc(100% + 6px);left:0;right:0;' +
+    'background:var(--surface);border:1px solid var(--border);' +
+    'border-radius:8px;box-shadow:var(--shadow-lg);' +
+    'display:none;z-index:960;overflow:hidden;padding:.4rem;' +
   '}' +
-  '.uh-search:focus{outline:none;border-color:var(--primary);width:260px;box-shadow:0 0 0 3px rgba(99,102,241,.12);}' +
-  '.uh-search::placeholder{color:var(--muted);}' +
-  '.uh-search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}' +
-  '.uh-search-results{' +
-    'position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);' +
-    'border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:none;z-index:960;overflow:hidden;padding:.4rem;' +
-  '}' +
-  '.uh-search-results a{' +
-    'display:block;padding:.5rem .75rem;font-size:.85rem;color:var(--text-secondary);border-radius:var(--radius);' +
+  '.ta-search-results a{' +
+    'display:block;padding:.5rem .75rem;font-size:.85rem;' +
+    'color:var(--text-secondary);border-radius:6px;' +
     'transition:background .12s,color .12s;' +
   '}' +
-  '.uh-search-results a:hover{background:var(--primary-glow);color:var(--text);}' +
-  '.uh-sr-empty{padding:.75rem;text-align:center;color:var(--muted);font-size:.82rem;}' +
-  /* Mega menu */
-  '.uh-mega{' +
-    'position:absolute;top:100%;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);' +
-    'box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-8px);' +
-    'transition:opacity .2s,transform .2s,visibility .2s;z-index:890;' +
+  '.ta-search-results a:hover{background:var(--primary-glow);color:var(--text)}' +
+  '.ta-sr-empty{padding:.75rem;text-align:center;color:var(--muted);font-size:.82rem}' +
+  /* Nav links */
+  '.ta-nav-links{display:flex;gap:.25rem;margin-left:auto;align-items:center}' +
+  '.ta-nav-links a{' +
+    'font-size:.85rem;font-weight:500;color:var(--text-secondary);' +
+    'padding:.4rem .7rem;border-radius:6px;' +
+    'transition:color .15s,background .15s;' +
   '}' +
-  '.uh-mega.uh-mega-open{opacity:1;visibility:visible;transform:translateY(0);}' +
-  '.uh-mega-grid{' +
-    'max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:1.5rem;padding:1.5rem;' +
+  '.ta-nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}' +
+  /* Right section */
+  '.ta-right{flex-shrink:0;position:relative}' +
+  '.ta-signin{' +
+    'font-size:.82rem;font-weight:500;' +
+    'padding:.4rem .9rem;border-radius:6px;' +
+    'background:rgba(255,255,255,.05);border:1px solid var(--border);' +
+    'color:var(--text-secondary);cursor:pointer;' +
+    'transition:all .2s;' +
   '}' +
-  '.uh-mega-col{}' +
-  '.uh-mega-label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;padding-left:.4rem;}' +
-  '.uh-mega-links{display:flex;flex-direction:column;gap:.1rem;}' +
-  '.uh-mega-links a{' +
-    'display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .5rem;font-size:.82rem;color:var(--text-secondary);' +
-    'border-radius:var(--radius);transition:background .12s,color .12s;' +
+  '.ta-signin:hover{border-color:var(--border-hover);color:var(--text);background:rgba(255,255,255,.07)}' +
+  /* Avatar */
+  '.ta-avatar-trigger{' +
+    'width:32px;height:32px;border-radius:50%;' +
+    'border:1px solid var(--border);overflow:hidden;cursor:pointer;' +
+    'background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;' +
   '}' +
-  '.uh-mega-links a:hover{background:var(--primary-glow);color:var(--text);}' +
-  '.uh-mega-links a.uh-active{color:var(--primary);font-weight:600;}' +
-  '.uh-mini-badge{font-size:.7rem;}' +
-  '.uh-mini-badge-new{font-size:.6rem;background:var(--primary);color:#fff;padding:0 .35rem;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;}' +
-  '.uh-right{flex-shrink:0;position:relative;}' +
-  '.uh-avatar-trigger{' +
-    'width:34px;height:34px;border-radius:50%;border:2px solid var(--border);overflow:hidden;cursor:pointer;background:var(--bg);display:flex;align-items:center;justify-content:center;' +
-  '}' +
-  '.uh-avatar-img{width:100%;height:100%;object-fit:cover;}' +
-  '.uh-avatar-init{font-size:.8rem;font-weight:600;color:var(--primary);}' +
-  '.uh-dropdown{' +
-    'position:absolute;right:0;top:calc(100% + 8px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);' +
+  '.ta-avatar-img{width:100%;height:100%;object-fit:cover}' +
+  '.ta-avatar-init{font-size:.8rem;font-weight:600;color:var(--primary)}' +
+  '.ta-dropdown{' +
+    'position:absolute;right:0;top:calc(100% + 8px);' +
+    'background:var(--surface);border:1px solid var(--border);border-radius:8px;' +
     'box-shadow:var(--shadow);min-width:200px;display:none;z-index:950;overflow:hidden;' +
   '}' +
-  '.uh-dropdown.uh-dd-open{display:block;}' +
-  '.uh-dd-header{padding:.75rem;border-bottom:1px solid var(--border);}' +
-  '.uh-dd-name{font-weight:600;font-size:.9rem;}' +
-  '.uh-dd-email{font-size:.75rem;color:var(--muted);margin-top:2px;}' +
-  '.uh-dd-item{' +
-    'display:block;width:100%;text-align:left;padding:.6rem .75rem;font-size:.85rem;color:var(--text);' +
+  '.ta-dropdown.ta-dd-open{display:block}' +
+  '.ta-dd-header{padding:.75rem;border-bottom:1px solid var(--border)}' +
+  '.ta-dd-name{font-weight:600;font-size:.9rem}' +
+  '.ta-dd-email{font-size:.75rem;color:var(--muted);margin-top:2px}' +
+  '.ta-dd-item{' +
+    'display:block;width:100%;text-align:left;' +
+    'padding:.6rem .75rem;font-size:.85rem;color:var(--text);' +
     'background:none;border:none;cursor:pointer;transition:background .15s;' +
   '}' +
-  '.uh-dd-item:hover{background:rgba(99,102,241,.08);}' +
+  '.ta-dd-item:hover{background:rgba(99,102,241,.06)}' +
+  /* Hamburger */
+  '.ta-hamburger{' +
+    'display:none;background:none;border:none;cursor:pointer;' +
+    'padding:4px;flex-direction:column;gap:4px;flex-shrink:0;' +
+  '}' +
+  '.ta-hamburger span{' +
+    'display:block;width:20px;height:2px;background:var(--text);border-radius:1px;' +
+    'transition:transform .2s,opacity .2s;' +
+  '}' +
+  '.ta-hamburger.ta-active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}' +
+  '.ta-hamburger.ta-active span:nth-child(2){opacity:0}' +
+  '.ta-hamburger.ta-active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}' +
+  /* Mobile menu */
+  '.ta-mobile-menu{' +
+    'display:none;position:absolute;top:100%;left:0;right:0;' +
+    'background:var(--bg-elevated);border-bottom:1px solid var(--border);' +
+    'max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;' +
+    'padding:1rem;z-index:890;' +
+  '}' +
+  '.ta-mobile-menu.ta-open{display:block}' +
+  '.ta-mobile-cat{margin-bottom:1.25rem}' +
+  '.ta-mobile-cat-label{' +
+    'font-size:.72rem;font-weight:600;color:var(--muted);' +
+    'text-transform:uppercase;letter-spacing:.06em;' +
+    'margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;' +
+  '}' +
+  '.ta-cat-dot{width:7px;height:7px;border-radius:50%;display:inline-block}' +
+  '.ta-mobile-cat-links{display:flex;flex-direction:column;gap:.1rem}' +
+  '.ta-mobile-cat-links a{' +
+    'padding:.5rem .6rem;font-size:.88rem;color:var(--text-secondary);' +
+    'border-radius:6px;transition:background .12s,color .12s;' +
+  '}' +
+  '.ta-mobile-cat-links a:hover{background:rgba(255,255,255,.04);color:var(--text)}' +
+  '.ta-badge-sm{font-size:.7rem;margin-left:.2rem}' +
+  /* Responsive */
   '@media(max-width:768px){' +
-    '.uh-hamburger{display:flex;}' +
-    '.uh-menu{' +
-      'display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);' +
-      'border-bottom:1px solid var(--border);flex-direction:column;padding:1rem;gap:.75rem;' +
-      'max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;' +
-    '}' +
-    '.uh-menu.uh-open{display:flex;}' +
-    '.uh-center{flex-direction:column;align-items:stretch;gap:.5rem;}' +
-    '.uh-center a,.uh-tools-trigger{padding:.6rem .8rem;font-size:.95rem;}' +
-    '.uh-search-wrap{margin-left:0;width:100%;}' +
-    '.uh-search{width:100%!important;}' +
-    '.uh-mega{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;display:none;}' +
-    '.uh-mega.uh-mega-open{display:block;}' +
-    '.uh-mega-grid{grid-template-columns:1fr;gap:1rem;padding:0;}' +
+    '.ta-nav-links{display:none}' +
+    '.ta-hamburger{display:flex}' +
+    '.ta-search-wrap{max-width:none;flex:1}' +
+    '.ta-right{display:none}' +
+    '.ta-kbd{display:none}' +
+  '}' +
+  '@media(max-width:480px){' +
+    '.ta-nav-inner{padding:0 1rem;height:54px}' +
   '}';
 
 })();
