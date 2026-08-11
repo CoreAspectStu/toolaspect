@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Converter — HEX, RGB, HSL, CMYK | ToolAspect</title>
+<meta name="description" content="Convert colors between HEX, RGB, HSL, and CMYK formats. Pick colors, generate palettes, and copy CSS-ready values. Free online color converter.">
+<link rel="canonical" href="https://toolaspect.com/color-converter/">
+<meta property="og:title" content="Color Converter — HEX, RGB, HSL, CMYK">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/color-converter/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Color Converter","description":"Convert colors between HEX, RGB, HSL, CMYK.","url":"https://toolaspect.com/color-converter/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.color-preview{height:120px;border-radius:14px;border:1px solid var(--border);margin-bottom:18px;transition:background .3s}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:'JetBrains Mono',monospace;outline:none}
+.form-group input[type=color]{width:100%;height:50px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;padding:4px}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.output-row{display:flex;align-items:center;gap:8px}
+.output-row input{flex:1}
+.copy-btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 14px;font-size:.78rem;cursor:pointer;white-space:nowrap}
+.copy-btn:hover{background:rgba(99,102,241,.2)}
+.color-values{display:grid;gap:10px;margin-top:16px}
+.value-row{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px}
+.value-row .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;width:50px;flex-shrink:0}
+.value-row .val{flex:1;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text)}
+.palette{display:flex;gap:6px;margin-top:16px}
+.palette-swatch{flex:1;height:50px;border-radius:8px;cursor:pointer;border:1px solid var(--border);transition:transform .2s}
+.palette-swatch:hover{transform:scale(1.05)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Color Converter</h1>
+  <p class="subtitle">Convert between HEX, RGB, HSL, CMYK — with palette generator</p>
+
+  <div class="color-preview" id="preview" style="background:#6366f1"></div>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Pick a Color</label>
+      <input type="color" id="picker" value="#6366f1" oninput="fromHex(this.value)">
+    </div>
+    <div class="form-group">
+      <label>HEX</label>
+      <div class="output-row">
+        <input type="text" id="hex" value="#6366f1" oninput="fromHex(this.value)">
+        <button class="copy-btn" onclick="copy('hex')">Copy</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>RGB</label>
+      <div class="output-row">
+        <input type="text" id="rgb" readonly>
+        <button class="copy-btn" onclick="copy('rgb')">Copy</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>HSL</label>
+      <div class="output-row">
+        <input type="text" id="hsl" readonly>
+        <button class="copy-btn" onclick="copy('hsl')">Copy</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>CMYK</label>
+      <div class="output-row">
+        <input type="text" id="cmyk" readonly>
+        <button class="copy-btn" onclick="copy('cmyk')">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label style="font-size:.8rem;color:var(--muted);margin-bottom:10px;display:block;font-weight:500">Complementary Palette</label>
+    <div class="palette" id="palette"></div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>Color Format Guide</h2>
+    <ul>
+      <li><strong>HEX:</strong> #RRGGBB — used in CSS, HTML, design tools</li>
+      <li><strong>RGB:</strong> rgb(r, g, b) — 0-255 values per channel</li>
+      <li><strong>HSL:</strong> hsl(h, s%, l%) — hue (0-360), saturation, lightness</li>
+      <li><strong>CMYK:</strong> cmyk(c%, m%, y%, k%) — print/color mixing</li>
+    </ul>
+    <h2>When to Use Each Format</h2>
+    <p>Use <strong>HEX</strong> for web design and CSS. Use <strong>RGB</strong> when you need individual channel control or opacity (rgba). Use <strong>HSL</strong> for creating color variations by adjusting hue/saturation. Use <strong>CMYK</strong> for print design.</p>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function hexToRgb(hex){
+  hex=hex.replace('#','');
+  if(hex.length===3)hex=hex.split('').map(function(c){return c+c;}).join('');
+  if(hex.length!==6)return null;
+  var r=parseInt(hex.slice(0,2),16);
+  var g=parseInt(hex.slice(2,4),16);
+  var b=parseInt(hex.slice(4,6),16);
+  return{r:r,g:g,b:b};
+}
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  var max=Math.max(r,g,b),min=Math.min(r,g,b);
+  var h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}
+  else{
+    var d=max-min;
+    s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){
+      case r:h=(g-b)/d+(g<b?6:0);break;
+      case g:h=(b-r)/d+2;break;
+      case b:h=(r-g)/d+4;break;
+    }
+    h/=6;
+  }
+  return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};
+}
+function rgbToCmyk(r,g,b){
+  r/=255;g/=255;b/=255;
+  var k=1-Math.max(r,g,b);
+  if(k===1)return{c:0,m:0,y:0,k:100};
+  var c=(1-r-k)/(1-k);
+  var m=(1-g-k)/(1-k);
+  var y=(1-b-k)/(1-k);
+  return{c:Math.round(c*100),m:Math.round(m*100),y:Math.round(y*100),k:Math.round(k*100)};
+}
+function fromHex(hex){
+  var rgb=hexToRgb(hex);
+  if(!rgb)return;
+  var hsl=rgbToHsl(rgb.r,rgb.g,rgb.b);
+  var cmyk=rgbToCmyk(rgb.r,rgb.g,rgb.b);
+  document.getElementById('hex').value='#'+hex.replace('#','').toUpperCase();
+  document.getElementById('rgb').value='rgb('+rgb.r+', '+rgb.g+', '+rgb.b+')';
+  document.getElementById('hsl').value='hsl('+hsl.h+', '+hsl.s+'%, '+hsl.l+'%)';
+  document.getElementById('cmyk').value='cmyk('+cmyk.c+'%, '+cmyk.m+'%, '+cmyk.y+'%, '+cmyk.k+'%)';
+  document.getElementById('preview').style.background=hex;
+  document.getElementById('picker').value='#'+hex.replace('#','');
+  // Palette: complementary + triadic
+  var pal=document.getElementById('palette');
+  pal.innerHTML='';
+  var hues=[hsl.h,(hsl.h+120)%360,(hsl.h+180)%360,(hsl.h+240)%360,(hsl.h+60)%360];
+  hues.forEach(function(h){
+    var c=hslToHex(h,hsl.s,hsl.l);
+    var d=document.createElement('div');
+    d.className='palette-swatch';d.style.background=c;
+    d.title=c;d.onclick=function(){fromHex(c);};
+    pal.appendChild(d);
+  });
+}
+function hslToHex(h,s,l){
+  s/=100;l/=100;
+  var c=(1-Math.abs(2*l-1))*s;
+  var x=c*(1-Math.abs((h/60)%2-1));
+  var m=l-c/2;
+  var r,g,b;
+  if(h<60){r=c;g=x;b=0;}
+  else if(h<120){r=x;g=c;b=0;}
+  else if(h<180){r=0;g=c;b=x;}
+  else if(h<240){r=0;g=x;b=c;}
+  else if(h<300){r=x;g=0;b=c;}
+  else{r=c;g=0;b=x;}
+  var toHex=function(v){return Math.round((v+m)*255).toString(16).padStart(2,'0');};
+  return'#'+toHex(r)+toHex(g)+toHex(b);
+}
+function copy(id){navigator.clipboard.writeText(document.getElementById(id).value);}
+fromHex('#6366f1');
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

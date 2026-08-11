@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary Calculator — After-Tax Take-Home Pay | ToolAspect</title>
+<meta name="description" content="Calculate your after-tax take-home pay. Enter your salary and see annual, monthly, biweekly, and hourly rates. Free salary calculator.">
+<link rel="canonical" href="https://toolaspect.com/salary-calculator/">
+<meta property="og:title" content="Salary Calculator — After-Tax Take-Home Pay">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/salary-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Salary Calculator","description":"Calculate after-tax take-home pay from annual salary.","url":"https://toolaspect.com/salary-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--text);border-radius:10px;padding:12px 24px;font-size:.92rem;cursor:pointer;font-family:inherit;width:100%}
+.btn:hover{background:rgba(99,102,241,.25)}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.result-card .amount{font-size:1.3rem;font-weight:700;color:var(--primary)}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.breakdown{margin-top:18px}
+.breakdown-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-row .val{font-weight:600}
+.breakdown-row.deduct .val{color:#f87171}
+.breakdown-row.net .val{color:#34d399}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Salary Calculator</h1>
+  <p class="subtitle">Calculate your real take-home pay after taxes</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Annual Salary ($)</label>
+        <input type="number" id="salary" value="75000" min="0" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Pay Frequency</label>
+        <select id="freq" onchange="calc()">
+          <option value="annual">Annual</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="biweekly">Bi-weekly</option>
+          <option value="weekly">Weekly</option>
+          <option value="hourly">Hourly</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Hours/Week</label>
+        <input type="number" id="hours" value="40" min="1" max="168" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Filing Status</label>
+        <select id="filing" onchange="calc()">
+          <option value="single">Single</option>
+          <option value="married">Married Filing Jointly</option>
+          <option value="head">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pre-tax 401(k) (%)</label>
+        <input type="number" id="retire" value="5" min="0" max="50" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>State Tax Rate (%)</label>
+        <input type="number" id="stateTax" value="5" min="0" max="15" step="0.1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="results" id="results"></div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How Take-Home Pay Is Calculated</h2>
+    <p>This calculator estimates your after-tax income by applying federal, state, and FICA deductions to your gross salary. It also accounts for pre-tax retirement contributions.</p>
+    <h2>Understanding Your Paycheck</h2>
+    <ul>
+      <li><strong>Federal Income Tax:</strong> Progressive tax brackets (10%-37%)</li>
+      <li><strong>FICA (Social Security + Medicare):</strong> 7.65% for employees</li>
+      <li><strong>State Tax:</strong> Varies by state — 0% (TX, FL) to 13.3% (CA)</li>
+      <li><strong>401(k) Contributions:</strong> Pre-tax, lowers taxable income</li>
+    </ul>
+    <h2>Salary Negotiation Tips</h2>
+    <p>Always negotiate based on total compensation (base + bonus + equity + benefits), not just base salary. Consider the cost of living in your area and benchmark against industry standards on Glassdoor, Levels.fyi, or Salary.com.</p>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var BRACKETS={
+  single:[[0,0.10],[11600,0.12],[47150,0.22],[100525,0.24],[191950,0.32],[243725,0.35],[609350,0.37]],
+  married:[[0,0.10],[23200,0.12],[94300,0.22],[201050,0.24],[383900,0.32],[487450,0.35],[731200,0.37]],
+  head:[[0,0.10],[16550,0.12],[63100,0.22],[100500,0.24],[191950,0.32],[243700,0.35],[609350,0.37]]
+};
+function calcFedTax(taxable,status){
+  var brackets=BRACKETS[status];
+  var tax=0;
+  for(var i=brackets.length-1;i>=0;i--){
+    if(taxable>brackets[i][0]){
+      var prev=i>0?brackets[i-1][0]:0;
+      tax+=(taxable-brackets[i][0]+(i>0?brackets[i][0]-prev:0))*brackets[i][1];
+      // Simpler: sum each bracket
+      tax=0;
+      for(var j=0;j<brackets.length;j++){
+        if(taxable>brackets[j][0]){
+          var upper=j<brackets.length-1?Math.min(taxable,brackets[j+1][0]):taxable;
+          tax+=(upper-brackets[j][0])*brackets[j][1];
+        }
+      }
+      break;
+    }
+  }
+  return tax;
+}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function calc(){
+  var salary=parseFloat(document.getElementById('salary').value)||0;
+  var hours=parseFloat(document.getElementById('hours').value)||40;
+  var retirePct=parseFloat(document.getElementById('retire').value)||0;
+  var statePct=parseFloat(document.getElementById('stateTax').value)||0;
+  var status=document.getElementById('filing').value;
+  // Pre-tax deductions
+  var retireAmount=salary*(retirePct/100);
+  var taxable=salary-retireAmount;
+  // Federal tax
+  var fedTax=calcFedTax(taxable,status);
+  // FICA
+  var ss=Math.min(salary,168600)*0.062;
+  var medicare=salary*0.0145;
+  var fica=ss+medicare;
+  // State tax
+  var stateTax=taxable*(statePct/100);
+  // Total deductions
+  var totalDeductions=fedTax+fica+stateTax+retireAmount;
+  var net=salary-totalDeductions;
+  // Display results
+  var annual=net;
+  var monthly=net/12;
+  var biweekly=net/26;
+  var weekly=net/52;
+  var hourly=net/(hours*52);
+  document.getElementById('results').innerHTML=
+    '<div class="result-card"><div class="amount">'+fmt(annual)+'</div><div class="label">Annual</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(monthly)+'</div><div class="label">Monthly</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(biweekly)+'</div><div class="label">Bi-weekly</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(weekly)+'</div><div class="label">Weekly</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(hourly)+'</div><div class="label">Hourly</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(retireAmount)+'</div><div class="label">401(k)/Yr</div></div>';
+  document.getElementById('breakdown').innerHTML=
+    '<div class="breakdown-row"><span>Gross Annual</span><span class="val">'+fmt(salary)+'</span></div>'+
+    '<div class="breakdown-row deduct"><span>401(k) ('+retirePct+'%)</span><span class="val">-'+fmt(retireAmount)+'</span></div>'+
+    '<div class="breakdown-row deduct"><span>Federal Tax</span><span class="val">-'+fmt(fedTax)+'</span></div>'+
+    '<div class="breakdown-row deduct"><span>FICA (SS+Medicare)</span><span class="val">-'+fmt(fica)+'</span></div>'+
+    '<div class="breakdown-row deduct"><span>State Tax ('+statePct+'%)</span><span class="val">-'+fmt(stateTax)+'</span></div>'+
+    '<div class="breakdown-row net"><span>Net Take-Home</span><span class="val">'+fmt(net)+'</span></div>'+
+    '<div class="breakdown-row"><span>Effective Tax Rate</span><span class="val">'+((totalDeductions/salary)*100).toFixed(1)+'%</span></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
