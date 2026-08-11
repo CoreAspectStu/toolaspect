@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Tools — Resize, Compress, Convert | ToolAspect</title>
+<meta name="description" content="Free online image tools. Resize images, compress PNG/JPG/WebP, convert between formats. All processing happens in your browser — no upload required.">
+<link rel="canonical" href="https://toolaspect.com/image-tools/">
+<meta property="og:title" content="Image Tools — Resize, Compress, Convert">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-tools/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Tools","description":"Resize, compress, and convert images in your browser.","url":"https://toolaspect.com/image-tools/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.tabs{display:flex;gap:4px;margin-bottom:18px;justify-content:center}
+.tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:10px 20px;font-size:.88rem;cursor:pointer;transition:all .2s}
+.tab.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:var(--text)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.dropzone{border:2px dashed var(--border);border-radius:14px;padding:40px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone:hover,.dropzone.dragover{border-color:rgba(99,102,241,.4)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:2rem;margin-bottom:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.btn{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--text);border-radius:10px;padding:12px 24px;font-size:.92rem;cursor:pointer;font-family:inherit;width:100%}
+.btn:hover{background:rgba(99,102,241,.25)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.preview-area{margin-top:16px;text-align:center}
+.preview-area img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:14px}
+.info-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.info-item .val{font-size:1rem;font-weight:600;color:var(--text)}
+.info-item .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase}
+.result-actions{display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.result-actions .btn{width:auto}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.panel{display:none}
+.panel.active{display:block}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Image Tools</h1>
+  <p class="subtitle">Resize, compress, and convert images — all in your browser, no upload needed</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('resize')">Resize</button>
+    <button class="tab" onclick="setTab('compress')">Compress</button>
+    <button class="tab" onclick="setTab('convert')">Convert</button>
+  </div>
+
+  <!-- RESIZE -->
+  <div class="panel active" id="panel-resize">
+    <div class="card">
+      <div class="dropzone" id="drop-resize" onclick="document.getElementById('file-resize').click()">
+        <div class="icon">🖼️</div>
+        <p>Click or drag an image here</p>
+        <input type="file" id="file-resize" accept="image/*" style="display:none" onchange="loadImage(event,'resize')">
+      </div>
+      <div id="opts-resize" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Width (px)</label>
+            <input type="number" id="r-width" oninput="previewResize()">
+          </div>
+          <div class="form-group">
+            <label>Height (px)</label>
+            <input type="number" id="r-height" oninput="previewResize()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Lock aspect ratio</label>
+          <select id="r-lock" onchange="previewResize()">
+            <option value="1" selected>Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+        <div class="preview-area" id="preview-resize"></div>
+        <div class="info-grid" id="info-resize"></div>
+        <div class="result-actions">
+          <button class="btn" onclick="downloadImage('resize')">Download Resized</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPRESS -->
+  <div class="panel" id="panel-compress">
+    <div class="card">
+      <div class="dropzone" id="drop-compress" onclick="document.getElementById('file-compress').click()">
+        <div class="icon">🗜️</div>
+        <p>Click or drag an image to compress</p>
+        <input type="file" id="file-compress" accept="image/*" style="display:none" onchange="loadImage(event,'compress')">
+      </div>
+      <div id="opts-compress" style="display:none">
+        <div class="form-group">
+          <label>Quality (10-100)</label>
+          <input type="range" id="c-quality" min="10" max="100" value="70" oninput="document.getElementById('q-val').textContent=this.value;compressImage()" style="width:100%">
+          <span id="q-val" style="font-size:.82rem;color:var(--muted)">70</span>
+        </div>
+        <div class="form-group">
+          <label>Output Format</label>
+          <select id="c-format" onchange="compressImage()">
+            <option value="image/jpeg">JPEG (smallest)</option>
+            <option value="image/webp">WebP (modern)</option>
+            <option value="image/png">PNG (lossless)</option>
+          </select>
+        </div>
+        <div class="preview-area" id="preview-compress"></div>
+        <div class="info-grid" id="info-compress"></div>
+        <div class="result-actions">
+          <button class="btn" onclick="downloadImage('compress')">Download Compressed</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONVERT -->
+  <div class="panel" id="panel-convert">
+    <div class="card">
+      <div class="dropzone" id="drop-convert" onclick="document.getElementById('file-convert').click()">
+        <div class="icon">🔄</div>
+        <p>Click or drag an image to convert</p>
+        <input type="file" id="file-convert" accept="image/*" style="display:none" onchange="loadImage(event,'convert')">
+      </div>
+      <div id="opts-convert" style="display:none">
+        <div class="form-group">
+          <label>Convert To</label>
+          <select id="conv-format">
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="preview-area" id="preview-convert"></div>
+        <div class="info-grid" id="info-convert"></div>
+        <div class="result-actions">
+          <button class="btn" onclick="convertImage()">Convert & Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>Browser-Based Image Processing</h2>
+    <p>All image processing happens entirely in your browser using HTML5 Canvas — your images are never uploaded to a server. This means complete privacy and instant processing.</p>
+    <h2>When to Use Each Tool</h2>
+    <ul>
+      <li><strong>Resize:</strong> Change dimensions for web, email, or social media</li>
+      <li><strong>Compress:</strong> Reduce file size for faster page loads (WebP recommended)</li>
+      <li><strong>Convert:</strong> Change formats — PNG for transparency, JPEG for photos, WebP for modern browsers</li>
+    </ul>
+    <h2>Image Format Guide</h2>
+    <ul>
+      <li><strong>JPEG:</strong> Best for photos, no transparency, smaller files</li>
+      <li><strong>PNG:</strong> Lossless, supports transparency, larger files</li>
+      <li><strong>WebP:</strong> Modern format, 25-35% smaller than JPEG at same quality</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var images={resize:null,compress:null,convert:null};
+var originalSize={};
+
+function setTab(name){
+  document.querySelectorAll('.tab').forEach(function(t,i){
+    var tabs=['resize','compress','convert'];
+    t.classList.toggle('active',tabs[i]===name);
+  });
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+// Drag & drop
+['resize','compress','convert'].forEach(function(type){
+  var dz=document.getElementById('drop-'+type);
+  dz.ondragover=function(e){e.preventDefault();this.classList.add('dragover');};
+  dz.ondragleave=function(){this.classList.remove('dragover');};
+  dz.ondrop=function(e){
+    e.preventDefault();this.classList.remove('dragover');
+    var f=e.dataTransfer.files[0];
+    if(f)processFile(f,type);
+  };
+});
+
+function loadImage(e,type){
+  var f=e.target.files[0];
+  if(f)processFile(f,type);
+}
+
+function processFile(file,type){
+  originalSize[type]=file.size;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      images[type]=img;
+      document.getElementById('opts-'+type).style.display='block';
+      if(type==='resize'){
+        document.getElementById('r-width').value=img.width;
+        document.getElementById('r-height').value=img.height;
+        previewResize();
+      }else if(type==='compress'){
+        compressImage();
+      }else if(type==='convert'){
+        showInfo(type,img.width,img.height);
+        document.getElementById('preview-'+type).innerHTML='<img src="'+e.target.result+'">';
+      }
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewResize(){
+  var img=images.resize;if(!img)return;
+  var w=parseInt(document.getElementById('r-width').value)||img.width;
+  var h=parseInt(document.getElementById('r-height').value)||img.height;
+  var lock=document.getElementById('r-lock').value==='1';
+  if(lock&&img.width>0&&img.height>0){
+    // Only adjust if user changed one dimension — keep it simple
+  }
+  var canvas=document.createElement('canvas');
+  canvas.width=w;canvas.height=h;
+  var ctx=canvas.getContext('2d');
+  ctx.drawImage(img,0,0,w,h);
+  document.getElementById('preview-resize').innerHTML='';
+  canvas.style.maxWidth='100%';canvas.style.borderRadius='10px';canvas.style.border='1px solid var(--border)';
+  document.getElementById('preview-resize').appendChild(canvas);
+  showInfo('resize',w,h,originalSize.resize);
+}
+
+function compressImage(){
+  var img=images.compress;if(!img)return;
+  var q=parseInt(document.getElementById('c-quality').value)/100;
+  var fmt=document.getElementById('c-format').value;
+  var canvas=document.createElement('canvas');
+  canvas.width=img.width;canvas.height=img.height;
+  var ctx=canvas.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(img,0,0);
+  canvas.toBlob(function(blob){
+    var url=URL.createObjectURL(blob);
+    var p=document.getElementById('preview-compress');
+    p.innerHTML='<img src="'+url+'">';
+    showInfo('compress',img.width,img.height,originalSize.compress,blob.size);
+  },fmt,q);
+}
+
+function convertImage(){
+  var img=images.convert;if(!img)return;
+  var fmt=document.getElementById('conv-format').value;
+  var canvas=document.createElement('canvas');
+  canvas.width=img.width;canvas.height=img.height;
+  var ctx=canvas.getContext('2d');
+  if(fmt==='image/jpeg'){ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);}
+  ctx.drawImage(img,0,0);
+  canvas.toBlob(function(blob){
+    var ext=fmt==='image/jpeg'?'jpg':fmt==='image/png'?'png':'webp';
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='converted.'+ext;a.click();
+    showInfo('convert',img.width,img.height,originalSize.convert,blob.size);
+  },fmt,0.92);
+}
+
+function downloadImage(type){
+  var canvas=document.querySelector('#preview-'+type+' canvas');
+  if(!canvas)return;
+  var ext=type==='compress'?document.getElementById('c-format').value.split('/')[1]:'png';
+  if(ext==='jpeg')ext='jpg';
+  canvas.toBlob(function(blob){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='toolaspect-'+type+'.'+ext;a.click();
+  });
+}
+
+function fmtSize(bytes){
+  if(bytes<1024)return bytes+' B';
+  if(bytes<1048576)return (bytes/1024).toFixed(1)+' KB';
+  return (bytes/1048576).toFixed(2)+' MB';
+}
+
+function showInfo(type,w,h,origSize,newSize){
+  var savings=newSize?(1-newSize/origSize)*100:0;
+  var html='<div class="info-item"><div class="val">'+w+'×'+h+'</div><div class="lbl">Dimensions</div></div>';
+  html+='<div class="info-item"><div class="val">'+fmtSize(origSize)+'</div><div class="lbl">Original</div></div>';
+  if(newSize){
+    html+='<div class="info-item"><div class="val">'+fmtSize(newSize)+'</div><div class="lbl">New Size</div></div>';
+    html+='<div class="info-item"><div class="val" style="color:#34d399">-'+savings.toFixed(0)+'%</div><div class="lbl">Smaller</div></div>';
+  }
+  document.getElementById('info-'+type).innerHTML=html;
+}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

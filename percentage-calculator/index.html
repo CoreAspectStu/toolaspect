@@ -4,744 +4,115 @@
 <script src="/shared/domain-redirect.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Percentage Calculator — Calculate Percentages Instantly</title>
-<meta name="description" content="Free online percentage calculator. Calculate percentage of a number, percentage difference, increase or decrease. Real-time results as you type.">
+<title>Percentage Calculator | ToolAspect</title>
+<meta name="description" content="Calculate percentages easily. What is X% of Y, X is what percent of Y, percentage increase/decrease. Free online percentage calculator.">
 <link rel="canonical" href="https://toolaspect.com/percentage-calculator/">
-<meta property="og:title" content="Percentage Calculator — Calculate Percentages Instantly">
-<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
-<meta property="og:description" content="Free online percentage calculator. Calculate percentage of a number, percentage difference, increase or decrease. Real-time results as you type.">
+<meta property="og:title" content="Percentage Calculator">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toolaspect.com/percentage-calculator/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="keywords" content="percentage calculator, percent of number, percentage increase, percentage decrease, percentage difference, percent change, add percent, subtract percent">
-<meta name="twitter:title" content="Percentage Calculator | ToolAspect">
-<meta name="twitter:description" content="Free online percentage calculator with real-time results. Supports all common percentage operations.">
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Percentage Calculator",
-  "description": "Free online percentage calculator. Calculate percentage of a number, percentage difference, percentage increase/decrease, and more.",
-  "url": "https://toolaspect.com/percentage-calculator/",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "browserRequirements": "Requires JavaScript"
-}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Percentage Calculator","description":"Calculate percentages, percentage change, and more.","url":"https://toolaspect.com/percentage-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
 <style>
-/* --- Page-level overrides & extras --- */
-:root {
-  --bg: #0f1117;
-  --surface: #1a1d27;
-  --border: #2a2d3a;
-  --text: #e4e4e7;
-  --muted: #9ca3af;
-  --primary: #6366f1;
-  --primary-hover: #818cf8;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --shadow: 0 2px 12px rgba(0,0,0,.4);
-}
-
-.page-container { max-width: 920px; margin: 0 auto; padding: 0 1rem; }
-
-/* Header */
-.page-header { padding: 2rem 0 0.5rem; text-align: center; }
-.page-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.3rem; }
-.page-header p { color: var(--muted); font-size: 0.95rem; }
-
-/* Tabs */
-.tabs {
-  display: flex; gap: 4px; margin-top: 1.25rem;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 4px;
-  overflow-x: auto; scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab-btn {
-  flex: 1; min-width: 0; padding: 10px 8px;
-  background: transparent; border: none; color: var(--muted);
-  font-size: 0.82rem; font-weight: 600; cursor: pointer;
-  border-radius: 8px; transition: all .2s; white-space: nowrap;
-}
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { background: var(--primary); color: #fff; }
-
-/* Tab panels */
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* Calculator card */
-.calc-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.5rem;
-  margin-top: 1.25rem; box-shadow: var(--shadow);
-}
-.calc-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
-.calc-card .description { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.15rem; }
-
-/* Input row */
-.calc-row {
-  display: flex; align-items: center; gap: 0.6rem;
-  flex-wrap: wrap; margin-bottom: 0.85rem;
-}
-.calc-row .label-text {
-  font-size: 0.92rem; color: var(--text); white-space: nowrap;
-}
-.calc-row input[type="number"] {
-  width: 130px; padding: 0.55rem 0.75rem;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius); color: var(--text);
-  font-size: 0.95rem; font-family: inherit;
-  transition: border-color .2s, box-shadow .2s;
-  -moz-appearance: textfield;
-}
-.calc-row input[type="number"]::-webkit-inner-spin-button,
-.calc-row input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none; margin: 0;
-}
-.calc-row input[type="number"]:focus {
-  outline: none; border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(99,102,241,.25);
-}
-.calc-row input.full { flex: 1; width: auto; min-width: 100px; }
-
-/* Result */
-.result-area {
-  margin-top: 1.25rem; padding: 1rem 1.25rem;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius); display: flex;
-  align-items: center; justify-content: space-between;
-  gap: 0.75rem; min-height: 56px;
-}
-.result-area .result-text {
-  font-size: 1.1rem; font-weight: 600; color: var(--primary);
-  word-break: break-word;
-}
-.result-area .result-text.empty { color: var(--muted); font-weight: 400; font-size: 0.9rem; }
-.copy-btn {
-  padding: 0.4rem 0.7rem; background: transparent;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  color: var(--muted); font-size: 0.8rem; cursor: pointer;
-  transition: all .2s; white-space: nowrap; flex-shrink: 0;
-}
-.copy-btn:hover { border-color: var(--primary); color: var(--primary); }
-.copy-btn.copied { border-color: var(--success); color: var(--success); }
-
-/* History */
-.history-section { margin-top: 1.5rem; }
-.history-section h3 {
-  font-size: 1rem; font-weight: 600; margin-bottom: 0.65rem;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.clear-history-btn {
-  font-size: 0.78rem; color: var(--muted); background: none;
-  border: none; cursor: pointer; transition: color .2s;
-}
-.clear-history-btn:hover { color: var(--danger); }
-.history-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.history-item {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 0.65rem 1rem;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 0.5rem; cursor: pointer; transition: border-color .2s;
-}
-.history-item:hover { border-color: var(--primary); }
-.history-item .hist-label { font-size: 0.85rem; color: var(--muted); flex: 1; }
-.history-item .hist-result { font-size: 0.9rem; font-weight: 600; color: var(--primary); white-space: nowrap; }
-.history-item .hist-time { font-size: 0.72rem; color: var(--border); white-space: nowrap; }
-.no-history { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
-
-/* Footer */
-.page-footer {
-  margin-top: 3rem; padding: 1.5rem 0;
-  border-top: 1px solid var(--border);
-  text-align: center; color: var(--muted); font-size: 0.85rem;
-}
-.page-footer a { color: var(--primary); transition: color .2s; }
-.page-footer a:hover { color: var(--primary-hover); text-decoration: underline; }
-
-/* Toast */
-.toast-container {
-  position: fixed; bottom: 1.25rem; right: 1.25rem;
-  display: flex; flex-direction: column; gap: 0.5rem;
-  z-index: 2000; pointer-events: none;
-}
-.toast {
-  padding: 0.65rem 1rem; background: var(--surface);
-  border: 1px solid var(--border); border-left: 3px solid var(--success);
-  border-radius: var(--radius); box-shadow: var(--shadow);
-  font-size: 0.85rem; color: var(--text); pointer-events: auto;
-  animation: toast-in .25s ease forwards;
-}
-.toast.removing { animation: toast-out .2s ease forwards; }
-@keyframes toast-in { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(30px); } }
-
-/* Responsive */
-@media (max-width: 640px) {
-  .page-header h1 { font-size: 1.35rem; }
-  .tab-btn { font-size: 0.75rem; padding: 8px 6px; }
-  .calc-card { padding: 1.1rem; }
-  .calc-row { gap: 0.4rem; }
-  .calc-row input[type="number"] { width: 100px; }
-  .result-area { flex-direction: column; align-items: flex-start; }
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.card-title{font-size:.9rem;font-weight:600;margin-bottom:14px;color:var(--text)}
+.form-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.form-group{flex:1;min-width:80px}
+.form-group label{font-size:.72rem;color:var(--muted);display:block;margin-bottom:4px}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 12px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.result-box{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px;margin-top:12px;text-align:center;font-size:1.3rem;font-weight:700;color:var(--primary)}
+.form-text{font-size:.88rem;color:var(--text);white-space:nowrap}
+.btn{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:var(--text);border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
 </style>
-  <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Percentage Calculator", "item": "https://toolaspect.com/percentage-calculator/"}]}</script>
 </head>
 <body>
 <script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Percentage Calculator</h1>
+  <p class="subtitle">Calculate percentages, percentage change, discounts, and more</p>
 
-<div class="page-container">
-  <header class="page-header">
-    <h1>Percentage Calculator</h1>
-    <p>Fast, free percentage calculations — results update as you type</p>
-  </header>
-
-  <!-- Tabs -->
-  <div class="tabs" role="tablist">
-    <button class="tab-btn active" role="tab" data-tab="pct-of" aria-selected="true">% of Number</button>
-    <button class="tab-btn" role="tab" data-tab="pct-is" aria-selected="false">What %?</button>
-    <button class="tab-btn" role="tab" data-tab="pct-change" aria-selected="false">% Change</button>
-    <button class="tab-btn" role="tab" data-tab="pct-add" aria-selected="false">Add / Sub %</button>
-  </div>
-
-  <!-- Tab 1: What is X% of Y? -->
-  <div class="tab-panel active" id="panel-pct-of" role="tabpanel">
-    <div class="calc-card">
-      <h2>What is X% of Y?</h2>
-      <p class="description">Find a specific percentage of any number. Example: What is 15% of 200?</p>
-      <div class="calc-row">
-        <span class="label-text">What is</span>
-        <input type="number" id="pof-x" placeholder="15" step="any" aria-label="Percentage">
-        <span class="label-text">% of</span>
-        <input type="number" id="pof-y" placeholder="200" step="any" aria-label="Number">
-        <span class="label-text">?</span>
-      </div>
-      <div class="result-area">
-        <span class="result-text empty" id="res-pof">Enter values to calculate</span>
-        <button class="copy-btn" id="copy-pof" style="display:none">Copy</button>
-      </div>
+  <div class="card">
+    <div class="card-title">What is X% of Y?</div>
+    <div class="form-row">
+      <div class="form-group"><label>Percentage (%)</label><input type="number" id="p1" value="15" oninput="calc1()"></div>
+      <span class="form-text">of</span>
+      <div class="form-group"><label>Value</label><input type="number" id="v1" value="200" oninput="calc1()"></div>
+      <span class="form-text">=</span>
     </div>
+    <div class="result-box" id="r1">30</div>
   </div>
 
-  <!-- Tab 2: X is what % of Y? -->
-  <div class="tab-panel" id="panel-pct-is" role="tabpanel">
-    <div class="calc-card">
-      <h2>X is what % of Y?</h2>
-      <p class="description">Find what percentage one number is of another. Example: 30 is what % of 150?</p>
-      <div class="calc-row">
-        <input type="number" id="pis-x" placeholder="30" step="any" aria-label="Value">
-        <span class="label-text">is what % of</span>
-        <input type="number" id="pis-y" placeholder="150" step="any" aria-label="Total">
-        <span class="label-text">?</span>
-      </div>
-      <div class="result-area">
-        <span class="result-text empty" id="res-pis">Enter values to calculate</span>
-        <button class="copy-btn" id="copy-pis" style="display:none">Copy</button>
-      </div>
+  <div class="card">
+    <div class="card-title">X is what percent of Y?</div>
+    <div class="form-row">
+      <div class="form-group"><label>Value</label><input type="number" id="p2a" value="30" oninput="calc2()"></div>
+      <span class="form-text">is what % of</span>
+      <div class="form-group"><label>Total</label><input type="number" id="p2b" value="200" oninput="calc2()"></div>
+      <span class="form-text">=</span>
     </div>
+    <div class="result-box" id="r2">15%</div>
   </div>
 
-  <!-- Tab 3: Percentage change from X to Y -->
-  <div class="tab-panel" id="panel-pct-change" role="tabpanel">
-    <div class="calc-card">
-      <h2>Percentage Change</h2>
-      <p class="description">Calculate the percentage increase or decrease from one value to another.</p>
-      <div class="calc-row">
-        <span class="label-text">From</span>
-        <input type="number" id="pch-from" placeholder="80" step="any" aria-label="Original value">
-        <span class="label-text">to</span>
-        <input type="number" id="pch-to" placeholder="100" step="any" aria-label="New value">
-      </div>
-      <div class="result-area">
-        <span class="result-text empty" id="res-pch">Enter values to calculate</span>
-        <button class="copy-btn" id="copy-pch" style="display:none">Copy</button>
-      </div>
+  <div class="card">
+    <div class="card-title">Percentage Increase / Decrease</div>
+    <div class="form-row">
+      <div class="form-group"><label>From</label><input type="number" id="p3a" value="100" oninput="calc3()"></div>
+      <span class="form-text">→</span>
+      <div class="form-group"><label>To</label><input type="number" id="p3b" value="125" oninput="calc3()"></div>
     </div>
+    <div class="result-box" id="r3">+25%</div>
   </div>
 
-  <!-- Tab 4: Add/Subtract X% from Y -->
-  <div class="tab-panel" id="panel-pct-add" role="tabpanel">
-    <div class="calc-card">
-      <h2>Add / Subtract a Percentage</h2>
-      <p class="description">Add or subtract a percentage from a number. Great for tips, discounts, and tax calculations.</p>
-      <div class="calc-row" style="margin-bottom:0.5rem">
-        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer">
-          <input type="radio" name="addsub" value="add" checked style="accent-color:var(--primary)"> Add
-        </label>
-        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer">
-          <input type="radio" name="addsub" value="sub" style="accent-color:var(--primary)"> Subtract
-        </label>
-      </div>
-      <div class="calc-row">
-        <input type="number" id="pad-pct" placeholder="10" step="any" aria-label="Percentage to add/subtract">
-        <span class="label-text">% to</span>
-        <input type="number" id="pad-val" placeholder="250" step="any" aria-label="Base value">
-      </div>
-      <div class="result-area">
-        <span class="result-text empty" id="res-pad">Enter values to calculate</span>
-        <button class="copy-btn" id="copy-pad" style="display:none">Copy</button>
-      </div>
+  <div class="card">
+    <div class="card-title">Discount Calculator</div>
+    <div class="form-row">
+      <div class="form-group"><label>Original Price ($)</label><input type="number" id="p4a" value="80" oninput="calc4()"></div>
+      <div class="form-group"><label>Discount (%)</label><input type="number" id="p4b" value="20" oninput="calc4()"></div>
     </div>
+    <div class="result-box" id="r4">You save $16.00 — Pay $64.00</div>
   </div>
 
-  <!-- History -->
-  <section class="history-section" id="history-section">
-    <h3>
-      Recent Calculations
-      <button class="clear-history-btn" id="clear-history">Clear All</button>
-    </h3>
-    <div class="history-list" id="history-list"></div>
-  </section>
+  <div class="ad-slot">Advertisement</div>
 
-<!-- SEO Content -->
-<div class="seo-section" style="max-width:920px;margin:2rem auto;padding:0 1rem;line-height:1.8;color:var(--muted);font-size:0.92rem">
-  <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px">About Percentage Calculations</h2>
-  <p>Percentages are one of the most widely used mathematical concepts in everyday life. From calculating discounts at the store to figuring out tips at restaurants, understanding tax rates, analyzing financial growth, and interpreting statistics, percentages provide a universal way to express proportions and changes. The word "percent" literally means "per hundred"—when you say 25%, you're saying 25 out of every 100. This simple concept underlies countless real-world calculations, and our percentage calculator handles all the common variations instantly as you type.</p>
+  <div class="seo-content">
+    <h2>How to Calculate Percentages</h2>
+    <p>To find X% of Y: multiply Y by X/100. For example, 15% of 200 = 200 × 0.15 = 30.</p>
+    <p>To find what percent X is of Y: divide X by Y and multiply by 100. For example, 30/200 × 100 = 15%.</p>
+    <h2>Percentage Change Formula</h2>
+    <p><strong>Change % = ((New - Old) / Old) × 100</strong></p>
+    <p>Positive result = increase. Negative = decrease.</p>
+    <h2>Common Percentage Uses</h2>
+    <ul>
+      <li>Sales tax and tip calculations</li>
+      <li>Discount and sale prices</li>
+      <li>Grade/score percentages</li>
+      <li>Investment returns</li>
+      <li>Body fat and fitness metrics</li>
+    </ul>
+  </div>
 
-  <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Percentage Formulas Explained</h2>
-  <p>There are several core percentage formulas, each serving a different purpose. Understanding these formulas will help you solve virtually any percentage problem you encounter:</p>
-  <p><strong>1. What is X% of Y?</strong> — This is the most basic percentage calculation. The formula is <code>Result = (X / 100) × Y</code>. For example, to find 15% of 200: <code>(15 / 100) × 200 = 0.15 × 200 = 30</code>. This formula is commonly used for calculating discounts, tips, commissions, and tax amounts.</p>
-  <p><strong>2. X is what percent of Y?</strong> — To find what percentage one number is of another, use <code>Percentage = (X / Y) × 100</code>. For example, to find what percentage 30 is of 150: <code>(30 / 150) × 100 = 0.2 × 100 = 20%</code>. This is useful for calculating test scores, market share, completion rates, and comparing proportions.</p>
-  <p><strong>3. Percentage change (increase or decrease):</strong> — To find how much something changed in percentage terms, use <code>Change% = ((New - Original) / |Original|) × 100</code>. For example, going from 80 to 100: <code>((100 - 80) / 80) × 100 = (20 / 80) × 100 = 25% increase</code>. This is essential for analyzing sales growth, price changes, and performance metrics.</p>
-  <p><strong>4. Add or subtract a percentage:</strong> — To add X% to a value, use <code>Result = Y + (X / 100 × Y) = Y × (1 + X/100)</code>. To subtract, use <code>Result = Y - (X / 100 × Y) = Y × (1 - X/100)</code>. For example, adding 10% tip to a $50 bill: <code>50 + (10/100 × 50) = 50 + 5 = $55</code>. This formula powers tip calculators, tax adders, and discount appliers.</p>
-
-  <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">How to Calculate Percentages: A Step-by-Step Guide</h2>
-  <p>Using this percentage calculator is simple—just select the right tab for your calculation type and enter your numbers. Here's a walkthrough for each mode:</p>
-  <p><strong>Mode 1 — "% of Number":</strong> Use this when you need to find a portion of a total. Enter the percentage in the first field and the total number in the second field. The result updates instantly. This is perfect for calculating discounts (What is 20% off $80?), tax amounts (What is 8.5% of $125?), or commissions (What is 3% of $50,000?).</p>
-  <p><strong>Mode 2 — "What %?":</strong> Use this when you know both numbers and want to find the percentage relationship. Enter the part in the first field and the whole in the second field. Great for test scores (If I got 42 out of 50, what's my percentage?), survey results, and progress tracking.</p>
-  <p><strong>Mode 3 — "% Change":</strong> Use this to measure growth or decline between two values. Enter the original value first, then the new value. The result shows both the numeric percentage and whether it's an increase or decrease. Essential for financial analysis, tracking weight loss/gain, and comparing year-over-year metrics.</p>
-  <p><strong>Mode 4 — "Add / Sub %":</strong> Use this to add or subtract a percentage from a base number. Choose "Add" or "Subtract" with the radio buttons, then enter the percentage and base value. Ideal for calculating tips (add 18% to a restaurant bill), applying discounts (subtract 30% for a sale), or computing prices with tax included.</p>
-
-  <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Real-World Percentage Examples</h2>
-  <p>Here are practical examples that demonstrate how percentages are used in everyday situations:</p>
-  <p><strong>Shopping discounts:</strong> A $120 jacket is on sale for 35% off. What's the sale price? First, find 35% of $120: <code>(35/100) × 120 = $42</code>. Then subtract from the original price: <code>120 - 42 = $78</code>. Alternatively, use the "Subtract %" tab: enter 35 and 120 to get $78 directly.</p>
-  <p><strong>Restaurant tips:</strong> Your dinner bill is $67.50 and you want to leave an 18% tip. Use the "Add %" tab: enter 18 and 67.50. The tip amount is <code>(18/100) × 67.50 = $12.15</code>, making the total <code>$79.65</code>. For quick mental math, 20% is simply moving the decimal point one place left and doubling it: $6.75 × 2 = $13.50.</p>
-  <p><strong>Sales tax calculation:</strong> You're buying a $999 TV in a state with 8.25% sales tax. Use the "Add %" tab: enter 8.25 and 999. The tax is <code>$82.42</code>, making the total <code>$1,081.42</code>. Some states don't tax certain items like groceries or clothing under a threshold amount—always check local regulations.</p>
-  <p><strong>School grades:</strong> You scored 87 points out of 100 on an exam. Use the "What %?" tab: enter 87 and 100. Your score is <code>87%</code>. If the test was out of 120 instead, enter 87 and 120 to get <code>72.5%</code>.</p>
-  <p><strong>Salary increase:</strong> Your salary went from $65,000 to $72,000. Use the "% Change" tab: enter 65000 and 72000. The result is <code>+10.77% increase</code>. This helps evaluate whether a raise keeps pace with inflation or market rates.</p>
-  <p><strong>Cooking and recipes:</strong> A recipe calls for 250g of flour but you want to make 150% of the recipe for a larger group. Use the "% of Number" tab: enter 150 and 250. The result is 375g—the amount of flour you need. Scaling recipes by percentage ensures ingredient ratios stay correct.</p>
-
-  <h2 style="color:var(--text);font-size:1.15rem;margin-bottom:10px;margin-top:1.5rem">Frequently Asked Questions</h2>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate a percentage?</h3>
-  <p>To calculate X% of a number Y, divide X by 100 to get a decimal, then multiply by Y. For example, to find 20% of 50: <code>20 ÷ 100 = 0.20</code>, then <code>0.20 × 50 = 10</code>. You can also convert the percentage to a fraction: 20% = 20/100 = 1/5, so 1/5 of 50 = 10. This calculator does the math instantly—just enter the percentage and the number in the "% of Number" tab.</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate percentage increase?</h3>
-  <p>To calculate percentage increase, use the formula: <code>((New Value - Original Value) / Original Value) × 100</code>. For example, if a price increases from $40 to $50: <code>((50 - 40) / 40) × 100 = (10 / 40) × 100 = 25%</code>. The result is a 25% increase. Use the "% Change" tab on this calculator—just enter the original value (40) and the new value (50).</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate percentage decrease?</h3>
-  <p>Percentage decrease uses the same formula as increase: <code>((New Value - Original Value) / Original Value) × 100</code>. If the result is negative, it's a decrease. For example, going from $80 to $60: <code>((60 - 80) / 80) × 100 = (-20 / 80) × 100 = -25%</code>, meaning a 25% decrease. The "% Change" tab automatically labels it as a decrease when the value drops.</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate a discount?</h3>
-  <p>To calculate a discount, find the discount amount (X% of the original price), then subtract it from the original price. For example, a $200 item with a 30% discount: the discount is <code>30% × $200 = $60</code>, so the sale price is <code>$200 - $60 = $140</code>. Use the "Subtract %" tab with values 30 and 200 to get $140 directly. To find what you saved, use the "% of Number" tab: 30% of 200 = $60.</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate a tip?</h3>
-  <p>To calculate a tip, multiply the bill amount by the tip percentage (as a decimal). For an 18% tip on a $45 bill: <code>0.18 × $45 = $8.10</code>. The total with tip is <code>$53.10</code>. Use the "Add %" tab with values 18 and 45 to get the total directly. Common tip amounts are 15% (adequate service), 18% (good service), and 20% (excellent service).</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">How do I calculate sales tax?</h3>
-  <p>Multiply the pre-tax price by the tax rate (as a decimal) to find the tax amount, then add it to the original price. For a $100 item with 7% tax: <code>0.07 × $100 = $7</code> tax, total = $107. Use the "Add %" tab with values 7 and 100 to get $107. Some regions have compound tax (GST + PST), so calculate each tax separately if your area requires it.</p>
-  <h3 style="color:var(--text);font-size:1rem;margin-bottom:6px">What is the difference between percentage and percentile?</h3>
-  <p>A percentage represents a part of a whole (e.g., you scored 85% on a test means 85 out of 100). A percentile indicates rank—scoring in the 85th percentile means you performed better than 85% of test takers. Percentages compare to a maximum, while percentiles compare to other people's results.</p>
+  <div class="ad-slot">Advertisement</div>
 </div>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I calculate a percentage?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "To calculate X% of a number Y, divide X by 100 to get a decimal, then multiply by Y. For example, to find 20% of 50: 20 ÷ 100 = 0.20, then 0.20 × 50 = 10. You can also convert the percentage to a fraction: 20% = 1/5, so 1/5 of 50 = 10."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate percentage increase?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use the formula: ((New Value - Original Value) / Original Value) × 100. For example, if a price increases from $40 to $50: ((50 - 40) / 40) × 100 = 25%. The result is a 25% increase."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate percentage decrease?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use the same formula as percentage increase: ((New Value - Original Value) / Original Value) × 100. If the result is negative, it's a decrease. For example, going from $80 to $60: ((60 - 80) / 80) × 100 = -25%, meaning a 25% decrease."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate a discount?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Find the discount amount by multiplying the original price by the discount percentage, then subtract. For a $200 item with 30% off: discount = 30% × $200 = $60, so sale price = $200 - $60 = $140."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate a tip?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Multiply the bill amount by the tip percentage as a decimal. For an 18% tip on a $45 bill: 0.18 × $45 = $8.10 tip, total $53.10. Common tip amounts are 15% (adequate), 18% (good), and 20% (excellent service)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I calculate sales tax?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Multiply the pre-tax price by the tax rate as a decimal, then add it to the original price. For a $100 item with 7% tax: 0.07 × $100 = $7 tax, total $107. Some regions have compound tax, so calculate each tax separately if needed."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is the difference between percentage and percentile?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A percentage represents a part of a whole (85% means 85 out of 100). A percentile indicates rank—being in the 85th percentile means you performed better than 85% of others. Percentages compare to a maximum, while percentiles compare to other people's results."
-      }
-    }
-  ]
-}
-</script>
-
-</div>
-
-
-  <!-- Related Tools -->
-  <div class="related-tools" style="margin-bottom:24px;">
-    <h3 style="font-size:1.1rem;margin-bottom:12px;">Related Tools</h3>
-    <div style="display:flex;flex-wrap:wrap;gap:10px;">
-      <a href="/finance-calculator" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Finance Calculator</a>
-      <a href="/age-calculator" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Age Calculator</a>
-      <a href="/unit-converter" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Unit Converter</a>
-      <a href="/currency-converter" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Currency Converter</a>
-      <a href="/json-formatter" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">JSON Formatter</a>
-      <a href="/password-generator" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Password Generator</a>
-      <a href="/base64-encoder" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Base64 Encoder</a>
-      <a href="/qr-code-generator" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">QR Code Generator</a>
-      <a href="/image-compressor" style="display:inline-block;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.9rem;transition:border-color .2s;">Image Compressor</a>
-    </div>
-  </div>
-
-<!-- Footer -->
-  <footer class="page-footer">
-  <p>Percentage Calculator by <a href="/">ToolAspect</a> — Free online tools for everyone.</p>
-  </footer>
-</div>
-
-<!-- Toast container -->
-<div class="toast-container" id="toast-container"></div>
-
 <script>
-(function() {
-  'use strict';
-
-  /* ========== Tab Switching ========== */
-  var tabBtns = document.querySelectorAll('.tab-btn');
-  var panels = document.querySelectorAll('.tab-panel');
-
-  tabBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      tabBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
-      panels.forEach(function(p) { p.classList.remove('active'); });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected','true');
-      var target = document.getElementById('panel-' + btn.getAttribute('data-tab'));
-      if (target) target.classList.add('active');
-    });
-  });
-
-  /* ========== Formatting Helpers ========== */
-  function fmt(n) {
-    if (n === Infinity || n === -Infinity) return '∞';
-    // Up to 8 decimal places, strip trailing zeros
-    var s = parseFloat(n.toFixed(8)).toString();
-    return s;
-  }
-
-  function fmtPct(n) {
-    return fmt(n) + '%';
-  }
-
-  function showToast(msg) {
-    var container = document.getElementById('toast-container');
-    var toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = msg;
-    container.appendChild(toast);
-    setTimeout(function() {
-      toast.classList.add('removing');
-      setTimeout(function() { toast.remove(); }, 200);
-    }, 1500);
-  }
-
-  /* ========== History (localStorage, last 10) ========== */
-  var HISTORY_KEY = 'pct-calc-history';
-
-  function loadHistory() {
-    try {
-      var data = localStorage.getItem(HISTORY_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch(e) { return []; }
-  }
-
-  function saveHistory(items) {
-    try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 10)));
-    } catch(e) {}
-  }
-
-  function addHistory(label, result) {
-    var items = loadHistory();
-    items.unshift({ label: label, result: result, time: Date.now() });
-    if (items.length > 10) items = items.slice(0, 10);
-    saveHistory(items);
-    renderHistory();
-  }
-
-  function renderHistory() {
-    var list = document.getElementById('history-list');
-    var items = loadHistory();
-    if (items.length === 0) {
-      list.innerHTML = '<div class="no-history">No calculations yet — start typing above!</div>';
-      return;
-    }
-    list.innerHTML = '';
-    items.forEach(function(item) {
-      var el = document.createElement('div');
-      el.className = 'history-item';
-      var timeStr = '';
-      try {
-        var d = new Date(item.time);
-        var now = new Date();
-        if (d.toDateString() === now.toDateString()) {
-          timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        } else {
-          timeStr = d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-      } catch(e) {}
-      el.innerHTML =
-        '<span class="hist-label">' + escHTML(item.label) + '</span>' +
-        '<span class="hist-result">' + escHTML(item.result) + '</span>' +
-        '<span class="hist-time">' + timeStr + '</span>';
-      el.addEventListener('click', function() {
-        copyText(item.result);
-        showToast('Copied: ' + item.result);
-      });
-      list.appendChild(el);
-    });
-  }
-
-  function escHTML(s) {
-    var d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  document.getElementById('clear-history').addEventListener('click', function() {
-    saveHistory([]);
-    renderHistory();
-  });
-
-  renderHistory();
-
-  /* ========== Copy to Clipboard ========== */
-  function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).catch(function() { fallbackCopy(text); });
-    } else {
-      fallbackCopy(text);
-    }
-  }
-
-  function fallbackCopy(text) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch(e) {}
-    document.body.removeChild(ta);
-  }
-
-  function setupCopy(btnId, resultId) {
-    var btn = document.getElementById(btnId);
-    var res = document.getElementById(resultId);
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-      var text = res.textContent;
-      if (!text || text === 'Enter values to calculate') return;
-      copyText(text);
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      showToast('Copied: ' + text);
-      setTimeout(function() {
-        btn.textContent = 'Copy';
-        btn.classList.remove('copied');
-      }, 1500);
-    });
-  }
-
-  setupCopy('copy-pof', 'res-pof');
-  setupCopy('copy-pis', 'res-pis');
-  setupCopy('copy-pch', 'res-pch');
-  setupCopy('copy-pad', 'res-pad');
-
-  /* ========== Real-Time Calculations ========== */
-
-  // 1. What is X% of Y?
-  var pofX = document.getElementById('pof-x');
-  var pofY = document.getElementById('pof-y');
-  var resPof = document.getElementById('res-pof');
-  var copyPof = document.getElementById('copy-pof');
-
-  function calcPof() {
-    var x = parseFloat(pofX.value);
-    var y = parseFloat(pofY.value);
-    if (isNaN(x) || isNaN(y)) {
-      resPof.textContent = 'Enter values to calculate';
-      resPof.className = 'result-text empty';
-      copyPof.style.display = 'none';
-      return;
-    }
-    var result = (x / 100) * y;
-    var display = fmt(result);
-    resPof.textContent = display;
-    resPof.className = 'result-text';
-    copyPof.style.display = '';
-    // History
-    addHistory(x + '% of ' + y, display);
-  }
-
-  pofX.addEventListener('input', debounce(calcPof, 300));
-  pofY.addEventListener('input', debounce(calcPof, 300));
-
-  // 2. X is what % of Y?
-  var pisX = document.getElementById('pis-x');
-  var pisY = document.getElementById('pis-y');
-  var resPis = document.getElementById('res-pis');
-  var copyPis = document.getElementById('copy-pis');
-
-  function calcPis() {
-    var x = parseFloat(pisX.value);
-    var y = parseFloat(pisY.value);
-    if (isNaN(x) || isNaN(y)) {
-      resPis.textContent = 'Enter values to calculate';
-      resPis.className = 'result-text empty';
-      copyPis.style.display = 'none';
-      return;
-    }
-    if (y === 0) {
-      resPis.textContent = 'Cannot divide by zero';
-      resPis.className = 'result-text empty';
-      copyPis.style.display = 'none';
-      return;
-    }
-    var result = (x / y) * 100;
-    var display = fmtPct(result);
-    resPis.textContent = display;
-    resPis.className = 'result-text';
-    copyPis.style.display = '';
-    addHistory(x + ' is what % of ' + y, display);
-  }
-
-  pisX.addEventListener('input', debounce(calcPis, 300));
-  pisY.addEventListener('input', debounce(calcPis, 300));
-
-  // 3. Percentage change from X to Y
-  var pchFrom = document.getElementById('pch-from');
-  var pchTo = document.getElementById('pch-to');
-  var resPch = document.getElementById('res-pch');
-  var copyPch = document.getElementById('copy-pch');
-
-  function calcPch() {
-    var from = parseFloat(pchFrom.value);
-    var to = parseFloat(pchTo.value);
-    if (isNaN(from) || isNaN(to)) {
-      resPch.textContent = 'Enter values to calculate';
-      resPch.className = 'result-text empty';
-      copyPch.style.display = 'none';
-      return;
-    }
-    if (from === 0) {
-      resPch.textContent = 'Original value cannot be zero';
-      resPis.className = 'result-text empty';
-      copyPch.style.display = 'none';
-      return;
-    }
-    var change = ((to - from) / Math.abs(from)) * 100;
-    var sign = change >= 0 ? '+' : '';
-    var display = sign + fmtPct(change);
-    var word = change >= 0 ? 'increase' : 'decrease';
-    resPch.textContent = display + ' (' + word + ')';
-    resPch.className = 'result-text';
-    copyPch.style.display = '';
-    addHistory('Change from ' + from + ' to ' + to, display);
-  }
-
-  pchFrom.addEventListener('input', debounce(calcPch, 300));
-  pchTo.addEventListener('input', debounce(calcPch, 300));
-
-  // 4. Add/Subtract X% to/from Y
-  var padPct = document.getElementById('pad-pct');
-  var padVal = document.getElementById('pad-val');
-  var resPad = document.getElementById('res-pad');
-  var copyPad = document.getElementById('copy-pad');
-
-  function calcPad() {
-    var pct = parseFloat(padPct.value);
-    var val = parseFloat(padVal.value);
-    var mode = document.querySelector('input[name="addsub"]:checked').value;
-    if (isNaN(pct) || isNaN(val)) {
-      resPad.textContent = 'Enter values to calculate';
-      resPad.className = 'result-text empty';
-      copyPad.style.display = 'none';
-      return;
-    }
-    var result;
-    var label;
-    if (mode === 'add') {
-      result = val + (pct / 100) * val;
-      label = 'Add ' + pct + '% to ' + val;
-    } else {
-      result = val - (pct / 100) * val;
-      label = 'Subtract ' + pct + '% from ' + val;
-    }
-    var display = fmt(result);
-    resPad.textContent = display;
-    resPad.className = 'result-text';
-    copyPad.style.display = '';
-    addHistory(label, display);
-  }
-
-  padPct.addEventListener('input', debounce(calcPad, 300));
-  padVal.addEventListener('input', debounce(calcPad, 300));
-  document.querySelectorAll('input[name="addsub"]').forEach(function(radio) {
-    radio.addEventListener('change', calcPad);
-  });
-
-  /* ========== Debounce ========== */
-  function debounce(fn, delay) {
-    var timer = null;
-    return function() {
-      var ctx = this, args = arguments;
-      clearTimeout(timer);
-      timer = setTimeout(function() { fn.apply(ctx, args); }, delay);
-    };
-  }
-
-})();
+function calc1(){var p=parseFloat(document.getElementById('p1').value)||0;var v=parseFloat(document.getElementById('v1').value)||0;document.getElementById('r1').textContent=(p*v/100).toLocaleString(undefined,{maximumFractionDigits:2});}
+function calc2(){var a=parseFloat(document.getElementById('p2a').value)||0;var b=parseFloat(document.getElementById('p2b').value)||1;var r=b!==0?(a/b*100):0;document.getElementById('r2').textContent=r.toFixed(2)+'%';}
+function calc3(){var a=parseFloat(document.getElementById('p3a').value)||0;var b=parseFloat(document.getElementById('p3b').value)||0;var r=a!==0?((b-a)/a*100):0;var sign=r>=0?'+':''document.getElementById('r3').textContent=sign+r.toFixed(1)+'%';}
+function calc4(){var price=parseFloat(document.getElementById('p4a').value)||0;var disc=parseFloat(document.getElementById('p4b').value)||0;var save=price*disc/100;var pay=price-save;document.getElementById('r4').textContent='You save $'+save.toFixed(2)+' — Pay $'+pay.toFixed(2);}
+calc1();calc2();calc3();calc4();
 </script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </body>
 </html>
