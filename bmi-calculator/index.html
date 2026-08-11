@@ -3,137 +3,181 @@
 <head>
 <script src="/shared/domain-redirect.js"></script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>BMI Calculator — Body Mass Index Calculator | ToolAspect</title>
-<meta name="description" content="Free BMI calculator. Calculate your Body Mass Index instantly. Enter height and weight to check if you're underweight, normal, overweight, or obese. Metric and imperial.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMI Calculator | ToolAspect</title>
+<meta name="description" content="Calculate your Body Mass Index (BMI) instantly. Enter height and weight for metric or imperial. See your BMI category and healthy weight range. Free BMI calculator.">
 <link rel="canonical" href="https://toolaspect.com/bmi-calculator/">
-<meta property="og:title" content="BMI Calculator — Body Mass Index | ToolAspect">
-<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
-<meta property="og:description" content="Free BMI calculator. Check your Body Mass Index. Metric and imperial supported.">
+<meta property="og:title" content="BMI Calculator">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toolaspect.com/bmi-calculator/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BMI Calculator | ToolAspect">
-<meta name="twitter:description" content="Calculate your Body Mass Index. Free, instant, metric and imperial.">
-<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BMI Calculator","description":"Calculate Body Mass Index (BMI) from height and weight. Metric and imperial units.","url":"https://toolaspect.com/bmi-calculator/","applicationCategory":"HealthApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"BMI Calculator","item":"https://toolaspect.com/bmi-calculator/"}]}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"BMI Calculator","description":"Calculate Body Mass Index.","url":"https://toolaspect.com/bmi-calculator/","applicationCategory":"HealthApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
 <style>
-.units{display:flex;gap:8px;margin:1rem 0}
-.units button{flex:1;padding:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:500}
-.units button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1rem 0}
-.field label{font-size:.8rem;color:var(--muted);font-weight:500;display:block;margin-bottom:4px}
-.field input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-size:1rem;outline:none}
-.field input:focus{border-color:var(--primary)}
-.result-box{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem 1rem;margin:1.5rem 0}
-.bmi-number{font-size:3.5rem;font-weight:800;line-height:1}
-.bmi-category{font-size:1.1rem;font-weight:600;margin-top:.5rem}
-.cat-underweight{color:#3b82f6}.cat-normal{color:#22c55e}.cat-overweight{color:#f59e0b}.cat-obese{color:#ef4444}
-.scale{display:flex;height:30px;border-radius:6px;overflow:hidden;margin:1.5rem 0;font-size:.7rem}
-.scale div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600}
-.scale .s1{flex:18.5;background:#3b82f6}.scale .s2{flex:6.5;background:#22c55e}.scale .s3{flex:5;background:#f59e0b}.scale .s4{flex:10;background:#ef4444}
-.scale-marker{position:relative;height:0}
-.scale-marker::after{content:"▲";position:absolute;color:var(--text);font-size:1rem;transform:translateX(-50%)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.unit-toggle{display:flex;gap:6px;margin-bottom:18px;justify-content:center}
+.unit-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 20px;font-size:.82rem;cursor:pointer}
+.unit-btn.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:var(--text)}
+.result-box{text-align:center;padding:30px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.bmi-number{font-size:3.5rem;font-weight:700;color:var(--primary)}
+.bmi-category{font-size:1.1rem;font-weight:600;margin-top:8px}
+.bmi-healthy{font-size:.85rem;color:var(--muted);margin-top:8px}
+.scale{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:20px 0}
+.scale div{flex:1}
+.scale-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted)}
+.marker{width:3px;height:20px;background:var(--text);border-radius:2px;position:relative;margin:0 auto;transition:left .3s}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <script src="../shared/nav.js"></script>
 <div class="container">
-<header><h1>⚖️ BMI Calculator</h1><p>Calculate your Body Mass Index — metric or imperial</p></header>
-<div class="units">
-<button class="active" onclick="setUnit('metric',this)">Metric (cm/kg)</button>
-<button onclick="setUnit('imperial',this)">Imperial (ft/lb)</button>
-</div>
-<div class="input-grid">
-<div class="field"><label id="height-label">Height (cm)</label><input type="number" id="height" value="170" min="0" step="any"></div>
-<div class="field"><label id="weight-label">Weight (kg)</label><input type="number" id="weight" value="70" min="0" step="any"></div>
-</div>
-<div class="result-box">
-<div class="bmi-number" id="bmi-num">—</div>
-<div class="bmi-category" id="bmi-cat">Enter your details</div>
-</div>
-<div class="scale">
-<div class="s1">Under</div><div class="s2">Normal</div><div class="s3">Over</div><div class="s4">Obese</div>
-</div>
-<p style="text-align:center;font-size:.8rem;color:var(--muted)">Scale: &lt;18.5 underweight · 18.5-24.9 normal · 25-29.9 overweight · 30+ obese</p>
+  <h1>BMI Calculator</h1>
+  <p class="subtitle">Calculate your Body Mass Index</p>
 
-<div class="related"><h3>Related Tools</h3><div class="related-grid">
-<a href="/age-calculator">Age Calculator</a><a href="/finance-calculator">Finance Calculator</a><a href="/percentage-calculator">Percentage Calculator</a><a href="/unit-converter">Unit Converter</a><a href="/currency-converter">Currency Converter</a><a href="/crypto-converter">Crypto Converter</a><a href="/calorie-calculator">Calorie Calculator</a><a href="/password-generator">Password Generator</a>
-</div></div>
+  <div class="unit-toggle">
+    <button class="unit-btn active" onclick="setUnit('metric')">Metric (kg/cm)</button>
+    <button class="unit-btn" onclick="setUnit('imperial')">Imperial (lb/ft)</button>
+  </div>
 
-<div class="seo-content">
-<h2>What is BMI?</h2>
-<p>BMI (Body Mass Index) is a numerical value derived from your height and weight. It provides a simple screening method for categorizing whether a person is underweight, at a normal weight, overweight, or obese. The formula was developed by Belgian mathematician Adolphe Quetelet in the 1830s and is now used worldwide by health organizations including the WHO, CDC, and NHS.</p>
-<p>BMI is calculated by dividing weight in kilograms by height in meters squared: <strong>BMI = weight (kg) ÷ height (m)²</strong>. For imperial units, the formula is <strong>BMI = 703 × weight (lb) ÷ height (in)²</strong>. Our calculator handles both systems automatically.</p>
-<h2>BMI Categories</h2>
-<table style="width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0">
-<tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:8px">Category</th><th style="text-align:left;padding:8px">BMI Range</th><th style="text-align:left;padding:8px">Health Risk</th></tr>
-<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:#3b82f6">Underweight</td><td style="padding:8px">Below 18.5</td><td style="padding:8px">Nutritional deficiency</td></tr>
-<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:#22c55e">Normal weight</td><td style="padding:8px">18.5 – 24.9</td><td style="padding:8px">Lowest risk</td></tr>
-<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px;color:#f59e0b">Overweight</td><td style="padding:8px">25.0 – 29.9</td><td style="padding:8px">Moderate risk</td></tr>
-<tr><td style="padding:8px;color:#ef4444">Obese</td><td style="padding:8px">30.0 and above</td><td style="padding:8px">High risk</td></tr>
-</table>
-<h2>How to Calculate BMI Manually</h2>
-<h3>Metric Calculation</h3>
-<ol>
-<li>Measure your height in meters (e.g., 170 cm = 1.70 m)</li>
-<li>Measure your weight in kilograms (e.g., 70 kg)</li>
-<li>Square your height: 1.70 × 1.70 = 2.89</li>
-<li>Divide weight by squared height: 70 ÷ 2.89 = <strong>24.2</strong></li>
-</ol>
-<h3>Imperial Calculation</h3>
-<ol>
-<li>Measure height in inches (e.g., 5'7" = 67 inches)</li>
-<li>Measure weight in pounds (e.g., 154 lbs)</li>
-<li>Square height: 67 × 67 = 4,489</li>
-<li>Multiply weight by 703: 154 × 703 = 108,262</li>
-<li>Divide by squared height: 108,262 ÷ 4,489 = <strong>24.1</strong></li>
-</ol>
-<h2>Limitations of BMI</h2>
-<p>While BMI is a useful screening tool, it has important limitations:</p>
-<ul>
-<li><strong>Doesn't measure body fat directly:</strong> BMI uses total weight, which includes muscle, bone, and water weight.</li>
-<li><strong>May overestimate for muscular individuals:</strong> Athletes and bodybuilders may have a high BMI but low body fat.</li>
-<li><strong>May underestimate for elderly:</strong> Older adults may have normal BMI but high body fat percentage.</li>
-<li><strong>Doesn't account for fat distribution:</strong> Abdominal fat (visceral fat) is more dangerous than fat stored in hips and thighs.</li>
-<li><strong>Doesn't account for age, sex, or ethnicity:</strong> Body composition varies significantly across demographics.</li>
-</ul>
-<p>For a more complete health assessment, combine BMI with waist circumference, body fat percentage, and blood tests. Always consult a healthcare professional for personalized advice.</p>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a healthy BMI?","acceptedAnswer":{"@type":"Answer","text":"A healthy BMI falls between 18.5 and 24.9 for most adults. This range is associated with the lowest risk of weight-related health problems. However, individual health depends on many factors beyond BMI, including body composition, fitness level, and metabolic health."}},{"@type":"Question","name":"How is BMI calculated?","acceptedAnswer":{"@type":"Answer","text":"BMI = weight (kg) ÷ height (m)². For imperial: BMI = 703 × weight (lb) ÷ height (in)². For example, someone who is 70 kg and 1.70 m tall has a BMI of 24.2."}},{"@type":"Question","name":"Is BMI accurate for athletes?","acceptedAnswer":{"@type":"Answer","text":"BMI can be misleading for athletes because muscle weighs more than fat. A muscular athlete may have a BMI in the overweight range despite having low body fat. Body fat percentage and waist-to-hip ratio are better metrics for athletic populations."}},{"@type":"Question","name":"What BMI is considered obese?","acceptedAnswer":{"@type":"Answer","text":"A BMI of 30 or higher is classified as obese. The obese category has three subclasses: Class I (30-34.9), Class II (35-39.9), and Class III (40+, also called severe or morbid obesity)."}},{"@type":"Question","name":"Should I use BMI for children?","acceptedAnswer":{"@type":"Answer","text":"BMI for children and teens (ages 2-19) is calculated the same way but interpreted differently using age- and sex-specific percentile charts, not the adult categories. A child's BMI percentile shows how they compare to peers of the same age and sex."}},{"@type":"Question","name":"How often should I check my BMI?","acceptedAnswer":{"@type":"Answer","text":"Checking BMI monthly or quarterly is sufficient for most people. BMI changes slowly and daily weight fluctuations from water retention, meals, and bathroom habits don't reflect real changes in body composition."}}]}</script>
-<h3>What is a healthy BMI?</h3>
-<p>Between 18.5 and 24.9 for most adults. This range has the lowest risk of weight-related health problems.</p>
-<h3>How is BMI calculated?</h3>
-<p>BMI = weight (kg) ÷ height (m)². For imperial: BMI = 703 × weight (lb) ÷ height (in)².</p>
-<h3>Is BMI accurate for athletes?</h3>
-<p>Not always. Muscle weighs more than fat, so muscular athletes may have a high BMI despite low body fat. Body fat percentage is a better metric for athletes.</p>
-<h3>What BMI is considered obese?</h3>
-<p>BMI of 30 or higher. Class I (30-34.9), Class II (35-39.9), Class III (40+, severe obesity).</p>
-<h3>Should I use BMI for children?</h3>
-<p>Children use age- and sex-specific percentile charts, not the adult categories. Consult a pediatrician for children's growth assessment.</p>
-<h3>How often should I check my BMI?</h3>
-<p>Monthly or quarterly is sufficient. Daily weight fluctuations don't reflect real body composition changes.</p>
-</div>
-<footer><p>&copy; 2026 ToolAspect &mdash; Free online tools</p></footer>
+  <div class="card">
+    <div class="form-row" id="heightInputs"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label id="weightLabel">Weight (kg)</label>
+        <input type="number" id="weight" value="70" min="0" step="0.1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Age</label>
+        <input type="number" id="age" value="30" min="2" max="120" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+
+  <div class="scale">
+    <div style="background:#60a5fa"></div>
+    <div style="background:#34d399"></div>
+    <div style="background:#fbbf24"></div>
+    <div style="background:#f87171"></div>
+  </div>
+  <div class="scale-labels">
+    <span>&lt;18.5 Underweight</span>
+    <span>18.5-24.9 Normal</span>
+    <span>25-29.9 Overweight</span>
+    <span>30+ Obese</span>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>What is BMI?</h2>
+    <p>Body Mass Index (BMI) is a measure of body fat based on height and weight. It applies to adult men and women aged 20+. While BMI doesn't directly measure body fat, it's a useful screening tool for weight categories.</p>
+    <h2>BMI Formula</h2>
+    <p><strong>Metric:</strong> BMI = weight (kg) / [height (m)]²</p>
+    <p><strong>Imperial:</strong> BMI = 703 × weight (lb) / [height (in)]²</p>
+    <h2>BMI Limitations</h2>
+    <ul>
+      <li>Doesn't distinguish between muscle and fat — athletes may have high BMI but low body fat</li>
+      <li>Doesn't account for fat distribution (belly fat is riskier than hip/thigh fat)</li>
+      <li>May not be accurate for elderly (loss of muscle mass)</li>
+      <li>Doesn't account for bone density or frame size</li>
+    </ul>
+    <h2>Healthy Weight Ranges</h2>
+    <p>For a BMI of 18.5-24.9:</p>
+    <ul>
+      <li>5'4" (162cm): 108-145 lb (49-66 kg)</li>
+      <li>5'8" (172cm): 121-163 lb (55-74 kg)</li>
+      <li>6'0" (183cm): 136-184 lb (62-83 kg)</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
 </div>
 <script>
-var unit="metric";
-function setUnit(u,btn){unit=u;document.querySelectorAll(".units button").forEach(function(b){b.classList.remove("active")});btn.classList.add("active");
-if(u==="metric"){document.getElementById("height-label").textContent="Height (cm)";document.getElementById("weight-label").textContent="Weight (kg)";document.getElementById("height").value=170;document.getElementById("weight").value=70}
-else{document.getElementById("height-label").textContent="Height (inches)";document.getElementById("weight-label").textContent="Weight (lb)";document.getElementById("height").value=67;document.getElementById("weight").value=154}
-calc()}
-function calc(){var h=parseFloat(document.getElementById("height").value)||0;var w=parseFloat(document.getElementById("weight").value)||0;if(!h||!w)return;
-var bmi;if(unit==="metric"){var hm=h/100;bmi=w/(hm*hm)}else{bmi=703*w/(h*h)}
-bmi=Math.round(bmi*10)/10;
-var num=document.getElementById("bmi-num");var cat=document.getElementById("bmi-cat");
-num.textContent=bmi;
-if(bmi<18.5){cat.textContent="Underweight";cat.className="bmi-category cat-underweight"}
-else if(bmi<25){cat.textContent="Normal weight";cat.className="bmi-category cat-normal"}
-else if(bmi<30){cat.textContent="Overweight";cat.className="bmi-category cat-overweight"}
-else{cat.textContent="Obese";cat.className="bmi-category cat-obese"}}
-document.getElementById("height").addEventListener("input",calc);
-document.getElementById("weight").addEventListener("input",calc);
+var unit='metric';
+function setUnit(u){
+  unit=u;
+  document.querySelectorAll('.unit-btn').forEach(function(b,i){b.classList.toggle('active',i===(u==='metric'?0:1));});
+  if(u==='metric'){
+    document.getElementById('heightInputs').innerHTML='<div class="form-group"><label>Height (cm)</label><input type="number" id="height" value="170" min="0" oninput="calc()"></div><div class="form-group"><label>Or Height (m)</label><input type="number" id="heightM" value="1.70" min="0" step="0.01" oninput="calcFromM()"></div>';
+    document.getElementById('weightLabel').textContent='Weight (kg)';
+    document.getElementById('weight').value=70;
+  }else{
+    document.getElementById('heightInputs').innerHTML='<div class="form-group"><label>Height (ft)</label><input type="number" id="heightFt" value="5" min="0" oninput="calc()"></div><div class="form-group"><label>Height (in)</label><input type="number" id="heightIn" value="9" min="0" max="11" oninput="calc()"></div>';
+    document.getElementById('weightLabel').textContent='Weight (lb)';
+    document.getElementById('weight').value=155;
+  }
+  calc();
+}
+function calcFromM(){
+  var m=parseFloat(document.getElementById('heightM').value)||0;
+  var cm=Math.round(m*100);
+  var h=document.getElementById('height');
+  if(h)h.value=cm;
+  calc();
+}
+function calc(){
+  var weight=parseFloat(document.getElementById('weight').value)||0;
+  var bmi=0;
+  if(unit==='metric'){
+    var h=document.getElementById('height');
+    var heightCM=parseFloat(h?h.value:0)||0;
+    var heightM=heightCM/100;
+    bmi=weight/(heightM*heightM);
+  }else{
+    var ft=parseFloat(document.getElementById('heightFt')?.value)||0;
+    var inch=parseFloat(document.getElementById('heightIn')?.value)||0;
+    var totalInches=ft*12+inch;
+    bmi=703*weight/(totalInches*totalInches);
+  }
+  if(bmi<=0||isNaN(bmi)){
+    document.getElementById('result').innerHTML='<div class="bmi-number">—</div><div class="bmi-category">Enter your details</div>';
+    return;
+  }
+  var cat,color;
+  if(bmi<18.5){cat='Underweight';color='#60a5fa';}
+  else if(bmi<25){cat='Normal Weight';color='#34d399';}
+  else if(bmi<30){cat='Overweight';color='#fbbf24';}
+  else{cat='Obese';color='#f87171';}
+  // Healthy weight range
+  var hM;
+  if(unit==='metric'){
+    hM=parseFloat(document.getElementById('height').value)/100;
+  }else{
+    var tFt=parseFloat(document.getElementById('heightFt')?.value)||0;
+    var tIn=parseFloat(document.getElementById('heightIn')?.value)||0;
+    hM=(tFt*12+tIn)*0.0254;
+  }
+  var minW=18.5*hM*hM;
+  var maxW=24.9*hM*hM;
+  var rangeStr=unit==='metric'?
+    'Healthy range: '+Math.round(minW)+'-'+Math.round(maxW)+' kg':
+    'Healthy range: '+Math.round(minW*2.205)+'-'+Math.round(maxW*2.205)+' lb';
+  document.getElementById('result').innerHTML=
+    '<div class="bmi-number" style="color:'+color+'">'+bmi.toFixed(1)+'</div>'+
+    '<div class="bmi-category" style="color:'+color+'">'+cat+'</div>'+
+    '<div class="bmi-healthy">'+rangeStr+'</div>';
+}
 calc();
 </script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </body>
 </html>
