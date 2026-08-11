@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markup Calculator | ToolAspect</title>
+<meta name="description" content="Calculate selling price, profit margin, and markup percentage from cost and revenue. Essential for pricing strategy. Free markup calculator.">
+<link rel="canonical" href="https://toolaspect.com/markup-calculator/">
+<meta property="og:title" content="Markup Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markup-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FinanceApplication","name":"Markup Calculator","description":"Calculate selling price, profit margin, and markup percentage from cost and revenue. Essential for pricing strategy. Free markup calculator.","url":"https://toolaspect.com/markup-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem;transition:border-color var(--transition)}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.result-box .value{font-size:2rem;font-weight:700;color:var(--primary)}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Markup Calculator</h1>
+<p class="subtitle">Calculate selling price, profit margin, and markup percentage from cost and revenue.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+
+<div class="card">
+<div class="form-group">
+<label>Cost Price ($)</label>
+<input type="number" id="cost" placeholder="50" value="50" step="0.01">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Markup (%)</label>
+<input type="number" id="markup" placeholder="40" value="40" step="0.1">
+</div>
+<div class="form-group">
+<label>OR Selling Price ($)</label>
+<input type="number" id="selling" placeholder="0" value="0" step="0.01">
+</div>
+</div>
+<button class="btn-calc" onclick="calcMarkup()">Calculate</button>
+</div>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">Selling Price</span><span class="value" id="sellPrice">$0</span></div>
+<div class="result-row"><span class="label">Profit</span><span id="profit">$0</span></div>
+<div class="result-row"><span class="label">Margin (%)</span><span id="margin">0%</span></div>
+<div class="result-row"><span class="label">Markup Amount</span><span id="markupAmt">$0</span></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Markup Calculator</h2>
+<p>Calculate selling price, profit margin, and markup percentage from cost and revenue. Essential for pricing strategy. Free markup calculator.</p>
+</div>
+<div class="related-links">
+<a href="/finance-calculator/">Finance Calculator</a>
+<a href="/mortgage-calculator/">Mortgage Calculator</a>
+<a href="/loan-calculator/">Loan Calculator</a>
+<a href="/roi-calculator/">ROI Calculator</a>
+<a href="/compound-interest-calculator/">Compound Interest</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+
+function calcMarkup(){
+var cost=parseFloat(document.getElementById('cost').value)||0;
+var markupPct=parseFloat(document.getElementById('markup').value)||0;
+var sellInput=parseFloat(document.getElementById('selling').value)||0;
+var selling,markupAmt,margin;
+if(sellInput>0){selling=sellInput;markupAmt=selling-cost;margin=cost>0?(markupAmt/selling*100):0;}
+else{markupAmt=cost*markupPct/100;selling=cost+markupAmt;margin=selling>0?(markupAmt/selling*100):0;}
+document.getElementById('sellPrice').textContent='$'+selling.toFixed(2);
+document.getElementById('profit').textContent='$'+markupAmt.toFixed(2);
+document.getElementById('margin').textContent=margin.toFixed(1)+'%';
+document.getElementById('markupAmt').textContent='$'+markupAmt.toFixed(2);
+document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer | ToolAspect</title>
+<meta name="description" content="Set a countdown timer for any event. Customizable with sound alerts. Works in your browser. Free online countdown timer.">
+<link rel="canonical" href="https://toolaspect.com/countdown-timer/">
+<meta property="og:title" content="Countdown Timer">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/countdown-timer/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Countdown Timer","description":"Set a countdown timer for any event.","url":"https://toolaspect.com/countdown-timer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);margin-top:1rem;display:none}
+.result-box.show{display:block}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Countdown Timer</h1>
+<p class="subtitle">Set a countdown to any event.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card" style="text-align:center">
+<div class="form-group">
+<label style="font-size:.85rem;color:var(--text-secondary)">Event Name (optional)</label>
+<input type="text" id="eventName" placeholder="New Year" style="text-align:center">
+</div>
+<div class="form-group">
+<label style="font-size:.85rem;color:var(--text-secondary)">Target Date & Time</label>
+<input type="datetime-local" id="targetDt" style="text-align:center">
+</div>
+<button class="btn-calc" onclick="startCountdown()">Start Countdown</button>
+</div>
+<div class="result-box show" id="timerBox" style="text-align:center;padding:2rem">
+<div id="displayName" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;color:var(--text-secondary)"></div>
+<div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap">
+<div><div class="value" id="days" style="font-size:2.5rem;font-weight:700;color:var(--primary)">0</div><div class="label" style="font-size:.75rem;color:var(--muted)">DAYS</div></div>
+<div><div class="value" id="hours" style="font-size:2.5rem;font-weight:700;color:var(--primary)">0</div><div class="label" style="font-size:.75rem;color:var(--muted)">HOURS</div></div>
+<div><div class="value" id="mins" style="font-size:2.5rem;font-weight:700;color:var(--primary)">0</div><div class="label" style="font-size:.75rem;color:var(--muted)">MINUTES</div></div>
+<div><div class="value" id="secs" style="font-size:2.5rem;font-weight:700;color:var(--primary)">0</div><div class="label" style="font-size:.75rem;color:var(--muted)">SECONDS</div></div>
+</div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Countdown Timer</h2>
+<p>Set a countdown timer for any event. Customizable with event names. Works entirely in your browser.</p>
+</div>
+<div class="related-links">
+<a href="/pomodoro-timer/">Pomodoro Timer</a>
+<a href="/hours-calculator/">Hours Calculator</a>
+<a href="/date-difference-calculator/">Date Difference Calculator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var timerInt=null;
+function startCountdown(){
+var name=document.getElementById('eventName').value||'Countdown';
+var dt=document.getElementById('targetDt').value;
+if(!dt){alert('Please select a date and time');return;}
+var target=new Date(dt).getTime();
+document.getElementById('displayName').textContent=name;
+if(timerInt)clearInterval(timerInt);
+function tick(){
+var now=Date.now();var diff=target-now;
+if(diff<=0){document.getElementById('days').textContent='0';document.getElementById('hours').textContent='0';document.getElementById('mins').textContent='0';document.getElementById('secs').textContent='🎉';document.getElementById('secs').style.fontSize='2rem';clearInterval(timerInt);return;}
+var d=Math.floor(diff/86400000);
+var h=Math.floor((diff%86400000)/3600000);
+var m=Math.floor((diff%3600000)/60000);
+var s=Math.floor((diff%60000)/1000);
+document.getElementById('days').textContent=d;
+document.getElementById('hours').textContent=h;
+document.getElementById('mins').textContent=m;
+document.getElementById('secs').textContent=s;
+document.getElementById('secs').style.fontSize='2.5rem';
+}
+tick();timerInt=setInterval(tick,1000);
+}</script>
+</body>
+</html>

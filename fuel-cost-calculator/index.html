@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel Cost Calculator | ToolAspect</title>
+<meta name="description" content="Calculate trip fuel costs based on distance, fuel efficiency, and gas prices. Plan your travel budget. Free fuel cost calculator.">
+<link rel="canonical" href="https://toolaspect.com/fuel-cost-calculator/">
+<meta property="og:title" content="Fuel Cost Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/fuel-cost-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Fuel Cost Calculator","description":"Calculate trip fuel costs.","url":"https://toolaspect.com/fuel-cost-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.result-box .value{font-size:2rem;font-weight:700;color:var(--primary)}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Fuel Cost Calculator</h1>
+<p class="subtitle">Calculate trip fuel costs and plan your travel budget.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-group">
+<label>Trip Distance</label>
+<div class="form-row">
+<div><input type="number" id="distance" placeholder="300" value="300"></div>
+<div><select id="distUnit" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem"><option value="miles">miles</option><option value="km">km</option></select></div>
+</div>
+</div>
+<div class="form-group">
+<label>Fuel Efficiency</label>
+<div class="form-row">
+<div><input type="number" id="mpg" placeholder="30" value="30"></div>
+<div><select id="effUnit" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem"><option value="mpg">mpg (US)</option><option value="L100">L/100km</option></select></div>
+</div>
+</div>
+<div class="form-group">
+<label>Fuel Price per Gallon/Liter ($)</label>
+<input type="number" id="price" placeholder="3.50" value="3.50" step="0.01">
+</div>
+<button class="btn-calc" onclick="calcFuel()">Calculate Fuel Cost</button>
+</div>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">Fuel Needed</span><span id="fuelNeeded">0</span></div>
+<div class="result-row"><span class="label">Total Fuel Cost</span><span class="value" id="totalCost">$0</span></div>
+<div class="result-row"><span class="label">Cost per Mile/Km</span><span id="costPer">$0</span></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Fuel Cost Calculator</h2>
+<p>Calculate trip fuel costs based on distance, fuel efficiency, and gas prices. Works with both US (mpg) and metric (L/100km) units.</p>
+</div>
+<div class="related-links">
+<a href="/unit-converter/">Unit Converter</a>
+<a href="/percentage-calculator/">Percentage Calculator</a>
+<a href="/salary-calculator/">Salary Calculator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+function calcFuel(){
+var distance=parseFloat(document.getElementById('distance').value)||0;
+var distUnit=document.getElementById('distUnit').value;
+var eff=parseFloat(document.getElementById('mpg').value)||1;
+var effUnit=document.getElementById('effUnit').value;
+var price=parseFloat(document.getElementById('price').value)||0;
+var miles=distUnit==='km'?distance*0.621371:distance;
+var gallons;
+if(effUnit==='L100'){var liters=(distance/100)*eff;gallons=liters*0.264172;}
+else{gallons=miles/eff;}
+var cost=gallons*price;
+var perMile=miles>0?cost/miles:0;
+document.getElementById('fuelNeeded').textContent=gallons.toFixed(2)+' gal';
+document.getElementById('totalCost').textContent='$'+cost.toFixed(2);
+document.getElementById('costPer').textContent='$'+perMile.toFixed(2)+'/'+(distUnit==='km'?'km':'mi');
+document.getElementById('result').classList.add('show');
+}</script>
+</body>
+</html>

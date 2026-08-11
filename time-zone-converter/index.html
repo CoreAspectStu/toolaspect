@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Zone Converter | ToolAspect</title>
+<meta name="description" content="Convert times between any two time zones instantly. Meeting planner for global teams. DST-aware. Free time zone converter.">
+<link rel="canonical" href="https://toolaspect.com/time-zone-converter/">
+<meta property="og:title" content="Time Zone Converter">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/time-zone-converter/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Time Zone Converter","description":"Convert times between any two time zones instantly.","url":"https://toolaspect.com/time-zone-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.result-box .value{font-size:1.4rem;font-weight:700;color:var(--primary)}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);align-items:center}
+.result-row:last-child{border-bottom:none}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Time Zone Converter</h1>
+<p class="subtitle">Convert times between any two time zones instantly.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-row">
+<div class="form-group">
+<label>From Time Zone</label>
+<select id="fromTz" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem">
+<option value="UTC">UTC</option>
+<option value="America/New_York" selected>US Eastern (New York)</option>
+<option value="America/Chicago">US Central (Chicago)</option>
+<option value="America/Denver">US Mountain (Denver)</option>
+<option value="America/Los_Angeles">US Pacific (Los Angeles)</option>
+<option value="America/Sao_Paulo">Sao Paulo</option>
+<option value="Europe/London">London (GMT/BST)</option>
+<option value="Europe/Paris">Paris/CET</option>
+<option value="Europe/Moscow">Moscow</option>
+<option value="Asia/Dubai">Dubai</option>
+<option value="Asia/Kolkata">India (IST)</option>
+<option value="Asia/Shanghai">China (CST)</option>
+<option value="Asia/Tokyo">Tokyo (JST)</option>
+<option value="Asia/Singapore">Singapore</option>
+<option value="Australia/Sydney">Sydney</option>
+<option value="Pacific/Auckland">Auckland</option>
+</select>
+</div>
+<div class="form-group">
+<label>To Time Zone</label>
+<select id="toTz" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem">
+<option value="UTC">UTC</option>
+<option value="America/New_York">US Eastern (New York)</option>
+<option value="America/Chicago">US Central (Chicago)</option>
+<option value="America/Denver">US Mountain (Denver)</option>
+<option value="America/Los_Angeles">US Pacific (Los Angeles)</option>
+<option value="America/Sao_Paulo">Sao Paulo</option>
+<option value="Europe/London">London (GMT/BST)</option>
+<option value="Europe/Paris" selected>Paris/CET</option>
+<option value="Europe/Moscow">Moscow</option>
+<option value="Asia/Dubai">Dubai</option>
+<option value="Asia/Kolkata">India (IST)</option>
+<option value="Asia/Shanghai">China (CST)</option>
+<option value="Asia/Tokyo">Tokyo (JST)</option>
+<option value="Asia/Singapore">Singapore</option>
+<option value="Australia/Sydney">Sydney</option>
+<option value="Pacific/Auckland">Auckland</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label>Date & Time</label>
+<input type="datetime-local" id="dt" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem">
+</div>
+<button class="btn-calc" onclick="convert()">Convert Time</button>
+</div>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label" id="fromLabel">From</span><span id="fromTime">-</span></div>
+<div class="result-row"><span class="label" id="toLabel">To</span><span class="value" id="toTime" style="font-size:1.2rem">-</span></div>
+<div class="result-row"><span class="label">Time Difference</span><span id="diff">-</span></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Time Zone Converter</h2>
+<p>Convert times between any two time zones instantly. Perfect for scheduling meetings across global teams. DST-aware.</p>
+</div>
+<div class="related-links">
+<a href="/date-difference-calculator/">Date Difference Calculator</a>
+<a href="/hours-calculator/">Hours Calculator</a>
+<a href="/cron-generator/">Cron Expression Generator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+function convert(){
+var fromTz=document.getElementById('fromTz').value;
+var toTz=document.getElementById('toTz').value;
+var dtVal=document.getElementById('dt').value;
+if(!dtVal){var now=new Date();dtVal=now.toISOString().slice(0,16);document.getElementById('dt').value=dtVal;}
+var dt=new Date(dtVal);
+try{
+var fromStr=new Intl.DateTimeFormat('en-US',{timeZone:fromTz,dateStyle:'full',timeStyle:'short'}).format(dt);
+var toStr=new Intl.DateTimeFormat('en-US',{timeZone:toTz,dateStyle:'full',timeStyle:'short'}).format(dt);
+var offsetFrom=getOffset(dt,fromTz);var offsetTo=getOffset(dt,toTz);
+var diffH=(offsetTo-offsetFrom);
+var sign=diffH>=0?'+':'-';var absH=Math.abs(diffH);var h=Math.floor(absH);var m=Math.round((absH-h)*60);
+document.getElementById('fromTime').textContent=fromStr;
+document.getElementById('toTime').textContent=toStr;
+document.getElementById('fromLabel').textContent='From ('+fromTz+')';
+document.getElementById('toLabel').textContent='To ('+toTz+')';
+document.getElementById('diff').textContent=sign+h+'h'+(m>0?(' '+m+'m'):'');
+document.getElementById('result').classList.add('show');
+}catch(e){document.getElementById('toTime').textContent='Error: '+e.message;document.getElementById('result').classList.add('show');}
+}
+function getOffset(dt,tz){
+var fmt=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+var parts=fmt.formatToParts(dt);var p={};parts.forEach(function(o){p[o.type]=o.value;});
+var asUTC=Date.UTC(p.year,parseInt(p.month)-1,p.day,p.hour===24?0:p.hour,p.minute,p.second);
+return (asUTC-dt.getTime())/3600000;
+}</script>
+</body>
+</html>
