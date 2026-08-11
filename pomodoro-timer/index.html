@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro Timer — Focus Timer Online Free | ToolAspect</title>
+<meta name="description" content="Free online Pomodoro timer with customizable work and break intervals. Boost productivity with the proven 25/5 focus technique. Track sessions, get sound notifications, and stay focused.">
+<link rel="canonical" href="https://toolaspect.com/pomodoro-timer/">
+<meta property="og:title" content="Pomodoro Timer — Focus Timer Online Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Free online Pomodoro timer with customizable intervals, session tracking, and sound notifications. Boost your productivity today.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pomodoro-timer/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pomodoro Timer — Focus Timer Online Free">
+<meta name="twitter:description" content="Free online Pomodoro timer with customizable intervals, session tracking, and sound notifications.">
+<meta name="keywords" content="pomodoro timer, focus timer, productivity timer, 25 minute timer, work break timer, study timer, online pomodoro">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pomodoro Timer",
+  "url": "https://toolaspect.com/pomodoro-timer/",
+  "description": "Free online Pomodoro timer with customizable work and break intervals. Boost productivity with the proven focus technique.",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": "Customizable work/break intervals, auto-cycle, session counter, sound notifications, task tracking, daily focus statistics"
+}
+</script>
+<style>
+:root{--bg:#08090a;--surface:#131516;--border:rgba(255,255,255,0.06);--text:#f7f8f8;--muted:#8a8f98;--primary:#6366f1;--radius:14px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:4px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:28px;font-size:.92rem}
+
+/* Mode Tabs */
+.mode-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:24px}
+.mode-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 18px;font-size:.82rem;cursor:pointer;font-family:inherit;font-weight:500;transition:all .2s}
+.mode-tab:hover{color:var(--text)}
+.mode-tab.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:var(--primary)}
+
+/* Timer Circle */
+.timer-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
+.timer-circle{position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center}
+.timer-circle svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.timer-bg-ring{fill:none;stroke:var(--border);stroke-width:5}
+.timer-progress-ring{fill:none;stroke:var(--primary);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .5s linear,stroke .3s}
+.timer-text{position:relative;z-index:1;text-align:center}
+.timer-display{font-size:3.8rem;font-weight:700;letter-spacing:-2px;line-height:1;font-variant-numeric:tabular-nums}
+.timer-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-top:8px}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.012);opacity:.92}}
+.timer-circle.running .timer-text{animation:pulse 2s ease-in-out infinite}
+
+/* Controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-bottom:28px}
+.btn{border:none;border-radius:10px;padding:12px 28px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-start{background:var(--primary);color:#fff}
+.btn-start:hover{background:#5558e3;transform:translateY(-1px)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.btn-secondary:hover{color:var(--text);border-color:rgba(255,255,255,.12)}
+.btn-start.paused{background:#e87b3a}
+
+/* Task input */
+.task-input-wrap{margin-bottom:20px}
+.task-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 16px;font-size:.92rem;font-family:inherit;outline:none;transition:border-color .2s;text-align:center}
+.task-input::placeholder{color:var(--muted)}
+.task-input:focus{border-color:rgba(99,102,241,.3)}
+
+/* Settings */
+.settings{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.settings h3{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;font-weight:600}
+.settings-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.setting-item label{display:block;font-size:.76rem;color:var(--muted);margin-bottom:5px}
+.setting-item input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 10px;font-size:.88rem;font-family:inherit;outline:none;text-align:center;transition:border-color .2s}
+.setting-item input:focus{border-color:rgba(99,102,241,.3)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.stat-number{font-size:1.7rem;font-weight:700;color:var(--primary)}
+.stat-label{font-size:.76rem;color:var(--muted);margin-top:2px}
+
+/* Session dots */
+.session-dots{display:flex;gap:6px;justify-content:center;margin-bottom:20px}
+.session-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.session-dot.completed{background:var(--primary)}
+
+/* Ad */
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:40px 16px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+
+/* SEO */
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+
+/* Notification banner */
+.notif-banner{display:none;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:10px 14px;text-align:center;font-size:.82rem;color:var(--primary);margin-bottom:16px}
+.notif-banner.show{display:block}
+
+@media(max-width:640px){.container{padding:1rem}.timer-circle{width:220px;height:220px}.timer-display{font-size:3rem}.settings-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Pomodoro Timer</h1>
+  <p class="subtitle">Stay focused, work in proven intervals</p>
+
+  <div class="notif-banner" id="notifBanner">🔔 Time's up! <span id="notifMessage"></span></div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="work">Focus</button>
+    <button class="mode-tab" data-mode="short">Short Break</button>
+    <button class="mode-tab" data-mode="long">Long Break</button>
+  </div>
+
+  <div class="timer-wrap">
+    <div class="timer-circle" id="timerCircle">
+      <svg viewBox="0 0 260 260">
+        <circle class="timer-bg-ring" cx="130" cy="130" r="120"/>
+        <circle class="timer-progress-ring" cx="130" cy="130" r="120" id="progressRing"/>
+      </svg>
+      <div class="timer-text">
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="timer-label" id="timerLabel">Focus Session</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="session-dots" id="sessionDots">
+    <div class="session-dot"></div><div class="session-dot"></div><div class="session-dot"></div><div class="session-dot"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="startBtn">Start</button>
+    <button class="btn btn-secondary" id="resetBtn">Reset</button>
+    <button class="btn btn-secondary" id="skipBtn">Skip</button>
+  </div>
+
+  <div class="task-input-wrap">
+    <input type="text" class="task-input" id="taskInput" placeholder="What are you working on?" maxlength="120">
+  </div>
+
+  <div class="settings">
+    <h3>Timer Settings (minutes)</h3>
+    <div class="settings-row">
+      <div class="setting-item">
+        <label>Focus</label>
+        <input type="number" id="workMin" value="25" min="1" max="90">
+      </div>
+      <div class="setting-item">
+        <label>Short Break</label>
+        <input type="number" id="shortMin" value="5" min="1" max="30">
+      </div>
+      <div class="setting-item">
+        <label>Long Break</label>
+        <input type="number" id="longMin" value="15" min="1" max="60">
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-number" id="statPomodoros">0</div>
+      <div class="stat-label">Pomodoros Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statFocusTime">0m</div>
+      <div class="stat-label">Focus Time</div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>What is the Pomodoro Technique?</h2>
+    <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s. It breaks work into focused intervals (traditionally 25 minutes) separated by short breaks. These intervals are called "pomodoros," named after the tomato-shaped kitchen timer Cirillo used as a student.</p>
+
+    <h2>How to Use This Timer</h2>
+    <ul>
+      <li>Enter your task in the "What are you working on?" field</li>
+      <li>Press <strong>Start</strong> to begin a 25-minute focus session</li>
+      <li>When the timer rings, take a 5-minute short break</li>
+      <li>After 4 focus sessions, take a longer 15-minute break</li>
+      <li>Customize the durations in the settings above to match your workflow</li>
+    </ul>
+
+    <h2>Benefits of the Pomodoro Technique</h2>
+    <ul>
+      <li><strong>Reduces mental fatigue</strong> — Regular breaks prevent burnout and keep your mind fresh</li>
+      <li><strong>Improves focus</strong> — Short, defined work periods are easier to commit to than open-ended work</li>
+      <li><strong>Fights procrastination</strong> — Starting a 25-minute timer feels manageable, reducing the urge to delay</li>
+      <li><strong>Tracks productivity</strong> — Completed pomodoros give you a tangible measure of focused work</li>
+      <li><strong>Prevents distractions</strong> — Knowing a break is coming makes it easier to defer interruptions</li>
+      <li><strong>Builds momentum</strong> — The cycle of work and rest creates a sustainable rhythm for deep work</li>
+    </ul>
+
+    <h2>Tips for Getting the Most Out of Pomodoros</h2>
+    <p>During focus sessions, close unnecessary tabs, silence your phone, and commit fully to one task. During breaks, step away from the screen — stretch, hydrate, or rest your eyes. Adjust the timer durations to find your optimal focus length; some people work best with 50-minute sessions and 10-minute breaks.</p>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+
+<script>
+(function(){
+  // State
+  let currentMode = 'work';
+  let timeLeft = 25 * 60;
+  let totalSeconds = 25 * 60;
+  let isRunning = false;
+  let intervalId = null;
+  let pomodoroCount = 0;
+  let cyclePosition = 0; // 0-3 within the 4-work cycle
+  let focusMinutesTotal = 0;
+  let ringCircumference = 2 * Math.PI * 120;
+
+  // Elements
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerLabel = document.getElementById('timerLabel');
+  const timerCircle = document.getElementById('timerCircle');
+  const progressRing = document.getElementById('progressRing');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const workInput = document.getElementById('workMin');
+  const shortInput = document.getElementById('shortMin');
+  const longInput = document.getElementById('longMin');
+  const taskInput = document.getElementById('taskInput');
+  const statPomodoros = document.getElementById('statPomodoros');
+  const statFocusTime = document.getElementById('statFocusTime');
+  const sessionDots = document.querySelectorAll('.session-dot');
+  const modeTabs = document.querySelectorAll('.mode-tab');
+  const notifBanner = document.getElementById('notifBanner');
+  const notifMessage = document.getElementById('notifMessage');
+
+  // Init ring
+  progressRing.style.strokeDasharray = ringCircumference;
+  progressRing.style.strokeDashoffset = 0;
+
+  // Load stats from localStorage
+  function loadStats(){
+    const today = new Date().toDateString();
+    try{
+      const data = JSON.parse(localStorage.getItem('pomodoro-stats') || '{}');
+      if(data.date === today){
+        pomodoroCount = data.pomodoros || 0;
+        focusMinutesTotal = data.focusMinutes || 0;
+      }
+    }catch(e){}
+    updateStats();
+  }
+
+  function saveStats(){
+    const today = new Date().toDateString();
+    localStorage.setItem('pomodoro-stats', JSON.stringify({
+      date: today,
+      pomodoros: pomodoroCount,
+      focusMinutes: focusMinutesTotal
+    }));
+  }
+
+  function updateStats(){
+    statPomodoros.textContent = pomodoroCount;
+    const h = Math.floor(focusMinutesTotal / 60);
+    const m = focusMinutesTotal % 60;
+    statFocusTime.textContent = h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+  }
+
+  function updateSessionDots(){
+    sessionDots.forEach((dot, i) => {
+      dot.classList.toggle('completed', i < cyclePosition);
+    });
+  }
+
+  function getModeMinutes(mode){
+    if(mode === 'work') return parseInt(workInput.value) || 25;
+    if(mode === 'short') return parseInt(shortInput.value) || 5;
+    return parseInt(longInput.value) || 15;
+  }
+
+  function setMode(mode){
+    currentMode = mode;
+    totalSeconds = getModeMinutes(mode) * 60;
+    timeLeft = totalSeconds;
+    isRunning = false;
+    clearInterval(intervalId);
+    intervalId = null;
+
+    modeTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.mode === mode));
+    timerCircle.classList.remove('running');
+    startBtn.textContent = 'Start';
+    startBtn.classList.remove('paused');
+
+    const labels = {work:'Focus Session', short:'Short Break', long:'Long Break'};
+    timerLabel.textContent = labels[mode];
+
+    // Color per mode
+    const colors = {work:'#6366f1', short:'#2dd4a0', long:'#f59e0b'};
+    progressRing.style.stroke = colors[mode];
+
+    updateDisplay();
+  }
+
+  function updateDisplay(){
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerDisplay.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    const progress = totalSeconds > 0 ? timeLeft / totalSeconds : 0;
+    progressRing.style.strokeDashoffset = ringCircumference * (1 - progress);
+    document.title = timerDisplay.textContent + ' — Pomodoro Timer';
+  }
+
+  function playBeep(){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      // Play a pleasant double beep
+      for(let i = 0; i < 2; i++){
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        const startTime = ctx.currentTime + i * 0.35;
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.3);
+        osc.start(startTime);
+        osc.stop(startTime + 0.3);
+      }
+    }catch(e){}
+  }
+
+  function notify(title, body){
+    if('Notification' in window && Notification.permission === 'granted'){
+      new Notification(title, {body: body, icon: '/shared/og-image.png'});
+    }
+    // Show in-page banner
+    notifMessage.textContent = body;
+    notifBanner.classList.add('show');
+    setTimeout(() => notifBanner.classList.remove('show'), 6000);
+  }
+
+  function requestNotifPermission(){
+    if('Notification' in window && Notification.permission === 'default'){
+      Notification.requestPermission();
+    }
+  }
+
+  function complete(){
+    playBeep();
+
+    if(currentMode === 'work'){
+      pomodoroCount++;
+      focusMinutesTotal += getModeMinutes('work');
+      saveStats();
+      updateStats();
+
+      cyclePosition++;
+      if(cyclePosition >= 4){
+        cyclePosition = 0;
+        updateSessionDots();
+        notify('Pomodoro Complete! 🎉', 'Time for a long break — you earned it!');
+        setMode('long');
+      } else {
+        updateSessionDots();
+        notify('Pomodoro Complete! 🎉', 'Great work! Time for a short break.');
+        setMode('short');
+      }
+    } else {
+      notify('Break Over! ⚡', 'Ready to focus again?');
+      setMode('work');
+    }
+  }
+
+  function tick(){
+    timeLeft--;
+    updateDisplay();
+    if(timeLeft <= 0){
+      complete();
+    }
+  }
+
+  function toggle(){
+    requestNotifPermission();
+    if(isRunning){
+      isRunning = false;
+      clearInterval(intervalId);
+      intervalId = null;
+      timerCircle.classList.remove('running');
+      startBtn.textContent = 'Resume';
+      startBtn.classList.add('paused');
+    } else {
+      isRunning = true;
+      intervalId = setInterval(tick, 1000);
+      timerCircle.classList.add('running');
+      startBtn.textContent = 'Pause';
+      startBtn.classList.remove('paused');
+    }
+  }
+
+  function reset(){
+    clearInterval(intervalId);
+    intervalId = null;
+    isRunning = false;
+    timeLeft = totalSeconds;
+    timerCircle.classList.remove('running');
+    startBtn.textContent = 'Start';
+    startBtn.classList.remove('paused');
+    updateDisplay();
+  }
+
+  function skip(){
+    clearInterval(intervalId);
+    intervalId = null;
+    isRunning = false;
+    // Advance to next logical mode without counting
+    if(currentMode === 'work'){
+      cyclePosition++;
+      if(cyclePosition >= 4){
+        cyclePosition = 0;
+      }
+      updateSessionDots();
+      setMode(cyclePosition === 0 ? 'long' : 'short');
+    } else {
+      setMode('work');
+    }
+  }
+
+  // Events
+  startBtn.addEventListener('click', toggle);
+  resetBtn.addEventListener('click', reset);
+  skipBtn.addEventListener('click', skip);
+
+  modeTabs.forEach(tab => {
+    tab.addEventListener('click', () => setMode(tab.dataset.mode));
+  });
+
+  [workInput, shortInput, longInput].forEach(input => {
+    input.addEventListener('change', () => {
+      if(!isRunning){
+        totalSeconds = getModeMinutes(currentMode) * 60;
+        timeLeft = totalSeconds;
+        updateDisplay();
+      }
+    });
+  });
+
+  // Keyboard shortcut
+  document.addEventListener('keydown', (e) => {
+    if(e.target.tagName === 'INPUT') return;
+    if(e.code === 'Space'){
+      e.preventDefault();
+      toggle();
+    }
+  });
+
+  // Init
+  loadStats();
+  updateDisplay();
+})();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
