@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT Decoder — Decode JSON Web Tokens | ToolAspect</title>
+<meta name="description" content="Decode and inspect JSON Web Tokens (JWT) online. View header, payload, and signature of any JWT token instantly.">
+<link rel="canonical" href="https://toolaspect.com/jwt-decoder/">
+<meta property="og:title" content="JWT Decoder">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/jwt-decoder/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JWT Decoder","description":"Decode JSON Web Tokens online.","url":"https://toolaspect.com/jwt-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;min-height:80px;resize:vertical}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.78rem;white-space:pre-wrap;word-break:break-all;min-height:40px}
+.section-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:block}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>JWT Decoder</h1>
+  <p class="subtitle">Decode JSON Web Tokens — inspect header, payload & signature</p>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Paste JWT Token</label>
+      <textarea id="jwt" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." oninput="decode()"></textarea>
+    </div>
+    <div id="result" style="display:none">
+      <div class="form-group">
+        <span class="section-label" style="color:#10b981">Header</span>
+        <div class="output" id="header"></div>
+      </div>
+      <div class="form-group">
+        <span class="section-label" style="color:#6366f1">Payload</span>
+        <div class="output" id="payload"></div>
+      </div>
+      <div class="form-group">
+        <span class="section-label" style="color:#f59e0b">Signature</span>
+        <div class="output" id="sig"></div>
+      </div>
+      <div id="expInfo"></div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>What is a JWT?</h2>
+    <p>JSON Web Tokens are an open standard for securely transmitting information between parties as a JSON object. Commonly used for authentication and authorization in web applications.</p>
+    <h2>JWT Structure</h2>
+    <p>A JWT has three parts: <strong>header.payload.signature</strong></p>
+    <ul>
+      <li><strong>Header:</strong> Token type and signing algorithm</li>
+      <li><strong>Payload:</strong> Claims (user data, expiration, issuer)</li>
+      <li><strong>Signature:</strong> Cryptographic signature to verify integrity</li>
+    </ul>
+    <h2>Security Note</h2>
+    <p>This tool decodes JWTs but does NOT verify signatures. JWT payloads are Base64-encoded, not encrypted — anyone can read them. Never put production secrets into online tools.</p>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function decode(){
+  var t=document.getElementById('jwt').value.trim();
+  if(!t){document.getElementById('result').style.display='none';return;}
+  var parts=t.split('.');
+  if(parts.length<2){document.getElementById('result').style.display='none';return;}
+  try{
+    var hdr=JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
+    var pl=JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    document.getElementById('header').textContent=JSON.stringify(hdr,null,2);
+    document.getElementById('payload').textContent=JSON.stringify(pl,null,2);
+    document.getElementById('sig').textContent=parts[2]||'(unsigned)';
+    document.getElementById('result').style.display='block';
+    var info='';
+    if(pl.exp){
+      var d=new Date(pl.exp*1000);var now=new Date();var expired=d<now;
+      info='<div class="output" style="border-color:'+(expired?'#ef4444':'#10b981')+';margin-top:12px"><span style="color:'+(expired?'#ef4444':'#10b981')+';font-weight:600">'+(expired?'⚠ EXPIRED':'✓ VALID')+'</span> — Expires: '+d.toLocaleString()+'</div>';
+    }
+    if(pl.iat){
+      var id=new Date(pl.iat*1000);
+      info+='<div class="output" style="margin-top:8px">Issued: '+id.toLocaleString()+'</div>';
+    }
+    if(pl.iss){
+      info+='<div class="output" style="margin-top:8px">Issuer: '+pl.iss+'</div>';
+    }
+    document.getElementById('expInfo').innerHTML=info;
+  }catch(e){document.getElementById('result').style.display='none';}
+}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

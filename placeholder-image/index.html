@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placeholder Image Generator | ToolAspect</title>
+<meta name="description" content="Generate placeholder images with custom dimensions, colors, and text. Free online placeholder image generator for mockups.">
+<link rel="canonical" href="https://toolaspect.com/placeholder-image/">
+<meta property="og:title" content="Placeholder Image Generator | ToolAspect">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/placeholder-image/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Placeholder Image Generator","description":"Generate placeholder images with custom dimensions, colors, and text. Free online placeholder image generator for mockups.","url":"https://toolaspect.com/placeholder-image/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(99,102,241,.3)}
+.form-group textarea{min-height:100px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:.82rem}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 20px;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.82rem;white-space:pre-wrap;word-break:break-all;min-height:50px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Placeholder Image Generator</h1>
+  <p class="subtitle">Generate placeholder images with custom dimensions, colors, and text. Free online placeholder image generator for mockups.</p>
+  <div class="card">
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="form-group"><label>Width (px)</label><input type="number" id="w" value="600" oninput="gen()"></div>
+      <div class="form-group"><label>Height (px)</label><input type="number" id="h" value="400" oninput="gen()"></div>
+      <div class="form-group"><label>Bg Color</label><input type="color" id="bg" value="#1a1a2e" oninput="gen()" style="height:42px;padding:4px"></div>
+    </div>
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label>Text Color</label><input type="color" id="fg" value="#6366f1" oninput="gen()" style="height:42px;padding:4px"></div>
+      <div class="form-group"><label>Custom Text</label><input type="text" id="txt" placeholder="600 × 400" oninput="gen()"></div>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="gen()">Generate</button> <button class="btn" onclick="dl()">Download PNG</button></div>
+    <div style="text-align:center;margin-top:20px"><canvas id="canvas" style="max-width:100%;border-radius:10px;border:1px solid var(--border)"></canvas></div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+  <div class="seo-content">
+  <h2>Placeholder Image Generator</h2>
+  <p>Generate placeholder images for your mockups, wireframes, and prototypes. Choose custom dimensions, colors, and text — then download as PNG.</p>
+  <ul>
+  <li>Any dimension from 1×1 to 4000×4000</li>
+  <li>Custom background and text colors</li>
+  <li>Add custom labels or use auto dimensions</li>
+  <li>Download as PNG with transparent option</li>
+  </ul>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function gen(){
+  var w=parseInt(document.getElementById('w').value)||600;
+  var h=parseInt(document.getElementById('h').value)||400;
+  var bg=document.getElementById('bg').value;
+  var fg=document.getElementById('fg').value;
+  var txt=document.getElementById('txt').value||(w+' × '+h);
+  var c=document.getElementById('canvas');
+  c.width=w;c.height=h;
+  var ctx=c.getContext('2d');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=fg;
+  var fs=Math.max(12,Math.min(w,h)/8);
+  ctx.font='600 '+fs+'px Inter,sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(txt,w/2,h/2);
+}
+function dl(){
+  var c=document.getElementById('canvas');
+  var link=document.createElement('a');
+  link.download='placeholder-'+c.width+'x'+c.height+'.png';
+  link.href=c.toDataURL();link.click();
+}
+gen();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diff Checker — Compare Text Online | ToolAspect</title>
+<meta name="description" content="Compare two blocks of text and highlight differences. Free online diff checker for code, documents, and content.">
+<link rel="canonical" href="https://toolaspect.com/diff-checker/">
+<meta property="og:title" content="Diff Checker — Compare Text Online | ToolAspect">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/diff-checker/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Diff Checker","description":"Compare two blocks of text and highlight differences. Free online diff checker for code, documents, and content.","url":"https://toolaspect.com/diff-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(99,102,241,.3)}
+.form-group textarea{min-height:100px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:.82rem}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 20px;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.82rem;white-space:pre-wrap;word-break:break-all;min-height:50px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Diff Checker</h1>
+  <p class="subtitle">Compare two blocks of text and highlight differences. Free online diff checker for code, documents, and content.</p>
+  <div class="card">
+    <div class="form-group">
+      <label>Original Text</label>
+      <textarea id="text1" placeholder="Paste original text..." style="min-height:150px"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Modified Text</label>
+      <textarea id="text2" placeholder="Paste modified text..." style="min-height:150px"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="compare()">Compare</button>
+      <button class="btn" onclick="swap()">Swap</button>
+      <button class="btn" onclick="clr()">Clear</button>
+    </div>
+    <div class="form-group" style="margin-top:16px">
+      <label>Differences</label>
+      <div class="output" id="diffOutput" style="min-height:100px"></div>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+  <div class="seo-content">
+  <h2>Text Diff Checker</h2>
+  <p>Compare two blocks of text line by line to see what changed. Lines in red were removed, lines in green were added, and grey lines are unchanged.</p>
+  <ul>
+  <li>Compare document revisions</li>
+  <li>Check code changes between versions</li>
+  <li>Review editing changes in content</li>
+  <li>Verify data transformations</li>
+  </ul>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function compare(){
+  var a=document.getElementById('text1').value.split('\n');
+  var b=document.getElementById('text2').value.split('\n');
+  var max=Math.max(a.length,b.length);
+  var html='';
+  for(var i=0;i<max;i++){
+    var la=a[i]||'';
+    var lb=b[i]||'';
+    if(la===lb){html+='<div style="color:var(--muted);padding:2px 0">  '+esc(la)+'</div>';}
+    else{
+      if(la)html+='<div style="color:#f87171;padding:2px 0">- '+esc(la)+'</div>';
+      if(lb)html+='<div style="color:#34d399;padding:2px 0">+ '+esc(lb)+'</div>';
+    }
+  }
+  document.getElementById('diffOutput').innerHTML=html||'<span style="color:var(--muted)">No differences</span>';
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function swap(){var t=document.getElementById('text1').value;document.getElementById('text1').value=document.getElementById('text2').value;document.getElementById('text2').value=t;}
+function clr(){document.getElementById('text1').value='';document.getElementById('text2').value='';document.getElementById('diffOutput').innerHTML='';}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

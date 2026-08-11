@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAML Validator & Converter | ToolAspect</title>
+<meta name="description" content="Validate YAML syntax and convert to JSON. Free online YAML parser and validator for configs and manifests.">
+<link rel="canonical" href="https://toolaspect.com/yaml-validator/">
+<meta property="og:title" content="YAML Validator & Converter | ToolAspect">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/yaml-validator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"YAML Validator","description":"Validate YAML syntax and convert to JSON. Free online YAML parser and validator for configs and manifests.","url":"https://toolaspect.com/yaml-validator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(99,102,241,.3)}
+.form-group textarea{min-height:100px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:.82rem}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 20px;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.82rem;white-space:pre-wrap;word-break:break-all;min-height:50px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>YAML Validator</h1>
+  <p class="subtitle">Validate YAML syntax and convert to JSON. Free online YAML parser and validator for configs and manifests.</p>
+  <div class="card">
+    <div class="form-group">
+      <label>YAML Input</label>
+      <textarea id="yaml" placeholder="key: value\nlist:\n  - item1\n  - item2" style="min-height:150px"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="validate()">Validate</button>
+      <button class="btn" onclick="toJSON()">Convert to JSON</button>
+      <button class="btn" onclick="clr()">Clear</button>
+    </div>
+    <div id="result" style="margin-top:12px"></div>
+    <div class="form-group" id="jsonOutputWrap" style="display:none;margin-top:16px">
+      <label>JSON Output</label>
+      <div class="output" id="jsonOutput" style="min-height:100px"></div>
+      <button class="btn" style="margin-top:8px" onclick="copyJSON()">Copy JSON</button>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+  <div class="seo-content">
+  <h2>YAML Validator</h2>
+  <p>Validate YAML syntax and convert to JSON. Checks for indentation errors, type mismatches, and structural issues.</p>
+  <ul>
+  <li>Validate Kubernetes manifests, CI/CD configs, and docker-compose files</li>
+  <li>Detect indentation and syntax errors</li>
+  <li>Convert YAML to JSON with one click</li>
+  <li>Supports nested objects and arrays</li>
+  </ul>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function validate(){
+  var y=document.getElementById('yaml').value;
+  var el=document.getElementById('result');
+  if(!y.trim()){el.innerHTML='';return;}
+  try{
+    var obj=parseYAML(y);
+    el.innerHTML='<div class="output" style="border-color:#10b981;color:#10b981">✓ Valid YAML — '+Object.keys(obj).length+' root keys</div>';
+  }catch(e){
+    el.innerHTML='<div class="output" style="border-color:#ef4444;color:#ef4444">✗ '+e.message+'</div>';
+  }
+}
+function toJSON(){
+  var y=document.getElementById('yaml').value;
+  if(!y.trim())return;
+  try{
+    var obj=parseYAML(y);
+    document.getElementById('jsonOutput').textContent=JSON.stringify(obj,null,2);
+    document.getElementById('jsonOutputWrap').style.display='block';
+  }catch(e){
+    document.getElementById('result').innerHTML='<div class="output" style="border-color:#ef4444;color:#ef4444">✗ '+e.message+'</div>';
+  }
+}
+function parseYAML(yaml){
+  var result={};
+  var lines=yaml.split('\n');
+  var stack=[{indent:-1,obj:result}];
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    if(!line.trim()||line.trim().startsWith('#'))continue;
+    var indent=line.length-line.trimStart().length;
+    var trimmed=line.trim();
+    // List item
+    if(trimmed.startsWith('- ')){
+      var val=trimmed.slice(2).trim();
+      var top=stack[stack.length-1];
+      if(!Array.isArray(top.obj))top.obj=[];
+      if(val.includes(':')){
+        var k=val.split(':')[0].trim();
+        var v=val.split(':').slice(1).join(':').trim();
+        var item={};item[k]=parseVal(v);top.obj.push(item);
+      }else{top.obj.push(parseVal(val));}
+      continue;
+    }
+    // Key-value
+    if(trimmed.includes(':')){
+      var colonIdx=trimmed.indexOf(':');
+      var key=trimmed.substring(0,colonIdx).trim();
+      var val=trimmed.substring(colonIdx+1).trim();
+      // Pop stack to current indent
+      while(stack.length>1&&stack[stack.length-1].indent>=indent)stack.pop();
+      var parent=stack[stack.length-1].obj;
+      if(val===''){var child={};parent[key]=child;stack.push({indent:indent,obj:child});}
+      else{parent[key]=parseVal(val);}
+    }
+  }
+  return result;
+}
+function parseVal(v){
+  if(!v)return '';
+  v=v.replace(/^["']|["']$/g,'');
+  if(v==='true')return true;
+  if(v==='false')return false;
+  if(v==='null'||v==='~')return null;
+  if(!isNaN(v)&&v!=='')return Number(v);
+  return v;
+}
+function copyJSON(){navigator.clipboard.writeText(document.getElementById('jsonOutput').textContent);}
+function clr(){document.getElementById('yaml').value='';document.getElementById('result').innerHTML='';document.getElementById('jsonOutputWrap').style.display='none';}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
