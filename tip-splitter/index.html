@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Splitter | ToolAspect</title>
+<meta name="description" content="Split tips and bills among friends. Calculate tip percentage, split by person, and round up. Free tip splitter calculator.">
+<link rel="canonical" href="https://toolaspect.com/tip-splitter/">
+<meta property="og:title" content="Tip Splitter">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/tip-splitter/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Tip Splitter","description":"Split tips and bills among friends.","url":"https://toolaspect.com/tip-splitter/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.tip-btns{display:flex;gap:.5rem;margin-top:8px}
+.tip-btn{flex:1;padding:.5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-secondary);font-size:.85rem;cursor:pointer;transition:all var(--transition)}
+.tip-btn.active,.tip-btn:hover{border-color:var(--primary);color:var(--text);background:var(--primary-glow)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.result-row:last-child{border-bottom:none}
+.result-row .value{font-size:1.5rem;font-weight:700;color:var(--primary)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Tip Splitter</h1>
+<p class="subtitle">Split the bill and tip among friends.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-group"><label>Bill Amount ($)</label><input type="number" id="bill" placeholder="85.00" value="85" step="0.01"></div>
+<div class="form-group"><label>Tip Percentage</label>
+<div class="tip-btns">
+<button class="tip-btn" onclick="setTip(10)">10%</button>
+<button class="tip-btn active" onclick="setTip(15)">15%</button>
+<button class="tip-btn" onclick="setTip(18)">18%</button>
+<button class="tip-btn" onclick="setTip(20)">20%</button>
+<button class="tip-btn" onclick="setTip(25)">25%</button>
+</div>
+<input type="number" id="tipPct" value="15" style="margin-top:8px" step="0.5">
+</div>
+<div class="form-group"><label>Number of People</label><input type="number" id="people" value="4" min="1"></div>
+<button class="btn-calc" onclick="calcSplit()">Calculate Split</button>
+</div>
+<div class="result-box" id="result">
+<div class="result-row"><span>Tip Amount</span><span id="tipAmt">$0</span></div>
+<div class="result-row"><span>Total Bill</span><span id="totalBill">$0</span></div>
+<div class="result-row"><span>Per Person</span><span class="value" id="perPerson">$0</span></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Tip Splitter</h2>
+<p>Split bills and tips among any number of people. Quick tip percentage buttons for common amounts. Perfect for group dinners.</p>
+</div>
+<div class="related-links">
+<a href="/tip-calculator/">Tip Calculator</a>
+<a href="/percentage-calculator/">Percentage Calculator</a>
+<a href="/discount-calculator/">Discount Calculator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var tipPct=15;
+function setTip(pct){tipPct=pct;document.getElementById('tipPct').value=pct;document.querySelectorAll('.tip-btn').forEach(function(b){b.classList.remove('active');});event.target.classList.add('active');}
+function calcSplit(){
+var bill=parseFloat(document.getElementById('bill').value)||0;
+var pct=parseFloat(document.getElementById('tipPct').value)||0;
+var people=parseInt(document.getElementById('people').value)||1;
+var tip=bill*pct/100;var total=bill+tip;var per=total/people;
+document.getElementById('tipAmt').textContent='$'+tip.toFixed(2);
+document.getElementById('totalBill').textContent='$'+total.toFixed(2);
+document.getElementById('perPerson').textContent='$'+per.toFixed(2);
+document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

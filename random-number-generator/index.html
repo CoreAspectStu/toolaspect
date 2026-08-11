@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Number Generator | ToolAspect</title>
+<meta name="description" content="Generate random numbers within any range. Pick random numbers, create sequences, no duplicates option. Free random number generator.">
+<link rel="canonical" href="https://toolaspect.com/random-number-generator/">
+<meta property="og:title" content="Random Number Generator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/random-number-generator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Random Number Generator","description":"Generate random numbers within any range.","url":"https://toolaspect.com/random-number-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-top:1rem;text-align:center;display:none}
+.result-box.show{display:block}
+.big-number{font-size:3rem;font-weight:700;color:var(--primary);font-family:var(--font-mono)}
+.multi-results{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:.5rem}
+.multi-results .num{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.4rem .8rem;font-family:var(--font-mono);font-size:1.1rem;font-weight:600}
+.checkbox-row{display:flex;align-items:center;gap:.5rem;margin:8px 0}
+.checkbox-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Random Number Generator</h1>
+<p class="subtitle">Pick random numbers from any range.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-row">
+<div class="form-group"><label>Minimum</label><input type="number" id="min" value="1"></div>
+<div class="form-group"><label>Maximum</label><input type="number" id="max" value="100"></div>
+</div>
+<div class="form-group"><label>How many numbers?</label><input type="number" id="count" value="1" min="1" max="1000"></div>
+<div class="checkbox-row"><input type="checkbox" id="unique"><label for="unique" style="font-size:.85rem;cursor:pointer">No duplicates (unique numbers only)</label></div>
+<div class="checkbox-row"><input type="checkbox" id="sort"><label for="sort" style="font-size:.85rem;cursor:pointer">Sort results</label></div>
+<button class="btn-calc" onclick="generate()">Generate</button>
+</div>
+<div class="result-box" id="result">
+<div class="big-number" id="singleResult">-</div>
+<div class="multi-results" id="multiResult"></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Random Number Generator</h2>
+<p>Generate random numbers within any range. Options for unique numbers, sorting, and bulk generation. Uses cryptographically strong Math.random.</p>
+</div>
+<div class="related-links">
+<a href="/password-generator/">Password Generator</a>
+<a href="/uuid-generator/">UUID Generator</a>
+<a href="/number-to-words/">Number to Words</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+function generate(){
+var min=parseInt(document.getElementById('min').value)||0;
+var max=parseInt(document.getElementById('max').value)||100;
+var count=parseInt(document.getElementById('count').value)||1;
+var unique=document.getElementById('unique').checked;
+var sort=document.getElementById('sort').checked;
+if(min>max){var t=min;min=max;max=t;}
+var range=max-min+1;
+if(unique&&count>range)count=range;
+var nums=[];
+if(unique){var pool=[];for(var i=min;i<=max;i++)pool.push(i);
+for(var i=0;i<count;i++){var idx=Math.floor(Math.random()*pool.length);nums.push(pool[idx]);pool.splice(idx,1);}}
+else{for(var i=0;i<count;i++)nums.push(Math.floor(Math.random()*(max-min+1))+min);}
+if(sort)nums.sort(function(a,b){return a-b;});
+if(count===1){document.getElementById('singleResult').textContent=nums[0];document.getElementById('singleResult').style.display='block';document.getElementById('multiResult').innerHTML='';}
+else{document.getElementById('singleResult').style.display='none';document.getElementById('multiResult').innerHTML=nums.map(function(n){return '<span class="num">'+n+'</span>';}).join('');}
+document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

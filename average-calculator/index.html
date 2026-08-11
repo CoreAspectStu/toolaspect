@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Average Calculator | ToolAspect</title>
+<meta name="description" content="Calculate the average (mean), median, mode, and range of any set of numbers. Free online average calculator with statistical analysis.">
+<link rel="canonical" href="https://toolaspect.com/average-calculator/">
+<meta property="og:title" content="Average Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/average-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Average Calculator","description":"Calculate mean, median, mode, and range.","url":"https://toolaspect.com/average-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem}
+.form-group input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem}
+.stat-item{text-align:center;padding:1rem;background:var(--surface);border-radius:var(--radius-md)}
+.stat-item .label{font-size:.75rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
+.stat-item .value{font-size:1.5rem;font-weight:700;color:var(--primary)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Average Calculator</h1>
+<p class="subtitle">Mean, median, mode, range, and more.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-group">
+<label>Enter numbers (comma or space separated)</label>
+<input type="text" id="numbers" placeholder="10, 20, 30, 40, 50" value="10, 20, 30, 40, 50">
+</div>
+<button class="btn-calc" onclick="calculate()">Calculate</button>
+</div>
+<div class="result-box" id="result">
+<div class="stat-grid">
+<div class="stat-item"><div class="label">Mean (Average)</div><div class="value" id="mean">-</div></div>
+<div class="stat-item"><div class="label">Median</div><div class="value" id="median">-</div></div>
+<div class="stat-item"><div class="label">Mode</div><div class="value" id="mode">-</div></div>
+<div class="stat-item"><div class="label">Range</div><div class="value" id="range">-</div></div>
+<div class="stat-item"><div class="label">Sum</div><div class="value" id="sum">-</div></div>
+<div class="stat-item"><div class="label">Count</div><div class="value" id="count">-</div></div>
+<div class="stat-item"><div class="label">Min</div><div class="value" id="min">-</div></div>
+<div class="stat-item"><div class="label">Max</div><div class="value" id="max">-</div></div>
+</div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Average Calculator</h2>
+<p>Calculate the mean, median, mode, range, sum, min, and max of any set of numbers. Useful for statistics, grades, and data analysis.</p>
+</div>
+<div class="related-links">
+<a href="/percentage-calculator/">Percentage Calculator</a>
+<a href="/binary-converter/">Binary Converter</a>
+<a href="/number-to-words/">Number to Words</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+function calculate(){
+var input=document.getElementById('numbers').value;
+var nums=input.split(/[\s,]+/).filter(function(x){return x!==''&&isFinite(x);}).map(Number);
+if(nums.length===0)return;
+nums.sort(function(a,b){return a-b;});
+var sum=nums.reduce(function(a,b){return a+b;},0);
+var mean=sum/nums.length;
+var median=nums.length%2===0?(nums[nums.length/2-1]+nums[nums.length/2])/2:nums[Math.floor(nums.length/2)];
+var freq={};var maxFreq=0;var modes=[];
+nums.forEach(function(n){freq[n]=(freq[n]||0)+1;if(freq[n]>maxFreq)maxFreq=freq[n];});
+for(var k in freq){if(freq[k]===maxFreq)modes.push(parseFloat(k));}
+var modeStr=maxFreq===1?'None':modes.join(', ');
+var range=nums[nums.length-1]-nums[0];
+document.getElementById('mean').textContent=mean.toFixed(2);
+document.getElementById('median').textContent=median;
+document.getElementById('mode').textContent=modeStr;
+document.getElementById('range').textContent=range;
+document.getElementById('sum').textContent=sum;
+document.getElementById('count').textContent=nums.length;
+document.getElementById('min').textContent=nums[0];
+document.getElementById('max').textContent=nums[nums.length-1];
+document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
