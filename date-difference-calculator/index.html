@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Days Between Dates Calculator | ToolAspect</title>
+<meta name="description" content="Calculate the number of days between two dates. Also calculate weeks, months, years, and business days between dates. Free date duration calculator.">
+<link rel="canonical" href="https://toolaspect.com/date-difference-calculator/">
+<meta property="og:title" content="Days Between Dates Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/date-difference-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Date Difference Calculator","description":"Calculate days, weeks, and months between two dates.","url":"https://toolaspect.com/date-difference-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none;color-scheme:dark}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:8px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.result-card.primary .num{color:var(--primary);font-size:2rem}
+.result-card .num{font-size:1.4rem;font-weight:700}
+.result-card .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.add-info{margin-top:18px;font-size:.85rem;color:var(--text)}
+.add-info div{padding:6px 0;border-bottom:1px solid var(--border)}
+.add-info div:last-child{border-bottom:none}
+.add-info strong{color:var(--text)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Date Difference Calculator</h1>
+  <p class="subtitle">Calculate days, weeks, months, and business days between two dates</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>From Date</label>
+        <input type="date" id="date1" value="2026-01-01" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>To Date</label>
+        <input type="date" id="date2" value="2026-12-31" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="results-grid" id="results"></div>
+    <div class="add-info" id="addInfo"></div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How to Calculate Days Between Dates</h2>
+    <p>This calculator counts the actual days between two dates. It accounts for leap years and varying month lengths automatically.</p>
+    <h2>Business Days vs Calendar Days</h2>
+    <p>Business days (working days) exclude weekends (Saturday and Sunday). Some calculators also exclude holidays, but since holidays vary by country, this tool only excludes weekends.</p>
+    <h2>Common Uses</h2>
+    <ul>
+      <li>Project deadline tracking</li>
+      <li>Age and tenure calculations</li>
+      <li>Pregnancy due date estimation</li>
+      <li>Contract and lease duration</li>
+      <li>Vacation planning</li>
+      <li>Event countdown</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var d1=new Date(document.getElementById('date1').value);
+  var d2=new Date(document.getElementById('date2').value);
+  if(isNaN(d1)||isNaN(d2))return;
+  var diff=Math.abs(d2-d1);
+  var days=Math.floor(diff/86400000);
+  var weeks=Math.floor(days/7);
+  var remDays=days%7;
+  // Months approximation
+  var earlier=d1<d2?d1:d2;
+  var later=d1<d2?d2:d1;
+  var years=later.getFullYear()-earlier.getFullYear();
+  var months=years*12+(later.getMonth()-earlier.getMonth());
+  if(later.getDate()<earlier.getDate())months--;
+  // Business days
+  var businessDays=0;
+  var temp=new Date(earlier);
+  while(temp<=later){
+    var day=temp.getDay();
+    if(day!==0&&day!==6)businessDays++;
+    temp.setDate(temp.getDate()+1);
+  }
+  // Hours, minutes
+  var hours=Math.floor(diff/3600000);
+  var minutes=Math.floor(diff/60000);
+  var seconds=Math.floor(diff/1000);
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="num">'+days.toLocaleString()+'</div><div class="lbl">Total Days</div></div>'+
+    '<div class="result-card"><div class="num">'+businessDays.toLocaleString()+'</div><div class="lbl">Business Days</div></div>'+
+    '<div class="result-card"><div class="num">'+weeks.toLocaleString()+'</div><div class="lbl">Weeks</div></div>'+
+    '<div class="result-card"><div class="num">'+months.toLocaleString()+'</div><div class="lbl">Months</div></div>'+
+    '<div class="result-card"><div class="num">'+hours.toLocaleString()+'</div><div class="lbl">Hours</div></div>'+
+    '<div class="result-card"><div class="num">'+(years>0?years:0)+'</div><div class="lbl">Years</div></div>';
+  document.getElementById('addInfo').innerHTML=
+    '<div><strong>'+weeks+' weeks and '+remDays+' days</strong></div>'+
+    '<div><strong>'+months+' months</strong></div>'+
+    '<div>Business days: <strong>'+businessDays+'</strong> (excludes weekends)</div>'+
+    '<div>Weekend days: <strong>'+(days-businessDays)+'</strong></div>'+
+    '<div>Total hours: <strong>'+hours.toLocaleString()+'</strong></div>'+
+    '<div>Total minutes: <strong>'+minutes.toLocaleString()+'</strong></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

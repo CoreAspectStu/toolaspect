@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary / Hex / Decimal Converter | ToolAspect</title>
+<meta name="description" content="Convert numbers between binary, decimal, hexadecimal, and octal. Also convert text to binary and binary to text. Free online number base converter.">
+<link rel="canonical" href="https://toolaspect.com/binary-converter/">
+<meta property="og:title" content="Binary / Hex / Decimal Converter">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/binary-converter/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Binary Converter","description":"Convert between binary, decimal, hex, and octal.","url":"https://toolaspect.com/binary-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.form-group{margin-bottom:14px}
+.form-group label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 14px;font-size:.9rem;font-family:'JetBrains Mono',monospace;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-group .badge{font-size:.68rem;background:rgba(99,102,241,.1);color:var(--primary);padding:2px 8px;border-radius:6px}
+.tabs{display:flex;gap:6px;margin-bottom:18px;justify-content:center}
+.tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 16px;font-size:.82rem;cursor:pointer}
+.tab.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:var(--text)}
+.panel{display:none}
+.panel.active{display:block}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Binary / Hex Converter</h1>
+  <p class="subtitle">Convert between number bases and encode text as binary</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('num')">Number Bases</button>
+    <button class="tab" onclick="setTab('text')">Text ↔ Binary</button>
+  </div>
+
+  <div class="panel active" id="panel-num">
+    <div class="card">
+      <div class="form-group">
+        <label>Decimal <span class="badge">Base 10</span></label>
+        <input type="text" id="dec" value="255" oninput="fromDec(this.value)">
+      </div>
+      <div class="form-group">
+        <label>Binary <span class="badge">Base 2</span></label>
+        <input type="text" id="bin" value="11111111" oninput="fromBin(this.value)">
+      </div>
+      <div class="form-group">
+        <label>Hexadecimal <span class="badge">Base 16</span></label>
+        <input type="text" id="hex" value="FF" oninput="fromHex(this.value)">
+      </div>
+      <div class="form-group">
+        <label>Octal <span class="badge">Base 8</span></label>
+        <input type="text" id="oct" value="377" oninput="fromOct(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-text">
+    <div class="card">
+      <div class="form-group">
+        <label>Text Input</label>
+        <input type="text" id="textIn" value="Hello" oninput="textToBin()" placeholder="Type text...">
+      </div>
+      <div class="form-group">
+        <label>Binary Output</label>
+        <input type="text" id="binOut" readonly style="background:rgba(99,102,241,.05)">
+      </div>
+      <div class="form-group">
+        <label>Binary Input (space-separated)</label>
+        <input type="text" id="binIn" placeholder="01001000 01100101..." oninput="binToText()">
+      </div>
+      <div class="form-group">
+        <label>Text Output</label>
+        <input type="text" id="textOut" readonly style="background:rgba(99,102,241,.05)">
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>Number Base Systems</h2>
+    <ul>
+      <li><strong>Decimal (Base 10):</strong> Uses digits 0-9. The standard number system.</li>
+      <li><strong>Binary (Base 2):</strong> Uses digits 0-1. The language of computers.</li>
+      <li><strong>Hexadecimal (Base 16):</strong> Uses 0-9 and A-F. Used for colors, memory addresses, and byte values.</li>
+      <li><strong>Octal (Base 8):</strong> Uses 0-7. Used in Unix file permissions.</li>
+    </ul>
+    <h2>Common Use Cases</h2>
+    <ul>
+      <li>Debugging memory addresses in programming</li>
+      <li>Setting color values in CSS (#FF5733)</li>
+      <li>Understanding IP addresses and subnet masks</li>
+      <li>Converting character encoding values</li>
+      <li>Working with bitwise operations</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function setTab(name){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('active',i===(name==='num'?0:1));});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('panel-'+name).classList.add('active');
+}
+function fromDec(v){
+  var n=parseInt(v);if(isNaN(n))n=0;
+  document.getElementById('bin').value=n.toString(2);
+  document.getElementById('hex').value=n.toString(16).toUpperCase();
+  document.getElementById('oct').value=n.toString(8);
+}
+function fromBin(v){
+  var n=parseInt(v,2);if(isNaN(n))n=0;
+  document.getElementById('dec').value=n;
+  document.getElementById('hex').value=n.toString(16).toUpperCase();
+  document.getElementById('oct').value=n.toString(8);
+}
+function fromHex(v){
+  var n=parseInt(v,16);if(isNaN(n))n=0;
+  document.getElementById('dec').value=n;
+  document.getElementById('bin').value=n.toString(2);
+  document.getElementById('oct').value=n.toString(8);
+}
+function fromOct(v){
+  var n=parseInt(v,8);if(isNaN(n))n=0;
+  document.getElementById('dec').value=n;
+  document.getElementById('bin').value=n.toString(2);
+  document.getElementById('hex').value=n.toString(16).toUpperCase();
+}
+function textToBin(){
+  var text=document.getElementById('textIn').value;
+  var bin=text.split('').map(function(c){return c.charCodeAt(0).toString(2).padStart(8,'0');}).join(' ');
+  document.getElementById('binOut').value=bin;
+}
+function binToText(){
+  var bin=document.getElementById('binIn').value.trim().split(/\s+/);
+  var text=bin.map(function(b){return String.fromCharCode(parseInt(b,2));}).join('');
+  document.getElementById('textOut').value=text;
+}
+textToBin();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

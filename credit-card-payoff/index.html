@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Payoff Calculator | ToolAspect</title>
+<meta name="description" content="Calculate how long it will take to pay off your credit card balance. See total interest paid and find the fastest payoff strategy. Free credit card payoff calculator.">
+<link rel="canonical" href="https://toolaspect.com/credit-card-payoff/">
+<meta property="og:title" content="Credit Card Payoff Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/credit-card-payoff/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Credit Card Payoff Calculator","description":"Calculate credit card payoff time and total interest.","url":"https://toolaspect.com/credit-card-payoff/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.4rem;font-weight:700}
+.result-card.primary .amount{color:var(--primary);font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card.red .amount{color:#f87171}
+.result-card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.payoff-table{width:100%;border-collapse:collapse;margin-top:16px}
+.payoff-table th,.payoff-table td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);font-size:.78rem}
+.payoff-table th{color:var(--muted);font-size:.7rem;text-transform:uppercase}
+.payoff-table td:first-child,.payoff-table th:first-child{text-align:left}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Credit Card Payoff Calculator</h1>
+  <p class="subtitle">See exactly when you'll be debt-free and how much interest you'll pay</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current Balance ($)</label>
+        <input type="number" id="balance" value="5000" min="0" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Annual Interest Rate (%)</label>
+        <input type="number" id="apr" value="24.99" min="0" step="0.01" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Monthly Payment ($)</label>
+        <input type="number" id="payment" value="200" min="0" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Or: Pay off in X months</label>
+        <input type="number" id="targetMonths" value="" min="1" placeholder="Optional" oninput="calcTarget()">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="results-grid" id="results"></div>
+  </div>
+
+  <div class="card">
+    <label style="font-size:.8rem;color:var(--muted);margin-bottom:8px;display:block;font-weight:500">Payoff Timeline</label>
+    <table class="payoff-table">
+      <thead><tr><th>Month</th><th>Payment</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead>
+      <tbody id="timeline"></tbody>
+    </table>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>The True Cost of Minimum Payments</h2>
+    <p>If you only pay the minimum (usually 2-3% of balance), a $5,000 balance at 24.99% APR takes over <strong>20 years</strong> to pay off and costs <strong>$7,000+</strong> in interest. Even a small increase in your monthly payment can save years and thousands of dollars.</p>
+    <h2>Strategies to Pay Off Faster</h2>
+    <ul>
+      <li><strong>Avalanche method:</strong> Pay minimum on all cards, extra on highest APR first</li>
+      <li><strong>Snowball method:</strong> Pay off smallest balance first for psychological wins</li>
+      <li><strong>Balance transfer:</strong> Move to a 0% intro APR card (saves the most if you can pay before promo ends)</li>
+      <li><strong>Consolidation loan:</strong> Personal loan at lower rate to pay off cards</li>
+      <li><strong>Stop using the card:</strong> Can't pay it off while still adding charges</li>
+    </ul>
+    <h2>Average Credit Card Rates</h2>
+    <ul>
+      <li>Average APR: <strong>24.99%</strong> (2026)</li>
+      <li>Store cards: <strong>28-30%</strong></li>
+      <li>Best credit (740+): <strong>14-18%</strong></li>
+      <li>0% intro APR periods: typically <strong>12-21 months</strong></li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function calc(){
+  var bal=parseFloat(document.getElementById('balance').value)||0;
+  var apr=parseFloat(document.getElementById('apr').value)||0;
+  var pmt=parseFloat(document.getElementById('payment').value)||0;
+  var monthlyRate=apr/100/12;
+  // Minimum interest check
+  var minPmt=bal*monthlyRate+bal*0.01;
+  if(pmt<=minPmt&&bal>0){
+    document.getElementById('results').innerHTML='<div class="result-card red"><div class="amount">⚠ Payment too low</div><div class="label">Must pay more than $'+minPmt.toFixed(2)+'/mo to cover interest</div></div>';
+    document.getElementById('timeline').innerHTML='';
+    return;
+  }
+  var balance=bal;
+  var totalInterest=0;
+  var totalPaid=0;
+  var months=0;
+  var rows='';
+  while(balance>0&&months<600){
+    var interest=balance*monthlyRate;
+    var principal=pmt-interest;
+    if(principal>=balance){principal=balance;interest=balance*monthlyRate;principal=balance;}
+    balance-=principal;
+    totalInterest+=interest;
+    totalPaid+=principal+interest;
+    months++;
+    if(months<=6||months%12===0||balance<=0){
+      rows+='<tr><td>Month '+months+'</td><td>'+(principal+interest>0?fmt(principal+interest):'0')+'</td><td>'+fmt(interest)+'</td><td>'+fmt(principal)+'</td><td>'+fmt(Math.max(0,balance))+'</td></tr>';
+    }
+  }
+  var years=Math.floor(months/12);
+  var remMonths=months%12;
+  var timeStr=years>0?years+'y '+remMonths+'m':months+' months';
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+timeStr+'</div><div class="label">Time to Pay Off</div></div>'+
+    '<div class="result-card green"><div class="amount">'+fmt(bal)+'</div><div class="label">Principal</div></div>'+
+    '<div class="result-card red"><div class="amount">'+fmt(totalInterest)+'</div><div class="label">Total Interest</div></div>'+
+    '<div class="result-card"><div class="amount">'+fmt(totalPaid)+'</div><div class="label">Total Paid</div></div>'+
+    '<div class="result-card"><div class="amount">'+((totalInterest/bal)*100).toFixed(0)+'%</div><div class="label">Cost vs Principal</div></div>';
+  document.getElementById('timeline').innerHTML=rows;
+}
+function calcTarget(){
+  var bal=parseFloat(document.getElementById('balance').value)||0;
+  var apr=parseFloat(document.getElementById('apr').value)||0;
+  var months=parseFloat(document.getElementById('targetMonths').value)||0;
+  if(months<=0)return;
+  var monthlyRate=apr/100/12;
+  // Payment formula: P × r / (1 - (1+r)^-n)
+  var pmt;
+  if(monthlyRate>0){
+    pmt=bal*monthlyRate/(1-Math.pow(1+monthlyRate,-months));
+  }else{
+    pmt=bal/months;
+  }
+  document.getElementById('payment').value=Math.round(pmt);
+  calc();
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
