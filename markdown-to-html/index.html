@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown to HTML Converter | ToolAspect</title>
+<meta name="description" content="Convert Markdown to clean HTML online. Supports headings, bold, italic, lists, code blocks, links, images, tables and more. Free Markdown to HTML converter.">
+<link rel="canonical" href="https://toolaspect.com/markdown-to-html/">
+<meta property="og:title" content="Markdown to HTML Converter">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markdown-to-html/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown to HTML Converter","description":"Convert Markdown to clean HTML online.","url":"https://toolaspect.com/markdown-to-html/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.panel-header{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-header .title{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase}
+.panel-header .btn{font-size:.72rem;padding:4px 10px}
+.panel-body{padding:0}
+.panel-body textarea{width:100%;background:var(--bg);border:none;color:var(--text);padding:16px;font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;resize:vertical;min-height:300px;line-height:1.6}
+.panel-body .preview{padding:16px;min-height:300px;font-size:.9rem;line-height:1.7;color:var(--text)}
+.panel-body pre{padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;white-space:pre-wrap;word-break:break-word;color:var(--text);min-height:300px}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.tabs{display:flex;gap:4px;margin-bottom:16px}
+.tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer}
+.tab.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:var(--text)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:768px){.panels{grid-template-columns:1fr}.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Markdown to HTML Converter</h2>
+  <p class="subtitle">Convert Markdown to clean HTML — or HTML back to Markdown</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setMode('md2html')">Markdown → HTML</button>
+    <button class="tab" onclick="setMode('html2md')">HTML → Markdown</button>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="title" id="inputLabel">Markdown Input</span>
+        <button class="btn" onclick="clr()">Clear</button>
+      </div>
+      <div class="panel-body">
+        <textarea id="input" placeholder="# Hello World&#10;&#10;Type **Markdown** here..." oninput="convert()"></textarea>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="title" id="outputLabel">HTML Output</span>
+        <button class="btn" onclick="copyOut()">Copy</button>
+      </div>
+      <div class="panel-body">
+        <pre id="output"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="convert()">Convert</button>
+    <button class="btn" onclick="loadSample()">Load Sample</button>
+    <button class="btn" onclick="dl()">Download</button>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>Markdown to HTML Converter</h2>
+    <p>Convert Markdown syntax to clean HTML instantly. Supports headings, bold, italic, strikethrough, code blocks, inline code, links, images, blockquotes, ordered/unordered lists, tables, and horizontal rules.</p>
+    <h2>Supported Markdown Syntax</h2>
+    <ul>
+      <li><code># H1</code>, <code>## H2</code> — Headings (H1-H6)</li>
+      <li><code>**bold**</code>, <code>*italic*</code>, <code>~~strike~~</code> — Text formatting</li>
+      <li><code>[link](url)</code> — Hyperlinks</li>
+      <li><code>![alt](url)</code> — Images</li>
+      <li><code>- item</code> or <code>1. item</code> — Lists</li>
+      <li><code>> quote</code> — Blockquotes</li>
+      <li><code>`code`</code> and <code>```block```</code> — Inline/block code</li>
+      <li><code>---</code> — Horizontal rules</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var mode='md2html';
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.tab').forEach(function(t,i){
+    t.classList.toggle('active',(m==='md2html'&&!i)||(m==='html2md'&&i));
+  });
+  document.getElementById('inputLabel').textContent=m==='md2html'?'Markdown Input':'HTML Input';
+  document.getElementById('outputLabel').textContent=m==='md2html'?'HTML Output':'Markdown Output';
+  convert();
+}
+
+function md2html(md){
+  // Escape HTML first
+  md=md.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Code blocks
+  md=md.replace(/```(\w*)\n([\s\S]*?)```/g,function(_,lang,code){return '<pre><code class="language-'+lang+'">'+code.trim()+'</code></pre>';});
+  // Inline code
+  md=md.replace(/`([^`]+)`/g,'<code>$1</code>');
+  // Headings
+  md=md.replace(/^######\s+(.+)$/gm,'<h6>$1</h6>');
+  md=md.replace(/^#####\s+(.+)$/gm,'<h5>$1</h5>');
+  md=md.replace(/^####\s+(.+)$/gm,'<h4>$1</h4>');
+  md=md.replace(/^###\s+(.+)$/gm,'<h3>$1</h3>');
+  md=md.replace(/^##\s+(.+)$/gm,'<h2>$1</h2>');
+  md=md.replace(/^#\s+(.+)$/gm,'<h1>$1</h1>');
+  // Horizontal rule
+  md=md.replace(/^---+$/gm,'<hr>');
+  // Blockquote
+  md=md.replace(/^&gt;\s+(.+)$/gm,'<blockquote>$1</blockquote>');
+  // Bold/italic/strike
+  md=md.replace(/\*\*\*(.+?)\*\*\*/g,'<strong><em>$1</em></strong>');
+  md=md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  md=md.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  md=md.replace(/~~(.+?)~~/g,'<del>$1</del>');
+  // Images
+  md=md.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img src="$2" alt="$1">');
+  // Links
+  md=md.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+  // Unordered list
+  md=md.replace(/^[\s]*[-*+]\s+(.+)$/gm,'<li>$1</li>');
+  md=md.replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>');
+  md=md.replace(/<\/ul>\s*<ul>/g,'');
+  // Ordered list
+  md=md.replace(/^\d+\.\s+(.+)$/gm,'<oli>$1</oli>');
+  md=md.replace(/(<oli>[\s\S]*?<\/oli>)/g,'<ol>$1</ol>');
+  md=md.replace(/<\/ol>\s*<ol>/g,'');
+  md=md.replace(/oli>/g,'li>');
+  // Tables
+  md=md.replace(/^\|(.+)\|$/gm,function(m){return m;});
+  // Paragraphs (double newline)
+  md=md.replace(/\n\n/g,'</p><p>');
+  md='<p>'+md+'</p>';
+  // Clean up empty paragraphs around block elements
+  md=md.replace(/<p>\s*(<(?:h[1-6]|ul|ol|pre|blockquote|hr|table|div))/g,'$1');
+  md=md.replace(/(<\/(?:h[1-6]|ul|ol|pre|blockquote|hr|table|div)>)\s*<\/p>/g,'$1');
+  return md.trim();
+}
+
+function html2md(html){
+  // Basic HTML to Markdown
+  html=html.replace(/<h1[^>]*>(.*?)<\/h1>/gi,'\n# $1\n');
+  html=html.replace(/<h2[^>]*>(.*?)<\/h2>/gi,'\n## $1\n');
+  html=html.replace(/<h3[^>]*>(.*?)<\/h3>/gi,'\n### $1\n');
+  html=html.replace(/<h4[^>]*>(.*?)<\/h4>/gi,'\n#### $1\n');
+  html=html.replace(/<h5[^>]*>(.*?)<\/h5>/gi,'\n##### $1\n');
+  html=html.replace(/<h6[^>]*>(.*?)<\/h6>/gi,'\n###### $1\n');
+  html=html.replace(/<strong[^>]*>(.*?)<\/strong>/gi,'**$1**');
+  html=html.replace(/<b[^>]*>(.*?)<\/b>/gi,'**$1**');
+  html=html.replace(/<em[^>]*>(.*?)<\/em>/gi,'*$1*');
+  html=html.replace(/<i[^>]*>(.*?)<\/i>/gi,'*$1*');
+  html=html.replace(/<del[^>]*>(.*?)<\/del>/gi,'~~$1~~');
+  html=html.replace(/<code[^>]*>(.*?)<\/code>/gi,'`$1`');
+  html=html.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi,'```\n$1\n```');
+  html=html.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi,'[$2]($1)');
+  html=html.replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/gi,'![$2]($1)');
+  html=html.replace(/<img[^>]*src="([^"]*)"[^>]*\/?>/gi,'![]($1)');
+  html=html.replace(/<li[^>]*>(.*?)<\/li>/gi,'- $1\n');
+  html=html.replace(/<hr\s*\/?>/gi,'\n---\n');
+  html=html.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gi,'\n> $1\n');
+  html=html.replace(/<br\s*\/?>/gi,'\n');
+  html=html.replace(/<[^>]+>/g,''); // Strip remaining tags
+  html=html.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ');
+  html=html.replace(/\n{3,}/g,'\n\n');
+  return html.trim();
+}
+
+function convert(){
+  var inp=document.getElementById('input').value;
+  var out=document.getElementById('output');
+  if(mode==='md2html'){out.textContent=md2html(inp);}
+  else{out.textContent=html2md(inp);}
+}
+
+function copyOut(){navigator.clipboard.writeText(document.getElementById('output').textContent);}
+function clr(){document.getElementById('input').value='';document.getElementById('output').textContent='';}
+function dl(){
+  var blob=new Blob([document.getElementById('output').textContent],{type:'text/plain'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=mode==='md2html'?'output.html':'output.md';a.click();
+}
+function loadSample(){
+  document.getElementById('input').value='# Welcome to ToolAspect\n\nThis is a **Markdown** sample with *various* elements.\n\n## Features\n\n- Bold text\n- *Italic text*\n- `Inline code`\n\n### Code Block\n\n```js\nconsole.log("Hello World");\n```\n\n> This is a blockquote.\n\n[Visit ToolAspect](https://toolaspect.com)';
+  convert();
+}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

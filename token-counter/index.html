@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token Counter — GPT, Claude, Gemini Token Estimator | ToolAspect</title>
+<meta name="description" content="Count tokens for GPT-4, Claude, and Gemini AI models. Estimate API costs and token limits. Free online token counter.">
+<link rel="canonical" href="https://toolaspect.com/token-counter/">
+<meta property="og:title" content="Token Counter — GPT, Claude, Gemini">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/token-counter/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Token Counter","description":"Count tokens for GPT, Claude, and Gemini AI models.","url":"https://toolaspect.com/token-counter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 14px;font-size:.88rem;font-family:inherit;outline:none;min-height:120px;resize:vertical}
+.form-group textarea:focus{border-color:rgba(99,102,241,.3)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.stat .num{font-size:1.5rem;font-weight:700;color:var(--text)}
+.stat .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.stat.highlight .num{color:var(--primary)}
+.model-table{width:100%;border-collapse:collapse;margin-top:14px}
+.model-table th,.model-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.model-table th{font-size:.75rem;color:var(--muted);text-transform:uppercase}
+.model-table td{font-size:.85rem}
+.progress-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.stats-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Token Counter</h1>
+  <p class="subtitle">Estimate tokens for GPT-4, Claude, Gemini & calculate API costs</p>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Enter your text or prompt</label>
+      <textarea id="input" placeholder="Paste text here to count tokens..." oninput="count()"></textarea>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat highlight">
+        <div class="num" id="tokens">0</div>
+        <div class="lbl">Est. Tokens</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="words">0</div>
+        <div class="lbl">Words</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="chars">0</div>
+        <div class="lbl">Characters</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="sentences">0</div>
+        <div class="lbl">Sentences</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="cost">$0.00</div>
+        <div class="lbl">Est. Cost (GPT-4o)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label style="font-size:.8rem;color:var(--muted);margin-bottom:8px;display:block;font-weight:500">Model Context Limits</label>
+    <table class="model-table">
+      <thead>
+        <tr><th>Model</th><th>Context Window</th><th>Fits in Context</th><th>Input Cost/1K</th></tr>
+      </thead>
+      <tbody id="modelTable"></tbody>
+    </table>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How Token Counting Works</h2>
+    <p>Large Language Models process text in "tokens" — chunks of characters that represent words, parts of words, or punctuation. A general rule: <strong>1 token ≈ 4 characters ≈ 0.75 words</strong> in English.</p>
+    <h2>Why Token Counting Matters</h2>
+    <ul>
+      <li><strong>API costs:</strong> You're billed per token — know your cost before sending</li>
+      <li><strong>Context limits:</strong> Each model has a max token limit for input + output</li>
+      <li><strong>Prompt engineering:</strong> Optimize prompts to use fewer tokens</li>
+      <li><strong>Rate limits:</strong> API tiers are based on tokens per minute</li>
+    </ul>
+    <h2>Token Estimates by Model</h2>
+    <p>Token counts vary slightly between tokenizers (tiktoken for OpenAI, SentencePiece for Claude, etc.). This tool provides a close estimate based on the standard ~4 chars/token ratio.</p>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var MODELS=[
+  {name:'GPT-4o',ctx:128000,cost:0.0025},
+  {name:'GPT-4o mini',ctx:128000,cost:0.000075},
+  {name:'GPT-4 Turbo',ctx:128000,cost:0.01},
+  {name:'Claude 3.5 Sonnet',ctx:200000,cost:0.003},
+  {name:'Claude 3 Opus',ctx:200000,cost:0.015},
+  {name:'Gemini 1.5 Pro',ctx:1000000,cost:0.00125},
+  {name:'Gemini 1.5 Flash',ctx:1000000,cost:0.0000375},
+  {name:'Llama 3.1 70B',ctx:128000,cost:0.0009}
+];
+
+function count(){
+  var text=document.getElementById('input').value;
+  var chars=text.length;
+  var words=text.trim()?text.trim().split(/\s+/).length:0;
+  var sentences=text.trim()?(text.match(/[.!?]+/g)||[]).length:0;
+  // Token estimation: ~4 chars per token for English, adjusted for punctuation
+  var tokens=Math.ceil(chars/4);
+  if(words>0)tokens=Math.max(tokens,Math.ceil(words*1.3));
+
+  document.getElementById('tokens').textContent=tokens.toLocaleString();
+  document.getElementById('words').textContent=words.toLocaleString();
+  document.getElementById('chars').textContent=chars.toLocaleString();
+  document.getElementById('sentences').textContent=sentences.toLocaleString();
+
+  // Cost estimate (GPT-4o input price)
+  var cost=(tokens/1000)*0.0025;
+  document.getElementById('cost').textContent='$'+cost.toFixed(4);
+
+  // Model table
+  var tbody=document.getElementById('modelTable');
+  tbody.innerHTML='';
+  MODELS.forEach(function(m){
+    var pct=Math.min(100,(tokens/m.ctx)*100);
+    var fits=tokens<m.ctx;
+    tbody.innerHTML+='<tr><td>'+m.name+'</td><td>'+(m.ctx/1000)+'K</td><td>'+(fits?'<span style="color:#10b981">✓ Yes</span>':'<span style="color:#ef4444">✗ No</span>')+'</td><td>$'+m.cost.toFixed(5)+'</td></tr>';
+  });
+}
+count();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
