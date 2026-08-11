@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factoring Calculator | ToolAspect</title>
+<meta name="description" content="Factor any number into its prime factors. Find GCD and LCM of two numbers. Free online factoring calculator.">
+<link rel="canonical" href="https://toolaspect.com/factoring-calculator/">
+<meta property="og:title" content="Factoring Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/factoring-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Factoring Calculator","description":"Factor any number into its prime factors. Find GCD and LCM of two numbers. Free online factoring calculator.","url":"https://toolaspect.com/factoring-calculator/","applicationCategory":"MathApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.result-box .value{font-size:2rem;font-weight:700;color:var(--primary)}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);align-items:center}
+.result-row:last-child{border-bottom:none}
+.output-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:1rem;font-family:var(--font-mono);font-size:.85rem;white-space:pre-wrap;word-break:break-all;display:none;max-height:400px;overflow-y:auto}
+.output-area.show{display:block}
+
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Factoring Calculator</h1>
+<p class="subtitle">Factor any number into its prime factors.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card">
+<div class="form-group">
+<label>Number to Factor</label>
+<input type="number" id="number" placeholder="120" value="120" min="2">
+</div>
+<button class="btn-calc" onclick="factorize()">Factor</button>
+</div>
+<div class="result-box" id="result">
+<div class="result-row"><span class="label">Prime Factorization</span><span class="value" id="factors" style="font-size:1.3rem">-</span></div>
+<div class="result-row"><span class="label">All Factors</span><span id="allFactors">-</span></div>
+<div class="result-row"><span class="label">Is Prime?</span><span id="isPrime">-</span></div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Factoring Calculator</h2>
+<p>Factor any number into its prime factors. Find GCD and LCM of two numbers. Free online factoring calculator.</p>
+</div>
+<div class="related-links"><a href="/finance-calculator/">Finance Calculator</a><a href="/percentage-calculator/">Percentage Calculator</a><a href="/unit-converter/">Unit Converter</a></div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+function factorize(){
+var n=parseInt(document.getElementById("number").value);
+if(!n||n<2)return;
+var primes=[];var temp=n;
+for(var d=2;d*d<=temp;d++){while(temp%d===0){primes.push(d);temp/=d;}}
+if(temp>1)primes.push(temp);
+var primeStr=primes.join(" x ");
+var factorCounts={};primes.forEach(function(p){factorCounts[p]=(factorCounts[p]||0)+1;});
+var expStr=Object.entries(factorCounts).map(function(e){return e[1]>1?e[0]+"^"+e[1]:e[0];}).join(" x ");
+var allFactors=[];for(var i=1;i<=n;i++){if(n%i===0)allFactors.push(i);}
+document.getElementById("factors").textContent=expStr;
+document.getElementById("allFactors").textContent=allFactors.join(", ");
+document.getElementById("isPrime").textContent=primes.length===1?"YES":"NO";
+document.getElementById("isPrime").style.color=primes.length===1?"var(--success)":"var(--danger)";
+document.getElementById("result").classList.add("show");
+}
+</script>
+</body>
+</html>

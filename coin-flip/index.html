@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coin Flip | ToolAspect</title>
+<meta name="description" content="Flip a virtual coin for heads or tails. Random and fair. Free online coin flip simulator.">
+<link rel="canonical" href="https://toolaspect.com/coin-flip/">
+<meta property="og:title" content="Coin Flip">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/coin-flip/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Coin Flip","description":"Flip a virtual coin for heads or tails. Random and fair. Free online coin flip simulator.","url":"https://toolaspect.com/coin-flip/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.card{margin-bottom:1rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
+.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
+.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.result-box .value{font-size:2rem;font-weight:700;color:var(--primary)}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);align-items:center}
+.result-row:last-child{border-bottom:none}
+.output-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:1rem;font-family:var(--font-mono);font-size:.85rem;white-space:pre-wrap;word-break:break-all;display:none;max-height:400px;overflow-y:auto}
+.output-area.show{display:block}
+
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Coin Flip</h1>
+<p class="subtitle">Flip a virtual coin for heads or tails.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="card" style="text-align:center;padding:2rem">
+<div id="coinResult" style="font-size:5rem;margin-bottom:1rem;cursor:pointer" onclick="flipCoin()">🪙</div>
+<div id="coinText" style="font-size:1.2rem;color:var(--text-secondary);margin-bottom:1rem">Click to flip</div>
+<button class="btn-calc" style="max-width:200px;margin:0 auto" onclick="flipCoin()">Flip Coin</button>
+<div style="margin-top:1.5rem;display:flex;justify-content:center;gap:2rem">
+<div><span style="color:var(--muted);font-size:.8rem">HEADS</span><br><span id="hCount" style="font-size:1.5rem;font-weight:700">0</span></div>
+<div><span style="color:var(--muted);font-size:.8rem">TAILS</span><br><span id="tCount" style="font-size:1.5rem;font-weight:700">0</span></div>
+<div><span style="color:var(--muted);font-size:.8rem">TOTAL</span><br><span id="totalCount" style="font-size:1.5rem;font-weight:700">0</span></div>
+</div>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Coin Flip</h2>
+<p>Flip a virtual coin for heads or tails. Random and fair. Free online coin flip simulator.</p>
+</div>
+<div class="related-links"><a href="/finance-calculator/">Finance Calculator</a><a href="/percentage-calculator/">Percentage Calculator</a><a href="/unit-converter/">Unit Converter</a></div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var heads=0,tails=0;
+function flipCoin(){
+var coin=document.getElementById("coinResult");
+var text=document.getElementById("coinText");
+coin.style.transform="rotateY(720deg)";
+coin.style.transition="transform 0.5s";
+setTimeout(function(){coin.style.transition="";coin.style.transform="";var isHeads=Math.random()<0.5;
+if(isHeads){coin.textContent="👑";text.textContent="HEADS!";heads++;}else{coin.textContent="🦅";text.textContent="TAILS!";tails++;}
+document.getElementById("hCount").textContent=heads;document.getElementById("tCount").textContent=tails;document.getElementById("totalCount").textContent=heads+tails;},500);
+}
+</script>
+</body>
+</html>
