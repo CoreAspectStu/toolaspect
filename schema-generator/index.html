@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Markup Generator — Free JSON-LD SEO Tool | ToolAspect</title>
+<meta name="description" content="Generate Schema.org structured data (JSON-LD) for your website. Supports 25+ schema types: Organization, Product, Article, FAQ, HowTo, Recipe, Event, Course and more.">
+<link rel="canonical" href="https://toolaspect.com/schema-generator/">
+<meta property="og:title" content="Schema Markup Generator — Free JSON-LD SEO Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Generate Schema.org structured data for 25+ types. Free, fast, copy-paste JSON-LD.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/schema-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="keywords" content="schema markup generator, json-ld generator, structured data, schema.org, seo">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Schema Markup Generator","description":"Free online Schema.org JSON-LD structured data generator supporting 25+ schema types.","url":"https://toolaspect.com/schema-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Schema Markup Generator","item":"https://toolaspect.com/schema-generator/"}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.75rem;font-weight:700;text-align:center;margin-bottom:8px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:28px;font-size:.95rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;margin-bottom:20px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:6px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 14px;font-size:.9rem;font-family:inherit;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(99,102,241,.3)}
+.form-group textarea{min-height:60px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+select{cursor:pointer}
+.preview{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px}
+.preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.preview-title{font-size:.8rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.preview pre{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:150px;max-height:500px;overflow-y:auto;line-height:1.5}
+.copy-btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(99,102,241,.2)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:32px}
+.seo-content h2{font-size:1.25rem;font-weight:600;margin-bottom:12px}
+.seo-content p{color:var(--text-secondary);margin-bottom:14px;font-size:.92rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:14px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:6px;font-size:.92rem}
+.schema-type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:20px}
+.schema-type-btn{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 8px;cursor:pointer;font-size:.8rem;text-align:center;transition:all .2s}
+.schema-type-btn:hover{border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.05)}
+.schema-type-btn.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.4);color:var(--text)}
+@media(max-width:640px){.form-row,.form-row-3{grid-template-columns:1fr}.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Schema Markup Generator</h1>
+  <p class="subtitle">Generate valid JSON-LD structured data for 25+ Schema.org types</p>
+
+  <div class="card">
+    <label style="font-size:.8rem;color:var(--muted);margin-bottom:8px;display:block;font-weight:500">Select Schema Type</label>
+    <div class="schema-type-grid" id="typeGrid"></div>
+
+    <div id="formFields"></div>
+  </div>
+
+  <div class="preview">
+    <div class="preview-header">
+      <span class="preview-title">JSON-LD Output</span>
+      <button class="copy-btn" onclick="copySchema()">Copy</button>
+    </div>
+    <pre id="output"></pre>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>What is Schema Markup?</h2>
+    <p>Schema markup (structured data) is a standardized format used by search engines to understand the content of your web pages. By adding JSON-LD structured data to your site, you help Google, Bing, and other search engines display rich results — enhanced snippets with star ratings, images, event dates, FAQ accordions, and more.</p>
+
+    <h2>Why Schema Markup Matters for SEO</h2>
+    <ul>
+      <li><strong>Rich Results:</strong> Pages with structured data are eligible for rich snippets, which increase click-through rates by up to 30%</li>
+      <li><strong>Better Understanding:</strong> Search engines can parse your content more accurately, reducing misclassification</li>
+      <li><strong>Knowledge Graph:</strong> Organization and Person schema feed Google's Knowledge Graph panel</li>
+      <li><strong>Voice Search:</strong> Structured data helps voice assistants answer questions about your business</li>
+      <li><strong>AI Search (SGE/AI Overviews):</strong> Large Language Models use structured data to understand and cite your content</li>
+    </ul>
+
+    <h2>How to Add Schema to Your Site</h2>
+    <p>1. Generate your JSON-LD using the tool above<br>
+    2. Copy the output<br>
+    3. Paste it inside a <code>&lt;script type="application/ld+json"&gt;</code> tag in your page's <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code><br>
+    4. Test with Google's <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener" style="color:var(--primary)">Rich Results Test</a></p>
+
+    <h2>Schema Type Guide</h2>
+    <ul>
+      <li><strong>Organization:</strong> Brands, companies — powers Knowledge Graph panels</li>
+      <li><strong>LocalBusiness:</strong> Brick-and-mortar stores — enables local pack inclusion</li>
+      <li><strong>Product:</strong> E-commerce items — shows price, availability, reviews in SERP</li>
+      <li><strong>FAQPage:</strong> Frequently asked questions — accordion rich results</li>
+      <li><strong>HowTo:</strong> Step-by-step guides — visual step-by-step rich results</li>
+      <li><strong>Article/BlogPosting:</strong> News and blog content — enhanced article cards</li>
+      <li><strong>Recipe:</strong> Food recipes — cook time, ratings, ingredients in SERP</li>
+      <li><strong>Event:</strong> Workshops, concerts — date/venue/location rich results</li>
+    </ul>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var SCHEMA_TYPES = {
+  Organization: {fields: [['name','text','Organization Name'],['url','url','Website URL'],['logo','url','Logo URL'],['description','textarea','Description'],['email','email','Email'],['telephone','tel','Phone'],['foundingDate','text','Founding Date (YYYY-MM-DD)']]},
+  LocalBusiness: {fields: [['name','text','Business Name'],['address_street','text','Street Address'],['address_locality','text','City'],['address_region','text','State/Region'],['postalCode','text','Postal Code'],['address_country','text','Country'],['telephone','tel','Phone'],['openingHours','text','Opening Hours (Mo-Fr 09:00-17:00)'],['priceRange','text','Price Range ($-$$$$)'],['url','url','Website']]},
+  Restaurant: {type:'LocalBusiness', fields: [['name','text','Restaurant Name'],['servesCuisine','text','Cuisine Type'],['priceRange','text','Price Range ($-$$$$)'],['address_street','text','Street'],['address_locality','text','City'],['telephone','tel','Phone'],['menu','url','Menu URL'],['acceptsReservations','text','Reservations (Yes/No)']]},
+  Product: {fields: [['name','text','Product Name'],['description','textarea','Description'],['brand','text','Brand'],['sku','text','SKU'],['price','text','Price'],['priceCurrency','text','Currency (USD/EUR/GBP)'],['availability','select:In Stock|Out of Stock|Pre-Order','Availability'],['image','url','Image URL']]},
+  Review: {fields: [['itemReviewed','text','Item Name'],['reviewBody','textarea','Review Text'],['ratingValue','number','Rating (1-5)'],['bestRating','number','Best Rating (5)'],['author','text','Author Name'],['datePublished','text','Date (YYYY-MM-DD)']]},
+  Article: {fields: [['headline','text','Headline'],['description','textarea','Description'],['author','text','Author'],['datePublished','text','Published (YYYY-MM-DD)'],['dateModified','text','Modified (YYYY-MM-DD)'],['image','url','Image URL'],['publisher','text','Publisher Name']]},
+  BlogPosting: {type:'Article', fields: [['headline','text','Headline'],['author','text','Author'],['datePublished','text','Published'],['image','url','Image URL'],['publisher','text','Publisher'],['wordCount','number','Word Count']]},
+  NewsArticle: {type:'Article', fields: [['headline','text','Headline'],['datePublished','text','Published'],['author','text','Author'],['image','url','Image URL'],['publisher','text','Publisher'],['articleSection','text','Section']]},
+  Event: {fields: [['name','text','Event Name'],['description','textarea','Description'],['startDate','text','Start Date/Time'],['endDate','text','End Date/Time'],['location_name','text','Venue Name'],['location_address','text','Venue Address'],['organizer','text','Organizer'],['offers_price','text','Ticket Price'],['offers_currency','text','Currency'],['offers_url','url','Ticket URL']]},
+  Course: {fields: [['name','text','Course Name'],['description','textarea','Description'],['provider','text','Provider'],['price','text','Price'],['priceCurrency','text','Currency'],['image','url','Image URL']]},
+  Recipe: {fields: [['name','text','Recipe Name'],['description','textarea','Description'],['recipeIngredient','textarea','Ingredients (one per line)'],['recipeInstructions','textarea','Instructions'],['cookTime','text','Cook Time (PT30M)'],['prepTime','text','Prep Time (PT15M)'],['recipeYield','text','Yield (4 servings)'],['nutrition','text','Calories'],['image','url','Image URL']]},
+  FAQPage: {fields: [['faqs','textarea','FAQs (one Q&A per line, format: Q: question | A: answer)']]},
+  HowTo: {fields: [['name','text','How-To Title'],['description','textarea','Description'],['totalTime','text','Total Time'],['estimatedCost','text','Estimated Cost'],['steps','textarea','Steps (one per line)'],['tools','textarea','Tools Needed (one per line)'],['image','url','Image URL']]},
+  VideoObject: {fields: [['name','text','Video Title'],['description','textarea','Description'],['thumbnailUrl','url','Thumbnail URL'),('uploadDate','text','Upload Date (YYYY-MM-DD)'],['duration','text','Duration (PT4M13S)'],['contentUrl','url','Video URL']]},
+  BreadcrumbList: {fields: [['breadcrumbs','textarea','Breadcrumb Trail (one per line: Name | URL)']]},
+  Person: {fields: [['name','text','Full Name'],['jobTitle','text','Job Title'],['email','email','Email'],['telephone','tel','Phone'],['url','url','Website'],['image','url','Photo URL'],['worksFor','text','Company'],['sameAs','textarea','Social Profiles (one URL per line)']]},
+  Place: {fields: [['name','text','Place Name'],['address','text','Address'],['telephone','tel','Phone'],['geo_lat','text','Latitude'],['geo_lng','text','Longitude'],['url','url','Website']]},
+  SoftwareApplication: {fields: [['name','text','App Name'],['applicationCategory','text','Category (WebApplication)'],['operatingSystem','text','OS (Any)'],['offers_price','text','Price'],['offers_currency','text','Currency'],['ratingValue','number','Rating'],['ratingCount','number','Rating Count'],['image','url','Icon URL']]},
+  JobPosting: {fields: [['title','text','Job Title'],['description','textarea','Job Description'],['hiringOrganization','text','Company'],['jobLocation_address','text','Location'],['employmentType','select:Full Time|Part Time|Contract|Temporary|Internship','Employment Type'],['datePosted','text','Date Posted'],['validThrough','text','Application Deadline'],['baseSalary','text','Base Salary'],['salaryCurrency','text','Currency']]},
+  Service: {fields: [['name','text','Service Name'],['serviceType','text','Service Type'],['provider','text','Provider'],['areaServed','text','Area Served'],['url','url','URL'],['description','textarea','Description']]},
+  MedicalCondition: {fields: [['name','text','Condition Name'],['description','textarea','Description'],['symptom','textarea','Symptoms (one per line)'),('possibleTreatment','textarea','Treatments (one per line)'],['medicineSystem','text','Medicine System']]},
+  Store: {type:'LocalBusiness', fields: [['name','text','Store Name'],['address','text','Address'],['openingHours','text','Opening Hours'],['telephone','tel','Phone'],['url','url','Website'],['currenciesAccepted','text','Currencies']]},
+  Offer: {fields: [['name','text','Offer Name'],['price','text','Price'],['priceCurrency','text','Currency'],['availability','select:In Stock|Out of Stock|Pre-Order','Availability'],['url','url','Offer URL'],['priceValidUntil','text','Valid Until (YYYY-MM-DD)']]},
+  AggregateRating: {fields: [['itemReviewed','text','Item Name'],['ratingValue','number','Rating'],['bestRating','number','Best Rating'],['ratingCount','number','Rating Count'],['reviewCount','number','Review Count']]}
+};
+
+var currentType = 'Organization';
+var typeKeys = Object.keys(SCHEMA_TYPES);
+
+// Build type grid
+var grid = document.getElementById('typeGrid');
+typeKeys.forEach(function(t) {
+  var btn = document.createElement('button');
+  btn.className = 'schema-type-btn';
+  btn.textContent = t;
+  btn.onclick = function() { selectType(t); };
+  grid.appendChild(btn);
+});
+
+function selectType(t) {
+  currentType = t;
+  document.querySelectorAll('.schema-type-btn').forEach(function(b) {
+    b.classList.toggle('active', b.textContent === t);
+  });
+  buildForm();
+  generate();
+}
+
+function buildForm() {
+  var schema = SCHEMA_TYPES[currentType];
+  var container = document.getElementById('formFields');
+  container.innerHTML = '';
+  var fields = schema.fields;
+  
+  // Determine if we need rows
+  for (var i = 0; i < fields.length; i++) {
+    var f = fields[i];
+    var name = f[0], type = f[1], label = f[2];
+    var group = document.createElement('div');
+    group.className = 'form-group';
+    var lbl = document.createElement('label');
+    lbl.textContent = label;
+    group.appendChild(lbl);
+
+    var input;
+    if (type.indexOf('select:') === 0) {
+      input = document.createElement('select');
+      type.split(':')[1].split('|').forEach(function(opt) {
+        var o = document.createElement('option');
+        o.value = o.textContent = opt;
+        input.appendChild(o);
+      });
+    } else if (type === 'textarea') {
+      input = document.createElement('textarea');
+    } else {
+      input = document.createElement('input');
+      input.type = type === 'number' ? 'number' : 'text';
+    }
+    input.id = 'field_' + name;
+    input.oninput = generate;
+    input.placeholder = label;
+    group.appendChild(input);
+    container.appendChild(group);
+  }
+}
+
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function generate() {
+  var schema = SCHEMA_TYPES[currentType];
+  var baseType = schema.type || currentType;
+  var obj = { '@context': 'https://schema.org', '@type': currentType };
+
+  if (currentType === 'Organization') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_url')) obj.url = val('field_url');
+    if (val('field_logo')) obj.logo = val('field_logo');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_email')) obj.email = val('field_email');
+    if (val('field_telephone')) obj.telephone = val('field_telephone');
+    if (val('field_foundingDate')) obj.foundingDate = val('field_foundingDate');
+  } else if (currentType === 'LocalBusiness' || currentType === 'Store') {
+    if (val('field_name')) obj.name = val('field_name');
+    obj['@type'] = currentType === 'Store' ? ['LocalBusiness','Store'] : 'LocalBusiness';
+    if (val('field_address_street') || val('field_address_locality')) {
+      obj.address = { '@type': 'PostalAddress' };
+      if (val('field_address_street')) obj.address.streetAddress = val('field_address_street');
+      if (val('field_address_locality')) obj.address.addressLocality = val('field_address_locality');
+      if (val('field_address_region')) obj.address.addressRegion = val('field_address_region');
+      if (val('field_postalCode')) obj.address.postalCode = val('field_postalCode');
+      if (val('field_address_country')) obj.address.addressCountry = val('field_address_country');
+    }
+    if (val('field_telephone')) obj.telephone = val('field_telephone');
+    if (val('field_openingHours')) obj.openingHours = val('field_openingHours');
+    if (val('field_priceRange')) obj.priceRange = val('field_priceRange');
+    if (val('field_url')) obj.url = val('field_url');
+    if (val('field_currenciesAccepted')) obj.currenciesAccepted = val('field_currenciesAccepted');
+    if (val('field_menu')) obj.menu = val('field_menu');
+    if (val('field_servesCuisine')) obj.servesCuisine = val('field_servesCuisine');
+    if (val('field_acceptsReservations')) obj.acceptsReservations = val('field_acceptsReservations') === 'Yes';
+  } else if (currentType === 'Restaurant') {
+    obj['@type'] = ['LocalBusiness','Restaurant'];
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_servesCuisine')) obj.servesCuisine = val('field_servesCuisine');
+    if (val('field_priceRange')) obj.priceRange = val('field_priceRange');
+    if (val('field_address_street')) { obj.address = {'@type':'PostalAddress', streetAddress: val('field_address_street'), addressLocality: val('field_address_locality')}; }
+    if (val('field_telephone')) obj.telephone = val('field_telephone');
+    if (val('field_menu')) obj.menu = val('field_menu');
+    if (val('field_acceptsReservations')) obj.acceptsReservations = val('field_acceptsReservations') === 'Yes';
+  } else if (currentType === 'Product') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_brand')) obj.brand = {'@type':'Brand', name: val('field_brand')};
+    if (val('field_sku')) obj.sku = val('field_sku');
+    if (val('field_image')) obj.image = val('field_image');
+    if (val('field_price')) {
+      obj.offers = {'@type':'Offer', price: val('field_price'), priceCurrency: val('field_priceCurrency')||'USD'};
+      if (val('field_availability')) obj.offers.availability = 'https://schema.org/' + val('field_availability').replace(/ /g,'');
+    }
+  } else if (currentType === 'Review') {
+    if (val('field_itemReviewed')) obj.itemReviewed = {'@type':'Thing', name: val('field_itemReviewed')};
+    if (val('field_reviewBody')) obj.reviewBody = val('field_reviewBody');
+    if (val('field_ratingValue')) obj.reviewRating = {'@type':'Rating', ratingValue: val('field_ratingValue'), bestRating: val('field_bestRating')||'5'};
+    if (val('field_author')) obj.author = {'@type':'Person', name: val('field_author')};
+    if (val('field_datePublished')) obj.datePublished = val('field_datePublished');
+  } else if (currentType === 'Article' || currentType === 'BlogPosting' || currentType === 'NewsArticle') {
+    if (val('field_headline')) obj.headline = val('field_headline');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_author')) obj.author = {'@type':'Person', name: val('field_author')};
+    if (val('field_datePublished')) obj.datePublished = val('field_datePublished');
+    if (val('field_dateModified')) obj.dateModified = val('field_dateModified');
+    if (val('field_image')) obj.image = val('field_image');
+    if (val('field_publisher')) obj.publisher = {'@type':'Organization', name: val('field_publisher')};
+    if (val('field_wordCount')) obj.wordCount = parseInt(val('field_wordCount'));
+    if (val('field_articleSection')) obj.articleSection = val('field_articleSection');
+  } else if (currentType === 'Event') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_startDate')) obj.startDate = val('field_startDate');
+    if (val('field_endDate')) obj.endDate = val('field_endDate');
+    if (val('field_location_name')) obj.location = {'@type':'Place', name: val('field_location_name'), address: val('field_location_address')};
+    if (val('field_organizer')) obj.organizer = {'@type':'Organization', name: val('field_organizer')};
+    if (val('field_offers_price')) obj.offers = {'@type':'Offer', price: val('field_offers_price'), priceCurrency: val('field_offers_currency')||'USD', url: val('field_offers_url')};
+  } else if (currentType === 'Course') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_provider')) obj.provider = {'@type':'Organization', name: val('field_provider')};
+    if (val('field_price')) obj.hasCourseInstance = [{'@type':'CourseInstance', price: val('field_price'), priceCurrency: val('field_priceCurrency')||'USD'}];
+    if (val('field_image')) obj.image = val('field_image');
+  } else if (currentType === 'Recipe') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_recipeIngredient')) obj.recipeIngredient = val('field_recipeIngredient').split('\n').filter(function(l){return l.trim()});
+    if (val('field_recipeInstructions')) obj.recipeInstructions = val('field_recipeInstructions').split('\n').filter(function(l){return l.trim()}).map(function(s,i){return{'@type':'HowToStep',position:i+1,text:s}});
+    if (val('field_cookTime')) obj.cookTime = val('field_cookTime');
+    if (val('field_prepTime')) obj.prepTime = val('field_prepTime');
+    if (val('field_recipeYield')) obj.recipeYield = val('field_recipeYield');
+    if (val('field_nutrition')) obj.nutrition = {'@type':'NutritionInformation', calories: val('field_nutrition')};
+    if (val('field_image')) obj.image = val('field_image');
+  } else if (currentType === 'FAQPage') {
+    var raw = val('field_faqs');
+    if (raw) {
+      obj.mainEntity = raw.split('\n').filter(function(l){return l.trim()}).map(function(line) {
+        var parts = line.split('|');
+        var q = parts[0].replace(/^Q:\s*/i,'').trim();
+        var a = (parts[1]||'').replace(/^A:\s*/i,'').trim();
+        return {'@type':'Question', name: q, acceptedAnswer: {'@type':'Answer', text: a}};
+      });
+    }
+  } else if (currentType === 'HowTo') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_totalTime')) obj.totalTime = val('field_totalTime');
+    if (val('field_estimatedCost')) obj.estimatedCost = {'@type':'MonetaryAmount', value: val('field_estimatedCost')};
+    if (val('field_steps')) obj.step = val('field_steps').split('\n').filter(function(l){return l.trim()}).map(function(s,i){return{'@type':'HowToStep',position:i+1,text:s}});
+    if (val('field_tools')) obj.tool = val('field_tools').split('\n').filter(function(l){return l.trim()}).map(function(s){return{'@type':'HowToTool',name:s}});
+    if (val('field_image')) obj.image = val('field_image');
+  } else if (currentType === 'VideoObject') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_thumbnailUrl')) obj.thumbnailUrl = val('field_thumbnailUrl');
+    if (val('field_uploadDate')) obj.uploadDate = val('field_uploadDate');
+    if (val('field_duration')) obj.duration = val('field_duration');
+    if (val('field_contentUrl')) obj.contentUrl = val('field_contentUrl');
+  } else if (currentType === 'BreadcrumbList') {
+    var raw = val('field_breadcrumbs');
+    if (raw) {
+      obj.itemListElement = raw.split('\n').filter(function(l){return l.trim()}).map(function(line,i) {
+        var parts = line.split('|');
+        return {'@type':'ListItem', position: i+1, name: parts[0].trim(), item: (parts[1]||'').trim()};
+      });
+    }
+  } else if (currentType === 'Person') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_jobTitle')) obj.jobTitle = val('field_jobTitle');
+    if (val('field_email')) obj.email = val('field_email');
+    if (val('field_telephone')) obj.telephone = val('field_telephone');
+    if (val('field_url')) obj.url = val('field_url');
+    if (val('field_image')) obj.image = val('field_image');
+    if (val('field_worksFor')) obj.worksFor = {'@type':'Organization', name: val('field_worksFor')};
+    if (val('field_sameAs')) obj.sameAs = val('field_sameAs').split('\n').filter(function(l){return l.trim()});
+  } else if (currentType === 'Place') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_address')) obj.address = val('field_address');
+    if (val('field_telephone')) obj.telephone = val('field_telephone');
+    if (val('field_geo_lat')) obj.geo = {'@type':'GeoCoordinates', latitude: val('field_geo_lat'), longitude: val('field_geo_lng')};
+    if (val('field_url')) obj.url = val('field_url');
+  } else if (currentType === 'SoftwareApplication') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_applicationCategory')) obj.applicationCategory = val('field_applicationCategory');
+    if (val('field_operatingSystem')) obj.operatingSystem = val('field_operatingSystem');
+    if (val('field_image')) obj.image = val('field_image');
+    if (val('field_offers_price')) obj.offers = {'@type':'Offer', price: val('field_offers_price'), priceCurrency: val('field_offers_currency')||'USD'};
+    if (val('field_ratingValue')) obj.aggregateRating = {'@type':'AggregateRating', ratingValue: val('field_ratingValue'), ratingCount: val('field_ratingCount')};
+  } else if (currentType === 'JobPosting') {
+    if (val('field_title')) obj.title = val('field_title');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_hiringOrganization')) obj.hiringOrganization = {'@type':'Organization', name: val('field_hiringOrganization')};
+    if (val('field_jobLocation_address')) obj.jobLocation = {'@type':'Place', address: val('field_jobLocation_address')};
+    if (val('field_employmentType')) obj.employmentType = val('field_employmentType').replace(/ /g,'').toUpperCase();
+    if (val('field_datePosted')) obj.datePosted = val('field_datePosted');
+    if (val('field_validThrough')) obj.validThrough = val('field_validThrough');
+    if (val('field_baseSalary')) obj.baseSalary = {'@type':'MonetaryAmount', currency: val('field_salaryCurrency')||'USD', value: val('field_baseSalary')};
+  } else if (currentType === 'Service') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_serviceType')) obj.serviceType = val('field_serviceType');
+    if (val('field_provider')) obj.provider = {'@type':'Organization', name: val('field_provider')};
+    if (val('field_areaServed')) obj.areaServed = val('field_areaServed');
+    if (val('field_url')) obj.url = val('field_url');
+    if (val('field_description')) obj.description = val('field_description');
+  } else if (currentType === 'MedicalCondition') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_description')) obj.description = val('field_description');
+    if (val('field_symptom')) obj.signOrSymptom = val('field_symptom').split('\n').filter(function(l){return l.trim()}).map(function(s){return{'@type':'MedicalSymptom', name:s}});
+    if (val('field_possibleTreatment')) obj.possibleTreatment = val('field_possibleTreatment').split('\n').filter(function(l){return l.trim()}).map(function(s){return{'@type':'MedicalTherapy', name:s}});
+  } else if (currentType === 'Offer') {
+    if (val('field_name')) obj.name = val('field_name');
+    if (val('field_price')) obj.price = val('field_price');
+    if (val('field_priceCurrency')) obj.priceCurrency = val('field_priceCurrency');
+    if (val('field_availability')) obj.availability = 'https://schema.org/' + val('field_availability').replace(/ /g,'');
+    if (val('field_url')) obj.url = val('field_url');
+    if (val('field_priceValidUntil')) obj.priceValidUntil = val('field_priceValidUntil');
+  } else if (currentType === 'AggregateRating') {
+    if (val('field_itemReviewed')) obj.itemReviewed = {'@type':'Thing', name: val('field_itemReviewed')};
+    if (val('field_ratingValue')) obj.ratingValue = val('field_ratingValue');
+    if (val('field_bestRating')) obj.bestRating = val('field_bestRating');
+    if (val('field_ratingCount')) obj.ratingCount = parseInt(val('field_ratingCount'));
+    if (val('field_reviewCount')) obj.reviewCount = parseInt(val('field_reviewCount'));
+  }
+
+  document.getElementById('output').textContent = JSON.stringify(obj, null, 2);
+}
+
+function copySchema() {
+  var text = document.getElementById('output').textContent;
+  navigator.clipboard.writeText('<script type="application/ld+json">\n' + text + '\n<\/script>').then(function() {
+    var btn = document.querySelector('.copy-btn');
+    var orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(function() { btn.textContent = orig; }, 2000);
+  });
+}
+
+selectType('Organization');
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
