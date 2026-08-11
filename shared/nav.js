@@ -107,6 +107,13 @@
   /* Insert at top of body */
   document.body.insertBefore(nav, document.body.firstChild);
 
+  /* --- Auto-inject ads.js for AdSense --- */
+  if (!document.querySelector('script[src*="shared/ads.js"]')) {
+    var adsScript = document.createElement('script');
+    adsScript.src = base + 'shared/ads.js';
+    document.body.appendChild(adsScript);
+  }
+
   /* --- Hamburger toggle --- */
   var hamburger = nav.querySelector('.ta-hamburger');
   var mobileMenu = nav.querySelector('.ta-mobile-menu');
