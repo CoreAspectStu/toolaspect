@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Name Generator | ToolAspect</title>
+<meta name="description" content="Find the perfect name for your pet. Browse thousands of pet names by animal, letter, and personality. Free pet name generator for dogs, cats, birds, and more.">
+<link rel="canonical" href="https://toolaspect.com/pet-name-generator/">
+<meta property="og:title" content="Pet Name Generator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pet-name-generator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Pet Name Generator","description":"Find the perfect name for your pet by animal, letter, and personality.","url":"https://toolaspect.com/pet-name-generator/","applicationCategory":"EntertainmentApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:900px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.controls{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.controls select,.controls button{padding:.6rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:.9rem}
+.controls button{background:var(--primary);color:#fff;border:none;font-weight:600;cursor:pointer;transition:all .2s}
+.controls button:hover{background:var(--primary-light)}
+.name-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem}
+.name-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.name-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.name-card .name{font-size:1.1rem;font-weight:700;color:var(--text)}
+.name-card .meaning{font-size:.75rem;color:var(--muted);margin-top:4px}
+.name-card .copy{font-size:.7rem;color:var(--primary);margin-top:6px;opacity:0;transition:opacity .2s}
+.name-card:hover .copy{opacity:1}
+.section-title{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .75rem}
+.animal-pick{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1rem}
+.animal-pick button{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.82rem;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.animal-pick button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.animal-pick button:hover{border-color:var(--primary)}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Pet Name Generator</h1>
+<p class="subtitle">Find the perfect name for your pet</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="animal-pick" id="animalPick">
+<button class="active" onclick="setAnimal('dog',this)">🐕 Dogs</button>
+<button onclick="setAnimal('cat',this)">🐱 Cats</button>
+<button onclick="setAnimal('bird',this)">🐤 Birds</button>
+<button onclick="setAnimal('rabbit',this)">🐇 Rabbits</button>
+<button onclick="setAnimal('fish',this)">🐟 Fish</button>
+<button onclick="setAnimal('hamster',this)">🐹 Hamsters</button>
+<button onclick="setAnimal('reptile',this)">🐍 Reptiles</button>
+<button onclick="setAnimal('horse',this)">🐎 Horses</button>
+</div>
+<div class="controls">
+<select id="letterPick">
+<option value="">Any letter</option>
+<option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+<option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+<option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option>
+<option value="M">M</option><option value="N">N</option><option value="O">O</option><option value="P">P</option>
+<option value="Q">Q</option><option value="R">R</option><option value="S">S</option><option value="T">T</option>
+<option value="U">U</option><option value="V">V</option><option value="W">W</option><option value="X">X</option>
+<option value="Y">Y</option><option value="Z">Z</option>
+</select>
+<select id="stylePick">
+<option value="all">All styles</option>
+<option value="cute">Cute</option>
+<option value="tough">Tough</option>
+<option value="funny">Funny</option>
+<option value="food">Food-inspired</option>
+<option value="nature">Nature</option>
+<option value="mythology">Mythology</option>
+</select>
+<button onclick="generate()">Generate Names</button>
+</div>
+<h3 class="section-title" id="resultTitle">Click "Generate Names" to start</h3>
+<div class="name-grid" id="nameGrid"></div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Pet Name Generator</h2>
+<p>Browse thousands of pet names filtered by animal type, starting letter, and personality style. Whether you have a dog, cat, bird, or reptile, find the perfect name. Click any name to copy it.</p>
+</div>
+<div class="related-links">
+<a href="/baby-name-generator/">Baby Name Generator</a>
+<a href="/word-unscrambler/">Word Unscrambler</a>
+<a href="/random-number-generator/">Random Generator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var PET_NAMES={
+dog:["Max","Bella","Charlie","Luna","Cooper","Daisy","Rocky","Molly","Bear","Sophie","Duke","Lucy","Tucker","Sadie","Jack","Maggie","Oliver","Chloe","Buddy","Zoe","Bailey","Lily","Rocky","Ruby","Zeus","Rosie","Shadow","Stella","Biscuit","Cookie","Rex","Lola","Murphy","Nala","Bruno","Penny","Gus","Gracie","Winston","Izzy","Zeus","Mia","Leo","Dakota","Tank","Pearl","Maximus","Willow","Rusty","Ginger"],
+cat:["Luna","Oliver","Bella","Leo","Milo","Charlie","Nala","Simba","Lucy","Kitty","Chloe","Jack","Cleo","Max","Lily","Tigger","Shadow","Oreo","Mochi","Loki","Zoe","Finn","Gizmo","Jasper","Willow","Pumpkin","Salem","Daisy","George","Pepper","Biscuit","Cookie","Pumpkin","Whiskers","Socks","Boots","Midnight","Storm","Felix","Mittens","Ginger","Tofu","Mango","Boba","Noodle","Waffles","Phoebe","Misha","Ash","Ivy"],
+bird:["Kiwi","Sunny","Sky","Mango","Piper","Rio","Sunny","Coco","Pepper","Blue","Sunny","Peaches","Tiki","Rainbow","Echo","Jade","Ruby","Sapphire","Sunny","Angel","Skye","Charley","Zazu","Goose","Mango","Polly","Sunny","Indigo","Coral","Feather","Hawk","Robin","Star","Jet","Comet","Twilight","Dawn","Dusk","Spark","Emerald","Goldie","Honey","Kiwi","Lemon","Melon","Olive","Plum","Raven","Sunny"],
+rabbit:["Bunny","Cottontail","Thumper","Hazel","Clover","Cinnamon","Honey","Mochi","Peanut","Nutmeg","Caramel","Biscuit","Buttercup","Daisy","Honeybun","Marshmallow","Noodles","Pancake","Pumpkin","Snickerdoodle","Toffee","Vanilla","Willow","Bongo","Comet","Dusty","Fluffy","Gizmo","Hopper","Luna","Marble","Nimbus","Oreo","Patch","Pepper","Quartz","Snowball","Thunder","Velvet","Whisker"],
+fish:["Nemo","Bubbles","Finley","Goldie","Marlin","Splash","Coral","Dory","Gilbert","Pearl","Sheldon","Bloop","Blue","Neon","Sushi","Wave","Aqua","Casper","Echo,Flip","Guppy","Jack","Koi","Marlin","Nemo","Orca","Penny","Reef","Shiny","Tide","Treasure","Bubbles","Coral","Dash","Flash","Glimmer","Jewel","Lumos","Mirror","Nemo","Onyx"],
+hamster:["Peanut","Gizmo","Whiskers","Nibbles","Pip","Squeak","Waffle","Hammy","Chestnut","Dusty","Fudge","Ginger","Hazel","Jellybean","Kiwi","Marshmallow","Nugget","Oats","Pip","Quigley","Rolo","Snickers","Tofu","Waffles","Acorn","Biscuit","Button","Crumb","Dumpling","Elf","Fuzzy","Gummy","Honey","Jelly","Mochi","Peanut","Poppy","Raisin","Squish","Turbo"],
+reptile:["Slytherin","Dragon","Rex","Komodo","Spike"," Godzilla","Lizard","Nessie","Spyro","Viper","Zilla","Balthazar","Cleo","Dino","Echo","Fang","Gex","Hydra","Iggy","Jafar","Kaa","Lagarto","Medusa","Naga","Onyx","Python","Quetzal","Reptar","Smaug","Talon","Umbra","Venom","Wyrm","Xander","Yoshi","Zilla","Anakin","Basilisk","Charizard","Draco"],
+horse:["Thunder","Spirit","Dakota","Whisper","Stormy","Buck","Duke","Star","Comet","Blaze,"Apache","Scout","Daisy","Bella","Misty","Shadow," Maverick","Ranger","Cowboy,"Roy","Honey","Cinnamon","Ruby,"Willow,"Grace","Diamond","Jewel,"Phoenix","Eagle","Storm","Jack,"Ginger","Penny","Cookie","Sugar","Brownie,"Stella","Angel","Beauty"]
+};
+var currentAnimal="dog";
+function setAnimal(a,el){currentAnimal=a;document.querySelectorAll("#animalPick button").forEach(function(b){b.classList.remove("active");});el.classList.add("active");}
+function generate(){
+var names=PET_NAMES[currentAnimal]||PET_NAMES.dog;
+var letter=document.getElementById("letterPick").value;
+var filtered=letter?names.filter(function(n){return n.charAt(0).toUpperCase()===letter;}):names;
+if(filtered.length===0)filtered=names;
+// Shuffle
+filtered=filtered.sort(function(){return Math.random()-0.5;}).slice(0,24);
+var grid=document.getElementById("nameGrid");
+grid.innerHTML=filtered.map(function(n){return '<div class="name-card" onclick="copyName(this)" data-name="'+n+'"><div class="name">'+n+'</div><div class="meaning">'+currentAnimal+'</div><div class="copy">Click to copy</div></div>';}).join("");
+document.getElementById("resultTitle").textContent=filtered.length+" Pet Names for Your "+currentAnimal.charAt(0).toUpperCase()+currentAnimal.slice(1);
+}
+function copyName(el){
+var name=el.getAttribute("data-name");
+navigator.clipboard.writeText(name).then(function(){el.style.borderColor="var(--success)";setTimeout(function(){el.style.borderColor="";},1000);});
+}
+generate();
+</script>
+</body>
+</html>

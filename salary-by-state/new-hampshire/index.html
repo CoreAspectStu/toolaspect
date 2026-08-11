@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New Hampshire Salary Calculator | ToolAspect</title>
+<meta name="description" content="Calculate your after-tax salary in New Hampshire. Federal and New Hampshire state tax, take-home pay, and hourly rate. Free New Hampshire salary calculator.">
+<link rel="canonical" href="https://toolaspect.com/salary-by-state/new-hampshire/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"New Hampshire Salary Calculator","description":"Calculate your after-tax salary in New Hampshire. Federal and New Hampshire state tax, take-home pay, and hourly rate. Free New Hampshire salary calculator.","url":"https://toolaspect.com/salary-by-state/new-hampshire/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script src="/shared/nav.js"></script>
+<style>
+.wrap{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+h1{font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:6px}
+.sub{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.fg input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.95rem}
+.fg input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.btn{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn:hover{background:var(--primary-light)}
+.results{display:none;margin-top:16px}.results.show{display:block}
+.rr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);align-items:center}
+.rr:last-child{border-bottom:none}
+.rr .v{font-size:1.3rem;font-weight:700;color:var(--primary)}
+.rr .vl{font-size:.8rem;color:var(--muted)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo{margin-top:24px}.seo h2{font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.seo p{color:var(--text-secondary);font-size:.88rem;margin-bottom:12px;line-height:1.7}
+.related{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--text-secondary)}
+.related a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>New Hampshire Salary Calculator</h1>
+<p class="sub">Calculate take-home pay after New Hampshire state tax</p>
+<div class="card">
+<div class="fg"><label>Annual Salary ($)</label><input type="number" id="salary" placeholder="75000" value="75000"></div>
+<div class="fg"><label>Filing Status</label><select id="status" style="width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px;font-size:.9rem"><option value="single">Single</option><option value="married">Married</option></select></div>
+<button class="btn" onclick="calc()">Calculate Take-Home Pay</button>
+</div>
+<div class="results" id="results">
+<div class="rr"><span class="vl">Gross Monthly</span><span class="v" id="monthly">$0</span></div>
+<div class="rr"><span class="vl">Federal Tax (est.)</span><span id="fedTax">$0</span></div>
+<div class="rr"><span class="vl">FICA (Social Security + Medicare)</span><span id="fica">$0</span></div>
+<div class="rr"><span class="vl">State Tax (NH)</span><span id="stateTax">$0</span></div>
+<div class="rr"><span class="vl">Take-Home (Annual)</span><span class="v" id="takeHome">$0</span></div>
+<div class="rr"><span class="vl">Take-Home (Monthly)</span><span class="v" id="monthlyTakeHome">$0</span></div>
+<div class="rr"><span class="vl">Hourly Rate (40h/wk)</span><span id="hourly">$0</span></div>
+</div>
+<div class="ad-slot">Advertisement</div>
+<div class="seo">
+<h2>Salary Calculator for New Hampshire</h2>
+<p>Calculate your after-tax income in New Hampshire. Includes federal income tax, FICA, and New Hampshire state income tax.</p>
+<h2>How New Hampshire Taxes Affect Your Salary</h2>
+<p>State income tax rates vary significantly. Some states like Texas, Florida, and Washington have no state income tax, while others like California and New York have high rates. Use this calculator to see your true take-home pay in New Hampshire.</p>
+</div>
+<div class="related">
+<a href="/salary-calculator/">General Salary Calculator</a>
+<a href="/income-tax-calculator/">Income Tax Calculator</a>
+</div>
+</div>
+<script>
+function calc(){
+var salary=parseFloat(document.getElementById("salary").value)||0;
+var status=document.getElementById("status").value;
+var deductions=status==="married"?29200:14600;
+var taxable=Math.max(0,salary-deductions);
+var brackets=status==="married"?[[0,.10],[23200,.12],[94300,.22],[201050,.24],[383900,.32],[487450,.35],[731200,.37]]:[[0,.10],[11600,.12],[47150,.22],[100525,.24],[191950,.32],[243725,.35],[609350,.37]];
+var fedTax=0;var prev=0;
+for(var i=0;i<brackets.length;i++){if(taxable>brackets[i][0]){var amt=Math.min(taxable,brackets[i][0])-prev;if(amt>0)fedTax+=amt*brackets[i][1];prev=brackets[i][0];}else break;}
+if(taxable>brackets[brackets.length-1][0])fedTax+=(taxable-brackets[brackets.length-1][0])*.37;
+var fica=salary*.0765;var stateTax=taxable*.04;var takeHome=salary-fedTax-fica-stateTax;
+document.getElementById("monthly").textContent="$"+(salary/12).toFixed(0);
+document.getElementById("fedTax").textContent="$"+fedTax.toFixed(0);
+document.getElementById("fica").textContent="$"+fica.toFixed(0);
+document.getElementById("stateTax").textContent="$"+stateTax.toFixed(0);
+document.getElementById("takeHome").textContent="$"+takeHome.toFixed(0);
+document.getElementById("monthlyTakeHome").textContent="$"+(takeHome/12).toFixed(0);
+document.getElementById("hourly").textContent="$"+(takeHome/2080).toFixed(2);
+document.getElementById("results").classList.add("show");
+}
+</script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

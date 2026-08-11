@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Name Generator | ToolAspect</title>
+<meta name="description" content="Find the perfect baby name. Browse thousands of names by gender, origin, and letter. Free baby name generator with meanings and popularity data.">
+<link rel="canonical" href="https://toolaspect.com/baby-name-generator/">
+<meta property="og:title" content="Baby Name Generator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/baby-name-generator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Baby Name Generator","description":"Browse baby names by gender, origin, and letter.","url":"https://toolaspect.com/baby-name-generator/","applicationCategory":"EntertainmentApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:900px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.gender-pick{display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem}
+.gender-pick button{padding:.5rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.85rem;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.gender-pick button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.gender-pick button:hover{border-color:var(--primary)}
+.controls{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+.controls select,.controls button{padding:.6rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:10px;font-size:.9rem}
+.controls button{background:var(--primary);color:#fff;border:none;font-weight:600;cursor:pointer;transition:all .2s}
+.controls button:hover{background:var(--primary-light)}
+.name-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem}
+.name-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
+.name-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.name-card .name{font-size:1.15rem;font-weight:700;color:var(--text)}
+.name-card .meaning{font-size:.75rem;color:var(--muted);margin-top:4px;font-style:italic}
+.name-card .origin{font-size:.7rem;color:var(--accent-violet);margin-top:2px}
+.section-title{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Baby Name Generator</h1>
+<p class="subtitle">Find the perfect name for your baby</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="gender-pick">
+<button class="active" onclick="setGender('boy',this)">Boy Names</button>
+<button onclick="setGender('girl',this)">Girl Names</button>
+<button onclick="setGender('neutral',this)">Gender Neutral</button>
+</div>
+<div class="controls">
+<select id="originPick">
+<option value="all">All origins</option>
+<option value="English">English</option>
+<option value="Hebrew">Hebrew</option>
+<option value="Greek">Greek</option>
+<option value="Latin">Latin</option>
+<option value="Irish">Irish</option>
+<option value="Spanish">Spanish</option>
+<option value="French">French</option>
+<option value="Arabic">Arabic</option>
+<option value="Norse">Norse</option>
+<option value="Italian">Italian</option>
+</select>
+<select id="letterPick">
+<option value="">Any letter</option>
+<option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+<option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+<option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option>
+<option value="M">M</option><option value="N">N</option><option value="O">O</option><option value="P">P</option>
+<option value="R">R</option><option value="S">S</option><option value="T">T</option>
+<option value="V">V</option><option value="W">W</option><option value="Z">Z</option>
+</select>
+<button onclick="generate()">Generate Names</button>
+</div>
+<h3 class="section-title" id="resultTitle">Click Generate to browse names</h3>
+<div class="name-grid" id="nameGrid"></div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Baby Name Generator</h2>
+<p>Browse thousands of baby names filtered by gender, origin, and starting letter. Each name includes its meaning and cultural origin. Click any name to copy it.</p>
+</div>
+<div class="related-links">
+<a href="/pet-name-generator/">Pet Name Generator</a>
+<a href="/word-unscrambler/">Word Unscrambler</a>
+<a href="/random-number-generator/">Random Generator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var BOY_NAMES=[
+["James","supplanter","English"],["Liam","strong-willed warrior","Irish"],["Noah","rest","Hebrew"],["Oliver","olive tree","Latin"],["Lucas","light","Greek"],
+["Mason","stone worker","English"],["Ethan","strong","Hebrew"],["Alexander","defender of men","Greek"],["Henry","ruler of home","German"],["Sebastian","venerable","Greek"],
+["Jack","God is gracious","English"],["Daniel","God is my judge","Hebrew"],["Matthew","gift of God","Hebrew"],["David","beloved","Hebrew"],["Joseph","God will increase","Hebrew"],
+["Samuel","asked of God","Hebrew"],["Benjamin","son of the right hand","Hebrew"],["Leo","lion","Latin"],["Owen","young warrior","Irish"],["Theodore","gift of God","Greek"],
+["Aiden","little fire","Irish"],["Caleb","devotion","Hebrew"],["Wyatt","brave warrior","English"],["Julian","youthful","Latin"],["Isaac","laughter","Hebrew"],
+["Gabriel","God is my strength","Hebrew"],["Anthony","priceless","Latin"],["Dylan","son of the sea","Welsh"],["Levi","joined","Hebrew"],["Miles","soldier","Latin"],
+["Carter","transporter","English"],["Jayden","thankful","Hebrew"],["John","God is gracious","Hebrew"],["Lincoln","lake colony","English"],["Thomas","twin","Greek"],
+["Charles","free man","German"],["Christopher","bearer of Christ","Greek"],["Joshua","God is salvation","Hebrew"],["Andrew","manly","Greek"],["Elijah","my God is Yahweh","Hebrew"]
+];
+var GIRL_NAMES=[
+["Olivia","olive tree","Latin"],["Emma","universal","German"],["Charlotte","free woman","French"],["Amelia","industrious","German"],["Sophia","wisdom","Greek"],
+["Isabella","devoted to God","Hebrew"],["Ava","life","Latin"],["Mia","mine","Italian"],["Evelyn","desired","English"],["Luna","moon","Latin"],
+["Harper","harp player","English"],["Camila","young ceremonial attendant","Latin"],["Gianna","God is gracious","Hebrew"],["Elizabeth","God is my oath","Hebrew"],["Eleanor","light","Greek"],
+["Ella","fairy maiden","English"],["Abigail","my father is joyful","Hebrew"],["Sofia","wisdom","Greek"],["Avery","ruler of elves","English"],["Scarlett","red","English"],
+["Emily","rival","Latin"],["Aria","air/song","Italian"],["Penelope","weaver","Greek"],["Chloe","green shoot","Greek"],["Layla","night","Arabic"],
+["Riley","courageous","Irish"],["Zoey","life","Greek"],["Nora","light","Latin"],["Lily","pure","Latin"],["Hannah","grace","Hebrew"],
+["Lila","night","Arabic"],["Lucy","light","Latin"],["Eliana","God has answered","Hebrew"],["Stella","star","Latin"],["Audrey","noble strength","English"],
+["Bella","beautiful","Italian"],["Grace","grace","Latin"],["Maya","water","Sanskrit"],["Aaliyah","exalted","Arabic"],["Zoe","life","Greek"]
+];
+var NEUTRAL_NAMES=[
+["Riley","courageous","Irish"],["Jordan","flowing down","Hebrew"],["Avery","ruler of elves","English"],["Quinn","wise","Irish"],["Rowan","tree","Irish"],
+["Sage","wise one","Latin"],["Charlie","free man","German"],["Hayden","heather-covered hill","English"],["Finley","fair warrior","Scottish"],["Morgan","sea-born","Welsh"],
+["Phoenix","reborn from fire","Greek"],["River","flowing water","English"],["Sky","heavens","English"],["Dakota","friend","Native American"],["Reese","enthusiasm","Welsh"],
+["Blake","dark or fair","English"],["Cameron","crooked nose","Scottish"],["Emerson","brave one","English"],["Harper","harp player","English"],["Kai","sea","Hawaiian"],
+["London","fortress","English"],["Parker","keeper of the park","English"],["Peyton","fighting man","Irish"],["Remi","oarsman","French"],["Sawyer","woodcutter","English"],
+["Tatum","cheerful","English"],["Wren","small bird","English"],["Arden","valley of the eagle","English"],["Bailey","bailiff","English"],["Drew","strong","Greek"],
+["Ellis","benevolent","Hebrew"],["Frankie","free","French"],["Indigo","blue dye","Greek"],["Jamie","supplanter","Hebrew"],["Kendall","valley of the river Kent","English"]
+];
+var currentGender="boy";
+var DATA={"boy":BOY_NAMES,"girl":GIRL_NAMES,"neutral":NEUTRAL_NAMES};
+function setGender(g,el){currentGender=g;document.querySelectorAll(".gender-pick button").forEach(function(b){b.classList.remove("active");});el.classList.add("active");}
+function generate(){
+var names=DATA[currentGender]||BOY_NAMES;
+var letter=document.getElementById("letterPick").value;
+var origin=document.getElementById("originPick").value;
+var filtered=names.filter(function(n){
+var matchLetter=!letter||n[0].charAt(0).toUpperCase()===letter;
+var matchOrigin=origin==="all"||n[2]===origin;
+return matchLetter&&matchOrigin;
+});
+if(filtered.length===0)filtered=names;
+filtered=filtered.sort(function(){return Math.random()-0.5;}).slice(0,30);
+var grid=document.getElementById("nameGrid");
+grid.innerHTML=filtered.map(function(n){return '<div class="name-card" onclick="copyName(this)" data-name="'+n[0]+'"><div class="name">'+n[0]+'</div><div class="meaning">'+n[1]+'</div><div class="origin">'+n[2]+'</div></div>';}).join("");
+var label=currentGender==="boy"?"Boy":currentGender==="girl"?"Girl":"Gender-Neutral";
+document.getElementById("resultTitle").textContent=filtered.length+" "+label+" Baby Names";
+}
+function copyName(el){var name=el.getAttribute("data-name");navigator.clipboard.writeText(name).then(function(){el.style.borderColor="var(--success)";setTimeout(function(){el.style.borderColor="";},1000);});}
+generate();
+</script>
+</body>
+</html>
