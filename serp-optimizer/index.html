@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SERP Snippet Optimizer — Title Tag & Meta Description Previewer</title>
+<meta name="description" content="Free SERP snippet optimizer. Preview your title tags and meta descriptions in Google search results. Check pixel width, character limits, and get AI-powered suggestions.">
+<link rel="canonical" href="https://toolaspect.com/serp-optimizer/">
+<meta property="og:title" content="SERP Snippet Optimizer — Title Tag & Meta Description Previewer">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Free SERP snippet optimizer. Preview your title tags and meta descriptions in Google search results. Check pixel width, character limits, and get AI-powered suggestions.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/serp-optimizer/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SERP Snippet Optimizer — Title Tag & Meta Description Previewer">
+<meta name="twitter:description" content="Free SERP snippet optimizer. Preview your title tags and meta descriptions in Google search results. Check pixel width, character limits, and get AI-powered suggestions.">
+<meta name="keywords" content="serp snippet optimizer, title tag optimizer, meta description generator, serp preview, seo snippet, google preview tool">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "SERP Snippet Optimizer",
+  "url": "https://toolaspect.com/serp-optimizer/",
+  "description": "Free SERP snippet optimizer. Preview your title tags and meta descriptions in Google search results. Check pixel width, character limits, and get AI-powered suggestions.",
+  "applicationCategory": "SEOApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:960px;margin:0 auto;padding:0 16px}
+header{text-align:center;padding:32px 0 16px}
+header h1{font-size:1.75rem;font-weight:700;margin-bottom:4px}
+header p{color:var(--muted);font-size:0.95rem}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card h2{font-size:1.1rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h2 .badge{font-size:0.7rem;background:var(--primary);color:#fff;padding:2px 8px;border-radius:9999px;font-weight:500}
+
+/* Inputs */
+.input-group{margin-bottom:18px}
+.input-group label{display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;color:var(--muted);margin-bottom:6px}
+.input-group label .limit{font-family:monospace;font-size:0.8rem}
+.input-wrap{position:relative;display:flex;gap:8px}
+.input-wrap input, .input-wrap textarea{
+  flex:1;width:100%;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);
+  padding:10px 14px;color:var(--text);font-size:0.95rem;outline:none;transition:border-color .2s;resize:vertical;
+  font-family:inherit;
+}
+.input-wrap input:focus, .input-wrap textarea:focus{border-color:var(--primary)}
+.input-wrap textarea{min-height:60px}
+.copy-btn{
+  background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);color:var(--muted);
+  cursor:pointer;padding:0 12px;font-size:0.85rem;transition:all .2s;white-space:nowrap;
+}
+.copy-btn:hover{border-color:var(--primary);color:var(--primary)}
+.copy-btn.copied{border-color:#22c55e;color:#22c55e}
+
+/* Count bars */
+.count-row{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:0.82rem}
+.count-label{color:var(--muted);min-width:90px;font-family:monospace}
+.count-bar-wrap{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.count-bar{height:100%;border-radius:4px;transition:width .3s,background-color .3s}
+.count-text{font-family:monospace;font-size:0.8rem;min-width:70px;text-align:right}
+.status-good{color:#22c55e}
+.status-ok{color:#eab308}
+.status-bad{color:#ef4444}
+
+/* SERP Preview */
+.serp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.serp-grid{grid-template-columns:1fr}}
+.serp-preview-col h3{font-size:0.8rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px}
+.serp-preview-col h3 .icon{font-size:1rem}
+.google-result{
+  background:#fff;border-radius:12px;padding:16px 20px;
+  font-family:Google Sans,Roboto,arial,sans-serif;
+}
+.google-result .favicon-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.google-result .favicon-dot{width:28px;height:28px;border-radius:50%;background:#f1f3f4;display:flex;align-items:center;justify-content:center;font-size:14px}
+.google-result .url-info{display:flex;flex-direction:column;line-height:1.2}
+.google-result .site-name{font-size:14px;color:#4d5156;font-weight:500}
+.google-result .site-url{font-size:12px;color:#4d5156}
+.google-result .title-link{
+  display:block;margin-top:4px;font-size:20px;line-height:1.3;color:#1a0dab;
+  text-decoration:none;cursor:pointer;overflow:hidden;text-overflow:ellipsis;
+}
+.google-result .title-link:hover{text-decoration:underline}
+.google-result .desc{margin-top:3px;font-size:14px;color:#4d5156;line-height:1.58}
+.google-result .desc b{font-weight:700;color:#3c4043}
+
+/* Mobile preview specific */
+.google-result.mobile{border-radius:0;padding:12px 16px}
+.google-result.mobile .title-link{font-size:16px;line-height:1.3}
+.google-result.mobile .desc{font-size:14px;line-height:1.5}
+
+/* AI Suggestions */
+.ai-section{margin-top:4px}
+.ai-btn-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.ai-btn{
+  background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;border:none;border-radius:var(--radius);
+  padding:10px 18px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;
+}
+.ai-btn:hover{opacity:0.9}
+.ai-btn:active{transform:scale(0.97)}
+.ai-results{display:none}
+.ai-results.visible{display:block}
+.ai-result-item{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+}
+.ai-result-item .text{flex:1;font-size:0.9rem;color:var(--text);line-height:1.5}
+.ai-result-item .tag{font-size:0.7rem;color:var(--primary);background:rgba(99,102,241,0.12);padding:2px 8px;border-radius:4px;white-space:nowrap;font-weight:600}
+.ai-result-item .apply-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-size:0.75rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+.ai-result-item .apply-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+/* Ad Slot */
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:40px 16px;text-align:center;color:var(--muted);font-size:0.85rem;margin:20px 0}
+
+/* SEO Content */
+.seo-content{font-size:0.92rem;color:var(--muted);line-height:1.8}
+.seo-content h2{color:var(--text);font-size:1.15rem;font-weight:600;margin:20px 0 8px}
+.seo-content h3{color:var(--text);font-size:1rem;font-weight:600;margin:16px 0 6px}
+.seo-content p{margin-bottom:10px}
+.seo-content ul{margin:8px 0 12px 20px}
+.seo-content li{margin-bottom:4px}
+.seo-content strong{color:var(--text)}
+
+/* Utility */
+.muted-note{font-size:0.8rem;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+
+<div class="container">
+  <header>
+    <h1>SERP Snippet Optimizer</h1>
+    <p>Preview and optimize your title tags & meta descriptions before publishing</p>
+  </header>
+
+  <!-- Inputs Card -->
+  <div class="card">
+    <h2>Snippet Inputs</h2>
+
+    <div class="input-group">
+      <label>
+        <span>Title Tag</span>
+        <span class="limit">Max 60 characters</span>
+      </label>
+      <div class="input-wrap">
+        <input type="text" id="titleInput" placeholder="Enter your page title tag..." maxlength="120">
+        <button class="copy-btn" id="copyTitle">Copy</button>
+      </div>
+      <div class="count-row">
+        <span class="count-label">Characters</span>
+        <div class="count-bar-wrap"><div class="count-bar" id="titleCharBar"></div></div>
+        <span class="count-text" id="titleCharText">0 / 60</span>
+      </div>
+      <div class="count-row">
+        <span class="count-label">Pixel Width</span>
+        <div class="count-bar-wrap"><div class="count-bar" id="titlePxBar"></div></div>
+        <span class="count-text" id="titlePxText">0 / 600px</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>
+        <span>Meta Description</span>
+        <span class="limit">Max 160 characters</span>
+      </label>
+      <div class="input-wrap">
+        <textarea id="descInput" placeholder="Enter your meta description..." rows="2"></textarea>
+        <button class="copy-btn" id="copyDesc">Copy</button>
+      </div>
+      <div class="count-row">
+        <span class="count-label">Characters</span>
+        <div class="count-bar-wrap"><div class="count-bar" id="descCharBar"></div></div>
+        <span class="count-text" id="descCharText">0 / 160</span>
+      </div>
+      <div class="count-row">
+        <span class="count-label">Pixel Width</span>
+        <div class="count-bar-wrap"><div class="count-bar" id="descPxBar"></div></div>
+        <span class="count-text" id="descPxText">0 / 960px</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label><span>URL Slug (for preview)</span><span class="limit">Optional</span></label>
+      <div class="input-wrap">
+        <input type="text" id="urlInput" placeholder="example-page" value="your-page">
+      </div>
+    </div>
+  </div>
+
+  <!-- SERP Preview Card -->
+  <div class="card">
+    <h2>Live SERP Preview <span class="badge">Google</span></h2>
+    <p class="muted-note" style="margin-bottom:14px;">See how your snippet appears in Google search results on desktop and mobile.</p>
+
+    <div class="serp-grid">
+      <div class="serp-preview-col">
+        <h3><span class="icon">🖥️</span> Desktop Preview</h3>
+        <div class="google-result desktop" id="desktopPreview">
+          <div class="favicon-row">
+            <div class="favicon-dot">🌐</div>
+            <div class="url-info">
+              <span class="site-name">ToolAspect</span>
+              <span class="site-url" id="desktopUrl">https://toolaspect.com › your-page</span>
+            </div>
+          </div>
+          <a class="title-link" id="desktopTitle">Your Page Title Will Appear Here</a>
+          <div class="desc" id="desktopDesc">Your meta description will appear here. Start typing above to see a live preview of how your snippet looks in Google search results.</div>
+        </div>
+      </div>
+
+      <div class="serp-preview-col">
+        <h3><span class="icon">📱</span> Mobile Preview</h3>
+        <div class="google-result mobile" id="mobilePreview">
+          <div class="favicon-row">
+            <div class="favicon-dot">🌐</div>
+            <div class="url-info">
+              <span class="site-name">ToolAspect</span>
+              <span class="site-url" id="mobileUrl">https://toolaspect.com › your-page</span>
+            </div>
+          </div>
+          <a class="title-link" id="mobileTitle">Your Page Title Will Appear Here</a>
+          <div class="desc" id="mobileDesc">Your meta description will appear here. Start typing above to see a live preview of how your snippet looks in Google search results.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Suggestions Card -->
+  <div class="card ai-section">
+    <h2>AI-Powered Suggestions <span class="badge">Templates</span></h2>
+    <p class="muted-note" style="margin-bottom:14px;">Generate optimized title and meta description patterns based on proven SEO frameworks.</p>
+
+    <div class="ai-btn-group">
+      <button class="ai-btn" onclick="generateTitles()">✨ Generate Title Variants</button>
+      <button class="ai-btn" onclick="generateDescs()">✨ Generate Meta Description</button>
+    </div>
+
+    <div class="ai-results" id="aiResults"></div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+
+  <!-- SEO Content -->
+  <div class="card">
+    <div class="seo-content">
+      <h2>How to Optimize Title Tags & Meta Descriptions</h2>
+      <p>Title tags and meta descriptions are your first impression in search engine results pages (SERPs). A well-optimized snippet can dramatically increase your click-through rate (CTR), even if your ranking position stays the same.</p>
+
+      <h3>Title Tag Best Practices</h3>
+      <ul>
+        <li><strong>Keep it under 60 characters</strong> — Google typically truncates titles longer than 60 characters or 600px pixel width.</li>
+        <li><strong>Place primary keywords early</strong> — Front-load your most important keywords for maximum impact.</li>
+        <li><strong>Use power words</strong> — Words like "Ultimate," "Complete," "Proven," and "Free" can boost CTR.</li>
+        <li><strong>Include numbers</strong> — Listicles with numbers ("10 Best," "7 Tips") tend to attract more clicks.</li>
+        <li><strong>Add your brand</strong> — Brand name at the end (e.g., " — BrandName") builds trust and recognition.</li>
+        <li><strong>Use brackets or parentheses</strong> — [2025], (Free), {Updated} can increase CTR by up to 38%.</li>
+      </ul>
+
+      <h3>Meta Description Best Practices</h3>
+      <ul>
+        <li><strong>Aim for 150–160 characters</strong> — Descriptions get truncated after ~960px on desktop and ~680px on mobile.</li>
+        <li><strong>Write for humans, optimize for search</strong> — Include keywords naturally while maintaining readability.</li>
+        <li><strong>Include a call to action</strong> — Phrases like "Learn more," "Try free," or "Get started" encourage clicks.</li>
+        <li><strong>Match search intent</strong> — Your description should align with what users are searching for.</li>
+        <li><strong>Avoid duplicate descriptions</strong> — Each page should have a unique meta description.</li>
+      </ul>
+
+      <h3>Understanding Pixel Width</h3>
+      <p>Google truncates titles and descriptions based on <strong>pixel width</strong>, not just character count. Wide characters (W, M, O) take up more space than narrow ones (i, l, t). This tool estimates pixel width using average character widths to help you avoid truncation.</p>
+      <ul>
+        <li><strong>Title tag max:</strong> ~600px on desktop (~580px on mobile)</li>
+        <li><strong>Description max:</strong> ~960px on desktop (~680px on mobile)</li>
+      </ul>
+
+      <h3>Why CTR Matters for SEO</h3>
+      <p>Google uses <strong>organic CTR as a ranking signal</strong>. If your snippet gets more clicks than competitors at the same position, Google interprets this as a quality signal and may boost your ranking. Optimizing your title and description is one of the fastest, highest-ROI SEO improvements you can make.</p>
+
+      <h3>Common Title Tag Mistakes</h3>
+      <ul>
+        <li><strong>Keyword stuffing</strong> — Repeating keywords looks spammy and can trigger penalties.</li>
+        <li><strong>No keyword research</strong> — Targeting the wrong keywords means missed traffic.</li>
+        <li><strong>Too vague</strong> — "Home" or "About Us" titles waste valuable SERP real estate.</li>
+        <li><strong>Ignoring brand</strong> — Not leveraging brand recognition is a missed opportunity.</li>
+      </ul>
+
+      <p><strong>Pro tip:</strong> After publishing, monitor your CTR in Google Search Console. Pages with low CTR (below 2%) are prime candidates for snippet optimization.</p>
+    </div>
+  </div>
+
+  <div class="ad-slot">Advertisement</div>
+</div>
+
+<script>
+// ---- Pixel width estimation (avg char widths in Google's serif at 18-20px) ----
+var CHAR_WIDTHS = {
+  // Narrow
+  'i':4,'l':4,'j':4,'.':4,',':4,'!':4,'|':4,' ':4,"'":4,'f':5,'t':5,'r':5,'(':5,')':5,'-':5,
+  // Medium
+  'a':9,'b':9,'c':9,'d':9,'e':9,'g':9,'h':9,'k':9,'n':9,'o':9,'p':9,'q':9,'s':9,'u':9,'v':9,'x':9,'y':9,'z':9,
+  'A':10,'B':10,'C':10,'D':10,'E':10,'F':10,'G':10,'H':10,'J':10,'K':10,'L':10,'N':10,'O':10,'P':10,'Q':10,'R':10,'S':10,'T':10,'U':10,'V':10,'X':9,'Y':10,'Z':10,
+  // Wide
+  'm':14,'M':13,'W':15,'w':12,'@':14,'&':13,'%':12,
+  // Digits
+  '0':9,'1':5,'2':9,'3':9,'4':9,'5':9,'6':9,'7':9,'8':9,'9':9,
+  // Symbols
+  '#':9,'$':9,'*':9,'+':9,':':5,';':5,'<':9,'=':9,'>':9,'?':9,'/':5,'\\':5,'"':6,'_':9,'[':5,']':5,'{':5,'}':5,
+};
+
+function estimatePixelWidth(text, scale) {
+  scale = scale || 1;
+  var width = 0;
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    width += (CHAR_WIDTHS[ch] || 10) * scale;
+  }
+  return Math.round(width);
+}
+
+// ---- DOM refs ----
+var titleInput = document.getElementById('titleInput');
+var descInput = document.getElementById('descInput');
+var urlInput = document.getElementById('urlInput');
+
+// ---- Update functions ----
+function updatePreview() {
+  var title = titleInput.value || 'Your Page Title Will Appear Here';
+  var desc = descInput.value || 'Your meta description will appear here. Start typing above to see a live preview of how your snippet looks in Google search results.';
+  var slug = urlInput.value || 'your-page';
+
+  // Truncate title for display if needed
+  var titlePxDesktop = estimatePixelWidth(title, 1.15);
+  var titleTruncated = title;
+  var titleTruncatedMobile = title;
+  if (titlePxDesktop > 600) {
+    while (estimatePixelWidth(titleTruncated + '…', 1.15) > 600 && titleTruncated.length > 10) {
+      titleTruncated = titleTruncated.slice(0, -1);
+    }
+    titleTruncated = titleTruncated + '…';
+  }
+  var titlePxMobile = estimatePixelWidth(title, 0.95);
+  if (titlePxMobile > 580) {
+    while (estimatePixelWidth(titleTruncatedMobile + '…', 0.95) > 580 && titleTruncatedMobile.length > 10) {
+      titleTruncatedMobile = titleTruncatedMobile.slice(0, -1);
+    }
+    titleTruncatedMobile = titleTruncatedMobile + '…';
+  }
+
+  // Truncate description
+  var descPxDesktop = estimatePixelWidth(desc, 0.82);
+  var descTruncated = desc;
+  var descTruncatedMobile = desc;
+  if (descPxDesktop > 960) {
+    while (estimatePixelWidth(descTruncated + '…', 0.82) > 960 && descTruncated.length > 20) {
+      descTruncated = descTruncated.slice(0, -1);
+    }
+    descTruncated = descTruncated + '…';
+  }
+  var descPxMobile = estimatePixelWidth(desc, 0.82);
+  if (descPxMobile > 680) {
+    while (estimatePixelWidth(descTruncatedMobile + '…', 0.82) > 680 && descTruncatedMobile.length > 20) {
+      descTruncatedMobile = descTruncatedMobile.slice(0, -1);
+    }
+    descTruncatedMobile = descTruncatedMobile + '…';
+  }
+
+  // Desktop
+  document.getElementById('desktopTitle').textContent = titleTruncated;
+  document.getElementById('desktopDesc').textContent = descTruncated;
+  document.getElementById('desktopUrl').textContent = 'https://toolaspect.com › ' + slug;
+
+  // Mobile
+  document.getElementById('mobileTitle').textContent = titleTruncatedMobile;
+  document.getElementById('mobileDesc').textContent = descTruncatedMobile;
+  document.getElementById('mobileUrl').textContent = 'https://toolaspect.com › ' + slug;
+
+  // Character bars
+  updateBar('titleCharBar', 'titleCharText', title.length, 50, 60, '#title');
+  updateBar('descCharBar', 'descCharText', desc.length, 140, 160, '#desc');
+
+  // Pixel bars
+  updateBar('titlePxBar', 'titlePxText', titlePxDesktop, 520, 600, 'px-title');
+  updateBar('descPxBar', 'descPxText', descPxDesktop, 840, 960, 'px-desc');
+}
+
+function updateBar(barId, textId, current, greenMax, hardMax, type) {
+  var bar = document.getElementById(barId);
+  var text = document.getElementById(textId);
+  var pct = Math.min(100, (current / hardMax) * 100);
+  bar.style.width = pct + '%';
+
+  var suffix = type.indexOf('px') === 0 ? 'px' : '';
+  var displayText = current + ' / ' + hardMax + suffix;
+  text.textContent = displayText;
+
+  bar.className = 'count-bar';
+  text.className = 'count-text';
+
+  if (current === 0) {
+    bar.style.background = '#333';
+  } else if (current <= greenMax) {
+    bar.style.background = '#22c55e';
+    text.classList.add('status-good');
+  } else if (current <= hardMax) {
+    bar.style.background = '#eab308';
+    text.classList.add('status-ok');
+  } else {
+    bar.style.background = '#ef4444';
+    text.classList.add('status-bad');
+  }
+}
+
+// ---- Copy buttons ----
+document.getElementById('copyTitle').addEventListener('click', function() {
+  if (!titleInput.value) return;
+  navigator.clipboard.writeText(titleInput.value).then(function() {
+    showCopied(this);
+  }.bind(this));
+});
+
+document.getElementById('copyDesc').addEventListener('click', function() {
+  if (!descInput.value) return;
+  navigator.clipboard.writeText(descInput.value).then(function() {
+    showCopied(this);
+  }.bind(this));
+});
+
+function showCopied(btn) {
+  var original = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  btn.classList.add('copied');
+  setTimeout(function() {
+    btn.textContent = original;
+    btn.classList.remove('copied');
+  }, 1500);
+}
+
+// ---- AI Suggestions ----
+function generateTitles() {
+  var base = extractBaseKeyword();
+  var year = new Date().getFullYear();
+  var variants = [
+    { text: base + ' — Complete Guide [' + year + ']', tag: 'Bracket + Year' },
+    { text: year + ' Best ' + base + ': Top Picks & Reviews', tag: 'Listicle' },
+    { text: 'How to Use ' + base + ': A Beginner\'s Guide', tag: 'How-To' },
+    { text: base + ': Free Online Tool | ToolAspect', tag: 'Brand + Tool' },
+    { text: 'The Ultimate ' + base + ' Guide (Tips & Tricks)', tag: 'Parentheses' },
+    { text: '10 ' + base + ' Secrets Nobody Tells You', tag: 'Number + Curiosity' },
+    { text: 'Free ' + base + ' — No Sign Up Required', tag: 'Free + Friction' },
+    { text: base + ' — Fast, Easy & 100% Free', tag: 'Benefit Stack' },
+    { text: 'Why ' + base + ' Matters (And How to Win)', tag: 'Question + Promise' },
+    { text: base + ': Everything You Need to Know in One Place', tag: 'Comprehensive' },
+  ];
+
+  renderAIResults(variants, 'title');
+}
+
+function generateDescs() {
+  var base = extractBaseKeyword();
+  var variants = [
+    { text: 'Free online ' + base + '. Fast, accurate, and easy to use. No downloads or sign-up required. Try it now and see results instantly!', tag: 'Feature + CTA' },
+    { text: 'Looking for the best ' + base + '? Our free tool delivers instant results. Save time and boost productivity. Get started for free today.', tag: 'Problem + Solution' },
+    { text: 'Master ' + base + ' with our comprehensive guide. Learn expert tips, proven strategies, and common mistakes to avoid. Read now!', tag: 'Educational' },
+    { text: base + ' made simple. Use our free tool to get instant, accurate results. No technical knowledge needed. 100% free, no sign up.', tag: 'Simplicity' },
+    { text: 'The #1 free ' + base + ' tool online. Trusted by thousands. Get accurate results in seconds. No registration. Works on all devices.', tag: 'Social Proof' },
+    { text: 'Everything you need for ' + base + ' in one place. Free, fast, and reliable. Join 50,000+ users who trust ToolAspect.', tag: 'All-in-One' },
+  ];
+
+  renderAIResults(variants, 'desc');
+}
+
+function extractBaseKeyword() {
+  var title = titleInput.value.trim();
+  if (title.length > 5) {
+    // Try to extract a meaningful base
+    var cleaned = title.replace(/\s*[|\-–—].*$/, '').replace(/\d+\s+/g, '').trim();
+    if (cleaned.length > 3) return cleaned;
+  }
+  return 'your keyword';
+}
+
+function renderAIResults(variants, type) {
+  var container = document.getElementById('aiResults');
+  container.innerHTML = '';
+  container.className = 'ai-results visible';
+
+  var target = type === 'title' ? titleInput : descInput;
+
+  variants.forEach(function(v, idx) {
+    var item = document.createElement('div');
+    item.className = 'ai-result-item';
+
+    var left = document.createElement('div');
+    left.style.flex = '1';
+
+    var tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = v.tag;
+    tag.style.display = 'inline-block';
+    tag.style.marginBottom = '4px';
+
+    var text = document.createElement('div');
+    text.className = 'text';
+    text.textContent = v.text;
+
+    left.appendChild(tag);
+    left.appendChild(text);
+
+    var applyBtn = document.createElement('button');
+    applyBtn.className = 'apply-btn';
+    applyBtn.textContent = 'Use This';
+    applyBtn.onclick = function() {
+      if (type === 'title') {
+        titleInput.value = v.text;
+      } else {
+        descInput.value = v.text;
+      }
+      updatePreview();
+    };
+
+    item.appendChild(left);
+    item.appendChild(applyBtn);
+    container.appendChild(item);
+  });
+}
+
+// ---- Init ----
+titleInput.addEventListener('input', updatePreview);
+descInput.addEventListener('input', updatePreview);
+urlInput.addEventListener('input', updatePreview);
+
+updatePreview();
+</script>
+</body>
+</html>
