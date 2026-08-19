@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paint Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate gallons of paint needed from wall area, coats, and primer. Includes interior and exterior paint cost estimates. Free paint calculator.">
+<link rel="canonical" href="https://toolaspect.com/paint-calculator/">
+<meta property="og:title" content="Paint Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/paint-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Paint Calculator","description":"Calculate gallons of paint, primer, and cost.","url":"https://toolaspect.com/paint-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Paint Calculator</h1>
+  <p class="subtitle">Gallons of paint and primer, with cost estimate</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Wall + ceiling area (ft²)</label>
+        <input type="number" id="area" value="800" min="0" step="10" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Coats of paint</label>
+        <input type="number" id="coats" value="2" min="1" max="4" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Coverage per gallon (ft²)</label>
+        <input type="number" id="cover" value="400" min="100" step="10" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per gallon ($)</label>
+        <input type="number" id="price" value="40" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Primer coats (0 = none)</label>
+        <input type="number" id="primerCoats" value="0" min="0" max="3" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Primer price per gallon ($)</label>
+        <input type="number" id="primerPrice" value="25" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Paint Calculator Works</h2>
+    <p>Enter your total paintable area, the number of coats, and your paint's coverage rate, and this calculator tells you exactly how many gallons to buy. It also prices an optional primer coat. Most interior latex covers 350–400 ft² per gallon per coat; textured, porous, or bare surfaces can drop that to 250–300 ft².</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Wall area:</strong> perimeter × wall height − doors and windows (a standard door ≈ 20 ft², a window ≈ 15 ft²)</li>
+      <li><strong>Gallons of paint:</strong> ceil(area × coats ÷ coverage)</li>
+      <li><strong>Primer:</strong> ceil(area × primer coats ÷ coverage), using the same coverage rate</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 12 ft × 14 ft bedroom with 8 ft ceilings: perimeter = 52 ft, walls = 52 × 8 = 416 ft², ceiling = 168 ft², minus one door (20 ft²) and two windows (30 ft²) = 534 ft². Two coats at 400 ft²/gal: 534 × 2 ÷ 400 = 2.7 → buy 3 gallons. With primer: one more gallon of primer.</p>
+
+    <h2>Coverage by Paint Type</h2>
+    <ul>
+      <li><strong>Interior latex (flat/eggshell):</strong> ~400 ft²/gal on prepared walls</li>
+      <li><strong>Exterior acrylic:</strong> ~350 ft²/gal on smooth siding, less on rough textures</li>
+      <li><strong>Primer:</strong> ~350–400 ft²/gal; stains and dark colors may need two coats</li>
+      <li><strong>Epoxy/enamel:</strong> often only 250–300 ft²/gal — check the can</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Do I always need two coats?</strong> For color changes, dark colors, or patch repairs, yes. Touch-ups over a similar color can sometimes get away with one.</p>
+    <p><strong>Should I prime first?</strong> Prime new drywall, repaired areas, stains, or when painting light over dark. Tinted primer dramatically improves coverage on big color changes.</p>
+    <p><strong>How much does trim paint differ?</strong> Trim, doors, and baseboards use far less paint — figure about 1 gallon per 400 linear feet of trim per coat.</p>
+    <p><strong>Why round up?</strong> You can't buy 0.7 of a gallon, and leftover paint is valuable for touch-ups. Always round to the next gallon.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/electrical-load-calculator/">Electrical Load Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var area=parseFloat(document.getElementById('area').value)||0;
+  var coats=parseFloat(document.getElementById('coats').value)||1;
+  var cover=parseFloat(document.getElementById('cover').value)||400;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var pc=parseFloat(document.getElementById('primerCoats').value)||0;
+  var pp=parseFloat(document.getElementById('primerPrice').value)||0;
+  if(area<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter the area</div>';return;}
+  var gal=area*coats/cover;
+  var galBuy=Math.ceil(gal);
+  var pGal=area*pc/cover;
+  var pBuy=Math.ceil(pGal);
+  var cost=galBuy*price+pBuy*pp;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+galBuy+' gallons</div>'+
+    '<div class="sub-result">'+area.toFixed(0)+' ft² × '+coats+' coat'+(coats>1?'s':'')+' ÷ '+cover+' ft²/gal = '+gal.toFixed(1)+' gal</div>'+
+    (pc>0?'<div class="sub-result">Primer: <strong>'+pBuy+' gallon'+(pBuy>1?'s':'')+'</strong> ('+pc+' coat'+(pc>1?'s':'')+', '+pGal.toFixed(1)+' gal)</div>':'')+
+    (cost>0?'<div class="sub-result">Paint cost estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

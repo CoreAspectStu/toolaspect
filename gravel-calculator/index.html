@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravel Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate cubic yards and tons of gravel from area and depth. Covers driveways, paths, and drainage projects. Free gravel calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/gravel-calculator/">
+<meta property="og:title" content="Gravel Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/gravel-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Gravel Calculator","description":"Calculate cubic yards and tons of gravel.","url":"https://toolaspect.com/gravel-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.sub-result strong{color:#60a5fa}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Gravel Calculator</h1>
+  <p class="subtitle">Cubic yards and tons from area and depth</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Length (ft)</label>
+        <input type="number" id="len" value="20" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Width (ft)</label>
+        <input type="number" id="wid" value="10" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Depth (in)</label>
+        <input type="number" id="depth" value="3" min="0.25" step="0.25" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group">
+        <label>Material</label>
+        <select id="mat" onchange="calc()">
+          <option value="1.4">Gravel (pea, #57) ~1.4 tons/yd³</option>
+          <option value="1.5">Crushed stone ~1.5 tons/yd³</option>
+          <option value="1.35">Sand / topsoil ~1.35 tons/yd³</option>
+          <option value="1.7">Limestone (dense) ~1.7 tons/yd³</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price per ton ($)</label>
+        <input type="number" id="price" value="45" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Gravel Calculator Works</h2>
+    <p>Enter the area you're covering (length × width, or any shape's square footage) and the depth you want, and this calculator returns the volume in cubic feet and cubic yards plus an estimated tonnage. Gravel is sold by the ton at quarries and by the bag at home centers; suppliers' weights vary, so the tonnage here is a planning estimate using typical densities.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Volume:</strong> ft³ = length × width × (depth ÷ 12)</li>
+      <li><strong>Cubic yards:</strong> yd³ = ft³ ÷ 27</li>
+      <li><strong>Tons:</strong> tons = yd³ × density (≈1.4–1.5 tons/yd³ for typical gravel)</li>
+      <li><strong>Coverage check:</strong> 1 yd³ covers 324 ft² at 1" deep, 108 ft² at 3" deep, 81 ft² at 4" deep</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 20 ft × 10 ft driveway base at 3 inches deep: volume = 20 × 10 × 0.25 = 50 ft³ = 1.85 yd³. At 1.4 tons/yd³, that's about 2.6 tons of #57 gravel. At $45/ton delivered, budget roughly $117 in material.</p>
+
+    <h2>Depth Recommendations</h2>
+    <ul>
+      <li><strong>2–3"</strong> — decorative top layer, walkways, pea gravel over a base</li>
+      <li><strong>4–6"</strong> — driveways (2–3" base of larger stone + 2–3" of surface gravel)</li>
+      <li><strong>6–12"</strong> — drainage trenches and French drains (use #57 or #3 stone)</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much does a cubic yard of gravel weigh?</strong> Typically 2,400–2,900 lb (1.2–1.45 tons) depending on stone type and moisture. Crushed limestone runs heavier.</p>
+    <p><strong>How much gravel do I need per 50lb bag?</strong> A 50lb bag of pea gravel covers about 0.5 ft³ — you'd need 54 bags to equal one yard, so bulk is far cheaper for anything over a few square feet.</p>
+    <p><strong>Gravel or crushed stone for a driveway?</strong> Crushed stone (e.g., #57 with fines like crusher run for the base) locks together better; rounded pea gravel shifts and ruts under tires.</p>
+    <p><strong>Should I add extra?</strong> Add 5–10% for settling and uneven excavation — gravel compacts.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/fence-calculator/">Fence Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var w=parseFloat(document.getElementById('wid').value)||0;
+  var d=parseFloat(document.getElementById('depth').value)||0;
+  var dens=parseFloat(document.getElementById('mat').value)||1.4;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  if(l<=0||w<=0||d<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter area and depth</div>';return;}
+  var cf=l*w*(d/12);
+  var yd=cf/27;
+  var tons=yd*dens;
+  var cost=tons*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+yd.toFixed(2)+' yd³</div>'+
+    '<div class="sub-result">'+cf.toFixed(1)+' ft³ ('+l+'×'+w+' ft at '+d+'" deep)</div>'+
+    '<div class="sub-result">≈ <strong>'+tons.toFixed(2)+' tons</strong></div>'+
+    (price>0?'<div class="sub-result">Material cost: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

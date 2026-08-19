@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Expression Generator | ToolAspect</title>
+<meta name="description" content="Generate and understand cron expressions visually. Build cron schedules with a simple form, see human-readable descriptions, and copy ready-to-use expressions.">
+<link rel="canonical" href="https://toolaspect.com/cron-generator/">
+<meta property="og:title" content="Cron Expression Generator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/cron-generator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Cron Expression Generator","description":"Generate cron expressions visually.","url":"https://toolaspect.com/cron-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group select,.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cron-display{text-align:center;padding:20px;background:var(--bg);border:1px solid var(--border);border-radius:12px;margin-bottom:16px}
+.cron-expr{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--primary);letter-spacing:.05em}
+.cron-desc{color:var(--muted);margin-top:8px;font-size:.9rem}
+.cron-fields{display:flex;justify-content:center;gap:20px;margin-top:8px;font-size:.72rem;color:var(--muted)}
+.cron-fields span{text-align:center}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 20px;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+.presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:16px}
+.preset-btn{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px;font-size:.78rem;cursor:pointer;text-align:left;transition:all .2s}
+.preset-btn:hover{border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.05)}
+.preset-btn .name{font-weight:600;display:block}
+.preset-btn .cron{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+td,th{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.82rem}
+th{color:var(--muted);font-size:.75rem;text-transform:uppercase}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+ <h1>Cron Expression Generator</h1>
+ <p class="subtitle">Build cron schedules visually — see human-readable descriptions instantly</p>
+
+ <div class="cron-display">
+ <div class="cron-expr" id="cronExpr">0 9 * * *</div>
+ <div class="cron-desc" id="cronDesc">At 09:00 AM every day</div>
+ <div class="cron-fields">
+ <span>Minute<br><strong id="f0">0</strong></span>
+ <span>Hour<br><strong id="f1">9</strong></span>
+ <span>Day<br><strong id="f2">*</strong></span>
+ <span>Month<br><strong id="f3">*</strong></span>
+ <span>Weekday<br><strong id="f4">*</strong></span>
+ </div>
+ </div>
+
+ <div class="card">
+ <div class="form-row">
+ <div class="form-group">
+ <label>Minute</label>
+ <select id="minute" onchange="update()">
+ <option value="0">0 (top of hour)</option>
+ <option value="5">5</option>
+ <option value="10">10</option>
+ <option value="15">15 (quarter past)</option>
+ <option value="30">30 (half past)</option>
+ <option value="45">45 (quarter to)</option>
+ <option value="*/5">Every 5 minutes</option>
+ <option value="*/10">Every 10 minutes</option>
+ <option value="*/15">Every 15 minutes</option>
+ <option value="*/30">Every 30 minutes</option>
+ <option value="*">Every minute</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label>Hour</label>
+ <select id="hour" onchange="update()">
+ <option value="*">Every hour</option>
+ <option value="0">0 (midnight)</option>
+ <option value="6">6 AM</option>
+ <option value="9" selected>9 AM</option>
+ <option value="12">12 PM (noon)</option>
+ <option value="18">6 PM</option>
+ <option value="23">11 PM</option>
+ <option value="*/2">Every 2 hours</option>
+ <option value="*/6">Every 6 hours</option>
+ <option value="*/12">Every 12 hours</option>
+ </select>
+ </div>
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label>Day of Month</label>
+ <select id="dom" onchange="update()">
+ <option value="*" selected>Every day</option>
+ <option value="1">1st</option>
+ <option value="15">15th</option>
+ <option value="L">Last day</option>
+ <option value="*/2">Every 2 days</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label>Month</label>
+ <select id="month" onchange="update()">
+ <option value="*" selected>Every month</option>
+ <option value="1">January</option>
+ <option value="*/3">Every quarter</option>
+ <option value="*/6">Twice a year</option>
+ </select>
+ </div>
+ </div>
+ <div class="form-group">
+ <label>Day of Week</label>
+ <select id="dow" onchange="update()">
+ <option value="*" selected>Every day</option>
+ <option value="1-5">Mon-Fri (weekdays)</option>
+ <option value="0,6">Sat & Sun (weekends)</option>
+ <option value="1">Monday</option>
+ <option value="2">Tuesday</option>
+ <option value="3">Wednesday</option>
+ <option value="4">Thursday</option>
+ <option value="5">Friday</option>
+ <option value="6">Saturday</option>
+ <option value="0">Sunday</option>
+ </select>
+ </div>
+ <div class="btn-row">
+ <button class="btn" onclick="copyCron()">Copy Expression</button>
+ </div>
+ </div>
+
+ <div class="card">
+ <label style="font-size:.8rem;color:var(--muted);margin-bottom:10px;display:block;font-weight:500">Quick Presets</label>
+ <div class="presets" id="presets"></div>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+
+ <div class="seo-content">
+ <h2>Cron Expression Format</h2>
+ <table>
+ <tr><th>Field</th><th>Values</th><th>Special</th></tr>
+ <tr><td>Minute</td><td>0-59</td><td>* / - ,</td></tr>
+ <tr><td>Hour</td><td>0-23</td><td>* / - ,</td></tr>
+ <tr><td>Day of Month</td><td>1-31</td><td>* / L</td></tr>
+ <tr><td>Month</td><td>1-12</td><td>* / - ,</td></tr>
+ <tr><td>Day of Week</td><td>0-6 (Sun-Sat)</td><td>* / - ,</td></tr>
+ </table>
+ <h2>Common Cron Examples</h2>
+ <ul>
+ <li><code>0 * * * *</code> — Every hour on the hour</li>
+ <li><code>*/15 * * * *</code> — Every 15 minutes</li>
+ <li><code>0 9 * * 1-5</code> — 9 AM on weekdays</li>
+ <li><code>0 0 1 * *</code> — Midnight on the 1st of every month</li>
+ <li><code>0 0 * * 0</code> — Every Sunday at midnight</li>
+ </ul>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PRESETS=[
+ {name:'Every minute',cron:'* * * * *'},
+ {name:'Every 5 min',cron:'*/5 * * * *'},
+ {name:'Every 15 min',cron:'*/15 * * * *'},
+ {name:'Every 30 min',cron:'*/30 * * * *'},
+ {name:'Every hour',cron:'0 * * * *'},
+ {name:'Every 6 hours',cron:'0 */6 * * *'},
+ {name:'Every day at 9am',cron:'0 9 * * *'},
+ {name:'Every day at midnight',cron:'0 0 * * *'},
+ {name:'Weekdays at 9am',cron:'0 9 * * 1-5'},
+ {name:'Weekly (Monday)',cron:'0 0 * * 1'},
+ {name:'Monthly (1st)',cron:'0 0 1 * *'},
+ {name:'Yearly (Jan 1)',cron:'0 0 1 1 *'},
+];
+function update(){
+ var m=document.getElementById('minute').value;
+ var h=document.getElementById('hour').value;
+ var dom=document.getElementById('dom').value;
+ var mon=document.getElementById('month').value;
+ var dow=document.getElementById('dow').value;
+ var cron=m+' '+h+' '+dom+' '+mon+' '+dow;
+ document.getElementById('cronExpr').textContent=cron;
+ document.getElementById('f0').textContent=m;
+ document.getElementById('f1').textContent=h;
+ document.getElementById('f2').textContent=dom;
+ document.getElementById('f3').textContent=mon;
+ document.getElementById('f4').textContent=dow;
+ document.getElementById('cronDesc').textContent=describe(m,h,dom,mon,dow);
+}
+function describe(m,h,dom,mon,dow){
+ var freq='',time='';
+ if(m==='*')freq='every minute';
+ else if(m.startsWith('*/'))freq='every '+m.slice(2)+' minutes';
+ else{
+ var t='';
+ if(h==='*')t='every hour';
+ else{var hr=parseInt(h);var ampm=hr<12?'AM':'PM';var hr12=hr===0?12:hr>12?hr-12:hr;t='at '+hr12+':'+m.padStart(2,'0')+' '+ampm;}
+ if(dow==='1-5')freq='on weekdays '+t;
+ else if(dow==='0,6')freq='on weekends '+t;
+ else if(dow==='*'){
+ if(dom==='*')freq=t+' every day';
+ else if(dom==='1')freq=t+' on the 1st of every month';
+ else if(dom==='L')freq=t+' on the last day of every month';
+ else freq=t+' on day '+dom;
+ }else{
+ var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+ freq=t+' every '+days[parseInt(dow)]||t+' day '+dow;
+ }
+ }
+ if(mon!=='*'&&mon!=='*/3'&&mon!=='*/6')freq+=' in month '+mon;
+ else if(mon==='*/3')freq+=' quarterly';
+ else if(mon==='*/6')freq+=' twice a year';
+ return 'At '+freq;
+}
+function copyCron(){navigator.clipboard.writeText(document.getElementById('cronExpr').textContent);}
+// Build presets
+var pal=document.getElementById('presets');
+PRESETS.forEach(function(p){
+ var b=document.createElement('button');
+ b.className='preset-btn';
+ b.innerHTML='<span class="name">'+p.name+'</span><span class="cron">'+p.cron+'</span>';
+ b.onclick=function(){
+ var parts=p.cron.split(' ');
+ document.getElementById('minute').value=parts[0];
+ document.getElementById('hour').value=parts[1];
+ document.getElementById('dom').value=parts[2];
+ document.getElementById('month').value=parts[3];
+ document.getElementById('dow').value=parts[4];
+ update();
+ };
+ pal.appendChild(b);
+});
+update();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

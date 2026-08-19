@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number to Words Converter | ToolAspect</title>
+<meta name="description" content="Convert any number to English words. Supports up to trillions. Perfect for check writing, invoices, and legal documents.">
+<link rel="canonical" href="https://toolaspect.com/number-to-words/">
+<meta property="og:title" content="Number to Words Converter">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/number-to-words/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Number to Words Converter","description":"Convert numbers to English words.","url":"https://toolaspect.com/number-to-words/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:1.1rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.output{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:8px;font-size:1rem;min-height:50px;color:var(--text)}
+.btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:var(--text);border-radius:8px;padding:10px 20px;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(99,102,241,.2)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:16px}
+.result-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px}
+.result-item .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px}
+.result-item .val{font-family:'JetBrains Mono',monospace;font-size:.82rem;word-break:break-all}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+ <h1>Number to Words Converter</h1>
+ <p class="subtitle">Convert numbers to English words — perfect for checks, invoices & legal docs</p>
+
+ <div class="card">
+ <div class="form-group">
+ <label>Enter a Number</label>
+ <input type="text" id="num" placeholder="e.g. 1234.56" oninput="convert()">
+ </div>
+ <div class="form-group">
+ <label>In Words</label>
+ <div class="output" id="words"></div>
+ </div>
+ <div class="btn-row">
+ <button class="btn" onclick="copyWords()">Copy</button>
+ <button class="btn" onclick="clr()">Clear</button>
+ </div>
+ <div id="extra"></div>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+
+ <div class="seo-content">
+ <h2>When Do You Need Numbers in Words?</h2>
+ <ul>
+ <li><strong>Check writing:</strong> Banks require the amount written in words</li>
+ <li><strong>Legal documents:</strong> Contracts often spell out amounts</li>
+ <li><strong>Invoices:</strong> Some countries require amounts in words</li>
+ <li><strong>Education:</strong> Teaching children number names</li>
+ <li><strong>Accessibility:</strong> Screen readers handle words better</li>
+ </ul>
+ <h2>How It Works</h2>
+ <p>The converter breaks numbers into groups of three (thousands, millions, billions) and converts each group separately, then joins them with the appropriate scale word. Decimal portions are converted to fractions (/100 format for checks).</p>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var O=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+var T=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+var S=['','thousand','million','billion','trillion'];
+function three(n){var s='';if(n>=100){s+=O[Math.floor(n/100)]+' hundred';n%=100;if(n>0)s+=' ';}if(n>=20){s+=T[Math.floor(n/10)];if(n%10>0)s+='-'+O[n%10];}else if(n>0){s+=O[n];}return s;}
+function conv(num){
+ if(num===0)return'Zero';
+ if(isNaN(num))return'Please enter a valid number';
+ var neg=num<0;num=Math.abs(num);
+ var intP=Math.floor(num);
+ var dec=Math.round((num-intP)*100);
+ var r='',si=0;
+ while(intP>0&&si<S.length){var c=intP%1000;if(c>0){r=three(c)+(S[si]?' '+S[si]:'')+(r?', '+r:'');}intP=Math.floor(intP/1000);si++;}
+ if(neg)r='Negative '+r;
+ if(dec>0)r+=' and '+dec+'/100';
+ return r.charAt(0).toUpperCase()+r.slice(1);
+}
+function convert(){
+ var v=document.getElementById('num').value.trim();
+ var el=document.getElementById('words');
+ var ex=document.getElementById('extra');
+ if(!v){el.textContent='';ex.innerHTML='';return;}
+ var n=parseFloat(v);
+ el.textContent=conv(n);
+ var bin=Math.floor(Math.abs(n)).toString(2);
+ var hex='0x'+Math.floor(Math.abs(n)).toString(16).toUpperCase();
+ var sq=Math.sqrt(Math.abs(n)).toFixed(6);
+ ex.innerHTML='<div class="result-grid">'+
+ '<div class="result-item"><span class="lbl">Even/Odd</span><span class="val">'+(n%2===0?'Even':'Odd')+'</span></div>'+
+ '<div class="result-item"><span class="lbl">Binary</span><span class="val">'+bin+'</span></div>'+
+ '<div class="result-item"><span class="lbl">Hexadecimal</span><span class="val">'+hex+'</span></div>'+
+ '<div class="result-item"><span class="lbl">Square Root</span><span class="val">'+sq+'</span></div>'+
+ '<div class="result-item"><span class="lbl">Squared</span><span class="val">' +(n*n).toLocaleString()+'</span></div>'+
+ '<div class="result-item"><span class="lbl">Roman</span><span class="val">'+roman(n)+'</span></div>'+
+ '</div>';
+}
+function roman(num){num=Math.floor(Math.abs(num));if(num<1||num>3999)return'N/A';var r='';var v=[1000,900,500,400,100,90,50,40,10,9,5,4,1];var s=['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];for(var i=0;i<v.length;i++){while(num>=v[i]){r+=s[i];num-=v[i];}}return r;}
+function copyWords(){navigator.clipboard.writeText(document.getElementById('words').textContent);}
+function clr(){document.getElementById('num').value='';document.getElementById('words').textContent='';document.getElementById('extra').innerHTML='';}
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

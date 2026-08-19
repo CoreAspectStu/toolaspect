@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumber Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate board feet, number of lumber pieces from linear feet, and total cost. Board feet formula and worked examples. Free lumber calculator.">
+<link rel="canonical" href="https://toolaspect.com/lumber-calculator/">
+<meta property="og:title" content="Lumber Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/lumber-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Lumber Calculator","description":"Calculate board feet, pieces from linear feet, and cost.","url":"https://toolaspect.com/lumber-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Lumber Calculator</h1>
+  <p class="subtitle">Board feet, pieces from linear feet, and cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nominal thickness (in)</label>
+        <input type="number" id="thick" value="2" min="0.25" step="0.25" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Nominal width (in)</label>
+        <input type="number" id="wide" value="4" min="0.25" step="0.25" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Board length (ft)</label>
+        <input type="number" id="len" value="8" min="0.5" step="0.5" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group">
+        <label>Linear feet needed</label>
+        <input type="number" id="linft" value="100" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per board ($)</label>
+        <input type="number" id="price" value="6" min="0" step="0.25" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Lumber Calculator Works</h2>
+    <p>Enter your lumber's nominal dimensions and length, and this calculator computes board feet per piece, how many boards you need to cover a given run of linear feet, and the total cost. It uses nominal dimensions (e.g., a "2×4"), which is how lumber is both sold and priced by the board foot.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Board feet (per piece):</strong> BF = thickness(in) × width(in) × length(ft) ÷ 12</li>
+      <li><strong>Pieces needed:</strong> ceil(linear feet ÷ board length)</li>
+      <li><strong>Total board feet:</strong> pieces × BF per piece</li>
+      <li><strong>Cost:</strong> pieces × price per board</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>For 100 linear feet of 2×4 in 8-foot lengths: each board covers 8 linear feet, so pieces = ceil(100 ÷ 8) = 13 boards. Board feet per board = 2 × 4 × 8 ÷ 12 = 5.33 BF, so 13 boards = 69.3 board feet total. At $6 per board, that's $78 plus tax.</p>
+
+    <h2>Nominal vs. Actual Dimensions</h2>
+    <p>A 2×4 actually measures 1.5" × 3.5" after milling and drying. Board feet and lumber pricing use the nominal size, but always use actual dimensions when calculating framing spacings, spans, or finished openings.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What is a board foot?</strong> A volume unit equal to a piece 12" × 12" × 1" thick — 144 cubic inches. Hardwood is priced per board foot; dimensional softwood is usually priced per piece.</p>
+    <p><strong>How many board feet in a 2x4x8?</strong> 2 × 4 × 8 ÷ 12 = 5.33 board feet.</p>
+    <p><strong>How do I estimate framing lumber for a wall?</strong> One stud per linear foot of wall at 16" on-center (plus plates), so a 12 ft wall needs about 10–12 studs plus top and bottom plates.</p>
+    <p><strong>Should I add waste?</strong> Yes — add 10–15% for cuts, culls, and mistakes on any framing or trim order.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/fence-calculator/">Fence Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var t=parseFloat(document.getElementById('thick').value)||0;
+  var w=parseFloat(document.getElementById('wide').value)||0;
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var linft=parseFloat(document.getElementById('linft').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  if(t<=0||w<=0||l<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter dimensions</div>';return;}
+  var bf=t*w*l/12;
+  var pieces=linft>0?Math.ceil(linft/l):0;
+  var totalBf=bf*pieces;
+  var cost=pieces*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+bf.toFixed(2)+' BF</div>'+
+    '<div class="sub-result">per board ('+t+'" × '+w+'" × '+l+' ft)</div>'+
+    (linft>0?'<div class="sub-result">'+linft+' linear ft → <strong>'+pieces+' boards</strong></div>'+
+    '<div class="sub-result">Total: <strong>'+totalBf.toFixed(1)+' board feet</strong></div>'+
+    (price>0?'<div class="sub-result">Cost estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':''):'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

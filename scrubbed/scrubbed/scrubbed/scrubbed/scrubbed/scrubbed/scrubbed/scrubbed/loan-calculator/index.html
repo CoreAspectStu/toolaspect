@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Calculator | ToolAspect</title>
+<meta name="description" content="Calculate monthly loan payments for personal loans, auto loans, and student loans. Enter amount, rate, and term to see your payment, total interest, and full amortization.">
+<link rel="canonical" href="https://toolaspect.com/loan-calculator/">
+<meta property="og:title" content="Loan Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/loan-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Loan Calculator","description":"Calculate monthly loan payments and total interest.","url":"https://toolaspect.com/loan-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:700px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.4rem;font-weight:700}
+.result-card.primary .amount{color:var(--primary);font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+ <h1>Loan Calculator</h1>
+ <p class="subtitle">Calculate monthly payments for any type of loan</p>
+
+ <div class="card">
+ <div class="form-row">
+ <div class="form-group">
+ <label>Loan Amount ($)</label>
+ <input type="number" id="amount" value="25000" min="0" oninput="calc()">
+ </div>
+ <div class="form-group">
+ <label>Annual Interest Rate (%)</label>
+ <input type="number" id="rate" value="8.5" min="0" step="0.01" oninput="calc()">
+ </div>
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label>Loan Term</label>
+ <select id="term" onchange="calc()">
+ <option value="12">1 year</option>
+ <option value="24">2 years</option>
+ <option value="36">3 years</option>
+ <option value="48">4 years</option>
+ <option value="60" selected>5 years</option>
+ <option value="72">6 years</option>
+ <option value="84">7 years</option>
+ <option value="120">10 years</option>
+ <option value="180">15 years</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label>Loan Type</label>
+ <select id="type" onchange="setPreset()">
+ <option value="">Custom</option>
+ <option value="auto">Auto Loan</option>
+ <option value="personal">Personal Loan</option>
+ <option value="student">Student Loan</option>
+ <option value="business">Business Loan</option>
+ </select>
+ </div>
+ </div>
+ </div>
+
+ <div class="card">
+ <div class="results-grid" id="results"></div>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+
+ <div class="seo-content">
+ <h2>Loan Payment Formula</h2>
+ <p><strong>M = P × [r(1+r)^n] / [(1+r)^n − 1]</strong></p>
+ <p>Where M = monthly payment, P = principal, r = monthly rate, n = number of payments</p>
+ <h2>Average Interest Rates by Loan Type (2026)</h2>
+ <ul>
+ <li><strong>Auto loan (new car):</strong> 5-8%</li>
+ <li><strong>Auto loan (used car):</strong> 7-12%</li>
+ <li><strong>Personal loan:</strong> 8-36% (depends on credit)</li>
+ <li><strong>Student loan (federal):</strong> 4.5-7.5%</li>
+ <li><strong>Student loan (private):</strong> 4-15%</li>
+ <li><strong>Business loan (SBA):</strong> 8-13%</li>
+ </ul>
+ <h2>Tips for Getting the Best Rate</h2>
+ <ul>
+ <li>Check and improve your credit score before applying</li>
+ <li>Compare offers from multiple lenders</li>
+ <li>Consider credit unions — often 1-2% lower than banks</li>
+ <li>Shorter terms = lower rates but higher monthly payments</li>
+ <li>Make a larger down payment to reduce the loan amount</li>
+ </ul>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PRESETS={auto:{rate:7,term:60},personal:{rate:12,term:36},student:{rate:5.5,term:120},business:{rate:10,term:60}};
+function setPreset(){
+ var type=document.getElementById('type').value;
+ if(!type)return;
+ var p=PRESETS[type];
+ document.getElementById('rate').value=p.rate;
+ document.getElementById('term').value=p.term;
+ calc();
+}
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function calc(){
+ var p=parseFloat(document.getElementById('amount').value)||0;
+ var r=parseFloat(document.getElementById('rate').value)||0;
+ var n=parseInt(document.getElementById('term').value)||60;
+ var monthlyRate=r/100/12;
+ var monthly;
+ if(monthlyRate>0){
+ monthly=p*(monthlyRate*Math.pow(1+monthlyRate,n))/(Math.pow(1+monthlyRate,n)-1);
+ }else{
+ monthly=p/n;
+ }
+ var totalPaid=monthly*n;
+ var totalInterest=totalPaid-p;
+ document.getElementById('results').innerHTML=
+ '<div class="result-card primary"><div class="amount">'+fmt(monthly)+'/mo</div><div class="label">Monthly Payment</div></div>'+
+ '<div class="result-card"><div class="amount">'+fmt(p)+'</div><div class="label">Loan Amount</div></div>'+
+ '<div class="result-card green"><div class="amount">'+fmt(totalInterest)+'</div><div class="label">Total Interest</div></div>'+
+ '<div class="result-card"><div class="amount">'+fmt(totalPaid)+'</div><div class="label">Total Paid</div></div>'+
+ '<div class="result-card"><div class="amount">'+(n/12).toFixed(1)+' yrs</div><div class="label">Term</div></div>'+
+ '<div class="result-card"><div class="amount">'+((totalInterest/p)*100).toFixed(1)+'%</div><div class="label">Interest %</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

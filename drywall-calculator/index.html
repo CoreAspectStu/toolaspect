@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drywall Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate drywall sheets, joint compound, screws, and cost from wall area. Supports 4x8 and 4x12 sheets. Free drywall calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/drywall-calculator/">
+<meta property="og:title" content="Drywall Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/drywall-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Drywall Calculator","description":"Calculate drywall sheets, mud, screws, and cost.","url":"https://toolaspect.com/drywall-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Drywall Calculator</h1>
+  <p class="subtitle">Sheets, joint compound, screws, and cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Total wall + ceiling area (ft²)</label>
+        <input type="number" id="area" value="800" min="0" step="10" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Sheet size</label>
+        <select id="sheet" onchange="calc()">
+          <option value="32">4 ft × 8 ft (32 ft²)</option>
+          <option value="40">4 ft × 10 ft (40 ft²)</option>
+          <option value="48">4 ft × 12 ft (48 ft²)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price per sheet ($)</label>
+        <input type="number" id="price" value="15" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Waste factor (%)</label>
+        <input type="number" id="waste" value="10" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Drywall Calculator Works</h2>
+    <p>Enter your total wall and ceiling area (or compute it as length × height for each surface, minus large openings), pick a sheet size, and this tool estimates how many sheets to buy, how many pounds of joint compound ("mud") and how many screws the job will take, plus a materials cost estimate. A 10% waste factor covers cuts, breaks, and odd-size scraps.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Wall area:</strong> sum of (length × height) for each wall, minus doors/windows</li>
+      <li><strong>Sheets needed:</strong> ceil(area × (1 + waste) ÷ sheet area)</li>
+      <li><strong>Joint compound:</strong> ≈ 0.05 lb per ft² of drywall (about 1 lb per 20 ft²)</li>
+      <li><strong>Screws:</strong> ≈ 1 screw per ft² (screws every 12" on studs, both edges)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 12 ft × 12 ft room with 8 ft ceilings: 4 walls × (12 × 8) = 384 ft². With 10% waste: 422 ft². Using 4×8 sheets (32 ft² each): ceil(422 ÷ 32) = 14 sheets. Joint compound: 384 × 0.05 ≈ 19 lb (one 20 lb box of setting compound or 2 buckets of premixed). Screws: ~384, so buy a 1 lb box (≈300 screws) plus a backup — get 500.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>4x8 or 4x12 sheets?</strong> 4×12 sheets mean fewer seams and faster finishing on long runs, but they're heavy (two-person hang) and harder to transport. For DIY, 4×8 is usually the practical choice.</p>
+    <p><strong>How much mud per sheet?</strong> Budget roughly 1.5–2 lb of joint compound per 4×8 sheet for tape, fill, and skim coats.</p>
+    <p><strong>How many screws per 4x8 sheet?</strong> About 32–36 screws per sheet at 12" spacing — roughly one screw per square foot overall.</p>
+    <p><strong>Should I subtract doors and windows?</strong> Yes for accuracy, but many pros keep them in as natural waste allowance. Our 10% default covers either approach.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/electrical-load-calculator/">Electrical Load Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var area=parseFloat(document.getElementById('area').value)||0;
+  var sheet=parseFloat(document.getElementById('sheet').value)||32;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  if(area<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter the area</div>';return;}
+  var areaW=area*(1+waste);
+  var sheets=Math.ceil(areaW/sheet);
+  var mud=area*0.05;
+  var screws=Math.ceil(area*1.05/25)*25;
+  var cost=sheets*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+sheets+' sheets</div>'+
+    '<div class="sub-result">'+areaW.toFixed(0)+' ft² (incl. '+Math.round(waste*100)+'% waste) ÷ '+sheet+' ft²/sheet</div>'+
+    '<div class="sub-result">Joint compound: <strong>'+mud.toFixed(0)+' lb</strong></div>'+
+    '<div class="sub-result">Screws: <strong>≈'+screws+'</strong></div>'+
+    (price>0?'<div class="sub-result">Sheet cost estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

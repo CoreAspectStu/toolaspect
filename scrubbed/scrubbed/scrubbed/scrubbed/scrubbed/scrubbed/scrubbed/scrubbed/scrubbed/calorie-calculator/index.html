@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Calculator | ToolAspect</title>
+<meta name="description" content="Calculate your daily calorie needs (TDEE). Free calorie calculator using the Mifflin-St Jeor equation. Find out how many calories to eat for weight loss, maintenance, or muscle gain.">
+<link rel="canonical" href="https://toolaspect.com/calorie-calculator/">
+<meta property="og:title" content="Calorie Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/calorie-calculator/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Calorie Calculator","description":"Calculate your daily calorie needs (TDEE). Free calorie calculator using the Mifflin-St Jeor equation. Find out how many calories to eat for weight loss, maintenance, or muscle gain.","url":"https://toolaspect.com/calorie-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}}</script>
+<script src="/shared/nav.js"></script>
+<style>
+.wrap{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+h1{font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:6px}
+.sub{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.fg{margin-bottom:14px}.fg label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
+.fg input,.fg select{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.95rem}
+.fg input:focus,.fg select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
+.btn{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn:hover{background:var(--primary-light)}
+.results{display:none;margin-top:16px}.results.show{display:block}
+.rr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);align-items:center}
+.rr:last-child{border-bottom:none}
+.rr .v{font-size:1.3rem;font-weight:700;color:var(--primary)}
+.rr .vl{font-size:.8rem;color:var(--muted)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo{margin-top:24px}.seo h2{font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.seo p{color:var(--text-secondary);font-size:.88rem;margin-bottom:12px;line-height:1.7}
+.related{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--text-secondary);text-decoration:none}
+.related a:hover{border-color:var(--primary);color:var(--text)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Calorie Calculator</h1>
+<p class="sub">Calculate daily calorie needs (TDEE)</p>
+<div class="card">
+<div class="row2">
+<div class="fg"><label>Age</label><input type="number" id="age" value="30" min="1" max="120"></div>
+<div class="fg"><label>Gender</label><select id="gender"><option value="male">Male</option><option value="female">Female</option></select></div>
+</div>
+<div class="row2">
+<div class="fg"><label>Height (cm)</label><input type="number" id="height" value="175"></div>
+<div class="fg"><label>Weight (kg)</label><input type="number" id="weight" value="75"></div>
+</div>
+<div class="fg"><label>Activity Level</label><select id="activity">
+<option value="1.2">Sedentary (little/no exercise)</option>
+<option value="1.375">Light (1-3 days/week)</option>
+<option value="1.55" selected>Moderate (3-5 days/week)</option>
+<option value="1.725">Active (6-7 days/week)</option>
+<option value="1.9">Very Active (2x/day, physical job)</option>
+</select></div>
+<button class="btn" onclick="calc()">Calculate Calories</button>
+</div>
+<div class="results" id="results">
+<div class="rr"><span class="vl">BMR (Basal Metabolic Rate)</span><span class="v" id="bmr">0</span></div>
+<div class="rr"><span class="vl">TDEE (Maintenance Calories)</span><span class="v" id="tdee">0</span></div>
+<div class="rr"><span class="vl">Lose Weight (0.5 kg/week)</span><span id="lose">0</span></div>
+<div class="rr"><span class="vl">Mild Loss (0.25 kg/week)</span><span id="mildLose">0</span></div>
+<div class="rr"><span class="vl">Maintain Weight</span><span id="maintain">0</span></div>
+<div class="rr"><span class="vl">Mild Gain (0.25 kg/week)</span><span id="mildGain">0</span></div>
+<div class="rr"><span class="vl">Gain Weight (0.5 kg/week)</span><span id="gain">0</span></div>
+</div>
+<div class="ad-slot">Advertisement</div>
+<div class="seo">
+<h2>How Many Calories Should I Eat?</h2>
+<p>Your Total Daily Energy Expenditure (TDEE) is the number of calories your body burns each day. To lose weight, eat fewer calories than your TDEE. To gain weight, eat more. A deficit of 500 calories/day leads to roughly 0.5 kg (1 lb) of weight loss per week.</p>
+<h2>BMR vs TDEE</h2>
+<p>BMR (Basal Metabolic Rate) is the energy your body needs at complete rest. TDEE multiplies BMR by an activity factor to account for daily movement and exercise.</p>
+</div>
+<div class="related">
+<a href="/bmi-calculator/">BMI Calculator</a>
+<a href="/body-fat-calculator/">Body Fat Calculator</a>
+<a href="/macro-calculator/">Macro Calculator</a>
+</div>
+<script src="/shared/ads.js"></script>
+</div>
+<script>function calc(){
+var age=+document.getElementById("age").value;
+var h=+document.getElementById("height").value;
+var w=+document.getElementById("weight").value;
+var act=+document.getElementById("activity").value;
+var male=document.getElementById("gender").value==="male";
+var bmr=male?(10*w+6.25*h-5*age+5):(10*w+6.25*h-5*age-161);
+var tdee=Math.round(bmr*act);
+document.getElementById("bmr").textContent=Math.round(bmr)+" cal";
+document.getElementById("tdee").textContent=tdee+" cal";
+document.getElementById("lose").textContent=(tdee-500)+" cal";
+document.getElementById("mildLose").textContent=(tdee-250)+" cal";
+document.getElementById("maintain").textContent=tdee+" cal";
+document.getElementById("mildGain").textContent=(tdee+250)+" cal";
+document.getElementById("gain").textContent=(tdee+500)+" cal";
+document.getElementById("results").classList.add("show");
+}</script>
+</body>
+</html>

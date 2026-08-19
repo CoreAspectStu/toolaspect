@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Notepad | ToolAspect</title>
+<meta name="description" content="Free online notepad. Quick notes that auto-save to your browser. No login required. Works offline.">
+<link rel="canonical" href="https://toolaspect.com/notepad/">
+<meta property="og:title" content="Online Notepad">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/notepad/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Online Notepad","description":"Free online notepad with auto-save.","url":"https://toolaspect.com/notepad/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script src="/shared/nav.js"></script>
+<style>
+.page-container{max-width:800px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
+.page-header{text-align:center;margin-bottom:1.5rem}
+.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{color:var(--muted);font-size:.92rem}
+.toolbar{display:flex;gap:.5rem;margin-bottom:.75rem;align-items:center;flex-wrap:wrap}
+.toolbar .info{margin-left:auto;font-size:.78rem;color:var(--muted)}
+textarea{width:100%;min-height:500px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;color:var(--text);font-size:.95rem;font-family:var(--font-sans);line-height:1.7;resize:vertical;transition:border-color var(--transition)}
+textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10)}
+.btn-note{padding:.45rem .9rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);cursor:pointer;transition:all var(--transition)}
+.btn-note:hover{border-color:var(--primary);color:var(--text)}
+.btn-note.danger:hover{border-color:var(--danger);color:var(--danger)}
+.stats{display:flex;gap:1.5rem;margin-top:.75rem;font-size:.8rem;color:var(--muted)}
+.content-section{margin-top:2rem;padding:1.5rem 0}
+.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
+.related-links a:hover{border-color:var(--primary);color:var(--text)}
+</style>
+</head>
+<body>
+<div class="page-container">
+<div class="page-header">
+<h1>Online Notepad</h1>
+<p class="subtitle">Quick notes with auto-save. No login needed.</p>
+</div>
+<div class="ad-slot" data-position="top"></div>
+<div class="toolbar">
+<button class="btn-note" onclick="copyAll()">Copy All</button>
+<button class="btn-note" onclick="downloadNote()">Download</button>
+<button class="btn-note danger" onclick="clearNote()">Clear</button>
+<span class="info" id="saveStatus">Auto-saved</span>
+</div>
+<textarea id="note" placeholder="Start typing... Your notes auto-save to your browser automatically." autofocus></textarea>
+<div class="stats">
+<span id="wc">0 words</span>
+<span id="cc">0 characters</span>
+<span id="lc">0 lines</span>
+</div>
+<div class="ad-slot" data-position="middle"></div>
+<div class="content-section">
+<h2>About the Online Notepad</h2>
+<p>A simple, distraction-free notepad that auto-saves your notes to your browser's local storage. No account needed. Works offline after first load.</p>
+</div>
+<div class="related-links">
+<a href="/word-counter/">Word Counter</a>
+<a href="/markdown-to-html/">Markdown to HTML</a>
+<a href="/lorem-ipsum/">Lorem Ipsum Generator</a>
+</div>
+</div>
+<script src="/shared/ads.js"></script>
+<script>
+var note=document.getElementById('note');
+var saved=localStorage.getItem('toolaspect_notepad');
+if(saved)note.value=saved;
+function updateStats(){var t=note.value;document.getElementById('wc').textContent=(t.trim()?t.trim().split(/\s+/).length:0)+' words';document.getElementById('cc').textContent=t.length+' characters';document.getElementById('lc').textContent=t.split('\n').length+' lines';}
+note.addEventListener('input',function(){localStorage.setItem('toolaspect_notepad',note.value);document.getElementById('saveStatus').textContent='Saved ✓';updateStats();setTimeout(function(){document.getElementById('saveStatus').textContent='Auto-saved';},1500);});
+updateStats();
+function copyAll(){note.select();document.execCommand('copy');window.getSelection().removeAllRanges();}
+function downloadNote(){var blob=new Blob([note.value],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='note.txt';a.click();}
+function clearNote(){if(confirm('Clear all text?')){note.value='';localStorage.removeItem('toolaspect_notepad');updateStats();note.focus();}}
+</script>
+</body>
+</html>

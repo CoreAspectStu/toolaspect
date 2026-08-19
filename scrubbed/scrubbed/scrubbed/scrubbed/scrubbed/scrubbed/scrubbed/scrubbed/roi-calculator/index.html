@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Calculator — Return on Investment | ToolAspect</title>
+<meta name="description" content="Calculate Return on Investment (ROI) with annualized returns. Enter investment amount and returns to see your ROI, profit, and annual growth rate.">
+<link rel="canonical" href="https://toolaspect.com/roi-calculator/">
+<meta property="og:title" content="ROI Calculator — Return on Investment">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/roi-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"ROI Calculator","description":"Calculate Return on Investment with annualized returns.","url":"https://toolaspect.com/roi-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:760px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus{border-color:rgba(99,102,241,.3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.result-card .amount{font-size:1.4rem;font-weight:700}
+.result-card.green .amount{color:#34d399}
+.result-card.red .amount{color:#f87171}
+.result-card.blue .amount{color:#6366f1}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+ <h1>ROI Calculator</h1>
+ <p class="subtitle">Calculate your Return on Investment — profit, ROI %, and annualized returns</p>
+
+ <div class="card">
+ <div class="form-row">
+ <div class="form-group">
+ <label>Initial Investment ($)</label>
+ <input type="number" id="initial" value="10000" min="0" oninput="calc()">
+ </div>
+ <div class="form-group">
+ <label>Final Value ($)</label>
+ <input type="number" id="final" value="15000" min="0" oninput="calc()">
+ </div>
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label>Investment Period (years)</label>
+ <input type="number" id="years" value="3" min="0.1" step="0.1" oninput="calc()">
+ </div>
+ <div class="form-group">
+ <label>Additional Costs ($)</label>
+ <input type="number" id="costs" value="0" min="0" oninput="calc()">
+ </div>
+ </div>
+ </div>
+
+ <div class="card">
+ <div class="results" id="results"></div>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+
+ <div class="seo-content">
+ <h2>ROI Formula</h2>
+ <p><strong>ROI = (Net Profit / Total Cost) × 100</strong></p>
+ <p>Where Net Profit = Final Value − Initial Investment − Additional Costs</p>
+ <h2>Annualized ROI</h2>
+ <p>Annualized ROI accounts for time: <strong>((Final / Initial)^(1/years) − 1) × 100</strong></p>
+ <p>This lets you compare investments of different durations fairly.</p>
+ <h2>What's a Good ROI?</h2>
+ <ul>
+ <li><strong>S&P 500 average:</strong> ~10% annually (7% inflation-adjusted)</li>
+ <li><strong>Real estate:</strong> 8-12% annually (appreciation + rental income)</li>
+ <li><strong>Bonds:</strong> 3-5% annually</li>
+ <li><strong>High-yield savings:</strong> 4-5% (2024 rates)</li>
+ <li><strong>Venture capital:</strong> 15-25% target (high variance)</li>
+ </ul>
+ </div>
+
+ <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n,dec){
+ dec=dec||0;
+ var sign=n<0?'-':'';
+ return sign+'$'+Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+function calc(){
+ var init=parseFloat(document.getElementById('initial').value)||0;
+ var fin=parseFloat(document.getElementById('final').value)||0;
+ var yrs=parseFloat(document.getElementById('years').value)||1;
+ var costs=parseFloat(document.getElementById('costs').value)||0;
+ var totalCost=init+costs;
+ var netProfit=fin-totalCost;
+ var roi=totalCost>0?(netProfit/totalCost)*100:0;
+ var annualized=totalCost>0&&yrs>0?(Math.pow(fin/totalCost,1/yrs)-1)*100:0;
+ var mult=totalCost>0?(fin/totalCost):0;
+ document.getElementById('results').innerHTML=
+ '<div class="result-card '+(netProfit>=0?'green':'red')+'"><div class="amount">'+fmt(netProfit)+'</div><div class="label">Net Profit</div></div>'+
+ '<div class="result-card '+(roi>=0?'green':'red')+'"><div class="amount">'+roi.toFixed(1)+'%</div><div class="label">Total ROI</div></div>'+
+ '<div class="result-card blue"><div class="amount">'+annualized.toFixed(1)+'%</div><div class="label">Annualized ROI</div></div>'+
+ '<div class="result-card blue"><div class="amount">'+mult.toFixed(2)+'x</div><div class="label">Multiple</div></div>'+
+ '<div class="result-card"><div class="amount">'+fmt(totalCost)+'</div><div class="label">Total Cost</div></div>'+
+ '<div class="result-card"><div class="amount">'+fmt(fin)+'</div><div class="label">Final Value</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

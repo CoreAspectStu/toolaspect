@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrical Load Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate total amps from your appliance list, recommended breaker size, and check service panel capacity. Free electrical load calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/electrical-load-calculator/">
+<meta property="og:title" content="Electrical Load Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/electrical-load-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Electrical Load Calculator","description":"Calculate amps, breaker size, and service capacity check.","url":"https://toolaspect.com/electrical-load-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:680px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.load-row{display:grid;grid-template-columns:2fr 1fr 40px;gap:10px;margin-bottom:10px;align-items:end}
+.load-row input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 12px;font-size:.9rem;font-family:inherit;outline:none}
+.btn{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35);color:var(--text);border-radius:10px;padding:9px 16px;font-size:.82rem;cursor:pointer;margin-top:4px}
+.btn.del{background:transparent;border-color:var(--border);color:var(--muted);padding:10px 12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.sub-result strong{color:#60a5fa}
+.warn{color:#fbbf24}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row,.load-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Electrical Load Calculator</h1>
+  <p class="subtitle">Total amps, breaker size, and service capacity check</p>
+
+  <div class="card">
+    <div id="loadList"></div>
+    <button class="btn" onclick="addRow()">+ Add appliance</button>
+    <div class="form-row" style="margin-top:16px">
+      <div class="form-group">
+        <label>Voltage</label>
+        <select id="volts" onchange="calc()">
+          <option value="120">120V</option>
+          <option value="240">240V</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Service panel capacity (A)</label>
+        <select id="service" onchange="calc()">
+          <option value="100">100A</option>
+          <option value="150">150A</option>
+          <option value="200" selected>200A</option>
+          <option value="400">400A</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Electrical Load Calculator Works</h2>
+    <p>List each appliance or device on the circuit along with its wattage (found on the nameplate or in the manual), and this calculator sums the load, converts to amps, and recommends the next standard breaker size. It also checks the total against your service panel so you can see whether a new high-draw appliance — a tankless water heater, EV charger, or hot tub — fits your service.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Amps:</strong> A = watts ÷ volts (Ohm's law / power law, P = V × I)</li>
+      <li><strong>Breaker size:</strong> next standard size ≥ 125% of continuous load: 15, 20, 25, 30, 40, 50, 60A</li>
+      <li><strong>Circuit safe capacity:</strong> 80% of breaker rating for continuous loads (e.g., 16A on a 20A breaker)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 120V circuit running a 1500W space heater, 300W of LED lights, and a 600W TV: total = 2400W → 2400 ÷ 120 = 20A. A 20A breaker at 80% continuous capacity (16A) is overloaded if the heater runs continuously — put the heater on a dedicated circuit, leaving 900W (7.5A) for the rest, which fits a 15A breaker.</p>
+
+    <h2>Common Appliance Loads</h2>
+    <ul>
+      <li><strong>Electric water heater:</strong> 4,500W @ 240V = 18.75A (30A breaker)</li>
+      <li><strong>Electric dryer:</strong> 5,000W @ 240V ≈ 21A (30A breaker)</li>
+      <li><strong>EV charger (Level 2, 32A):</strong> 7,680W @ 240V (40A breaker)</li>
+      <li><strong>Microwave:</strong> 1,000–1,500W @ 120V = 8–12.5A</li>
+      <li><strong>Space heater:</strong> 1,500W @ 120V = 12.5A — one per circuit</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Why only 80% of a breaker rating?</strong> NEC requires that continuous loads (3+ hours) not exceed 80% of a breaker's rating, so breakers don't trip under sustained heat. Non-continuous loads can use the full rating.</p>
+    <p><strong>Can I upsize a breaker?</strong> Never without verifying the wire gauge — a 20A breaker needs 12 AWG copper, 30A needs 10 AWG. An oversized breaker on undersized wire is a fire hazard.</p>
+    <p><strong>Do I need a service upgrade?</strong> If your calculated load exceeds ~80% of your service capacity, or you're adding an EV charger or tankless water heater to a 100A panel, get a load calculation from a licensed electrician (NEC Article 220 allows demand factors this simple tool doesn't).</p>
+    <p><strong>Is this calculator code-compliant?</strong> No — it's a planning aid. Permit-level load calculations follow NEC Article 220 with demand factors, diversity, and area-based allowances. Always have a licensed electrician verify.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var defaults=[["Space heater",1500],["LED lights",300],["TV",600]];
+function addRow(name,watts){
+  var d=document.createElement('div');
+  d.className='load-row';
+  d.innerHTML='<input type="text" placeholder="Appliance" value="'+(name||'')+'" oninput="calc()">'+
+    '<input type="number" placeholder="Watts" min="0" step="10" value="'+(watts!=null?watts:'')+'" oninput="calc()">'+
+    '<button class="btn del" onclick="this.parentNode.remove();calc()">×</button>';
+  document.getElementById('loadList').appendChild(d);
+}
+function calc(){
+  var volts=parseFloat(document.getElementById('volts').value)||120;
+  var service=parseFloat(document.getElementById('service').value)||200;
+  var rows=document.querySelectorAll('.load-row');
+  var totalW=0,n=0;
+  rows.forEach(function(r){
+    var w=parseFloat(r.children[1].value)||0;
+    if(w>0){totalW+=w;n++;}
+  });
+  if(totalW<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Add appliances and wattages</div>';return;}
+  var amps=totalW/volts;
+  var sizes=[15,20,25,30,40,50,60,70,80,90,100];
+  var breaker=null;
+  for(var i=0;i<sizes.length;i++){if(sizes[i]>=amps*1.25){breaker=sizes[i];break;}}
+  var svcAmps=totalW/240; // service loads split across legs
+  var pct=svcAmps/service*100;
+  var svcNote=pct>80?'<span class="warn">⚠ '+pct.toFixed(0)+'% of '+service+'A service — consider an upgrade (consult an electrician)</span>':pct.toFixed(0)+'% of your '+service+'A service — OK';
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+amps.toFixed(1)+' A</div>'+
+    '<div class="sub-result">'+n+' appliances · '+totalW.toLocaleString()+'W @ '+volts+'V</div>'+
+    (breaker?'<div class="sub-result">Recommended breaker: <strong>'+breaker+'A</strong> (125% of load)</div>':'<div class="sub-result">Load exceeds 100A — needs a subpanel or dedicated circuits</div>')+
+    '<div class="sub-result">Service check: '+svcNote+'</div>';
+}
+defaults.forEach(function(d){addRow(d[0],d[1]);});
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

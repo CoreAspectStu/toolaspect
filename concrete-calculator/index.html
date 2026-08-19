@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concrete Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate cubic yards of concrete for slabs, footings, and columns. Estimates 80lb bag count and total cost. Free concrete calculator for contractors and DIY.">
+<link rel="canonical" href="https://toolaspect.com/concrete-calculator/">
+<meta property="og:title" content="Concrete Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/concrete-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Concrete Calculator","description":"Calculate cubic yards of concrete, bags needed, and cost.","url":"https://toolaspect.com/concrete-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.unit-toggle{display:flex;gap:6px;margin-bottom:18px;justify-content:center}
+.unit-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:10px;padding:8px 18px;font-size:.82rem;cursor:pointer}
+.unit-btn.active{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.35);color:var(--text)}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Concrete Calculator</h1>
+  <p class="subtitle">Cubic yards, 80lb bags, and cost estimate</p>
+
+  <div class="unit-toggle">
+    <button class="unit-btn active" onclick="setMode('slab',this)">Slab</button>
+    <button class="unit-btn" onclick="setMode('footing',this)">Footing</button>
+    <button class="unit-btn" onclick="setMode('column',this)">Column</button>
+  </div>
+
+  <div class="card">
+    <div id="inputs"></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group">
+        <label>Waste factor (%)</label>
+        <input type="number" id="waste" value="10" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per yd³ ($, ready-mix)</label>
+        <input type="number" id="price" value="150" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Concrete Calculator Works</h2>
+    <p>Enter your dimensions and this calculator returns the volume of concrete you need in cubic feet and cubic yards, the number of 80-pound bags of quikrete required for smaller pours, and a cost estimate based on your local ready-mix price. Slab mode handles patios, driveways, and shed pads; footing mode handles rectangular footings; column mode handles round sono-tubes and square posts.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Slab / footing volume:</strong> V (ft³) = length × width × thickness(ft)</li>
+      <li><strong>Round column volume:</strong> V (ft³) = π × (diameter/2)² × height</li>
+      <li><strong>Cubic yards:</strong> yd³ = ft³ ÷ 27 (one cubic yard = 27 cubic feet)</li>
+      <li><strong>80lb bags:</strong> bags = ceil(V ÷ 0.6) — one 80lb bag yields ≈ 0.6 ft³ of mixed concrete</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 10 ft × 10 ft slab at 4 inches thick: thickness = 4/12 = 0.333 ft, so volume = 10 × 10 × 0.333 = 33.3 ft³. That is 33.3 ÷ 27 = 1.23 yd³ (order 1.5 yd³ with 10% waste). In bags: 33.3 ÷ 0.6 = 56 eighty-pound bags. At $150/yd³, ready-mix costs about $185 — far easier than mixing 56 bags by hand.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many 80lb bags of concrete make a yard?</strong> One cubic yard is 27 ft³ and each 80lb bag yields 0.6 ft³, so you'd need 45 bags per yard — mixing by hand beyond about 1 yard is impractical.</p>
+    <p><strong>How thick should a concrete slab be?</strong> Patios and walkways: 4 inches. Driveways: 4–6 inches. Shed bases: 4–5 inches. Always check local code.</p>
+    <p><strong>How much waste should I add?</strong> 5–10% for typical pours, up to 15% for irregular shapes or uneven ground.</p>
+    <p><strong>60lb vs 80lb bags?</strong> A 60lb bag yields about 0.45 ft³. Multiply our bag count by 1.33 for 60lb bags.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/fence-calculator/">Fence Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var mode='slab';
+function setMode(m,btn){
+  mode=m;
+  document.querySelectorAll('.unit-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderInputs();
+  calc();
+}
+function renderInputs(){
+  var h='';
+  if(mode==='slab'){
+    h='<div class="form-row"><div class="form-group"><label>Length (ft)</label><input type="number" id="a" value="10" min="0" step="0.5" oninput="calc()"></div><div class="form-group"><label>Width (ft)</label><input type="number" id="b" value="10" min="0" step="0.5" oninput="calc()"></div><div class="form-group"><label>Thickness (in)</label><input type="number" id="c" value="4" min="0.5" step="0.5" oninput="calc()"></div></div>';
+  }else if(mode==='footing'){
+    h='<div class="form-row"><div class="form-group"><label>Length (ft)</label><input type="number" id="a" value="20" min="0" step="0.5" oninput="calc()"></div><div class="form-group"><label>Width (in)</label><input type="number" id="b" value="16" min="1" step="1" oninput="calc()"></div><div class="form-group"><label>Depth (in)</label><input type="number" id="c" value="8" min="1" step="1" oninput="calc()"></div></div>';
+  }else{
+    h='<div class="form-row"><div class="form-group"><label>Diameter (in)</label><input type="number" id="d" value="12" min="1" step="1" oninput="calc()"></div><div class="form-group"><label>Height (ft)</label><input type="number" id="a" value="4" min="0" step="0.5" oninput="calc()"></div><div class="form-group"><label>Number of columns</label><input type="number" id="n" value="4" min="1" step="1" oninput="calc()"></div></div><div class="form-group" id="sqWrap"><label><input type="checkbox" id="square" style="width:auto;margin-right:6px" onchange="calc()"> Square column (instead of round)</label></div>';
+  }
+  document.getElementById('inputs').innerHTML=h;
+}
+function calc(){
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var cf=0;
+  var a=parseFloat((document.getElementById('a')||{}).value)||0;
+  var b=parseFloat((document.getElementById('b')||{}).value)||0;
+  var c=parseFloat((document.getElementById('c')||{}).value)||0;
+  if(mode==='slab'){ cf=a*b*(c/12); }
+  else if(mode==='footing'){ cf=a*(b/12)*(c/12); }
+  else{
+    var d=parseFloat((document.getElementById('d')||{}).value)||0;
+    var n=parseFloat((document.getElementById('n')||{}).value)||1;
+    var sq=document.getElementById('square')&&document.getElementById('square').checked;
+    var one=sq?(d/12)*(d/12)*a:Math.PI*Math.pow(d/24,2)*a;
+    cf=one*n;
+  }
+  if(cf<=0||isNaN(cf)){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var cfW=cf*(1+waste);
+  var yd=cfW/27;
+  var bags=Math.ceil(cfW/0.6);
+  var cost=yd*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+yd.toFixed(2)+' yd³</div>'+
+    '<div class="sub-result">'+cfW.toFixed(1)+' ft³ (with '+Math.round(waste*100)+'% waste)</div>'+
+    '<div class="sub-result"><strong>'+bags+'</strong> × 80lb bags</div>'+
+    (price>0?'<div class="sub-result">Ready-mix cost estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+renderInputs();
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deck Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate deck boards, joists, and footings from your deck dimensions. Includes cost estimate and joist spacing guidance. Free deck calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/deck-calculator/">
+<meta property="og:title" content="Deck Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/deck-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Deck Calculator","description":"Calculate deck boards, joists, and footings.","url":"https://toolaspect.com/deck-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.2rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.sub-result strong{color:#60a5fa}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Deck Calculator</h1>
+  <p class="subtitle">Deck boards, joists, and footings from dimensions</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Deck length (ft)</label>
+        <input type="number" id="len" value="16" min="1" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Deck width (ft)</label>
+        <input type="number" id="wid" value="12" min="1" step="0.5" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Joist spacing</label>
+        <select id="joistOC" onchange="calc()">
+          <option value="16">16" on center</option>
+          <option value="12">12" on center</option>
+          <option value="24">24" on center</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Board width (in, incl. gap)</label>
+        <input type="number" id="boardW" value="5.5" min="1" step="0.25" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price per deck board ($)</label>
+        <input type="number" id="price" value="8" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per joist ($)</label>
+        <input type="number" id="joistPrice" value="14" min="0" step="0.5" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Deck Calculator Works</h2>
+    <p>Enter your deck's length and width, joist spacing, and decking board width. The calculator estimates the number of decking boards, the number of joists (including a rim joist at each end), concrete footings based on beam spans, and a lumber cost estimate. Board width should include the fastener gap — a standard 5.5" composite or 5.5" wood board spans 5.5" installed with gaps.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Decking boards:</strong> ceil(deck width ÷ (board width ÷ 12)), boards run parallel to the length</li>
+      <li><strong>Joists:</strong> ceil(deck length ÷ (spacing ÷ 12)) + 1, plus rim joists</li>
+      <li><strong>Footings:</strong> 2 per beam line; beams every ~8 ft of joist span (4 max for typical decks)</li>
+      <li><strong>Deck area:</strong> length × width, for fasteners and stain estimates</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 16 ft × 12 ft deck with 5.5" boards running the 16 ft direction: board rows = 12 ÷ (5.5/12) = 26.2 → 27 rows. Using 16 ft boards, that's 27 boards. Joists at 16" OC spanning the 12 ft width: ceil(16 ÷ 1.333) + 1 = 13 joists × 12 ft each. With beams at mid-span and ledger, figure 4–6 footings depending on beam config. At $8/board and $14/joist: decking ≈ $216, joists ≈ $182.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What joist spacing should I use?</strong> 16" OC is standard for wood decking. Use 12" OC for composite (check manufacturer specs — many require it perpendicular to house) and for diagonal layouts; 24" OC only for 2×6 wood boards.</p>
+    <p><strong>How far can a 2x8 joist span?</strong> Roughly 12–14 ft at 16" OC for Southern pine; check the IRC span tables or your local code for your species and grade.</p>
+    <p><strong>How many footings do I need?</strong> Typically one every 4–8 ft along each beam line, sized by soil bearing capacity. Most ground-level decks need 4–8; elevated multi-beam decks need more.</p>
+    <p><strong>Should decking run parallel or perpendicular to the house?</strong> Boards normally run perpendicular to joists and parallel to the house for a conventional look — the calculator assumes boards run parallel to the deck length.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/fence-calculator/">Fence Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var oc=parseFloat(document.getElementById('joistOC').value)||16;
+  var bw=parseFloat(document.getElementById('boardW').value)||5.5;
+  var bp=parseFloat(document.getElementById('price').value)||0;
+  var jp=parseFloat(document.getElementById('joistPrice').value)||0;
+  if(len<=0||wid<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter deck dimensions</div>';return;}
+  // boards run parallel to length, rows across width
+  var rows=Math.ceil(wid/(bw/12));
+  var boardsPerRow=1; // assume full-length boards (len ft long)
+  var boards=rows*boardsPerRow;
+  // joists span the width, spaced along length
+  var joists=Math.ceil(len/(oc/12))+1;
+  var joistLF=joists*wid;
+  // beams every 8 ft of joist span: number of beam lines
+  var beamLines=Math.ceil(wid/8)+1; // includes ledger side
+  var footings=beamLines*2;
+  var area=len*wid;
+  var cost=boards*bp+joists*jp;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+boards+' deck boards</div>'+
+    '<div class="sub-result">'+rows+' rows × '+len+' ft ('+bw+'" boards)</div>'+
+    '<div class="sub-result"><strong>'+joists+' joists</strong> @ '+oc+'" OC ('+joistLF.toFixed(0)+' lf of '+wid+' ft joists)</div>'+
+    '<div class="sub-result">≈ <strong>'+footings+' footings</strong> ('+beamLines+' beam lines × 2)</div>'+
+    '<div class="sub-result">Deck area: <strong>'+area.toFixed(0)+' ft²</strong></div>'+
+    (cost>0?'<div class="sub-result">Lumber estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

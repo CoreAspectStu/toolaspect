@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fence Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate fence posts, rails, and pickets from your perimeter length. Includes post spacing guidance and concrete for posts. Free fence calculator.">
+<link rel="canonical" href="https://toolaspect.com/fence-calculator/">
+<meta property="og:title" content="Fence Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/fence-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Fence Calculator","description":"Calculate fence posts, rails, and pickets from perimeter.","url":"https://toolaspect.com/fence-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.4rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.sub-result strong{color:#60a5fa}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Fence Calculator</h1>
+  <p class="subtitle">Posts, rails, and pickets from perimeter length</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Total fence length (ft)</label>
+        <input type="number" id="len" value="150" min="1" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Post spacing (ft)</label>
+        <input type="number" id="spacing" value="8" min="4" max="12" step="0.5" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Rails per section</label>
+        <input type="number" id="railsPer" value="2" min="1" max="4" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Picket width (in)</label>
+        <input type="number" id="picketW" value="5.5" min="1" step="0.25" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Picket gap (in)</label>
+        <input type="number" id="gap" value="0.5" min="0" step="0.125" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Fence style</label>
+        <select id="style" onchange="calc()">
+          <option value="picket">Picket (with pickets)</option>
+          <option value="privacy">Privacy (no gap)</option>
+          <option value="rail">Rail only (no pickets)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Fence Calculator Works</h2>
+    <p>Enter your total fence run and post spacing, and this calculator estimates posts, rails, and pickets. Posts are spaced evenly (8 ft is standard), rails run horizontally between posts (2 rails for fences under 5 ft, 3 for taller), and pickets are counted across the run including gaps. It also tells you how many 80lb bags of concrete you'll need to set the posts — two bags per standard 4×4 post hole is the norm.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Posts:</strong> ceil(fence length ÷ post spacing) + 1</li>
+      <li><strong>Rails:</strong> sections × rails per section, where sections = posts − 1</li>
+      <li><strong>Pickets:</strong> fence length ÷ ((picket width + gap) ÷ 12)</li>
+      <li><strong>Post concrete:</strong> ≈ 2 × 80lb bags per post (12" dia × 24–30" deep hole)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 150 ft privacy fence with 8 ft post spacing: posts = ceil(150 ÷ 8) + 1 = 20 posts. Sections = 19, so 2 rails per section = 38 rails (16 ft 2×4s ripped in half gives 76 8-ft rails — or buy 19 16-ft 2×4s and cut each into two 8 ft rails). Pickets at 5.5" wide with no gap: 150 ÷ (5.5/12) = 327 pickets. Concrete: 40 bags of 80lb quikrete.</p>
+
+    <h2>Post Spacing Guide</h2>
+    <ul>
+      <li><strong>6–8 ft</strong> — standard for privacy and picket fences (8 ft minimizes posts)</li>
+      <li><strong>8–10 ft</strong> — rail fences and wire fencing with tensioned line wires</li>
+      <li><strong>Closer spacing</strong> — high-wind areas, heavy gates, or 8 ft tall fences</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How deep should fence posts be?</strong> Bury 1/3 to 1/2 of the above-ground height, minimum 24". A 6 ft fence typically needs 36" holes — below the frost line in cold climates.</p>
+    <p><strong>Should I use concrete for every post?</strong> For privacy and picket fences, yes. For long agricultural runs, corner and gate posts get concrete, line posts can be tamped dirt.</p>
+    <p><strong>How many pickets for 100 ft of fence?</strong> With 5.5" pickets and 1/2" gaps: 100 ÷ (6/12) = 200 pickets.</p>
+    <p><strong>Gate posts?</strong> Use heavier posts (6×6 for wide gates) and set them deeper with extra concrete — gates put leverage loads on posts.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var sp=parseFloat(document.getElementById('spacing').value)||8;
+  var rps=parseFloat(document.getElementById('railsPer').value)||2;
+  var pw=parseFloat(document.getElementById('picketW').value)||5.5;
+  var gap=parseFloat(document.getElementById('gap').value)||0;
+  var style=document.getElementById('style').value;
+  if(style==='privacy')gap=0;
+  if(len<=0||sp<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter fence length and spacing</div>';return;}
+  var posts=Math.ceil(len/sp)+1;
+  var sections=posts-1;
+  var rails=sections*rps;
+  var railLF=rails*sp;
+  var pickets=style==='rail'?0:Math.ceil(len/((pw+gap)/12));
+  var bags=posts*2;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+posts+' posts</div>'+
+    '<div class="sub-result">'+sections+' sections @ '+sp+' ft</div>'+
+    '<div class="sub-result"><strong>'+rails+' rails</strong> ('+railLF.toFixed(0)+' linear ft, '+rps+' per section)</div>'+
+    (pickets>0?'<div class="sub-result"><strong>'+pickets+' pickets</strong> ('+pw+'" + '+gap+'" gap)</div>':'')+
+    '<div class="sub-result">Post concrete: <strong>'+bags+' × 80lb bags</strong></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
