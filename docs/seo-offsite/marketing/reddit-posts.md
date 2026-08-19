@@ -1,4 +1,4 @@
-# Reddit Posts — toolaspect.com
+# Reddit Posts, toolaspect.com
 
 Vary the posting accounts, stagger over 2+ weeks, engage with comments. Delete any thread that gets heavily downvoted early.
 
@@ -10,7 +10,7 @@ Vary the posting accounts, stagger over 2+ weeks, engage with comments. Delete a
 
 **Body:**
 
-Been grinding on this for about 14 months now. The site is [toolaspect.com](https://toolaspect.com) — free online tools, no signup, no ads, nothing to install.
+Been grinding on this for about 14 months now. The site is [toolaspect.com](https://toolaspect.com), free online tools, no signup, no ads, nothing to install.
 
 The pitch is boring on purpose: finance calculators (loan payoff, mortgage, compound interest), dev utilities (JSON formatter, base64, regex tester), unit converters, a word unscrambler for the Wordle crowd, some AI cost calculators. All client-side where possible, so they load instantly.
 
@@ -23,11 +23,11 @@ The numbers people always ask about:
 
 Everyone told me to slap AdSense on it month two. I ran the numbers: I'd earn maybe $200/mo and tank load times and repeat visits. Instead the whole thing works as a portfolio piece / lead-gen for client work, and it actually outperforms my old portfolio site for that.
 
-Happy to answer questions about the stack (it's boring — static pages + vanilla JS for most tools), SEO for long-tail tool queries, or why I think most tool sites die from ad bloat.
+Happy to answer questions about the stack (it's boring, static pages + vanilla JS for most tools), SEO for long-tail tool queries, or why I think most tool sites die from ad bloat.
 
 ---
 
-## Post 2 — r/webdev (technical angle)
+## Post 2, r/webdev (technical angle)
 
 **Title:** Built 1,400+ client-side tools — what I learned about shipping boring fast pages in 2026
 
@@ -50,7 +50,7 @@ Ask me anything about the architecture. Happy to share the page template structu
 
 ## Post 3 — r/personalfinance (value post, no promo till the end)
 
-**Title:** PSA: stop guessing your loan payoff date — a calculator will depress you into action
+**Title:** PSA: stop guessing your loan payoff date, a calculator will depress you into action
 
 **Body:**
 
@@ -58,7 +58,7 @@ I did the thing where I paid "extra" on my car loan whenever I felt rich for two
 
 Owed $11,400 at 6.9%. My irregular "extra" payments had knocked maybe 4 months off. If I'd just committed an extra $150/mo from the start I'd have been done 14 months earlier and saved about $780 in interest. The difference between vibes-based and plan-based paying was almost a grand.
 
-So: pick a calculator (any of them — I use the ones on [toolaspect.com](https://toolaspect.com/loan-calculator) because they're free with no signup, but bank ones work too), and actually model:
+So: pick a calculator (any of them, I use the ones on [toolaspect.com](https://toolaspect.com/loan-calculator) because they're free with no signup, but bank ones work too), and actually model:
 
 1. Your real payoff date at minimum payment
 2. +$100/mo, +$200/mo scenarios
@@ -92,7 +92,7 @@ The layout's not going to win design awards but that's kind of the charm. It loa
 
 **Body:**
 
-Genuine question for this community. I built [toolaspect.com](https://toolaspect.com) — free calculators, dev tools, converters, no accounts, no ads. The whole thesis is that tool sites are unusable because of signup walls and ads, so I removed both.
+Genuine question for this community. I built [toolaspect.com](https://toolaspect.com), free calculators, dev tools, converters, no accounts, no ads. The whole thesis is that tool sites are unusable because of signup walls and ads, so I removed both.
 
 But I'm second-guessing myself, so I want honest feedback:
 
@@ -138,7 +138,7 @@ What worked:
 
 - **Long-tail intent is alive.** "Loan payoff calculator with extra payments" still gets thousands of searches a month. Generic heads ("calculator") are unwinnable, but the long tail is enormous and poorly served.
 - **Speed as differentiation.** Competitors run 4+ ad scripts. My LCP is under a second. Time-on-page and repeat visits reflect it.
-- **AI tools created new demand.** Token cost calculators, prompt counters — categories that didn't exist two years ago now drive real traffic.
+- **AI tools created new demand.** Token cost calculators, prompt counters, categories that didn't exist two years ago now drive real traffic.
 
 What didn't:
 
@@ -157,8 +157,8 @@ If you're looking for a niche: pick utilities where the incumbent is ad-choked a
 
 Came across [toolaspect.com](https://toolaspect.com) looking for a decent word unscrambler (don't judge, Scrabble ego was on the line).
 
-The site has 1,400+ tools — finance calculators, dev stuff like a JSON formatter and regex tester, unit converters, health calculators, AI cost estimators. No ads I can find, no account prompt, no cookie banner drama. Pages load basically instantly.
+The site has 1,400+ tools, finance calculators, dev stuff like a JSON formatter and regex tester, unit converters, health calculators, AI cost estimators. No ads I can find, no account prompt, no cookie banner drama. Pages load basically instantly.
 
 My question for the room: how does something like this exist? Hosting 1,400 static pages is cheap (I get that part), but someone built all of them. Labor of love? Loss leader? The about page is vague.
 
-Either way it's going in my bookmarks — the loan payoff calculator already showed me my car loan's real payoff date and ruined my afternoon (in a useful way). Just curious whether no-ads utility sites like this stick around or inevitably enshittify.
+Either way it's going in my bookmarks, the loan payoff calculator already showed me my car loan's real payoff date and ruined my afternoon (in a useful way). Just curious whether no-ads utility sites like this stick around or inevitably enshittify.

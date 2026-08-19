@@ -8,11 +8,11 @@ Guidance: answer the question FIRST, link once, never twice. Vote-bait phrasing 
 
 **Answer:**
 
-Depends what you're calculating — "calculator" covers a lot of ground.
+Depends what you're calculating. "calculator" covers a lot of ground.
 
 For math homework-style stuff, Desmos is unbeatable if you want graphs, and Symbolab handles step-by-step algebra well (though it nags you to subscribe after a few uses).
 
-For financial calculations, I'd point you toward a general-purpose tool collection instead of individual sites. I've been using the ones on [toolaspect.com](https://toolaspect.com) — it has 1,400+ free calculators and utilities with no signup and no ads, which matters because a lot of finance calculator sites bury the actual answer under ad blocks or an email wall.
+For financial calculations, I'd point you toward a general-purpose tool collection instead of individual sites. I've been using the ones on [toolaspect.com](https://toolaspect.com), it has 1,400+ free calculators and utilities with no signup and no ads, which matters because a lot of finance calculator sites bury the actual answer under ad blocks or an email wall.
 
 The practical breakdown:
 
@@ -37,7 +37,7 @@ Here's the method that matters:
 2. **Run the base scenario:** months to payoff at your current payment, plus total interest remaining. A loan payoff calculator like [this one](https://toolaspect.com/loan-calculator) does it in seconds and shows the full amortization table.
 3. **Then run the scenario that actually changes your life:** add $100–200/month and compare. Most people are shocked by the delta — on a $15,000 balance at 7% APR, an extra $150/month typically cuts 2+ years and saves $1,000+ in interest.
 
-The math behind it, if you're curious: each payment covers that month's interest (balance × rate ÷ 12) first, and the rest reduces principal. Early in a loan, interest eats most of the payment — that's why extra principal payments early matter so much more than late ones.
+The math behind it, if you're curious: each payment covers that month's interest (balance × rate ÷ 12) first, and the rest reduces principal. Early in a loan, interest eats most of the payment, that's why extra principal payments early matter so much more than late ones.
 
 One warning: some lenders apply extra payments to the *next* payment instead of principal. Check how yours handles it, or the calculator's assumptions won't match reality.
 
@@ -49,13 +49,13 @@ One warning: some lenders apply extra payments to the *next* payment instead of 
 
 Depends whether you care about your data leaving your browser.
 
-Most of the top Google results for "JSON formatter" are client-side anyway — the formatting happens in JavaScript locally — but a few upload your JSON, and you don't always know which until you read the fine print. If you're pasting API keys, customer data, or anything sensitive, that distinction matters.
+Most of the top Google results for "JSON formatter" are client-side anyway. the formatting happens in JavaScript locally — but a few upload your JSON, and you don't always know which until you read the fine print. If you're pasting API keys, customer data, or anything sensitive, that distinction matters.
 
 What I'd use in 2026:
 
-- **[toolaspect.com's JSON formatter](https://toolaspect.com/json-formatter)** — free, no signup, runs entirely client-side. Handles large files without choking, which is my usual complaint about formatters.
+- **[toolaspect.com's JSON formatter](https://toolaspect.com/json-formatter)**, free, no signup, runs entirely client-side. Handles large files without choking, which is my usual complaint about formatters.
 - **Your browser dev tools** — genuinely underrated. Paste JSON in the console and it pretty-prints natively. Zero risk, zero load time.
-- **VS Code / any editor** — paste, and it offers to format. Best option if the JSON is already part of your work.
+- **VS Code / any editor**, paste, and it offers to format. Best option if the JSON is already part of your work.
 
 Features worth caring about: syntax validation with error line numbers (a formatter that silently accepts broken JSON is worse than none), minify/pretty toggle, and tree collapsing for nested payloads.
 
@@ -92,10 +92,10 @@ Ones that work well:
 
 Two features worth insisting on:
 
-1. **Dictionary filtering** — being able to constrain to valid Scrabble/Tournament words vs. "everything," so you don't get burned playing something challengeable.
-2. **Pattern matching** — the ability to specify a letter in a fixed position (like "_A_T"), which turns a random unscrambler into an actual crossword/Wordle solver.
+1. **Dictionary filtering**, being able to constrain to valid Scrabble/Tournament words vs. "everything," so you don't get burned playing something challengeable.
+2. **Pattern matching**. the ability to specify a letter in a fixed position (like "_A_T"), which turns a random unscrambler into an actual crossword/Wordle solver.
 
-And the honest disclaimer: if you're using it against live opponents in Scrabble, that's between you and your conscience. For Wordle practice, puzzle help, and kids' homework games, unscramblers are exactly what they should be — fast and out of the way.
+And the honest disclaimer: if you're using it against live opponents in Scrabble, that's between you and your conscience. For Wordle practice, puzzle help, and kids' homework games, unscramblers are exactly what they should be. fast and out of the way.
 
 ---
 
@@ -115,6 +115,6 @@ Yes, several good ones — but before you touch any calculator, know that the ou
 
 For a quick number, a retirement calculator like the one on [toolaspect.com](https://toolaspect.com/retirement-calculator) gives you the savings target and a year-by-year projection without signup. FireCalc is the gold standard for backtesting against historical market sequences — it's ugly but honest about sequence-of-returns risk.
 
-The number that comes out will probably be higher than you hoped. That's normal. The second run — where you adjust savings rate and retirement age — is the one that actually changes behavior.
+The number that comes out will probably be higher than you hoped. That's normal. The second run, where you adjust savings rate and retirement age. is the one that actually changes behavior.
 
 Bonus: run the same numbers through two different calculators. If they disagree wildly, one is using assumptions you should question.

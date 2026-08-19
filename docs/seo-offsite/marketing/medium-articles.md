@@ -84,7 +84,7 @@ Here's the simple version.
 
 All the major providers quote prices per million tokens. A token is roughly ¾ of a word — 1,000 tokens is about 750 words of English. Input tokens are what you send (your prompt, context, documents); output tokens are what the model generates. Output costs more, usually 2–4× input, because generation is computationally heavier.
 
-As of the latest pricing rounds, the general landscape:
+Recent pricing rounds, roughly:
 
 - **Flagship models** (the biggest, smartest tier): roughly $1–10 per million input tokens, $3–40 per million output.
 - **Mid-tier workhorses:** the $0.15–$3 per million range — these handle most production workloads fine.
