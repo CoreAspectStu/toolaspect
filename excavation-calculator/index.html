@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excavation Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate cubic yards of soil to excavate, truck loads, and removal cost from trench, pit, or pool dimensions. Free excavation calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/excavation-calculator/">
+<meta property="og:title" content="Excavation Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/excavation-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Excavation Calculator","description":"Calculate excavation volume in cubic yards, truck loads, and removal cost.","url":"https://toolaspect.com/excavation-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Excavation Calculator</h1>
+  <p class="subtitle">Cubic yards to remove, truck loads &amp; haul-off cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Length (ft)</label><input type="number" id="len" value="30" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Width (ft)</label><input type="number" id="wid" value="20" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Depth (ft)</label><input type="number" id="dep" value="5" min="0" step="0.25" oninput="calc()"></div>
+      <div class="form-group">
+        <label>Soil Swell Factor</label>
+        <select id="swell" onchange="calc()">
+          <option value="1.10">Sand/gravel — 10%</option>
+          <option value="1.25" selected>Loam/common earth — 25%</option>
+          <option value="1.35">Clay — 35%</option>
+          <option value="1.40">Rock (blasted) — 40%</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Truck Size</label>
+        <select id="truck" onchange="calc()">
+          <option value="10">Small dump — 10 yd³</option>
+          <option value="15" selected>Standard dump — 15 yd³</option>
+          <option value="20">Tri-axle — 20 yd³</option>
+          <option value="25">Semi end-dump — 25 yd³</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Haul-off Price ($/load)</label><input type="number" id="price" value="150" min="0" step="10" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Excavation Calculator Works</h2>
+    <p>Enter the pit, trench, or pool dimensions and the calculator returns the volume in cubic feet, <strong>bank cubic yards</strong> (in-place soil), and <strong>loose cubic yards</strong> after the soil swells during digging. It then divides by your truck capacity to give truck loads and multiplies by the per-load haul-off price for a removal cost estimate. If you need backfill, keep in mind compacted backfill takes about 10–20% more volume than the hole it came from.</p>
+
+    <h2>Excavation Formulas</h2>
+    <ul>
+      <li><strong>Volume (ft³) = length × width × depth</strong> (trenches: length × width × average depth)</li>
+      <li><strong>Bank cubic yards (BCY) = ft³ ÷ 27</strong></li>
+      <li><strong>Loose cubic yards (LCY) = BCY × swell factor</strong> (earth swells 20–40% when dug)</li>
+      <li><strong>Truck loads = ceil(LCY ÷ truck capacity)</strong></li>
+      <li><strong>Weight check:</strong> loose soil ≈ 2,400 lb/yd³ — a 15 yd³ truck hauls ~18 tons at the legal limit in most states</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>Excavating a 30 ft × 20 ft pool shell 5 ft deep: 3,000 ft³ = 111 BCY. With 25% swell that's 139 loose yards — <strong>10 fifteen-yard truck loads</strong>. At $150/load, haul-off costs $1,500, plus machine time and disposal tipping fees.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What is a swell factor?</strong> Soil occupies more volume loose than in the ground. Common earth swells about 25%, clay 35%, blasted rock 40–50%. Truck counts must use loose yards.</p>
+    <p><strong>How many cubic yards are in a dump truck?</strong> Small dumps carry 10 yd³, standard single-axle/tandem dumps 12–16 yd³, tri-axles up to 20, and semi end-dumps 24–28.</p>
+    <p><strong>How much does excavation cost?</strong> Machine excavation typically runs $50–$200 per hour or $1–$5 per bank cubic yard depending on access and soil; haul-off and disposal add $15–$60 per loose yard in many markets.</p>
+    <p><strong>Do I need to keep soil for backfill?</strong> Yes — stockpile clean topsoil and suitable backfill on site. Hauling it away and buying it back can double your cost.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/rebar-calculator/">Rebar Calculator</a>
+      <a href="/asphalt-calculator/">Asphalt Calculator</a>
+      <a href="/mulch-calculator/">Mulch Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var dep=parseFloat(document.getElementById('dep').value)||0;
+  var swell=parseFloat(document.getElementById('swell').value);
+  var truck=parseFloat(document.getElementById('truck').value);
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var cft=len*wid*dep;
+  var bcy=cft/27;
+  var lcy=bcy*swell;
+  var loads=Math.ceil(lcy/truck);
+  var tons=lcy*1.2; // loose soil ~2400lb/yd3
+  var cost=loads*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+bcy.toFixed(1)+'</div><div class="label">Bank Cubic Yards</div></div>'+
+    '<div class="result-card"><div class="amount">'+lcy.toFixed(1)+'</div><div class="label">Loose Cubic Yards</div></div>'+
+    '<div class="result-card green"><div class="amount">'+loads+'</div><div class="label">Truck Loads</div></div>'+
+    '<div class="result-card"><div class="amount">'+tons.toFixed(0)+' tons</div><div class="label">Est. Loose Weight</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(cft).toLocaleString()+' ft³</div><div class="label">Volume (cubic ft)</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Haul-off Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

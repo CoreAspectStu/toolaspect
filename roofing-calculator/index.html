@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roofing Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate roofing shingle squares, underlayment rolls, ridge caps, and nails from roof footprint area and pitch. Free roofing calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/roofing-calculator/">
+<meta property="og:title" content="Roofing Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/roofing-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Roofing Calculator","description":"Calculate shingle squares, underlayment, ridge cap, and nail quantities from roof area and pitch.","url":"https://toolaspect.com/roofing-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Roofing Calculator</h1>
+  <p class="subtitle">Shingle squares, underlayment rolls, ridge caps &amp; nails</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Building Length (ft)</label><input type="number" id="len" value="40" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Building Width (ft)</label><input type="number" id="wid" value="24" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Roof Pitch</label>
+        <select id="pitch" onchange="calc()">
+          <option value="1.000">Flat / low slope</option>
+          <option value="1.030">3/12</option>
+          <option value="1.054" selected>4/12</option>
+          <option value="1.118">6/12</option>
+          <option value="1.202">8/12</option>
+          <option value="1.307">10/12</option>
+          <option value="1.414">12/12</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Roof Type</label>
+        <select id="type" onchange="calc()">
+          <option value="gable" selected>Gable (2 slopes)</option>
+          <option value="hip">Hip (4 slopes)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Waste Factor (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Price per Bundle ($)</label><input type="number" id="price" value="35" min="0" step="1" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Roofing Calculator Works</h2>
+    <p>Enter your building footprint (length × width at the eaves), select the roof pitch, and the calculator applies the correct roof pitch multiplier to convert the flat footprint into actual sloped roof area. From that it derives squares of shingles, bundles, underlayment rolls, ridge cap bundles, and nail quantities — all adjusted for a waste factor.</p>
+
+    <h2>Roofing Formulas</h2>
+    <ul>
+      <li><strong>Roof area = footprint × pitch multiplier</strong> (6/12 = 1.118, 8/12 = 1.202, 12/12 = 1.414)</li>
+      <li><strong>1 square = 100 sq ft</strong> of roof coverage</li>
+      <li><strong>Bundles = squares × 3</strong> (most 3-tab and architectural shingles: 3 bundles per square)</li>
+      <li><strong>Underlayment:</strong> 1 roll of #30 felt covers 1 square (2 layers at eaves adds ~10%)</li>
+      <li><strong>Ridge cap:</strong> 1 bundle covers ~33 lin. ft of ridge/hip when cut from 3-tab shingles</li>
+      <li><strong>Nails:</strong> 4 nails per shingle ≈ 320 nails/square → 1lb of coil nails per square</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 40 ft × 24 ft gable house with a 6/12 pitch: footprint = 960 sq ft, sloped area = 960 × 1.118 = 1,073 sq ft ≈ 10.7 squares. Ridge length = 40 ft. With 10% waste: order <strong>11.8 squares ≈ 36 bundles</strong>, 12 rolls of #30 felt, and 2 bundles of ridge cap. At $35/bundle that's about $1,260 in shingles.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many bundles of shingles make a square?</strong> Three bundles cover one square (100 sq ft) for most standard-weight 3-tab and architectural shingles. Some premium heavyweight shingles are 4–5 bundles per square — check the bundle label.</p>
+    <p><strong>What is a roof pitch multiplier?</strong> It is the ratio of sloped roof length to horizontal run — the hypotenuse of the pitch triangle. For 6/12: √(6²+12²)/12 = 1.118.</p>
+    <p><strong>What waste factor should I use?</strong> 10% for simple gable roofs, 12–15% for hip roofs and roofs with many valleys, dormers, or chimneys.</p>
+    <p><strong>How is a hip roof different?</strong> A hip roof has four sloped planes and hip ridges, so ridge/hip cap material runs along all four hips plus the main ridge — typically 1.5× the cap length of a comparable gable roof.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/siding-calculator/">Siding Calculator</a>
+      <a href="/insulation-calculator/">Insulation Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/asphalt-calculator/">Asphalt Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var pf=parseFloat(document.getElementById('pitch').value);
+  var type=document.getElementById('type').value;
+  var waste=parseFloat(document.getElementById('waste').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var foot=len*wid;
+  var area=foot*pf;
+  var squares=area/100;
+  var squaresW=squares*(1+waste/100);
+  var bundles=squaresW*3;
+  var felt=Math.ceil(squaresW*1.1); // 1 roll per square, ~10% lap/extra
+  var ridgeLen=type==='gable'?len:wid;
+  var hipLen=type==='hip'?(2*Math.sqrt(Math.pow(wid/2,2)+Math.pow(wid*0.5*(pf-1>0?1:1),2))||0):0;
+  if(type==='hip'){
+    // hip run: each hip spans from corner to ridge; approximate hip length = 2 * sqrt((wid/2)^2 + rise^2), rise = (wid/2)*pitchRatio
+    var rise=(wid/2)*(pf-1+1)/1; // rise multiplier approx via pf: rise/run; run=wid/2, rise=run*sqrt(pf^2-1)
+    rise=(wid/2)*Math.sqrt(pf*pf-1);
+    hipLen=4*Math.sqrt(Math.pow(wid/2,2)+Math.pow(rise,2));
+    ridgeLen=Math.max(0,len-wid);
+  }
+  var capLen=ridgeLen+(type==='hip'?hipLen:0);
+  var capBundles=Math.ceil(capLen/33);
+  var nails=Math.ceil(squaresW); // ~1 lb per square
+  var cost=bundles*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+squaresW.toFixed(1)+'</div><div class="label">Squares (incl. waste)</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.ceil(bundles)+'</div><div class="label">Shingle Bundles</div></div>'+
+    '<div class="result-card green"><div class="amount">'+felt+'</div><div class="label">#30 Felt Rolls</div></div>'+
+    '<div class="result-card"><div class="amount">'+capBundles+'</div><div class="label">Ridge/Hip Cap Bundles</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(area).toLocaleString()+' ft²</div><div class="label">Sloped Roof Area</div></div>'+
+    '<div class="result-card"><div class="amount">'+nails+' lb</div><div class="label">Coil Nails</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Shingle Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

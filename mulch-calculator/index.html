@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mulch Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate cubic yards of mulch or bags needed from area and depth. Includes cost estimate. Free mulch calculator for landscapers and homeowners.">
+<link rel="canonical" href="https://toolaspect.com/mulch-calculator/">
+<meta property="og:title" content="Mulch Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/mulch-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Mulch Calculator","description":"Calculate cubic yards and bags of mulch from area and depth.","url":"https://toolaspect.com/mulch-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Mulch Calculator</h1>
+  <p class="subtitle">Cubic yards &amp; bags of mulch from area and depth</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Area Length (ft)</label><input type="number" id="len" value="20" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Area Width (ft)</label><input type="number" id="wid" value="10" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Area (sq ft) — overrides dimensions if set</label><input type="number" id="area" value="" min="0" placeholder="e.g. 400" oninput="calc()"></div>
+      <div class="form-group">
+        <label>Mulch Depth (in)</label>
+        <select id="depth" onchange="calc()">
+          <option value="1">1 in — topdress</option>
+          <option value="2">2 in — thin</option>
+          <option value="3" selected>3 in — standard</option>
+          <option value="4">4 in — new bed / weed control</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price per Cubic Yard ($)</label><input type="number" id="priceYd" value="40" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Price per Bag ($, 2 ft³)</label><input type="number" id="priceBag" value="4.5" min="0" step="0.25" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Mulch Calculator Works</h2>
+    <p>Enter your bed dimensions (or a known square footage) and target depth. The calculator returns cubic yards for bulk delivery, the number of 2 cubic-foot bags if you're buying retail, and both costs so you can see how much bulk saves. One cubic yard of mulch covers about 324 sq ft at 1 inch deep, 162 sq ft at 2 inches, or 108 sq ft at 3 inches.</p>
+
+    <h2>Mulch Formulas</h2>
+    <ul>
+      <li><strong>Cubic yards = area (sq ft) × depth (in) ÷ 12 ÷ 27</strong></li>
+      <li><strong>Coverage: 1 yd³ = 27 ft³</strong> → 324 sq ft at 1 in, 108 sq ft at 3 in</li>
+      <li><strong>Bags = cubic feet ÷ 2</strong> (standard bag is 2 ft³; some are 3 ft³)</li>
+      <li><strong>Wheelbarrows:</strong> a typical wheelbarrow holds 3 ft³ heaped — 9 loads per yard</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 20 ft × 10 ft bed (200 sq ft) mulched 3 inches deep: 200 × 3 ÷ 12 = 50 ft³ = <strong>1.85 cubic yards</strong> (order 2). In bags: 50 ÷ 2 = <strong>25 bags</strong>. Bulk at $40/yd³ ≈ $80 delivered vs $112 in bags — bulk wins on any bed over about 1 yard.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How deep should mulch be?</strong> 2–3 inches for established beds, 3–4 inches for new beds or weed suppression. Avoid piling more than 4 inches — roots suffocate, and never mound mulch against tree trunks ("mulch volcanoes" cause rot).</p>
+    <p><strong>How many bags of mulch equal a yard?</strong> 13.5 two-cubic-foot bags make one cubic yard. Nine 3-cubic-foot bags also make a yard.</p>
+    <p><strong>How much does a yard of mulch weigh?</strong> Mulch weighs 400–800 lb per cubic yard depending on moisture — a half-ton pickup safely hauls about 2–3 yards of dry mulch.</p>
+    <p><strong>How do I mulch around trees?</strong> Cover the root zone out to the drip line if possible, keep mulch 3–6 inches back from the trunk, and maintain a flat, even 3 inch layer.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/excavation-calculator/">Excavation Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/asphalt-calculator/">Asphalt Calculator</a>
+      <a href="/siding-calculator/">Siding Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var areaIn=parseFloat(document.getElementById('area').value)||0;
+  var area=areaIn>0?areaIn:len*wid;
+  var depth=parseFloat(document.getElementById('depth').value);
+  var priceYd=parseFloat(document.getElementById('priceYd').value)||0;
+  var priceBag=parseFloat(document.getElementById('priceBag').value)||0;
+  var cft=area*depth/12;
+  var yd3=cft/27;
+  var yd3Buy=Math.ceil(yd3*2)/2; // order in half-yard increments
+  var bags=Math.ceil(cft/2);
+  var costYd=yd3Buy*priceYd;
+  var costBag=bags*priceBag;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+yd3.toFixed(2)+'</div><div class="label">Cubic Yards</div></div>'+
+    '<div class="result-card"><div class="amount">'+yd3Buy.toFixed(1)+' yd³</div><div class="label">Order (half-yd)</div></div>'+
+    '<div class="result-card green"><div class="amount">'+bags+'</div><div class="label">2 ft³ Bags</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(area).toLocaleString()+' ft²</div><div class="label">Coverage at '+depth+'"</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(costYd).toLocaleString()+'</div><div class="label">Bulk Cost</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(costBag).toLocaleString()+'</div><div class="label">Bagged Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

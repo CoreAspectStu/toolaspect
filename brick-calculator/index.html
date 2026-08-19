@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brick Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate bricks and mortar needed for any wall. Supports modular, King, and Queen brick sizes, waste factor, and cost estimate. Free brick calculator for masons and contractors.">
+<link rel="canonical" href="https://toolaspect.com/brick-calculator/">
+<meta property="og:title" content="Brick Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/brick-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Brick Calculator","description":"Calculate bricks and mortar bags needed for a wall, with waste factor and cost.","url":"https://toolaspect.com/brick-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Brick Calculator</h1>
+  <p class="subtitle">Bricks, mortar bags, and cost estimate for any wall</p>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Wall dimensions — or enter area directly below</label>
+      <div class="form-row">
+        <div class="form-group"><label>Wall Length (ft)</label><input type="number" id="len" value="20" min="0" step="0.5" oninput="calc()"></div>
+        <div class="form-group"><label>Wall Height (ft)</label><input type="number" id="hgt" value="8" min="0" step="0.5" oninput="calc()"></div>
+      </div>
+      <div class="form-group"><label>Wall Area (sq ft) — overrides dimensions if set</label><input type="number" id="area" value="" min="0" placeholder="e.g. 500" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Brick Type</label>
+        <select id="brick" onchange="calc()">
+          <option value="modular" selected>Modular (7⅝ × 2¼ × 3⅝ in)</option>
+          <option value="queen">Queen (7⅝ × 2¾ × 2¾ in)</option>
+          <option value="king">King (9⅝ × 2¾ × 2⅝ in)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mortar Joint (in)</label>
+        <input type="number" id="joint" value="0.375" min="0.0625" step="0.0625" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Waste Factor (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Price per 1,000 Bricks ($)</label><input type="number" id="price" value="500" min="0" step="10" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Brick Calculator Works</h2>
+    <p>Enter your wall dimensions (or a known wall area), pick your brick size, and this calculator returns the number of bricks to buy, the number of 80lb mortar bags to mix, and a material cost estimate. It works for face brick, structural brick veneer, and garden walls. Openings like doors and windows should be subtracted from the wall area before you enter it.</p>
+
+    <h2>Brick Count Formula</h2>
+    <p>Bricks per sq ft is computed from the <em>bedded size</em> — brick plus one mortar joint:</p>
+    <ul>
+      <li><strong>Bricks/sq ft = 144 ÷ [(width + joint) × (height + joint)]</strong></li>
+      <li>Modular (8 × 2⅝ in bedded) ≈ <strong>6.86 → 7 bricks/sq ft</strong></li>
+      <li>Queen ≈ 5.7 bricks/sq ft · King ≈ 4.6 bricks/sq ft</li>
+      <li><strong>Bricks needed = area × bricks/sq ft × (1 + waste%)</strong></li>
+      <li><strong>Mortar:</strong> one 80lb bag yields ~0.72 ft³ of mortar — roughly 35–40 modular bricks per bag (N mortar for veneer, S for structural)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 20 ft × 8 ft wall in modular brick with ⅜ in joints: area = 160 sq ft. Bricks = 160 × 6.86 = 1,097; add 10% waste → <strong>1,207 bricks</strong> (buy 1.21 thousand). Mortar = 1,097 ÷ 37 ≈ 30 bags before waste. At $500 per thousand, brick costs about $605.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many modular bricks are in a square foot?</strong> With a standard ⅜ in mortar joint, a bedded modular brick measures 8 × 2⅝ inches, giving 144 ÷ 21 = 6.86 — round to 7 bricks per square foot.</p>
+    <p><strong>How much mortar does a bag make?</strong> An 80lb bag of premixed mortar yields about 0.72 ft³, enough to lay roughly 35–40 modular bricks. A 3,000-brick job needs 75–85 bags.</p>
+    <p><strong>What waste factor should I use?</strong> 5–10% for clean running bond walls; 12–15% for walls with many openings, closures, or soldier courses where cuts are frequent.</p>
+    <p><strong>King vs Queen vs modular?</strong> King and Queen bricks are larger and cheaper per square foot, but modular brick aligns with 3 courses per 8 inches, which simplifies layout with standard lintels and rowslock.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/mortar-calculator/">Mortar Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <a href="/rebar-calculator/">Rebar Calculator</a>
+      <a href="/excavation-calculator/">Excavation Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var hgt=parseFloat(document.getElementById('hgt').value)||0;
+  var areaIn=parseFloat(document.getElementById('area').value)||0;
+  var area=areaIn>0?areaIn:len*hgt;
+  var j=parseFloat(document.getElementById('joint').value)||0.375;
+  var waste=parseFloat(document.getElementById('waste').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var sizes={modular:[7.625,2.25],queen:[7.625,2.75],king:[9.625,2.75]};
+  var b=sizes[document.getElementById('brick').value];
+  var beddedW=b[0]+j, beddedH=b[1]+j;
+  var perSqft=144/(beddedW*beddedH);
+  var bricksBase=area*perSqft;
+  var bricks=bricksBase*(1+waste/100);
+  var bags=Math.ceil(bricksBase/37);
+  var cost=bricks/1000*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+Math.ceil(bricks).toLocaleString()+'</div><div class="label">Bricks (incl. waste)</div></div>'+
+    '<div class="result-card"><div class="amount">'+perSqft.toFixed(2)+'</div><div class="label">Bricks per sq ft</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.ceil(bricksBase).toLocaleString()+'</div><div class="label">Bricks (no waste)</div></div>'+
+    '<div class="result-card green"><div class="amount">'+bags+'</div><div class="label">80lb Mortar Bags</div></div>'+
+    '<div class="result-card"><div class="amount">'+area.toFixed(1).toLocaleString()+'</div><div class="label">Wall Area (sq ft)</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Brick Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

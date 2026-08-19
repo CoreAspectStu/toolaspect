@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tile Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate tiles needed, thinset bags, and grout from floor or wall area, tile size, and waste percentage. Free tile calculator for contractors and DIY.">
+<link rel="canonical" href="https://toolaspect.com/tile-calculator/">
+<meta property="og:title" content="Tile Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/tile-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Tile Calculator","description":"Calculate tile count, thinset bags, and grout needed for floors and walls.","url":"https://toolaspect.com/tile-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Tile Calculator</h1>
+  <p class="subtitle">Tiles, thinset bags &amp; grout for floors and walls</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Area Length (ft)</label><input type="number" id="len" value="12" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Area Width (ft)</label><input type="number" id="wid" value="10" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tile Size</label>
+        <select id="tile" onchange="calc()">
+          <option value="12">12 × 12 in</option>
+          <option value="18">18 × 18 in</option>
+          <option value="24">24 × 24 in</option>
+          <option value="6">6 × 6 in</option>
+          <option value="4.5">4.25 × 4.25 in</option>
+          <option value="3">3 × 6 in subway</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Grout Joint Width</label>
+        <select id="joint" onchange="calc()">
+          <option value="0.125">⅛ in</option>
+          <option value="0.1875" selected>3/16 in</option>
+          <option value="0.25">¼ in</option>
+          <option value="0.375">⅜ in</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Waste Factor (%)</label><input type="number" id="waste" value="12" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Tile Price per sq ft ($)</label><input type="number" id="price" value="4" min="0" step="0.25" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Tile Calculator Works</h2>
+    <p>Enter the area to tile and your tile size. The calculator returns the number of tiles to buy (including waste for cuts and breakage), boxes of tile based on typical box quantities, 50 lb bags of thinset mortar for the trowel size your tile requires, and pounds of grout computed from tile size and joint width. Subtract cutouts like vanities and tubs from your area before entering it.</p>
+
+    <h2>Tile Formulas</h2>
+    <ul>
+      <li><strong>Tiles = area × 144 ÷ (tile width × tile height) × (1 + waste%)</strong></li>
+      <li><strong>Thinset:</strong> 50 lb bag covers ≈ 90–100 sq ft with a ¼×¼ trowel, 60–70 sq ft with ½×½ for large format</li>
+      <li><strong>Grout:</strong> joint volume = joint width × tile thickness × joint length; grout need ≈ 0.25 × joint factor × area (chart-based per 25 lb bag below)</li>
+      <li><strong>Waste:</strong> 10% for straight-lay small tile, 15% for diagonal or large-format layouts</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 12 ft × 10 ft floor (120 sq ft) with 12×12 tile and 3/16 in joints: 120 tiles before waste; add 12% → <strong>135 tiles</strong>. Thinset at ~75 sq ft per 50 lb bag: 2 bags. Grout for 12×12 with 3/16 in joints covers ~115 sq ft per 25 lb bag → <strong>1.1 bags, buy 2</strong>. At $4/sq ft the tile costs about $540.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much tile waste should I add?</strong> 10% for standard straight layouts; 15% for diagonal (diamond), herringbone, or large-format tile; 20% for natural stone with culling.</p>
+    <p><strong>How many 12x12 tiles are in a box?</strong> Usually 10 sq ft (10 tiles) per box for ceramic; porcelain and stone vary. Our box count assumes 10 sq ft per box.</p>
+    <p><strong>How much thinset do I need?</strong> A 50 lb bag sets about 90–100 sq ft of small tile with a ¼ in notch trowel, but only 60–70 sq ft of 12×24 large-format with a ½ in notch — buy accordingly.</p>
+    <p><strong>Sanded or unsanded grout?</strong> Sanded for joints ⅛ in and wider (floors, most tile); unsanded for joints under ⅛ in and for soft stone like marble that sand scratches.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/brick-calculator/">Brick Calculator</a>
+      <a href="/insulation-calculator/">Insulation Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var tile=parseFloat(document.getElementById('tile').value);
+  var joint=parseFloat(document.getElementById('joint').value);
+  var waste=parseFloat(document.getElementById('waste').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var area=len*wid;
+  var tileArea=tile*tile; // sq in (subway 3x6 handled as 18 sq in via value trick? no)
+  if(tile===3) tileArea=3*6; // subway
+  var tilesBase=area*144/tileArea;
+  var tiles=Math.ceil(tilesBase*(1+waste/100));
+  var boxes=Math.ceil(tiles*tileArea/144/10); // 10 sq ft per box
+  // thinset coverage sq ft per 50lb bag depends on tile size
+  var thinsetCov=tile>=18?65:tile>=12?75:95;
+  var thinsetBags=Math.ceil(area/thinsetCov);
+  // grout: lb/sqft calibrated to manufacturer charts (12x12 3/16 -> ~115 sqft per 25lb bag)
+  var lbPerSqft=1.175*joint/((tile+joint)/12);
+  var groutBags=Math.ceil(area*lbPerSqft/25);
+  var cost=area*(1+waste/100)*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+tiles+'</div><div class="label">Tiles (incl. waste)</div></div>'+
+    '<div class="result-card"><div class="amount">'+boxes+'</div><div class="label">Boxes of Tile</div></div>'+
+    '<div class="result-card green"><div class="amount">'+thinsetBags+'</div><div class="label">50lb Thinset Bags</div></div>'+
+    '<div class="result-card"><div class="amount">'+groutBags+'</div><div class="label">25lb Grout Bags</div></div>'+
+    '<div class="result-card"><div class="amount">'+area.toFixed(0)+' ft²</div><div class="label">Area</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Tile Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

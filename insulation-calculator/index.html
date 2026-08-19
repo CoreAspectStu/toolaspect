@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insulation Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate R-value, square feet of batts or rolls needed, and insulation cost for walls, attics, and ceilings. Free insulation calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/insulation-calculator/">
+<meta property="og:title" content="Insulation Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/insulation-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Insulation Calculator","description":"Calculate R-value achieved, batt/roll square footage, and insulation cost.","url":"https://toolaspect.com/insulation-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Insulation Calculator</h1>
+  <p class="subtitle">R-value achieved, batts/rolls needed &amp; material cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Area Length (ft)</label><input type="number" id="len" value="30" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Area Width (ft)</label><input type="number" id="wid" value="24" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Insulation Type</label>
+        <select id="type" onchange="calc()">
+          <option value="3" selected>Fiberglass batts R-13 (3½ in, 2x4 walls)</option>
+          <option value="6">Fiberglass batts R-19 (6¼ in, 2x6 walls)</option>
+          <option value="9">Fiberglass batts R-30 (9½ in, floors)</option>
+          <option value="12">Fiberglass batts R-38 (12 in, attics)</option>
+          <option value="15">Fiberglass batts R-49 (15 in, attics)</option>
+          <option value="rockwool">Rockwool batts R-15 (3½ in)</option>
+          <option value="rigid">Rigid foam R-5/in (4x8 sheets)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Framing Spacing</label>
+        <select id="oc" onchange="calc()">
+          <option value="16" selected>16 in on center</option>
+          <option value="24">24 in on center</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Waste Factor (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Price per sq ft ($) or per sheet</label><input type="number" id="price" value="0.75" min="0" step="0.05" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Insulation Calculator Works</h2>
+    <p>Enter the area to insulate and the insulation product. The calculator returns total square footage, the number of batts or rolls (or 4×8 rigid foam sheets) to buy, the R-value achieved, and a material cost estimate. Framing spacing matters: batts are manufactured to fit 14½ in or 22½ in clear cavities, and rolls come in specific widths, so counts change with 16 in vs 24 in on-center framing.</p>
+
+    <h2>R-Value and Quantity Formulas</h2>
+    <ul>
+      <li><strong>R-value = R-per-inch × installed thickness</strong> (fiberglass ≈ R-3.1–3.4/in, rockwool ≈ R-3.7–4.2/in, rigid foam ≈ R-5/in)</li>
+      <li><strong>Batts/sq ft of coverage:</strong> R-13 batt = 8 ft × 15¼ in ≈ 10.2 sq ft per piece (16 in oc)</li>
+      <li><strong>Rolls:</strong> standard roll = 40 ft long × 15 in or 23 in wide; R-38/R-49 come mostly as batts or rolls 25–80 ft</li>
+      <li><strong>Buy = area × (1 + waste%) ÷ coverage per package</strong></li>
+      <li><strong>Compressed batts lose R-value:</strong> squeezing an R-19 into a 3½ in cavity yields only ~R-13</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 30 ft × 24 ft attic ceiling (720 sq ft) insulated with R-38 fiberglass: 720 ÷ coverage per R-38 roll (23 in × 40 ft = 76.7 sq ft) = 9.4 → with 10% waste, buy <strong>11 rolls</strong>. Achieved R-value = R-38 at full 12 in thickness. At $0.75/sq ft, material cost ≈ $594.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What R-value do I need?</strong> Typical code minimums: R-13–15 exterior 2x4 walls, R-19–21 for 2x6 walls, R-30–38 floors over unconditioned space, R-49–60 attics in most US climate zones (IECC climate zones 2–8).</p>
+    <p><strong>Can I stack two layers of insulation?</strong> Yes — R-values add. R-19 plus R-30 yields R-49. For attics, a second perpendicular layer over batts also reduces thermal bridging through the joists.</p>
+    <p><strong>Faced or unfaced batts?</strong> Faced batts include a vapor retarder (use on exterior walls in cold climates); unfaced are for layering over existing insulation.</p>
+    <p><strong>How much waste should I add?</strong> 5–10% for open attics and regular framing; 12–15% for walls with many outlets, windows, and odd cavities.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/siding-calculator/">Siding Calculator</a>
+      <a href="/roofing-calculator/">Roofing Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var type=document.getElementById('type').value;
+  var oc=parseInt(document.getElementById('oc').value);
+  var waste=parseFloat(document.getElementById('waste').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var area=len*wid;
+  var rlabel, coverage, unitLabel, pkgCount, pricePerSqft=price;
+  if(type==='rigid'){
+    rlabel='R-20 (4 in, R-5/in)';
+    coverage=32; // 4x8 sheet
+    unitLabel='4×8 Foam Sheets';
+    pkgCount=area*(1+waste/100)/coverage;
+    pricePerSqft=price/32;
+  } else {
+    var map={
+      '3':{r:'R-13',cov16:10.17,cov24:15.33,batt:true},
+      '6':{r:'R-19',cov16:10.17,cov24:15.33,batt:true},
+      '9':{r:'R-30',cov16:7.65,cov24:76.7,batt:false},
+      '12':{r:'R-38',cov16:7.65,cov24:76.7,batt:false},
+      '15':{r:'R-49',cov16:7.65,cov24:76.7,batt:false},
+      'rockwool':{r:'R-15',cov16:11.33,cov24:17.0,batt:true}
+    };
+    var m=map[type];
+    rlabel=m.r;
+    coverage=oc===16?m.cov16:m.cov24;
+    unitLabel=m.batt?'Batts (pre-cut)':'Rolls';
+    pkgCount=area*(1+waste/100)/coverage;
+  }
+  pkgCount=Math.ceil(pkgCount);
+  var cost=area*pricePerSqft;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+rlabel.split(' ')[0]+'</div><div class="label">R-Value Achieved</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(area).toLocaleString()+' ft²</div><div class="label">Coverage Area</div></div>'+
+    '<div class="result-card green"><div class="amount">'+pkgCount+'</div><div class="label">'+unitLabel+'</div></div>'+
+    '<div class="result-card"><div class="amount">'+coverage.toFixed(1)+' ft²</div><div class="label">Coverage / Package</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Material Cost</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.ceil(area*(1+waste/100)).toLocaleString()+' ft²</div><div class="label">Buy (incl. waste)</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

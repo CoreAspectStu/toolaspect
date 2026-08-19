@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rebar Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate rebar count, grid layout, total length, 20ft sticks, tie wire, and cost from slab dimensions and spacing. Free rebar calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/rebar-calculator/">
+<meta property="og:title" content="Rebar Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/rebar-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Rebar Calculator","description":"Calculate rebar grid, stick count, tie wire, and cost for slabs and footings.","url":"https://toolaspect.com/rebar-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Rebar Calculator</h1>
+  <p class="subtitle">Rebar grid, sticks, tie wire &amp; cost for slabs and footings</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Slab Length (ft)</label><input type="number" id="len" value="20" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Slab Width (ft)</label><input type="number" id="wid" value="20" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Grid Spacing (in, on center)</label>
+        <select id="grid" onchange="calc()">
+          <option value="12">12 in</option>
+          <option value="18">18 in</option>
+          <option value="24" selected>24 in</option>
+          <option value="36">36 in</option>
+          <option value="48">48 in</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rebar Size</label>
+        <select id="size" onchange="calc()">
+          <option value="3">#3 (0.376 lb/ft)</option>
+          <option value="4" selected>#4 (0.668 lb/ft)</option>
+          <option value="5">#5 (1.043 lb/ft)</option>
+          <option value="6">#6 (1.502 lb/ft)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Edge Clearance (in)</label>
+        <input type="number" id="clear" value="3" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group"><label>Lap per Stick (ft)</label><input type="number" id="lap" value="2" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price per lb ($)</label><input type="number" id="price" value="0.85" min="0" step="0.05" oninput="calc()"></div>
+      <div class="form-group"><label>Wire Tie Spacing</label>
+        <select id="tie" onchange="calc()">
+          <option value="1">Every intersection</option>
+          <option value="2" selected>Every other intersection</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Rebar Calculator Works</h2>
+    <p>Enter your slab dimensions, grid spacing, and rebar size. The calculator lays out the grid — bars spaced on center with an edge clearance on each side — counts the bars running each direction, totals the linear footage (with lap for splices), converts to 20 ft sticks, estimates tie wire from the number of tied intersections, and prices the package by weight.</p>
+
+    <h2>Rebar Formulas</h2>
+    <ul>
+      <li><strong>Bars one way = floor((dimension − 2×clearance) ÷ spacing) + 1</strong></li>
+      <li><strong>Total length = (bars × other dimension) × 2 directions + laps</strong></li>
+      <li><strong>Sticks = ceil(total ft ÷ 20)</strong> (20 ft stock lengths are standard; 40/60 ft available for big jobs)</li>
+      <li><strong>Weight = total ft × lb/ft</strong> — #3 = 0.376, #4 = 0.668, #5 = 1.043, #6 = 1.502 lb/ft</li>
+      <li><strong>Tie wire:</strong> ~0.03 lb per tie (one 16-gauge tie loop) — a 3.5 lb spool ≈ 100+ ties... plan ~2 lb per 1,000 ft of rebar</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 20 ft × 20 ft slab with #4 bar at 24 in on center, 3 in edge clearance: usable run = 20 − 0.5 = 19.5 ft → floor(19.5 ÷ 2) + 1 = 10 bars each way (20 total). Length = 10 × 20 × 2 = 400 ft + laps ≈ 420 ft = <strong>21 twenty-foot sticks</strong> of #4, weighing ~280 lb. Tying every other intersection: ~50 ties ≈ 1 lb of wire. At $0.85/lb, steel costs about $240.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What size rebar for a 4-inch slab?</strong> #3 or #4 at 18–24 in on center is typical for patios and driveways. Wire mesh is an alternative for light-duty slabs, but rebar holds alignment better during the pour.</p>
+    <p><strong>How much should rebar overlap?</strong> Lap splices are typically 30–40× the bar diameter (e.g., ~20 in for #4), or as specified by your engineer. Our default 2 ft lap per stick covers most cases.</p>
+    <p><strong>How much tie wire do I need?</strong> Tying every other intersection with a figure-8 tie uses roughly 2 lb of 16-gauge wire per 1,000 linear ft of rebar; double it for every-intersection tying.</p>
+    <p><strong>Does rebar pricing work by weight?</strong> Yes — rebar is sold by the pound or by the stick, but weight-based pricing is standard for orders over a few hundred pounds.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/excavation-calculator/">Excavation Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/brick-calculator/">Brick Calculator</a>
+      <a href="/asphalt-calculator/">Asphalt Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var grid=parseFloat(document.getElementById('grid').value)/12; // ft
+  var size=parseFloat(document.getElementById('size').value);
+  var clear=parseFloat(document.getElementById('clear').value)/12;
+  var lap=parseFloat(document.getElementById('lap').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var tieEvery=parseInt(document.getElementById('tie').value);
+  var lbft={3:0.376,4:0.668,5:1.043,6:1.502}[size];
+  var nx=Math.max(1,Math.floor((len-2*clear)/grid)+1);
+  var ny=Math.max(1,Math.floor((wid-2*clear)/grid)+1);
+  var totalFt=nx*wid+ny*len;
+  var sticks=Math.ceil(totalFt/20);
+  var totalWithLap=totalFt+sticks*lap;
+  var sticksLap=Math.ceil(totalWithLap/20);
+  var weight=totalWithLap*lbft;
+  var intersections=Math.ceil((nx*ny)/tieEvery);
+  var wireLb=Math.max(1,Math.ceil(totalWithLap/500*1)); // ~1 lb per 500 ft
+  var wireSpools=Math.ceil(wireLb/3.5);
+  var cost=weight*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+(nx+ny)+'</div><div class="label">Total Bars</div></div>'+
+    '<div class="result-card"><div class="amount">'+nx+' × '+ny+'</div><div class="label">Grid (x × y bars)</div></div>'+
+    '<div class="result-card green"><div class="amount">'+sticksLap+'</div><div class="label">20ft Sticks (incl. lap)</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(totalWithLap)+' ft</div><div class="label">Total Length</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(weight)+' lb</div><div class="label">Steel Weight</div></div>'+
+    '<div class="result-card"><div class="amount">'+wireSpools+' spool</div><div class="label">Tie Wire ('+intersections+' ties)</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Rebar Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siding Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate squares of siding, trim boards, and nails from wall dimensions. Includes waste factor and cost estimate. Free siding calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/siding-calculator/">
+<meta property="og:title" content="Siding Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/siding-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Siding Calculator","description":"Calculate squares of siding, trim, and nails from wall dimensions.","url":"https://toolaspect.com/siding-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Siding Calculator</h1>
+  <p class="subtitle">Squares of siding, trim boards &amp; nail quantities</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Building Perimeter (ft)</label><input type="number" id="perim" value="120" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Wall Height (ft)</label><input type="number" id="hgt" value="9" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Gable Area (sq ft, total)</label><input type="number" id="gable" value="0" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Openings to Subtract (sq ft)</label><input type="number" id="open" value="120" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Siding Material</label>
+        <select id="mat" onchange="calc()">
+          <option value="vinyl" selected>Vinyl</option>
+          <option value="lp">LP SmartSide / engineered</option>
+          <option value="hardie">Fiber cement (Hardie)</option>
+          <option value="wood">Wood lap</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Waste Factor (%)</label><input type="number" id="waste" value="12" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price per Square ($)</label><input type="number" id="price" value="350" min="0" step="10" oninput="calc()"></div>
+      <div class="form-group"><label>Trim Perimeter (lin ft, doors+windows)</label><input type="number" id="trim" value="150" min="0" step="5" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="results-grid" id="results"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Siding Calculator Works</h2>
+    <p>Enter your building perimeter, wall height, gable areas, and total window/door area to subtract. The calculator returns net wall area, <strong>squares</strong> of siding (the industry unit — 1 square = 100 sq ft), trim board linear feet, and nail box counts for the material you select. Waste defaults to 12% because laps, cuts at openings, and starter/course alignment always consume extra material.</p>
+
+    <h2>Siding Formulas</h2>
+    <ul>
+      <li><strong>Net area = perimeter × height + gables − openings</strong></li>
+      <li><strong>Squares = net area ÷ 100</strong> (1 square = 100 sq ft)</li>
+      <li><strong>Buy = squares × (1 + waste%)</strong>, rounded up to whole squares</li>
+      <li><strong>Trim:</strong> perimeter of every opening + corners and fascia breaks; a 12 ft board yields ~11 usable ft</li>
+      <li><strong>Nails:</strong> vinyl ≈ 2,000 nails/square using 1½ in roofing nails... actually ~ 2 nails per 12 in of panel coverage — figure one 5,000-count box per 5 squares</li>
+      <li><strong>House wrap:</strong> 1 roll of 9×100 ft covers 3 squares per layer</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 120 ft perimeter × 9 ft wall with 0 gables and 120 sq ft of openings: net area = 1,080 − 120 = 960 sq ft = 9.6 squares. With 12% waste: order <strong>11 squares</strong>. Trim at 150 lin ft = 14 twelve-foot boards. At $350/square, siding costs about $3,850.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Why is siding sold in squares?</strong> A square covers 100 square feet — the same unit as roofing. A square of vinyl typically weighs 60–100 lb; fiber cement is 2–3× heavier, so expect a lift or helper.</p>
+    <p><strong>How much siding waste is normal?</strong> 10–15% for simple rectangles; up to 20% for houses with many gables, bays, and openings.</p>
+    <p><strong>How do I calculate gable area?</strong> Gable area = ½ × width × height of the triangle. A 24 ft wide gable rising 6 ft adds 72 sq ft per gable end.</p>
+    <p><strong>Does the calculator include house wrap?</strong> House wrap coverage ≈ net wall area ÷ 900 sq ft per 9×100 roll — order one roll per 3 squares with overlap.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/roofing-calculator/">Roofing Calculator</a>
+      <a href="/insulation-calculator/">Insulation Calculator</a>
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var perim=parseFloat(document.getElementById('perim').value)||0;
+  var hgt=parseFloat(document.getElementById('hgt').value)||0;
+  var gable=parseFloat(document.getElementById('gable').value)||0;
+  var open=parseFloat(document.getElementById('open').value)||0;
+  var mat=document.getElementById('mat').value;
+  var waste=parseFloat(document.getElementById('waste').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var trimFt=parseFloat(document.getElementById('trim').value)||0;
+  var gross=perim*hgt+gable;
+  var net=Math.max(0,gross-open);
+  var squares=net/100;
+  var buy=Math.ceil(squares*(1+waste/100));
+  var trimBoards=Math.ceil(trimFt/11);
+  var nailsPerSq={vinyl:2000,lp:1800,hardie:2200,wood:1800}[mat];
+  var nailCount=buy*nailsPerSq;
+  var nailBoxes=Math.ceil(nailCount/5000);
+  var wrapRolls=Math.ceil(buy/3);
+  var cost=buy*price;
+  document.getElementById('results').innerHTML=
+    '<div class="result-card primary"><div class="amount">'+buy+'</div><div class="label">Squares to Order</div></div>'+
+    '<div class="result-card"><div class="amount">'+Math.round(net).toLocaleString()+' ft²</div><div class="label">Net Wall Area</div></div>'+
+    '<div class="result-card green"><div class="amount">'+trimBoards+'</div><div class="label">12ft Trim Boards</div></div>'+
+    '<div class="result-card"><div class="amount">'+nailBoxes+'</div><div class="label">5k Nail Boxes</div></div>'+
+    '<div class="result-card"><div class="amount">'+wrapRolls+'</div><div class="label">House Wrap Rolls</div></div>'+
+    '<div class="result-card"><div class="amount">$'+Math.round(cost).toLocaleString()+'</div><div class="label">Siding Cost</div></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
