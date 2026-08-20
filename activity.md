@@ -39,3 +39,6 @@
 - Site launched on toolaspect.com via Cloudflare Pages
 - **17:30 [chat]** Gateway restart recovery: embed subagent JS survived on disk (4 widgets), catalog page was lost — rebuilt /embed/ index.html, deployed, all 5 URLs 200, sitemap 1422 URLs, IndexNow pinged
 - **17:35 [chat]** Vision QA: full-page /embed/ scored 9/10 (all 4 demos render, snippets clean). Outreach subagent died in restart — re-dispatched to docs/seo-offsite/outreach/
+
+## 2026-08-20
+- [chat] Docs refresh (md-reminder): FEATURES.md updated — embed system marked LIVE, page count 1422, outreach kit noted. Project otherwise idle: calculators indexed, /embed/ live, outreach kit staged awaiting first sends.
