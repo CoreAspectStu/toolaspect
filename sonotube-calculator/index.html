@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonotube Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate concrete per sonotube (πr²h), total yards for all tubes, and 80lb bag count for deck footings and post piers. Free sono tube calculator.">
+<link rel="canonical" href="https://toolaspect.com/sonotube-calculator/">
+<meta property="og:title" content="Sonotube Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sonotube-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Sonotube Calculator","description":"Concrete volume per tube and total yards for sono tubes.","url":"https://toolaspect.com/sonotube-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Sonotube Calculator</h1>
+  <p class="subtitle">Concrete per tube, total yards, and 80lb bags</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tube diameter (in)</label>
+        <select id="dia" onchange="calc()">
+          <option value="8">8 in</option>
+          <option value="10">10 in</option>
+          <option value="12" selected>12 in</option>
+          <option value="14">14 in</option>
+          <option value="16">16 in</option>
+          <option value="18">18 in</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tube height (ft)</label>
+        <input type="number" id="hgt" value="4" min="0.5" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Number of tubes</label>
+        <input type="number" id="n" value="6" min="1" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group">
+        <label>Waste factor (%)</label>
+        <input type="number" id="waste" value="10" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per yd³ ($, ready-mix)</label>
+        <input type="number" id="price" value="150" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Sonotube Calculator Works</h2>
+    <p>Sonotubes (concrete form tubes) create round piers for decks, pergolas, sign posts, and pole barns. Enter the tube diameter, the pour height, and how many piers you need — the calculator returns the concrete volume of one tube using the cylinder formula πr²h, the total for all tubes in cubic feet, cubic yards for the ready-mix order, and the 80 lb bag count if you're mixing by hand. A waste factor covers spillage and over-dig at the bell of the hole.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Volume per tube:</strong> V (ft³) = π × (diameter ÷ 24)² × height — radius in feet</li>
+      <li><strong>Total:</strong> ft³ × number of tubes × (1 + waste%)</li>
+      <li><strong>Cubic yards:</strong> yd³ = ft³ ÷ 27</li>
+      <li><strong>80 lb bags:</strong> bags = ceil(ft³ ÷ 0.6) — each bag yields ≈ 0.6 ft³</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 12 in diameter tube poured 4 ft deep: π × 0.5² × 4 = 3.14 ft³ per tube. Six footings = 18.8 ft³, and with 10% waste that is 20.7 ft³ = 0.77 yd³ — order 1 yd³ from the mini-mix truck or mix 35 eighty-pound bags (a strong argument for the truck). Remember to include any flared footing bell below the tube.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much concrete in a 12 inch sonotube per foot?</strong> Exactly π × 0.25 × 1 = 0.785 ft³ per vertical foot — roughly 1.3 eighty-pound bags per foot of height. An 8 in tube uses 0.35 ft³/ft; a 10 in uses 0.55.</p>
+    <p><strong>How deep should footings go?</strong> Below the frost line for your region (from 12 in in warm climates to 48+ in up north) and into undisturbed bearing soil. Check your local building department's frost depth map.</p>
+    <p><strong>Do I need rebar in sonotubes?</strong> Most decks call for two #4 vertical bars in each pier, or a post anchor embedded in the concrete. Tall or heavily loaded piers may require full cages — follow plans.</p>
+    <p><strong>Can I pour above grade?</strong> Yes — extend the tube 6 in above grade to keep post bases out of soil moisture, and backfill around the protruding tube.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/rebar-calculator/">Rebar Calculator</a>
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/fence-calculator/">Fence Calculator</a>
+      <a href="/aggregate-base-calculator/">Aggregate Base Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var dia=parseFloat(document.getElementById('dia').value)||12;
+  var hgt=parseFloat(document.getElementById('hgt').value)||0;
+  var n=parseFloat(document.getElementById('n').value)||1;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var one=Math.PI*Math.pow(dia/24,2)*hgt;
+  if(one<=0||isNaN(one)){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var total=one*n*(1+waste);
+  var yd=total/27;
+  var bags=Math.ceil(total/0.6);
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+yd.toFixed(2)+' yd³</div>'+
+    '<div class="sub-result">'+one.toFixed(2)+' ft³ per tube ('+dia+'" × '+hgt+' ft)</div>'+
+    '<div class="sub-result">'+total.toFixed(1)+' ft³ total for '+n+' tubes (w/ '+Math.round(waste*100)+'% waste)</div>'+
+    '<div class="sub-result"><strong>'+bags+'</strong> × 80lb bags</div>'+
+    (price>0?'<div class="sub-result">Ready-mix cost: <strong>$'+(yd*price).toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crown Molding Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate crown molding linear feet with waste factor for coped inside corners. Explains spring angle for 38/52 and 45/45 profiles. Free crown molding calculator.">
+<link rel="canonical" href="https://toolaspect.com/crown-molding-calculator/">
+<meta property="og:title" content="Crown Molding Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/crown-molding-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Crown Molding Calculator","description":"Calculate crown molding linear feet, board count, and cost with coped-corner waste.","url":"https://toolaspect.com/crown-molding-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Crown Molding Calculator</h1>
+  <p class="subtitle">Linear feet with coped-corner waste &amp; board count</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Room length (ft)</label><input type="number" id="len" value="16" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Room width (ft)</label><input type="number" id="wid" value="12" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Waste (%)</label><input type="number" id="waste" value="15" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Or enter total wall perimeter directly (linear ft)</label><input type="number" id="perim" placeholder="e.g. 56" min="0" step="1" oninput="calc()"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock length (ft)</label><input type="number" id="blen" value="12" min="4" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Inside corners</label><input type="number" id="ic" value="4" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Outside corners</label><input type="number" id="oc" value="0" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Spring angle profile</label>
+      <select id="spring" onchange="calc()">
+        <option value="52">52°/38° (most common — 38° wall, 52° ceiling)</option>
+        <option value="45">45°/45° (equal, contemporary profiles)</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Price per LF ($)</label><input type="number" id="price" value="3.50" min="0" step="0.25" oninput="calc()"></div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Crown Molding Calculator Works</h2>
+    <p>Enter your room dimensions or measured wall perimeter, the number of inside and outside corners, and your molding stock length. Because coped inside corners eat extra material — you cut away a coping profile and often lose a foot or more per joint — the calculator lets you set a separate waste percentage that should run 15–20% for coped work versus 10% for simple mitered outside corners. It returns total linear feet to buy, stick count, and cost.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Perimeter:</strong> 2 × (length + width)</li>
+      <li><strong>Buying LF:</strong> perimeter × (1 + waste%)</li>
+      <li><strong>Sticks:</strong> ceil(buying LF ÷ stock length)</li>
+      <li><strong>Spring angle:</strong> the angle between the molding back and the wall — set your miter saw bevel/crown stops to the matching spring angle so the profile nests flat against wall and ceiling</li>
+    </ul>
+
+    <h2>Understanding Spring Angle</h2>
+    <p>Crown molding installs sprung between wall and ceiling, touching each at a different angle. The <strong>spring angle</strong> is measured off the wall: most colonial and ogee profiles are <strong>38°/52°</strong> (38° against the wall, 52° against the ceiling), while many contemporary and cove profiles are <strong>45°/45°</strong>. When cutting crown lying flat in a miter saw, you tilt and rotate using these angles (for 38° crown: bevel 33.9°, miter 31.6°); when cutting it nested against the saw fence, just set the miter to 45° for a 90° corner and let the saw's crown stops hold the spring angle.</p>
+
+    <h2>Worked Example</h2>
+    <p>A 16 × 12 room: perimeter = 2 × (16 + 12) = 56 LF. With 4 coped inside corners and 15% waste, buy 56 × 1.15 = 64.4 → 65 LF. In 12-ft sticks that's 6 pieces (72 LF on hand). At $3.50/LF: about $225 in molding.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Why is crown molding waste so high?</strong> Coped inside corners require cutting a reverse profile with a coping saw, and each corner typically consumes an extra 6–12" of stock. Short offcuts also pile up fast on long profiles.</p>
+    <p><strong>Cope or miter inside corners?</strong> Always cope inside corners on anything but a perfectly square, never-moving room — copes absorb seasonal wood movement and stay tight; miters open up.</p>
+    <p><strong>What miter angle for crown corners?</strong> Nested in the saw at the correct spring angle, a standard 90° corner is a 45° miter. For 38° crown cut flat (bevel-and-miter method): 31.6° miter / 33.9° bevel.</p>
+    <p><strong>How do I measure for crown?</strong> Measure each wall independently at the ceiling, wall to wall. Never scale up from a perimeter if the room isn't rectangular — bay windows and jogged walls change everything.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/stair-calculator/">Stair Calculator</a>
+      <a href="/soffit-fascia-calculator/">Soffit &amp; Fascia Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/gutter-calculator/">Gutter Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var w=parseFloat(document.getElementById('wid').value)||0;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var blen=parseFloat(document.getElementById('blen').value)||12;
+  var ic=parseFloat(document.getElementById('ic').value)||0;
+  var oc=parseFloat(document.getElementById('oc').value)||0;
+  var spring=document.getElementById('spring').value;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var perim=parseFloat(document.getElementById('perim').value);
+  if(!perim||perim<=0){ perim=2*(l+w); }
+  if(perim<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var buy=perim*(1+waste);
+  var sticks=Math.ceil(buy/blen);
+  var cost=buy*price;
+  var tip=spring==='52'?'38°/52° profile: nested cut = 45° miter; flat-cut = 31.6° miter / 33.9° bevel':'45°/45° profile: nested cut = 45° miter; flat-cut = 35.3° miter / 30° bevel';
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+buy.toFixed(0)+' LF to buy</div>'+
+    '<div class="sub-result">'+perim.toFixed(0)+' LF perimeter + '+Math.round(waste*100)+'% waste ('+ic+' coped inside, '+oc+' outside corners)</div>'+
+    '<div class="sub-result">Sticks: <strong>'+sticks+' × '+blen+' ft</strong></div>'+
+    (price>0?'<div class="sub-result">Cost: <strong>$'+cost.toFixed(0)+'</strong> @ $'+price.toFixed(2)+'/LF</div>':'')+
+    '<div class="sub-result" style="margin-top:12px;font-size:.85rem;color:var(--muted)">'+tip+'</div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

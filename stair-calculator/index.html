@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stair Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate riser height, tread count, and stringer length for stairs. Checks IRC building code (7¾in max riser, 10in min tread). Free stair calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/stair-calculator/">
+<meta property="og:title" content="Stair Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/stair-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Stair Calculator","description":"Calculate risers, treads, stringer length, and code compliance for stairs.","url":"https://toolaspect.com/stair-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.code-pass{color:#4ade80;font-weight:600;margin-top:10px;font-size:.95rem}
+.code-fail{color:#f87171;font-weight:600;margin-top:10px;font-size:.95rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Stair Calculator</h1>
+  <p class="subtitle">Risers, treads, stringer length &amp; IRC code check</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Total rise (in — floor to floor)</label><input type="number" id="rise" value="108" min="1" step="0.25" oninput="calc()"></div>
+      <div class="form-group"><label>Target riser height (in)</label><input type="number" id="triser" value="7.25" min="4" max="12" step="0.25" oninput="calc()"></div>
+      <div class="form-group"><label>Tread depth (in, run)</label><input type="number" id="tread" value="10.5" min="6" step="0.25" oninput="calc()"></div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Stringer stock length available (in)</label><input type="number" id="stock" value="144" min="12" step="6" oninput="calc()"></div>
+      <div class="form-group"><label>Nosing overlap (in, for total run)</label><input type="number" id="nosing" value="1" min="0" step="0.25" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Stair Calculator Works</h2>
+    <p>Measure your total rise — the vertical distance from the finished lower floor to the finished upper floor — and enter your preferred tread depth. The calculator divides the rise by a target riser height near 7¼", rounds to a whole number of risers, then computes the exact riser height, tread count, total run, and the stringer length using the Pythagorean theorem. It also checks the result against IRC residential stair code automatically.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Riser count:</strong> n = round(total rise ÷ target riser)</li>
+      <li><strong>Exact riser height:</strong> total rise ÷ n</li>
+      <li><strong>Tread count:</strong> n − 1 (the top tread is the landing/floor itself)</li>
+      <li><strong>Stringer length:</strong> √(total run² + total rise²) — Pythagoras on the stair triangle</li>
+      <li><strong>IRC code (residential):</strong> riser 7¼" max (min 4"), tread 10" min, risers within ⅜" of each other</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>Deck stairs with a total rise of 108": 108 ÷ 7.25 = 14.9 → round to 15 risers. Exact riser height = 108 ÷ 15 = 7.20" — code compliant (under 7¾"). Treads = 14. With 10.5" treads the total run is 14 × 10.5 = 147". Stringer length = √(147² + 108²) = √(21,609 + 11,664) = √33,273 ≈ 182.4" ≈ 15.2 ft — buy 16 ft 2×12 stringer stock.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What is the maximum riser height allowed?</strong> IRC residential code allows a 7¾" maximum riser and requires a 10" minimum tread (measured nosing to nosing). Commercial IBC stairs are stricter at 7" risers and 11" treads.</p>
+    <p><strong>Why do I get one fewer tread than risers?</strong> The upper floor or landing serves as the top step, so a 15-riser stair has 14 cut treads on the stringer.</p>
+    <p><strong>How long should stair stringers be?</strong> Use the Pythagorean result plus 12–18" of extra stock for trimming and attaching to the frame. For rise over ~60", use a middle stringer on 36"+ wide stairs.</p>
+    <p><strong>What size lumber for stringers?</strong> 2×12 for risers up to 7¾" with 10–11" treads; never cut a 2×10 so deep that less than 5" of uncut depth remains.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/deck-calculator/">Deck Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/paver-calculator/">Paver Calculator</a>
+      <a href="/crown-molding-calculator/">Crown Molding Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var rise=parseFloat(document.getElementById('rise').value)||0;
+  var triser=parseFloat(document.getElementById('triser').value)||7.25;
+  var tread=parseFloat(document.getElementById('tread').value)||0;
+  var nosing=parseFloat(document.getElementById('nosing').value)||0;
+  var stock=parseFloat(document.getElementById('stock').value)||0;
+  if(rise<=0||tread<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var n=Math.max(1,Math.round(rise/triser));
+  var riserH=rise/n;
+  var treads=n-1;
+  var run=treads*tread;
+  var totalRun=run+nosing; // nosing-to-nosing overall footprint
+  var stringer=Math.sqrt(run*run+rise*rise);
+  var riserOK=riserH<=7.75&&riserH>=4;
+  var treadOK=tread>=10;
+  var codeOK=riserOK&&treadOK;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+n+' risers @ '+riserH.toFixed(2)+'"</div>'+
+    '<div class="sub-result"><strong>'+treads+'</strong> treads × '+tread+'" = total run '+run.toFixed(1)+'" ('+(run/12).toFixed(1)+' ft)</div>'+
+    '<div class="sub-result">Stringer length: <strong>'+stringer.toFixed(1)+'"</strong> ('+(stringer/12).toFixed(1)+' ft)'+(stock>0&&stringer>stock?' — exceeds '+stock+'" stock!':'')+'</div>'+
+    '<div class="'+(codeOK?'code-pass':'code-fail')+'">'+(codeOK?'✓ Passes IRC residential stair code':'⚠ Code issue: '+(riserOK?'':'riser '+riserH.toFixed(2)+'" outside 4–7.75" ')+(treadOK?'':'tread '+tread+'" under 10" min'))+'</div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

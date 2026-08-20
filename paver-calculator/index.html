@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paver Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate how many pavers you need from patio area and paver size. Estimates polymeric sand, base rock, and total cost. Free paver calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/paver-calculator/">
+<meta property="og:title" content="Paver Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/paver-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Paver Calculator","description":"Calculate paver count, polymeric sand, and base rock from area and paver size.","url":"https://toolaspect.com/paver-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Paver Calculator</h1>
+  <p class="subtitle">Paver count, polymeric sand, base rock &amp; cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Length (ft)</label><input type="number" id="len" value="20" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Width (ft)</label><input type="number" id="wid" value="16" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Or enter area directly (sq ft — overrides length × width)</label><input type="number" id="area" placeholder="e.g. 320" min="0" step="1" oninput="calc()"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Paver length (in)</label><input type="number" id="pl" value="16" min="1" step="0.25" oninput="calc()"></div>
+      <div class="form-group"><label>Paver width (in)</label><input type="number" id="pw" value="16" min="1" step="0.25" oninput="calc()"></div>
+      <div class="form-group"><label>Waste (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Price per paver ($)</label><input type="number" id="price" value="3.50" min="0" step="0.05" oninput="calc()"></div>
+      <div class="form-group"><label>Base rock thickness (in)</label><input type="number" id="base" value="6" min="0" step="1" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Paver Calculator Works</h2>
+    <p>Enter your patio or walkway dimensions (or a direct area), pick your paver size, and this calculator returns the exact number of pavers to buy including a waste factor for cuts and breakage. It also estimates the tons of crushed base rock for the specified compacted thickness and the pounds of polymeric sand needed to sweep into the joints. Use the price field to get a full material cost estimate for your project.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Pavers per sq ft:</strong> 144 ÷ (paver length × paver width in inches)</li>
+      <li><strong>Paver count:</strong> ceil(area × (1 + waste%) × pavers per sq ft)</li>
+      <li><strong>Base rock:</strong> tons = area × (thickness ft ÷ 27) × 1.4 (crushed stone ≈ 1.4 tons/yd³) — plus ~20% for compaction</li>
+      <li><strong>Polymeric sand:</strong> ≈ 1 lb per 4–5 sq ft of paver surface for typical 3/16" joints</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 20 ft × 16 ft patio = 320 sq ft with 16"×16" pavers. Each paver covers 256 sq in = 1.78 sq ft, so 320 ÷ 1.78 ≈ 180 pavers. With 10% waste: 199 pavers. At $3.50 each that's ~$697 in pavers. Base rock at 6" compacted: 320 × 0.5 ft = 160 ft³ ≈ 5.9 yd³ × 1.4 × 1.2 compaction ≈ 10 tons. Polymeric sand: about 70–80 lbs (two 40–50 lb pails).</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much waste should I add for pavers?</strong> 10% for simple rectangular layouts, 15% for diagonal (45°) patterns or curved borders, and up to 20% with herringbone and lots of cuts.</p>
+    <p><strong>How thick should the base be?</strong> 4–6 inches of compacted crusherrun for patios and walkways; 8–12 inches under driveways that carry vehicles.</p>
+    <p><strong>How many 12×12 pavers in a square foot?</strong> Exactly one. 16×16 covers 1.78 sq ft; 4×8 holland covers 0.22 sq ft (4.5 per sq ft).</p>
+    <p><strong>Do I need bedding sand too?</strong> Yes — about 1 inch of concrete sand under the pavers, roughly 1 yd³ per 325 sq ft. The polymeric sand in this calculator is only for the joints on top.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/stair-calculator/">Stair Calculator</a>
+      <a href="/sod-calculator/">Sod Calculator</a>
+      <a href="/flooring-calculator/">Flooring Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var area=parseFloat(document.getElementById('area').value);
+  if(!area||area<=0){
+    var l=parseFloat(document.getElementById('len').value)||0;
+    var w=parseFloat(document.getElementById('wid').value)||0;
+    area=l*w;
+  }
+  var pl=parseFloat(document.getElementById('pl').value)||0;
+  var pw=parseFloat(document.getElementById('pw').value)||0;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var base=parseFloat(document.getElementById('base').value)||0;
+  if(area<=0||pl<=0||pw<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var perSf=144/(pl*pw);
+  var pavers=Math.ceil(area*perSf*(1+waste));
+  var tons=base>0?area*(base/12)/27*1.4*1.2:0;
+  var sandLbs=area/4.5;
+  var cost=pavers*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+pavers+' pavers</div>'+
+    '<div class="sub-result">'+pl+'" × '+pw+'" covering '+area.toFixed(0)+' sq ft (incl. '+Math.round(waste*100)+'% waste)</div>'+
+    (base>0?'<div class="sub-result">Base rock: <strong>'+tons.toFixed(1)+' tons</strong> at '+base+'" compacted</div>':'')+
+    '<div class="sub-result">Polymeric sand: <strong>'+Math.ceil(sandLbs)+' lbs</strong> (≈1 lb per 4–5 sq ft)</div>'+
+    (price>0?'<div class="sub-result">Paver cost: <strong>$'+cost.toFixed(0)+'</strong> @ $'+price.toFixed(2)+' each</div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

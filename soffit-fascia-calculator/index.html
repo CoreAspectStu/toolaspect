@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soffit &amp; Fascia Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate soffit and fascia linear feet from building perimeter and overhang. Estimates soffit square footage and fascia board count. Free calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/soffit-fascia-calculator/">
+<meta property="og:title" content="Soffit &amp; Fascia Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/soffit-fascia-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Soffit and Fascia Calculator","description":"Calculate soffit square footage and fascia linear feet from perimeter and overhang.","url":"https://toolaspect.com/soffit-fascia-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Soffit &amp; Fascia Calculator</h1>
+  <p class="subtitle">Linear feet, soffit sq ft &amp; fascia boards</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Building length (ft)</label><input type="number" id="len" value="40" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Building width (ft)</label><input type="number" id="wid" value="30" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Overhang width (ft)</label><input type="number" id="oh" value="1.5" min="0.25" step="0.25" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Or enter total eave/soffit perimeter directly (linear ft — overrides length + width)</label><input type="number" id="perim" placeholder="e.g. 140" min="0" step="1" oninput="calc()"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Sides with eaves (2 or 4)</label><input type="number" id="sides" value="2" min="1" max="4" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Fascia board length (ft)</label><input type="number" id="blen" value="16" min="1" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Waste (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Soffit price ($/sq ft)</label><input type="number" id="sprice" value="2.00" min="0" step="0.05" oninput="calc()"></div>
+      <div class="form-group"><label>Fascia price ($/LF)</label><input type="number" id="fprice" value="4.50" min="0" step="0.25" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Soffit &amp; Fascia Calculator Works</h2>
+    <p>Enter your building footprint or the measured eave perimeter directly, the width of the overhang, and how many sides have open eaves. The calculator returns the linear feet of fascia and the square footage of soffit material, plus the number of fascia boards to buy at your chosen board length and a material cost estimate. It works equally for aluminum coil, vinyl soffit panels, and wood — just adjust the prices.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Eave perimeter (rectangular, 2 sides):</strong> 2 × length</li>
+      <li><strong>Eave perimeter (all 4 sides / hip roof):</strong> 2 × (length + width)</li>
+      <li><strong>Soffit area:</strong> perimeter × overhang width (+ waste%)</li>
+      <li><strong>Fascia LF:</strong> perimeter (+ waste%) — doubled if installing both fascia and sub-fascia</li>
+      <li><strong>Boards:</strong> ceil(fascia LF ÷ board length)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 40 × 30 house with a gable roof (2 eave sides): perimeter = 2 × 40 = 80 LF. With a 1.5 ft overhang, soffit = 80 × 1.5 = 120 sq ft, plus 10% waste = 132 sq ft. Fascia = 80 LF + 10% = 88 LF → six 16-ft boards. At $2/sq ft soffit and $4.50/LF fascia: $264 + $396 ≈ $660 in materials.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>What's the difference between soffit and fascia?</strong> Soffit is the horizontal underside of the overhang; fascia is the vertical board running along the rafter tails that the gutter mounts to.</p>
+    <p><strong>Vented or solid soffit?</strong> Vented in continuous or panel strips on the eave sides to feed attic intake ventilation — typically 50/50 vented to solid for a balanced system.</p>
+    <p><strong>What size is fascia board?</strong> 1×6 or 1×8 for 2×4/2×6 sub-fascia on most homes; 2×8 or 2×10 on deeper rafter tails. Aluminum fascia is bent from coil stock on site.</p>
+    <p><strong>How much waste should I add?</strong> 10% for straight runs; 15% with corners, rakes, or lots of joints on short stock.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/gutter-calculator/">Gutter Calculator</a>
+      <a href="/crown-molding-calculator/">Crown Molding Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/concrete-block-calculator/">Concrete Block Calculator</a>
+      <a href="/blow-in-insulation-calculator/">Blow-In Insulation Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var w=parseFloat(document.getElementById('wid').value)||0;
+  var oh=parseFloat(document.getElementById('oh').value)||0;
+  var sides=parseFloat(document.getElementById('sides').value)||2;
+  var blen=parseFloat(document.getElementById('blen').value)||16;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var sp=parseFloat(document.getElementById('sprice').value)||0;
+  var fp=parseFloat(document.getElementById('fprice').value)||0;
+  var perim=parseFloat(document.getElementById('perim').value);
+  if(!perim||perim<=0){
+    perim=(sides>=4)?2*(l+w):2*l;
+  }
+  if(perim<=0||oh<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var soffit=perim*oh*(1+waste);
+  var fascia=perim*(1+waste);
+  var boards=Math.ceil(fascia/blen);
+  var cost=soffit*sp+fascia*fp;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+fascia.toFixed(0)+' LF fascia</div>'+
+    '<div class="sub-result">'+perim.toFixed(0)+' LF eave perimeter + '+Math.round(waste*100)+'% waste</div>'+
+    '<div class="sub-result">Soffit: <strong>'+soffit.toFixed(0)+' sq ft</strong> ('+perim.toFixed(0)+' LF × '+oh+' ft overhang)</div>'+
+    '<div class="sub-result">Fascia boards: <strong>'+boards+' × '+blen+' ft</strong> boards</div>'+
+    ((sp+fp)>0?'<div class="sub-result">Material cost: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

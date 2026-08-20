@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wall Framing Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate stud count at 16in or 24in on-center, plate boards (3× wall length), sheathing sheets (4×8), and framing cost. Free wall framing estimator.">
+<link rel="canonical" href="https://toolaspect.com/wall-framing-calculator/">
+<meta property="og:title" content="Wall Framing Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/wall-framing-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Wall Framing Calculator","description":"Stud count, plates, sheathing, and cost for framing walls at 16in or 24in OC.","url":"https://toolaspect.com/wall-framing-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Wall Framing Calculator</h1>
+  <p class="subtitle">Studs, plates, sheathing, and cost per wall</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Wall length (ft)</label>
+        <input type="number" id="len" value="12" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Wall height (ft)</label>
+        <input type="number" id="hgt" value="8" min="1" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Number of walls</label>
+        <input type="number" id="n" value="4" min="1" step="1" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Stud spacing</label>
+        <select id="oc" onchange="calc()">
+          <option value="16" selected>16 in OC</option>
+          <option value="24">24 in OC</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Extra studs per wall<br>(corners/openings)</label>
+        <input type="number" id="extra" value="4" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per 2×4 stud ($)</label>
+        <input type="number" id="price" value="4" min="0" step="0.25" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price per 2×4 × 8ft board ($)</label>
+        <input type="number" id="platePrice" value="4" min="0" step="0.25" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Sheathing price per 4×8 sheet ($)</label>
+        <input type="number" id="sheetPrice" value="30" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <label style="font-size:.8rem"><input type="checkbox" id="noSheet" style="width:auto;margin-right:6px" onchange="calc()"> Skip sheathing</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Wall Framing Calculator Works</h2>
+    <p>Enter wall length, height, and count, pick 16 or 24 inch on-center spacing, and the calculator returns the full framing package: studs per wall and total (including a starter corner plus your extras for openings and tee intersections), plate boards (one bottom plate and two top plates = 3 × wall length), sheathing sheets at 32 sq ft per 4×8 panel, and a lumber cost total. It is the quick takeoff you do before ordering the lumber drop.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Studs per wall:</strong> floor(length_ft × 12 ÷ OC) + 1, plus extra studs for corners and openings</li>
+      <li><strong>Plates:</strong> 3 × wall length (single bottom + double top plate), converted to 8 ft boards: ceil(3 × length ÷ 8)</li>
+      <li><strong>Sheathing:</strong> sheets = ceil(wall area ÷ 32) where a 4×8 sheet = 32 sq ft</li>
+      <li><strong>Wall area:</strong> length × height × number of walls</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 12 ft wall at 16 in OC: floor(144 ÷ 16) + 1 = 10 studs, plus 4 extras for a corner and a door opening = 14 studs. Plates: 3 × 12 = 36 linear ft = 5 eight-foot boards. Sheathing on a 12 × 8 ft wall: 96 ÷ 32 = 3 sheets per wall. Four walls of a 12×12 shed: 56 studs, 20 plate boards, 12 sheets, roughly $350–400 in framing lumber at typical big-box prices.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Why +1 stud?</strong> Spacing starts at the beginning of the wall, so a 12 ft run at 16 in OC has studs at 0, 16, 32 … 144 in — ten positions, which is floor(144/16)+1. Corners, wall intersections, and door/window edges need additional studs (typically 2 per corner, 2 per tee).</p>
+    <p><strong>16 or 24 inch OC?</strong> Exterior walls and load-bearing walls are usually 16 in OC; 24 in OC is common for interior non-bearing walls and with modern 2×6 construction. Code may dictate spacing for tall walls.</p>
+    <p><strong>Why two top plates?</strong> The double top plate ties intersecting walls together and overlaps corners, staggering joints for structural continuity. Interior non-bearing partitions sometimes use a single top plate.</p>
+    <p><strong>What about studs for 9 ft walls?</strong> Buy 104-5/8 in precut studs for 9 ft ceilings (92-5/8 in precuts for 8 ft). The count math is identical — only board length changes.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/window-rough-opening-calculator/">Window Rough Opening Calculator</a>
+      <a href="/shed-calculator/">Shed Calculator</a>
+      <a href="/drywall-calculator/">Drywall Calculator</a>
+      <a href="/siding-calculator/">Siding Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var hgt=parseFloat(document.getElementById('hgt').value)||0;
+  var n=parseFloat(document.getElementById('n').value)||1;
+  var oc=parseFloat(document.getElementById('oc').value)||16;
+  var extra=parseFloat(document.getElementById('extra').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var platePrice=parseFloat(document.getElementById('platePrice').value)||0;
+  var sheetPrice=parseFloat(document.getElementById('sheetPrice').value)||0;
+  var noSheet=document.getElementById('noSheet').checked;
+  if(len<=0||hgt<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var studsWall=Math.floor(len*12/oc)+1+extra;
+  var studsTotal=studsWall*n;
+  var plateLf=3*len*n;
+  var plateBoards=Math.ceil(plateLf/8);
+  var area=len*hgt*n;
+  var sheets=Math.ceil(area/32);
+  var cost=studsTotal*price+plateBoards*platePrice+(noSheet?0:sheets*sheetPrice);
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+studsTotal+' studs</div>'+
+    '<div class="sub-result">'+studsWall+' per wall @ '+oc+'in OC (incl. '+extra+' extras)</div>'+
+    '<div class="sub-result"><strong>'+plateBoards+'</strong> × 8ft plate boards ('+plateLf+' lf: 1 bottom + 2 top)</div>'+
+    (noSheet?'':'<div class="sub-result"><strong>'+sheets+'</strong> × 4×8 sheathing sheets</div>')+
+    '<div class="sub-result">Lumber cost: <strong>$'+cost.toFixed(0)+'</strong></div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flooring Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate boxes of laminate or LVP flooring from room area plus waste factor. Estimates underlayment square feet and total material cost. Free flooring calculator.">
+<link rel="canonical" href="https://toolaspect.com/flooring-calculator/">
+<meta property="og:title" content="Flooring Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/flooring-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Flooring Calculator","description":"Calculate boxes of laminate/LVP, underlayment, and cost.","url":"https://toolaspect.com/flooring-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Flooring Calculator</h1>
+  <p class="subtitle">Boxes of laminate / LVP, underlayment &amp; cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Length (ft)</label><input type="number" id="len" value="15" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Width (ft)</label><input type="number" id="wid" value="12" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Or enter area directly (sq ft — overrides length × width)</label><input type="number" id="area" placeholder="e.g. 180" min="0" step="1" oninput="calc()"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Waste factor (%)</label><input type="number" id="waste" value="10" min="0" step="1" oninput="calc()"></div>
+      <div class="form-group"><label>Box coverage (sq ft/box)</label><input type="number" id="boxsf" value="23.8" min="0.1" step="0.1" oninput="calc()"></div>
+      <div class="form-group"><label>Price per box ($)</label><input type="number" id="price" value="45" min="0" step="0.5" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label><input type="checkbox" id="under" style="width:auto;margin-right:6px" checked onchange="calc()"> Include underlayment (rolled, priced per sq ft below)</label></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Underlayment $/sq ft</label><input type="number" id="uprice" value="0.35" min="0" step="0.01" oninput="calc()"></div>
+      <div class="form-group"><label>Underlayment roll size (sq ft)</label><input type="number" id="uroll" value="100" min="1" step="1" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Flooring Calculator Works</h2>
+    <p>Enter your room dimensions or total area, set the box coverage printed on the carton of your laminate or LVP, and adjust the waste factor for your layout. The calculator returns the number of boxes to buy, the square footage of underlayment to purchase, and a total material cost. Box coverage varies by brand — typical laminate boxes cover 18–24 sq ft and LVP boxes 20–30 sq ft, so always check the carton label.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Buying area:</strong> area × (1 + waste%)</li>
+      <li><strong>Boxes:</strong> ceil(buying area ÷ sq ft per box)</li>
+      <li><strong>Underlayment:</strong> same buying area (order by the roll), rolls = ceil(area ÷ roll size)</li>
+      <li><strong>Cost:</strong> boxes × price per box + underlayment sq ft × price per sq ft</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 15 ft × 12 ft bedroom = 180 sq ft. With 10% waste you buy for 198 sq ft. If each box covers 23.8 sq ft at $45: 198 ÷ 23.8 = 8.3 → 9 boxes = $405. Underlayment at $0.35/sq ft adds $69.30 (two 100 sq ft rolls). Total materials: about $474 before trim and transitions.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much waste should I add?</strong> 5–10% for straight layouts in simple rectangular rooms; 12–15% for diagonal installs, herringbone, or rooms with lots of angles and closets.</p>
+    <p><strong>Do I need underlayment under LVP?</strong> If the plank doesn't have pre-attached padding, yes — a thin foam or combo foam+vapor barrier. Over concrete, always use a 6-mil vapor barrier.</p>
+    <p><strong>How many boxes of laminate do I need for 500 sq ft?</strong> At 10% waste you're buying 550 sq ft. With a typical 23.8 sq ft box, that's 24 boxes (571 sq ft on hand).</p>
+    <p><strong>Can I return unopened boxes?</strong> Most retailers accept them within 30–90 days — buy the extra box, don't short yourself mid-install.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/paver-calculator/">Paver Calculator</a>
+      <a href="/crown-molding-calculator/">Crown Molding Calculator</a>
+      <a href="/sod-calculator/">Sod Calculator</a>
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var area=parseFloat(document.getElementById('area').value);
+  if(!area||area<=0){
+    var l=parseFloat(document.getElementById('len').value)||0;
+    var w=parseFloat(document.getElementById('wid').value)||0;
+    area=l*w;
+  }
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var boxsf=parseFloat(document.getElementById('boxsf').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var under=document.getElementById('under').checked;
+  var uprice=parseFloat(document.getElementById('uprice').value)||0;
+  var uroll=parseFloat(document.getElementById('uroll').value)||1;
+  if(area<=0||boxsf<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var buy=area*(1+waste);
+  var boxes=Math.ceil(buy/boxsf);
+  var cost=boxes*price;
+  var ucost=0,urolls=0;
+  if(under){urolls=Math.ceil(buy/uroll);ucost=buy*uprice;}
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+boxes+' boxes</div>'+
+    '<div class="sub-result">'+buy.toFixed(0)+' sq ft to buy ('+area.toFixed(0)+' sq ft + '+Math.round(waste*100)+'% waste)</div>'+
+    (under?'<div class="sub-result">Underlayment: <strong>'+buy.toFixed(0)+' sq ft</strong> ('+urolls+' × '+uroll+' sq ft rolls)</div>':'')+
+    (price>0?'<div class="sub-result">Flooring: <strong>$'+cost.toFixed(0)+'</strong> ('+boxes+' × $'+price.toFixed(2)+')</div>':'')+
+    (under&&uprice>0?'<div class="sub-result">Underlayment: <strong>$'+ucost.toFixed(0)+'</strong></div>':'')+
+    ((cost+ucost)>0?'<div class="sub-result">Total materials: <strong>$'+(cost+ucost).toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

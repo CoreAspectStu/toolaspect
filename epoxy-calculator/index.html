@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epoxy Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate epoxy garage floor kits and gallons from square footage. Two-coat coverage at ~160 sq ft/gal, kit count for 2-car garages, and cost estimate.">
+<link rel="canonical" href="https://toolaspect.com/epoxy-calculator/">
+<meta property="og:title" content="Epoxy Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/epoxy-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Epoxy Calculator","description":"Epoxy gallons and kits for garage floors from square footage and 2-coat coverage.","url":"https://toolaspect.com/epoxy-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Epoxy Calculator</h1>
+  <p class="subtitle">Garage floor epoxy gallons and kits for a 2-coat system</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Floor length (ft)</label>
+        <input type="number" id="len" value="22" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Floor width (ft)</label>
+        <input type="number" id="wid" value="22" min="0" step="0.5" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Coats</label>
+        <select id="coats" onchange="calc()">
+          <option value="2" selected>2 coats (typical)</option>
+          <option value="1">1 coat</option>
+          <option value="3">3 coats</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Coverage (sq ft/gal/coat)</label>
+        <input type="number" id="cov" value="160" min="10" step="10" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Waste factor (%)</label>
+        <input type="number" id="waste" value="10" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Price per gallon ($)</label>
+        <input type="number" id="price" value="75" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Epoxy Calculator Works</h2>
+    <p>Enter your garage floor dimensions and this calculator returns the total epoxy needed for a full two-coat system. Epoxy floor coatings are applied thinner than paint — a standard 100%-solids or water-based garage epoxy covers roughly 160 sq ft per gallon per coat, and manufacturers call for two coats (a primer/body coat plus a finish coat) for durability. The calculator also converts gallons to standard 2-car garage kits, which typically cover about 250 sq ft for both coats, so you can buy either bulk gallons or boxed kits.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Floor area:</strong> sq ft = length × width</li>
+      <li><strong>Gallons:</strong> gal = ceil( sq ft × coats ÷ coverage ) with coverage ≈ 160 sq ft/gal per coat</li>
+      <li><strong>2-coat kits:</strong> kits = ceil( (sq ft × 2) ÷ 250 ) — one standard kit covers ~250 sq ft for a 2-coat application</li>
+      <li><strong>Cost:</strong> gallons × price per gallon</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A typical 2-car garage at 22 × 22 ft = 484 sq ft. Two coats at 160 sq ft/gal: 484 × 2 ÷ 160 = 6.05 → 7 gallons with a 10% waste allowance. In kit terms: 484 × 2 ÷ 250 = 3.9 → 4 standard 2-car kits. At $75/gallon, material runs about $525 before etching cleaner, primer, and decorative flakes.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Why 160 sq ft per gallon and not 350–400?</strong> Paint covers 350–400 sq ft/gal because it goes on at 1–2 mils dry. Epoxy is applied at 8–12 mils total across two coats, so real-world coverage drops to about 160 sq ft per gallon per coat. Always follow the manufacturer's spread rate on the box.</p>
+    <p><strong>How much does one epoxy kit cover?</strong> Most consumer garage kits (Rust-Oleum EpoxyShield and similar) claim 250 sq ft for a single-coat application on a 1-car garage; for a proper 2-coat 2-car system plan on 3–4 kits.</p>
+    <p><strong>Do I need to etch the floor first?</strong> Yes — concrete must be cleaned and acid-etched (or ground) or the epoxy will peel at the first hot-tire turn. Budget cleaner/etcher at roughly 1 gallon per 300 sq ft.</p>
+    <p><strong>100% solids vs water-based epoxy?</strong> 100%-solids epoxy covers less per gallon (~120–160 sq ft) but builds a thicker, more durable floor; water-based products spread farther but need more coats.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/paint-calculator/">Paint Calculator</a>
+      <a href="/countertop-calculator/">Countertop Calculator</a>
+      <a href="/tile-calculator/">Tile Calculator</a>
+      <a href="/aggregate-base-calculator/">Aggregate Base Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var len=parseFloat(document.getElementById('len').value)||0;
+  var wid=parseFloat(document.getElementById('wid').value)||0;
+  var coats=parseFloat(document.getElementById('coats').value)||2;
+  var cov=parseFloat(document.getElementById('cov').value)||160;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var area=len*wid;
+  if(area<=0||isNaN(area)){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var areaW=area*(1+waste);
+  var gals=Math.ceil(areaW*coats/cov);
+  var kits=Math.ceil(areaW*2/250);
+  var cost=gals*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+gals+' gal</div>'+
+    '<div class="sub-result">'+area.toFixed(0)+' sq ft × '+coats+' coats ('+areaW.toFixed(0)+' sq ft w/ waste)</div>'+
+    '<div class="sub-result">or <strong>'+kits+'</strong> × 2-car epoxy kits (250 sq ft/kit)</div>'+
+    (price>0?'<div class="sub-result">Material cost: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

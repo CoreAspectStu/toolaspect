@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shed Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Estimate shed materials from dimensions: floor framing, wall studs and plates, siding squares, and roofing squares. Free shed material list calculator.">
+<link rel="canonical" href="https://toolaspect.com/shed-calculator/">
+<meta property="og:title" content="Shed Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/shed-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Shed Calculator","description":"Shed material list estimate: lumber, siding, and roofing from shed dimensions.","url":"https://toolaspect.com/shed-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Shed Calculator</h1>
+  <p class="subtitle">Material list estimate: lumber, siding, and roofing</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Shed length (ft)</label>
+        <input type="number" id="len" value="10" min="4" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Shed width (ft)</label>
+        <input type="number" id="wid" value="12" min="4" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Wall height (ft)</label>
+        <input type="number" id="hgt" value="8" min="4" step="0.5" oninput="calc()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Roof type</label>
+        <select id="roof" onchange="calc()">
+          <option value="1.1" selected>Gable (pitch multiplier ≈ 1.10)</option>
+          <option value="1.2">Gable 6/12 (≈ 1.20)</option>
+          <option value="1.0">Shed/skillion flat (≈ 1.00)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Roof overhang (in, each eave)</label>
+        <input type="number" id="ovh" value="6" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Stud spacing</label>
+        <select id="oc" onchange="calc()">
+          <option value="16" selected>16 in OC</option>
+          <option value="24">24 in OC</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group">
+        <label>Siding waste factor (%)</label>
+        <input type="number" id="waste" value="15" min="0" step="1" oninput="calc()">
+      </div>
+      <div class="form-group">
+        <label>Door opening width (in, deducted from siding)</label>
+        <input type="number" id="door" value="48" min="0" step="1" oninput="calc()">
+      </div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Shed Calculator Works</h2>
+    <p>Enter your shed's footprint and wall height and this calculator builds an approximate material list: framing lumber (studs at your chosen spacing plus plates for all four walls), siding area in square feet and squares (1 square = 100 sq ft, the unit siding is sold in), and roofing area with pitch and overhang factored in, expressed in roofing squares and shingle bundles at 3 bundles per square. It is the planning takeoff before you price a lumber package — window and door openings reduce siding slightly (enter the door width; standard door is 48 in).</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Studs per wall:</strong> floor(length × 12 ÷ OC) + 1, × 4 walls, plus ~3 extras per wall for corners/openings</li>
+      <li><strong>Plates:</strong> 3 × (2 × (L + W)) linear ft — one bottom, two top plates on each of four walls</li>
+      <li><strong>Siding:</strong> wall perimeter × height − door area, × (1 + waste%), reported in squares (÷ 100)</li>
+      <li><strong>Roofing:</strong> (length + overhang) × (width + 2 × overhang) × pitch multiplier, in squares; bundles = squares × 3</li>
+      <li><strong>Floor:</strong> footprint sq ft (add skids, joists at 16 in OC, and 3/4 in ply separately per your plan)</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 10 × 12 ft shed with 8 ft walls, 16 in OC, gable roof at ~1.10 multiplier, 6 in overhang, 48 in door: wall perimeter = 44 ft, gross wall area = 352 sq ft, minus a 16 sq ft door = 336 sq ft, × 1.15 waste = 387 sq ft ≈ 3.9 squares of siding. Roofing = (10+1) × (12+2) × 1.10 ≈ 169 sq ft ≈ 1.7 squares → 6 bundles of shingles plus underlayment. Studs: 10 studs/wall average × 4 + extras ≈ 50 studs and about 17 eight-foot plate boards (22 ft sides need longer stock or scarf joints).</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How much lumber do I need for a 10×12 shed?</strong> Roughly 50 studs, 132 lf of plate material, 4 sheets of 3/4 in floor ply, 4–5 squares siding, and 2 squares roofing — plus skids, floor joists, header/door framing, and trim. Total framing lumber for a basic 10×12 runs about $700–1,200 depending on market.</p>
+    <p><strong>Does this include the floor and foundation?</strong> The calculator reports floor footprint area; plan on treated skids or a gravel pad, floor joists at 16 in OC, and 3/4 in plywood (footprint ÷ 32 sheets). See the concrete and aggregate calculators for slab and base options.</p>
+    <p><strong>What's a square of siding/roofing?</strong> 100 square feet. Siding and shingles are priced and ordered per square; shingles come 3 bundles to the square for standard-weight architectural products.</p>
+    <p><strong>Do I need a permit?</strong> Most jurisdictions require one above 100–120 sq ft — which is exactly why 10×12 (120 sq ft) is the most popular shed size. Check local setbacks too.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/wall-framing-calculator/">Wall Framing Calculator</a>
+      <a href="/roofing-calculator/">Roofing Calculator</a>
+      <a href="/siding-calculator/">Siding Calculator</a>
+      <a href="/lumber-calculator/">Lumber Calculator</a>
+      <a href="/aggregate-base-calculator/">Aggregate Base Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var L=parseFloat(document.getElementById('len').value)||0;
+  var W=parseFloat(document.getElementById('wid').value)||0;
+  var hgt=parseFloat(document.getElementById('hgt').value)||0;
+  var pitch=parseFloat(document.getElementById('roof').value)||1.1;
+  var ovh=parseFloat(document.getElementById('ovh').value)||0;
+  var oc=parseFloat(document.getElementById('oc').value)||16;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var door=parseFloat(document.getElementById('door').value)||0;
+  if(L<=0||W<=0||hgt<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  // studs: 4 walls, +1 each, +3 extras each
+  var p1=Math.floor(L*12/oc)+1, p2=Math.floor(W*12/oc)+1;
+  var studs=(p1+p2)*2+12;
+  var plateLf=3*2*(L+W);
+  // siding
+  var perim=2*(L+W);
+  var wallArea=perim*hgt;
+  var doorArea=(door/12)*(hgt-0.8);
+  var sidingSqft=Math.max(0,wallArea-doorArea)*(1+waste);
+  var sidingSquares=sidingSqft/100;
+  // roofing
+  var roofSqft=(L+2*ovh/12)* (W+2*ovh/12)*pitch;
+  var roofSquares=roofSqft/100;
+  var bundles=Math.ceil(roofSquares*3);
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+L+'×'+W+' shed</div>'+
+    '<div class="sub-result"><strong>'+studs+'</strong> studs @ '+oc+'in OC · '+plateLf+' lf plates ('+Math.ceil(plateLf/8)+' × 8ft boards)</div>'+
+    '<div class="sub-result">Siding: <strong>'+sidingSqft.toFixed(0)+' sq ft</strong> ('+sidingSquares.toFixed(1)+' squares)</div>'+
+    '<div class="sub-result">Roofing: <strong>'+roofSqft.toFixed(0)+' sq ft</strong> ('+roofSquares.toFixed(1)+' squares · '+bundles+' bundles)</div>'+
+    '<div class="sub-result">Floor: <strong>'+(L*W).toFixed(0)+' sq ft</strong> ('+Math.ceil(L*W/32)+' sheets 3/4&quot; ply)</div>';
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

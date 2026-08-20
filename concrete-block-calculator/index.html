@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concrete Block Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate how many 8x8x16 concrete blocks (CMU) you need from wall area. Estimates mortar bags and cost. Free concrete block calculator for contractors.">
+<link rel="canonical" href="https://toolaspect.com/concrete-block-calculator/">
+<meta property="og:title" content="Concrete Block Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/concrete-block-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Concrete Block Calculator","description":"Calculate CMU count, mortar bags, and cost from wall dimensions.","url":"https://toolaspect.com/concrete-block-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Concrete Block Calculator</h1>
+  <p class="subtitle">CMU count, mortar bags &amp; cost for 8×8×16 block</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Wall length (ft)</label><input type="number" id="len" value="30" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Wall height (ft)</label><input type="number" id="hei" value="8" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Waste (%)</label><input type="number" id="waste" value="3" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-group"><label>Openings to subtract (sq ft — doors/windows total)</label><input type="number" id="open" value="0" min="0" step="1" oninput="calc()"></div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Price per block ($)</label><input type="number" id="price" value="2.25" min="0" step="0.05" oninput="calc()"></div>
+      <div class="form-group"><label>Blocks per course (per LF, 16" mod)</label><input type="number" id="mod" value="0.75" min="0.1" step="0.05" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Concrete Block Calculator Works</h2>
+    <p>Enter your wall length and height and any door/window openings to subtract. The calculator works from the standard nominal 8×8×16 CMU: each block face covers 16" × 8" = 128 sq in, which works out to exactly 1.125 blocks per square foot of wall (9 blocks per 8 sq ft, or 1.125 × area). It returns the block count with waste, the number of 80lb mortar bags, and a material cost. The "blocks per LF" field lets you double-check coursing: 0.75 blocks per linear foot at 16" module.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Wall area:</strong> length × height − openings</li>
+      <li><strong>Blocks:</strong> ceil(area × 1.125 × (1 + waste%)) — 1.125 blocks/sq ft for nominal 8×8×16</li>
+      <li><strong>Mortar:</strong> ≈ 1 bag of masonry cement (or Type S 80lb mix) per 33 blocks with standard ⅜" joints</li>
+      <li><strong>Coursing check:</strong> courses = height ÷ 0.667 ft (8" per course); blocks/course = length × 0.75</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 30 ft × 8 ft wall with no openings: 240 sq ft × 1.125 = 270 blocks, plus 3% waste = 279 blocks (buy 280). Coursing check: 8 ft ÷ 8" = 12 courses × 30 ft × 0.75 = 270 blocks — matches. Mortar: 279 ÷ 33 ≈ 9 bags. At $2.25/block the block package runs about $628.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many concrete blocks per square foot?</strong> Exactly 1.125 for standard nominal 8×8×16 block with ⅜" mortar joints — that's 9 blocks per 8 square feet.</p>
+    <p><strong>How many blocks in a bag of mortar?</strong> One 80lb bag of premix Type S mortar lays about 33 standard blocks; pure masonry cement bags (75lb) go further — about 36 blocks per bag when mixed 1:3 with sand.</p>
+    <p><strong>Do I need bond beam blocks?</strong> At wall tops, over openings, and at 8–10 ft vertical intervals in seismic/wind zones — typically every other course at the top. Ask your engineer; this calculator covers stretcher blocks only.</p>
+    <p><strong>What about filling cells with concrete?</strong> Solid-grouted walls need roughly 1 yd³ of grout per 250 sq ft of 8" wall (each 8×16 core ≈ 0.02 yd³ fill). Reinforced vertical cells are typically filled at 4 ft on center.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/concrete-calculator/">Concrete Calculator</a>
+      <a href="/gravel-calculator/">Gravel Calculator</a>
+      <a href="/stair-calculator/">Stair Calculator</a>
+      <a href="/soffit-fascia-calculator/">Soffit &amp; Fascia Calculator</a>
+      <a href="/paver-calculator/">Paver Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var h=parseFloat(document.getElementById('hei').value)||0;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var open=parseFloat(document.getElementById('open').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var mod=parseFloat(document.getElementById('mod').value)||0.75;
+  if(l<=0||h<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var area=Math.max(0,l*h-open);
+  var blocks=Math.ceil(area*1.125*(1+waste));
+  var mortar=Math.ceil(blocks/33);
+  var courses=h/0.6667;
+  var perCourse=l*mod;
+  var cost=blocks*price;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+blocks+' blocks</div>'+
+    '<div class="sub-result">'+area.toFixed(0)+' sq ft × 1.125 blocks/sq ft + '+Math.round(waste*100)+'% waste</div>'+
+    '<div class="sub-result">Mortar: <strong>'+mortar+' bags</strong> (80lb premix @ 33 blocks/bag)</div>'+
+    '<div class="sub-result">Coursing: '+Math.round(courses)+' courses × '+perCourse.toFixed(1)+' blocks/course</div>'+
+    (price>0?'<div class="sub-result">Block cost: <strong>$'+cost.toFixed(0)+'</strong> @ $'+price.toFixed(2)+' each</div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>

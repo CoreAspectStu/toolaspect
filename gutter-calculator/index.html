@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gutter Calculator — Free Contractor Calculator | ToolAspect</title>
+<meta name="description" content="Calculate gutter linear feet, downspout count (1 per 600 sq ft roof), hanger spacing, and cost. Free gutter calculator for contractors and DIY.">
+<link rel="canonical" href="https://toolaspect.com/gutter-calculator/">
+<meta property="og:title" content="Gutter Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/gutter-calculator/">
+<script type="application/ld+json">
+{"@context":"https://***@type":"WebApplication","name":"Gutter Calculator","description":"Calculate gutter LF, downspouts, hangers, and cost.","url":"https://toolaspect.com/gutter-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box{text-align:center;padding:26px;background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:18px}
+.big-number{font-size:2.6rem;font-weight:700;color:#60a5fa}
+.sub-result{color:var(--text-secondary);font-size:.95rem;margin-top:8px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="../shared/nav.js"></script>
+<div class="container">
+  <h1>Gutter Calculator</h1>
+  <p class="subtitle">Gutter LF, downspouts, hangers &amp; cost</p>
+
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label>Building length (ft)</label><input type="number" id="len" value="40" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Building width (ft)</label><input type="number" id="wid" value="30" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Waste (%)</label><input type="number" id="waste" value="5" min="0" step="1" oninput="calc()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Hanger spacing (ft)</label><input type="number" id="spacing" value="3" min="1" max="6" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Sq ft roof per downspout</label><input type="number" id="dssf" value="600" min="200" step="50" oninput="calc()"></div>
+      <div class="form-group"><label>Roof pitch multiplier</label><input type="number" id="pitchm" value="1.1" min="1" max="2" step="0.05" oninput="calc()"></div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr">
+      <div class="form-group"><label>Price per LF gutter installed ($)</label><input type="number" id="gprice" value="9" min="0" step="0.5" oninput="calc()"></div>
+      <div class="form-group"><label>Price per downspout ($)</label><input type="number" id="dprice" value="90" min="0" step="5" oninput="calc()"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="result"></div>
+  <div class="ad-slot">Advertisement</div>
+
+  <div class="seo-content">
+    <h2>How the Gutter Calculator Works</h2>
+    <p>Enter your building footprint and the calculator works out gutter runs for a 2-sided (gable) or 4-sided (hip) roof, sizes the downspout count from your actual roof area (footprint × pitch multiplier), and counts hangers at your chosen spacing. Adjust the pitch multiplier to convert flat footprint area to true roof area — 1.1 for a 4/12 pitch, 1.25 for 8/12, up to 1.4+ for steep roofs.</p>
+
+    <h2>Formulas Used</h2>
+    <ul>
+      <li><strong>Gutter LF:</strong> 2 × building length (gable) or 2 × (length + width) for hip roofs, + waste</li>
+      <li><strong>Roof area:</strong> length × width × pitch multiplier</li>
+      <li><strong>Downspouts:</strong> ceil(roof area ÷ 600 sq ft) — the industry standard drainage capacity per standard downspout</li>
+      <li><strong>Hangers:</strong> ceil(gutter LF ÷ spacing) + 1 per run; code/manufacturer standard is 24–36" spacing</li>
+    </ul>
+
+    <h2>Worked Example</h2>
+    <p>A 40 × 30 house with a hip roof: gutters = 2 × (40 + 30) = 140 LF, +5% = 147 LF. Roof area at a 6/12 pitch (×1.12) = 40 × 30 × 1.12 = 1,344 sq ft → 1,344 ÷ 600 = 2.24 → 3 downspouts. Hangers at 3 ft: 147 ÷ 3 ≈ 49 + extras ≈ 53. Installed at $9/LF plus $90 per downspout: $1,323 + $270 ≈ $1,593.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many downspouts do I need?</strong> One standard 2×3 or 3×4 downspout per 600 sq ft of roof area as a rule of thumb; 3×4 oversized downspouts handle roughly 800–1,000 sq ft each and clog less.</p>
+    <p><strong>What gutter size do I need?</strong> 5" K-style handles most residential roofs up to ~40 ft run per downspout; step up to 6" for steep roofs, long runs, or areas with heavy downpours.</p>
+    <p><strong>How far apart should gutter hangers be?</strong> Every 24–36 inches for spikes/ferrules or hidden hangers; closer (24") in snow regions where ice loads the gutter.</p>
+    <p><strong>What's the right gutter slope?</strong> ¼" of fall per 10 ft of run toward the downspout. Runs over 40 ft should slope from the middle to a downspout at each end.</p>
+
+    <h2>Related Contractor Tools</h2>
+    <div class="related">
+      <a href="/soffit-fascia-calculator/">Soffit &amp; Fascia Calculator</a>
+      <a href="/roof-pitch-calculator/">Roof Pitch Calculator</a>
+      <a href="/stair-calculator/">Stair Calculator</a>
+      <a href="/concrete-block-calculator/">Concrete Block Calculator</a>
+      <a href="/paver-calculator/">Paver Calculator</a>
+      <a href="/contractor-tools/">All Contractor Tools</a>
+    </div>
+  </div>
+  <div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function calc(){
+  var l=parseFloat(document.getElementById('len').value)||0;
+  var w=parseFloat(document.getElementById('wid').value)||0;
+  var waste=(parseFloat(document.getElementById('waste').value)||0)/100;
+  var spacing=parseFloat(document.getElementById('spacing').value)||3;
+  var dssf=parseFloat(document.getElementById('dssf').value)||600;
+  var pm=parseFloat(document.getElementById('pitchm').value)||1;
+  var gp=parseFloat(document.getElementById('gprice').value)||0;
+  var dp=parseFloat(document.getElementById('dprice').value)||0;
+  if(l<=0||w<=0){document.getElementById('result').innerHTML='<div class="big-number">—</div><div class="sub-result">Enter your dimensions</div>';return;}
+  var gutterLF=2*l*(1+waste); // gable roof: two eave runs
+  var roofArea=l*w*pm;
+  var downspouts=Math.ceil(roofArea/dssf);
+  var hangers=Math.ceil(gutterLF/spacing)+4;
+  var cost=gutterLF*gp+downspouts*dp;
+  document.getElementById('result').innerHTML=
+    '<div class="big-number">'+gutterLF.toFixed(0)+' LF gutter</div>'+
+    '<div class="sub-result">Gable roof: 2 × '+l+' ft + '+Math.round(waste*100)+'% waste (hip: '+(2*(l+w)*(1+waste)).toFixed(0)+' LF)</div>'+
+    '<div class="sub-result">Roof area ≈ '+roofArea.toFixed(0)+' sq ft ('+pm+'× pitch factor)</div>'+
+    '<div class="sub-result">Downspouts: <strong>'+downspouts+'</strong> (1 per '+dssf+' sq ft)</div>'+
+    '<div class="sub-result">Hangers: <strong>'+hangers+'</strong> @ '+spacing+' ft spacing</div>'+
+    ((gp+dp)>0?'<div class="sub-result">Cost estimate: <strong>$'+cost.toFixed(0)+'</strong></div>':'');
+}
+calc();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</body>
+</html>
