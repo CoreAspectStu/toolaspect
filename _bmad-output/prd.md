@@ -1,116 +1,85 @@
-# Utility Sites — microSaaS Transformation PRD
+# PRD — ToolAspect Two-Lane Monetization
 
-**Status:** Draft → Implementation
-**Track:** BMad Method (product transformation)
-**Created:** 2026-05-24
+**Status:** Active · **Supersedes:** microSaaS Transformation PRD (2026-05-24, stale, pre-pivot) · **Written:** 2026-08-21
 
 ---
 
-## 1. Problem
+## 1. Problem Statement
 
-10 utility tools deployed on Cloudflare Pages generating $0 revenue. Current model (free + AdSense) requires 3.3M+ pageviews/month to hit $50K/mo target. microSaaS playbook shows that paid subscriptions reach meaningful revenue with 100x fewer users than ad-only models.
+ToolAspect (toolaspect.com) is a 1,439-page static HTML tool site launched Aug 2026 on Cloudflare Pages, currently earning **$0**. The original $1K/day SEO-only plan scored 4/10 in adversarial review (2026-08-18): RPM assumptions were wrong (real: $8–12, not $20), head terms are DA-90-locked, and AI Overviews erode calculator-query CTR 30–50%. The plan pivoted to a two-lane model. This PRD captures that pivot.
 
-## 2. Vision
+## 2. Goal
 
-Transform utility-sites from a free ad-supported tool portfolio into a hybrid freemium microSaaS generating $50K/mo through subscriptions + AdSense + affiliates. Each tool retains a generous free tier; premium features unlock via $2-7/mo subscriptions.
+**$1,000/day revenue** — realistically reached **M12–18 via the B2B path**, not via display ads. At honest $8–12 RPM, ads-only $1K/day would need ~100K PV/day (≈3M/mo) — top-percentile outcome for a new domain. Therefore Lane 1 (B2B recurring revenue) is the primary path; Lane 2 (SEO) is the compounding hedge that must run near-zero-marginal-cost.
 
-## 3. Success Metrics
+## 3. Current State (grounded in FEATURES.md / activity.md, as of 2026-08-20)
 
-| Metric | Month 3 | Month 6 | Month 12 |
-|--------|---------|---------|----------|
-| Monthly Revenue | $5,500 | $19,000 | $55,000 |
-| Paid Subscribers | 200 | 800 | 2,500 |
-| Monthly Pageviews | 50K | 200K | 800K |
-| Tools with Paid Tiers | 5 | 7 | 10 |
-| SEO Articles Published | 40 | 120 | 240 |
+- 1,439 pages: ~109 standalone tools, 290+ converters, ~130 programmatic pages
+- **Lane 1 shipped:** 35 contractor-vertical calculators live (18 dispatched via swarm 2026-08-19, formulas verified, all HTTP 200); /embed/ white-label widget system live — 7 embeds shipped, free tier = attribution backlink, paid tier planned at $9/mo; outreach kit staged (50 targets, 3 templates, docs/seo-offsite/outreach/)
+- **Lane 2 shipped:** sitemap auto-regen in deploy.sh (1,421+ URLs); IndexNow daily cron (Yandex ✓, Bing 403); GSC verified + sitemap submitted 2026-08-12; traffic report cron on correct zone
+- Traffic: **~340 real PV/day** steady; Google sandbox ongoing (day 8+), YandexBot crawling 30% of PVs
+- Monetization: **none active.** AdSense deferred — "no ads" homepage claim removed site-wide 2026-08-19; needs 30d clean before applying
+- Content debt: ~100 legacy tool pages thin (79–349 words)
 
-## 4. Functional Requirements
+## 4. Lanes
 
-### FR-01: Payment Infrastructure
-System must integrate Stripe Checkout for subscription payments across all tools, with shared payment component, customer portal, and webhook handling.
+### Lane 1 — Contractor Vertical + B2B Embeds (primary revenue path)
+1. **Vertical depth:** contractor calculators (concrete, rebar, lumber, paint, drywall, roofing, fencing, decking, brick, tile, siding, insulation, excavation, gravel, asphalt, mulch, electrical load + hub) form the wedge. Rationale: high commercial intent, KD<10 long-tail terms, active trade communities that actually link out.
+2. **White-label embeds:** /embed/*.js one-line widgets. Free tier carries attribution backlink (also a link-building channel); paid tier $9/mo white-label (Stripe or Gumroad checkout). Unit economics: 40 sites × $75/mo-style pricing was the strategist's model; at $9/mo entry, ~300+ subs ≈ $90/day and the real upsell is higher tiers.
+3. **B2B outreach:** 50 staged targets, 3 email templates, 10/week cadence. This is a sales problem, not a ranking problem — Google-independent revenue.
 
-### FR-02: Freemium Tier System
-Each tool must support a free tier (full basic functionality) and a paid tier (advanced features). Free tier must deliver genuine value — no crippleware.
+### Lane 2 — Directory SEO on Autopilot (compounding hedge)
+Broad directory stays deployed (zero marginal cost) with automation only:
+- Sitemap auto-regen (deploy.sh — never run ad-hoc sitemap scripts)
+- IndexNow daily cron
+- GSC monitor + daily traffic report cron
+- No further 20 hr/wk investment in generic-directory SEO.
 
-### FR-03: User Accounts
-Users must be able to create accounts (email + password or OAuth) to access paid features, save history, and sync across devices.
+## 5. Non-Goals
 
-### FR-04: SEO Content Engine
-Automated system must generate and publish 40+ SEO articles per month targeting long-tail keywords for each tool. Runs 24/7 on XPS via Hermes cron.
-
-### FR-05: Revenue Dashboard
-Central dashboard showing revenue per tool, subscriber counts, conversion rates, traffic stats. Auto-generated weekly report to Mattermost.
-
-### FR-06: Custom Domains
-Each tool must be accessible via a custom domain (e.g., financecalculator.io) with proper SSL, redirects, and SEO authority.
-
-### FR-07: Affiliate Program
-20% revenue share for referrers. Affiliate dashboard with tracking links, payout history, and promotional assets.
-
-### FR-08: Build-in-Public Pipeline
-Automated drafting of X/Twitter posts about revenue, traffic, and feature updates. Daily draft sent to Stu for approval.
-
-### FR-09: Email Capture & Nurture
-Collect emails on free tier usage. Automated drip campaigns nudging toward paid upgrade.
-
-### FR-10: Google Search Console Integration
-Daily automated GSC data pull, keyword ranking tracking, and SERP position monitoring per tool.
-
-### FR-11: AdSense Integration
-Google AdSense on all 10 sites, properly placed (above fold, between content, sidebar) without degrading UX.
-
-### FR-12: Cross-Selling
-Cross-promote related tools within each site (e.g., Finance Calculator → Currency Converter).
-
-## 5. Non-Functional Requirements
-
-### NFR-01: Performance
-Each tool must load in <2s on 3G. Lighthouse Performance score ≥90. No backend server required — all client-side + Stripe redirect.
-
-### NFR-02: Zero Hosting Cost
-Architecture must stay on Cloudflare Pages (free tier). Stripe processes payments. No backend server.
-
-### NFR-03: Margin
-Operating costs must not exceed $50/month (domains + Stripe fees). Target margin: 95%+.
-
-### NFR-04: Accessibility
-WCAG 2.1 AA compliance. Keyboard navigation, screen reader support, proper contrast ratios.
-
-### NFR-05: Security
-HTTPS everywhere. No PII stored client-side. Stripe handles all payment data. JWT tokens for auth.
-
-### NFR-06: Dark Theme Consistency
-All tools use shared palette: bg #0f1117, surface #1a1d27, border #2a2d3a, text #e4e4e7, muted #9ca3af, primary #6366f1.
+- No backend, no DB, no build system (constraint, see §7)
+- No programmatic page expansion until first 100 retrofitted pages show GSC impressions
+- No head-keyword chasing (calculator.net DA 90+, rapidtables 88+ — closed)
+- AdSense application before the 30-day "no ads" fix window clears (≈2026-09-18)
 
 ## 6. Constraints
 
-- Pure client-side HTML/CSS/JS only (no backend, no Node, no Python server)
-- Cloudflare Pages hosting (free, unlimited static requests)
-- Stripe Checkout (redirect-based, no card data touches our pages)
-- Budget: $50/month max operating cost
-- Tools already built and deployed — transformation only, not rebuild
-- AdSense already planned — add subscriptions ON TOP, not instead
+- **No build step.** Static HTML, self-contained pages, inline JS/CSS.
+- **Deploy only via `./deploy.sh`** (which regenerates the sitemap).
+- No ad network yet — AdSense deferred; Ezoic only after 10K sessions.
+- AI-agent-executable where possible; auth-blocked steps (Reddit/Medium/Google account posting, email sending identity, Stripe/Gumroad account) marked explicitly.
 
-## 7. Priority Sites for Paid Tiers
+## 7. Success Metrics & Kill Gates
 
-| Priority | Site | Paid Price | Premium Features |
-|----------|------|-----------|------------------|
-| P0 | Finance Calculator | $5/mo | Advanced calcs, PDF export, comparison tables, amortization scheduling |
-| P0 | JSON Formatter | $4/mo | Batch validate, API tester, schema validation, saved schemas |
-| P1 | Image Compressor | $3/mo | Batch process, WebP conversion, watermark, resize presets |
-| P1 | QR Code Generator | $3/mo | Bulk QR, custom designs/colors, analytics tracking |
-| P1 | Password Generator | $2/mo | Bulk generate, custom policies, API access, breach check |
-| P2 | Regex Tester | $3/mo | Saved patterns, cheat sheet library, shareable links |
-| P2 | Word Unscrambler | $3/mo | Scrabble mode, custom dictionaries, anagram solver |
-| P3 | Age Calculator | AdSense only | — |
-| P3 | Currency Converter | AdSense only | — |
-| P3 | Unit Converter | AdSense only | — |
+**Revenue path check (per fact-check.md corrections):**
+- Realistic year-1 net RPM: **$8–12** (US-heavy utility traffic, AdSense/Ezoic tier)
+- Ads-only $1K/day = ~100K PV/day ≈ 3M/mo — not the base case
+- Realistic M12 SEO revenue: $15–50/day at 50–150K PV/mo
+- $1K/day realistic via: B2B embed MRR compounding (M12–18)
 
-## 8. Out of Scope
+**Kill gates (adopted from adversarial review, non-negotiable):**
+1. **< 10K visits/mo at M6 → stop all offsite SEO investment** (Lane 2 goes pure-autopilot)
+2. **M12 revenue < $200/day → exit / sell** (content sites trade ~30–40× monthly profit)
 
-- Mobile native apps
-- Backend API / database
-- Real-time collaboration
-- White-label / enterprise tier
-- Custom tool builder
-- API marketplace
+**Interim targets:**
+- First paid embed sub: within 30 days of checkout live
+- $1K MRR from embeds: within 60 days of outreach start (strategist target)
+- 10K sessions/mo: unlocks Ezoic (better RPM than AdSense)
+
+## 8. Risks
+
+| Risk | Mitigation |
+|---|---|
+| AI Overviews kill long-tail calculator CTR | Lane 1 B2B is Google-independent — the hedge IS the strategy |
+| Zero moat (asset clonable in a weekend) | Vertical brand + embed contracts = switching costs; attribution backlinks compound |
+| AdSense rejection (new domain, thin pages, programmatic) | Content retrofit first; apply only after 30d fix window + depth improvement |
+| Outreach emails never sent (auth/identity blocker) | Sprint 1 must resolve sender identity decision — it gates all of E2 |
+| Sandbox longer than 3–9mo | Lane 1 revenue doesn't wait for Google |
+
+## 9. Timeline (honest, post-correction)
+
+- **M0–2 (now):** embed paid tier, 7 more embeds, outreach sends begin, content retrofit starts
+- **M3–6:** first embed MRR, AdSense application (post-30d window), Ezoic at 10K sessions
+- **M6:** kill-gate check #1 (<10K visits/mo → stop offsite SEO)
+- **M12:** kill-gate check #2 (revenue <$200/day → exit); realistic $50–200/day blended
+- **M12–18:** $1K/day achievable only if B2B path compounds (embeds + vertical brand)

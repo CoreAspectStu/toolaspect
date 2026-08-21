@@ -1,163 +1,37 @@
-# Utility Sites — Architecture Decisions
+# Architecture — ToolAspect (as actually built)
 
-**Status:** Draft
-**Date:** 2026-05-24
+**Status:** Matches shipped reality · **Updated:** 2026-08-21
 
----
+## Stack (deliberately minimal)
 
-## ADR-001: Stripe Checkout for Payments
+- **Static HTML on Cloudflare Pages.** No backend, no DB, no build system, no framework.
+- Tool pages are **self-contained**: inline JS + inline CSS, dark theme (#0f172a/#1e293b/#60a5fa). Each page is a single .html file that runs entirely in the browser.
+- **Deploy: `./deploy.sh` only.** It auto-regenerates the sitemap (1,421+ URLs) and is the single deploy path. Ad-hoc sitemap scripts are forbidden.
+- **shared/nav.js** — shared navigation injection across pages.
 
-**Decision:** Use Stripe Checkout (redirect-based) for all subscriptions.
+## Key components
 
-**Rationale:** No backend needed — Stripe hosts the payment page. Client-side JS creates checkout sessions via Stripe.js. Webhooks to Cloudflare Workers (or Functions) for fulfillment. Zero card data touches our pages.
+### Tool pages (~109 tools + 290+ converters + ~130 programmatic)
+- Formula-based calculators; contractor vertical (35 calculators) verified: concrete cf/27, bags cf/0.6, lumber t×w×l/12, brick 7.625×2.25, asphalt 145, siding 100sqft.
+- Category hubs: /all-tools/, /finance-tools/, /health-fitness-tools/, /developer-tools/, /converter-tools/, /math-tools/, /everyday-tools/, /contractor-tools/.
 
-**Alternatives considered:**
-- Stripe Elements (embedded) — requires more client-side code, PCI scope increases
-- Paddle / LemonSqueezy — Merchant of Record, higher fees (5% vs 2.9%)
-- PayPal only — lower conversion, international friction
+### White-label embed system — /embed/*.js
+- Vanilla JS widgets (concrete, rebar, lumber, paint + more), one-line `<script>` install, light/dark themes.
+- All CSS/JS scoped under **`ta-embed-` prefix** to avoid host-site collisions.
+- **Attribution link** baked into free tier (backlink channel); paid tier = link removal ($9/mo, checkout TBD Stripe/Gumroad).
+- /embed/ catalog page with live demos (Vision QA 9/10).
 
-**Implementation:** Shared `stripe-checkout.js` component loaded by all paid tools. Config per tool defines plan IDs, features, and pricing.
+## Analytics
+- **Cloudflare Analytics** (zone toolaspect.com — cron fixed from wrong zone 2026-08-19)
+- **Umami** for self-hosted page analytics
 
----
+## Automation (cron jobs)
+1. **IndexNow daily** — pings new/changed URLs (Yandex accepted, Bing 403)
+2. **Traffic report** — daily PV summary from CF Analytics API
+3. **GSC monitor** — indexing/impression tracking
+4. **Sitemap regen** — runs inside deploy.sh, not standalone
 
-## ADR-002: Firebase Auth for User Accounts
-
-**Decision:** Use Firebase Authentication (Google) for user accounts.
-
-**Rationale:** Free tier covers 50K MAU. Supports email/password + Google OAuth + GitHub OAuth (for dev tools). Client-side SDK, no backend. JWT tokens for session management. Integrates with Stripe via Firebase Extensions.
-
-**Alternatives considered:**
-- Supabase Auth — good but adds a dependency on Supabase infrastructure
-- Auth0 — free tier too limited (7.5K MAU)
-- Custom JWT — reinventing the wheel, security risk
-- Clerk — excellent DX but pricing scales poorly
-
-**Implementation:** Shared `auth.js` component. Firebase project per tool or single project with multi-tenant claims.
-
----
-
-## ADR-003: Cloudflare Pages + Functions
-
-**Decision:** Static HTML on Cloudflare Pages. Cloudflare Functions (edge) for webhooks and API proxying only.
-
-**Rationale:** Pages = free, unlimited requests. Functions = serverless at edge, pay-per-invocation (first 100K free). Webhooks need a server endpoint — Functions provide it without a dedicated server.
-
-**Architecture:**
-```
-User → Cloudflare Pages (static HTML)
-     → Stripe.js → Stripe Checkout (redirect)
-     → Stripe Webhook → Cloudflare Function → Firebase (update user)
-     → Firebase Auth SDK → Client-side session
-```
-
----
-
-## ADR-004: SEO Automation on XPS via Hermes Cron
-
-**Decision:** XPS laptop (100.85.154.71) runs Hermes cron jobs for SEO content generation, GSC data pulls, and weekly reporting.
-
-**Rationale:** XPS is always-on, connected via Tailscale. Hermes agent can run 24/7. GSC API + Gemini/Claude for content generation. Daily content pipeline: keyword research → article draft → human review → publish.
-
-**Components:**
-- Daily GSC data pull → Qdrant for analysis
-- Daily keyword research → content brief generation
-- Article generation (2-3/day, 40+/month)
-- Weekly revenue + traffic report → Mattermost
-- Daily X post draft → Stu for approval
-
----
-
-## ADR-005: Shared UI Component System
-
-**Decision:** Shared JS/CSS components loaded from a central `/shared/` directory on Cloudflare Pages.
-
-**Rationale:** 10 sites share auth UI, payment modal, nav bar, footer, and cross-sell widgets. A single shared directory means one update propagates to all tools.
-
-**Components:**
-- `shared/auth.js` — Firebase auth UI (login/register/profile)
-- `shared/stripe-checkout.js` — Payment modal + subscription management
-- `shared/nav.js` — Top navigation with tool switcher
-- `shared/footer.js` — Footer with cross-sell links
-- `shared/theme.css` — Dark theme variables + typography
-
----
-
-## ADR-006: Freemium Gate Architecture
-
-**Decision:** Client-side feature gating with server-side verification.
-
-**Rationale:** Premium features are hidden behind a JS gate that checks Firebase auth claims (custom claims set by Stripe webhook). The gate is cosmetic — determined users can bypass it — but the actual premium value (export, batch, API) requires server-side resources gated by auth.
-
-**Implementation:**
-- Firebase custom claims: `{ premium: true, plan: 'pro', tools: ['finance', 'json'] }`
-- Client-side JS checks claims before showing premium UI
-- Premium features that require processing (PDF export, batch) use Cloudflare Functions
-- Simple premium features (extra tabs, advanced options) are just UI-gated
-
----
-
-## ADR-007: Custom Domain Strategy
-
-**Decision:** One primary domain with subdomains per tool, plus keyword-rich redirect domains.
-
-**Rationale:** Single domain builds authority faster. Subdomains inherit root domain SEO. Keyword domains redirect for brand + type-in traffic.
-
-**Structure:**
-- Primary: `utils.io` (or similar) → `finance.utils.io`, `json.utils.io`, etc.
-- Redirect domains: `financecalculator.io` → `finance.utils.io`
-- Cloudflare manages all DNS + SSL automatically
-
----
-
-## ADR-008: Monitoring & Reporting Cron Jobs
-
-**Decision:** Suite of Hermes cron jobs running on core-control and XPS for monitoring, reporting, and automation.
-
-**Jobs:**
-| Job | Frequency | Location | Deliver To |
-|-----|-----------|----------|------------|
-| Revenue Report | Weekly (Mon 9am) | core-control | Mattermost #project-utility-sites |
-| Traffic Report | Weekly (Mon 9am) | core-control | Mattermost |
-| SEO Content Pipeline | Daily (6am) | XPS | Cloudflare Pages (auto-deploy) |
-| GSC Data Pull | Daily (2am) | XPS | Qdrant |
-| X Post Draft | Daily (8am) | core-control | Stu (Telegram) |
-| Site Health Check | Daily (3am) | core-control | Mattermost (alert on failure) |
-| Competitor Monitoring | Weekly (Fri 9am) | core-control | Mattermost |
-
----
-
-## Build Sequence
-
-```
-Phase 1: Foundation (Week 1)
-  ├─ shared/ component system
-  ├─ Firebase Auth setup
-  ├─ Stripe account + product config
-  └─ Cloudflare Functions for webhooks
-
-Phase 2: Paid Tiers (Week 1-2)
-  ├─ Finance Calculator paid tier
-  ├─ JSON Formatter paid tier
-  ├─ Image Compressor paid tier
-  ├─ QR Code Generator paid tier
-  └─ Password Generator paid tier
-
-Phase 3: SEO Engine (Week 2-3)
-  ├─ GSC API integration
-  ├─ Content pipeline cron on XPS
-  ├─ Keyword research automation
-  └─ Article template system
-
-Phase 4: Growth (Week 3-4)
-  ├─ Email capture + Mailchimp/Resend
-  ├─ Affiliate program setup
-  ├─ Build-in-public pipeline
-  ├─ Cross-sell widgets
-  └─ Product Hunt launch
-
-Phase 5: Scale (Ongoing)
-  ├─ Custom domains
-  ├─ A/B pricing tests
-  ├─ Weekly shipping cadence
-  └─ New tool development
-```
+## Constraints for all future work
+- Static HTML only; any "backend" behavior must live in Cloudflare Pages Functions or client-side JS — currently neither exists, and adding one needs explicit decision.
+- Every deploy through ./deploy.sh.
+- New embed widgets: vanilla JS, `ta-embed-` scoping, attribution link, ≤ small file size (host-site friendly).

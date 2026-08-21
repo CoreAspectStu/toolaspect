@@ -1,43 +1,40 @@
-# Sprint 1 — Payment Foundation + First Paid Tier
+# Sprint 1 — Embed Expansion + Content Retrofit Start + Linking
 
-**Duration:** Week 1 (starting 2026-05-24)
-**Goal:** Users can sign in and pay for Finance Calculator Pro
-**Sprint Lead:** Baz (GLM-5.1 / Claude Code for heavy builds)
+**Duration:** 2 weeks from 2026-08-21 · **Focus:** highest-value unblocked work only.
 
----
+## Sprint goal
+Paid-tier groundwork + first 25 content retrofits + internal link graph — all AI-agent-executable, zero auth required. Auth-blocked items surfaced to user in parallel.
 
-## Build Order
+## Stories
 
-| # | Story | Files | Status | Blocked By |
-|---|-------|-------|--------|------------|
-| 1 | 1.1 Shared UI Components | `shared/theme.css`, `shared/auth.js`, `shared/stripe-checkout.js`, `shared/nav.js` | ⬜ TODO | — |
-| 2 | 1.2 Firebase Auth | Firebase project setup, `shared/auth.js` integration | ⬜ TODO | — |
-| 3 | 1.3 Stripe Setup | Stripe products/prices, webhook endpoint | ⬜ TODO | — |
-| 4 | 1.4 Cloudflare Functions | `functions/stripe-webhook.js` | ⬜ TODO | 1.3 |
-| 5 | 1.5 Freemium Gate | `shared/gate.js` premium feature gate | ⬜ TODO | 1.1, 1.2 |
-| 6 | 2.1 Finance Calculator Pro | `finance-calculator/index.html` premium tabs | ⬜ TODO | 1.1-1.5 |
-| 7 | 3.1 GSC API Integration | Cron job on XPS | ⬜ TODO | — (parallel) |
-| 8 | 3.5 Weekly SEO Report | Cron job on core-control | ⬜ TODO | 3.1 |
-| 9 | 6.4 Landing Page Upgrade | `index.html` redesign | ⬜ TODO | — (parallel) |
+| Story | From | Deliverable |
+|---|---|---|
+| E1-S1 Checkout decision doc | E1 | Stripe vs Gumroad recommendation for no-backend static site |
+| E1-S3 Paid-tier gating in widgets | E1 | data-license flag + attribution toggle across 4 live embeds |
+| E1-S5 7 new embed widgets | E1 | roofing, drywall, fencing, decking, brick, tile, gravel widgets + catalog update |
+| E1-S4 Pricing page | E1 | /embed/pricing/ deployed (checkout URL placeholder until E1-S2) |
+| E1-S6 Embed docs page | E1 | Install/theming/FAQ docs deployed |
+| E4-S1 6-block template finalization | E4 | Template + 1 pilot page retrofitted |
+| E4-S2 Thin-page inventory | E4 | Ranked top-100 retrofit queue |
+| E4-S3 Retrofit batch 1 | E4 | 25 pages ≥600 words, deployed, sitemap + IndexNow |
+| E6-S1 Orphan audit script | E6 | Link-graph crawl + orphan report |
+| E6-S2 Hub-and-spoke wiring | E6 | Hub + 3-related links on all tool pages |
+| E6-S3 Breadcrumbs | E6 | Breadcrumb UI + BreadcrumbList JSON-LD site-wide |
+| E2-S2 Outreach tracker | E2 | 50-target tracking sheet ready for sends |
+| E2-S3 Personalization pass | E2 | First 20 outreach emails drafted, humanized |
 
-## Parallelization
+## Blocked on user auth (raise this week — decisions unlock sprints 2–3)
 
-- **Track A (Critical Path):** 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 2.1
-- **Track B (Parallel):** 3.1, 6.4 (no dependencies on Track A)
-- **Track C (After Track A):** 3.5 (needs 3.1 data)
+- 🔐 **E1-S2**: create Stripe/Gumroad account + $9/mo checkout URL (unlocks real revenue)
+- 🔐 **E2-S1**: sender identity for outreach (unlocks 50 staged emails)
+- 🔐 **E3-S1**: Reddit/Quora/Medium/Pinterest account auth (unlocks 47 staged posts/pins)
 
-## Definition of Done
+## Sprint exit criteria
 
-- [ ] User can create account on any tool page
-- [ ] User can complete Stripe Checkout for Finance Calculator Pro
-- [ ] Premium features unlock immediately after payment
-- [ ] Webhook updates Firebase claims correctly
-- [ ] GSC data pull runs on cron
-- [ ] Landing page upgraded with hero + social proof
-- [ ] All deployed to Cloudflare Pages and verified
+- 7 new embeds live + pricing/docs pages deployed, all 200 OK
+- 25 retrofitted pages ≥600 words, indexed-pinged
+- 0 orphan pages after wiring
+- Tracker + 20 drafted emails ready to send the moment identity is decided
 
-## Future Sprints
-
-**Sprint 2:** Stories 2.2-2.5 (JSON, Image, QR, Password paid tiers) + Story 3.2-3.4 (content pipeline)
-**Sprint 3:** Stories 4.1-4.4 (email, affiliate, cross-sell, build-in-public) + Story 6.1-6.3 (domains)
-**Sprint 4:** Stories 5.1-5.4 (AdSense, dashboard, pricing tests) + ongoing content engine
+## Not in this sprint
+- E3 posting (auth), E5 AdSense (30-day window clears ~2026-09-18 — audit runs in sprint 2), E4 batches 2–4
