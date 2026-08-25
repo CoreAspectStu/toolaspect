@@ -4,24 +4,13 @@
 
 ## Wave 1 — High-CPC Finance/Insurance (build ourselves)
 
-renters-insurance-calculator | insurance | calc | $16 | low comp, simple
-umbrella-insurance-calculator | insurance | calc | $22 | affluent audience, zero comp tools
-
-disability-insurance-calculator | insurance | calc | $25 | high CPC, formula-friendly
-deductible-vs-copay-calculator | insurance | calc | $15 | AIO question-bait
-annuity-calculator | finance | calc | $23 | retirement annuity longtails
-
 ## Wave 2 — Legal/B2B high-CPC
-settlement-calculator | legal | calc | $35 | personal injury CPC is highest on web
+
 # DONE 2026-08-25: workers-comp-settlement-calculator, child-support-calculator,
 # medical-malpractice-settlement-calculator, mesothelioma-settlement-calculator ($40-90),
 # lawsuit-loan-calculator (wave 5) — see tool-factory-done.md
-alimony-calculator | legal | calc | $22 | low comp
-overtime-pay-calculator-by-state | legal | calc | $14 | FLSA tables, longtail states
-wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
 
-social-security-disability-benefits-calculator | legal | calc | $21 | SSDI tables
-incorporation-cost-calculator | legal | calc | $17 | business formation CPC
+wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
 
 ## Wave 3 — OSS-wrap generators (MIT repos verified Aug-25)
 invoice-generator-v2 | business | wrap-invoify | $8 | port invoify core patterns, PDF export

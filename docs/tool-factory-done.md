@@ -30,3 +30,17 @@
 - medical-malpractice-settlement-calculator — live 200, adversarial review PASS
 - child-support-calculator — live 200, adversarial review PASS
 - lawsuit-loan-calculator — live 200, adversarial review PASS
+
+## 2026-08-25 — Wave 3 insurance/alimony (swarm)
+- renters-insurance-calculator — live 200
+- umbrella-insurance-calculator — live 200
+- disability-insurance-calculator — live 200
+- deductible-vs-copay-calculator — live 200
+- annuity-calculator — live 200
+- alimony-calculator — live 200
+- settlement-calculator — live 200
+- incorporation-cost-calculator — live 200
+- overtime-pay-calculator-by-state — live 200
+- social-security-disability-benefits-calculator — live 200
+- alimony-calculator-california — live 200
+- alimony-calculator-texas — live 200

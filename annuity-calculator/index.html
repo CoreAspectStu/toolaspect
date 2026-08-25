@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annuity Calculator — Monthly Payout & Growth | ToolAspect</title>
+<meta name="description" content="Free annuity calculator for payouts and growth. $500,000 at 5.5% pays about $3,439 a month for 20 years. Compare fixed-period and lifetime income.">
+<link rel="canonical" href="https://toolaspect.com/annuity-calculator/">
+<meta property="og:title" content="Annuity Calculator — Monthly Payout & Growth">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="See the monthly income an annuity pays from your principal, rate, and payout period, or project how a deferred annuity grows before payout begins.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/annuity-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Annuity Calculator | Free Online Tool">
+<meta name="twitter:description" content="Calculate monthly annuity income, total payments, and deferred growth before payout.">
+<meta name="keywords" content="annuity calculator, annuity payout calculator, how much does an annuity pay, immediate annuity, deferred annuity, annuity income per month, fixed annuity calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Annuity Calculator","description":"Free annuity calculator. Work out the monthly income a principal pays over a fixed period, or project the future value of a deferred annuity with monthly contributions, then see the income that balance would buy.","url":"https://toolaspect.com/annuity-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much does a $500,000 annuity pay per month?","acceptedAnswer":{"@type":"Answer","text":"Over a fixed 20-year period at 5.5%, $500,000 pays $3,439.44 a month, which is $41,273 a year and $825,465 in total. A lifetime (life-only) immediate annuity bought at 65 pays roughly $3,050 to $3,275 a month for a man at mid-2025 quote levels, and slightly less for a woman because of longer life expectancy."}},
+{"@type":"Question","name":"How much does a $100,000 annuity pay per month?","acceptedAnswer":{"@type":"Answer","text":"About $687.89 a month over a fixed 20-year period at 5.5%, or $165,093 in total. As a lifetime immediate annuity, mid-2025 quotes for a 65-year-old run roughly $610 to $655 a month for a man and $575 to $620 for a woman. Waiting until 70 lifts the male range to about $685 to $745."}},
+{"@type":"Question","name":"What's the difference between immediate and deferred annuities?","acceptedAnswer":{"@type":"Answer","text":"An immediate annuity starts paying within a year of purchase: you hand over a lump sum and income begins right away. A deferred annuity grows first, often for 10 to 20 years, then converts to income later. Deferral buys a bigger payout because the balance compounds and, for lifetime annuities, because you start payments at an older age."}},
+{"@type":"Question","name":"Are annuity payments taxed?","acceptedAnswer":{"@type":"Answer","text":"Yes, but how much depends on the money that funded it. Annuities bought with pre-tax dollars (an IRA or 401(k) rollover) are fully taxable as ordinary income. Annuities bought with after-tax dollars use an exclusion ratio: part of each payment is a tax-free return of your own principal and only the earnings portion is taxed. Withdrawals before 59½ can also trigger a 10% IRS penalty on earnings."}},
+{"@type":"Question","name":"What happens to my annuity when I die?","acceptedAnswer":{"@type":"Answer","text":"It depends on the payout option you chose. Life-only payments stop at death, even if that's one month in. Period-certain options keep paying a beneficiary for the remainder of the guaranteed window, joint-and-survivor options continue for a spouse's lifetime, and cash-refund options return any unpaid principal. Deferred annuities that haven't annuitized pass the account balance to your beneficiary."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"Annuity Calculator","item":"https://toolaspect.com/annuity-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-toggle{display:flex;gap:.5rem;justify-content:center;margin-top:1.5rem}
+.mode-btn{padding:.55rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);font-size:.9rem;cursor:pointer;font-family:inherit;transition:border-color .2s,color .2s}
+.mode-btn:hover{border-color:var(--primary)}
+.mode-btn.active{background:rgba(99,102,241,.12);border-color:var(--primary);color:var(--text);font-weight:600}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-grid.four{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:640px){.input-grid.four{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>💵 Annuity Calculator</h1>
+<p>See the monthly income your money buys, or grow a deferred annuity first</p>
+</div>
+
+<div class="mode-toggle">
+<button type="button" class="mode-btn active" data-mode="payout" id="btnPayout">Payout</button>
+<button type="button" class="mode-btn" data-mode="grow" id="btnGrow">Grow (deferred)</button>
+</div>
+
+<div id="payoutInputs" class="section-card">
+<h2>Payout Details</h2>
+<div class="input-grid">
+<div class="input-group"><label>Principal ($)</label><input type="number" id="principal" value="500000" min="0" step="10000"></div>
+<div class="input-group"><label>Annual Rate (%)</label><input type="number" id="pRate" value="5.5" min="0" step="0.1"></div>
+<div class="input-group"><label>Payout Period (years)</label><input type="number" id="pYears" value="20" min="1" max="50" step="1"></div>
+</div>
+</div>
+
+<div id="growInputs" class="section-card" style="display:none">
+<h2>Accumulation Details</h2>
+<div class="input-grid four">
+<div class="input-group"><label>Starting Balance ($)</label><input type="number" id="startBal" value="100000" min="0" step="5000"></div>
+<div class="input-group"><label>Monthly Contribution ($)</label><input type="number" id="contrib" value="500" min="0" step="50"></div>
+<div class="input-group"><label>Annual Rate (%)</label><input type="number" id="gRate" value="5.5" min="0" step="0.1"></div>
+<div class="input-group"><label>Years Until Payout</label><input type="number" id="gYears" value="15" min="1" max="50" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label" id="heroLabel">Monthly Income</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid" id="payoutResults">
+<div class="result-item"><div class="ri-label">Annual Income</div><div class="ri-value" id="annualInc">—</div></div>
+<div class="result-item"><div class="ri-label">Total Payments Received</div><div class="ri-value" id="totalRec">—</div></div>
+<div class="result-item"><div class="ri-label">Total Interest Earned</div><div class="ri-value" id="totalInt">—</div></div>
+<div class="result-item"><div class="ri-label">Income as % of Principal per Year</div><div class="ri-value" id="pctYr">—</div></div>
+</div>
+<div class="result-grid" id="growResults" style="display:none">
+<div class="result-item"><div class="ri-label">Total Contributed</div><div class="ri-value" id="totalContrib">—</div></div>
+<div class="result-item"><div class="ri-label">Growth Earned</div><div class="ri-value" id="growthEarned">—</div></div>
+<div class="result-item"><div class="ri-label">Monthly Income It Buys (20 yr, same rate)</div><div class="ri-value" id="buyMonthly">—</div></div>
+<div class="result-item"><div class="ri-label">Annual Income It Buys (20 yr, same rate)</div><div class="ri-value" id="buyAnnual">—</div></div>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Sample Immediate Annuity Income per $100,000</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Age at Purchase</th><th>Male Monthly</th><th>Female Monthly</th><th>Approx Annual Payout Rate</th></tr></thead>
+<tbody>
+<tr><td>60</td><td>$545 – $580</td><td>$515 – $550</td><td>~6.7%</td></tr>
+<tr><td>65</td><td>$610 – $655</td><td>$575 – $620</td><td>~7.5%</td></tr>
+<tr><td>70</td><td>$685 – $745</td><td>$650 – $705</td><td>~8.5%</td></tr>
+<tr><td>75</td><td>$790 – $860</td><td>$745 – $810</td><td>~9.8%</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Sample life-only quotes published mid-2025. These are illustrations, not offers: actual quotes vary by insurer, state, interest-rate environment, and payout options. Women receive slightly less per month because they live longer on average. Adding a survivor benefit or period-certain guarantee lowers the monthly figure.</p>
+</div>
+
+<div class="section-card">
+<h2>Fixed-Period Payouts: $100,000 at 5.5%</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Payout Period</th><th>Monthly Payment</th><th>Total Received</th></tr></thead>
+<tbody>
+<tr><td>10 years</td><td>$1,085.26</td><td>$130,232</td></tr>
+<tr><td>15 years</td><td>$817.08</td><td>$147,075</td></tr>
+<tr><td>20 years</td><td>$687.89</td><td>$165,093</td></tr>
+<tr><td>25 years</td><td>$614.09</td><td>$184,226</td></tr>
+<tr><td>30 years</td><td>$567.79</td><td>$204,404</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Computed with the payout formula this calculator uses. Stretching the same $100,000 from 10 to 30 years roughly halves the monthly check but adds $74,000 of total interest, because the balance keeps compounding while it pays out.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Annuity Calculator Works</h2>
+<p>An annuity is a contract with an insurance company: you hand over money, and they pay you a stream of income. An immediate annuity starts paying within a year; a deferred annuity grows first and pays later. A fixed annuity credits a guaranteed rate, while a variable annuity ties your balance to market investments, so payments can swing. This calculator models the fixed kind, which is the one most people are actually pricing.</p>
+<h3>The formula</h3>
+<p>Payout mode uses the standard annuity payment formula: monthly payment = P × r ÷ (1 − (1 + r)<sup>−n</sup>), where P is the principal, r is the annual rate divided by 12, and n is the number of monthly payments. Grow mode compounds your starting balance and monthly contributions forward: FV = P(1 + r)<sup>n</sup> + c × ((1 + r)<sup>n</sup> − 1) ÷ r, with contributions added at the end of each month. It then feeds that future value back through the payout formula over 20 years so you can see the income it would buy.</p>
+<h3>How to use it</h3>
+<p>Pick a mode with the toggle. In Payout, enter the lump sum, the rate, and how many years you want the checks to last. In Grow, enter what you've got, what you'll add monthly, and how long until you need income. Every field recalculates live.</p>
+<h3>A worked example</h3>
+<p>Say you retire with $500,000 and buy a 20-year fixed payout at 5.5%. The formula gives $3,439.44 a month, which is $41,273 a year, or 8.25% of your principal annually. Over 240 payments you'd collect $825,465 in total, meaning $325,465 of interest on top of your original money.</p>
+<p>Now the deferred version. Start with $100,000 at age 50, add $500 a month at the same 5.5%, and leave it 15 years. You'd contribute $190,000 in total and the balance would grow to $367,131, with $177,131 of that being growth. Converted to a 20-year payout at the same rate, that buys about $2,525 a month.</p>
+<p>One warning before you sign anything. Annuities carry fees that this calculator, and most sales brochures, leave out: administrative charges, rider costs, and surrender periods that can lock your money up for 5 to 10 years with penalties of 7% or more for early withdrawal. A great quoted rate with a long surrender period isn't a great deal. Compare the guaranteed income against simply drawing down a <a href="/savings-calculator/" style="color:var(--primary-hover)">savings</a> or investment balance before committing.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How much does a $500,000 annuity pay per month?</h3><p>Over a fixed 20-year period at 5.5%, $500,000 pays $3,439.44 a month, which is $41,273 a year and $825,465 in total. A lifetime (life-only) immediate annuity bought at 65 pays roughly $3,050 to $3,275 a month for a man at mid-2025 quote levels, and slightly less for a woman because of longer life expectancy.</p></div>
+<div class="faq-item"><h3>How much does a $100,000 annuity pay per month?</h3><p>About $687.89 a month over a fixed 20-year period at 5.5%, or $165,093 in total. As a lifetime immediate annuity, mid-2025 quotes for a 65-year-old run roughly $610 to $655 a month for a man and $575 to $620 for a woman. Waiting until 70 lifts the male range to about $685 to $745.</p></div>
+<div class="faq-item"><h3>What's the difference between immediate and deferred annuities?</h3><p>An immediate annuity starts paying within a year of purchase: you hand over a lump sum and income begins right away. A deferred annuity grows first, often for 10 to 20 years, then converts to income later. Deferral buys a bigger payout because the balance compounds and, for lifetime annuities, because you start payments at an older age.</p></div>
+<div class="faq-item"><h3>Are annuity payments taxed?</h3><p>Yes, but how much depends on the money that funded it. Annuities bought with pre-tax dollars (an IRA or 401(k) rollover) are fully taxable as ordinary income. Annuities bought with after-tax dollars use an exclusion ratio: part of each payment is a tax-free return of your own principal and only the earnings portion is taxed. Withdrawals before 59½ can also trigger a 10% IRS penalty on earnings.</p></div>
+<div class="faq-item"><h3>What happens to my annuity when I die?</h3><p>It depends on the payout option you chose. Life-only payments stop at death, even if that's one month in. Period-certain options keep paying a beneficiary for the remainder of the guaranteed window, joint-and-survivor options continue for a spouse's lifetime, and cash-refund options return any unpaid principal. Deferred annuities that haven't annuitized pass the account balance to your beneficiary.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/retirement-calculator/">🏖️ Retirement Calculator</a>
+<a href="/compound-interest-calculator/">📈 Compound Interest Calculator</a>
+<a href="/social-security-calculator/">🧓 Social Security Calculator</a>
+<a href="/savings-calculator/">🏦 Savings Calculator</a>
+<a href="/life-insurance-needs-calculator/">🛡️ Life Insurance Needs Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n){return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');}
+function fmt2(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pmt(P,annualPct,years){
+  var r=annualPct/100/12,n=Math.round(years*12);
+  if(n<=0||P<=0)return 0;
+  if(r===0)return P/n;
+  return P*r/(1-Math.pow(1+r,-n));
+}
+function futureValue(P,c,annualPct,years){
+  var r=annualPct/100/12,n=Math.round(years*12);
+  if(n<=0)return P;
+  if(r===0)return P+c*n;
+  return P*Math.pow(1+r,n)+c*(Math.pow(1+r,n)-1)/r;
+}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+var mode='payout';
+function setMode(m){
+  mode=m;
+  document.getElementById('btnPayout').classList.toggle('active',m==='payout');
+  document.getElementById('btnGrow').classList.toggle('active',m==='grow');
+  document.getElementById('payoutInputs').style.display=m==='payout'?'':'none';
+  document.getElementById('growInputs').style.display=m==='grow'?'':'none';
+  document.getElementById('payoutResults').style.display=m==='payout'?'':'none';
+  document.getElementById('growResults').style.display=m==='grow'?'':'none';
+  calc();
+}
+function calc(){
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+  var label=document.getElementById('heroLabel');
+  if(mode==='payout'){
+    label.textContent='Monthly Income';
+    var P=parseFloat(document.getElementById('principal').value)||0;
+    var rate=parseFloat(document.getElementById('pRate').value)||0;
+    var years=parseFloat(document.getElementById('pYears').value)||0;
+    if(P<=0||years<=0){
+      animateValue(hero,'—');sub.textContent='Enter your principal and payout period';
+      ['annualInc','totalRec','totalInt','pctYr'].forEach(function(id){document.getElementById(id).textContent='—'});
+      return;
+    }
+    var m=pmt(P,rate,years);
+    var n=Math.round(years*12);
+    var total=m*n;
+    animateValue(hero,fmt(m)+'/mo');
+    sub.textContent=fmt(P)+' at '+rate+'% paid out over '+years+' years';
+    animateValue(document.getElementById('annualInc'),fmt(m*12));
+    animateValue(document.getElementById('totalRec'),fmt(total));
+    animateValue(document.getElementById('totalInt'),fmt(total-P));
+    animateValue(document.getElementById('pctYr'),(m*12/P*100).toFixed(2)+'%');
+  }else{
+    label.textContent='Future Value at Payout';
+    var start=parseFloat(document.getElementById('startBal').value)||0;
+    var c=parseFloat(document.getElementById('contrib').value)||0;
+    var gRate=parseFloat(document.getElementById('gRate').value)||0;
+    var gYears=parseFloat(document.getElementById('gYears').value)||0;
+    if((start<=0&&c<=0)||gYears<=0){
+      animateValue(hero,'—');sub.textContent='Enter a starting balance or monthly contribution';
+      ['totalContrib','growthEarned','buyMonthly','buyAnnual'].forEach(function(id){document.getElementById(id).textContent='—'});
+      return;
+    }
+    var n2=Math.round(gYears*12);
+    var f=futureValue(start,c,gRate,gYears);
+    var contributed=start+c*n2;
+    var buy=pmt(f,gRate,20);
+    animateValue(hero,fmt(f));
+    sub.textContent='In '+gYears+' years at '+gRate+'%, buying about '+fmt(buy)+'/mo for 20 years';
+    animateValue(document.getElementById('totalContrib'),fmt(contributed));
+    animateValue(document.getElementById('growthEarned'),fmt(f-contributed));
+    animateValue(document.getElementById('buyMonthly'),fmt(buy));
+    animateValue(document.getElementById('buyAnnual'),fmt(buy*12));
+  }
+}
+document.getElementById('btnPayout').addEventListener('click',function(){setMode('payout')});
+document.getElementById('btnGrow').addEventListener('click',function(){setMode('grow')});
+['principal','pRate','pYears','startBal','contrib','gRate','gYears'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+</body>
+</html>
