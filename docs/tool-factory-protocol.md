@@ -31,8 +31,20 @@ Each run: build the next **10 tools** from `docs/tool-backlog.md` (in order, ski
 ### 5. AI-provenance scrub
 - Static HTML from our template carries no AI marks — but if any subagent used generated text pasted from a model UI, run `python3 ~/projects/ai-mark-scrubber/scrub_cli.py <file>` on it. Check for C2PA/meta tags on any images: none should be present.
 
-### 6. Report (post to channel)
-Table: tool | URL | status(200) | indexed-submitted | notes. Plus batch totals (tools built, guides built, sitemap count before→after).
+### 6. llm.txt + embed widget + longtail variants (per batch)
+- `python3 scripts/gen-llm-txt.py` — regenerates llm.txt with all tools+guides (LLM crawler guide).
+- Each new tool gets an **embed JS** in `/embed/` modeled on `embed/concrete-calculator.js`:
+  one-line script, dark/light theme via `data-theme`, footer "Powered by ToolAspect" with
+  `<a href="https://toolaspect.com/<slug>/" ...>` = dofollow backlink to us when embedded.
+  Add to `/embed/` index listing.
+- For calculators with natural parameter variants (salary, state, rate, size), generate
+  **2-4 longtail result pages** per tool (e.g. `/70000-salary-to-hourly/`, `/-calculator-texas/`)
+  using the `scripts/generate-seo-pages.py` pattern: real computed numbers baked in, unique
+  title/meta, 150+ words unique intro, canonical to the tool page is NOT used — these are
+  standalone value pages with tables of results.
+
+### 7. Report (post to channel)
+Table: tool | URL | status(200) | indexed-submitted | notes. Plus batch totals (tools built, guides built, embeds added, longtail pages, sitemap count before→after).
 
 ## Backlog maintenance
 - On completion, move built slugs from backlog waves into `docs/tool-factory-done.md` with date.
