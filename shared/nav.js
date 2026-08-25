@@ -281,6 +281,7 @@
       '<p>\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
       '<div class="ta-footer-links">' +
         '<a href="/about.html">About</a>' +
+        '<a href="/roadmap/">Roadmap</a>' +
         '<a href="/contact.html">Contact</a>' +
         '<a href="/privacy.html">Privacy</a>' +
         '<a href="/terms.html">Terms</a>' +

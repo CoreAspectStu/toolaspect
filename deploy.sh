@@ -3,7 +3,9 @@
 set -e
 cd ~/projects/utility-sites
 
-echo "📋 Regenerating sitemap..."
+echo "📋 Regenerating sitemap + llm.txt + roadmap..."
+python3 scripts/gen-llm-txt.py
+python3 scripts/gen-roadmap.py
 python3 -c "
 import os, datetime
 today = datetime.date.today().isoformat()
