@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gantt Chart Maker — Free Online Gantt Generator | ToolAspect</title>
+<meta name="description" content="Free Gantt chart maker. Enter tasks, durations, and phases, and get a clean timeline chart with weekends shaded. Download the SVG. No signup.">
+<link rel="canonical" href="https://toolaspect.com/gantt-chart-maker/">
+<meta property="og:title" content="Gantt Chart Maker | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Build a project timeline in the browser: task bars, phases, progress, weekend shading, SVG download.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/gantt-chart-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Gantt Chart Maker | ToolAspect">
+<meta name="twitter:description" content="Tasks in, timeline out. Download as SVG.">
+<meta name="keywords" content="gantt chart maker, free gantt chart, online gantt chart, project timeline generator, gantt chart template, create gantt chart">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Gantt Chart Maker","description":"Free online Gantt chart maker. Enter tasks with start day, duration, and phase; get a timeline chart with weekend shading and SVG download.","url":"https://toolaspect.com/gantt-chart-maker/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a Gantt chart used for?","acceptedAnswer":{"@type":"Answer","text":"Scheduling anything where tasks run over time: seeing what happens when, which tasks overlap, where the critical path sits, and what a delay in one task pushes back downstream. It answers the question a task list can't: given all this work, when does the project actually finish?"}},
+{"@type":"Question","name":"How do I choose task durations that hold up?","acceptedAnswer":{"@type":"Answer","text":"Estimate in the units you actually track (days for most projects), then add buffer to the tasks with external dependencies, since those slip most. A practical default from project management practice: take your honest estimate, and if the task involves anyone outside your team, add 50 percent."}},
+{"@type":"Question","name":"What is the critical path in a Gantt chart?","acceptedAnswer":{"@type":"Answer","text":"The longest chain of dependent tasks from start to finish. If any task on that chain slips a day, the whole project slips a day, while tasks off the chain have slack. Most Gantt tools highlight it; on paper you find it by tracing dependency arrows and looking for the chain with zero room."}},
+{"@type":"Question","name":"Can I export or print the chart?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Download SVG button gives you a vector file that scales cleanly into slides, docs, or design tools, and your browser's print dialog can print the page directly. The chart also re-renders on every edit, so what you see is always current."}},
+{"@type":"Question","name":"Does this tool handle task dependencies?","acceptedAnswer":{"@type":"Answer","text":"It draws the timeline view: bars, phases, progress, and calendar context. It doesn't draw dependency arrows, which keeps it fast and simple. If you need dependency logic and leveling, you need a full project management tool; if you need a clear chart to share, this is it."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Gantt Chart Maker","item":"https://toolaspect.com/gantt-chart-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;font-family:inherit}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.btn.tiny{padding:.25rem .6rem;font-size:.75rem;font-weight:500}
+.task-row{display:grid;grid-template-columns:2.2fr .8fr .8fr 1fr .7fr auto;gap:8px;align-items:end;margin-bottom:8px}
+@media(max-width:700px){.task-row{grid-template-columns:1fr 1fr 1fr}.task-row .tr-name{grid-column:1/-1}}
+.task-row label{font-size:.72rem;color:var(--muted);display:block;margin-bottom:3px}
+.task-row input,.task-row select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.5rem .65rem;font-size:.9rem;box-sizing:border-box;font-family:inherit}
+#chartWrap{background:#fff;border-radius:8px;padding:10px;overflow-x:auto}
+#chartWrap svg{display:block;min-width:600px;width:100%;height:auto}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem;font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📅 Gantt Chart Maker</h1>
+<p>Enter tasks, get a real timeline with phases, progress, and weekend shading</p>
+</div>
+
+<div class="section-card">
+<h2>Project</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;max-width:640px">
+<div class="input-group"><label>Project name</label><input id="projName" value="Website Relaunch"></div>
+<div class="input-group"><label>Start date</label><input id="startDate" type="date"></div>
+<div class="input-group"><label>Day width (zoom)</label><select id="dayW"><option>28</option><option selected>22</option><option>16</option><option>10</option></select></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Tasks</h2>
+<div id="taskList"></div>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem">
+<button class="btn ghost" id="addBtn">+ Add task</button>
+<button class="btn ghost" id="sampleBtn">Load sample project</button>
+<button class="btn ghost" id="clearBtn">Clear all</button>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Chart</h2>
+<div id="chartWrap"></div>
+<div class="legend" id="legend"></div>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">
+<button class="btn" id="dlBtn">⬇️ Download SVG</button>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Dependency Types on Real Gantt Charts</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Type</th><th>Name</th><th>Meaning</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>FS</td><td>Finish-to-Start</td><td>B starts when A finishes</td><td>Design finishes, then build starts</td></tr>
+<tr><td>SS</td><td>Start-to-Start</td><td>B starts when A starts</td><td>Testing begins as coding begins</td></tr>
+<tr><td>FF</td><td>Finish-to-Finish</td><td>B finishes when A finishes</td><td>Docs end when the build ends</td></tr>
+<tr><td>SF</td><td>Start-to-Finish</td><td>B finishes when A starts (rare)</td><td>Old system retires as new one goes live</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">Finish-to-Start covers roughly 90% of real project links. If you can only state one relationship per task pair, state that one.</p>
+</div>
+
+<div class="section-card">
+<h2>Typical Software Project Phases (with realistic shares)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Phase</th><th>Share of Calendar</th><th>What Runs Concurrent</th></tr></thead>
+<tbody>
+<tr><td>Discovery &amp; planning</td><td>10–15%</td><td>Stakeholder interviews, requirements</td></tr>
+<tr><td>Design</td><td>15–20%</td><td>Wireframes → prototypes → review</td></tr>
+<tr><td>Build</td><td>35–45%</td><td>Frontend, backend, content prep</td></tr>
+<tr><td>Test &amp; fix</td><td>15–20%</td><td>QA cycles overlap late build</td></tr>
+<tr><td>Launch &amp; stabilize</td><td>5–10%</td><td>Deploy, monitor, hotfixes</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Gantt Chart Maker Works</h2>
+<p>Each task carries four numbers and a phase: when it starts (day offset from the project start), how long it runs, how complete it is, and which phase it belongs to for color. The chart lays one row per task on a calendar grid, shades weekends, marks the project start date on the axis, and draws a progress overlay inside each bar. Everything renders as SVG, so the download is a clean vector you can drop into a slide deck or spec.</p>
+<h3>How to use it</h3>
+<p>Start with your milestone list, then break each milestone into tasks of one to five days; longer bars hide slippage. Enter tasks top to bottom in kickoff order, using the start-day column to shift things later or run them in parallel. Phases exist for color and legend, so use them consistently. When a client asks what a one-week delay does, move the affected bars and watch the finish date move with them.</p>
+<h3>A worked example</h3>
+<p>The sample project is a realistic website relaunch: discovery on days 0–4, design 3–12 overlapping discovery's tail, build 10–32, content 14–30 in parallel with build, QA 28–38, and launch 38–41. Total: 42 calendar days. Notice the overlaps: content and build share two weeks, which is why the project is 42 days and not the 60 a straight sum would suggest. That overlap-finding is the entire value of the chart.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is a Gantt chart used for?</h3><p>Scheduling anything where tasks run over time: seeing what happens when, which tasks overlap, where the critical path sits, and what a delay in one task pushes back downstream. It answers the question a task list can't: given all this work, when does the project actually finish?</p></div>
+<div class="faq-item"><h3>How do I choose task durations that hold up?</h3><p>Estimate in the units you actually track (days for most projects), then add buffer to the tasks with external dependencies, since those slip most. A practical default from project management practice: take your honest estimate, and if the task involves anyone outside your team, add 50 percent.</p></div>
+<div class="faq-item"><h3>What is the critical path in a Gantt chart?</h3><p>The longest chain of dependent tasks from start to finish. If any task on that chain slips a day, the whole project slips a day, while tasks off the chain have slack. Most Gantt tools highlight it; on paper you find it by tracing dependency arrows and looking for the chain with zero room.</p></div>
+<div class="faq-item"><h3>Can I export or print the chart?</h3><p>Yes. The Download SVG button gives you a vector file that scales cleanly into slides, docs, or design tools, and your browser's print dialog can print the page directly. The chart also re-renders on every edit, so what you see is always current.</p></div>
+<div class="faq-item"><h3>Does this tool handle task dependencies?</h3><p>It draws the timeline view: bars, phases, progress, and calendar context. It doesn't draw dependency arrows, which keeps it fast and simple. If you need dependency logic and leveling, you need a full project management tool; if you need a clear chart to share, this is it.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/org-chart-maker/">🏢 Org Chart Maker</a>
+<a href="/bar-chart-maker/">📊 Bar Chart Maker</a>
+<a href="/countdown-timer/">⏱️ Countdown Timer</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var PHASES={planning:{name:'Planning',color:'#6366f1'},design:{name:'Design',color:'#0ea5e9'},build:{name:'Build',color:'#22c55e'},content:{name:'Content',color:'#f59e0b'},test:{name:'Test',color:'#f97316'},launch:{name:'Launch',color:'#ef4444'}};
+  var T=[
+    {name:'Discovery & requirements',start:0,days:5,pct:100,phase:'planning'},
+    {name:'Wireframes & design',start:3,days:10,pct:100,phase:'design'},
+    {name:'Backend build',start:10,days:18,pct:80,phase:'build'},
+    {name:'Frontend build',start:12,days:20,pct:70,phase:'build'},
+    {name:'Content migration',start:14,days:16,pct:40,phase:'content'},
+    {name:'QA & bug fixes',start:28,days:10,pct:10,phase:'test'},
+    {name:'Launch & stabilize',start:38,days:4,pct:0,phase:'launch'}
+  ];
+  var KEY='ta-gantt-v1';
+  try{var sv=localStorage.getItem(KEY);if(sv)T=JSON.parse(sv);}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(T));}catch(e){}}
+  function pad(n){return n<10?'0'+n:''+n;}
+  (function initDate(){var el=document.getElementById('startDate');if(!el.value){var t=new Date();el.value=t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}})();
+
+  var taskList=document.getElementById('taskList');
+  function renderList(){
+    taskList.innerHTML='';
+    T.forEach(function(t,i){
+      var d=document.createElement('div');d.className='task-row';
+      var phaseOpts=Object.keys(PHASES).map(function(k){return '<option value="'+k+'"'+(t.phase===k?' selected':'')+'>'+PHASES[k].name+'</option>';}).join('');
+      d.innerHTML='<div class="tr-name"><label>Task name</label><input data-k="name" data-i="'+i+'" value="'+String(t.name||'').replace(/"/g,'&quot;')+'"></div>'
+      +'<div><label>Start day</label><input type="number" min="0" data-k="start" data-i="'+i+'" value="'+t.start+'"></div>'
+      +'<div><label>Days</label><input type="number" min="1" data-k="days" data-i="'+i+'" value="'+t.days+'"></div>'
+      +'<div><label>Phase</label><select data-k="phase" data-i="'+i+'">'+phaseOpts+'</select></div>'
+      +'<div><label>% done</label><input type="number" min="0" max="100" data-k="pct" data-i="'+i+'" value="'+t.pct+'"></div>'
+      +'<div><button class="btn ghost tiny" data-del="'+i+'" style="color:var(--danger)">✕</button></div>';
+      taskList.appendChild(d);
+    });
+  }
+
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+  function renderChart(){
+    var startStr=document.getElementById('startDate').value||'2026-01-01';
+    var parts=startStr.split('-');
+    var base=new Date(+parts[0],+parts[1]-1,+parts[2]);
+    var totalDays=7;
+    T.forEach(function(t){totalDays=Math.max(totalDays,(+t.start||0)+(+t.days||1));});
+    totalDays=Math.ceil((totalDays+2)/7)*7;
+    var dayW=+document.getElementById('dayW').value;
+    var LABEL_W=170,ROW_H=36,HEAD_H=44;
+    var W=LABEL_W+totalDays*dayW,H=HEAD_H+T.length*ROW_H+10;
+    var s='';
+    // background
+    s+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    // header band
+    s+='<rect x="0" y="0" width="'+W+'" height="'+HEAD_H+'" fill="#f1f5f9"/>';
+    // weekend shading + week ticks
+    for(var d=0;d<totalDays;d++){
+      var cur=new Date(base.getTime()+d*864e5);
+      var dow=cur.getDay();
+      var x=LABEL_W+d*dayW;
+      if(dow===0||dow===6){s+='<rect x="'+x+'" y="'+HEAD_H+'" width="'+dayW+'" height="'+(H-HEAD_H)+'" fill="#f8fafc"/>';}
+      if(d%7===0){
+        s+='<line x1="'+x+'" y1="'+HEAD_H+'" x2="'+x+'" y2="'+H+'" stroke="#e2e8f0" stroke-width="1"/>';
+        var lbl=(cur.getMonth()+1)+'/'+cur.getDate();
+        s+='<text x="'+(x+4)+'" y="18" font-family="Arial" font-size="11" fill="#475569">'+lbl+'</text>';
+        s+='<text x="'+(x+4)+'" y="34" font-family="Arial" font-size="9" fill="#94a3b8">day '+d+'</text>';
+      }
+    }
+    // grid bottom
+    s+='<line x1="0" y1="'+HEAD_H+'" x2="'+W+'" y2="'+HEAD_H+'" stroke="#cbd5e1"/>';
+    // rows
+    T.forEach(function(t,i){
+      var y=HEAD_H+i*ROW_H;
+      s+='<text x="8" y="'+(y+ROW_H/2+4)+'" font-family="Arial" font-size="12" fill="#1e293b">'+esc((t.name||'Task').slice(0,24))+'</text>';
+      var bx=LABEL_W+(+t.start||0)*dayW, bw=Math.max(dayW*0.9,(+t.days||1)*dayW-2);
+      var by=y+7, bh=ROW_H-14;
+      var col=PHASES[t.phase]?PHASES[t.phase].color:'#6366f1';
+      s+='<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" rx="4" fill="'+col+'" fill-opacity="0.28" stroke="'+col+'" stroke-width="1.5"/>';
+      var pct=Math.min(100,Math.max(0,+t.pct||0));
+      if(pct>0){
+        s+='<rect x="'+bx+'" y="'+by+'" width="'+(bw*pct/100)+'" height="'+bh+'" rx="4" fill="'+col+'" fill-opacity="0.85"/>';
+      }
+      s+='<text x="'+(bx+bw/2)+'" y="'+(by+bh/2+4)+'" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#0f172a">'+(t.days||1)+'d · '+pct+'%</text>';
+    });
+    // title
+    var proj=document.getElementById('projName').value||'Project';
+    s+='<text x="'+(LABEL_W+8)+'" y="'+(H-2)+'" font-family="Arial" font-size="11" fill="#64748b">'+esc(proj)+' — '+totalDays+' calendar days — made with toolaspect.com</text>';
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+s+'</svg>';
+    document.getElementById('chartWrap').innerHTML=svg;
+    var lg=document.getElementById('legend');lg.innerHTML='';
+    Object.keys(PHASES).forEach(function(k){
+      var sp=document.createElement('span');
+      sp.innerHTML='<i style="background:'+PHASES[k].color+'"></i>'+PHASES[k].name;
+      lg.appendChild(sp);
+    });
+  }
+  function all(){renderList();renderChart();save();}
+
+  document.addEventListener('input',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.k&&t.dataset.i!==undefined){
+      var k=t.dataset.k;
+      T[+t.dataset.i][k]=(k==='name'||k==='phase')?t.value:+t.value||0;
+      renderChart();save();
+      if(k!=='name')renderList();
+    }else if(t.id==='projName'||t.id==='startDate'){renderChart();}
+  });
+  document.addEventListener('change',function(ev){
+    var t=ev.target;
+    if(t.id==='dayW')renderChart();
+    if(t.dataset&&t.dataset.k==='phase'&&t.dataset.i!==undefined){T[+t.dataset.i].phase=t.value;renderChart();save();}
+  });
+  document.addEventListener('click',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.del!==undefined){T.splice(+t.dataset.del,1);all();}
+  });
+  document.getElementById('addBtn').onclick=function(){T.push({name:'New task',start:0,days:3,pct:0,phase:'planning'});all();};
+  document.getElementById('clearBtn').onclick=function(){T=[];all();};
+  document.getElementById('sampleBtn').onclick=function(){
+    T=[
+      {name:'Discovery & requirements',start:0,days:5,pct:100,phase:'planning'},
+      {name:'Wireframes & design',start:3,days:10,pct:100,phase:'design'},
+      {name:'Backend build',start:10,days:18,pct:80,phase:'build'},
+      {name:'Frontend build',start:12,days:20,pct:70,phase:'build'},
+      {name:'Content migration',start:14,days:16,pct:40,phase:'content'},
+      {name:'QA & bug fixes',start:28,days:10,pct:10,phase:'test'},
+      {name:'Launch & stabilize',start:38,days:4,pct:0,phase:'launch'}
+    ];all();
+  };
+  document.getElementById('dlBtn').onclick=function(){
+    var svg=document.querySelector('#chartWrap svg');
+    var blob=new Blob([svg.outerHTML],{type:'image/svg+xml'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=(document.getElementById('projName').value||'gantt').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.svg';
+    a.click();URL.revokeObjectURL(a.href);
+  };
+  all();
+})();
+</script>
+</body>
+</html>

@@ -31,6 +31,28 @@
 - child-support-calculator — live 200, adversarial review PASS
 - lawsuit-loan-calculator — live 200, adversarial review PASS
 
+## 2026-08-26 — Wave 3 generators + pregnancy (solo build, 3 sequential groups)
+# Requested Wave 1 finance/insurance list was already live (Batch 1) — all 10 skipped per
+# "skip existing dirs"; batch built the next 10 unbuilt backlog items in order instead.
+- resume-builder — live, 3 templates, live preview, PDF via print CSS, localStorage
+- cover-letter-generator — live, template engine, 3 tones, word-count check, PDF
+- form-builder — live, 9 field types, HTML + JSON schema export (developer hub)
+- gantt-chart-maker — live, vanilla SVG (DHTMLX GPL avoided), phases, progress, weekends
+- org-chart-maker — live, indented-list parser, tidy tree layout, SVG download
+- flowchart-maker — live, ANSI symbols, decision branches w/ named no-targets, SVG
+- bar-chart-maker — live, V/H orientation, sort, negatives, zero-baseline, SVG
+- kanban-board — live, drag-drop + arrow keys, WIP limit, localStorage
+- mind-map-maker — live, radial 2-side layout, per-branch colors, SVG
+- pregnancy-weight-gain-calculator — live, IOM 2009 singleton+twin ranges, math hand-verified
+  (BMI 22.3→13.1–19.4 lb @ wk28; BMI 34.3→3.9–8.6 lb @ wk20)
+- invoice-generator upgraded in place (invoice-generator-v2 backlog item): live preview,
+  unlimited line items, dates/notes/tax, PDF print layout — same URL, no duplicate
+- Guides built (10): ats-resume, cover-letter, html-form, gantt, org-chart, flowchart,
+  bar-chart, kanban, mind-map, pregnancy-weight-gain
+- Embeds added (10): widgets 13–22 in /embed/ index
+- Longtails (2): pregnancy-weight-gain-calculator-twins, plus-size-pregnancy-weight-gain
+- business-tools/ hub created; all-tools Business section added; health/dev hubs updated
+
 ## 2026-08-25 — Wave 3 insurance/alimony (swarm)
 - renters-insurance-calculator — live 200
 - umbrella-insurance-calculator — live 200

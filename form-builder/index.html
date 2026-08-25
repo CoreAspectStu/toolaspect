@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Builder — Free HTML Form Generator | ToolAspect</title>
+<meta name="description" content="Free online form builder. Add text, email, select, radio and checkbox fields, reorder them, then copy clean HTML or JSON schema. No signup, no server.">
+<link rel="canonical" href="https://toolaspect.com/form-builder/">
+<meta property="og:title" content="Form Builder | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Build a web form field by field and export clean, dependency-free HTML. Free and private.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/form-builder/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free HTML Form Builder | ToolAspect">
+<meta name="twitter:description" content="Click to add fields, reorder, export HTML or JSON.">
+<meta name="keywords" content="form builder, html form generator, online form creator, web form builder, form html generator, free form builder">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Form Builder","description":"Free online form builder. Add fields, edit labels and options, reorder, and export clean HTML or JSON schema. Runs entirely in the browser.","url":"https://toolaspect.com/form-builder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is the exported HTML ready to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. The export is a single self-contained form element with semantic labels, name attributes, required flags, and a submit button. There is no framework, no CSS dependency, and no JavaScript required to render it. Point the action attribute at your backend or a form service and it works."}},
+{"@type":"Question","name":"Does the form submit anywhere by itself?","acceptedAnswer":{"@type":"Answer","text":"No. The generated form has action=\"#\" as a placeholder. You decide where it goes: your own backend endpoint, a service like Formspree or Netlify Forms, or an event handler you write. Nothing sends data anywhere until you wire that up, which is the point: your users' data stays yours."}},
+{"@type":"Question","name":"What's the difference between name and id on form fields?","acceptedAnswer":{"@type":"Answer","text":"The name attribute is what the browser puts in the submitted data, so every field needs one and duplicates among radio buttons are how grouping works. The id is for linking labels to fields for accessibility and is auto-generated here to stay unique. Forgetting name is the single most common broken-form bug."}},
+{"@type":"Question","name":"How do I make a required field?","acceptedAnswer":{"@type":"Answer","text":"Add the required attribute to the input. The browser then blocks submission and shows its own validation message, no JavaScript needed. Pair it with the right input type, email for addresses, number for quantities, and you get format checking for free from the same attribute."}},
+{"@type":"Question","name":"Can I style the generated form?","acceptedAnswer":{"@type":"Answer","text":"Easily, because the markup is plain. The export includes no classes you don't add yourself, so your site's existing styles apply immediately, and a few lines of CSS on label, input, and button cover the rest. Frameworks fight your stylesheets; plain HTML doesn't."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Form Builder","item":"https://toolaspect.com/form-builder/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;font-family:inherit}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.input-group textarea{resize:vertical;min-height:56px}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.btn.tiny{padding:.25rem .6rem;font-size:.75rem;font-weight:500}
+.palette{display:flex;flex-wrap:wrap;gap:.5rem}
+.pal-btn{padding:.5rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;cursor:pointer;font-family:inherit}
+.pal-btn:hover{border-color:var(--primary);color:var(--primary-hover)}
+.builder-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:1.5rem;margin-top:1.5rem}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
+.field-card{border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:.8rem;background:var(--bg)}
+.field-card .fc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;gap:.5rem;flex-wrap:wrap}
+.fc-head strong{font-size:.9rem;color:var(--primary-hover)}
+.fc-head .fc-actions{display:flex;gap:.3rem}
+.field-card .opts{margin-top:.6rem}
+#preview{background:#fff;color:#1a1a1a;border-radius:8px;padding:1.5rem;font-family:Arial,Helvetica,sans-serif;font-size:.9rem}
+#preview label{display:block;margin:12px 0 4px;font-weight:600;font-size:.85rem}
+#preview input[type=text],#preview input[type=email],#preview input[type=number],#preview input[type=date],#preview input[type=password],#preview select,#preview textarea{width:100%;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:.9rem;box-sizing:border-box;font-family:inherit}
+#preview textarea{min-height:64px;resize:vertical}
+#preview .checkline{display:flex;align-items:center;gap:8px;margin:6px 0;font-weight:400}
+#preview .checkline input{width:auto}
+#preview button[type=submit]{margin-top:16px;padding:10px 22px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:.9rem;cursor:pointer}
+#export{width:100%;min-height:260px;background:#0b0d12;color:#a5f3fc;border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5;box-sizing:border-box;white-space:pre;resize:vertical}
+.tabs{display:flex;gap:.5rem;margin-bottom:.8rem}
+.tab-btn{padding:.4rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;cursor:pointer;font-family:inherit}
+.tab-btn.active{border-color:var(--primary);color:var(--text);background:rgba(99,102,241,.12)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{background:var(--bg);padding:2px 6px;border-radius:4px;font-size:.82rem;color:#a5f3fc}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🧱 Form Builder</h1>
+<p>Add fields, reorder them, export clean HTML or JSON — no signup, no framework, no server</p>
+</div>
+
+<div class="builder-layout">
+<div>
+<div class="section-card">
+<h2>Add a Field</h2>
+<div class="palette">
+<button class="pal-btn" data-add="text">Short text</button>
+<button class="pal-btn" data-add="email">Email</button>
+<button class="pal-btn" data-add="number">Number</button>
+<button class="pal-btn" data-add="password">Password</button>
+<button class="pal-btn" data-add="date">Date</button>
+<button class="pal-btn" data-add="textarea">Long text</button>
+<button class="pal-btn" data-add="select">Dropdown</button>
+<button class="pal-btn" data-add="radio">Radio group</button>
+<button class="pal-btn" data-add="checkbox">Checkbox</button>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Your Fields</h2>
+<div id="fieldList"></div>
+<div class="btn-row" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem">
+<button class="btn ghost" id="sampleBtn">Load a contact form</button>
+<button class="btn ghost" id="clearBtn">Clear all fields</button>
+</div>
+</div>
+</div>
+
+<div>
+<div class="section-card">
+<h2>Live Preview</h2>
+<div id="preview"></div>
+</div>
+<div class="section-card">
+<h2>Export</h2>
+<div class="tabs">
+<button class="tab-btn active" data-tab="html">HTML</button>
+<button class="tab-btn" data-tab="json">JSON schema</button>
+</div>
+<textarea id="export" readonly></textarea>
+<div class="btn-row" style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem">
+<button class="btn" id="copyBtn">📋 Copy</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>HTML Input Types Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Type</th><th>Use It For</th><th>Free Validation You Get</th></tr></thead>
+<tbody>
+<tr><td><code>text</code></td><td>Single-line free text</td><td>None beyond length limits</td></tr>
+<tr><td><code>email</code></td><td>Email addresses</td><td>Format check, mobile @ keyboard</td></tr>
+<tr><td><code>number</code></td><td>Quantities, prices, ages</td><td>Numeric only, min/max/step</td></tr>
+<tr><td><code>tel</code></td><td>Phone numbers</td><td>Numeric keypad on mobile</td></tr>
+<tr><td><code>date</td><td>Birthdays, appointments</td><td>Native picker, no typos like 31/31</td></tr>
+<tr><td><code>url</code></td><td>Website links</td><td>Must be a valid URL</td></tr>
+<tr><td><code>password</code></td><td>Secrets</td><td>Masking; pair with HTTPS always</td></tr>
+<tr><td><code>checkbox</code></td><td>Yes/no consent, opt-ins</td><td>Checked/unchecked state</td></tr>
+<tr><td><code>radio</code></td><td>Pick one of a few options</td><td>Single selection per group name</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">Rule of thumb: the more you lean on the right input type, the less JavaScript you write. Browsers have validated email formats and date ranges since 2013.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Form Builder Works</h2>
+<p>Every click on the palette adds one field definition: a type, a label, a name attribute, placeholder text, and whether it's required. Dropdowns and radio groups take one option per line. The preview renders exactly what your users will see, and the export produces semantic HTML: a label tied to its input, a name on every field, and required flags where you set them.</p>
+<h3>How to use it</h3>
+<p>Build top to bottom in the order you want visitors to answer. Use radio buttons under five options and a dropdown above five, since a dropdown hides choices behind a click. Keep required fields to the minimum you can honestly justify, because every extra required field costs completions. When the form looks right, copy the HTML and paste it into any page, or grab the JSON schema if you're feeding a backend or a no-code tool.</p>
+<h3>A worked example</h3>
+<p>A contact form usually needs five fields: name (text, required), email (email, required), topic (dropdown with 3–4 options), message (long text, required), and a consent checkbox where privacy rules require one. That form exports as about 20 lines of HTML, weighs under a kilobyte, renders instantly, and validates in the browser with zero JavaScript.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is the exported HTML ready to use?</h3><p>Yes. The export is a single self-contained form element with semantic labels, name attributes, required flags, and a submit button. There is no framework, no CSS dependency, and no JavaScript required to render it. Point the action attribute at your backend or a form service and it works.</p></div>
+<div class="faq-item"><h3>Does the form submit anywhere by itself?</h3><p>No. The generated form has action="#" as a placeholder. You decide where it goes: your own backend endpoint, a service like Formspree or Netlify Forms, or an event handler you write. Nothing sends data anywhere until you wire that up, which is the point: your users' data stays yours.</p></div>
+<div class="faq-item"><h3>What's the difference between name and id on form fields?</h3><p>The name attribute is what the browser puts in the submitted data, so every field needs one and duplicates among radio buttons are how grouping works. The id is for linking labels to fields for accessibility and is auto-generated here to stay unique. Forgetting name is the single most common broken-form bug.</p></div>
+<div class="faq-item"><h3>How do I make a required field?</h3><p>Add the required attribute to the input. The browser then blocks submission and shows its own validation message, no JavaScript needed. Pair it with the right input type, email for addresses, number for quantities, and you get format checking for free from the same attribute.</p></div>
+<div class="faq-item"><h3>Can I style the generated form?</h3><p>Easily, because the markup is plain. The export includes no classes you don't add yourself, so your site's existing styles apply immediately, and a few lines of CSS on label, input, and button cover the rest. Frameworks fight your stylesheets; plain HTML doesn't.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧩 JSON Formatter</a>
+<a href="/schema-generator/">🏷️ Schema Generator</a>
+<a href="/meta-tag-generator/">🔖 Meta Tag Generator</a>
+<a href="/markdown-to-html/">📝 Markdown to HTML</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var F=[
+    {type:'text',label:'Full name',name:'name',placeholder:'Jane Doe',required:true},
+    {type:'email',label:'Email address',name:'email',placeholder:'jane@example.com',required:true},
+    {type:'select',label:'How can we help?',name:'topic',options:'General question\nSupport\nBilling',required:false},
+    {type:'textarea',label:'Message',name:'message',placeholder:'A few words about what you need…',required:true},
+    {type:'checkbox',label:'Send me the monthly newsletter',name:'newsletter',required:false}
+  ];
+  var tab='html';
+  var typeNames={text:'Short text',email:'Email',number:'Number',password:'Password',date:'Date',textarea:'Long text',select:'Dropdown',radio:'Radio group',checkbox:'Checkbox'};
+  var nextId=1;
+
+  function slug(l,i){var s=String(l||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');return s||('field_'+i);}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  function renderList(){
+    var el=document.getElementById('fieldList');
+    if(!F.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">No fields yet. Add one above, or load the contact form sample.</p>';return;}
+    el.innerHTML='';
+    F.forEach(function(f,i){
+      var d=document.createElement('div');d.className='field-card';
+      var opts='';
+      if(f.type==='select'||f.type==='radio'){
+        opts='<div class="input-group opts"><label>Options (one per line)</label><textarea data-k="options" data-i="'+i+'" rows="3">'+esc(f.options||'')+'</textarea></div>';
+      }
+      var ph=(f.type==='checkbox')?'':'<div class="input-group"><label>Placeholder</label><input data-k="placeholder" data-i="'+i+'" value="'+esc(f.placeholder||'')+'"></div>';
+      var nm=(f.type==='checkbox')?'':'<div class="input-group"><label>Name attribute</label><input data-k="name" data-i="'+i+'" value="'+esc(f.name||'')+'"></div>';
+      d.innerHTML='<div class="fc-head"><strong>'+(i+1)+'. '+typeNames[f.type]+'</strong><div class="fc-actions">'
+        +(i>0?'<button class="btn ghost tiny" data-up="'+i+'">↑</button>':'')
+        +(i<F.length-1?'<button class="btn ghost tiny" data-down="'+i+'">↓</button>':'')
+        +'<button class="btn ghost tiny" data-del="'+i+'" style="color:var(--danger)">✕</button></div></div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">'
+        +'<div class="input-group"><label>Label</label><input data-k="label" data-i="'+i+'" value="'+esc(f.label||'')+'"></div>'+nm+'</div>'+ph+opts
+        +'<label style="display:flex;gap:8px;align-items:center;margin-top:.6rem;font-size:.85rem;color:var(--muted);cursor:pointer"><input type="checkbox" data-k="required" data-i="'+i+'" '+(f.required?'checked':'')+'> Required</label>';
+      el.appendChild(d);
+    });
+  }
+
+  function renderPreview(){
+    var p=document.getElementById('preview');
+    var h='<form action="#" method="POST">';
+    F.forEach(function(f,i){
+      var fid='f_'+slug(f.name||f.label,i)+'_'+(i+1);
+      var req=f.required?' required':'';
+      var star=f.required?' <span style="color:#dc2626">*</span>':'';
+      if(f.type==='checkbox'){
+        h+='<label class="checkline" for="'+fid+'"><input type="checkbox" id="'+fid+'" name="'+esc(f.name||slug(f.label,i))+'"'+req+'>'+esc(f.label||'')+'</label>';
+      } else {
+        h+='<label for="'+fid+'">'+esc(f.label||'Label')+star+'</label>';
+        switch(f.type){
+          case 'textarea':h+='<textarea id="'+fid+'" name="'+esc(f.name||slug(f.label,i))+'" placeholder="'+esc(f.placeholder||'')+'"'+req+'></textarea>';break;
+          case 'select':
+            h+='<select id="'+fid+'" name="'+esc(f.name||slug(f.label,i))+'"'+req+'>';
+            var os=String(f.options||'').split('\n').map(function(o){return o.trim();}).filter(Boolean);
+            if(!f.required)h+='<option value="">Choose…</option>';
+            os.forEach(function(o){h+='<option value="'+esc(o)+'">'+esc(o)+'</option>';});
+            h+='</select>';break;
+          case 'radio':
+            var rs=String(f.options||'').split('\n').map(function(o){return o.trim();}).filter(Boolean);
+            rs.forEach(function(o,k){
+              var rid=fid+'_'+k;
+              h+='<label class="checkline" for="'+rid+'"><input type="radio" id="'+rid+'" name="'+esc(f.name||slug(f.label,i))+'" value="'+esc(o)+'"'+(f.required&&k===0?' required':'')+'>'+esc(o)+'</label>';
+            });break;
+          default:h+='<input type="'+f.type+'" id="'+fid+'" name="'+esc(f.name||slug(f.label,i))+'" placeholder="'+esc(f.placeholder||'')+'"'+req+'>';
+        }
+      }
+    });
+    h+='<button type="submit">Submit</button></form>';
+    p.innerHTML=h||'<p style="color:#666">Add fields to see the preview.</p>';
+  }
+
+  function buildHtml(){
+    var h='<form action="#" method="POST">';
+    F.forEach(function(f,i){
+      var fid='f_'+slug(f.name||f.label,i)+'_'+(i+1);
+      var nm=esc(f.name||slug(f.label,i));
+      var req=f.required?' required':'';
+      if(f.type==='checkbox'){
+        h+='  <label for="'+fid+'"><input type="checkbox" id="'+fid+'" name="'+nm+'"'+req+'> '+esc(f.label||'')+'</label>\n';
+      } else {
+        h+='  <label for="'+fid+'">'+esc(f.label||'Label')+'</label>\n';
+        switch(f.type){
+          case 'textarea':h+='  <textarea id="'+fid+'" name="'+nm+'" rows="4" placeholder="'+esc(f.placeholder||'')+'"'+req+'></textarea>\n';break;
+          case 'select':
+            h+='  <select id="'+fid+'" name="'+nm+'"'+req+'>\n';
+            var os=String(f.options||'').split('\n').map(function(o){return o.trim();}).filter(Boolean);
+            if(!f.required)h+='    <option value="">Choose…</option>\n';
+            os.forEach(function(o){h+='    <option value="'+esc(o)+'">'+esc(o)+'</option>\n';});
+            h+='  </select>\n';break;
+          case 'radio':
+            var rs=String(f.options||'').split('\n').map(function(o){return o.trim();}).filter(Boolean);
+            rs.forEach(function(o,k){h+='  <label><input type="radio" name="'+nm+'" value="'+esc(o)+'"'+(f.required&&k===0?' required':'')+'> '+esc(o)+'</label>\n';});
+            break;
+          default:h+='  <input type="'+f.type+'" id="'+fid+'" name="'+nm+'" placeholder="'+esc(f.placeholder||'')+'"'+req+'>\n';
+        }
+      }
+    });
+    h+='  <button type="submit">Submit</button>\n</form>';
+    return h;
+  }
+
+  function buildJson(){
+    return JSON.stringify({form:{action:'#',method:'POST'},fields:F.map(function(f,i){
+      var o={type:f.type,label:f.label,name:f.name||slug(f.label,i),required:!!f.required};
+      if(f.placeholder)o.placeholder=f.placeholder;
+      if(f.options)o.options=String(f.options||'').split('\n').map(function(x){return x.trim();}).filter(Boolean);
+      return o;
+    })},null,2);
+  }
+
+  function renderExport(){
+    document.getElementById('export').value=tab==='html'?buildHtml():buildJson();
+  }
+  function all(){renderList();renderPreview();renderExport();}
+
+  document.addEventListener('click',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.add){
+      var ty=t.dataset.add;
+      var f={type:ty,label:typeNames[ty],name:'',placeholder:'',required:false};
+      if(ty==='select'||ty==='radio')f.options='Option 1\nOption 2\nOption 3';
+      F.push(f);all();return;
+    }
+    if(t.dataset&&t.dataset.del!==undefined){F.splice(+t.dataset.del,1);all();return;}
+    if(t.dataset&&t.dataset.up!==undefined){var i=+t.dataset.up;var tmp=F[i-1];F[i-1]=F[i];F[i]=tmp;all();return;}
+    if(t.dataset&&t.dataset.down!==undefined){var j=+t.dataset.down;var t2=F[j+1];F[j+1]=F[j];F[j]=t2;all();return;}
+    if(t.classList&&t.classList.contains('tab-btn')){
+      document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+      t.classList.add('active');tab=t.dataset.tab;renderExport();
+    }
+  });
+  document.addEventListener('input',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.k&&t.dataset.i!==undefined){
+      var f=F[+t.dataset.i];
+      if(t.dataset.k==='required')return;
+      f[t.dataset.k]=t.value;renderPreview();renderExport();
+    }
+  });
+  document.addEventListener('change',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.k==='required'&&t.dataset.i!==undefined){F[+t.dataset.i].required=t.checked;renderPreview();renderExport();}
+  });
+
+  document.getElementById('sampleBtn').onclick=function(){
+    F=[
+      {type:'text',label:'Full name',name:'name',placeholder:'Jane Doe',required:true},
+      {type:'email',label:'Email address',name:'email',placeholder:'jane@example.com',required:true},
+      {type:'select',label:'How can we help?',name:'topic',options:'General question\nSupport\nBilling',required:false},
+      {type:'textarea',label:'Message',name:'message',placeholder:'A few words about what you need…',required:true},
+      {type:'checkbox',label:'Send me the monthly newsletter',name:'newsletter',required:false}
+    ];all();
+  };
+  document.getElementById('clearBtn').onclick=function(){F=[];all();};
+  document.getElementById('copyBtn').onclick=function(){
+    var ta=document.getElementById('export');ta.removeAttribute('readonly');ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ta.value);
+    ta.setAttribute('readonly','');
+    var b=document.getElementById('copyBtn');b.textContent='✓ Copied';setTimeout(function(){b.textContent='📋 Copy';},1500);
+  };
+  all();
+})();
+</script>
+</body>
+</html>

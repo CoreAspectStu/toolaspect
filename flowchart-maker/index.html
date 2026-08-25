@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowchart Maker — Free Flowchart Generator | ToolAspect</title>
+<meta name="description" content="Free flowchart maker. Type one step per line, mark decisions with a ?, and get a standard-symbol flowchart you can download as SVG. No signup.">
+<link rel="canonical" href="https://toolaspect.com/flowchart-maker/">
+<meta property="og:title" content="Flowchart Maker | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Describe a process as a list, get a flowchart with proper symbols and decision branches.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/flowchart-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Flowchart Maker | ToolAspect">
+<meta name="twitter:description" content="Steps in, flowchart out. Download SVG.">
+<meta name="keywords" content="flowchart maker, free flowchart generator, online flowchart, process diagram, how to make a flowchart, flowchart symbols">
+<script type="application/ld+json">
+{"@type":"WebApplication","@context":"https://schema.org","name":"Flowchart Maker","description":"Free online flowchart maker. Type steps one per line with simple prefixes for decisions and input/output, and download a standard-symbol flowchart as SVG.","url":"https://toolaspect.com/flowchart-maker/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What are the standard flowchart symbols?","acceptedAnswer":{"@type":"Answer","text":"Five cover almost everything: a rounded terminator for start and end, a rectangle for a process or action, a diamond for a decision, a parallelogram for input or output, and an arrow for flow direction. Document, database, and connector symbols exist for specialized diagrams, but mixing in too many shapes is the fastest way to make a chart nobody reads."}},
+{"@type":"Question","name":"How do I write the steps for this tool?","acceptedAnswer":{"@type":"Answer","text":"One step per line. Plain lines become process rectangles. Start a line with start: or end: for terminators, with ? for a decision diamond (the next line is the yes path), and with > for input or output. Add | Target step after a decision to point the no branch at a later step by name. Lines starting with # are ignored."}},
+{"@type":"Question","name":"What makes a good flowchart?","acceptedAnswer":{"@type":"Answer","text":"One clear start, decisions that always have two labeled exits, verbs in every box, and no more than around 15 steps on one page. If the chart needs a legend longer than the chart, split it into a main flow plus sub-flows. Test it by walking a real example through every branch with your finger."}},
+{"@type":"Question","name":"When should I use a flowchart instead of a checklist?","acceptedAnswer":{"@type":"Answer","text":"When the order of operations can change based on conditions. A checklist assumes every step happens every time in sequence; a flowchart earns its keep the moment someone asks 'but what if it fails validation?' If your process has no branches, a checklist is honestly the better tool."}},
+{"@type":"Question","name":"Can I show a loop or retry in the chart?","acceptedAnswer":{"@type":"Answer","text":"Yes, that's what the decision branch is for. A validation step like ? Form valid? | Fix errors sends the no path back to the step named Fix errors, drawing a branch arrow to wherever that step lives in the chart. Loops read naturally once the arrow exists, and every retry loop should have an obvious exit."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Flowchart Maker","item":"https://toolaspect.com/flowchart-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;min-height:340px;resize:vertical;line-height:1.6}
+.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.builder-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1.5rem;margin-top:1.5rem}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
+#chartWrap{background:#fff;border-radius:8px;padding:10px;overflow:auto;max-height:720px}
+#chartWrap svg{display:block;height:auto}
+.syntax-list{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--muted);line-height:1.9}
+.syntax-list code{color:#a5f3fc}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔀 Flowchart Maker</h1>
+<p>Describe the process as a list, get a proper flowchart with real symbols</p>
+</div>
+
+<div class="builder-layout">
+<div class="section-card">
+<h2>Steps (one per line)</h2>
+<div class="input-group">
+<label>start: / end: = terminator · ? = decision · &gt; = input/output · plain = process · | after a decision = the no branch target · leading . = branch-only step</label>
+<textarea id="steps" spellcheck="false">start: Customer submits refund request
+> System pulls order record
+? Order within 30 days? | Send denial email
+Auto-approve refund
+end: Refund issued
+.Send denial email
+end: Denial sent</textarea>
+</div>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">
+<button class="btn" id="dlBtn">⬇️ Download SVG</button>
+<button class="btn ghost" id="sampleBtn">Load hiring-process sample</button>
+</div>
+<div class="syntax-list" style="margin-top:1rem">
+<code>start:</code> / <code>end:</code> terminators · <code>? Q</code> decision (next line = yes path) · <code>? Q | Target</code> no branch jumps to Target · <code>.step</code> branch-only (no arrow in from above) · <code>&gt; step</code> input/output · <code>#</code> comment
+</div>
+</div>
+
+<div class="section-card" style="padding:1rem">
+<h2 style="font-size:.95rem">Live Flowchart</h2>
+<div id="chartWrap"></div>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Standard Flowchart Symbols</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Symbol</th><th>Shape</th><th>Means</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>Terminator</td><td>Rounded rectangle</td><td>Start or end of the flow</td><td>"Start: order received"</td></tr>
+<tr><td>Process</td><td>Rectangle</td><td>An action or step</td><td>"Charge the card"</td></tr>
+<tr><td>Decision</td><td>Diamond</td><td>A yes/no question</td><td>"Card approved?"</td></tr>
+<tr><td>Input / Output</td><td>Parallelogram</td><td>Data entering or leaving</td><td>"Email receipt sent"</td></tr>
+<tr><td>Flow arrow</td><td>Directed line</td><td>Order of steps</td><td>Yes/No labeled exits</td></tr>
+<tr><td>Document</td><td>Wavy-bottom rect</td><td>A printed or filed doc</td><td>"W-4 filed"</td></tr>
+<tr><td>Connector</td><td>Small circle</td><td>Jump to another page</td><td>"A" on page 2</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">The first five symbols follow the ANSI/ISO conventions drawn in every process diagram since the 1970s. They're what readers expect; the exotic shapes rarely earn their complexity.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Flowchart Maker Works</h2>
+<p>The left pane takes a plain-text description of a process; the right renders it with standard symbols. Every line is a step. A leading <code>?</code> makes it a decision diamond whose yes path continues to the next line, and <code>| Target</code> on that line aims the no branch at a later step by name, which is how loops and rejections are drawn. The result is an SVG you can download and drop into documentation, a wiki page, or a slide.</p>
+<h3>How to use it</h3>
+<p>Write the happy path first, top to bottom, in short verb-first steps. Then go back and add the decisions, asking at each step "what could go differently here?" and marking those with <code>?</code>. Keep every box under about eight words; if a step needs a paragraph, it's really three steps. End every branch somewhere explicit, even if it's just an <code>end:</code> line with a different label, because open-ended branches are where readers get lost.</p>
+<h3>A worked example</h3>
+<p>The default chart shows a refund flow in five lines: a terminator, a data lookup, one decision with a named no-branch target, an action, and an end. The hiring sample shows a longer pattern, with two decisions in sequence and a rejection path that exits early. Both were written in under a minute, which is the point: the fastest flowchart is the one you can draft while the process is still fresh.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What are the standard flowchart symbols?</h3><p>Five cover almost everything: a rounded terminator for start and end, a rectangle for a process or action, a diamond for a decision, a parallelogram for input or output, and an arrow for flow direction. Document, database, and connector symbols exist for specialized diagrams, but mixing in too many shapes is the fastest way to make a chart nobody reads.</p></div>
+<div class="faq-item"><h3>How do I write the steps for this tool?</h3><p>One step per line. Plain lines become process rectangles. Start a line with start: or end: for terminators, with ? for a decision diamond (the next line is the yes path), and with &gt; for input or output. Add | Target step after a decision to point the no branch at a later step by name. Lines starting with # are ignored.</p></div>
+<div class="faq-item"><h3>What makes a good flowchart?</h3><p>One clear start, decisions that always have two labeled exits, verbs in every box, and no more than around 15 steps on one page. If the chart needs a legend longer than the chart, split it into a main flow plus sub-flows. Test it by walking a real example through every branch with your finger.</p></div>
+<div class="faq-item"><h3>When should I use a flowchart instead of a checklist?</h3><p>When the order of operations can change based on conditions. A checklist assumes every step happens every time in sequence; a flowchart earns its keep the moment someone asks "but what if it fails validation?" If your process has no branches, a checklist is honestly the better tool.</p></div>
+<div class="faq-item"><h3>Can I show a loop or retry in the chart?</h3><p>Yes, that's what the decision branch is for. A validation step like ? Form valid? | Fix errors sends the no path back to the step named Fix errors, drawing a branch arrow to wherever that step lives in the chart. Loops read naturally once the arrow exists, and every retry loop should have an obvious exit.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/gantt-chart-maker/">📅 Gantt Chart Maker</a>
+<a href="/org-chart-maker/">🏢 Org Chart Maker</a>
+<a href="/bar-chart-maker/">📊 Bar Chart Maker</a>
+<a href="/mind-map-maker/">🧠 Mind Map Maker</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var input=document.getElementById('steps');
+  var KEY='ta-flowchart-v1';
+  try{var sv=localStorage.getItem(KEY);if(sv)input.value=sv;}catch(e){}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function wrap(text,max){
+    var words=String(text).split(' '),lines=[],cur='';
+    words.forEach(function(w){
+      if((cur+' '+w).trim().length>max){lines.push(cur.trim());cur=w;}else cur+=' '+w;
+    });
+    if(cur.trim())lines.push(cur.trim());
+    return lines.slice(0,3);
+  }
+
+  function parse(text){
+    var nodes=[];
+    text.split('\n').forEach(function(line){
+      var raw=line.trim();
+      if(!raw||raw.charAt(0)==='#')return;
+      var type='process',label=raw,noTarget='',branchOnly=false;
+      if(raw.charAt(0)==='.'){branchOnly=true;raw=raw.slice(1).trim();}
+      if(/^start:/i.test(raw)){type='start';label=raw.replace(/^start:\s*/i,'');}
+      else if(/^end:/i.test(raw)){type='end';label=raw.replace(/^end:\s*/i,'');}
+      else if(raw.charAt(0)==='?'){
+        type='decision';
+        var body=raw.slice(1).trim();
+        var pipe=body.indexOf('|');
+        if(pipe>=0){noTarget=body.slice(pipe+1).trim();body=body.slice(0,pipe).trim();}
+        label=body;
+      }
+      else if(raw.charAt(0)==='>'){type='io';label=raw.slice(1).trim();}
+      nodes.push({type:type,label:label,noTarget:noTarget,branchOnly:branchOnly});
+    });
+    return nodes;
+  }
+
+  var CW=240,MINH=48,DIA_H=76,GAP=26,LEFT=40,W=CW+LEFT*2+120;
+  function render(){
+    var nodes=parse(input.value);
+    var wrapEl=document.getElementById('chartWrap');
+    if(!nodes.length){wrapEl.innerHTML='<p style="color:#888;padding:20px;font-family:Arial">Add steps on the left to see the flowchart.</p>';return;}
+    var y=24,s='',i;
+    for(i=0;i<nodes.length;i++){
+      var n=nodes[i];
+      n.y=y;n.x=LEFT+CW/2;
+      if(n.type==='decision'){n.h=DIA_H;y+=DIA_H+GAP;}
+      else{n.h=MINH;y+=MINH+GAP;}
+    }
+    var H=y+10;
+    s+='<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    for(i=0;i<nodes.length-1;i++){
+      var a=nodes[i],b=nodes[i+1];
+      if(b.branchOnly)continue;
+      var x1=a.x,y1=a.y+a.h,x2=b.x,y2=b.y;
+      s+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+(y2-7)+'" stroke="#475569" stroke-width="1.6"/>'
+      +'<polygon points="'+x2+','+y2+' '+(x2-5)+','+(y2-9)+' '+(x2+5)+','+(y2-9)+'" fill="#475569"/>';
+      if(a.type==='decision'){
+        s+='<text x="'+(x1+8)+'" y="'+((y1+y2)/2+4)+'" font-family="Arial" font-size="11" font-weight="bold" fill="#16a34a">Yes</text>';
+      }
+    }
+    for(i=0;i<nodes.length;i++){
+      var n=nodes[i],cx=n.x,cy=n.y+ n.h/2;
+      var lines=wrap(n.label,n.type==='decision'?18:28);
+      var fs=12;
+      if(n.type==='decision'){
+        var w=CW/2,h=DIA_H/2;
+        s+='<polygon points="'+cx+','+n.y+' '+(cx+w)+','+cy+' '+cx+','+(n.y+DIA_H)+' '+(cx-w)+','+cy+'" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>';
+        var ty0=cy-((lines.length-1)*fs/2)+4;
+        lines.forEach(function(t,k){s+='<text x="'+cx+'" y="'+(ty0+k*fs)+'" text-anchor="middle" font-family="Arial" font-size="'+fs+'" fill="#1e293b">'+esc(t)+'</text>';});
+        if(n.noTarget){
+          var target=null;
+          for(var j=0;j<nodes.length;j++){if(j>i&&nodes[j].label.toLowerCase()===n.noTarget.toLowerCase()){target=nodes[j];break;}}
+          var exR=W-70;
+          if(target){
+            var midY2=target.y+target.h/2;
+            s+='<path d="M'+(cx+w)+' '+cy+' L'+exR+' '+cy+' L'+exR+' '+midY2+' L'+(target.x+CW/2+7)+' '+midY2+'" fill="none" stroke="#dc2626" stroke-width="1.6"/>'
+            +'<polygon points="'+(target.x+CW/2)+','+midY2+' '+(target.x+CW/2+9)+','+(midY2-5)+' '+(target.x+CW/2+9)+','+(midY2+5)+'" fill="#dc2626"/>';
+            s+='<text x="'+(exR-6)+'" y="'+(cy-6)+'" text-anchor="end" font-family="Arial" font-size="11" font-weight="bold" fill="#dc2626">No</text>';
+          }else{
+            s+='<line x1="'+(cx+w)+'" y1="'+cy+'" x2="'+exR+'" y2="'+cy+'" stroke="#dc2626" stroke-width="1.6"/>'
+            +'<text x="'+(exR-4)+'" y="'+(cy-6)+'" text-anchor="end" font-family="Arial" font-size="11" font-weight="bold" fill="#dc2626">No → ' +esc(n.noTarget.slice(0,14))+'</text>';
+          }
+        }else{
+          s+='<text x="'+(cx+w+8)+'" y="'+(cy-6)+'" font-family="Arial" font-size="11" font-weight="bold" fill="#dc2626">No (previous step)</text>';
+        }
+      }else{
+        var fill='#eef2ff',stroke='#6366f1';
+        if(n.type==='start'){fill='#dcfce7';stroke='#16a34a';}
+        if(n.type==='end'){fill='#fee2e2';stroke='#dc2626';}
+        if(n.type==='io'){fill='#e0f2fe';stroke='#0284c7';}
+        var bx=LEFT,bw=CW,bh=n.h;
+        if(n.type==='start'||n.type==='end'){
+          s+='<rect x="'+bx+'" y="'+n.y+'" width="'+bw+'" height="'+bh+'" rx="'+(bh/2)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5"/>';
+        }else if(n.type==='io'){
+          var sk=14;
+          s+='<polygon points="'+(bx+sk)+','+n.y+' '+(bx+bw)+','+n.y+' '+(bx+bw-sk)+','+(n.y+bh)+' '+(bx-0)+','+(n.y+bh)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5"/>';
+        }else{
+          s+='<rect x="'+bx+'" y="'+n.y+'" width="'+bw+'" height="'+bh+'" rx="6" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5"/>';
+        }
+        var ty0=n.y+bh/2-((lines.length-1)*fs/2)+4;
+        lines.forEach(function(t,k){s+='<text x="'+cx+'" y="'+(ty0+k*fs)+'" text-anchor="middle" font-family="Arial" font-size="'+fs+'" fill="#1e293b">'+esc(t)+'</text>';});
+      }
+    }
+    s+='<text x="'+(W-10)+'" y="'+(H-6)+'" text-anchor="end" font-family="Arial" font-size="9.5" fill="#94a3b8">toolaspect.com</text>';
+    wrapEl.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+s+'</svg>';
+    try{localStorage.setItem(KEY,input.value);}catch(e){}
+  }
+  input.addEventListener('input',render);
+  document.getElementById('sampleBtn').onclick=function(){
+    input.value='start: Application received\n> Resume screened by recruiter\n? Meets minimum requirements? | Send rejection\nPhone screen\n? Hiring manager approved? | Send rejection\nend: Schedule onsite\n.Send rejection\nend: Process closed';
+    render();
+  };
+  document.getElementById('dlBtn').onclick=function(){
+    var svg=document.querySelector('#chartWrap svg');
+    if(!svg)return;
+    var blob=new Blob([svg.outerHTML],{type:'image/svg+xml'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='flowchart.svg';a.click();URL.revokeObjectURL(a.href);
+  };
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Org Chart Maker — Free Org Chart Generator | ToolAspect</title>
+<meta name="description" content="Free org chart maker. Paste an indented list of names and titles and get a clean organization chart you can download as SVG. No signup.">
+<link rel="canonical" href="https://toolaspect.com/org-chart-maker/">
+<meta property="og:title" content="Org Chart Maker | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Type an indented list, get a downloadable organization chart. Free and instant.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/org-chart-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Org Chart Maker | ToolAspect">
+<meta name="twitter:description" content="Indented list in, org chart out. Download SVG.">
+<meta name="keywords" content="org chart maker, organization chart generator, free org chart, online org chart, company structure chart, hierarchy diagram">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Org Chart Maker","description":"Free online org chart maker. Paste an indented list of names and titles and get a clean organization chart with SVG download.","url":"https://toolaspect.com/org-chart-maker/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I structure the list for the org chart?","acceptedAnswer":{"@type":"Answer","text":"One person per line. Indent two spaces (or a tab) per level down the hierarchy, and separate the name from the title with a dash, pipe, or comma: \"Priya Nair — VP Engineering\". The first line becomes the top box, and each deeper indent becomes its direct report. Lines starting with # are ignored so you can leave yourself notes."}},
+{"@type":"Question","name":"What are the main types of organizational structure?","acceptedAnswer":{"@type":"Answer","text":"Functional (teams organized by discipline: engineering, marketing, finance), divisional (by product, region, or customer), matrix (people report to both a function and a project), and flat (few or no layers between leadership and staff). Most small companies start functional; divisional and matrix structures usually appear past a few hundred people."}},
+{"@type":"Question","name":"What is a healthy span of control?","acceptedAnswer":{"@type":"Answer","text":"Research and practice converge on roughly 5 to 8 direct reports for managers whose reports also manage others, and up to 10 to 15 for leads of individual contributors doing similar work. Below about 4, layers multiply and decisions slow; above about 10 for real management work, coaching quality drops."}},
+{"@type":"Question","name":"How do I show dotted-line or matrix reporting?","acceptedAnswer":{"@type":"Answer","text":"Text-based org charts like this one draw solid reporting lines only, which covers the structure most companies want to publish. For matrix relationships, add the second role in the title (\"Analyst (also: Growth squad)\") or maintain a separate project chart. Dedicated diagramming tools can draw the dashed lines if you need them visually."}},
+{"@type":"Question","name":"Why do org charts matter for a small company?","acceptedAnswer":{"@type":"Answer","text":"Three practical reasons: new hires orient faster when they can see who does what, approval paths become explicit instead of tribal knowledge, and planning headcount forces you to see where managers are over- or under-loaded. A chart you can regenerate in a minute stays accurate; a diagram in a design tool goes stale in a quarter."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Org Chart Maker","item":"https://toolaspect.com/org-chart-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;font-family:inherit}
+.input-group textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;min-height:320px;resize:vertical;line-height:1.6}
+.input-group input:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.builder-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1.5rem;margin-top:1.5rem}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
+#chartWrap{background:#fff;border-radius:8px;padding:10px;overflow:auto;max-height:720px}
+#chartWrap svg{display:block;height:auto}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏢 Org Chart Maker</h1>
+<p>Type an indented list on the left, get a downloadable org chart on the right</p>
+</div>
+
+<div class="builder-layout">
+<div class="section-card">
+<h2>Your Team (one person per line, indent = level)</h2>
+<div class="input-group">
+<label>Name — Title · indent 2 spaces per level · # lines are ignored</label>
+<textarea id="tree" spellcheck="false">Maya Okafor — CEO
+  Daniel Reyes — CFO
+    Ana Petrova — Controller
+  Priya Nair — VP Engineering
+    Tom Becker — Backend Lead
+      Jian Chen — Senior Engineer
+      Rosa Delgado — Engineer
+    Aisha Wright — Frontend Lead
+      Marco Silva — Engineer
+  James Holt — VP Sales
+    Elena Fischer — AE, Enterprise
+    Brad Kim — AE, SMB</textarea>
+</div>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">
+<button class="btn" id="dlBtn">⬇️ Download SVG</button>
+<button class="btn ghost" id="fitBtn">Reset zoom</button>
+</div>
+</div>
+
+<div class="section-card" style="padding:1rem">
+<h2 style="font-size:.95rem">Live Chart</h2>
+<div id="chartWrap"></div>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Four Organizational Structures, Compared</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Structure</th><th>Organized By</th><th>Works Best At</th><th>Watch Out For</th></tr></thead>
+<tbody>
+<tr><td>Functional</td><td>Discipline (eng, marketing, finance)</td><td>Startups to ~200 people</td><td>Silos; cross-team projects drift</td></tr>
+<tr><td>Divisional</td><td>Product line, region, or customer</td><td>Multi-market companies</td><td>Duplicated functions, higher cost</td></tr>
+<tr><td>Matrix</td><td>Function + project simultaneously</td><td>Agencies, consultancies, large tech</td><td>Two bosses; needs clear arbitration</td></tr>
+<tr><td>Flat</td><td>Barely any layers</td><td>Small teams under ~30</td><td>Founds its ceiling fast; founder bottleneck</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Span of Control Guidelines by Role Type</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Manager's Reports Are…</th><th>Healthy Span</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Also managers</td><td>4–7</td><td>Coaching other managers is deep, frequent work</td></tr>
+<tr><td>Individual contributors, varied work</td><td>5–8</td><td>Each report needs real 1:1 and review time</td></tr>
+<tr><td>Individual contributors, similar work</td><td>8–15</td><td>Standardized work needs less per-person attention</td></tr>
+<tr><td>Trainees or seasonal staff</td><td>15–30</td><td>Supervision replaces mentorship</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">These are the ranges that recur across management research and practice, not laws. A span outside them isn't automatically wrong, but it deserves a reason.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Org Chart Maker Works</h2>
+<p>The left pane is a plain indented list; the right is a rendered chart. Each line is a box, each indent level is a reporting layer, and the dash, pipe, or comma splits name from title. The layout engine gives every leaf its own horizontal slot, centers each manager over their direct reports, and draws elbow connectors between them. The output is SVG, so the download stays crisp at any size, from a slide to a poster.</p>
+<h3>How to use it</h3>
+<p>Write the top of the organization first, then work down level by level, one indent (two spaces) per level. Keep names and titles short; boxes wrap at about twenty characters. Skip empty seats and note planned hires as "Open — Data Engineer" so the chart doubles as a headcount plan. If a team list gets long, split deep departments into their own charts; a readable chart of one division beats an unreadable chart of the whole company.</p>
+<h3>A worked example</h3>
+<p>The sample list describes a 12-person company with a CEO, three VPs, and two levels below engineering. Parsed, it renders four tiers: the CEO box centered at the top, three VP boxes below, and their reports fanned out underneath. Count the spans as you read it: the VP of Engineering carries five total reports across two layers, which sits inside the healthy range for a manager of managers.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I structure the list for the org chart?</h3><p>One person per line. Indent two spaces (or a tab) per level down the hierarchy, and separate the name from the title with a dash, pipe, or comma: "Priya Nair — VP Engineering". The first line becomes the top box, and each deeper indent becomes its direct report. Lines starting with # are ignored so you can leave yourself notes.</p></div>
+<div class="faq-item"><h3>What are the main types of organizational structure?</h3><p>Functional (teams organized by discipline: engineering, marketing, finance), divisional (by product, region, or customer), matrix (people report to both a function and a project), and flat (few or no layers between leadership and staff). Most small companies start functional; divisional and matrix structures usually appear past a few hundred people.</p></div>
+<div class="faq-item"><h3>What is a healthy span of control?</h3><p>Research and practice converge on roughly 5 to 8 direct reports for managers whose reports also manage others, and up to 10 to 15 for leads of individual contributors doing similar work. Below about 4, layers multiply and decisions slow; above about 10 for real management work, coaching quality drops.</p></div>
+<div class="faq-item"><h3>How do I show dotted-line or matrix reporting?</h3><p>Text-based org charts like this one draw solid reporting lines only, which covers the structure most companies want to publish. For matrix relationships, add the second role in the title ("Analyst (also: Growth squad)") or maintain a separate project chart. Dedicated diagramming tools can draw the dashed lines if you need them visually.</p></div>
+<div class="faq-item"><h3>Why do org charts matter for a small company?</h3><p>Three practical reasons: new hires orient faster when they can see who does what, approval paths become explicit instead of tribal knowledge, and planning headcount forces you to see where managers are over- or under-loaded. A chart you can regenerate in a minute stays accurate; a diagram in a design tool goes stale in a quarter.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/gantt-chart-maker/">📅 Gantt Chart Maker</a>
+<a href="/flowchart-maker/">🔀 Flowchart Maker</a>
+<a href="/kanban-board/">📋 Kanban Board</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var BOX_W=150,BOX_H=52,ROW_GAP=56,SLOT_W=170;
+  var input=document.getElementById('tree');
+  var KEY='ta-orgchart-v1';
+  try{var sv=localStorage.getItem(KEY);if(sv)input.value=sv;}catch(e){}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+  function parse(text){
+    var root={name:'Root',title:'',children:[]},stack=[{node:root,depth:-1}];
+    text.split('\n').forEach(function(line){
+      if(!line.trim()||line.trim().charAt(0)==='#')return;
+      var m=line.match(/^[ \t]*/)[0];
+      var depth=Math.round(m.replace(/\t/g,'  ').length/2);
+      var content=line.trim();
+      var parts=content.split(/\s+[—–\-|]\s+|,\s+/);
+      var name=parts[0]||content;
+      var title=parts.slice(1).join(', ');
+      var node={name:name,title:title,children:[]};
+      while(stack.length>1&&stack[stack.length-1].depth>=depth)stack.pop();
+      stack[stack.length-1].node.children.push(node);
+      stack.push({node:node,depth:depth});
+    });
+    return root.children.length===1?root.children[0]:root;
+  }
+
+  function layout(node,depth,cursor){
+    node.depth=depth;
+    if(!node.children.length){
+      node.x=cursor.n;cursor.n+=SLOT_W;
+    }else{
+      var first=cursor.n;
+      node.children.forEach(function(c){layout(c,depth+1,cursor);});
+      node.x=(node.children[0].x+node.children[node.children.length-1].x)/2;
+    }
+  }
+
+  function render(){
+    var root=parse(input.value);
+    var cursor={n:SLOT_W/2};
+    layout(root,0,cursor);
+    var W=cursor.n+SLOT_W/2;
+    var maxD=0;(function walk(n){if(n.depth>maxD)maxD=n.depth;n.children.forEach(walk);})(root);
+    var H=(maxD+1)*(BOX_H+ROW_GAP)+ROW_GAP;
+    var s='<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    (function draw(n){
+      var y=ROW_GAP/2+n.depth*(BOX_H+ROW_GAP);
+      var kids=n.children;
+      kids.forEach(function(k){
+        var ky=ROW_GAP/2+k.depth*(BOX_H+ROW_GAP);
+        var midY=y+BOX_H+ROW_GAP/2;
+        s+='<path d="M'+n.x+' '+(y+BOX_H)+' L'+n.x+' '+midY+' L'+k.x+' '+midY+' L'+k.x+' '+ky+'" fill="none" stroke="#94a3b8" stroke-width="1.5"/>';
+        draw(k);
+      });
+    })(root);
+    (function boxes(n){
+      var y=ROW_GAP/2+n.depth*(BOX_H+ROW_GAP);
+      var isTop=n.depth===0;
+      s+='<rect x="'+(n.x-BOX_W/2)+'" y="'+y+'" width="'+BOX_W+'" height="'+BOX_H+'" rx="8" fill="'+(isTop?'#312e81':'#ffffff')+'" stroke="'+(isTop?'#312e81':'#c7d2fe')+'" stroke-width="1.5"/>'
+      +'<text x="'+n.x+'" y="'+(y+(n.title?21:31))+'" text-anchor="middle" font-family="Arial" font-size="12.5" font-weight="bold" fill="'+(isTop?'#ffffff':'#1e293b')+'">'+esc(n.name.slice(0,20))+'</text>'
+      +(n.title?'<text x="'+n.x+'" y="'+(y+37)+'" text-anchor="middle" font-family="Arial" font-size="10.5" fill="'+(isTop?'#c7d2fe':'#64748b')+'">'+esc(n.title.slice(0,24))+'</text>':'');
+      n.children.forEach(boxes);
+    })(root);
+    s+='<text x="'+(W-10)+'" y="'+(H-8)+'" text-anchor="end" font-family="Arial" font-size="9.5" fill="#94a3b8">toolaspect.com</text>';
+    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.setAttribute('width',W);svg.setAttribute('height',H);
+    svg.innerHTML=s;
+    var wrap=document.getElementById('chartWrap');
+    wrap.innerHTML='';wrap.appendChild(svg);
+    try{localStorage.setItem(KEY,input.value);}catch(e){}
+  }
+  input.addEventListener('input',render);
+  document.getElementById('fitBtn').onclick=function(){var w=document.getElementById('chartWrap');w.scrollLeft=0;w.scrollTop=0;};
+  document.getElementById('dlBtn').onclick=function(){
+    var svg=document.querySelector('#chartWrap svg');
+    if(!svg)return;
+    var blob=new Blob([svg.outerHTML],{type:'image/svg+xml'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='org-chart.svg';a.click();URL.revokeObjectURL(a.href);
+  };
+  render();
+})();
+</script>
+</body>
+</html>

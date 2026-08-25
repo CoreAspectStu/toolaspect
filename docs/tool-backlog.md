@@ -13,19 +13,16 @@
 wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
 
 ## Wave 3 — OSS-wrap generators (MIT repos verified Aug-25)
-invoice-generator-v2 | business | wrap-invoify | $8 | port invoify core patterns, PDF export
-resume-builder | business | wrap-resume | $12 | resume CPC solid, sadanandpai/resume-builder MIT
-cover-letter-generator | business | gen | $11 | LLM-free template engine
-form-builder | developer | wrap-formbuilder | $4 | kevinchappell/formBuilder MIT, drop-in
-gantt-chart-maker | business | wrap-dhtmlx | $5 | license-check DHTMLX first
-org-chart-maker | business | gen | $6 | canvas/SVG, low comp
-flowchart-maker | business | gen | $7 | drag-drop SVG, big volume
-gnatt-alternative:bar-chart-maker | data | gen | $4 | quick win
-kanban-board | productivity | gen | $3 | localStorage, high volume
-mind-map-maker | productivity | gen | $6 | SVG tree, AIO citable
+# DONE 2026-08-26: resume-builder, cover-letter-generator, form-builder, gantt-chart-maker,
+# org-chart-maker, flowchart-maker, bar-chart-maker, kanban-board, mind-map-maker —
+# built as clean vanilla-JS implementations (no external repo code vendored).
+# invoice-generator-v2 resolved as an in-place upgrade of /invoice-generator/ (PDF export,
+# unlimited line items, live preview, invoify-style layout) rather than a duplicate v2 URL.
+# gantt-chart-maker license check: DHTMLX Gantt community = GPL → built our own SVG instead.
+# Wave 4 pregnancy-weight-gain-calculator also built 2026-08-26 (see done.md).
 
 ## Wave 4 — Health/Medical AIO magnets
-pregnancy-weight-gain-calculator | health | calc | $9 | IOM tables = perfect AIO
+
 calorie-deficit-calculator | health | calc | $7 | huge volume
 macro-split-calculator | health | calc | $6 | bodybuilding longtails
 blood-alcohol-calculator-by-weight | health | exists-check | $8 | widen bac-calculator longtails

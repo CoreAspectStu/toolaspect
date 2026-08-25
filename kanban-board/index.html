@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Board — Free Online Kanban Tool | ToolAspect</title>
+<meta name="description" content="Free online kanban board. Three columns, drag and drop tasks, set a work-in-progress limit, and your board saves itself in your browser. No signup.">
+<link rel="canonical" href="https://toolaspect.com/kanban-board/">
+<meta property="og:title" content="Kanban Board | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="A fast, free kanban board that lives in your browser. Drag tasks, limit WIP, lose nothing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/kanban-board/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Online Kanban Board | ToolAspect">
+<meta name="twitter:description" content="Drag, drop, done. Free kanban board with WIP limits.">
+<meta name="keywords" content="kanban board, free kanban, online kanban board, kanban tool, personal kanban, task board, wip limit">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Kanban Board","description":"Free online kanban board with drag and drop, work-in-progress limits, and automatic browser storage. No signup.","url":"https://toolaspect.com/kanban-board/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What are the rules of a kanban board?","acceptedAnswer":{"@type":"Answer","text":"Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top."}},
+{"@type":"Question","name":"What columns should a kanban board have?","acceptedAnswer":{"@type":"Answer","text":"Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly."}},
+{"@type":"Question","name":"What is a WIP limit and what number should I pick?","acceptedAnswer":{"@type":"Answer","text":"A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck."}},
+{"@type":"Question","name":"Is my board private?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it, so export anything you need to keep."}},
+{"@type":"Question","name":"What's the difference between kanban and a to-do list?","acceptedAnswer":{"@type":"Answer","text":"A to-do list answers 'what could I do'; a kanban board answers 'what am I doing right now and how much of it'. The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Kanban Board","item":"https://toolaspect.com/kanban-board/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;font-family:inherit}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.add-bar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:flex-end}
+.add-bar .input-group{flex:1;min-width:220px}
+.board{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1.5rem}
+@media(max-width:760px){.board{grid-template-columns:1fr}}
+.col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;display:flex;flex-direction:column;min-height:320px}
+.col.dragover{border-color:var(--primary);border-style:dashed}
+.col-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.col-head h3{font-size:.95rem;font-weight:700}
+.col-count{font-size:.75rem;color:var(--muted)}
+.col-count.over{color:#f87171;font-weight:700}
+.cards{flex:1;display:flex;flex-direction:column;gap:.5rem;min-height:60px}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.6rem .7rem;font-size:.88rem;cursor:grab;display:flex;justify-content:space-between;align-items:center;gap:.4rem}
+.card.dragging{opacity:.4}
+.card .mv{display:flex;gap:.25rem}
+.card button{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:2px 7px;cursor:pointer;font-size:.75rem;font-family:inherit}
+.card button:hover{color:var(--text);border-color:var(--primary)}
+.card button.del:hover{color:#f87171;border-color:#f87171}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📋 Kanban Board</h1>
+<p>Drag tasks across columns, cap your work in progress, and it all saves in this browser</p>
+</div>
+
+<div class="section-card">
+<div class="add-bar">
+<div class="input-group"><label>New task</label><input id="newTask" placeholder="e.g. Draft Q3 launch email"></div>
+<div class="input-group" style="max-width:180px"><label>Column</label>
+<select id="newCol" style="padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;font-family:inherit">
+<option value="todo">To Do</option><option value="doing" selected>In Progress</option><option value="done">Done</option>
+</select></div>
+<button class="btn" id="addBtn">+ Add</button>
+<button class="btn ghost" id="wipBtn">WIP limit: <span id="wipLabel">3</span></button>
+<button class="btn ghost" id="clearDone">Clear Done</button>
+</div>
+</div>
+
+<div class="board" id="board"></div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Suggested WIP Limits by Situation</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Board Type</th><th>In-Progress Limit</th><th>Rationale</th></tr></thead>
+<tbody>
+<tr><td>Personal board</td><td>3</td><td>The classic personal kanban number; enough to juggle, few enough to finish</td></tr>
+<tr><td>Solo + lots of interruptions</td><td>1–2</td><td>Every extra open item multiplies restart cost</td></tr>
+<tr><td>Team of N, shared column</td><td>N + 1</td><td>Everyone can work, plus one item ready to pull</td></tr>
+<tr><td>Review/approval column</td><td>2× reviewers</td><td>Reviews pair poorly with queueing</td></tr>
+<tr><td>Done column</td><td>no limit</td><td>Archive periodically to keep the board readable</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Kanban Flow Metrics Worth Tracking</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Metric</th><th>Measures</th><th>Healthy Signal</th></tr></thead>
+<tbody>
+<tr><td>Throughput</td><td>Cards finished per week</td><td>Steady or rising</td></tr>
+<tr><td>Cycle time</td><td>Days from start to done</td><td>Short and predictable</td></tr>
+<tr><td>Blocker age</td><td>How long stuck cards stay stuck</td><td>Days, not weeks</td></tr>
+<tr><td>WIP utilization</td><td>How often the In-Progress column is full</td><td>Occasionally full, rarely overflowing</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">You don't need all four. Pick throughput if you want output, cycle time if you want speed, and blocker age if things keep stalling.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Kanban Board Works</h2>
+<p>Three columns, To Do, In Progress, and Done, with an optional work-in-progress limit on the middle one. Type a task, pick a column, and it appears as a card. Drag cards between columns, or use the arrow buttons, which exist for touch screens and for anyone who finds drag and drop finicky. The board writes itself to your browser's local storage after every change, so a closed tab doesn't lose your work.</p>
+<h3>How to use it</h3>
+<p>Write tasks small enough to finish in a sitting or two; anything bigger becomes a fog that sits in progress forever. Keep the WIP limit on, and when the In Progress column fills up, respect it: finish something instead of starting something. The Done column is your diary; clear it weekly and you'll have a natural record of what the week actually produced, which is usually humbler and more useful than what the plan said.</p>
+<h3>A worked example</h3>
+<p>Monday: five tasks entered, WIP limit 3, first three pulled into In Progress. A fourth idea arrives mid-morning; the limit says no, so it waits in To Do. By afternoon one task crosses to Done, the new one pulls in, and the board ends the day with two done, three active, two queued. Friday looks similar, and that's the point: steady finishing, no pile of half-work.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What are the rules of a kanban board?</h3><p>Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top.</p></div>
+<div class="faq-item"><h3>What columns should a kanban board have?</h3><p>Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly.</p></div>
+<div class="faq-item"><h3>What is a WIP limit and what number should I pick?</h3><p>A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck.</p></div>
+<div class="faq-item"><h3>Is my board private?</h3><p>Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it, so export anything you need to keep.</p></div>
+<div class="faq-item"><h3>What's the difference between kanban and a to-do list?</h3><p>A to-do list answers "what could I do"; a kanban board answers "what am I doing right now and how much of it". The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/gantt-chart-maker/">📅 Gantt Chart Maker</a>
+<a href="/mind-map-maker/">🧠 Mind Map Maker</a>
+<a href="/countdown-timer/">⏱️ Countdown Timer</a>
+<a href="/pomodoro-timer/">🍅 Pomodoro Timer</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var KEY='ta-kanban-v1';
+  var S={wip:3,seq:1,cols:{todo:[],doing:[],done:[]}};
+  try{var sv=JSON.parse(localStorage.getItem(KEY));if(sv&&sv.cols)S=sv;}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  var COLS=[{id:'todo',name:'To Do'},{id:'doing',name:'In Progress'},{id:'done',name:'Done'}];
+  var boardEl=document.getElementById('board');
+
+  function render(){
+    boardEl.innerHTML='';
+    COLS.forEach(function(c){
+      var col=document.createElement('div');col.className='col';col.dataset.col=c.id;
+      var count=S.cols[c.id].length;
+      var over=(c.id==='doing'&&S.wip>0&&count>S.wip);
+      var head='<div class="col-head"><h3>'+c.name+'</h3><span class="col-count'+(over?' over':'')+'">'+count+(c.id==='doing'&&S.wip>0?' / '+S.wip:'')+' cards</span></div>';
+      var cards=document.createElement('div');cards.className='cards';
+      S.cols[c.id].forEach(function(t){
+        var card=document.createElement('div');card.className='card';card.draggable=true;card.dataset.id=t.id;
+        var idx=COLS.findIndex(function(x){return x.id===c.id;});
+        var mv='';
+        if(idx>0)mv+='<button data-mv="left" data-id="'+t.id+'">←</button>';
+        if(idx<COLS.length-1)mv+='<button data-mv="right" data-id="'+t.id+'">→</button>';
+        mv+='<button class="del" data-del="'+t.id+'">✕</button>';
+        card.innerHTML='<span class="txt"></span><span class="mv">'+mv+'</span>';
+        card.querySelector('.txt').textContent=t.text;
+        card.addEventListener('dragstart',function(ev){ev.dataTransfer.setData('text/plain',String(t.id));card.classList.add('dragging');});
+        card.addEventListener('dragend',function(){card.classList.remove('dragging');});
+        cards.appendChild(card);
+      });
+      col.innerHTML=head;
+      col.appendChild(cards);
+      col.addEventListener('dragover',function(ev){ev.preventDefault();col.classList.add('dragover');});
+      col.addEventListener('dragleave',function(){col.classList.remove('dragover');});
+      col.addEventListener('drop',function(ev){
+        ev.preventDefault();col.classList.remove('dragover');
+        var id=ev.dataTransfer.getData('text/plain');
+        moveCard(id,c.id);
+      });
+      boardEl.appendChild(col);
+    });
+    save();
+  }
+  function findCard(id){
+    var out=null;
+    COLS.forEach(function(c){S.cols[c.id].forEach(function(t){if(String(t.id)===String(id))out={col:c.id,task:t};});});
+    return out;
+  }
+  function moveCard(id,toCol){
+    var f=findCard(id);
+    if(!f||f.col===toCol)return;
+    if(toCol==='doing'&&S.wip>0&&S.cols.doing.length>=S.wip){
+      alert('Work-in-progress limit reached ('+S.wip+'). Finish something first — that limit is the point of the board.');
+      return;
+    }
+    S.cols[f.col]=S.cols[f.col].filter(function(t){return String(t.id)!==String(id);});
+    S.cols[toCol].push(f.task);
+    render();
+  }
+  document.getElementById('addBtn').onclick=function(){
+    var v=document.getElementById('newTask').value.trim();
+    if(!v)return;
+    var col=document.getElementById('newCol').value;
+    if(col==='doing'&&S.wip>0&&S.cols.doing.length>=S.wip){alert('WIP limit reached — added to To Do instead.');col='todo';}
+    S.cols[col].push({id:S.seq++,text:v});
+    document.getElementById('newTask').value='';
+    render();
+  };
+  document.getElementById('newTask').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('addBtn').click();});
+  boardEl.addEventListener('click',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.del!==undefined){
+      COLS.forEach(function(c){S.cols[c.id]=S.cols[c.id].filter(function(x){return String(x.id)!==String(t.dataset.del);});});
+      render();return;
+    }
+    if(t.dataset&&t.dataset.mv&&t.dataset.id!==undefined){
+      var f=findCard(t.dataset.id);if(!f)return;
+      var i=COLS.findIndex(function(x){return x.id===f.col;});
+      moveCard(t.dataset.id,COLS[i+(t.dataset.mv==='right'?1:-1)].id);
+    }
+  });
+  document.getElementById('wipBtn').onclick=function(){
+    var v=prompt('Work-in-progress limit for the In Progress column (0 = no limit):',S.wip);
+    if(v===null)return;
+    S.wip=Math.max(0,parseInt(v,10)||0);
+    document.getElementById('wipLabel').textContent=S.wip||'off';
+    render();
+  };
+  document.getElementById('clearDone').onclick=function(){S.cols.done=[];render();};
+  document.getElementById('wipLabel').textContent=S.wip||'off';
+  render();
+})();
+</script>
+</body>
+</html>

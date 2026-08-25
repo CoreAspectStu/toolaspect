@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bar Chart Maker — Free Bar Graph Generator | ToolAspect</title>
+<meta name="description" content="Free bar chart maker. Paste labels and values, choose vertical or horizontal bars, and download a clean SVG chart with value labels. No signup.">
+<link rel="canonical" href="https://toolaspect.com/bar-chart-maker/">
+<meta property="og:title" content="Bar Chart Maker | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn a list of numbers into a clean bar chart. Sort, color, download SVG.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/bar-chart-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Bar Chart Maker | ToolAspect">
+<meta name="twitter:description" content="Labels and values in, bar chart out. Download SVG.">
+<meta name="keywords" content="bar chart maker, bar graph maker, free bar chart generator, create bar chart online, bar graph creator, horizontal bar chart">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Bar Chart Maker","description":"Free online bar chart maker. Paste labels and values, pick vertical or horizontal orientation, sort, color, and download an SVG with value labels.","url":"https://toolaspect.com/bar-chart-maker/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"When should I use a bar chart instead of a line chart?","acceptedAnswer":{"@type":"Answer","text":"Use bars when you're comparing categories and a line when you're showing a trend over a continuous sequence, usually time. Months as categories and revenue by region are bar chart work; stock price by minute is line chart work. A quick test: if connecting the points in between your categories would be meaningless, don't use a line."}},
+{"@type":"Question","name":"Should bars be vertical or horizontal?","acceptedAnswer":{"@type":"Answer","text":"Vertical is the default and reads fastest for short labels and few categories. Horizontal wins when labels are long or there are many categories, because names stay readable down the left edge instead of getting cramped or rotated under the axis."}},
+{"@type":"Question","name":"Does the y-axis have to start at zero?","acceptedAnswer":{"@type":"Answer","text":"Yes, for bar charts. Bars encode value by length, and chopping the axis changes the lengths, exaggerating small differences into dramatic ones. Truncated axes are only defensible on line charts, where position, not length, carries the value. If a zero baseline makes your differences invisible, that's the chart telling you the differences are small."}},
+{"@type":"Question","name":"How many bars are too many?","acceptedAnswer":{"@type":"Answer","text":"Around 12 to 15 on one chart before readers stop comparing and start skimming. Past that, sort descending and consider showing only the top N plus an everything-else bar, or split into small multiples. Sorting alone does a lot of work: sorted bars turn a wall of data into a ranking."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Bar Chart Maker","item":"https://toolaspect.com/bar-chart-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box;font-family:inherit}
+.input-group textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;min-height:220px;resize:vertical;line-height:1.6}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.builder-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:1.5rem;margin-top:1.5rem}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
+#chartWrap{background:#fff;border-radius:8px;padding:10px;overflow:auto}
+#chartWrap svg{display:block;width:100%;height:auto;min-width:480px}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📊 Bar Chart Maker</h1>
+<p>Paste labels and values, get a clean chart with value labels you can download</p>
+</div>
+
+<div class="builder-layout">
+<div class="section-card">
+<h2>Data (one "label, value" per line)</h2>
+<div class="input-group">
+<label>Comma, tab, or semicolon separated · # lines ignored · values can be decimals or negative</label>
+<textarea id="data" spellcheck="false">Northeast, 412000
+Southeast, 318000
+Midwest, 391000
+Southwest, 205000
+West, 468000</textarea>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+<div class="input-group"><label>Chart title</label><input id="ctitle" value="Revenue by Region"></div>
+<div class="input-group"><label>Orientation</label><select id="orient"><option value="v" selected>Vertical</option><option value="h">Horizontal</option></select></div>
+<div class="input-group"><label>Sort</label><select id="sortm"><option value="none" selected>Input order</option><option value="desc">Descending</option><option value="asc">Ascending</option></select></div>
+<div class="input-group"><label>Bar color</label><input id="color" type="color" value="#4f46e5"></div>
+</div>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">
+<button class="btn" id="dlBtn">⬇️ Download SVG</button>
+<button class="btn ghost" id="sampleBtn">Load sample data</button>
+</div>
+</div>
+
+<div class="section-card" style="padding:1rem">
+<h2 style="font-size:.95rem">Live Chart</h2>
+<div id="chartWrap"></div>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Which Chart Type Fits Your Data?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Question</th><th>Use</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Compare categories?</td><td>Bar chart</td><td>Length is the easiest quantity to judge</td></tr>
+<tr><td>Show change over time?</td><td>Line chart</td><td>Position along a continuous axis encodes trend</td></tr>
+<tr><td>Parts of one whole?</td><td>Stacked bar (or pie, sparingly)</td><td>Segments sum to 100% of one total</td></tr>
+<tr><td>Distribution shape?</td><td>Histogram</td><td>Bars, but the x-axis is binned numbers</td></tr>
+<tr><td>Correlation of two measures?</td><td>Scatter plot</td><td>Points show the relationship, not totals</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Bar Chart Maker Works</h2>
+<p>Paste your data as label-value pairs, one per line, and the chart renders instantly with value labels on every bar, a zero-based axis, and light gridlines. Sorting, orientation, color, and the title are one click each. The download is an SVG, so it stays sharp when you drop it into a slide, doc, or website.</p>
+<h3>How to use it</h3>
+<p>Keep labels short enough to read at a glance, and prefer five to ten bars; past a dozen, flip to horizontal and sort descending so the ranking carries the story. Negative values plot below the baseline automatically. If your numbers carry units people know (%, $K), put them in the labels once rather than on every bar.</p>
+<h3>A worked example</h3>
+<p>The default data is a regional revenue comparison: five regions, values from $205K to $468K. With input order the chart shows geography; switch to descending and the same data becomes a ranking, West first, Southwest last, with the value labels making the gap between the top two ($56K) obvious at a glance. Same numbers, different question answered.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>When should I use a bar chart instead of a line chart?</h3><p>Use bars when you're comparing categories and a line when you're showing a trend over a continuous sequence, usually time. Months as categories and revenue by region are bar chart work; stock price by minute is line chart work. A quick test: if connecting the points in between your categories would be meaningless, don't use a line.</p></div>
+<div class="faq-item"><h3>Should bars be vertical or horizontal?</h3><p>Vertical is the default and reads fastest for short labels and few categories. Horizontal wins when labels are long or there are many categories, because names stay readable down the left edge instead of getting cramped or rotated under the axis.</p></div>
+<div class="faq-item"><h3>Does the y-axis have to start at zero?</h3><p>Yes, for bar charts. Bars encode value by length, and chopping the axis changes the lengths, exaggerating small differences into dramatic ones. Truncated axes are only defensible on line charts, where position, not length, carries the value. If a zero baseline makes your differences invisible, that's the chart telling you the differences are small.</p></div>
+<div class="faq-item"><h3>How many bars are too many?</h3><p>Around 12 to 15 on one chart before readers stop comparing and start skimming. Past that, sort descending and consider showing only the top N plus an everything-else bar, or split into small multiples. Sorting alone does a lot of work: sorted bars turn a wall of data into a ranking.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/gantt-chart-maker/">📅 Gantt Chart Maker</a>
+<a href="/percentage-change-calculator/">📈 Percentage Change</a>
+<a href="/average-calculator/">🔢 Average Calculator</a>
+<a href="/ratio-calculator/">⚖️ Ratio Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var ids=['data','ctitle','orient','sortm','color'];
+  var KEY='ta-barchart-v1';
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function fmt(n){
+    if(Math.abs(n)>=1e6)return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M';
+    if(Math.abs(n)>=1e3)return (n/1e3).toFixed(1).replace(/\.0$/,'')+'K';
+    return String(Math.round(n*100)/100);
+  }
+  function parseData(text){
+    var rows=[];
+    text.split('\n').forEach(function(line){
+      var raw=line.trim();
+      if(!raw||raw.charAt(0)==='#')return;
+      var m=raw.split(/[,;\t]/);
+      if(m.length>=2){
+        var label=m[0].trim();
+        var val=parseFloat(m.slice(1).join('').replace(/[^0-9.\-]/g,''));
+        if(label&&!isNaN(val))rows.push({label:label,value:val});
+      }
+    });
+    return rows;
+  }
+  function render(){
+    var rows=parseData(document.getElementById('data').value);
+    var sortm=document.getElementById('sortm').value;
+    if(sortm==='desc')rows.sort(function(a,b){return b.value-a.value;});
+    if(sortm==='asc')rows.sort(function(a,b){return a.value-b.value;});
+    var color=document.getElementById('color').value;
+    var title=document.getElementById('ctitle').value||'';
+    var horiz=document.getElementById('orient').value==='h';
+    var wrapEl=document.getElementById('chartWrap');
+    if(!rows.length){wrapEl.innerHTML='<p style="color:#888;padding:20px;font-family:Arial">Enter label, value pairs on the left.</p>';return;}
+    var W=760,H= horiz?Math.max(320,rows.length*44+70):420;
+    var padL=horiz?170:56,padR=24,padT=title?52:24,padB=48;
+    var maxV=Math.max.apply(null,rows.map(function(r){return r.value;}));
+    var minV=Math.min(0,Math.min.apply(null,rows.map(function(r){return r.value;})));
+    var span=maxV-minV||1;
+    var s='<rect width="'+W+'" height="'+H+'" fill="#ffffff"/>';
+    if(title)s+='<text x="'+(W/2)+'" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#0f172a">'+esc(title)+'</text>';
+    var i,v;
+    if(horiz){
+      var plotW=W-padL-padR,plotH=H-padT-padB;
+      var zeroX=padL+(0-minV)/span*plotW;
+      for(i=0;i<=4;i++){
+        v=minV+span*i/4;
+        var gx=padL+plotW*i/4;
+        s+='<line x1="'+gx+'" y1="'+padT+'" x2="'+gx+'" y2="'+(padT+plotH)+'" stroke="#e2e8f0"/>';
+        s+='<text x="'+gx+'" y="'+(H-24)+'" text-anchor="middle" font-family="Arial" font-size="10" fill="#64748b">'+fmt(v)+'</text>';
+      }
+      rows.forEach(function(r,k){
+        var bh=Math.min(28,plotH/rows.length-10);
+        var y=padT+plotH*(k+0.5)/rows.length-bh/2;
+        var wv=Math.abs(r.value)/span*plotW;
+        var x=r.value>=0?zeroX:zeroX-wv;
+        s+='<rect x="'+x+'" y="'+y+'" width="'+wv+'" height="'+bh+'" rx="3" fill="'+color+'"/>';
+        s+='<text x="'+(padL-8)+'" y="'+(y+bh/2+4)+'" text-anchor="end" font-family="Arial" font-size="11.5" fill="#1e293b">'+esc(r.label.slice(0,22))+'</text>';
+        s+='<text x="'+(r.value>=0?x+wv+6:x-6)+'" y="'+(y+bh/2+4)+'" text-anchor="'+(r.value>=0?'start':'end')+'" font-family="Arial" font-size="11" font-weight="bold" fill="#334155">'+fmt(r.value)+'</text>';
+      });
+      s+='<line x1="'+zeroX+'" y1="'+padT+'" x2="'+zeroX+'" y2="'+(padT+plotH)+'" stroke="#94a3b8" stroke-width="1.5"/>';
+    }else{
+      var plotW=W-padL-padR,plotH=H-padT-padB;
+      var zeroY=padT+plotH*(maxV/span);
+      for(i=0;i<=4;i++){
+        v=minV+span*i/4;
+        var gy=padT+plotH*(1-i/4);
+        s+='<line x1="'+padL+'" y1="'+gy+'" x2="'+(padL+plotW)+'" y2="'+gy+'" stroke="#e2e8f0"/>';
+        s+='<text x="'+(padL-8)+'" y="'+(gy+4)+'" text-anchor="end" font-family="Arial" font-size="10" fill="#64748b">'+fmt(v)+'</text>';
+      }
+      rows.forEach(function(r,k){
+        var bw=Math.min(64,plotW/rows.length*0.6);
+        var cx=padL+plotW*(k+0.5)/rows.length;
+        var hv=Math.abs(r.value)/span*plotH;
+        var y=r.value>=0?zeroY-hv:zeroY;
+        s+='<rect x="'+(cx-bw/2)+'" y="'+y+'" width="'+bw+'" height="'+hv+'" rx="3" fill="'+color+'"/>';
+        s+='<text x="'+cx+'" y="'+(r.value>=0?y-6:y+hv+14)+'" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#334155">'+fmt(r.value)+'</text>';
+        var label=esc(r.label.slice(0,10));
+        s+='<text x="'+cx+'" y="'+(H-24)+'" text-anchor="middle" font-family="Arial" font-size="11" fill="#1e293b">'+label+'</text>';
+      });
+      s+='<line x1="'+padL+'" y1="'+zeroY+'" x2="'+(padL+plotW)+'" y2="'+zeroY+'" stroke="#94a3b8" stroke-width="1.5"/>';
+    }
+    s+='<text x="'+(W-10)+'" y="'+(H-6)+'" text-anchor="end" font-family="Arial" font-size="9.5" fill="#94a3b8">toolaspect.com</text>';
+    wrapEl.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'+s+'</svg>';
+    try{localStorage.setItem(KEY,JSON.stringify({d:document.getElementById('data').value,t:title,o:document.getElementById('orient').value,s:sortm,c:color}));}catch(e){}
+  }
+  try{var sv=JSON.parse(localStorage.getItem(KEY));if(sv){document.getElementById('data').value=sv.d;document.getElementById('ctitle').value=sv.t;document.getElementById('orient').value=sv.o;document.getElementById('sortm').value=sv.s;document.getElementById('color').value=sv.c;}}catch(e){}
+  ids.forEach(function(id){document.getElementById(id).addEventListener('input',render);document.getElementById(id).addEventListener('change',render);});
+  document.getElementById('sampleBtn').onclick=function(){
+    document.getElementById('data').value='Email, 3840\nOrganic search, 2915\nPaid social, 1760\nReferral, 940\nDirect, 720';
+    document.getElementById('ctitle').value='Signups by Channel';
+    render();
+  };
+  document.getElementById('dlBtn').onclick=function(){
+    var svg=document.querySelector('#chartWrap svg');
+    if(!svg)return;
+    var blob=new Blob([svg.outerHTML],{type:'image/svg+xml'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='bar-chart.svg';a.click();URL.revokeObjectURL(a.href);
+  };
+  render();
+})();
+</script>
+</body>
+</html>

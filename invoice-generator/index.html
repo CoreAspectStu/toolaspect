@@ -4,107 +4,264 @@
 <script src="/shared/domain-redirect.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invoice Generator | ToolAspect</title>
-<meta name="description" content="Create professional invoices online. Add line items, calculate totals, and download as HTML. Free invoice maker for freelancers and small businesses.">
+<title>Invoice Generator — Free PDF Invoice Maker | ToolAspect</title>
+<meta name="description" content="Free invoice generator with a live preview and PDF export. Add unlimited line items, set tax and due dates, then print or save a clean invoice. No signup.">
 <link rel="canonical" href="https://toolaspect.com/invoice-generator/">
-<meta property="og:title" content="Invoice Generator">
+<meta property="og:title" content="Invoice Generator | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Build a professional invoice with live preview and one-click PDF export. Free, no signup.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toolaspect.com/invoice-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="keywords" content="invoice generator, free invoice maker, invoice template, create invoice online, invoice pdf">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Invoice Generator","description":"Create professional invoices online. Add line items, calculate totals, and download as HTML. Free invoice maker for freelancers and small businesses.","url":"https://toolaspect.com/invoice-generator/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Invoice Generator","description":"Free invoice generator with live preview and PDF export. Unlimited line items, tax, due dates, notes. Runs entirely in your browser.","url":"https://toolaspect.com/invoice-generator/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
 </script>
-<script src="/shared/nav.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I save the invoice as a PDF?","acceptedAnswer":{"@type":"Answer","text":"Click Print / Save PDF and choose Save as PDF as the destination in your browser's print dialog. Chrome, Edge, Safari, and Firefox all support it. The print layout strips everything except the invoice itself, so the PDF comes out as a clean letter-size document."}},
+{"@type":"Question","name":"What should an invoice include to be legally valid?","acceptedAnswer":{"@type":"Answer","text":"At minimum: the word invoice, a unique invoice number, your business name and contact details, the client's name, the issue date, an itemized list of goods or services with quantities and prices, the total due, and acceptable payment terms. Many jurisdictions also want your tax ID and, where applicable, a registration number."}},
+{"@type":"Question","name":"How long should payment terms be?","acceptedAnswer":{"@type":"Answer","text":"Net 30 is the US default but not a law; you set the terms. Net 7 or Net 14 get paid faster, and freelancers who ask for due-on-receipt or a 50% deposit routinely see fewer late payments. Whatever you pick, state it on the invoice and charge a late fee if you mean it."}},
+{"@type":"Question","name":"Do I have to charge sales tax on an invoice?","acceptedAnswer":{"@type":"Answer","text":"It depends on what you sell and where. Services are exempt in many US states while goods usually aren't, and digital products sit somewhere in between depending on the state. You're responsible for collecting what applies to your situation; when in doubt, check your state's revenue department rather than guessing."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Invoice Generator","item":"https://toolaspect.com/invoice-generator/"}]}
+</script>
 <style>
-.page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
-.page-header{text-align:center;margin-bottom:2rem}
-.page-header h1{font-size:1.65rem;font-weight:700;margin-bottom:6px}
-.page-header .subtitle{color:var(--muted);font-size:.92rem}
-.card{margin-bottom:1rem}
-.form-group{margin-bottom:14px}
-.form-group label{display:block;font-size:.8rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-md);padding:.65rem .9rem;font-size:.9rem;font-family:inherit}
-.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.10);outline:none}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn-calc{width:100%;padding:.7rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-md);font-size:.95rem;font-weight:600;cursor:pointer;transition:all var(--transition);margin-top:8px}
-.btn-calc:hover{background:var(--primary-light);transform:translateY(-1px)}
-.result-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;margin-top:1rem;display:none}
-.result-box.show{display:block}
-.result-box .label{font-size:.8rem;color:var(--muted);margin-bottom:4px}
-.result-box .value{font-size:2rem;font-weight:700;color:var(--primary)}
-.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);align-items:center}
-.result-row:last-child{border-bottom:none}
-.output-area{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-top:1rem;font-family:var(--font-mono);font-size:.85rem;white-space:pre-wrap;word-break:break-all;display:none;max-height:400px;overflow-y:auto}
-.output-area.show{display:block}
-
-.content-section{margin-top:2rem;padding:1.5rem 0}
-.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
-.content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
-.related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
-.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
-.related-links a:hover{border-color:var(--primary);color:var(--text)}
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;font-family:inherit}
+.input-group textarea{resize:vertical;min-height:56px}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;padding:.55rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--primary);color:var(--text)}
+.btn.tiny{padding:.25rem .6rem;font-size:.75rem;font-weight:500}
+.builder-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem;margin-top:1.5rem}
+@media(max-width:900px){.builder-layout{grid-template-columns:1fr}}
+.line-item{display:grid;grid-template-columns:3fr 1fr 1.2fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px}
+@media(max-width:640px){.line-item{grid-template-columns:1fr 1fr}.line-item .li-desc{grid-column:1/-1}}
+.line-item label{font-size:.72rem;color:var(--muted);display:block;margin-bottom:3px}
+.line-item input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.55rem .7rem;font-size:.9rem;box-sizing:border-box;font-family:inherit}
+.line-item input[readonly]{background:transparent;color:var(--muted)}
+#invoiceSheet{background:#fff;color:#111;border-radius:8px;padding:36px 40px;min-height:560px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.55;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.inv-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.inv-word{font-size:26px;font-weight:800;letter-spacing:.18em;color:#312e81}
+.inv-meta{text-align:right;font-size:12px;color:#333}
+.inv-meta b{font-size:14px}
+.inv-parties{display:flex;justify-content:space-between;gap:20px;margin:18px 0 14px;font-size:12px}
+.inv-parties .p-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#312e81;margin-bottom:3px}
+.inv-parties div{max-width:48%;white-space:pre-line}
+table.inv-items{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+table.inv-items th{background:#312e81;color:#fff;padding:7px 9px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+table.inv-items td{padding:7px 9px;border-bottom:1px solid #e2e8f0}
+table.inv-items td.num{text-align:right;white-space:nowrap}
+.inv-tot{margin-top:12px;margin-left:auto;width:240px;font-size:12.5px}
+.inv-tot .row{display:flex;justify-content:space-between;padding:5px 0}
+.inv-tot .row.grand{border-top:2px solid #312e81;margin-top:4px;padding-top:8px;font-size:15px;font-weight:800;color:#312e81}
+.inv-notes{margin-top:22px;font-size:11px;color:#444;border-top:1px solid #e2e8f0;padding-top:10px;white-space:pre-line}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@media print{
+  body{background:#fff}
+  body *{visibility:hidden}
+  #invoiceSheet,#invoiceSheet *{visibility:visible}
+  #invoiceSheet{position:absolute;left:0;top:0;width:100%;box-shadow:none;border-radius:0;padding:0.5in;min-height:auto}
+}
 </style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
+<script src="/shared/nav.js"></script>
 <div class="page-container">
 <div class="page-header">
-<h1>Invoice Generator</h1>
-<p class="subtitle">Create professional invoices online.</p>
+<h1>🧾 Invoice Generator</h1>
+<p>Build the invoice on the left, watch it render on the right, save it as a PDF</p>
 </div>
-<div class="ad-slot" data-position="top"></div>
-<div class="card">
-<div class="form-row">
-<div class="form-group"><label>Your Name / Company</label><input type="text" id="fromName" placeholder="Acme Inc" value="Acme Inc"></div>
-<div class="form-group"><label>Bill To</label><input type="text" id="toName" placeholder="Client Name" value="Client Co"></div>
+
+<div class="builder-layout">
+<div>
+<div class="section-card">
+<h2>Details</h2>
+<div class="input-grid">
+<div class="input-group"><label>Your Name / Business</label><input id="fromName" value="Acme Design Studio"></div>
+<div class="input-group"><label>Your Email</label><input id="fromEmail" value="billing@acmedesign.co"></div>
+<div class="input-group"><label>Bill To</label><input id="toName" value="Client Co"></div>
+<div class="input-group"><label>Client Email (optional)</label><input id="toEmail" placeholder="accounts@clientco.com"></div>
+<div class="input-group"><label>Invoice #</label><input id="invNum" value="INV-001"></div>
+<div class="input-group"><label>Tax Rate (%)</label><input id="taxRate" type="number" value="0" step="0.1" min="0"></div>
+<div class="input-group"><label>Issue Date</label><input id="issueDate" type="date"></div>
+<div class="input-group"><label>Due Date</label><input id="dueDate" type="date"></div>
 </div>
-<div class="form-group"><label>Invoice #</label><input type="text" id="invNum" value="INV-001"></div>
-<div id="lineItems">
-<div class="line-item" style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px">
-<div><label style="font-size:.75rem;color:var(--muted)">Description</label><input type="text" id="desc0" value="Web Design"></div>
-<div><label style="font-size:.75rem;color:var(--muted)">Qty</label><input type="number" id="qty0" value="1" style="text-align:center"></div>
-<div><label style="font-size:.75rem;color:var(--muted)">Price ($)</label><input type="number" id="price0" value="500" step="0.01"></div>
-<div><label style="font-size:.75rem;color:var(--muted)">Total</label><input type="text" id="total0" value="$500" readonly style="background:var(--surface)"></div>
+<div class="input-group" style="margin-top:1rem"><label>Notes / Payment terms</label><textarea id="notes" placeholder="Payment due within 14 days. Bank transfer or card accepted. Late fee 1.5%/mo.">Payment due within 14 days. Bank transfer or card accepted.</textarea></div>
 </div>
-<div class="line-item" style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px">
-<div><input type="text" id="desc1" value="Hosting Setup"></div>
-<div><input type="number" id="qty1" value="2" style="text-align:center"></div>
-<div><input type="number" id="price1" value="100" step="0.01"></div>
-<div><input type="text" id="total1" readonly style="background:var(--surface)"></div>
+
+<div class="section-card">
+<h2>Line Items</h2>
+<div id="lineItems"></div>
+<button class="btn ghost" id="addBtn">+ Add line item</button>
+</div>
+
+<div class="section-card">
+<h2>Export</h2>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap">
+<button class="btn" id="printBtn">🖨️ Print / Save as PDF</button>
+<button class="btn ghost" id="resetBtn">Reset</button>
+</div>
+<p style="color:var(--muted);font-size:.8rem;margin-top:.8rem">Your invoice never leaves the browser; the PDF is made by your own print dialog.</p>
 </div>
 </div>
-<button class="btn-calc" onclick="calcInvoice()">Generate Invoice</button>
+
+<div>
+<div class="section-card" style="padding:1rem">
+<h2 style="font-size:.95rem">Live Preview</h2>
+<div id="invoiceSheet"></div>
 </div>
-<div class="result-box" id="result">
-<div class="result-row"><span class="label">Subtotal</span><span id="subtotal">$0</span></div>
-<div class="form-row" style="margin-top:8px">
-<div class="form-group"><label>Tax Rate (%)</label><input type="number" id="taxRate" value="0" step="0.1" style="max-width:100px" onchange="calcInvoice()"></div>
 </div>
-<div class="result-row"><span class="label">Tax</span><span id="taxAmt">$0</span></div>
-<div class="result-row"><span class="label">Total Due</span><span class="value" id="grandTotal">$0</span></div>
 </div>
-<div class="ad-slot" data-position="middle"></div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Common Payment Terms</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Term</th><th>Means</th><th>Typical Use</th></tr></thead>
+<tbody>
+<tr><td>Due on receipt</td><td>Pay immediately</td><td>Small jobs, one-off freelancers</td></tr>
+<tr><td>Net 7 / Net 14</td><td>Due in 7 / 14 days</td><td>Freelancers who want fast cycles</td></tr>
+<tr><td>Net 30</td><td>Due in 30 days</td><td>US B2B default; most corporate AP</td></tr>
+<tr><td>Net 60 / Net 90</td><td>Due in 60 / 90 days</td><td>Large enterprise clients, government</td></tr>
+<tr><td>50% deposit</td><td>Half up front, half on delivery</td><td>Projects with real upfront cost</td></tr>
+<tr><td>2/10 Net 30</td><td>2% discount if paid in 10 days</td><td>Wholesale and supplier relationships</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
 <div class="content-section">
 <h2>About the Invoice Generator</h2>
-<p>Create professional invoices online. Add line items, calculate totals, and download as HTML. Free invoice maker for freelancers and small businesses.</p>
+<p>Fill in the header, add line items, set a tax rate, and the invoice renders live on the right exactly as it will print. The math is the standard kind: each line is quantity times price, the subtotal is their sum, tax is the subtotal times the rate, and the total due is subtotal plus tax. When it looks right, one click sends it to your browser's print dialog, where Save as PDF produces a clean letter-size document with no watermarks and no signup.</p>
+<p>The layout follows the invoify pattern that has become a de facto standard for clean invoices: the word INVOICE up top, parties clearly separated, an itemized table with uppercase headers, and a right-aligned totals block. It reads as professional in any industry and prints well in black and white.</p>
 </div>
-<div class="related-links"><a href="/finance-calculator/">Finance Calculator</a><a href="/percentage-calculator/">Percentage Calculator</a><a href="/unit-converter/">Unit Converter</a></div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I save the invoice as a PDF?</h3><p>Click Print / Save PDF and choose Save as PDF as the destination in your browser's print dialog. Chrome, Edge, Safari, and Firefox all support it. The print layout strips everything except the invoice itself, so the PDF comes out as a clean letter-size document.</p></div>
+<div class="faq-item"><h3>What should an invoice include to be legally valid?</h3><p>At minimum: the word invoice, a unique invoice number, your business name and contact details, the client's name, the issue date, an itemized list of goods or services with quantities and prices, the total due, and acceptable payment terms. Many jurisdictions also want your tax ID and, where applicable, a registration number.</p></div>
+<div class="faq-item"><h3>How long should payment terms be?</h3><p>Net 30 is the US default but not a law; you set the terms. Net 7 or Net 14 get paid faster, and freelancers who ask for due-on-receipt or a 50% deposit routinely see fewer late payments. Whatever you pick, state it on the invoice and charge a late fee if you mean it.</p></div>
+<div class="faq-item"><h3>Do I have to charge sales tax on an invoice?</h3><p>It depends on what you sell and where. Services are exempt in many US states while goods usually aren't, and digital products sit somewhere in between depending on the state. You're responsible for collecting what applies to your situation; when in doubt, check your state's revenue department rather than guessing.</p></div>
 </div>
-<script src="/shared/ads.js"></script>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/resume-builder/">📄 Resume Builder</a>
+<a href="/markup-calculator/">📈 Markup Calculator</a>
+<a href="/sales-tax-calculator/">🧮 Sales Tax Calculator</a>
+<a href="/factoring-calculator/">💱 Invoice Factoring</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
 <script>
-function calcInvoice(){
-var subtotal=0;
-for(var i=0;i<2;i++){
-var qty=parseFloat(document.getElementById("qty"+i).value)||0;
-var price=parseFloat(document.getElementById("price"+i).value)||0;
-var total=qty*price;subtotal+=total;
-var el=document.getElementById("total"+i);if(el)el.value="$"+total.toFixed(2);}
-var taxRate=parseFloat(document.getElementById("taxRate").value)||0;
-var tax=subtotal*taxRate/100;
-var grand=subtotal+tax;
-document.getElementById("subtotal").textContent="$"+subtotal.toFixed(2);
-document.getElementById("taxAmt").textContent="$"+tax.toFixed(2);
-document.getElementById("grandTotal").textContent="$"+grand.toFixed(2);
-document.getElementById("result").classList.add("show");
-}
+(function(){
+  var KEY='ta-invoice-v1';
+  var S;
+  try{S=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!S||!S.items)S={fromName:'Acme Design Studio',fromEmail:'billing@acmedesign.co',toName:'Client Co',toEmail:'',invNum:'INV-001',taxRate:0,notes:'Payment due within 14 days. Bank transfer or card accepted.',
+    items:[{desc:'Web design — 5 pages',qty:1,price:1200},{desc:'Hosting setup',qty:2,price:100}]};
+  function pad(n){return n<10?'0'+n:''+n;}
+  if(!S.issue){var t=new Date();S.issue=t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());var d=new Date(t.getTime()+14*864e5);S.due=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function money(n){return '$'+(Math.round(n*100)/100).toFixed(2);}
+
+  var list=document.getElementById('lineItems');
+  function renderList(){
+    list.innerHTML='';
+    S.items.forEach(function(it,i){
+      var d=document.createElement('div');d.className='line-item';
+      d.innerHTML='<div class="li-desc"><label>Description</label><input data-k="desc" data-i="'+i+'" value="'+esc(it.desc)+'"></div>'
+      +'<div><label>Qty</label><input type="number" data-k="qty" data-i="'+i+'" value="'+esc(it.qty)+'" step="any" style="text-align:center"></div>'
+      +'<div><label>Price ($)</label><input type="number" data-k="price" data-i="'+i+'" value="'+esc(it.price)+'" step="0.01"></div>'
+      +'<div><label>Amount</label><input readonly value="'+money((parseFloat(it.qty)||0)*(parseFloat(it.price)||0))+'"></div>'
+      +'<div><button class="btn ghost tiny" data-del="'+i+'" style="color:var(--danger)">✕</button></div>';
+      list.appendChild(d);
+    });
+  }
+  function renderSheet(){
+    var subtotal=0;
+    S.items.forEach(function(it){subtotal+=(parseFloat(it.qty)||0)*(parseFloat(it.price)||0);});
+    var tax=subtotal*(parseFloat(S.taxRate)||0)/100;
+    var total=subtotal+tax;
+    var rows=S.items.map(function(it){
+      return '<tr><td>'+esc(it.desc||'Item')+'</td><td class="num">'+esc(it.qty||0)+'</td><td class="num">'+money(parseFloat(it.price)||0)+'</td><td class="num">'+money((parseFloat(it.qty)||0)*(parseFloat(it.price)||0))+'</td></tr>';
+    }).join('');
+    var sh=document.getElementById('invoiceSheet');
+    sh.innerHTML='<div class="inv-top"><div class="inv-word">INVOICE</div>'
+    +'<div class="inv-meta"><b>'+esc(S.invNum||'')+'</b><br>Issued: '+esc(S.issue||'—')+'<br>Due: '+esc(S.due||'—')+'</div></div>'
+    +'<div class="inv-parties"><div><div class="p-label">From</div>'+esc(S.fromName||'')+(S.fromEmail?'<br>'+esc(S.fromEmail):'')+'</div>'
+    +'<div style="text-align:right"><div class="p-label">Bill To</div>'+esc(S.toName||'')+(S.toEmail?'<br>'+esc(S.toEmail):'')+'</div></div>'
+    +'<table class="inv-items"><thead><tr><th>Description</th><th style="text-align:right">Qty</th><th style="text-align:right">Price</th><th style="text-align:right">Amount</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<div class="inv-tot"><div class="row"><span>Subtotal</span><span>'+money(subtotal)+'</span></div>'
+    +'<div class="row"><span>Tax ('+(parseFloat(S.taxRate)||0)+'%)</span><span>'+money(tax)+'</span></div>'
+    +'<div class="row grand"><span>Total Due</span><span>'+money(total)+'</span></div></div>'
+    +(S.notes?'<div class="inv-notes">'+esc(S.notes)+'</div>':'');
+  }
+  function all(){renderList();renderSheet();}
+
+  ['fromName','fromEmail','toName','toEmail','invNum','taxRate','issueDate','dueDate','notes'].forEach(function(id){
+    var el=document.getElementById(id);
+    var k=id==='issueDate'?'issue':(id==='dueDate'?'due':id);
+    el.value=S[k]!==undefined?S[k]:(id==='taxRate'?0:'');
+    el.addEventListener('input',function(){S[k]=el.value;save();renderSheet();});
+  });
+  document.addEventListener('input',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.k&&t.dataset.i!==undefined){S.items[+t.dataset.i][t.dataset.k]=t.value;save();renderSheet();
+      var row=t.closest('.line-item');if(row){var it=S.items[+t.dataset.i];row.querySelector('input[readonly]').value=money((parseFloat(it.qty)||0)*(parseFloat(it.price)||0));}}
+  });
+  document.addEventListener('click',function(ev){
+    var t=ev.target;
+    if(t.dataset&&t.dataset.del!==undefined){S.items.splice(+t.dataset.del,1);if(!S.items.length)S.items.push({desc:'',qty:1,price:0});save();all();}
+  });
+  document.getElementById('addBtn').onclick=function(){S.items.push({desc:'',qty:1,price:0});save();all();};
+  document.getElementById('printBtn').onclick=function(){window.print();};
+  document.getElementById('resetBtn').onclick=function(){
+    if(!confirm('Clear the invoice?'))return;
+    try{localStorage.removeItem(KEY);}catch(e){}
+    location.reload();
+  };
+  all();
+})();
 </script>
 </body>
 </html>
