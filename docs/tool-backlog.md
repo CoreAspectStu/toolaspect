@@ -90,3 +90,13 @@ fancy-qr-generator | everyday | wrap-qrbtf? | low | node-qrcode/nayuki MIT; qrbt
 - 82% of AIOs on <1k/mo keywords = longtails; ~80% informational; listicles cited most
 - Cited pages: 2500-3300 words, tables, FAQ blocks, 40-60 word direct answer under H1
 - Only 20-26% AIO overlap with top-10 → don't need to rank #1 to get cited
+
+## GH scan 2026-08-25 (auto)
+gh:nikolaeu/numi | oss | wrap | low | S6491 MIT — Beautiful calculator app for macOS, Linux & Windows
+gh:yuvadm/cidr.xyz | oss | wrap | low | S848 MIT — CIDR Calculator and Subnetting Visualizer
+gh:dunizb/sCalc | oss | wrap | low | S354 MIT — :calling: A simple calculator application
+gh:spot13/pmcalculator | oss | wrap | low | S225 MIT — A simple process manager calculator that helps determine the correct values for child processes in P
+gh:legions-developer/invoicely | oss | wrap | low | S899 MIT — Invoicely is a simple and easy to use invoice generator where you can create beautiful and professio
+gh:htmldocs-js/htmldocs | oss | wrap | low | S746 MIT — The modern alternative to LaTeX. Create PDF documents templates using React, JSX, and Tailwind
+gh:tuanpham-dev/react-invoice-generator | oss | wrap | low | S675 MIT — React Invoice Generator allows you quickly make invoices and export them as PDF
+gh:amruthpillai/reactive-resume | oss | wrap | low | S41664 MIT — A one-of-a-kind resume builder that keeps your privacy in mind. Completely secure, customizable, por
