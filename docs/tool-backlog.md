@@ -19,7 +19,7 @@ settlement-calculator | legal | calc | $35 | personal injury CPC is highest on w
 alimony-calculator | legal | calc | $22 | low comp
 overtime-pay-calculator-by-state | legal | calc | $14 | FLSA tables, longtail states
 wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
-slip-and-fall-settlement-calculator | legal | calc | $33 | PI vertical
+
 social-security-disability-benefits-calculator | legal | calc | $21 | SSDI tables
 incorporation-cost-calculator | legal | calc | $17 | business formation CPC
 
@@ -49,8 +49,7 @@ hydration-needs-by-weight | health | calc | $4 | extend water-intake
 
 ## Wave 5 — Deep-research additions (subagent-ranked, Aug-25)
 # Legal PI — highest CPC on the web ($20-90). Build with by-state/injury variant potential.
-car-accident-settlement-calculator | legal | calc | $25-60 | 90k/mo cluster, PI attorneys bid hard; state variants
-pain-and-suffering-calculator | legal | calc | $20-45 | multiplier method = perfect AIO content
+
 truck-accident-settlement-calculator | legal | calc | $25-60 | commercial vehicle premium
 # DONE 2026-08-25: lawsuit-loan-calculator
 # Finance adds (dedupe vs existing)
