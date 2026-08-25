@@ -29,6 +29,7 @@ def main():
         "contractor-tools": "Contractor + construction calculators (concrete, roofing, materials)",
         "health-calculators": "Health calculators (BMI, calories, macros, pregnancy)",
         "creator-tools": "Creator economy calculators (YouTube, TikTok, Twitch earnings)",
+        "legal-tools": "Legal calculators (settlements, child support, lawsuit funding) — education only, not legal advice",
         "converters": "Unit converters",
         "developer-tools": "Developer tools",
         "everyday-tools": "Everyday utilities",

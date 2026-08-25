@@ -13,12 +13,12 @@ annuity-calculator | finance | calc | $23 | retirement annuity longtails
 
 ## Wave 2 — Legal/B2B high-CPC
 settlement-calculator | legal | calc | $35 | personal injury CPC is highest on web
-workers-comp-settlement-calculator | legal | calc | $32 | PI/workers comp crossover
-child-support-calculator | legal | calc | $20 | by-state formulas = programmatic pages
+# DONE 2026-08-25: workers-comp-settlement-calculator, child-support-calculator,
+# medical-malpractice-settlement-calculator, mesothelioma-settlement-calculator ($40-90),
+# lawsuit-loan-calculator (wave 5) — see tool-factory-done.md
 alimony-calculator | legal | calc | $22 | low comp
 overtime-pay-calculator-by-state | legal | calc | $14 | FLSA tables, longtail states
 wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
-medical-malpractice-settlement-calculator | legal | calc | $34 | PI vertical
 slip-and-fall-settlement-calculator | legal | calc | $33 | PI vertical
 social-security-disability-benefits-calculator | legal | calc | $21 | SSDI tables
 incorporation-cost-calculator | legal | calc | $17 | business formation CPC
@@ -52,7 +52,7 @@ hydration-needs-by-weight | health | calc | $4 | extend water-intake
 car-accident-settlement-calculator | legal | calc | $25-60 | 90k/mo cluster, PI attorneys bid hard; state variants
 pain-and-suffering-calculator | legal | calc | $20-45 | multiplier method = perfect AIO content
 truck-accident-settlement-calculator | legal | calc | $25-60 | commercial vehicle premium
-lawsuit-loan-calculator | legal | calc | $20-50 | litigation finance goldmine
+# DONE 2026-08-25: lawsuit-loan-calculator
 # Finance adds (dedupe vs existing)
 heloc-vs-cash-out-refi-calculator | finance | calc | $15-35 | home equity top finance CPC
 debt-settlement-vs-bankruptcy-calculator | finance | calc | $10-30 | debt relief top-5 CPC
