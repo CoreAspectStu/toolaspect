@@ -45,6 +45,19 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
 - 2026-08-25 depth passes: pregnancy-due-date-calculator (92 → 900+ words, 2 tables, 4 FAQs + FAQ/Breadcrumb JSON-LD);
   mortgage-calculator (154 → 960+ words, rate table, 4 FAQs + FAQ/Breadcrumb JSON-LD, related links added).
   Skipped va-loan-calculator (827 words, near target, batch-1 depth already applied).
+- 2026-08-26 batch guides: ovulation → guides/when-do-you-ovulate/;
+  income-tax → guides/how-is-income-tax-calculated/;
+  car-payment → guides/how-much-car-payment-can-i-afford/
+  (each: 1,392–1,415 words, computed data tables, FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; all-tools guides section updated, count 39→59)
+- 2026-08-26 skipped (guide pre-existing, verified links tool): refinance-break-even (when-should-you-refinance-your-mortgage),
+  pmi (how-to-get-rid-of-pmi), net-worth (how-to-calculate-net-worth),
+  credit-card-payoff (credit-card-payoff-snowball-method), dti (debt-to-income-ratio-explained)
+- 2026-08-26 depth passes: ovulation-calculator (83 → 967 words, 2 tables, 4 FAQs + FAQ/Breadcrumb JSON-LD);
+  amortization-schedule (79 → 953 words, 2 reference tables, 4 FAQs + FAQ/Breadcrumb JSON-LD,
+  guide links added; calculator JS untouched on both)
+  Next in queue: amortization has no dedicated guide (guide candidate), then roi, calorie, macro,
+  body-fat, bmr, water-intake, ideal-weight, age-calculator.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
