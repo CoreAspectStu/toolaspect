@@ -21,7 +21,7 @@ content that multiplies existing pages' rankings. Every day, one content batch:
 
 ## Queue (auto-extended)
 Priority = monetization score (finance/insurance/legal/health keywords in slug).
-Wave order: savings, salary*, retirement, refinance-break-even*, property-tax, pmi*, payroll, ovulation,
+Wave order: savings*, salary*, retirement*, refinance-break-even*, property-tax*, pmi*, payroll*, ovulation,
 net-worth*, income-tax, credit-card-payoff*, car-payment, dti*, amortization, compound-interest*,
 roi, bmi*, calorie, macro, body-fat, bmr, water-intake, ideal-weight, due-date, age-calculator...
 (* = matching guide already exists in guides/ — verify on arrival, skip, and log it below)
@@ -30,6 +30,13 @@ roi, bmi*, calorie, macro, body-fat, bmr, water-intake, ideal-weight, due-date, 
 password-generator, image-compressor, csv-to-json, prompt-library) follow in wave 2.
 
 ### Done (drip log)
+- 2026-08-25 batch A guides: savings → guides/how-much-should-you-save-each-month/;
+  retirement → guides/how-much-do-you-need-to-retire/;
+  property-tax → guides/how-is-property-tax-calculated/;
+  payroll → guides/how-to-calculate-payroll-taxes/
+  (each: 1,078–1,142 words, computed data tables, FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; all-tools guides section updated to 29)
+- 2026-08-25 batch A skipped (guide pre-existing): salary (how-to-calculate-salary-after-tax)
 - 2026-08-25 guides: pregnancy-due-date → guides/how-due-dates-are-calculated/;
   workers-comp → guides/how-much-does-workers-comp-cost/;
   social-security → guides/when-to-take-social-security/

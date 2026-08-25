@@ -13,6 +13,14 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FinanceApplication","name":"Income Tax Calculator","description":"Estimate your annual income tax based on your salary and tax bracket. Simple, accurate tax estimator for planning. Free income tax calculator.","url":"https://toolaspect.com/income-tax-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is my paycheck withholding different from this estimate?","acceptedAnswer":{"@type":"Answer","text":"Withholding is your employer's running estimate of your annual tax bill, spread across pay periods and steered by what you entered on your W-4. It also sits alongside FICA and state withholding, which this calculator doesn't include, so the federal line on your pay stub won't match this number exactly. Over-withhold and you get a refund at filing time; under-withhold and you'll owe. If your refund keeps coming back over a thousand dollars, updating your W-4 puts that money in your paychecks instead."}},
+{"@type":"Question","name":"Should I take the standard deduction or itemize?","acceptedAnswer":{"@type":"Answer","text":"Itemize only if mortgage interest, state and local taxes (capped at $10,000), and charitable giving add up to more than the standard deduction, which is $14,600 for single filers and $29,200 for married couples filing jointly in 2024. Since the standard deduction roughly doubled in 2018, about nine in ten filers take it and skip the paperwork."}},
+{"@type":"Question","name":"Does moving into a higher tax bracket lower my take-home pay?","acceptedAnswer":{"@type":"Answer","text":"No. Only the dollars above the bracket threshold are taxed at the higher rate; everything below it is taxed exactly as before. A raise always increases your take-home pay, it just increases it a little less than the gross amount suggests."}},
+{"@type":"Question","name":"Do tax brackets change every year?","acceptedAnswer":{"@type":"Answer","text":"Yes. The IRS adjusts bracket thresholds and the standard deduction annually for inflation, so the cutoffs creep upward each year even when the rates themselves stay the same. This calculator uses the 2024 figures. The structure barely moves year to year, so the estimate stays a good planning number, but always check the current year's thresholds before making a decision that hinges on a few hundred dollars."}}
+]}
+</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -35,8 +43,17 @@
 .result-row:last-child{border-bottom:none}
 
 .content-section{margin-top:2rem;padding:1.5rem 0}
-.content-section h2{font-size:1.15rem;font-weight:600;margin-bottom:.5rem}
+.content-section h2{font-size:1.15rem;font-weight:600;margin:1.25rem 0 .5rem}
 .content-section p{font-size:.9rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.75rem}
+.content-section a{color:var(--primary)}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
+.faq-item{padding:14px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.92rem;font-weight:600;margin-bottom:6px}
+.faq-item p{font-size:.85rem;color:var(--text-secondary);line-height:1.7;margin-bottom:0}
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
@@ -79,15 +96,60 @@
 </div>
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
-<h2>About the Income Tax Calculator</h2>
-<p>Estimate your annual income tax based on your salary and tax bracket. Simple, accurate tax estimator for planning. Free income tax calculator.</p>
+<h2>How This Calculator Works</h2>
+<p>Quick answer first: a single filer earning $75,000 with the standard deduction owes $8,341 in 2024 federal income tax, an 11.1% effective rate. Enter your gross annual income, filing status, and pre-tax deductions, and the calculator estimates your federal income tax using the 2024 IRS brackets. The deductions field defaults to $14,600, the standard deduction for a single filer; married couples filing jointly get $29,200. If you contribute to a traditional 401(k) or an HSA, add those amounts here too, since that money comes out before tax is figured.</p>
+<p>Two caveats up front. This estimates federal income tax only, so Social Security and Medicare (FICA), state income tax, and tax credits aren't in the number. And it's a planning tool, not a filing tool; your actual return will reflect credits, other income, and adjustments that a simple bracket model skips.</p>
+<h2>2024 Federal Tax Brackets (Single Filers)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Rate</th><th>Taxable income</th><th>Total tax at top of bracket</th></tr></thead>
+<tbody>
+<tr><td>10%</td><td>$0 – $11,600</td><td>$1,160</td></tr>
+<tr><td>12%</td><td>$11,600 – $47,150</td><td>$5,426</td></tr>
+<tr><td>22%</td><td>$47,150 – $100,525</td><td>$17,169</td></tr>
+<tr><td>24%</td><td>$100,525 – $191,950</td><td>$39,111</td></tr>
+<tr><td>32%</td><td>$191,950 – $243,725</td><td>$55,679</td></tr>
+<tr><td>35%</td><td>$243,725 – $609,350</td><td>$183,647</td></tr>
+<tr><td>37%</td><td>Over $609,350</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p>These rates apply to taxable income, meaning what's left after deductions. Married-filing-jointly thresholds are roughly double the single ones (the 22% bracket starts at $94,300), and head of household sits in between, with 22% starting at $63,100.</p>
+<h2>A Worked Example</h2>
+<p>Say you earn $75,000 as a single filer and take the standard deduction. Taxable income is $75,000 minus $14,600, or $60,400. The tax builds slice by slice: the first $11,600 is taxed at 10% ($1,160), the next $35,550 at 12% ($4,266), and the final $13,250 at 22% ($2,915). Total federal tax: $8,341. That's an effective rate of 11.1% of gross income, leaving $66,659 before state tax and payroll taxes.</p>
+<p>FICA is the other big line on your pay stub: 6.2% for Social Security ($4,650 on this salary) plus 1.45% for Medicare ($1,087.50). Add those to the federal income tax and you're at $14,078.50, or 18.8% of gross, before your state takes its cut.</p>
+<h2>Marginal vs. Effective Rate</h2>
+<p>The $75,000 earner above is "in the 22% bracket," yet pays 11.1% overall. Both numbers are true; they answer different questions. The marginal rate is what your next dollar of income gets taxed at, which is the figure that matters when you're weighing overtime, a side gig, or a Roth conversion. The effective rate is what your income is actually taxed at once every bracket has taken its slice. And no, a raise can't lower your take-home pay. If a promotion pushes you from $100,000 to $105,000, only the dollars above the $100,525 line get taxed at 24%; everything underneath is taxed exactly as before.</p>
+<h2>Federal Tax by Income Level</h2>
+<p>Single filer, standard deduction, 2024 brackets, rounded to the nearest dollar:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Gross income</th><th>Federal tax</th><th>Effective rate</th><th>Marginal rate</th></tr></thead>
+<tbody>
+<tr><td>$50,000</td><td>$4,016</td><td>8.0%</td><td>12%</td></tr>
+<tr><td>$75,000</td><td>$8,341</td><td>11.1%</td><td>22%</td></tr>
+<tr><td>$100,000</td><td>$13,841</td><td>13.8%</td><td>22%</td></tr>
+<tr><td>$150,000</td><td>$25,539</td><td>17.0%</td><td>24%</td></tr>
+<tr><td>$200,000</td><td>$37,539</td><td>18.8%</td><td>24%</td></tr>
+</tbody>
+</table>
+</div>
+<p>Notice how slowly the effective rate climbs. Doubling your income from $75,000 to $150,000 lifts it from 11.1% to 17%, not to 24%. That's the progressive structure doing what it's designed to do.</p>
+<h2>What This Estimate Leaves Out</h2>
+<p>State income tax ranges from zero (Texas, Florida, and seven other states) to a top marginal rate of 13.3% in California, so where you live can move the total more than any deduction tweak. Tax credits aren't modeled either, and they matter because they cut your bill dollar for dollar; the child tax credit alone is worth up to $2,000 per child. Pre-tax benefits like health insurance premiums and commuter accounts shrink taxable income too. For the full path from gross salary to bank account, our guide on <a href="/guides/how-to-calculate-salary-after-tax/">how to calculate salary after tax</a> walks through every deduction in order.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why is my paycheck withholding different from this estimate?</h3><p>Withholding is your employer's running estimate of your annual tax bill, spread across pay periods and steered by what you entered on your W-4. It also sits alongside FICA and state withholding, which this calculator doesn't include, so the federal line on your pay stub won't match this number exactly. Over-withhold and you get a refund at filing time; under-withhold and you'll owe. If your refund keeps coming back over a thousand dollars, updating your W-4 puts that money in your paychecks instead.</p></div>
+<div class="faq-item"><h3>Should I take the standard deduction or itemize?</h3><p>Itemize only if mortgage interest, state and local taxes (capped at $10,000), and charitable giving add up to more than the standard deduction: $14,600 single, $29,200 married filing jointly for 2024. Since the standard deduction roughly doubled in 2018, about nine in ten filers take it and skip the paperwork.</p></div>
+<div class="faq-item"><h3>Does moving into a higher tax bracket lower my take-home pay?</h3><p>No. Only the dollars above the bracket threshold are taxed at the higher rate; everything below it is taxed exactly as before. A raise always increases your take-home pay, it just increases it a little less than the gross number suggests.</p></div>
+<div class="faq-item"><h3>Do tax brackets change every year?</h3><p>Yes. The IRS adjusts bracket thresholds and the standard deduction annually for inflation, so the cutoffs creep upward even when the rates stay the same. This calculator uses the 2024 figures. The structure barely moves year to year, so it stays a good planning number, but check the current thresholds before making a decision that hinges on a few hundred dollars.</p></div>
 </div>
 <div class="related-links">
-<a href="/finance-calculator/">Finance Calculator</a>
-<a href="/mortgage-calculator/">Mortgage Calculator</a>
-<a href="/loan-calculator/">Loan Calculator</a>
-<a href="/roi-calculator/">ROI Calculator</a>
-<a href="/compound-interest-calculator/">Compound Interest</a>
+<a href="/salary-calculator/">Salary Calculator</a>
+<a href="/payroll-calculator/">Payroll Calculator</a>
+<a href="/hourly-to-salary-calculator/">Hourly to Salary</a>
+<a href="/property-tax-calculator/">Property Tax</a>
+<a href="/sales-tax-calculator/">Sales Tax</a>
+<a href="/salary-by-state/">Salary by State</a>
 </div>
 </div>
 <script src="/shared/ads.js"></script>
@@ -102,15 +164,15 @@ var brackets;
 if(status==='married'){brackets=[[0,0.10],[23200,0.12],[94300,0.22],[201050,0.24],[383900,0.32],[487450,0.35],[731200,0.37]];}
 else if(status==='head'){brackets=[[0,0.10],[16550,0.12],[63100,0.22],[100500,0.24],[191950,0.32],[243700,0.35],[609350,0.37]];}
 else{brackets=[[0,0.10],[11600,0.12],[47150,0.22],[100525,0.24],[191950,0.32],[243725,0.35],[609350,0.37]];}
-var tax=0;var prev=0;var marginal=0;
+var tax=0;var marginal=0;
 for(var i=0;i<brackets.length;i++){
-var bracket=brackets[i];
-if(taxable>bracket[0]){
-var amount=Math.min(taxable,bracket[0])-prev;
-if(amount>0)tax+=amount*bracket[1];
-prev=bracket[0];marginal=bracket[1];
+var lo=brackets[i][0];var rate=brackets[i][1];
+var hi=(i+1<brackets.length)?brackets[i+1][0]:Number.POSITIVE_INFINITY;
+if(taxable>lo){
+var amount=Math.min(taxable,hi)-lo;
+if(amount>0)tax+=amount*rate;
+marginal=rate;
 }else{break;}}
-if(taxable>brackets[brackets.length-1][0]){tax+=(taxable-brackets[brackets.length-1][0])*0.37;marginal=0.37;}
 var effRate=income>0?(tax/income*100):0;
 var afterTax=income-tax;
 document.getElementById('fedTax').textContent='$'+tax.toFixed(2);
