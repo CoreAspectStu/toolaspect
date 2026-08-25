@@ -54,3 +54,39 @@ ovulation-fertility-window-calculator | health | exists-check | $8 | extend ovul
 glucose-a1c-converter | health | calc | $10 | medical tables, tiny comp
 ideal-protein-intake-calculator | health | calc | $5 | extend macro
 hydration-needs-by-weight | health | calc | $4 | extend water-intake
+
+## Wave 5 — Deep-research additions (subagent-ranked, Aug-25)
+# Legal PI — highest CPC on the web ($20-90). Build with by-state/injury variant potential.
+car-accident-settlement-calculator | legal | calc | $25-60 | 90k/mo cluster, PI attorneys bid hard; state variants
+pain-and-suffering-calculator | legal | calc | $20-45 | multiplier method = perfect AIO content
+truck-accident-settlement-calculator | legal | calc | $25-60 | commercial vehicle premium
+lawsuit-loan-calculator | legal | calc | $20-50 | litigation finance goldmine
+# Finance adds (dedupe vs existing)
+heloc-vs-cash-out-refi-calculator | finance | calc | $15-35 | home equity top finance CPC
+debt-settlement-vs-bankruptcy-calculator | finance | calc | $10-30 | debt relief top-5 CPC
+llc-vs-scorp-calculator | finance | calc | $8-20 | formation services bid
+capital-gains-tax-calculator | finance | calc | $5-15 | 90k/mo, crypto longtails (check existing income-tax first)
+rmd-calculator | finance | calc | $8-18 | IRMAA brackets = AIO tables
+401k-match-calculator | finance | calc | $5-12 | brokerage ads
+irmaa-calculator | insurance | calc | $10-25 | senior market high RPM
+sr22-insurance-calculator | insurance | calc | $10-25 | nonstandard auto premium CPC
+homeowners-dwelling-coverage-calculator | insurance | calc | $10-25 | regional insurer bids
+# Health cost (elective surgery = local clinic bids)
+dental-implant-cost-calculator | health | calc | $5-12 | 45k/mo, all-on-4 by state longtails
+ivf-cost-calculator | health | calc | $6-15 | clinics + fertility financing
+lasik-cost-calculator | health | calc | $6-14 | local surgical LTV
+plastic-surgery-cost-calculator | health | calc | $5-12 | 50k/mo, by-state
+# Home lead-gen ($300-600/lead)
+roof-replacement-cost-calculator | home | calc | $6-15 | 55k/mo
+hvac-cost-calculator | home | calc | $6-14 | ac replacement 3-ton longtails
+solar-payback-calculator | home | calc | $8-20 | $40-150/lead solar installers
+
+## OSS quick-wins (MIT, pure client-side — verified by subagent)
+xkcd-chart-maker | developer | wrap-chart.xkcd | low | chart.xkcd MIT 7.8K stars, SVG
+fancy-qr-generator | everyday | wrap-qrbtf? | low | node-qrcode/nayuki MIT; qrbtf is GPL-avoid
+## AVOID: it-tools (GPL), quickchart (AGPL), easy-invoice-pdf (AGPL), qrbtf (GPL)
+
+## AIO structure rule (from Semrush 200k study)
+- 82% of AIOs on <1k/mo keywords = longtails; ~80% informational; listicles cited most
+- Cited pages: 2500-3300 words, tables, FAQ blocks, 40-60 word direct answer under H1
+- Only 20-26% AIO overlap with top-10 → don't need to rank #1 to get cited
