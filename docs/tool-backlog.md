@@ -3,18 +3,10 @@
 # Status tracking: built tools get moved to done.md by the factory cron.
 
 ## Wave 1 — High-CPC Finance/Insurance (build ourselves)
-refinance-break-even-calculator | finance | calc | $25 | refi intent, huge CPC, many longtail state/rate variants
-pmi-calculator | finance | calc | $18 | mortgage PMI removal — commercial intent
-heloc-payment-calculator | finance | calc | $22 | HELOC boom queries
-closing-cost-calculator | finance | calc | $20 | by-state longtails
-fha-loan-calculator | finance | calc | $19 | FHA MIP rules = AIO citation fodder
-va-loan-calculator | finance | calc | $18 | VA funding fee tables
-home-equity-calculator | finance | calc | $24 | home equity loan CPC is top-tier
-car-insurance-estimator | insurance | calc | $30 | insurance CPC king (estimator not quote = safe)
-life-insurance-needs-calculator | insurance | calc | $28 | needs-based = tables + formula
+
 renters-insurance-calculator | insurance | calc | $16 | low comp, simple
 umbrella-insurance-calculator | insurance | calc | $22 | affluent audience, zero comp tools
-workers-comp-calculator | insurance | calc | $26 | B2B longtail, per-state rates
+
 disability-insurance-calculator | insurance | calc | $25 | high CPC, formula-friendly
 deductible-vs-copay-calculator | insurance | calc | $15 | AIO question-bait
 annuity-calculator | finance | calc | $23 | retirement annuity longtails

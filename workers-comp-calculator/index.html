@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workers Comp Calculator — Employer Premium Cost | ToolAspect</title>
+<meta name="description" content="Free workers comp calculator for employers. Premium = payroll ÷ 100 × class rate × e-mod. A $500,000 restaurant payroll runs about $9,000 a year.">
+<link rel="canonical" href="https://toolaspect.com/workers-comp-calculator/">
+<meta property="og:title" content="Workers Comp Calculator | ToolAspect">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Estimate your workers compensation premium from payroll, industry class code, and experience modifier. Built on national average NCCI-style rates.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/workers-comp-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Workers Comp Calculator | Free Online Tool">
+<meta name="twitter:description" content="Employer premium estimate by class code, payroll, and experience mod. Instant, no signup.">
+<meta name="keywords" content="workers comp calculator, workers compensation cost calculator, workers comp rate per 100 payroll, experience modifier, workers comp class codes, employer insurance cost">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Workers Comp Calculator","description":"Free workers compensation premium estimator for employers. Enter annual payroll, pick an industry class code, and set your experience modifier to see estimated annual and monthly premium based on national average NCCI-style rates.","url":"https://toolaspect.com/workers-comp-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is workers comp calculated?","acceptedAnswer":{"@type":"Answer","text":"Divide your annual payroll by 100, multiply by your class code's rate, then multiply by your experience modifier. A restaurant with $500,000 in payroll at a $1.80 rate and a 1.00 mod pays about $9,000 a year. Rates come from your state and the risk level of the work, which is why roofing costs a hundred times more than office work."}},
+{"@type":"Question","name":"What is an experience modifier (e-mod)?","acceptedAnswer":{"@type":"Answer","text":"A multiplier that compares your claims history to similar businesses. The average is 1.00, which is where every new business starts. A clean few years can earn you 0.85 or lower, a direct discount on your premium. Frequent or severe claims push it above 1.00, and some contracts won't hire firms with a mod over 1.0."}},
+{"@type":"Question","name":"Is workers comp insurance required?","acceptedAnswer":{"@type":"Answer","text":"In almost every state, yes, typically from your first employee. Texas is the notable exception where coverage is optional, though most employers carry it anyway because opting out removes key legal protections. Going without required coverage brings fines, stop-work orders, and personal liability for injury costs, so the penalty risk dwarfs the premium."}},
+{"@type":"Question","name":"How can I lower my workers comp premium?","acceptedAnswer":{"@type":"Answer","text":"Work the experience mod: safety training, prompt claim reporting, and return-to-work programs all cut claim costs, which lowers the mod over time. Also make sure employees are classified correctly, since misclassifying clerical staff under a field code overcharges you badly. Finally, audit your payroll estimates so you're not paying premium on wages you never ran."}},
+{"@type":"Question","name":"How much does workers comp pay injured employees?","acceptedAnswer":{"@type":"Answer","text":"The standard wage-replacement benefit is 66⅔% of the worker's average weekly wage, tax-free, up to a state maximum cap. Medical treatment for the injury is covered at 100% with no deductible. Most states impose a 3 to 7 day waiting period before wage benefits start, often paid retroactively if the disability runs longer."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Insurance Calculators","item":"https://toolaspect.com/insurance-tools/"},{"@type":"ListItem","position":3,"name":"Workers Comp Calculator","item":"https://toolaspect.com/workers-comp-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.input-note{color:var(--muted);font-size:.8rem;margin-top:.75rem}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.disclaimer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:1rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>👷 Workers Comp Calculator</h1>
+<p>Estimate your workers compensation premium from payroll, class code, and experience mod</p>
+</div>
+
+<div class="section-card">
+<h2>Business Details</h2>
+<div class="input-grid">
+<div class="input-group"><label>Annual Payroll ($)</label><input type="number" id="payroll" value="500000" min="0" step="10000"></div>
+<div class="input-group"><label>Industry / Class Code</label><select id="classRate">
+<option value="0.15">8810 — Clerical / office ($0.15)</option>
+<option value="1.80" selected>9082 — Restaurant ($1.80)</option>
+<option value="1.40">8017 — Retail store ($1.40)</option>
+<option value="6.50">0042 — Landscaping ($6.50)</option>
+<option value="8.00">5645 — Carpentry ($8.00)</option>
+<option value="15.00">5551 — Roofing ($15.00)</option>
+<option value="9.50">7228 — Trucking ($9.50)</option>
+<option value="2.20">8380 — Auto repair ($2.20)</option>
+<option value="4.20">5183 — Plumbing ($4.20)</option>
+<option value="3.40">5190 — Electrical ($3.40)</option>
+<option value="3.00">8835 — Healthcare / home care ($3.00)</option>
+<option value="2.90">3632 — Manufacturing / machine shop ($2.90)</option>
+</select></div>
+<div class="input-group"><label>Experience Modifier</label><input type="number" id="emod" value="1.00" min="0.75" max="2.0" step="0.01"></div>
+</div>
+<p class="input-note">New businesses start at a 1.00 experience mod. A few years of low claims can earn a credit below 1.0; frequent or severe claims push it above.</p>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Estimated Annual Premium</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Monthly Premium</div><div class="ri-value" id="moVal">—</div></div>
+<div class="result-item"><div class="ri-label">Class Rate per $100 of Payroll</div><div class="ri-value" id="rateVal">—</div></div>
+<div class="result-item"><div class="ri-label">Experience Modifier Applied</div><div class="ri-value" id="modVal">—</div></div>
+<div class="result-item"><div class="ri-label">Effective Rate After E-Mod</div><div class="ri-value" id="effVal">—</div></div>
+</div>
+<p class="disclaimer">Estimate based on national averages. Your actual premium depends on your insurer, location, and personal details.</p>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Workers Comp Rates by Class Code</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Class Code</th><th>Industry</th><th>Avg Rate per $100 of Payroll</th></tr></thead>
+<tbody>
+<tr><td>8810</td><td>Clerical / office</td><td>$0.15</td></tr>
+<tr><td>8017</td><td>Retail store</td><td>$1.40</td></tr>
+<tr><td>9082</td><td>Restaurant</td><td>$1.80</td></tr>
+<tr><td>8380</td><td>Auto repair</td><td>$2.20</td></tr>
+<tr><td>3632</td><td>Manufacturing / machine shop</td><td>$2.90</td></tr>
+<tr><td>8835</td><td>Healthcare / home care</td><td>$3.00</td></tr>
+<tr><td>5190</td><td>Electrical</td><td>$3.40</td></tr>
+<tr><td>5183</td><td>Plumbing</td><td>$4.20</td></tr>
+<tr><td>0042</td><td>Landscaping</td><td>$6.50</td></tr>
+<tr><td>5645</td><td>Carpentry</td><td>$8.00</td></tr>
+<tr><td>7228</td><td>Trucking</td><td>$9.50</td></tr>
+<tr><td>5551</td><td>Roofing</td><td>$15.00</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">National average NCCI-style rates; state rates vary. The spread is the whole story: roofing costs one hundred times more to insure than office work, per payroll dollar.</p>
+</div>
+
+<div class="section-card">
+<h2>What Workers Comp Pays Injured Employees</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Benefit</th><th>Typical Provision</th></tr></thead>
+<tbody>
+<tr><td>Wage replacement</td><td>66⅔% of average weekly wage, tax-free</td></tr>
+<tr><td>Maximum benefit</td><td>Capped at a state maximum weekly amount, which varies by state</td></tr>
+<tr><td>Medical care</td><td>Covered 100%, no deductible or copay for the injured worker</td></tr>
+<tr><td>Waiting period</td><td>3 – 7 days before wage benefits start, often paid retroactively for longer disabilities</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">These are the common state patterns, not a specific state's schedule. Every state runs its own system with its own caps and waiting periods.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Workers Comp Calculator Works</h2>
+<p>If you're hiring your first employee or budgeting for next year, you need a workers comp number before an agent will give you one. This calculator produces that number the same way insurers do: from your payroll, the risk class of the work, and your claims history. It's an estimate built on national average rates, not a quote, but it'll put you in the right neighborhood for planning.</p>
+<h3>The formula</h3>
+<p>Annual premium = (annual payroll ÷ 100) × class rate × experience modifier. Workers comp is priced per $100 of payroll, and the rate depends almost entirely on what your employees do. Office work (class 8810) runs about $0.15 per $100 because desk injuries are rare. Roofing (5551) runs about $15.00 because falls are common and expensive. The experience modifier then scales the whole thing: 1.00 is average and where every new business starts, safe operations earn below 1.0, and claim-heavy ones pay above it.</p>
+<h3>How to use it</h3>
+<p>Enter your total annual payroll, pick the class that best matches most of your workforce, and set your experience mod if you know it (it's printed on your current policy; leave 1.00 if you're new). If you employ a mix, run the tool once per group and add the results, because that's how your insurer rates it too.</p>
+<h3>A worked example</h3>
+<p>A restaurant with $500,000 in annual payroll: $500,000 ÷ 100 = 5,000 payroll units, times the $1.80 restaurant rate, times a 1.00 mod = $9,000 a year, or $750 a month. Now compare an office with identical payroll: 5,000 × $0.15 = just $750 a year. Same wages, wildly different risk, and the premium follows the risk.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How is workers comp calculated?</h3><p>Divide your annual payroll by 100, multiply by your class code's rate, then multiply by your experience modifier. A restaurant with $500,000 in payroll at a $1.80 rate and a 1.00 mod pays about $9,000 a year. Rates come from your state and the risk level of the work, which is why roofing costs a hundred times more than office work.</p></div>
+<div class="faq-item"><h3>What is an experience modifier (e-mod)?</h3><p>A multiplier that compares your claims history to similar businesses. The average is 1.00, which is where every new business starts. A clean few years can earn you 0.85 or lower, a direct discount on your premium. Frequent or severe claims push it above 1.00, and some contracts won't hire firms with a mod over 1.0.</p></div>
+<div class="faq-item"><h3>Is workers comp insurance required?</h3><p>In almost every state, yes, typically from your first employee. Texas is the notable exception where coverage is optional, though most employers carry it anyway because opting out removes key legal protections. Going without required coverage brings fines, stop-work orders, and personal liability for injury costs, so the penalty risk dwarfs the premium.</p></div>
+<div class="faq-item"><h3>How can I lower my workers comp premium?</h3><p>Work the experience mod: safety training, prompt claim reporting, and return-to-work programs all cut claim costs, which lowers the mod over time. Also make sure employees are classified correctly, since misclassifying clerical staff under a field code overcharges you badly. Finally, audit your payroll estimates so you're not paying premium on wages you never ran.</p></div>
+<div class="faq-item"><h3>How much does workers comp pay injured employees?</h3><p>The standard wage-replacement benefit is 66⅔% of the worker's average weekly wage, tax-free, up to a state maximum cap. Medical treatment for the injury is covered at 100% with no deductible. Most states impose a 3 to 7 day waiting period before wage benefits start, often paid retroactively if the disability runs longer.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/car-insurance-estimator/">🚗 Car Insurance Estimator</a>
+<a href="/life-insurance-needs-calculator/">🛡️ Life Insurance Needs</a>
+<a href="/payroll-calculator/">🧾 Payroll Calculator</a>
+<a href="/salary-calculator/">💵 Salary Calculator</a>
+<a href="/income-tax-calculator/">📊 Income Tax Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n){return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var payroll=parseFloat(document.getElementById('payroll').value)||0;
+  var rate=parseFloat(document.getElementById('classRate').value)||0;
+  var emod=parseFloat(document.getElementById('emod').value)||1;
+  emod=Math.min(Math.max(emod,0.75),2.0);
+
+  var units=payroll/100;
+  var annual=units*rate*emod;
+
+  animateValue(document.getElementById('heroVal'),fmt(annual)+'/yr');
+  document.getElementById('heroSub').textContent=fmt(annual/12)+'/mo at $'+rate.toFixed(2)+' per $100 of payroll × '+emod.toFixed(2)+' e-mod';
+  animateValue(document.getElementById('moVal'),fmt(annual/12)+'/mo');
+  animateValue(document.getElementById('rateVal'),'$'+rate.toFixed(2));
+  animateValue(document.getElementById('modVal'),'×'+emod.toFixed(2));
+  animateValue(document.getElementById('effVal'),'$'+(rate*emod).toFixed(2)+' per $100');
+}
+['payroll','classRate','emod'].forEach(function(id){
+  var el=document.getElementById(id);
+  el.addEventListener('input',calc);
+  el.addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
