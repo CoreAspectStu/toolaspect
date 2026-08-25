@@ -21,13 +21,23 @@ content that multiplies existing pages' rankings. Every day, one content batch:
 
 ## Queue (auto-extended)
 Priority = monetization score (finance/insurance/legal/health keywords in slug).
-Wave order: va-loan, pregnancy-due-date, mortgage, fha, workers-comp, social-security,
-savings, salary, retirement, refinance-break-even, property-tax, pmi, payroll, ovulation,
-net-worth, income-tax, credit-card-payoff, car-payment, dti, amortization, compound-interest,
-roi, bmi, calorie, macro, body-fat, bmr, water-intake, ideal-weight, due-date, age-calculator...
+Wave order: savings, salary*, retirement, refinance-break-even*, property-tax, pmi*, payroll, ovulation,
+net-worth*, income-tax, credit-card-payoff*, car-payment, dti*, amortization, compound-interest*,
+roi, bmi*, calorie, macro, body-fat, bmr, water-intake, ideal-weight, due-date, age-calculator...
+(* = matching guide already exists in guides/ — verify on arrival, skip, and log it below)
 
 48 high-value tools currently queued; remainder (currency-converter, qr-code-generator,
 password-generator, image-compressor, csv-to-json, prompt-library) follow in wave 2.
+
+### Done (drip log)
+- 2026-08-25 guides: pregnancy-due-date → guides/how-due-dates-are-calculated/;
+  workers-comp → guides/how-much-does-workers-comp-cost/;
+  social-security → guides/when-to-take-social-security/
+- 2026-08-25 skipped (guide pre-existing): va-loan (va-loan-funding-fee),
+  mortgage (how-to-calculate-mortgage-payment), fha (fha-loan-requirements)
+- 2026-08-25 depth passes: pregnancy-due-date-calculator (92 → 900+ words, 2 tables, 4 FAQs + FAQ/Breadcrumb JSON-LD);
+  mortgage-calculator (154 → 960+ words, rate table, 4 FAQs + FAQ/Breadcrumb JSON-LD, related links added).
+  Skipped va-loan-calculator (827 words, near target, batch-1 depth already applied).
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
