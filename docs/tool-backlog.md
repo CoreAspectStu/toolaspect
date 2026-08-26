@@ -565,3 +565,6 @@ weighted-grade-calculator | education | calc | $1-3 | "weighted grade calculator
 #   webcam-recorder (tab on screen-recorder) · slideshow-maker (Canva-class branded SERP,
 #   no clean OSS — self-build if ever, don't scan again) · wavesurfer.js = shared UI for
 #   voice-recorder + mp3-cutter rows.
+
+## Enhancement wave (queued — after AIO/SEO uplift wave lands) — charts on money tools
+- chart-pass-money-tools | enhancement | chart layer | n/a | uPlot/Chart.js deferred, render FROM existing HTML table data (table stays crawlable source of truth); ~30-40 loan/amortization/retirement/compound/tax/macro tools; engagement + linkability play, NOT an AIO substitute
