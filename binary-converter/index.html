@@ -37,9 +37,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert binary to decimal?","acceptedAnswer":{"@type":"Answer","text":"Add the place values of every 1 bit. For 11001010: 128 + 64 + 8 + 2 = 202."}},{"@type":"Question","name":"How do I convert binary to hexadecimal?","acceptedAnswer":{"@type":"Answer","text":"Split the bits into groups of four from the right and translate each group. 11001010 becomes 1100 1010 = C A, so the hex value is CA."}},{"@type":"Question","name":"Why do programmers use hexadecimal?","acceptedAnswer":{"@type":"Answer","text":"One hex digit is exactly four binary digits, so hex compresses long binary values cleanly — memory addresses, color codes, and hashes all become readable. Decimal has no such alignment with binary."}},{"@type":"Question","name":"What is octal used for?","acceptedAnswer":{"@type":"Answer","text":"Octal groups three bits per digit and lives on mainly in Unix file permissions, such as chmod 755 for owner-read-write-execute."}},{"@type":"Question","name":"How does text-to-binary work?","acceptedAnswer":{"@type":"Answer","text":"Each character is replaced by its encoding's bit pattern — in ASCII, 'A' is 01000001. UTF-8 extends the idea to one to four bytes per character, which is how it covers every language."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Binary / Hex Converter</h1>
@@ -95,22 +96,36 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Number Base Systems</h2>
-    <ul>
-      <li><strong>Decimal (Base 10):</strong> Uses digits 0-9. The standard number system.</li>
-      <li><strong>Binary (Base 2):</strong> Uses digits 0-1. The language of computers.</li>
-      <li><strong>Hexadecimal (Base 16):</strong> Uses 0-9 and A-F. Used for colors, memory addresses, and byte values.</li>
-      <li><strong>Octal (Base 8):</strong> Uses 0-7. Used in Unix file permissions.</li>
-    </ul>
-    <h2>Common Use Cases</h2>
-    <ul>
-      <li>Debugging memory addresses in programming</li>
-      <li>Setting color values in CSS (#FF5733)</li>
-      <li>Understanding IP addresses and subnet masks</li>
-      <li>Converting character encoding values</li>
-      <li>Working with bitwise operations</li>
-    </ul>
-  </div>
+<h2>About the Binary Converter</h2>
+<p>This binary converter translates numbers between binary (base 2), decimal (base 10), hexadecimal (base 16), and octal (base 8), and also converts text to binary and back. It handles arbitrary-length integers, so it works equally well for a homework exercise and for checking a 64-bit value.</p>
+<p>Number bases are just different ways of writing the same quantity using different numbers of digits. Binary uses only 0 and 1 because it maps directly onto two-state hardware; hexadecimal packs exactly four binary digits into one symbol (0–9, A–F), which is why memory dumps and color codes use it; octal groups three bits and survives in Unix file permissions. Once you can read one base, the others follow the same positional logic.</p>
+<h2>How Base Conversion Works</h2>
+<p>Every positional number is a sum of digit × baseᵏ terms. Decimal 202 breaks down as 1×128 + 1×64 + 0×32 + 0×16 + 1×8 + 0×4 + 1×2 + 0×1, which is why its binary form is 11001010. In hexadecimal the same value is CA (12×16 + 10), and in octal it is 312 (3×64 + 1×8 + 2).</p>
+<p>To convert by hand from decimal, divide repeatedly by the target base and read the remainders bottom-to-top. To convert from binary to hex, split the bits into groups of four from the right and translate each group with the table below — this shortcut is why programmers read hex fluently.</p>
+<h2>The Base-16 Reference Table</h2>
+<p>The table below lists the sixteen hexadecimal symbols with their decimal and binary values. Memorizing just this one table makes binary↔hex conversion instant, since every hex digit is exactly four bits.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Hex</th><th>Dec</th><th>Binary</th><th>Hex</th><th>Dec</th><th>Binary</th></tr><tr><td>0</td><td>0</td><td>0000</td><td>1</td><td>1</td><td>0001</td></tr><tr><td>2</td><td>2</td><td>0010</td><td>3</td><td>3</td><td>0011</td></tr><tr><td>4</td><td>4</td><td>0100</td><td>5</td><td>5</td><td>0101</td></tr><tr><td>6</td><td>6</td><td>0110</td><td>7</td><td>7</td><td>0111</td></tr><tr><td>8</td><td>8</td><td>1000</td><td>9</td><td>9</td><td>1001</td></tr><tr><td>A</td><td>10</td><td>1010</td><td>B</td><td>11</td><td>1011</td></tr><tr><td>C</td><td>12</td><td>1100</td><td>D</td><td>13</td><td>1101</td></tr><tr><td>E</td><td>14</td><td>1110</td><td>F</td><td>15</td><td>1111</td></tr></table>
+</div>
+<h2>Where Each Base Is Used</h2>
+<p>Binary is the machine's native language and appears in networking (subnet masks), and anywhere bit-level detail matters. Hexadecimal dominates programming: CSS colors such as #CA0000, memory addresses, MAC addresses, and hash digests are all hex. Octal survives mainly in Unix file permission notation such as 755.</p>
+<p>Text-to-binary conversion uses a character encoding — each character maps to a fixed bit pattern (ASCII assigns 7- or 8-bit codes, while UTF-8 uses one to four bytes). The converter applies the same encoding rules your text editor does, so 'A' becomes 01000001 and the round trip returns exactly what you typed.</p>
+<p>Signed integers need one extra idea: two's complement, the encoding virtually all modern hardware uses for negative numbers. The leftmost bit becomes a sign with value −(base^(n-1)) rather than +(base^(n-1)), so in 8 bits the pattern 11111111 represents −1, not 255, and the representable range becomes −128 to +127. This is why a counter that overflows at 127 in a program loops to a negative number — you are seeing two's complement arithmetic, not a bug in your conversion math.</p>
+<p>Bitwise operations work directly on binary representation and are easiest to understand in hex. Shifting left by one bit doubles a value; shifting right halves it (rounding down for positive integers). The AND, OR, and XOR operators combine values bit by bit and are used for masks — an AND with 0x0F strips everything but the low four bits, which is exactly a modulo-16 operation. Subnetting works the same way: a netmask is an AND mask over the 32-bit address.</p>
+<p>Floats are where binary surprises people. Binary can represent halves, quarters, and eighths exactly, but not tenths — 0.1 in binary is an infinitely repeating pattern, so it gets truncated to fit 64 bits. That is why 0.1 + 0.2 equals 0.30000000000000004 in most programming languages. Money should therefore be stored in integer cents, not floating-point dollars, and any comparison of computed floats needs a tolerance rather than equality.</p>
+<p>Octal earned its historical place because early computers used 12-, 24-, and 36-bit words — divisible by three, so octal digits aligned perfectly. When 8-, 16-, and 32-bit machines arrived, hexadecimal took over because its 4-bit grouping aligned instead. You can still see both eras: Unix permissions (755) and some legacy languages use octal, while everything modern — color values, UUIDs, addresses, hashes — is hex.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How do I convert binary to decimal?</strong></p>
+<p>Add the place values of every 1 bit. For 11001010: 128 + 64 + 8 + 2 = 202.</p>
+<p><strong>How do I convert binary to hexadecimal?</strong></p>
+<p>Split the bits into groups of four from the right and translate each group. 11001010 becomes 1100 1010 = C A, so the hex value is CA.</p>
+<p><strong>Why do programmers use hexadecimal?</strong></p>
+<p>One hex digit is exactly four binary digits, so hex compresses long binary values cleanly — memory addresses, color codes, and hashes all become readable. Decimal has no such alignment with binary.</p>
+<p><strong>What is octal used for?</strong></p>
+<p>Octal groups three bits per digit and lives on mainly in Unix file permissions, such as chmod 755 for owner-read-write-execute.</p>
+<p><strong>How does text-to-binary work?</strong></p>
+<p>Each character is replaced by its encoding's bit pattern — in ASCII, 'A' is 01000001. UTF-8 extends the idea to one to four bytes per character, which is how it covers every language.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

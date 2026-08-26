@@ -44,9 +44,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert HEX to RGB manually?","acceptedAnswer":{"@type":"Answer","text":"Split the hex string into pairs: #FF5733 gives FF, 57, 33. Convert each pair from hexadecimal to decimal: FF=255, 57=87, 33=51, giving rgb(255, 87, 51)."}},{"@type":"Question","name":"Is CMYK conversion exact?","acceptedAnswer":{"@type":"Answer","text":"No. The arithmetic conversion used here (C=1−R/255, etc.) does not account for ICC color profiles or gamut differences between screens and printers. Treat CMYK output as an approximation and use a profile-aware design tool for print production."}},{"@type":"Question","name":"What is the difference between HSL lightness and luminance?","acceptedAnswer":{"@type":"Answer","text":"HSL lightness is a simple average-based scale where 50% is the pure hue. Perceptual luminance is a weighted combination of the RGB channels (green contributing most) used for contrast calculations. Two colors with the same HSL lightness can differ in luminance."}},{"@type":"Question","name":"Why does lightness 0% always give black in HSL?","acceptedAnswer":{"@type":"Answer","text":"Lightness 0% means zero light in every channel, so the color has no hue information left — it is black by definition. Similarly, 100% lightness is always white."}},{"@type":"Question","name":"Does this converter upload my colors anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. All conversions and the color picker run entirely in your browser."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Color Converter</h1>
@@ -97,16 +98,37 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Color Format Guide</h2>
-    <ul>
-      <li><strong>HEX:</strong> #RRGGBB — used in CSS, HTML, design tools</li>
-      <li><strong>RGB:</strong> rgb(r, g, b) — 0-255 values per channel</li>
-      <li><strong>HSL:</strong> hsl(h, s%, l%) — hue (0-360), saturation, lightness</li>
-      <li><strong>CMYK:</strong> cmyk(c%, m%, y%, k%) — print/color mixing</li>
-    </ul>
-    <h2>When to Use Each Format</h2>
-    <p>Use <strong>HEX</strong> for web design and CSS. Use <strong>RGB</strong> when you need individual channel control or opacity (rgba). Use <strong>HSL</strong> for creating color variations by adjusting hue/saturation. Use <strong>CMYK</strong> for print design.</p>
-  </div>
+<h2>About Color Formats</h2>
+<p>Digital colors are usually written in one of a few standardized notations, and each carries different information. HEX and RGB define exact amounts of red, green, and blue light. HSL describes the same color in human terms: hue (position on the color wheel), saturation (colorfulness), and lightness. CMYK describes printed ink percentages. This converter translates between all four in real time so you can copy CSS-ready values without doing channel math by hand.</p>
+<p>In CSS, these correspond to the #rrggbb hex notation and the rgb(), hsl(), and (for print-oriented contexts) cmyk-style functions supported by design tools. Values are interconvertible: RGB and HSL are two views of the same RGB color space, while CMYK is device-dependent and should be treated as an approximation of what a printer will produce.</p>
+<h2>How the Formats Relate</h2>
+<p>RGB uses three channels from 0 to 255 (or 0% to 100% in CSS functional notation). HEX is simply those same three channel values written in hexadecimal: #FF5733 means R=255, G=87, B=51. HSL remaps the same color: hue is a 0–360 degree angle around the color wheel (0° red, 120° green, 240° blue), and saturation and lightness are percentages. Lightness 0% is always black and 100% is always white regardless of hue.</p>
+<p>CMYK expresses color as percentages of cyan, magenta, yellow, and key (black) ink. A simple conversion uses the relations C = 1 − R/255, M = 1 − G/255, Y = 1 − B/255, and K = min(C, M, Y), then rescales the remaining channels. This ignores ICC color profiles, so professional print work should use a profile-aware tool.</p>
+<h2>Color Format Reference Table</h2>
+<p>The table below shows one example color expressed in every format this page supports, plus what each channel means.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Format</th><th>Example (same color)</th><th>Channels</th></tr><tr><td>HEX</td><td>#FF5733</td><td>Red, green, blue as hexadecimal 00–FF</td></tr><tr><td>RGB</td><td>rgb(255, 87, 51)</td><td>Three channels, each 0–255</td></tr><tr><td>HSL</td><td>hsl(11, 100%, 60%)</td><td>Hue 0–360°, saturation %, lightness %</td></tr><tr><td>CMYK</td><td>cmyk(0%, 66%, 80%, 0%)</td><td>Cyan, magenta, yellow, key ink %</td></tr></table>
+</div>
+<h2>Working With Color in CSS</h2>
+<p>Modern CSS accepts both legacy syntax like rgb(255, 87, 51) and space-separated syntax like rgb(255 87 51), and hsl() likewise accepts hue as a plain number: hsl(11, 100%, 60%). Hex remains the most compact and universally supported notation. When you copy values from this page you get syntax that pastes straight into a stylesheet.</p>
+<p>For accessibility, remember that contrast depends on lightness much more than hue. WCAG 2.1 requires a contrast ratio of at least 4.5:1 for normal body text (3:1 for large text) against its background, so when picking a text color, compare the luminance of foreground and background rather than judging by eye.</p>
+<p>A related concept is the alpha channel: CSS supports #rrggbbaa hex and rgba()/hsla() notation, where alpha 0 is fully transparent and 1 fully opaque. Alpha does not change the color's identity, only how much of the background shows through, which is why converting a color between HEX, RGB, and HSL never touches opacity. Design systems often define a single brand hue and generate transparent overlays from it rather than precomputing dozens of tints.</p>
+<h2>Color Spaces and Gamuts</h2>
+<p>Every color on this page lives in the sRGB color space, the default for the web defined by the W3C. Newer displays cover wider gamuts like Display-P3, which CSS can target with the color() function, and CSS Color 4 adds perceptually uniform spaces such as OKLCH where adjusting lightness changes perceived brightness evenly across hues. Converting between HEX, RGB, and HSL stays inside sRGB and never crosses gamuts — the values are three views of the same color.</p>
+<p>Design tools often show HSB/HSV as well; it resembles HSL but brightness is defined differently — HSB brightness is the maximum RGB channel while HSL lightness is the midpoint of the maximum and minimum. A color at HSB brightness 100% can still be a dark tone in HSL terms. When following tutorials, check which model the numbers refer to before copying values.</p>
+<p>Gradients and opacity work together in backgrounds: a common pattern is a semi-transparent black or white overlay on a photo, written rgba(0,0,0,0.5), so text stays readable regardless of the underlying image. Because the overlay is transparent, the computed contrast depends on the photo behind it — WCAG techniques recommend also checking the worst-case region of the image, not just one sample point, when accessibility matters.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How do I convert HEX to RGB manually?</strong></p>
+<p>Split the hex string into pairs: #FF5733 gives FF, 57, 33. Convert each pair from hexadecimal to decimal: FF=255, 57=87, 33=51, giving rgb(255, 87, 51).</p>
+<p><strong>Is CMYK conversion exact?</strong></p>
+<p>No. The arithmetic conversion used here (C=1−R/255, etc.) does not account for ICC color profiles or gamut differences between screens and printers. Treat CMYK output as an approximation and use a profile-aware design tool for print production.</p>
+<p><strong>What is the difference between HSL lightness and luminance?</strong></p>
+<p>HSL lightness is a simple average-based scale where 50% is the pure hue. Perceptual luminance is a weighted combination of the RGB channels (green contributing most) used for contrast calculations. Two colors with the same HSL lightness can differ in luminance.</p>
+<p><strong>Why does lightness 0% always give black in HSL?</strong></p>
+<p>Lightness 0% means zero light in every channel, so the color has no hue information left — it is black by definition. Similarly, 100% lightness is always white.</p>
+<p><strong>Does this converter upload my colors anywhere?</strong></p>
+<p>No. All conversions and the color picker run entirely in your browser.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

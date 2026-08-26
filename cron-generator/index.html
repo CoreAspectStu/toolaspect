@@ -47,9 +47,10 @@ table{width:100%;border-collapse:collapse;margin:12px 0}
 td,th{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:.82rem}
 th{color:var(--muted);font-size:.75rem;text-transform:uppercase}
 @media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does */10 mean in a cron expression?","acceptedAnswer":{"@type":"Answer","text":"It is a step value: starting from the field's minimum, fire every 10 units. In the minute field that is :00, :10, :20, :30, :40, :50."}},{"@type":"Question","name":"Is 0 or 7 Sunday in the day-of-week field?","acceptedAnswer":{"@type":"Answer","text":"Both. Classic cron accepts 0–7 where 0 and 7 both mean Sunday, a compatibility quirk preserved across implementations."}},{"@type":"Question","name":"What is the difference between 5-field and 6-field cron?","acceptedAnswer":{"@type":"Answer","text":"Standard Unix cron uses five fields (minute through day of week). Quartz and cloud schedulers like AWS EventBridge often add a seconds field before the minute field, and Quartz can also append a years field."}},{"@type":"Question","name":"Why does my monthly job not run every month?","acceptedAnswer":{"@type":"Answer","text":"A day-of-month value like 31 only matches in months that have 31 days, so the job skips shorter months. Similar issues affect the 29th and 30th in February."}},{"@type":"Question","name":"What does @daily do?","acceptedAnswer":{"@type":"Answer","text":"It is shorthand for 0 0 * * * — once per day at midnight. Other shortcuts include @hourly, @weekly, @monthly, and @reboot, though support varies by scheduler."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Cron Expression Generator</h1>
@@ -150,24 +151,36 @@ th{color:var(--muted);font-size:.75rem;text-transform:uppercase}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Cron Expression Format</h2>
-    <table>
-      <tr><th>Field</th><th>Values</th><th>Special</th></tr>
-      <tr><td>Minute</td><td>0-59</td><td>* / - ,</td></tr>
-      <tr><td>Hour</td><td>0-23</td><td>* / - ,</td></tr>
-      <tr><td>Day of Month</td><td>1-31</td><td>* / L</td></tr>
-      <tr><td>Month</td><td>1-12</td><td>* / - ,</td></tr>
-      <tr><td>Day of Week</td><td>0-6 (Sun-Sat)</td><td>* / - ,</td></tr>
-    </table>
-    <h2>Common Cron Examples</h2>
-    <ul>
-      <li><code>0 * * * *</code> — Every hour on the hour</li>
-      <li><code>*/15 * * * *</code> — Every 15 minutes</li>
-      <li><code>0 9 * * 1-5</code> — 9 AM on weekdays</li>
-      <li><code>0 0 1 * *</code> — Midnight on the 1st of every month</li>
-      <li><code>0 0 * * 0</code> — Every Sunday at midnight</li>
-    </ul>
-  </div>
+<h2>About Cron Syntax</h2>
+<p>A cron expression is a schedule: five space-separated fields that tell a scheduler when to run a job. Standard cron, descending from Unix cron written in the 1970s, defines the fields as minute (0–59), hour (0–23), day of month (1–31), month (1–12), and day of week (0–7, where both 0 and 7 mean Sunday). Each field accepts single values, ranges (1-5), steps (*/10), and lists (1,15).</p>
+<p>Modern systems extend the syntax. Quartz (used in Java) adds a seconds field and a years field. Many cloud schedulers — AWS EventBridge, Google Cloud Scheduler — accept a sixth field for seconds at the front. This generator builds standard five-field expressions and shows a human-readable description so you can verify the schedule means what you intend.</p>
+<h2>Field Reference and Special Characters</h2>
+<p>The step operator */N inside the minute field means "every N minutes starting at 0" — */15 fires at :00, :15, :30, :45. Ranges combine with steps: 9-17/2 in the hours field means every 2 hours from 9:00 through 17:00. Names are allowed in the month and day-of-week fields in most implementations: JAN-DEC and SUN-SAT.</p>
+<p>The day-of-month and day-of-week fields interact unusually: if both are restricted (not *), cron runs the job when EITHER matches, not when both match — a documented quirk of classic Vixie cron semantics. Special strings exist as shorthand: @daily (once a day at midnight), @hourly, @weekly, @monthly, @reboot (at startup).</p>
+<h2>Cron Field Reference Table</h2>
+<p>The table below lists each field, its allowed values, and example entries.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Field</th><th>Allowed values</th><th>Example</th><th>Meaning</th></tr><tr><td>Minute</td><td>0–59</td><td>*/15</td><td>Every 15 minutes</td></tr><tr><td>Hour</td><td>0–23</td><td>9</td><td>At 9 in the morning</td></tr><tr><td>Day of month</td><td>1–31</td><td>1</td><td>First of the month</td></tr><tr><td>Month</td><td>1–12 or JAN-DEC</td><td>*/3</td><td>Every 3rd month</td></tr><tr><td>Day of week</td><td>0–7 or SUN-SAT (0 and 7 = Sunday)</td><td>1-5</td><td>Monday through Friday</td></tr></table>
+</div>
+<h2>Common Schedule Examples</h2>
+<p>Every weekday at 9am is 0 9 * * 1-5. Every 15 minutes is */15 * * * *. First of the month at midnight is 0 0 1 * *. Sunday at 2am — a common maintenance window — is 0 2 * * 0. Note that jobs set for a specific day-of-month such as the 31st simply don't run in shorter months, which matters for monthly schedules.</p>
+<p>Two practical cautions: schedulers in different time zones will fire at different absolute times, and distributed systems should handle the case where a job fires twice or not at all during clock changes. The @reboot shortcut is not supported by all schedulers.</p>
+<h2>Cron Time Zones and Scheduling Pitfalls</h2>
+<p>System cron runs in the machine's local time; server schedulers and cloud services differ — AWS EventBridge defaults to UTC, Google Cloud Scheduler lets you set a time zone per job, and Kubernetes CronJobs use UTC unless configured. A schedule written for 9am Eastern is a different cron expression in UTC depending on daylight saving time, which shifts the absolute time twice a year for any timezone-anchored job.</p>
+<p>Another classic pitfall: cron does not guarantee missed runs. If the machine is off at the scheduled moment, the job simply doesn't run, and overlapping long-running jobs can execute concurrently unless a lock (like flock) is used. For no-earlier-than-interval semantics, systemd timers with Persistent=true are an alternative on Linux.</p>
+<p>The @reboot shortcut deserves its own caution: it runs when the cron daemon starts, which on a frequently rebooted server can mean several runs per day, and it does not run for jobs added after the boot. For persistent scheduling across reboots with guaranteed catch-up, anacron (common on desktop Linux distributions) or systemd timers fill the gap that plain cron leaves. Cloud schedulers add their own semantics — for example, AWS EventBridge rate expressions ("rate(15 minutes)") differ subtly from cron step syntax in when they anchor their first run.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What does */10 mean in a cron expression?</strong></p>
+<p>It is a step value: starting from the field's minimum, fire every 10 units. In the minute field that is :00, :10, :20, :30, :40, :50.</p>
+<p><strong>Is 0 or 7 Sunday in the day-of-week field?</strong></p>
+<p>Both. Classic cron accepts 0–7 where 0 and 7 both mean Sunday, a compatibility quirk preserved across implementations.</p>
+<p><strong>What is the difference between 5-field and 6-field cron?</strong></p>
+<p>Standard Unix cron uses five fields (minute through day of week). Quartz and cloud schedulers like AWS EventBridge often add a seconds field before the minute field, and Quartz can also append a years field.</p>
+<p><strong>Why does my monthly job not run every month?</strong></p>
+<p>A day-of-month value like 31 only matches in months that have 31 days, so the job skips shorter months. Similar issues affect the 29th and 30th in February.</p>
+<p><strong>What does @daily do?</strong></p>
+<p>It is shorthand for 0 0 * * * — once per day at midnight. Other shortcuts include @hourly, @weekly, @monthly, and @reboot, though support varies by scheduler.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

@@ -41,9 +41,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I calculate the number of days between two dates?","acceptedAnswer":{"@type":"Answer","text":"Subtract the earlier date from the later date as day numbers. This calculator does exactly that using your browser's date handling, and the result excludes the start date (a period from Jan 1 to Jan 2 is 1 day apart)."}},{"@type":"Question","name":"Does the calculator count leap years?","acceptedAnswer":{"@type":"Answer","text":"Yes. Day counts use real calendar dates, so a period spanning February 29 includes it. The Gregorian rule adds leap days in years divisible by 4, except century years not divisible by 400."}},{"@type":"Question","name":"What is a business day?","acceptedAnswer":{"@type":"Answer","text":"By the common convention used here, Monday through Friday, excluding weekends. Public holidays vary by country and are not automatically excluded — subtract them yourself for exact contract or payroll figures."}},{"@type":"Question","name":"How many days is 6 months?","acceptedAnswer":{"@type":"Answer","text":"It depends which months: February through July is 181 days in a non-leap year (182 in a leap year), while other six-month spans give 183 or 184. Using the 30.44-day average, 6 months is about 183 days."}},{"@type":"Question","name":"Why is a year sometimes 365 and sometimes 365.25 days?","acceptedAnswer":{"@type":"Answer","text":"A specific calendar year is 365 or 366 days. The 365.25 figure (more precisely 365.2425 for the Gregorian calendar) is the long-run average including leap days, used when converting durations that aren't tied to specific dates."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Date Difference Calculator</h1>
@@ -70,20 +71,37 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>How to Calculate Days Between Dates</h2>
-    <p>This calculator counts the actual days between two dates. It accounts for leap years and varying month lengths automatically.</p>
-    <h2>Business Days vs Calendar Days</h2>
-    <p>Business days (working days) exclude weekends (Saturday and Sunday). Some calculators also exclude holidays, but since holidays vary by country, this tool only excludes weekends.</p>
-    <h2>Common Uses</h2>
-    <ul>
-      <li>Project deadline tracking</li>
-      <li>Age and tenure calculations</li>
-      <li>Pregnancy due date estimation</li>
-      <li>Contract and lease duration</li>
-      <li>Vacation planning</li>
-      <li>Event countdown</li>
-    </ul>
-  </div>
+<h2>About Date Arithmetic</h2>
+<p>Calculating the days between two dates sounds trivial, but conventions decide the answer: do you count both endpoints, does a year always mean 365 days, and how do you handle leap years? The straightforward difference — day count — is unambiguous, while weeks, months, and years require rules about partial periods. This calculator reports days, total weeks, and a year/month/day breakdown, plus business days (Monday–Friday).</p>
+<p>The Gregorian calendar, in use since 1582 and adopted by Britain and its colonies in 1752, adds a leap day every 4 years except century years not divisible by 400 — so 2000 was a leap year but 1900 was not. That rule keeps the average calendar year at 365.2425 days, close to the tropical year of about 365.2422 days.</p>
+<h2>Business Days and Weekends</h2>
+<p>A business day conventionally means Monday through Friday, excluding weekend days. Holidays are usually excluded too, but they vary by country and this calculator's business-day count covers weekdays only — subtract known holidays manually for an exact working-day figure. The math matters for contracts: "net 30" payment terms are typically counted in business days in commercial practice, though the exact convention should be stated in the agreement.</p>
+<p>Counting weekdays between dates can be done from the total day count: full weeks contribute 5 weekdays each, and the remainder days depend on which weekday the period starts and ends on.</p>
+<h2>Unit Conversions for Date Durations</h2>
+<p>The table below shows how a duration converts between common units using standard averages. A month averages 30.44 days (365.2425 ÷ 12) and a year averages 365.2425 days in the Gregorian calendar.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Unit</th><th>Definition used</th><th>Days per unit</th></tr><tr><td>Week</td><td>7 calendar days</td><td>7</td></tr><tr><td>Month (average)</td><td>Gregorian year ÷ 12</td><td>30.44</td></tr><tr><td>Year (average)</td><td>Gregorian mean year</td><td>365.2425</td></tr><tr><td>Year (common)</td><td>Non-leap calendar year</td><td>365</td></tr><tr><td>Year (leap)</td><td>Leap calendar year</td><td>366</td></tr></table>
+</div>
+<h2>Common Duration Questions</h2>
+<p>A year between the same calendar dates is 365 days, or 366 if the period includes a February 29. Age calculation follows the same convention: your age increments on the anniversary of your birth date, not after a fixed 365-day count. The "same day next year" is therefore not always 365 days away.</p>
+<p>ISO 8601, the international date standard, defines durations formally: P1Y2M3D means 1 year, 2 months, 3 days. Week numbering per ISO 8601 starts weeks on Monday, which matters when comparing "week of" labels across systems.</p>
+<h2>Date Formats and Standards</h2>
+<p>Ambiguity in date formats causes real errors: 03/04/2026 is March 4 in the US convention and 3 April in much of the rest of the world. ISO 8601 resolves this with the unambiguous YYYY-MM-DD format, which also sorts chronologically as plain text — the reason it underlies databases, APIs, and this calculator's inputs. Always confirm the format when a duration calculation surprises you; a swapped month and day is the most common cause.</p>
+<p>Week arithmetic has its own conventions: ISO week dates number weeks from the Monday of the week containing the year's first Thursday, so the first week of a year can begin in the previous December, and a year contains 52 or 53 ISO weeks. Two-weeks-from-Friday style reasoning depends on whether endpoints count — this calculator reports whole weeks and remaining days explicitly so there's no ambiguity.</p>
+<p>Time zones add one more layer when comparing dates across regions: the same moment in time can fall on different calendar dates in Tokyo and New York, so "the same date" and "the same moment" are different questions. Date-only arithmetic like this calculator's sidesteps the issue by ignoring time-of-day entirely, which is the right model for ages, anniversaries, and contract day counts, but not for timestamp-precise durations where hours matter.</p>
+<p>Durations also anchor everyday deadlines: "30 days from date X" in contracts typically means calendar days including weekends unless the document says business days, while court filings and statutory deadlines often exclude the first day and include the last. Age in years for official purposes counts full elapsed years from the birth date, so someone born on February 29 legally ages on March 1 in non-leap years in many jurisdictions — the kind of edge case pure arithmetic handles correctly as long as the anchor date logic is explicit.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How do I calculate the number of days between two dates?</strong></p>
+<p>Subtract the earlier date from the later date as day numbers. This calculator does exactly that using your browser's date handling, and the result excludes the start date (a period from Jan 1 to Jan 2 is 1 day apart).</p>
+<p><strong>Does the calculator count leap years?</strong></p>
+<p>Yes. Day counts use real calendar dates, so a period spanning February 29 includes it. The Gregorian rule adds leap days in years divisible by 4, except century years not divisible by 400.</p>
+<p><strong>What is a business day?</strong></p>
+<p>By the common convention used here, Monday through Friday, excluding weekends. Public holidays vary by country and are not automatically excluded — subtract them yourself for exact contract or payroll figures.</p>
+<p><strong>How many days is 6 months?</strong></p>
+<p>It depends which months: February through July is 181 days in a non-leap year (182 in a leap year), while other six-month spans give 183 or 184. Using the 30.44-day average, 6 months is about 183 days.</p>
+<p><strong>Why is a year sometimes 365 and sometimes 365.25 days?</strong></p>
+<p>A specific calendar year is 365 or 366 days. The 365.25 figure (more precisely 365.2425 for the Gregorian calendar) is the long-run average including leap days, used when converting durations that aren't tied to specific dates.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>
