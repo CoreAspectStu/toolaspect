@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Sponsorship Calculator — Rate Estimator</title>
+<meta name="description" content="Estimate YouTube sponsorship rates per video from average views and niche using creator-reported CPM ranges. Free sponsorship value calculator.">
+<link rel="canonical" href="https://toolaspect.com/youtube-sponsorship-calculator/">
+<meta property="og:title" content="YouTube Sponsorship Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/youtube-sponsorship-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"YouTube Sponsorship Calculator","description":"Estimate sponsorship value per video from views and niche CPM ranges.","url":"https://toolaspect.com/youtube-sponsorship-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much do sponsors pay per 1,000 views?", "acceptedAnswer": {"@type": "Answer", "text": "Community-reported CPMs range from about $4 to $28 depending on niche \u2014 finance and tech pay the most, general entertainment the least. All figures are creator-reported approximations."}}, {"@type": "Question", "name": "Do sponsors pay on views or subscribers?", "acceptedAnswer": {"@type": "Answer", "text": "Almost always on expected views, because that is what the brand's message is actually attached to. Subscribers matter mostly as a signal of view reliability."}}, {"@type": "Question", "name": "What is a dedication vs an integration?", "acceptedAnswer": {"@type": "Answer", "text": "A dedication means the entire video covers the sponsor's product and prices toward the high end; an integration is a shorter segment inside your normal content."}}, {"@type": "Question", "name": "Why does niche change the rate so much?", "acceptedAnswer": {"@type": "Answer", "text": "Sponsors price by what a conversion is worth to them \u2014 a finance customer can be worth hundreds of dollars, so those sponsors outbid entertainment advertisers."}}, {"@type": "Question", "name": "How do I turn viewers into a real audience?", "acceptedAnswer": {"@type": "Answer", "text": "Pair the channel with a hub page holding your links, and let an AI trained on your content answer fan questions instantly \u2014 Veyzi builds this for creators."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>YouTube Sponsorship Calculator</h1>
+<p class="subtitle">Estimate YouTube sponsorship rates per video from average views and niche using creator-reported CPM ranges.</p>
+
+<div class="card">
+<div class="form-row">
+<div class="form-group"><label>Average views per video</label><input type="number" id="views" value="10000"></div>
+<div class="form-group"><label>Subscribers</label><input type="number" id="subs" value="50000"></div>
+</div>
+<div class="form-group"><label>Niche</label><select id="niche">
+<option value="12,22">Tech / software</option><option value="15,28">Finance / business</option>
+<option value="8,15">Education</option><option value="6,12">Health / fitness</option>
+<option value="5,10">Food / cooking</option><option value="4,8">Entertainment / vlogs</option>
+<option value="6,12">Gaming</option><option value="8,16">DIY / tools</option>
+</select></div>
+<button class="btn" onclick="calc()">Calculate sponsorship value</button>
+<div class="results-grid" id="out" style="display:none">
+<div class="result-card primary"><div class="amount" id="low">$—</div><div class="label">Low estimate / video</div></div>
+<div class="result-card green"><div class="amount" id="high">$—</div><div class="label">High estimate / video</div></div>
+<div class="result-card"><div class="amount" id="cpm">$—</div><div class="label">Assumed CPM range</div></div>
+<div class="result-card"><div class="amount" id="yr">$—</div><div class="label">At 2 deals / month</div></div>
+</div>
+</div>
+<div class="seo-content">
+<h2>How YouTube sponsorship pricing works</h2>
+<p>Sponsors typically pay per thousand views a video is expected to receive, quoted as a CPM. The creator and brand estimate the video's likely view count from the channel's recent average, then multiply by an agreed CPM. Dedication integrations (the whole video is about the product) price higher than a 60-second mention; pre-roll reads sit in between. Because pricing is negotiated privately, every figure in this space is creator-reported rather than official — treat all CPM ranges on this page as community-reported approximations that vary by deal, audience geography, and exclusivity terms.</p>
+<h2>Creator-reported CPM ranges by niche</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Niche</th><th>Reported CPM range</th><th>Why it differs</th></tr>
+<tr><td>Finance / business</td><td>$15–28</td><td>High customer value per conversion</td></tr>
+<tr><td>Tech / software</td><td>$12–22</td><td>SaaS and gadget margins fund placements</td></tr>
+<tr><td>Education</td><td>$8–15</td><td>Course and tool sponsors</td></tr>
+<tr><td>Health / fitness</td><td>$6–12</td><td>Supplement and app advertisers</td></tr>
+<tr><td>Gaming</td><td>$6–12</td><td>Large volume, younger audience</td></tr>
+<tr><td>DIY / tools</td><td>$8–16</td><td>Tool brands, strong purchase intent</td></tr>
+<tr><td>Food / cooking</td><td>$5–10</td><td>CPG brands, broad audience</td></tr>
+<tr><td>Entertainment / vlogs</td><td>$4–8</td><td>General reach, less buying intent</td></tr>
+</table></div>
+<p style="font-size:.8rem;color:var(--muted)">Ranges are approximations aggregated from what creators publicly report; no platform publishes official sponsorship rates.</p>
+<h2>What else changes your rate</h2>
+<p>Beyond niche, sponsors weigh audience geography (US/UK/CA-heavy audiences command more), engagement rate versus raw subscriber count, exclusivity (a sponsor may pay a premium to keep competitors out of your next videos), and usage rights — if the brand wants to clip your segment into their own ads, that typically raises the fee. Channels with strong engagement often out-earn larger channels with passive audiences, which is why this calculator keys off average views rather than subscribers alone.</p>
+<h2>Negotiating your first deal</h2>
+<p>First-time creators usually quote using their average recent views, not their best video, because sponsors discount outliers. Quote a range rather than a single number — it leaves room to negotiate add-ons like a pinned comment, community post, or short-form clip. Get payment terms in writing before recording, and be clear about what happens if the video underperforms; some deals include make-goods. Repeat sponsors are the most valuable outcome: steady monthly income beats a one-off premium rate, which is the logic behind aiming for a small roster of recurring brands rather than chasing new deals each month.</p>
+<h2>Beyond the calculator</h2>
+<p>Knowing your rate is the first step; converting viewers into a durable audience is the next. Creators increasingly pair their channel with a hub page where fans can find everything in one place — and answer common questions instantly even when the creator is offline. Veyzi builds exactly that: a shareable page with your links plus a brand-voice AI that talks to fans for you. See <a href="https://veyzi.com" target="_blank" rel="noopener">veyzi.com</a>.</p>
+</div>
+<script>
+function calc(){
+const v=+document.getElementById('views').value||0;
+const n=document.getElementById('niche').value.split(',').map(Number);
+const low=v/1000*n[0], high=v/1000*n[1];
+document.getElementById('low').textContent='$'+low.toFixed(0);
+document.getElementById('high').textContent='$'+high.toFixed(0);
+document.getElementById('cpm').textContent='$'+n[0]+'–'+n[1];
+document.getElementById('yr').textContent='$'+((low+high)/2*2*12/1000).toFixed(1)+'k';
+document.getElementById('out').style.display='grid';
+}
+</script>
+<div class="ad-slot">ad</div>
+<h2>Reading your own numbers honestly</h2>
+<p>The most common pricing mistake is anchoring on a viral outlier. Pull your last ten videos, drop the best and worst, and average the rest — that trimmed mean is what a sponsor will expect, and quoting it builds credibility for the next deal. If your view counts swing wildly, quote a range and say why; brands respect a creator who understands their own variance more than one who promises a number the next video may not reach.</p>
+<p>One more habit worth adopting: log every deal you actually close — niche, views at the time, price, deliverables — in a simple spreadsheet. After a handful of deals this private ledger becomes more accurate than any public CPM table, including this one, because it is calibrated to your audience and your negotiation. The calculator here is for the conversations before that ledger exists; your own data is the endgame.</p>
+<h2>Shorts, podcasts, and off-platform value</h2>
+<p>Sponsorship is no longer only mid-roll on long videos. Short-form placements, podcast read-outs, newsletter mentions, and pinned comments each price differently, and bundling them is where experienced creators lift total revenue — a sponsor may pay modestly for the video itself but well for the bundle. When you model bundles, keep the video as the anchor and price add-ons as a percentage of it rather than inventing standalone figures, because that is how media buyers typically think.</p>
+<h2>When to raise your rates</h2>
+<p>Raise rates when the evidence moves, not when you feel bold: sustained view growth across several months, an audience-geography shift toward higher-value regions, or a niche that heats up as more advertisers enter it. The cleanest practice is an annual rate review where you re-run this calculator with current averages and adjust your quote sheet. Long-term sponsors should hear about increases early and get a grace period — protecting a reliable relationship is usually worth more than the increment.</p>
+<h2>Sponsorship income is volatile by nature</h2>
+<p>Ad revenue and sponsorship income rise and fall with views and advertiser budgets, which is why creators increasingly build direct audience channels that do not depend on any platform's algorithm: a page fans bookmark, a way to answer questions and sell directly. That structural shift — from renting attention to owning the relationship — is the argument for tools like Veyzi, which give every creator a home base with an AI that keeps fans engaged between uploads.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

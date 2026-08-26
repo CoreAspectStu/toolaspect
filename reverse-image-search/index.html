@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reverse Image Search — 4 Engines at Once</title>
+<meta name="description" content="Search Google Lens, Bing, TinEye, and Yandex with your image at once to find stolen or reposted photos. Free reverse image search launcher.">
+<link rel="canonical" href="https://toolaspect.com/reverse-image-search/">
+<meta property="og:title" content="Reverse Image Search">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/reverse-image-search/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Reverse Image Search","description":"Launch a reverse image search across four engines at once.","url":"https://toolaspect.com/reverse-image-search/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does reverse image search find stolen photos?", "acceptedAnswer": {"@type": "Answer", "text": "Engines index the pixels of web images, so a copy of your photo matches even when it is renamed or reposted without credit."}}, {"@type": "Question", "name": "Why search four engines instead of one?", "acceptedAnswer": {"@type": "Answer", "text": "Each engine's index and matching differ; the union of Google Lens, Bing, TinEye, and Yandex finds noticeably more copies than any single one."}}, {"@type": "Question", "name": "Does this tool upload my image?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 it builds search URLs for engines from the public image link you paste; your browser contacts the engines directly."}}, {"@type": "Question", "name": "What do I do when I find stolen copies?", "acceptedAnswer": {"@type": "Answer", "text": "Capture evidence, then file a takedown with the hosting platform \u2014 our DMCA cost calculator breaks down the process and time involved."}}, {"@type": "Question", "name": "Can monitoring be automated?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 authAspect watches for unauthorized use of your images and prepares enforcement actions for creators automatically."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>Reverse Image Search</h1>
+<p class="subtitle">Search Google Lens, Bing, TinEye, and Yandex with your image at once to find stolen or reposted photos.</p>
+
+<div class="card">
+<div class="form-group"><label>Image URL (public link to your image)</label><input id="url" placeholder="https://example.com/my-photo.jpg"></div>
+<button class="btn" onclick="go()">Open all engines</button>
+<div class="results-grid" style="margin-top:14px">
+<a class="result-card" style="text-decoration:none" href="#" id="e-lens" target="_blank" rel="noopener"><div class="label">Google Lens</div></a>
+<a class="result-card" style="text-decoration:none" href="#" id="e-bing" target="_blank" rel="noopener"><div class="label">Bing Visual</div></a>
+<a class="result-card" style="text-decoration:none" href="#" id="e-tine" target="_blank" rel="noopener"><div class="label">TinEye</div></a>
+<a class="result-card" style="text-decoration:none" href="#" id="e-yand" target="_blank" rel="noopener"><div class="label">Yandex</div></a>
+</div>
+</div>
+<div class="seo-content">
+<h2>Why creators reverse-search their own images</h2>
+<p>A reverse image search feeds a picture to a search engine and returns everywhere that picture appears online. For photographers, artists, and content creators it is the standard first move in protecting your work: find where your images were reposted, stolen, or used without credit. A regular keyword search can't do this — copies of your work usually carry no trace of your name, but they do carry the pixels themselves.</p>
+<h2>Which engine finds what</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Engine</th><th>Best at</th><th>Coverage</th></tr>
+<tr><td>Google Lens</td><td>Broad web + shopping matches</td><td>Widest general index</td></tr>
+<tr><td>Bing Visual Search</td><td>Products, near-duplicates</td><td>Strong on commerce imagery</td></tr>
+<tr><td>TinEye</td><td>Exact copies and oldest-first sorting</td><td>Specialized image index</td></tr>
+<tr><td>Yandex</td><td>Lookalike and edited variants</td><td>Often strongest on faces/variants</td></tr>
+</table></div>
+<p>No single engine sees everything, which is why the tool opens all four — the union of results is what gives you a real picture of where your work ended up.</p>
+<h2>How to use this tool</h2>
+<p>Paste the public URL of your image (anywhere it is hosted — your site, a cloud share with public access) and the tool builds the correct search URL for each engine, opening each in its own tab. Nothing is uploaded to us; your browser talks directly to the engines. For images that only exist on your device, use each engine's own upload option once you arrive.</p>
+<h2>From finding theft to acting on it</h2>
+<p>Searching tells you where the copies are; enforcement is the next step — evidence capture, takedown notices, and repeat monitoring, because stolen content tends to resurface. Doing this by hand every month is exactly the grind this page's companion calculator quantifies. authAspect automates the whole loop for creators: monitoring for unauthorized use of your images and preparing enforcement actions so you are not chasing URLs one at a time. Learn more at <a href="https://authaspect.com" target="_blank" rel="noopener">authaspect.com</a>.</p>
+<h2>Keeping your originals provable</h2>
+<p>Enforcement goes faster when you can prove the work is yours. Keep original files with intact creation timestamps, publish with visible attribution, and note first-publication dates. When a platform asks for evidence, a dated original settles the question quickly — and makes casual infringers fold rather than argue.</p>
+<p>One practical archiving pattern: at publication time, save the original file plus a small text note — filename, date, where it was published, and the URL if public — in a per-month folder on storage you control. This takes seconds per image and years later is the difference between a takedown that sails through and an argument. Provenance is boring right up until the day it is the only thing that settles a dispute.</p>
+</div>
+<script>
+function go(){
+const u=encodeURIComponent(document.getElementById('url').value.trim());
+if(!u){alert('Paste a public image URL first');return}
+document.getElementById('e-lens').href='https://lens.google.com/uploadbyurl?url='+u;
+document.getElementById('e-bing').href='https://www.bing.com/images/search?view=detailv2&iss=sbi&q=imgurl:'+u;
+document.getElementById('e-tine').href='https://tineye.com/search?url='+u;
+document.getElementById('e-yand').href='https://yandex.com/images/search?rpt=imageview&url='+u;
+['e-lens','e-bing','e-tine','e-yand'].forEach(id=>document.getElementById(id).click());
+}
+</script>
+<div class="ad-slot">ad</div>
+<h2>What each match type tells you</h2>
+<p>Results come in three flavors. Exact matches — same pixels, maybe resized — are the clear-cut infringements; note the page date, screenshot everything, and the takedown writes itself. Near-duplicates — cropped, filtered, or partially overlaid versions — usually still qualify but may need a short explanation of the transformation. Lookalikes — similar poses or scenes with different pixels — are generally not actionable, and chasing them wastes the energy the exact matches deserve. Sorting results into these buckets before acting keeps enforcement proportionate.</p>
+<p>Remember also that search indexes lag reality — a photo posted yesterday may not be findable for days or weeks, and deleted pages sometimes linger in results. That is the inherent limit of manual searching and the honest case for automated monitoring: software re-checks continuously, at a cadence no human routine matches, which is precisely the gap services like authAspect fill for working creators.</p>
+<h2>Building your case file as you search</h2>
+<p>While the tabs are open, capture the evidence: full-page screenshot including the URL bar, the direct image link, the date you found it, and a side-by-side with your original including its first-publication date. Five minutes per match while it is in front of you saves an hour of re-searching later, because infringing pages disappear without notice once a takedown lands. A simple dated folder per incident is enough structure; the DMCA cost calculator page covers what happens next.</p>
+<h2>Search cadence that catches problems early</h2>
+<p>Theft compounds: an unchallenged repost gets scraped by other sites, and each scraper's copy spawns more. A monthly reverse-search pass over your most valuable images catches copies while the tree is small. High-value creators — those whose images drive sales — often move to automated monitoring because the manual pass grows with their catalog. Either way, the cadence matters more than the tool: a search you actually run monthly beats a perfect system you run once.</p>
+<p>Prioritize what you search by value, not by volume. The images worth monitoring monthly are the ones doing commercial work — portfolio hero shots, product photos, listing images — not every casual upload. A creator with two hundred published images usually has fewer than twenty that drive real traffic or sales. Focusing the routine on those twenty keeps the monthly pass under an hour while covering the copies that actually cost money.</p>
+<h2>Protecting the next upload</h2>
+<p>Prevention lowers the enforcement bill. Publish at resolutions sufficient for display but not for print reuse, keep your highest-value originals off open galleries, watermark preview copies where aesthetics allow, and register copyright where the economics justify it — the last one multiplies your leverage in the rare case that goes legal. Combined with monitoring, these habits shrink the problem to the size your monthly routine can absorb, which is the whole game.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

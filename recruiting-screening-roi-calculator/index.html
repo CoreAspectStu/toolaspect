@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screening ROI Calculator — Recruiting Cost</title>
+<meta name="description" content="Calculate what applicant screening really costs in hours and dollars per month, and what automating the first pass could save.">
+<link rel="canonical" href="https://toolaspect.com/recruiting-screening-roi-calculator/">
+<meta property="og:title" content="Screening ROI Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/recruiting-screening-roi-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Screening ROI Calculator","description":"Calculate monthly hours and cost spent screening job applicants.","url":"https://toolaspect.com/recruiting-screening-roi-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much time does screening one applicant take?", "acceptedAnswer": {"@type": "Answer", "text": "Typically 20\u201340 minutes including resume review and a phone screen; enter your own figure \u2014 the calculator is transparent multiplication."}}, {"@type": "Question", "name": "What share of applicants is usually unqualified?", "acceptedAnswer": {"@type": "Answer", "text": "Teams commonly report half or more of a pipeline is not viable for the role, which is where screening time is quietly wasted."}}, {"@type": "Question", "name": "What does AI screening cost?", "acceptedAnswer": {"@type": "Answer", "text": "Per-screening platform fees are commonly around $0.50\u2013$2 depending on vendor and volume; override the band with a real quote."}}, {"@type": "Question", "name": "Does AI screening replace interviews?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 it replaces the first-pass grind, handing recruiters a ranked shortlist with transcripts so human time goes to plausible candidates."}}, {"@type": "Question", "name": "Where can I deploy AI screening?", "acceptedAnswer": {"@type": "Answer", "text": "Emuu is a voice AI platform that runs structured AI screening calls in production and integrates with your hiring flow."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>Screening ROI Calculator</h1>
+<p class="subtitle">Calculate what applicant screening really costs in hours and dollars per month, and what automating the first pass could save.</p>
+
+<div class="card">
+<div class="form-row">
+<div class="form-group"><label>Applicants / month</label><input type="number" id="app" value="100"></div>
+<div class="form-group"><label>Screening minutes each</label><input type="number" id="mins" value="20"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Screener cost $/hour</label><input type="number" id="rate" value="40"></div>
+<div class="form-group"><label>Unqualified share %</label><input type="number" id="unq" value="60"></div>
+</div>
+<button class="btn" onclick="calc()">Calculate screening cost</button>
+<div class="results-grid" id="out" style="display:none">
+<div class="result-card primary"><div class="amount" id="hrs">—</div><div class="label">Screening hours / mo</div></div>
+<div class="result-card"><div class="amount" id="cost">$—</div><div class="label">Cost / month</div></div>
+<div class="result-card"><div class="amount" id="waste">$—</div><div class="label">Spent on unqualified</div></div>
+<div class="result-card green"><div class="amount" id="yr">$—</div><div class="label">Cost / year</div></div>
+</div>
+</div>
+<div class="seo-content">
+<h2>The hidden line item in every hire</h2>
+<p>Recruiting budgets usually track job-board fees and agency retainers, but the biggest quiet cost is screener time: every applicant who gets a resume review or a phone screen consumes twenty to forty minutes of a salaried person's day. At a hundred applicants a month and twenty minutes each, that is over thirty hours — nearly a full working week — spent before a single interview is scheduled. Worse, most of that time goes to applicants who were never viable: unqualified share is routinely half or more of any pipeline.</p>
+<h2>Screening approaches compared</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Approach</th><th>Time per applicant</th><th>Cost driver</th><th>Consistency</th></tr>
+<tr><td>Manual resume review</td><td>5–10 min</td><td>Recruiter salary</td><td>Varies by reviewer and fatigue</td></tr>
+<tr><td>Phone screens</td><td>15–30 min</td><td>Screener hourly cost</td><td>Good but unscalable</td></tr>
+<tr><td>Keyword filters (ATS)</td><td>~2 min</td><td>Software license</td><td>Consistent but misses nuance</td></tr>
+<tr><td>AI voice screening</td><td>~0 screener min</td><td>Per-screening platform fee, commonly ~$0.50–2</td><td>Identical process for all</td></tr>
+</table></div>
+<p style="font-size:.8rem;color:var(--muted)">Time figures are typical ranges reported by recruiting teams; AI pricing bands are vendor-dependent.</p>
+<h2>What the calculator assumes</h2>
+<p>Simple multiplication, shown in full: applicants times minutes gives hours; hours times your screener's hourly cost gives the monthly spend; the unqualified share splits that spend between wasted and useful screening. The AI comparison band is a per-screening fee you can override with a real quote. The point is not precision — it is whether the order of magnitude justifies a conversation about automating the first-pass screen.</p>
+<h2>Where AI screening fits</h2>
+<p>The highest-value use is not replacing the final interview; it is automating the top-of-funnel grind. An AI voice agent can call every applicant, ask the same structured questions, and hand the recruiter a ranked shortlist with transcripts — so human time goes only to plausible candidates. Consistency is the underrated benefit: every applicant gets the same questions in the same tone, which is both fairer and more defensible than reviews done at 5pm on a Friday.</p>
+<h2>Doing it in practice</h2>
+<p>Deployment realities matter: the screening agent needs your job criteria, integration with your calendar and ATS, and a voice applicants will actually talk to. Emuu runs exactly this kind of voice screening in production — structured AI calls that score and shortlist candidates before a human ever picks up the phone. If your calculator number is uncomfortable, that is the gap a platform like <a href="https://emuu.io" target="_blank" rel="noopener">Emuu</a> is built to close.</p>
+</div>
+<script>
+function calc(){
+const a=+document.getElementById('app').value||0,m=+document.getElementById('mins').value||0,r=+document.getElementById('rate').value||0,u=(+document.getElementById('unq').value||0)/100;
+const hrs=a*m/60, cost=hrs*r;
+document.getElementById('hrs').textContent=hrs.toFixed(0);
+document.getElementById('cost').textContent='$'+cost.toFixed(0);
+document.getElementById('waste').textContent='$'+(cost*u).toFixed(0);
+document.getElementById('yr').textContent='$'+(cost*12).toFixed(0);
+document.getElementById('out').style.display='grid';
+}
+</script>
+<div class="ad-slot">ad</div>
+<h2>Where screening time really goes</h2>
+<p>Break down a screener's week and three sinks dominate: reading resumes that never had a chance, repeating the same five qualification questions on every phone screen, and chasing scheduling for interviews that sometimes no-show. Each sink is automatable independently — keyword and structured filtering for the first, voice agents for the second, self-serve scheduling for the third — and each removes hours that the calculator above prices in dollars. Teams that automate all three routinely reclaim most of a recruiter's screening week.</p>
+<p>A caution on the numbers: screening cost is real, but so is screening judgment. The goal of automation is to move human attention up the funnel, not to remove it — the interview where a candidate reveals they are perfect for a different role, or the read-between-the-lines sense that a resume is inflated, still pays for itself. Use the calculator to justify removing drudgery, then reinvest the recovered hours in the conversations only humans can have.</p>
+<h2>Consistency as a quality feature</h2>
+<p>Human screening varies by hour and by mood: the fourteenth resume of the day does not get the same read as the first. Structured AI screening applies identical questions, in identical order, with identical scoring — which improves not just throughput but fairness and defensibility. When hiring decisions are challenged, a consistent process with transcripts is far easier to stand behind than memories of phone calls. This is why consistency, not raw speed, is the benefit screening teams cite most after adopting structured automation.</p>
+<h2>Candidate experience is still on you</h2>
+<p>Automation can hurt candidates when it becomes a black hole — applications vanish into filters with no reply. Whatever screens the pipeline, the experience bar is the same: acknowledge every application quickly, tell candidates the process and timeline, and close out rejected applicants with a real message. Recruiters who pair automated first-pass screening with respectful communication convert better offer-acceptance rates, because the applicant's experience of the process is itself an advertisement for the role.</p>
+<p>It also pays to revisit the inputs quarterly. Screening minutes creep upward as teams add "just one more question" to every screen, and unqualified share shifts with the job market and the wording of the posting. Re-running the calculator with fresh numbers each quarter keeps the automation case honest — and occasionally reveals that a rewritten job ad, which costs nothing, cuts the unqualified share more cheaply than any software could.</p>
+<h2>A workable rollout plan</h2>
+<p>Start with one high-volume role, define the screening questions and knockout criteria in writing, and let the AI run alongside the human process for a fortnight — same applicants, both tracks. Compare shortlists, read transcripts, and tune. Teams that do this quickly learn which questions predict success and which were noise. Platforms like Emuu run this exact pattern in production: structured voice screening calls that hand recruiters ranked, transcript-backed shortlists.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>
