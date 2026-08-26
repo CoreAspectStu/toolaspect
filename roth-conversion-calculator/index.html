@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roth Conversion Calculator — Tax Bracket Ladder | ToolAspect</title>
+<meta name="description" content="Free Roth conversion calculator. See the tax on converting all at once vs a bracket ladder over years. $300k spread over 5 years saves $24,476.">
+<link rel="canonical" href="https://toolaspect.com/roth-conversion-calculator/">
+<meta property="og:title" content="Roth Conversion Calculator — Tax Bracket Ladder">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Run a year-by-year Roth conversion ladder against 2026 tax brackets and see the tax saved by spreading instead of converting all at once.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/roth-conversion-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Roth Conversion Calculator | Free Tool">
+<meta name="twitter:description" content="Bracket-ladder Roth conversion planning with 2026 federal brackets built in.">
+<meta name="keywords" content="roth conversion calculator, roth conversion ladder, roth conversion tax calculator, how much can i convert to roth, 12 percent bracket roth conversion, 2026 tax brackets">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Roth Conversion Calculator","description":"Free Roth conversion calculator. Compare the tax on converting a traditional IRA all at once versus a multi-year bracket ladder, using 2026 federal brackets.","url":"https://toolaspect.com/roth-conversion-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much can I convert to Roth and stay in the 12% bracket in 2026?","acceptedAnswer":{"@type":"Answer","text":"The 12% bracket tops out at $50,400 of taxable income for single filers and $100,800 for married filing jointly in 2026. Subtract your other taxable income from that cap and the difference is your conversion room. A married couple with $20,000 of other taxable income can convert $80,800 before any dollar hits the 22% bracket."}},
+{"@type":"Question","name":"When does a Roth conversion make sense?","acceptedAnswer":{"@type":"Answer","text":"Conversions tend to pay off when your bracket today is lower than the bracket you expect in the future, which happens a lot between retirement and Required Minimum Distributions at age 73. Low-income years, a big future RMD pushing you into higher brackets, and leaving tax-free money to heirs are the three classic cases. If you expect to be in a lower bracket later, converting usually works against you."}},
+{"@type":"Question","name":"Do you pay taxes twice on a Roth conversion?","acceptedAnswer":{"@type":"Answer","text":"No. Pre-tax dollars in a traditional IRA have never been taxed, so a conversion taxes them once as ordinary income. After that, qualified withdrawals are tax-free forever. The one trap is the pro-rata rule: if you have nondeductible (after-tax) contributions in any traditional IRA, each conversion is taxed proportionally on the pre-tax share, not on the dollars you pick."}},
+{"@type":"Question","name":"What is the five-year rule on Roth conversions?","acceptedAnswer":{"@type":"Answer","text":"Each conversion starts its own five-year clock for penalty-free access to converted principal if you're under 59½. Withdraw converted amounts before that clock runs and the 10% early-distribution penalty can apply. Earnings are separate: they need both age 59½ and a five-year period on the account to come out tax-free. Money converted after 59½ avoids the penalty clock entirely."}},
+{"@type":"Question","name":"What is the biggest hidden cost of a Roth conversion?","acceptedAnswer":{"@type":"Answer","text":"Medicare premiums. IRMAA surcharges are set by your modified adjusted gross income from two years earlier, and large conversions can push you over the 2026 thresholds, adding roughly $810 to $5,445 per person per year in Part B and D surcharges. Conversions can also raise taxes on Social Security benefits and reduce ACA premium subsidies if you're under 65."}},
+{"@type":"Question","name":"When are taxes due on a Roth conversion?","acceptedAnswer":{"@type":"Answer","text":"The converted amount is ordinary income for the tax year of the conversion, so the tax is due with that year's return by the following April 15. You can pay from outside funds or have the custodian withhold, but paying the tax from the converted amount itself leaves you with less compounding in the Roth and, before 59½, can trigger the 10% penalty on the amount withheld."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"Roth Conversion Calculator","item":"https://toolaspect.com/roth-conversion-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0;padding:14px 16px;margin:1rem 0 0;font-size:.92rem;color:var(--text);line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.warn-line{color:#fbbf24;font-size:.85rem;text-align:center;margin-top:.9rem;line-height:1.6}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.over{color:#fbbf24}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.disclaimer{margin-top:2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;color:var(--muted);font-size:.82rem;line-height:1.6}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔄 Roth Conversion Calculator</h1>
+<p>Run a bracket ladder against 2026 federal brackets</p>
+</div>
+<div class="aio-answer">Converting a traditional IRA to Roth is taxed as ordinary income, so the trick is filling your low brackets a little at a time. In 2026 the 12% bracket tops out at <strong>$50,400 taxable income (single)</strong> or <strong>$100,800 (married filing jointly)</strong>. A couple with $20,000 of other taxable income can convert <strong>$80,800 a year at 12% or less</strong>. Spread $300,000 over 5 years that way and the tax is <strong>$35,520 (11.84%)</strong>, versus $59,996 converting it all at once.</div>
+
+<div class="section-card">
+<h2>Your Tax Year</h2>
+<div class="input-grid">
+<div class="input-group"><label>Filing Status</label><select id="fs">
+<option value="mfj" selected>Married filing jointly</option>
+<option value="single">Single</option>
+</select></div>
+<div class="input-group"><label>Other Taxable Income ($/yr)</label><input type="number" id="other" value="20000" min="0" step="1000"></div>
+<div class="input-group"><label>Stay Under Bracket</label><select id="cap">
+<option value="12" selected>12%</option>
+<option value="22">22%</option>
+<option value="24">24%</option>
+</select></div>
+</div>
+<p style="color:var(--muted);font-size:.8rem;margin-top:.75rem">Other taxable income is income after deductions that fills your brackets before the conversion: pension, interest, dividends, taxable Social Security, wages. Leave $0 for a pure gap year.</p>
+</div>
+
+<div class="section-card">
+<h2>Conversion Plan</h2>
+<div class="input-grid">
+<div class="input-group"><label>Amount to Convert ($)</label><input type="number" id="amt" value="300000" min="0" step="5000"></div>
+<div class="input-group"><label>Spread Over (years)</label><input type="number" id="yrs" value="5" min="1" max="15" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Total Tax on Conversion (laddered)</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Tax per Year</div><div class="ri-value" id="perYear">—</div></div>
+<div class="result-item"><div class="ri-label">Effective Rate on Conversion</div><div class="ri-value" id="effRate">—</div></div>
+<div class="result-item"><div class="ri-label">Tax if Converted All at Once</div><div class="ri-value" id="oneShot">—</div></div>
+<div class="result-item"><div class="ri-label">Saved by Laddering</div><div class="ri-value" id="saved">—</div></div>
+<div class="result-item"><div class="ri-label">Top Bracket Reached per Year</div><div class="ri-value" id="topRate">—</div></div>
+<div class="result-item"><div class="ri-label">Room Left Under the Cap</div><div class="ri-value" id="roomLeft">—</div></div>
+</div>
+<div class="warn-line" id="warn" style="display:none"></div>
+</div>
+
+<div class="section-card">
+<h2>Year-by-Year Bracket Ladder</h2>
+<div class="table-wrap">
+<table class="data-table" id="ladderTable">
+<thead><tr><th>Year</th><th>Conversion</th><th>Taxable Income</th><th>Tax on Conversion</th><th>Top Rate Reached</th><th>Cumulative Converted</th></tr></thead>
+<tbody id="ladderBody"></tbody>
+</table>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>2026 Federal Tax Brackets</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Rate</th><th>Single: Taxable Income</th><th>Single: Tax at Top</th><th>Married Filing Jointly: Taxable Income</th><th>MFJ: Tax at Top</th></tr></thead>
+<tbody>
+<tr><td>10%</td><td>$0 – $12,400</td><td>$1,240</td><td>$0 – $24,800</td><td>$2,480</td></tr>
+<tr><td>12%</td><td>$12,400 – $50,400</td><td>$5,800</td><td>$24,800 – $100,800</td><td>$11,600</td></tr>
+<tr><td>22%</td><td>$50,400 – $105,700</td><td>$17,966</td><td>$100,800 – $211,400</td><td>$35,932</td></tr>
+<tr><td>24%</td><td>$105,700 – $201,775</td><td>$41,024</td><td>$211,400 – $403,550</td><td>$82,048</td></tr>
+<tr><td>32%</td><td>$201,775 – $256,225</td><td>$58,448</td><td>$403,550 – $512,450</td><td>$116,896</td></tr>
+<tr><td>35%</td><td>$256,225 – $640,600</td><td>$192,979</td><td>$512,450 – $768,700</td><td>$206,584</td></tr>
+<tr><td>37%</td><td>over $640,600</td><td>—</td><td>over $768,700</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">These are the 2026 brackets from IRS Rev. Proc. 2025-32. "Tax at top" is the cumulative federal income tax owed at the top of that bracket, which is how the calculator builds each year's bill. Head-of-household thresholds sit between single and joint; this tool covers the two statuses most Roth planners use.</p>
+</div>
+
+<div class="section-card">
+<h2>Conversion Room Under the 12% Bracket</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Other Taxable Income</th><th>Single: Convert Up To</th><th>Married: Convert Up To</th></tr></thead>
+<tbody>
+<tr><td>$0</td><td>$50,400</td><td>$100,800</td></tr>
+<tr><td>$20,000</td><td>$30,400</td><td>$80,800</td></tr>
+<tr><td>$40,000</td><td>$10,400</td><td>$60,800</td></tr>
+<tr><td>$60,000</td><td>$0 (already past the top)</td><td>$40,800</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Room equals the bracket cap minus your other taxable income. Dollars past the cap spill into 22%, which still beats the 24%+ rates many retirees pay once Required Minimum Distributions start at age 73.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Roth Conversion Calculator Works</h2>
+<p>A Roth conversion moves money from a traditional IRA or 401(k) into a Roth account. The converted amount counts as ordinary income in the year you convert, and in exchange every future dollar of growth and withdrawal is tax-free. Done carelessly, a conversion can land in the 22% or 24% bracket. Done as a ladder, it soaks up the 10% and 12% space you'd otherwise waste in a low-income year.</p>
+<h3>The formula</h3>
+<p>Tax is computed bracket by bracket: each slice of taxable income is taxed at its own rate, never the whole amount at your top rate. The calculator takes your other taxable income, adds each year's conversion slice, subtracts the tax you'd owe anyway, and reports the difference as the tax on that year's conversion. It also runs the entire conversion as a single year so you can see what laddering saves.</p>
+<h3>How to use it</h3>
+<p>Enter your filing status and the taxable income you'll have anyway in a typical year, pensions and interest included. Pick the bracket you refuse to go over, 12% is the usual ceiling for a ladder. Then enter the total you're thinking of converting and how many years you'll spread it across. The ladder table shows each year's slice, the tax it triggers, and the top rate that year touches. Uneven splits front-load the remainder into the early years.</p>
+<h3>A worked example</h3>
+<p>A married couple, both retired, has $20,000 of taxable income from interest and a small pension. They want $300,000 out of a traditional IRA. Converting all of it in one year stacks $320,000 of taxable income and triggers $59,996 of tax on the conversion, a 20.0% effective rate, with dollars reaching the 24% bracket.</p>
+<p>Instead they convert $60,000 a year for 5 years. Each year, the first $4,800 of the conversion fills the rest of the 10% bracket ($480 of tax) and the remaining $55,200 lands in the 12% bracket ($6,624). That's $7,104 a year, $35,520 total, an effective rate of 11.84% on the full $300,000. Laddering under the 12% line saves $24,476, and every dollar now compounds tax-free in the Roth.</p>
+<h3>What this calculator leaves out</h3>
+<p>State income tax, the pro-rata rule if you have after-tax money in any traditional IRA, IRMAA Medicare surcharges set by income from two years prior, and the tax on Social Security benefits that extra income can trigger. Those can flip a marginal decision, so treat the result as a floor for a conversation with a tax professional, not a filing plan.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How much can I convert to Roth and stay in the 12% bracket in 2026?</h3><p>The 12% bracket tops out at $50,400 of taxable income for single filers and $100,800 for married filing jointly in 2026. Subtract your other taxable income from that cap and the difference is your conversion room. A married couple with $20,000 of other taxable income can convert $80,800 before any dollar hits the 22% bracket.</p></div>
+<div class="faq-item"><h3>When does a Roth conversion make sense?</h3><p>Conversions tend to pay off when your bracket today is lower than the bracket you expect in the future, which happens a lot between retirement and Required Minimum Distributions at age 73. Low-income years, a big future RMD pushing you into higher brackets, and leaving tax-free money to heirs are the three classic cases. If you expect to be in a lower bracket later, converting usually works against you.</p></div>
+<div class="faq-item"><h3>Do you pay taxes twice on a Roth conversion?</h3><p>No. Pre-tax dollars in a traditional IRA have never been taxed, so a conversion taxes them once as ordinary income. After that, qualified withdrawals are tax-free forever. The one trap is the pro-rata rule: if you have nondeductible (after-tax) contributions in any traditional IRA, each conversion is taxed proportionally on the pre-tax share, not on the dollars you pick.</p></div>
+<div class="faq-item"><h3>What is the five-year rule on Roth conversions?</h3><p>Each conversion starts its own five-year clock for penalty-free access to converted principal if you're under 59½. Withdraw converted amounts before that clock runs and the 10% early-distribution penalty can apply. Earnings are separate: they need both age 59½ and a five-year period on the account to come out tax-free. Money converted after 59½ avoids the penalty clock entirely.</p></div>
+<div class="faq-item"><h3>What is the biggest hidden cost of a Roth conversion?</h3><p>Medicare premiums. IRMAA surcharges are set by your modified adjusted gross income from two years earlier, and large conversions can push you over the 2026 thresholds, adding roughly $810 to $5,445 per person per year in Part B and D surcharges. Conversions can also raise taxes on Social Security benefits and reduce ACA premium subsidies if you're under 65.</p></div>
+<div class="faq-item"><h3>When are taxes due on a Roth conversion?</h3><p>The converted amount is ordinary income for the tax year of the conversion, so the tax is due with that year's return by the following April 15. You can pay from outside funds or have the custodian withhold, but paying the tax from the converted amount itself leaves you with less compounding in the Roth and, before 59½, can trigger the 10% penalty on the amount withheld.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/retirement-calculator/">🎯 Retirement Calculator</a>
+<a href="/social-security-calculator/">💵 Social Security Calculator</a>
+<a href="/income-tax-calculator/">📊 Income Tax Calculator</a>
+<a href="/hsa-contribution-calculator/">🏥 HSA Contribution Calculator</a>
+<a href="/annuity-calculator/">📈 Annuity Calculator</a>
+</div>
+</div>
+
+<div class="disclaimer">Educational tool only, not tax, legal, or investment advice. Bracket thresholds are 2026 federal figures and change most years. Your actual tax depends on deductions, credits, state tax, IRMAA, and the pro-rata rule, so confirm the plan with a qualified tax professional before converting.</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var BR={
+  single:[[0,.10],[12400,.12],[50400,.22],[105700,.24],[201775,.32],[256225,.35],[640600,.37]],
+  mfj:[[0,.10],[24800,.12],[100800,.22],[211400,.24],[403550,.32],[512450,.35],[768700,.37]]
+};
+var CAPS={
+  single:{'12':50400,'22':105700,'24':201775},
+  mfj:{'12':100800,'22':211400,'24':403550}
+};
+function tax(taxable,b){
+  var t=0;
+  for(var i=0;i<b.length;i++){
+    var lo=b[i][0],r=b[i][1],hi=b[i+1]?b[i+1][0]:Infinity;
+    var slice=Math.max(0,Math.min(taxable,hi)-lo);
+    t+=slice*r;
+  }
+  return t;
+}
+function topRateAt(taxable,b){
+  for(var i=b.length-1;i>=0;i--){
+    if(taxable>b[i][0])return b[i][1];
+  }
+  return b[0][1];
+}
+function fmt(n){return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var fs=document.getElementById('fs').value;
+  var other=parseFloat(document.getElementById('other').value)||0;
+  var amt=parseFloat(document.getElementById('amt').value)||0;
+  var yrs=Math.round(parseFloat(document.getElementById('yrs').value)||1);
+  var cap=document.getElementById('cap').value;
+  var b=BR[fs],capTop=CAPS[fs][cap];
+  yrs=Math.min(15,Math.max(1,yrs));
+
+  var hero=document.getElementById('heroVal'),sub=document.getElementById('heroSub');
+  var body=document.getElementById('ladderBody');
+  if(amt<=0){
+    animateValue(hero,'—');sub.textContent='Enter an amount to convert';
+    ['perYear','effRate','oneShot','saved','topRate','roomLeft'].forEach(function(id){document.getElementById(id).textContent='—'});
+    body.innerHTML='';
+    document.getElementById('warn').style.display='none';
+    return;
+  }
+
+  var base=Math.floor(amt/yrs),rem=amt-base*yrs;
+  var totalConvTax=0,rows='',overCapYears=0;
+  for(var y=1;y<=yrs;y++){
+    var conv=base+(y<=rem?1:0);
+    var taxable=other+conv;
+    var convTax=tax(taxable,b)-tax(other,b);
+    totalConvTax+=convTax;
+    var tr=topRateAt(taxable,b);
+    if(taxable>capTop){overCapYears++;tr='<span style="color:#fbbf24">'+(tr*100).toFixed(0)+'% ▲</span>';}
+    else{tr=(tr*100).toFixed(0)+'%';}
+    rows+='<tr'+(taxable>capTop?' class="over"':'')+'><td>'+y+'</td><td>'+fmt(conv)+'</td><td>'+fmt(taxable)+'</td><td>'+fmt(convTax)+'</td><td>'+tr+'</td><td>'+fmt(Math.min(amt,base*y+(y<=rem?y:rem)))+'</td></tr>';
+  }
+  body.innerHTML=rows;
+
+  var oneShot=tax(other+amt,b)-tax(other,b);
+  var eff=totalConvTax/amt*100;
+  var room=Math.max(0,capTop-other);
+  var perYrConv=amt/yrs;
+
+  animateValue(hero,fmt(totalConvTax));
+  sub.textContent='over '+yrs+' years vs '+fmt(oneShot)+' all at once';
+  animateValue(document.getElementById('perYear'),fmt(totalConvTax/yrs));
+  animateValue(document.getElementById('effRate'),eff.toFixed(2)+'%');
+  animateValue(document.getElementById('oneShot'),fmt(oneShot));
+  animateValue(document.getElementById('saved'),oneShot>totalConvTax?fmt(oneShot-totalConvTax):'$0');
+  animateValue(document.getElementById('topRate'),(topRateAt(other+perYrConv,b)*100).toFixed(0)+'%');
+  animateValue(document.getElementById('roomLeft'),fmt(Math.max(0,room-perYrConv)));
+
+  var warn=document.getElementById('warn');
+  if(other>=capTop){
+    warn.style.display='block';
+    warn.textContent='Your other taxable income already fills the '+cap+'% bracket, so every converted dollar lands above it. Try a higher cap or reconsider the timing.';
+  }else if(perYrConv>room&&overCapYears===yrs){
+    warn.style.display='block';
+    warn.textContent='Each year’s conversion of '+fmt(perYrConv)+' exceeds the '+fmt(room)+' of room below the top of the '+cap+'% bracket. Add years or accept the higher bracket.';
+  }else if(overCapYears>0){
+    warn.style.display='block';
+    warn.textContent=overCapyr(overCapYears,cap);
+  }else{
+    warn.style.display='none';
+  }
+}
+function overCapyr(n,cap){return n+' year'+(n>1?'s':'')+' spill'+(n>1?'':'s')+' past the top of the '+cap+'% bracket; the flagged rows show where.';}
+['fs','other','cap','amt','yrs'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+  document.getElementById(id).addEventListener('change',calc);
+});
+calc();
+</script>
+</body>
+</html>
