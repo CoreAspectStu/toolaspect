@@ -77,3 +77,37 @@ gh:legions-developer/invoicely | oss | wrap | low | S899 MIT — Invoicely is a 
 gh:htmldocs-js/htmldocs | oss | wrap | low | S746 MIT — The modern alternative to LaTeX. Create PDF documents templates using React, JSX, and Tailwind
 gh:tuanpham-dev/react-invoice-generator | oss | wrap | low | S675 MIT — React Invoice Generator allows you quickly make invoices and export them as PDF
 gh:amruthpillai/reactive-resume | oss | wrap | low | S41664 MIT — A one-of-a-kind resume builder that keeps your privacy in mind. Completely secure, customizable, por
+
+## Wave 6 — refill 2026-08-26 (pattern-research: lead-gen x home systems, insurance/legal/medical/finance extensions, volume converters)
+window-replacement-cost-calculator | home | lead | $25 | window lead-gen, $300-600/lead verticals
+kitchen-remodel-cost-calculator | home | lead | $22 | high-ticket remodel, contractor leads
+bathroom-remodel-cost-calculator | home | lead | $20 | companion to kitchen, same buyers
+fence-cost-calculator | home | lead | $15 | linear-ft pricing, easy table+calc
+deck-cost-calculator | home | lead | $15 | composite vs wood table = AIO citable
+driveway-paving-cost-calculator | home | lead | $14 | asphalt vs concrete comparison
+hvac-replacement-cost-calculator | home | lead | $30 | AC/furnace $400+/lead vertical
+water-heater-cost-calculator | home | lead | $18 | tank vs tankless table
+solar-savings-calculator | home | lead | $35 | solar CPC king, utility-rate math
+flood-insurance-cost-calculator | insurance | calc | $18 | FEMA zone table, climate searches up
+earthquake-insurance-calculator | insurance | calc | $15 | CA/WA/OR states
+motorcycle-insurance-cost-calculator | insurance | calc | $16 | state table pattern proved
+rv-insurance-cost-calculator | insurance | calc | $14 | low competition
+boat-insurance-cost-calculator | insurance | calc | $12 | low competition
+identity-theft-protection-calculator | insurance | calc | $20 | high CPC security niche
+motorcycle-accident-settlement-calculator | legal | calc | $40 | PI + moto cross
+uber-lyft-accident-settlement-calculator | legal | calc | $38 | gig economy PI, unique
+nursing-home-abuse-settlement-calculator | legal | calc | $50 | very high CPC, careful tone
+social-security-disability-denial-calculator | legal | calc | $30 | SSDI appeals, back-pay math
+invisalign-cost-calculator | medical | calc | $16 | dental elective
+vasectomy-reversal-cost-calculator | medical | calc | $12 | tiny comp, high intent
+hsa-contribution-calculator | finance | calc | $14 | tax-season evergreen
+fsa-deadline-calculator | finance | calc | $10 | use-it-lose-it seasonal spike
+estimated-quarterly-tax-calculator | finance | calc | $20 | 1099/gig workers, 4 deadlines
+self-employment-tax-calculator | finance | calc | $18 | SE tax + deduction half
+roth-conversion-calculator | finance | calc | $22 | retirement tax planning
+required-minimum-distribution-calculator | finance | calc | $18 | RMD uniform table
+annuity-payout-comparison-calculator | finance | calc | $15 | extends annuity winner
+military-time-converter | convert | tool | $3 | high volume staple
+fraction-to-decimal-chart | convert | tool | $3 | workshop volume, embed king
+reading-time-calculator | convert | tool | $2 | writer/blogger niche
+words-per-minute-test | convert | tool | $4 | typing test volume
