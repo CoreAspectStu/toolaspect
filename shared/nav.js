@@ -104,14 +104,23 @@
   nav.className = 'ta-nav';
   nav.innerHTML = buildHTML();
 
-  /* Insert at top of body */
-  document.body.insertBefore(nav, document.body.firstChild);
+  /* Insert at top of body — body may not exist yet if this script is
+     included from <head>, so defer to DOMContentLoaded in that case */
+  function insertNav() {
+    document.body.insertBefore(nav, document.body.firstChild);
+  }
 
   /* --- Auto-inject ads.js for AdSense --- */
-  if (!document.querySelector('script[src*="shared/ads.js"]')) {
+  if (document.body && !document.querySelector('script[src*="shared/ads.js"]')) {
     var adsScript = document.createElement('script');
     adsScript.src = base + 'shared/ads.js';
     document.body.appendChild(adsScript);
+  }
+
+  if (document.body) {
+    insertNav();
+  } else {
+    document.addEventListener('DOMContentLoaded', insertNav);
   }
 
   /* --- Hamburger toggle --- */
