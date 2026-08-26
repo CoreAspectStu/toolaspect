@@ -153,3 +153,22 @@
 - Verified across all 25: AIO answer block present (quick-answer/aio-answer/direct-answer variants), 3× JSON-LD (WebApplication+FAQPage+BreadcrumbList, all parse), embed JS with dofollow backlink + listed in /embed/ index, guide exists + links tool, all-tools + category hub links, stats labeled as published national ranges/attributed (EIA, FEMA, CDI, SSA 2024, Martindale-Nolo, NHTSA, NCOA/DOJ, Belker 1991, Invisalign claims data, FTC/BJS) — no fabricated precision found.
 - DEPLOYED (deploy.sh): 96 files uploaded, sitemap regenerated, llm.txt regenerated; IndexNow submitted OK.
 - Curl-verified 81 URLs (25 tools + 25 guides + 25 embeds + 6 hubs): all 200.
+
+## 2026-08-26 — 4-tool batch (roth + time/text cluster) — built, NOT deployed
+- roth-conversion-calculator — 2026 bracket-ladder planner (Rev. Proc. 2025-32 thresholds), MFJ/single, node-verified worked examples ($300k/5yr ladder saves $24,476), not-tax-advice disclaimer
+- words-per-minute-test — interactive 30/60/120s typing test, live WPM/accuracy, forward-only scoring (348 chars/60s → 69.6 gross, 68 net), Tab restart / Esc new passage
+- military-time-converter — 12h<->24h both directions + full 24-row chart with pronunciation + live 24h clock; roundtrip verified over all 1440 minutes
+- reading-time-calculator — words/paste-text to reading minutes at 150/238/325/475 WPM + speaking time at 130, pages at 275 wpp (Brysbaert 2019 figures)
+- embeds 56-59 added; guides: when-to-do-a-roth-conversion, average-typing-speed, average-reading-speed, how-to-read-military-time
+
+## 2026-08-26 — Autoloop review round 2: adversarial verify + deploy of the 4-tool batch (roth + time/text cluster)
+- Recomputed all arithmetic via node: reading-time claims all exact (1500/238=6:18, 5min=1190 words, 80000/238=5hr36min, 291 pages, Medium 265×5=1325, 2500/238=10:30, 18min×145=2610); military chart verified over all 1440 minutes roundtrip.
+- Real defects found and fixed:
+  - military-time-converter + embed: spoken-form generator mixed words and digits ("nineteen 42") and dropped leading-zero hours (0930 -> "nine 30", 0030 -> "zero 30"); rewrote to word-based minutes ("fourteen forty-five", "zero nine thirty", "zero zero thirty") matching the page's own prose/FAQ promises. Verified all spoken claims + 1440-min roundtrip pass.
+  - military-time-converter: colon-notation alt display broke for 12:00-12:59 AM (12:42 AM showed ":42"); now 00:42 via padded hour.
+  - Citation error: the 190-study reading-rate meta-analysis is Brysbaert 2019 (J. Memory and Language), not 2014 — fixed on reading tool (AIO/FAQ/table), average-reading-speed guide (meta/intro/body/table/FAQ), guides index card, and this done-log.
+  - reading-time FAQ: 1000 words aloud at 130 WPM is 7 min 42 s (tool output), FAQ said 7:40 — aligned.
+  - De-fabricated guide ranges: dropped invented "college-educated 250-280" and "older readers 10-20% under best years" precision (now qualitative); podcast script 30min@145WPM corrected 4,300 -> 4,350 words.
+  - Read-time badges honest: average-reading-speed 8 -> 4 min (974 words), how-to-read-military-time 6 -> 4 min (999 words).
+- Verified: AIO block, 3x JSON-LD parse (WebApplication+FAQPage+BreadcrumbList tools; Article+FAQPage guides), embeds + /embed/ index listing, guide<->tool crosslinks, all-tools + everyday-tools hub cards, canonicals; AI-slop grep clean; published stats properly attributed (Brysbaert 2019, Rayner 2016, Medium 265 WPM).
+- DEPLOYED (deploy.sh) + curl-verified + committed + pushed (this entry).

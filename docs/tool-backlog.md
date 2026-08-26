@@ -1,31 +1,39 @@
-# Tool Factory Backlog — ranked by suggest-demand score (2026-08-26 rescan)
+# Tool Factory Backlog — hostile audit #2 (2026-08-26)
 # Format: slug | category | type | est CPC | why | suggest(score K/L seeds, depth N)
-# Rescored from REAL Google Suggest data (docs/data/suggest-scan.json):
+# Audit #2 verdicts: 216 rows in -> 209 kept | 2 cut | 5 merged into surviving rows |
+#   1 retyped (wedding-venue lead->calc, no server-side lead capture on static hosting) |
+#   15 wave-7 auto rows pulled up from the research-notes tail into the ranked tiers
+#   (marked †, no suggest score yet, placed by CPC x volume x buildability).
+#   0 duplicates of live tools found (audit #1 earlier today already cut those 11).
+#   Full verdict list: /tmp/backlog-audit.md (supersedes audit #1's tmp report).
+# Scoring, from the 2026-08-26 rescan (docs/data/suggest-scan.json):
 #   score = 100 x demand_frac x (0.4 + 0.6 x longtail) x (0.3 + 0.7 x cpc_norm)
 #     demand_frac = seeds returning suggestions / seeds tried (1-2 seeds per slug)
 #     longtail    = unique suggest variants across seeds, capped at 20
 #     cpc_norm    = midpoint of est-CPC field / $50 ("low" -> $1)
 # Zero-demand rows (score 0: no seed returned any suggestion) sit in the last tier —
-# suggest absence is not proof of zero volume (quirky for some head terms) but is weak evidence.
-# Original wave headers/research comments preserved verbatim at the bottom (research notes).
-# Pre-rewrite layout: /tmp/tool-backlog.pre-suggest-rewrite.md + git history.
+#   suggest absence is not proof of zero volume (quirky for some head terms) but is weak evidence.
+# CPC/volume figures are as-researched by the original waves, not re-verified externally.
+# Pre-rewrite layouts: /tmp/tool-backlog.pre-suggest-rewrite.md + git history.
 # Status tracking: built tools get moved to done.md by the factory cron.
 
-## Score 80+ (1 slugs)
+## Score 80+ (1 slug)
 student-loan-refinance-calculator | finance | calc | $30-80 | highest CPC in the file; SoFi/Earnest/Credible bid hard; weighted rate vs offer, break-even + interest saved; reuses loan-calculator pattern | suggest(score 100, 2/2 seeds, depth 20)
 
-## Score 60-79 (6 slugs)
+## Score 60-79 (5 slugs)
 extended-car-warranty-cost-calculator | auto | calc | $20-50 | warranty vertical clicks run $20-50+; 8-12k/mo; age/mileage term-pricing bands, pure client-side | suggest(score 77, 2/2 seeds, depth 19)
 diminished-value-claim-calculator | legal | calc | $15-40 | 17c formula (base loss x damage x mileage multipliers); 10-15k/mo; DV appraisers + PI attorneys bid; same multiplier-table pattern as settlement winners | suggest(score 68, 2/2 seeds, depth 20)
 truck-accident-settlement-calculator | legal | calc | $25-60 | commercial vehicle premium; 8th settlement tool on a pattern proven 7x | suggest(score 68, 2/2 seeds, depth 12)
 student-loan-consolidation-calculator | finance | calc | $15-40 | federal weighted-average rate ROUNDED UP to 1/8% (generic calcs get this wrong = the moat); 15-25k/mo; loans-category CPCs $30-55 | suggest(score 66, 2/2 seeds, depth 19)
 heloc-vs-cash-out-refi-calculator | finance | calc | $15-35 | home equity = top finance CPC; comparison chooser, distinct from live heloc-payment + refinance-break-even | suggest(score 65, 2/2 seeds, depth 20)
-roth-conversion-calculator | finance | calc | $22 | retirement tax planning; bracket-ladder projection, pure client-side | suggest(score 61, 2/2 seeds, depth 20)
 
-## Score 40-59 (51 slugs)
+## Score 40-59 (59 slugs: 51 scored + 8 †wave-7)
+vin-decoder | auto | tool | $2-5 | "vin decoder" 350-550k/mo, the biggest auto keyword not in the catalog; free NHTSA vPIC API is CORS-open (client-side fetch, no key; house precedent: live currency/crypto rates) + static WMI/year-code fallback table; recall-lookup mode same page; volume + interlink play, vehicle-history advertisers fund it | †wave-7
 pet-insurance-cost-calculator | insurance | calc | $12-30 | anchor for /pet-tools/ hub: species/breed/age/state premium table x reimbursement %; 40-60k/mo cluster; Lemonade/Trupanion bid; add worth-it break-even mode | suggest(score 59, 2/2 seeds, depth 20)
 non-owner-car-insurance-cost-calculator | insurance | calc | $10-30 | state-average table for non-owner policies; 8-12k/mo; head-term CPC without the head-term SERP war; distinct from sr22 row; state-table pattern proved | suggest(score 58, 2/2 seeds, depth 20)
 pslf-forgiveness-calculator | finance | calc | $10-30 | 120-payment projection vs standard/refi payoff comparison; loan-lawyer bids | suggest(score 58, 2/2 seeds, depth 20)
+car-shipping-cost-calculator | auto | calc | $8-20 | auto transport is a notorious expensive-lead vertical (brokers pay $50-150/lead; monetized via display ads, no lead capture on static hosting); "car shipping cost"/"how much to ship a car"/"car transport cost" 40-70k/mo; per-mile tier x vehicle size x open-vs-enclosed table, pure client-side; nothing in backlog or live touches it | †wave-7
+car-insurance-rate-increase-calculator | insurance | calc | $8-20 | "how much does car insurance go up after an accident" 15-25k/mo + DUI/speeding/ticket variants = 30-50k cluster; state surcharge tables (+40% avg accident, +80% DUI) are AIO-citable; insurers pay top CPC; distinct intent from live car-insurance-estimator (generic cost vs post-incident delta) | †wave-7
 irmaa-calculator | insurance | calc | $10-25 | senior market high RPM; MAGI 2-year lookback bracket tables; pairs with rmd-calculator | suggest(score 54, 2/2 seeds, depth 20)
 auto-refinance-calculator | finance | calc | $8-25 | refi lenders pay top auto-finance CPC; current APR vs offer + fee break-even; distinct from auto-loan-calculator and refinance-break-even | suggest(score 53, 2/2 seeds, depth 20)
 parent-plus-loan-calculator | finance | calc | $8-25 | ~4.2% origination fee true-APR reveal is the hook; 15-25k/mo; refi lenders target parents | suggest(score 53, 2/2 seeds, depth 20)
@@ -34,9 +42,10 @@ totaled-car-value-calculator | insurance | calc | $8-25 | ACV from depreciation 
 sr22-insurance-cost-calculator | insurance | calc | $10-25 | nonstandard auto premium CPC; state filing-fee table | suggest(score 53, 2/2 seeds, depth 19)
 homeowners-dwelling-coverage-calculator | insurance | calc | $10-25 | dwelling-replacement cost by regional build rates; regional insurer bids; no homeowners tool live | suggest(score 51, 2/2 seeds, depth 18)
 dog-food-calculator | pets | calc | $8-20 | RER = 70 x kg^0.75 x activity factor; "how much should I feed my dog" ~35k/mo; fresh-food DTC pays top pet CAC | suggest(score 50, 2/2 seeds, depth 20)
+lease-payment-calculator | auto | calc | $4-10 | "lease payment calculator"/"car lease calculator" 30-60k/mo head term missing from the file; cap-cost minus residual + money-factor math, engine shared with lease-vs-buy row (house precedent: auto-loan/car-payment/loan coexist); lease lenders bid | †wave-7
 rmd-calculator | finance | calc | $8-18 | uniform-table RMD by age + balance; IRMAA interlink (merged 2026-08-26: wave-6 required-minimum-distribution-calculator was the same tool, one row now) | suggest(score 48, 2/2 seeds, depth 20)
 lease-vs-buy-car-calculator | auto | calc | $8-20 | ~20k/mo; pure NPV math (depreciation, money factor, mileage overage) | suggest(score 48, 2/2 seeds, depth 19)
-college-cost-calculator | education | calc | $6-18 | in-state vs out-of-state vs private 4-yr table; programmatic-college leads $20-100 CPL | suggest(score 47, 2/2 seeds, depth 20)
+college-cost-calculator | education | calc | $6-18 | in-state vs out-of-state vs private 4-yr table; programmatic-college leads $20-100 CPL; how-much-should-i-borrow mode folded in (audit #2 2026-08-26: first-year-salary cap rule + per-$10k payment table; was a depth-3 row, weakest signal in the file) | suggest(score 47, 2/2 seeds, depth 20)
 llc-vs-scorp-calculator | finance | calc | $8-20 | tax-structure chooser, formation services bid; distinct from live incorporation-cost-calculator (fees vs structure) | suggest(score 47, 2/2 seeds, depth 18)
 wedding-loan-calculator | finance | calc | $10-25 | personal-loan lenders bid "wedding loan" 15k/mo; thin re-skin of loan-calculator pattern (house precedent: auto-loan + loan + car-payment coexist) | suggest(score 46, 2/2 seeds, depth 15)
 car-repair-cost-calculator | auto | calc | $6-15 | umbrella hub; 30k+/mo; by-repair table (diagnose -> parts -> labor hours) | suggest(score 45, 2/2 seeds, depth 20)
@@ -45,15 +54,19 @@ windshield-replacement-cost-calculator | auto | calc | $8-18 | glass cos bid har
 529-college-savings-calculator | finance | calc | $5-15 | tuition-inflation projection + monthly needed + 30-state deduction table; triple AIO-citable | suggest(score 44, 2/2 seeds, depth 20)
 capital-gains-tax-calculator | finance | calc | $5-15 | 90k/mo + crypto longtails; distinct from income-tax-calculator (salary tax); federal + state LTCG/STCG bracket tables | suggest(score 44, 2/2 seeds, depth 20)
 car-affordability-calculator | auto | calc | $5-15 | reverse of auto-loan-calculator: budget -> sticker incl tax/fees; 15-25k/mo; pairs with live how-much-car-payment guide | suggest(score 44, 2/2 seeds, depth 20)
+upside-down-car-loan-calculator | auto | calc | $5-15 | "upside down car loan"/"negative equity car" cluster 15-30k/mo; amortization-vs-depreciation curve crossing shows when equity turns positive = unique math no generic calc does; refi lenders bid; distinct from gap-insurance row (policy cost vs equity math) | †wave-7
 gap-insurance-cost-calculator | insurance | calc | $5-15 | dealer one-time vs insurer add-on + loan-balance gap check; interlinks auto-loan and depreciation tools | suggest(score 44, 2/2 seeds, depth 20)
+engine-replacement-cost-calculator | auto | calc | $4-10 | "engine replacement cost" 20-40k/mo, bigger than transmission which already has a row; reman vs used vs rebuild vs in-frame repair table; parts retailers + reman engine suppliers bid; shares the repair-cost table pattern | †wave-7
 lasik-cost-calculator | health | calc | $6-14 | local surgical LTV; by-provider-type price bands | suggest(score 44, 2/2 seeds, depth 20)
 student-loan-payoff-calculator | finance | calc | $8-20 | federal daily-simple-interest amortization + extra payments + avalanche; 10-18k/mo; student-specific variant of loan payoff (house precedent: credit-card-payoff pair) | suggest(score 44, 2/2 seeds, depth 16)
 529-to-roth-rollover-calculator | finance | calc | $6-15 | SECURE 2.0 $35k cap / 15-yr age / annual-limit years-to-complete math; fresh keyword, thin SERP | suggest(score 43, 2/2 seeds, depth 19)
+ev-charger-installation-cost-calculator | auto | calc | $5-12 | "EV charger installation cost"/"level 2 charger install" 15-30k/mo; hardware + electrician hours + panel-upgrade decision tree; charger brands and home-services electricians pay home-improvement CPCs; distinct from ev-charging-cost row (install vs energy) | †wave-7
 actual-vs-standard-mileage-calculator | finance | calc | $5-12 | IRS standard rate vs actual expenses; 15-25k/mo, Jan-Apr peak; tax-software bids; interlinks live self-employment-tax + quarterly-tax tools | suggest(score 42, 2/2 seeds, depth 20)
 catalytic-converter-replacement-cost-calculator | auto | calc | $5-12 | ~18k/mo; theft-replacement spikes; parts retailers bid | suggest(score 42, 2/2 seeds, depth 20)
 dog-dental-cleaning-cost-calculator | pets | calc | $5-12 | biggest uncovered vet-procedure keyword 20-30k/mo; anesthesia price-band table; vet financing bids | suggest(score 42, 2/2 seeds, depth 20)
 dog-surgery-cost-calculator | pets | calc | $5-12 | TPLO/patella/foreign-body procedure table by dog size; 15-25k/mo; vet-financing advertisers pay near-insurance CPCs | suggest(score 42, 2/2 seeds, depth 20)
 ev-charging-cost-calculator | auto | calc | $5-12 | "how much to charge an EV" ~15k/mo rising; kWh x mi/kWh vs gas comparison; interlinks live fuel-cost-calculator | suggest(score 42, 2/2 seeds, depth 20)
+ev-battery-replacement-cost-calculator | auto | calc | $4-10 | "EV battery replacement cost" 12-25k/mo and rising as 2011-2018 EV packs age out of 8yr/100k warranties; by-model pack-price table + warranty-check mode; same warranty bidders as extended-car-warranty-cost (the #2 score row in this file) | †wave-7
 new-vs-used-car-calculator | auto | calc | $5-12 | distinct from lease-vs-buy; depreciation delta + insurance + financing 5-yr spread | suggest(score 42, 2/2 seeds, depth 20)
 plastic-surgery-cost-calculator | health | calc | $5-12 | 50k/mo; by-procedure x by-state table pattern | suggest(score 42, 2/2 seeds, depth 20)
 student-loan-forgiveness-tax-bomb-calculator | finance | calc | $5-12 | IDR forgiveness TAXABLE again post-2025 (ARPA exclusion ended); 2-5k/mo AIO longtail zone; complements repayment anchor | suggest(score 42, 2/2 seeds, depth 20)
@@ -75,7 +88,7 @@ timing-belt-replacement-cost-calculator | auto | calc | $4-10 | 15-20k/mo; $500-
 towing-cost-calculator | auto | calc | $4-10 | ~12k/mo; hook fee + per-mile by tow type; local tow + roadside plans bid | suggest(score 40, 2/2 seeds, depth 20)
 sat-score-calculator | education | calc | $4-12 | 25-60k/mo seasonal; raw->scaled->percentile from published College Board tables; test-prep bidders pay $10-30/click adjacent | suggest(score 40, 2/2 seeds, depth 19)
 
-## Score 20-39 (144 slugs)
+## Score 20-39 (141 slugs: 134 scored + 7 †wave-7)
 act-score-calculator | education | calc | $3-10 | 15-35k/mo seasonal; published ACT tables; second page on the sat-score engine | suggest(score 39, 2/2 seeds, depth 20)
 raw-dog-food-calculator | pets | calc | $3-10 | 2-3% body weight 80/10/10 split; 8-15k/mo; premium raw DTC pays top pet-food CAC; distinct keyword from dog-food-calculator | suggest(score 39, 2/2 seeds, depth 20)
 car-key-replacement-cost-calculator | auto | calc | $4-12 | 15-25k/mo; basic vs transponder vs smart fob x dealer vs locksmith; table-first | suggest(score 39, 2/2 seeds, depth 18)
@@ -95,13 +108,18 @@ party-rental-cost-calculator | events | calc | $3-8 | tent size table + per-item
 vehicle-registration-cost-calculator | auto | calc | $3-8 | 50-state fee table = the AIO pattern that won for car-insurance-estimator; ~15k/mo | suggest(score 38, 2/2 seeds, depth 20)
 wheel-alignment-cost-calculator | auto | calc | $3-8 | 25-30k/mo; 2 vs 4-wheel x single vs lifetime plan; cross-sell new-tires tool | suggest(score 38, 2/2 seeds, depth 20)
 window-tint-cost-calculator | auto | calc | $3-8 | 25-35k/mo; vehicle x film-type bands PLUS 50-state VLT legality table = double AIO magnet | suggest(score 38, 2/2 seeds, depth 20)
+car-cost-of-ownership-calculator | auto | calc | $3-8 | "cost of ownership"/"true cost to own"/"how much does it cost to own a car" 25-50k/mo; 5-yr stacker (depreciation + insurance + fuel + maintenance + financing + fees) = hub page internal-linking every auto row in this file; Edmunds owns the branded phrase, not the generic keywords | †wave-7
 engagement-ring-budget-calculator | wedding | calc | $2-8 | "engagement ring cost" 25k/mo + "how much to spend" 10k/mo; salary-rule vs 2-3mo myth + carat table; jewelers bid | suggest(score 37, 2/2 seeds, depth 20)
-wedding-venue-cost-calculator | wedding | lead | $4-6 | venue = #1 line item; confirmed $5.42 CPC and $40-150/lead vertical; by-state and venue-type table | suggest(score 37, 2/2 seeds, depth 20)
+wedding-venue-cost-calculator | wedding | calc | $4-6 | venue = #1 line item; confirmed $5.42 CPC; by-state and venue-type table (RETYPED lead->calc audit #2 2026-08-26: no server-side lead capture on static hosting, display-ads calc instead) | suggest(score 37, 2/2 seeds, depth 20)
 pell-grant-eligibility-calculator | education | calc | $3-8 | SAI-band -> award table ($7,395 max); 5-15k/mo; reuses the fafsa-sai engine | suggest(score 37, 2/2 seeds, depth 19)
 towing-capacity-calculator | auto | tool | $3-8 | GVWR minus curb weight, GCWR check, tongue-weight math; 20-40k/mo; capability sibling of towing-cost | suggest(score 37, 2/2 seeds, depth 19)
+lease-buyout-calculator | auto | calc | $4-10 | "car lease buyout"/"should I buy my leased car" 10-20k/mo; residual vs current-market value vs early-termination payoff 3-way compare + buyout loan payment; lenders and used-car retailers bid; distinct from lease-vs-buy (decision at signing vs end-of-lease) | †wave-7
+strut-replacement-cost-calculator | auto | calc | $3-8 | "strut replacement cost"/"shocks and struts cost" 15-30k/mo; per-axle parts+labor combos + strut-mount + post-replacement alignment cross-sell to wheel-alignment row; complete-strut-assembly retailers bid | †wave-7
+car-sales-tax-calculator | auto | calc | $3-8 | "sales tax on a car"/"vehicle sales tax" 15-30k/mo; state+county rate table with trade-in-credit states and title/registration add-ons = the car-specific moat over live generic sales-tax-calculator; cross-links vehicle-registration-cost row | †wave-7
+salvage-title-value-calculator | insurance | calc | $4-10 | "salvage title value"/"salvage car value" 8-15k/mo; % of ACV by damage tier + rebuilt-title resale discount table; we-buy-junk-car and salvage-auction lead-gen pays; closes the totaled-car-value -> diminished-value -> salvage chain | †wave-7
 ap-score-calculator | education | calc | $2-6 | per-exam raw->scaled worksheets; May spike 10-25k/mo; third page on the sat/act engine | suggest(score 36, 2/2 seeds, depth 20)
 cat-litter-cost-calculator | pets | calc | $2-6 | substrate x price-per-lb + subscription math; 5-10k/mo; subscription litter DTC bids | suggest(score 36, 2/2 seeds, depth 20)
-dog-pregnancy-calendar | pets | calc | $3-6 | 63-day gestation wheel; 15-20k/mo breeder intent, near-zero tool competition | suggest(score 36, 2/2 seeds, depth 20)
+dog-pregnancy-calendar | pets | calc | $3-6 | 63-day gestation wheel; 15-20k/mo breeder intent, near-zero tool competition; + cat-pregnancy-calendar (63-65 day wheel) as second page on the same engine (folded in audit #2 2026-08-26) | suggest(score 36, 2/2 seeds, depth 20)
 oil-change-cost-calculator | auto | calc | $3-6 | 40-60k/mo volume leader; synthetic vs blend cost-per-mile with interval math; quick-lube chains bid | suggest(score 36, 2/2 seeds, depth 20)
 pet-cremation-cost-calculator | pets | calc | $2-6 | communal vs individual + urn line items; 10-15k/mo; factual tone-careful build | suggest(score 36, 2/2 seeds, depth 20)
 photo-booth-rental-cost-calculator | events | calc | $2-6 | 10-20k/mo across weddings/proms/corporate; booth operators bid aggressively | suggest(score 36, 2/2 seeds, depth 20)
@@ -109,16 +127,16 @@ puppy-feeding-calculator | pets | calc | $2-6 | growth-phase calories (2-3x RER 
 scholarship-taxability-calculator | education | calc | $3-6 | qualified-expense vs room-and-board split; <1k/mo but that is the AIO longtail zone (82% of AIOs cite <1k/mo keywords); cheap build | suggest(score 36, 2/2 seeds, depth 20)
 subnet-calculator | dev | oss-wrap | $2-6 | rs/node-netmask (MIT): CIDR<->mask<->range<->broadcast, host count, split table; 55k+/mo; hosting/VPN ads bid (UI ref: cidr.xyz MIT) | suggest(score 36, 2/2 seeds, depth 20)
 teacher-salary-by-state-calculator | education | table | $2-6 | static NEA/BLS state x step-schedule data = near-zero build, the state-table AIO pattern; 15-25k/mo | suggest(score 36, 2/2 seeds, depth 20)
-words-per-minute-test | convert | tool | $4 | interactive typing test; distinct from reading-time (measure vs estimate); high volume | suggest(score 36, 2/2 seeds, depth 20)
+car-title-transfer-cost-calculator | auto | calc | $2-6 | "title transfer cost" + 50 state longtails 15-30k/mo; sibling of vehicle-registration-cost row (title vs reg fee; sale vs gift vs inheritance modes); DMV-service advertisers; near-zero tool competition in SERPs | †wave-7
+dealer-doc-fee-calculator | auto | table | $2-6 | "dealer fees"/"dealer doc fees" 10-25k/mo at purchase-decision stage; 50-state doc-fee table (capped in ~10 states) + out-the-door fee stacker = the state-table AIO pattern that won for car-insurance-estimator | †wave-7
 marriage-tax-penalty-calculator | finance | calc | $5-15 | MFJ vs MFS side-by-side reuses income-tax engine; tax software bids; 5-15k/mo, Jan-Apr peak | suggest(score 36, 2/2 seeds, depth 14)
 vet-bill-financing-calculator | finance | calc | $5-15 | CareCredit deferred-interest trap math (0% promo, ~27% retroactive APR); 3-6k/mo; consumer-finance CPC; cross-sells vet dental + surgery pages | suggest(score 36, 2/2 seeds, depth 14)
 barcode-generator | dev | oss-wrap | $2-5 | productdevbook/etiket (MIT, active, zero-dep): Code128/UPC/EAN/39 + 40 formats, SVG+PNG; "barcode generator" ~50k/mo; ALSO styled-QR = upgrade path for live qr-code-generator (ONE row: JsBarcode merged here 2026-08-26, etiket preferred, JsBarcode fallback) | suggest(score 35, 2/2 seeds, depth 20)
 certificate-decoder | dev-sec | asn1js | $2-5 | lapo-luchini/asn1js (ISC): PEM cert/CSR/key -> ASN.1 tree + readable fields; "certificate decoder" 8k + "csr decoder" 3k/mo; SSL-vendor ads = best CPC in lane | suggest(score 35, 2/2 seeds, depth 20)
-code-screenshot-generator | dev | oss-wrap | $2-5 | carbon (MIT, 36k stars) core extraction (prism -> styled render -> PNG), skip the Next.js shell; "code screenshot" ~10k/mo; carbon owns the brand, not the generic terms | suggest(score 35, 2/2 seeds, depth 20)
 dog-ideal-weight-calculator | pets | calc | $2-5 | breed + BCS healthy range; ~15k/mo; weight-loss-dog-food brand ads | suggest(score 35, 2/2 seeds, depth 20)
 dog-life-expectancy-calculator | pets | calc | $2-5 | ~80-90k/mo cluster; breed-size table; shares data with dog-age page | suggest(score 35, 2/2 seeds, depth 20)
 favicon-generator | dev | oss-wrap | $2-5 | ruisaraiva19/favycon (MIT): canvas pipeline -> favicon.ico + apple-touch + manifest; "favicon generator" ~30k/mo + "ico converter" ~15k/mo | suggest(score 35, 2/2 seeds, depth 20)
-protect-pdf | pdf | oss-wrap | $2-5 | pdfstudio lock() AES-256 + permissions; "password protect pdf" ~90k/mo; e-sign/SaaS ads bid hard | suggest(score 35, 2/2 seeds, depth 20)
+pdf-password-tools | pdf | oss-wrap | $1-3 | pdfstudio lock() + unlock() on ONE shell, TWO pages: "password protect pdf" ~90k/mo + "remove password from pdf" ~150k/mo; "never uploaded" privacy angle vs upload-based SERP leaders (protect-pdf + pdf-password-remover merged into one row audit #2 2026-08-26: same lib, inverse verbs) | suggest(scores 35 + 33, the two merged rows, both 2/2 seeds depth 20)
 tire-size-calculator | auto | tool | $2-5 | 40k+/mo volume king (retail tire sites own it now); pure geometry 225/65R17 -> diameter/width/speedo delta | suggest(score 35, 2/2 seeds, depth 20)
 wedding-dj-cost-calculator | wedding | calc | $2-5 | 10-20k/mo; 4-hr base + add-ons + live-band toggle ("wedding band cost" rides the page) | suggest(score 35, 2/2 seeds, depth 20)
 wedding-florist-cost-calculator | wedding | calc | $1.5-5 | per-piece pricing x table count; 10-18k/mo; high florist margins fund the ads | suggest(score 35, 2/2 seeds, depth 20)
@@ -133,7 +151,6 @@ curl-converter | dev | curlconverter | $1.5-4 | MIT, tree-sitter wasm lazy (thei
 dog-heat-cycle-calculator | pets | calc | $2-4 | next-cycle prediction (6-12 mo interval); 8-12k/mo breeder niche, zero quality tools ranking | suggest(score 34, 2/2 seeds, depth 20)
 ielts-band-score-calculator | education | calc | $1-4 | four-section mean + half-band rounding; 15-30k/mo global; pairs with cgpa-to-gpa as international cluster | suggest(score 34, 2/2 seeds, depth 20)
 image-metadata-remover | dev | oss-wrap | $2-4 | szTheory/exifcleaner (MIT) proves pure-JS lossless strip (no exiftool); "remove exif" ~15k/mo; privacy advertisers bid | suggest(score 34, 2/2 seeds, depth 20)
-military-time-converter | convert | tool | $3 | 12h<->24h conversion; ~60k/mo; live hours-calculator only does duration math (verified in-page, no 24h converter); trivial build | suggest(score 34, 2/2 seeds, depth 20)
 svg-optimizer | dev | oss-wrap | $1.5-4 | svg/svgo (MIT) in-browser, svgomg proves the bundle; "svg optimizer"/"minify svg" ~15k/mo; presets + before/after diff (duplicate rows from both image waves merged 2026-08-26) | suggest(score 34, 2/2 seeds, depth 20)
 wedding-budget-calculator | wedding | calc | $2-4 | 30-70k/mo head term + hub for the whole wedding cluster; allocates budget by % scaled by guest count; build first in the lane | suggest(score 34, 2/2 seeds, depth 20)
 wedding-dress-cost-calculator | wedding | calc | $1.5-4 | 20-35k/mo; dress + alterations (10-20% adder) + preservation; online bridal retailers bid | suggest(score 34, 2/2 seeds, depth 20)
@@ -153,12 +170,10 @@ json-to-typescript | dev | quicktype | $1-3 | Apache-2.0 client-side engine; "js
 mermaid-diagram-suite | dev | mermaid | $1-3 | mermaid (MIT) behind 3-4 pages: sequence-diagram-maker 25k/mo, er-diagram-maker 15k/mo, class-diagram-maker 10k/mo; FLAG: upgrades live flowchart-maker + gantt-chart-maker with a "mermaid syntax" mode, do not duplicate them | suggest(score 33, 2/2 seeds, depth 20)
 minifier-trio | dev | terser+csso+html-minifier | $1-3 | one shell, 3 pages: minify js 18k, css minifier 25k, minify html 8k/mo; terser BSD-2 + csso MIT + html-minifier MIT | suggest(score 33, 2/2 seeds, depth 20)
 password-strength-checker | dev | zxcvbn-ts | $1-3 | zxcvbn (MIT fork, active): entropy + crack-time; lazy ~800KB dictionary; ~25k/mo; password-manager ads bid | suggest(score 33, 2/2 seeds, depth 20)
-pdf-password-remover | pdf | oss-wrap | $1-3 | pdfstudio (Apache-2.0) unlock(); "remove password from pdf" ~150k/mo; "never uploaded" privacy angle vs upload-based SERP leaders; volume monster | suggest(score 33, 2/2 seeds, depth 20)
 phone-number-validator | dev | libphonenumber-js | $1-3 | MIT, offline Google metadata: validity + E.164 formats + carrier type; ~15k/mo | suggest(score 33, 2/2 seeds, depth 20)
 puppy-adult-size-calculator | pets | calc | $1-3 | "how big will my puppy get" 25-40k/mo; growth-curve percentage math + mixed-breed range; trivial | suggest(score 33, 2/2 seeds, depth 20)
 qr-code-with-logo | creator | oss-wrap | $1-3 | qr-code-styling (MIT, active): dots/logo/gradients, PNG/SVG; "qr code with logo" ~12k + "custom qr code" ~20k/mo; distinct intent from live plain qr-code-generator; dynamic-QR SaaS affiliate upside (fancy-qr-generator row merged here 2026-08-26) | suggest(score 33, 2/2 seeds, depth 20)
 quinceanera-cost-calculator | events | calc | $1-3 | 5-10k/mo for $5k-20k events; underserved SERP with a real advertiser base; Latino-events niche the big sites ignore | suggest(score 33, 2/2 seeds, depth 20)
-reading-time-calculator | convert | tool | $2 | words / WPM reading speed; distinct keyword cluster from word-counter; ~30k/mo; trivial | suggest(score 33, 2/2 seeds, depth 20)
 robots-txt-validator | dev | oss-wrap | $1-3 | samclarke/robots-parser (MIT, active): validate + "is this URL blocked" wildcard matcher + AI-crawler table; distinct intent from live robots-txt-generator (check vs create) | suggest(score 33, 2/2 seeds, depth 20)
 sql-playground | dev | sql.js | $1-3 | SQLite-to-wasm ~1MB, sample DB + user DDL -> results grid; "sqlite online" 8k + "sql playground" 6k/mo; runs, complements live sql-formatter (format) | suggest(score 33, 2/2 seeds, depth 20)
 watermark-pdf | pdf | oss-wrap | $1-3 | pdf-lib stamp overlay/underlay via pdfstudio; "watermark pdf" ~40k/mo | suggest(score 33, 2/2 seeds, depth 20)
@@ -166,7 +181,6 @@ wedding-alcohol-calculator | wedding | calc | $1-3 | 1-drink-per-guest-per-hour 
 wedding-cake-servings-calculator | wedding | calc | $1-3 | tier-size to servings chart + price-per-slice; 3-8k/mo; trivial build | suggest(score 33, 2/2 seeds, depth 20)
 wedding-invitation-cost-calculator | wedding | calc | $1-3 | 8-15k/mo; piece price + postage math; stationery printers bid | suggest(score 33, 2/2 seeds, depth 20)
 bcrypt-generator | dev | bcrypt.js | $1-2 | BSD-2 (per raw LICENSE): hash + verify + rounds slider; ~5k/mo; distinct from live MD5/SHA-only hash-generator | suggest(score 32, 2/2 seeds, depth 20)
-binary-payload-decoder | dev | protobuf.js + msgpack | $1-2 | both BSD/ISC verified: paste hex/base64 -> protobuf tree or msgpack JSON; 2.5k + 1.5k/mo; growing on LLM-API debugging traffic | suggest(score 32, 2/2 seeds, depth 20)
 code-beautifier | dev | js-beautify | $1-2.5 | js-beautify (MIT): js/css/html beautify 18k/mo combined; same shell as minifier-trio | suggest(score 32, 2/2 seeds, depth 20)
 compress-pdf | pdf | oss-wrap | $0.5-2 | pdfstudio lossless + PDFLince (MIT) rerender-downscale path; ~500k/mo biggest pdf verb after merge; honest "lossless / never uploaded" angle only | suggest(score 32, 2/2 seeds, depth 20)
 docx-viewer | document | oss-wrap | $1-2 | flyfish-dev/file-viewer (Apache-2.0) self-hostable wasm; "open docx online" ~30k/mo | suggest(score 32, 2/2 seeds, depth 20)
@@ -181,7 +195,7 @@ markdown-to-word | document | oss-wrap | $1-2 | vace/markdown-docx (MIT) on dola
 markdown-toc-generator | dev | oss-wrap | $0.5-2 | Flet/github-slugger (ISC, vendor+pin, dormant) + doctoc (MIT) as behavior ref: GitHub-accurate anchors (emoji/case/duplicates) are the moat; "table of contents generator" ~12k/mo | suggest(score 32, 2/2 seeds, depth 20)
 marriage-license-cost-calculator | wedding | calc | $0.5-2 | 50-state fee table + courthouse-wedding mode (15-25k/mo combined); state-table AIO pattern; internally links the cluster | suggest(score 32, 2/2 seeds, depth 20)
 pdf-metadata-editor | pdf | oss-wrap | $1-2 | pdf-lib (MIT) setTitle/setAuthor + read via pdfjs; "pdf metadata editor" ~10k/mo | suggest(score 32, 2/2 seeds, depth 20)
-pdf-to-text | pdf | oss-wrap | $1-2 | markitdown-ts PDF conversion; "pdf to text" ~100k/mo + AI-ingest longtail; same lib powers docx-to-markdown | suggest(score 32, 2/2 seeds, depth 20)
+pdf-to-text | pdf | oss-wrap | $1-2 | markitdown-ts PDF conversion; "pdf to text" ~100k/mo + AI-ingest longtail; markdown output mode covers the folded pdf-to-markdown row (markitdown-ts emits both, audit #2 2026-08-26) | suggest(score 32, 2/2 seeds, depth 20)
 test-grade-calculator | education | calc | $1-2 | "what grade is 21 out of 30" longtail flood 50k+/mo aggregate + teacher quick-grade mode; embed king; distinct from final-grade (points-to-% vs what-you-need) | suggest(score 32, 2/2 seeds, depth 20)
 wedding-gift-calculator | everyday | calc | $0.8-2 | "how much to spend on a wedding gift" 15-25k/mo by relationship/city/plate-cost; volume + internal links, not CPC; calc not generator (distinct from live gift-ideas) | suggest(score 32, 2/2 seeds, depth 20)
 words-to-pages-calculator | education | tool | $0.5-2 | 40-70k/mo evergreen essay volume; 275-words/page table + font options; trivial; cross-link word-counter | suggest(score 32, 2/2 seeds, depth 20)
@@ -204,41 +218,29 @@ csv-to-sql | dev | PapaParse | $1-2.5 | MIT (likely already the csv-to-json engi
 pdf-repair | pdf | oss-wrap | $1-4 | pdfstudio repair(); "repair corrupt pdf" ~20k/mo desperate-user niche, thin tool competition, high conversion | suggest(score 31, 2/2 seeds, depth 18)
 jpg-to-pdf | pdf | oss-wrap | $0.3-1 | pdfstudio images-to-PDF + pdf-lib embed; ~300k/mo phone-scanner crowd, trivial; feeder into pdf-merge | suggest(score 30, 2/2 seeds, depth 19)
 heic-to-jpg-converter | image | oss-wrap | $0.5-2 | hoppergee/heic-to (LGPL-3.0, verified): ship lib UNMODIFIED via CDN + attribution; "heic to jpg" 300k+/mo monster | suggest(score 30, 2/2 seeds, depth 18)
-jq-playground | dev | jq wasm | $1-2 | jqlang/jq (MIT, Dolan text verified) + official playground impl; "jq online" ~5k/mo; pairs with jsonpath-tester | suggest(score 30, 2/2 seeds, depth 18)
+jq-playground | dev | jq wasm + jsonpath | $1-2 | jqlang/jq (MIT, Dolan text verified) official playground impl + jsonpath lib in ONE shell, two pages: "jq online" ~5k/mo + jsonpath-tester ~5k/mo (jsonpath-tester row merged here audit #2 2026-08-26: the two rows described the same shell) | suggest(scores 30 + 27, the two merged rows)
 svg-to-png-converter | image | oss-wrap | $0.5-1.5 | vincerubinetti/svg-to-png (MIT): scale-factor rasterize + batch, handles foreignObject/fonts; ~40k/mo; rasterizes vector, distinct from live image-tools (raster<->raster) | suggest(score 30, 2/2 seeds, depth 18)
 wedding-cost-per-guest-calculator | wedding | calc | $2-4 | $150-300/guest breakdown table feeding the budget hub; same schema as by-state cost winners | suggest(score 30, 2/2 seeds, depth 16)
 html-entity-converter | dev | entities | $0.8-2 | fb55/entities (BSD-2 per file text, not BSD-3 as first logged): named/numeric encode+decode; ~12k/mo | suggest(score 27, 2/2 seeds, depth 15)
-jsonpath-tester | dev | jsonpath | $1-2 | MIT live eval + highlighted matches; ~5k/mo; same shell could host jq | suggest(score 27, 2/2 seeds, depth 15)
 document-metadata-remover | document | oss-wrap | $2-5 | toddholloway/O365Metadata (MIT, active) strips author/company/history from docx/pptx/xlsx/pdf client-side; "remove metadata from word document" ~10k/mo; job-seeker/legal intent; pairs with image-metadata-remover | suggest(score 27, 2/2 seeds, depth 12)
-cat-pregnancy-calendar | pets | calc | $2-4 | 63-65 day wheel; second page on the dog-pregnancy engine | suggest(score 26, 2/2 seeds, depth 12)
 party-food-quantity-calculator | events | calc | $1.5-4 | 5-15k/mo across ALL party types; per-person appetizer/entree/dessert table; grocery + catering ads | suggest(score 26, 2/2 seeds, depth 12)
-docx-to-markdown | document | oss-wrap | $1-2.5 | markitdown-ts (MIT) Word converter in-worker; ~6k/mo riding the LLM-ingest wave; cross-links pdf-to-markdown + docx-to-html | suggest(score 23, 1/1 seeds, depth 10)
+docx-to-markdown | document | oss-wrap | $1-2.5 | markitdown-ts (MIT) Word converter in-worker; ~6k/mo riding the LLM-ingest wave; cross-links pdf-to-text + docx-to-html | suggest(score 23, 1/1 seeds, depth 10)
 flatten-pdf | pdf | oss-wrap | $1-3 | pdfstudio flatten(); print-shop/forms niche "flatten pdf" ~15k/mo | suggest(score 23, 1/1 seeds, depth 10)
-pdf-to-markdown | pdf | oss-wrap | $1-3 | jzillmann/pdf-to-markdown (MIT) browser pdfjs pipeline; AI-training workflow term growing fast | suggest(score 23, 1/1 seeds, depth 10)
 docx-to-html | document | oss-wrap | $1-2 | mammoth.js (BSD-2) semantic docx->html, 13 yrs maintained; pairs with live markdown-to-html | suggest(score 22, 1/1 seeds, depth 10)
 markdown-to-pdf | document | oss-wrap | $0.5-1.5 | realdennis/md2pdf (MIT) vendored, swap print-dialog for pdfmake one-click download; ~60k/mo | suggest(score 22, 1/1 seeds, depth 10)
 crop-pdf | pdf | oss-wrap | $1-2 | PDFLince crop via pdf-lib setCropBox + auto-whitespace-detect mode; ~15k/mo | suggest(score 22, 1/1 seeds, depth 9)
 debt-settlement-vs-bankruptcy-calculator | finance | calc | $10-30 | debt relief = top-5 CPC vertical; nothing similar live | suggest(score 20, 1/2 seeds, depth 10)
-how-much-should-i-borrow-for-college-calculator | education | calc | $4-10 | first-year-salary cap rule + per-$10k payment table; decision-stage, feeds college-cost interlinks | suggest(score 20, 1/1 seeds, depth 3)
 
 ## Score 1-19 (3 slugs)
 fake-data-generator-trio | dev | @faker-js/faker | $0.3-1 | faker-js (MIT, 15.4k stars) one lazy locale bundle -> 3 pages: fake-name-generator 180k+/mo, random-address-generator 40k+/mo, fake-email-generator 15k+/mo; volume monster | suggest(score 11, 1/2 seeds, depth 10)
 pdf-certificate-maker | document | oss-wrap | $1-3 | pdfme (MIT) Designer component; "certificate maker" ~20k/mo; course-platform ads | suggest(score 11, 1/2 seeds, depth 10)
 toml-validator | dev | smol-toml | $1-2 | BSD-2: TOML 1.1 validate + ->JSON; 4k + 2k/mo; clone of live yaml-validator shell, near-zero effort | suggest(score 11, 1/2 seeds, depth 10)
 
-## Research notes — preserved verbatim from pre-rewrite wave headers
-# Tool Factory Backlog — hostile audit + re-rank 2026-08-26
-# Format: slug | category | type | est CPC | why
-# Build history lives in docs/tool-factory-done.md ONLY. Built slugs are removed here.
-# Audit 2026-08-26: 235 rows in -> 204 kept, 31 cut. Cuts: 11 duplicates of live tools,
-# 9 cross-wave duplicate rows merged, 4 unwrappable, 7 unmonetizable or poor-ROI.
-# Full verdict list: /tmp/backlog-audit.md. CPC/volume figures are as-researched by the
-# original waves, not re-verified externally. Tiers: P1 (money anchors / volume monsters,
-# proven patterns) -> P4 (thin tail, build opportunistically). Within tier: CPC x volume.
-## P1 — ship first: $10+ mid CPC, or monster volume on a trivial build
-## P2 — solid money: mid CPC $4-12 or 25k+/mo volume, easy build
-## P3 — lane fillers: $2-6 CPC, real volume, table/calc builds
-## P4 — thin tail: cheap builds, weak monetization, ship when a shell already exists
+## Research notes — preserved from audit #1 (2026-08-26), minus superseded P1-P4 tier-definition lines
+# Audit #1 (earlier 2026-08-26): 235 rows in -> 204 kept, 31 cut. Cuts: 11 duplicates of
+#   live tools, 9 cross-wave duplicate rows merged, 4 unwrappable, 7 unmonetizable or
+#   poor-ROI. CPC/volume figures are as-researched by the original waves, not re-verified
+#   externally. (Audit #1's P1-P4 tier headers removed by audit #2: superseded by score tiers.)
 ## License guards (verified the hard way — do not re-litigate)
 # AVOID (GPL/AGPL/non-commercial): it-tools, quickchart, easy-invoice-pdf, qrbtf, ua-parser-js
 #   (AGPL-3.0 now despite MIT-era README), jsoncrack (42MB app anyway), ONLYOFFICE,
@@ -250,7 +252,7 @@ toml-validator | dev | smol-toml | $1-2 | BSD-2: TOML 1.1 validate + ->JSON; 4k 
 #   qpdf engine underneath is 15+ yrs battle-tested). sheetjs + pdf-lib dormant but
 #   API-stable: vendor + pin from cdn.sheetjs.com.
 # Never promise iLovePDF compression ratios: pdfstudio compress is lossless stream
-# recompression only; PDFLince rerender is the downscale path.
+#   recompression only; PDFLince rerender is the downscale path.
 ## Fold-ins & deferred (decided — don't re-research, don't make new rows)
 # pets: kitten-vaccination = mode of puppy-vaccination engine; xylitol + onion toxicity fold
 #   into dog-chocolate page as a suite; rover-sitter-earnings fits everyday/finance not pets.
@@ -267,7 +269,22 @@ toml-validator | dev | smol-toml | $1-2 | BSD-2: TOML 1.1 validate + ->JSON; 4k 
 #   end-of-life wave, out of current lanes.
 # mermaid suite UPGRADES live flowchart-maker + gantt-chart-maker (add syntax mode), never
 #   new duplicate pages. Squoosh wasm codecs = future upgrade path for image-compressor.
+# audit #2 folds (2026-08-26): cat-pregnancy = page on dog-pregnancy engine; pdf-to-markdown
+#   = output mode of pdf-to-text (markitdown-ts); how-much-should-i-borrow = mode of
+#   college-cost; protect/remove pdf-password = one shell two pages; jsonpath = page on the
+#   jq shell. CUT outright: code-screenshot-generator (carbon owns brand+SERP, no wedge),
+#   binary-payload-decoder (two vendored deps for ~4k/mo, worst ROI in file).
 ## AIO structure rule (from Semrush 200k study — applies to every page build)
 # 82% of AIOs on <1k/mo keywords = longtails; ~80% informational; listicles cited most.
 # Cited pages: 2500-3300 words, tables, FAQ blocks, 40-60 word direct answer under H1.
 # Only 20-26% AIO overlap with top-10 → don't need to rank #1 to get cited.
+
+## Wave 7 — auto ownership & repair research notes (rows integrated into tiers above as †)
+# 2026-08-26 wave. All client-side builds. Dupe-checked vs backlog + live catalog + fold-in
+#   list: engine/strut pages are NOT on the head-gasket/clutch/alternator/paint/detailing
+#   fold-in list and outrank transmission-repair-cost (25k/mo), which has its own row —
+#   same precedent. Suggest scores to be added on next rescan; † rows placed by CPC x volume.
+# Bench (build when a shell exists): early-lease-termination-fee-calculator (8-15k/mo, 3-way exit compare),
+#   hail-damage-repair-cost-calculator (10-20k/mo seasonal spring/summer PDR + insurance-claim mode),
+#   smog-check-cost-calculator (15-25k/mo CA-centric county price table), mechanic-labor-rate-calculator
+#   (metro labor-rate table, meta-hub cross-linking every repair page above).
