@@ -37,9 +37,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is URL encoding?","acceptedAnswer":{"@type":"Answer","text":"A scheme that represents characters not allowed in a URL as a percent sign followed by their UTF-8 hex bytes — a space as %20, an ampersand as %26. Defined by RFC 3986 and the WHATWG URL standard."}},{"@type":"Question","name":"What is the difference between encodeURI and encodeURIComponent?","acceptedAnswer":{"@type":"Answer","text":"encodeURIComponent escapes every reserved character including &, =, ?, and /, and is correct for query parameter values. encodeURI leaves structural characters intact and is meant for a complete URL."}},{"@type":"Question","name":"Why does a space sometimes appear as + instead of %20?","acceptedAnswer":{"@type":"Answer","text":"In application/x-www-form-urlencoded data (HTML form submissions), spaces are encoded as +. Elsewhere in URLs the correct encoding is %20. Decoders must know which convention the sender used, or + and space get confused."}},{"@type":"Question","name":"What does double encoding look like and how do I fix it?","acceptedAnswer":{"@type":"Answer","text":"A %20 that gets encoded again becomes %2520 (the % becomes %25). If a URL shows percent codes in the final rendered text, it was double-encoded — decode once and re-encode only the components that need it."}},{"@type":"Question","name":"Is URL encoding a security measure?","acceptedAnswer":{"@type":"Answer","text":"No. It transports characters safely through URL syntax but is neither encryption nor sanitization. Prevent XSS or SQL injection by escaping data for the destination context, not by URL encoding."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>URL Encoder / Decoder</h1>
@@ -69,18 +70,34 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>What is URL Encoding?</h2>
-    <p>URL encoding converts special characters into a format that can be transmitted over the internet. Characters like spaces, ampersands, and non-ASCII characters are replaced with percent-encoded sequences (e.g., space becomes %20).</p>
-    <h2>When to Use URL Encoding</h2>
-    <ul>
-      <li>Building query strings with special characters</li>
-      <li>Passing data in URL parameters</li>
-      <li>Encoding API request URLs</li>
-      <li>Handling international characters in URLs</li>
-    </ul>
-    <h2>encodeURI vs encodeURIComponent</h2>
-    <p>Use <strong>encodeURI</strong> for full URLs (keeps :/?#&=@). Use <strong>encodeURIComponent</strong> for individual query parameter values (encodes everything except A-Za-z0-9-_.!~*'()).</p>
-  </div>
+<h2>About URL Encoding</h2>
+<p>URL encoding — percent-encoding — is how arbitrary characters travel inside a URL, a format that only permits a limited set of unreserved ASCII characters. When a space, an ampersand, a Chinese character, or an emoji needs to appear in a query string or path, the safe representation is a percent sign followed by the character's UTF-8 bytes in hexadecimal. A space becomes %20; an ampersand becomes %26 — encoded precisely so it is not mistaken for a parameter separator.</p>
+<p>The rules come from the URI specifications (RFC 3986 for URIs generally, with the WHATWG URL standard governing what browsers actually implement). Unreserved characters — letters, digits, hyphen, period, underscore, tilde — may appear raw. Reserved characters like ?, &, =, /, and # have structural meaning, so they must be encoded when used as data. Everything else, including all non-ASCII, is percent-encoded over its UTF-8 bytes.</p>
+<p>The classic confusion is component versus full-URI encoding. Encoding a query parameter value must escape & and =, or the server will parse your data as extra parameters; encoding a whole URL must not escape the structural separators. This tool encodes a component (equivalent to encodeURIComponent in JavaScript) and decodes either form, so you can move data in and out of URLs safely.</p>
+<p>Practical uses appear constantly in web work: building links that carry a search term, passing an email address or URL inside a redirect parameter, handling user names that contain spaces or accents, and decoding a value that arrives double-encoded. If a plus sign shows up where you expected a space, you are looking at form encoding (application/x-www-form-urlencoded), an older scheme the decoder here also handles.</p>
+<p>One more habit worth forming: paste, encode, copy, and paste back — a ten-second loop that has saved countless broken links. Compare the encoded string against the decoded original before shipping; if decoding the encoded value does not reproduce your input exactly, something upstream double-encoded it, and the bug is easier to catch at your desk than in a user's browser.</p>
+<h2>Common Characters and Their Encodings</h2>
+<p>The table shows the encodings you will encounter most. Note two special cases: the space is %20 in paths but historically + in form-encoded query strings (application/x-www-form-urlencoded), and the plus sign itself must then be encoded as %2B in that context — a mismatch that produces the classic '+ instead of space' bug when decoding with the wrong function.</p>
+<p>Non-ASCII characters encode over multiple bytes because UTF-8 uses one byte for ASCII, two for most Latin-script diacritics, and three or four for CJK and emoji. É is %C3%A9, 中 is %E4%B8%AD, and the coffee emoji is four percent triplets. A decoder must therefore decode bytes first, then interpret the byte sequence as UTF-8 — which is exactly what this tool does.</p>
+<h2>Where Encoding Actually Breaks</h2>
+<p>Real-world failures cluster in a few places. Copying a URL out of an email or document can double-encode it (a %20 becomes %2520, because the % itself got encoded), producing a path that literally contains '%20' as text. Building URLs by string concatenation without encoding user input is both a correctness bug and the vector for query-string injection — encode each dynamic piece separately. And API keys or tokens containing + or / must be encoded in query strings, or they arrive corrupted after the server interprets + as space.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Character</th><th>Encoded</th><th>Why</th></tr><tr><td>space</td><td>%20</td><td>Not allowed raw in URLs</td></tr><tr><td>&amp;</td><td>%26</td><td>Separates query parameters</td></tr><tr><td>=</td><td>%3D</td><td>Separates key from value</td></tr><tr><td>?</td><td>%3F</td><td>Starts the query string</td></tr><tr><td>#</td><td>%23</td><td>Starts the fragment</td></tr><tr><td>+</td><td>%2B</td><td>Means space in form-encoding</td></tr><tr><td>%</td><td>%25</td><td>Introduces an encoding itself</td></tr><tr><td>/</td><td>%2F</td><td>Path separator (encode in values)</td></tr></table>
+</div>
+<h2>Encoding and Security</h2>
+<p>Percent-encoding is not encryption or sanitization. Encoding user input stops it from being parsed as URL structure, but it does not stop XSS or SQL injection by itself — those are defeated by output-encoding for the destination context (HTML, SQL), not by URL encoding. Use this tool to make data survive the trip through a URL; use the appropriate escaping mechanism when that data is later rendered.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What is URL encoding?</strong></p>
+<p>A scheme that represents characters not allowed in a URL as a percent sign followed by their UTF-8 hex bytes — a space as %20, an ampersand as %26. Defined by RFC 3986 and the WHATWG URL standard.</p>
+<p><strong>What is the difference between encodeURI and encodeURIComponent?</strong></p>
+<p>encodeURIComponent escapes every reserved character including &, =, ?, and /, and is correct for query parameter values. encodeURI leaves structural characters intact and is meant for a complete URL.</p>
+<p><strong>Why does a space sometimes appear as + instead of %20?</strong></p>
+<p>In application/x-www-form-urlencoded data (HTML form submissions), spaces are encoded as +. Elsewhere in URLs the correct encoding is %20. Decoders must know which convention the sender used, or + and space get confused.</p>
+<p><strong>What does double encoding look like and how do I fix it?</strong></p>
+<p>A %20 that gets encoded again becomes %2520 (the % becomes %25). If a URL shows percent codes in the final rendered text, it was double-encoded — decode once and re-encode only the components that need it.</p>
+<p><strong>Is URL encoding a security measure?</strong></p>
+<p>No. It transports characters safely through URL syntax but is neither encryption nor sanitization. Prevent XSS or SQL injection by escaping data for the destination context, not by URL encoding.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

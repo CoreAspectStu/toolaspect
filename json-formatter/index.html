@@ -45,9 +45,14 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my JSON sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Formatting, minifying, and validating all run locally in your browser with JavaScript. Nothing you paste is transmitted or stored, so the tool is safe for confidential data."}},{"@type":"Question","name":"What's the difference between JSON formatting and validation?","acceptedAnswer":{"@type":"Answer","text":"Formatting rewrites the document with consistent indentation while preserving its content and structure. Validation only parses the document and reports whether it is syntactically correct, changing nothing. This tool validates continuously as you type and formats on demand."}},{"@type":"Question","name":"Why does JSON disallow comments?","acceptedAnswer":{"@type":"Answer","text":"JSON's specification defines a minimal data-only grammar; comments were deliberately excluded to keep parsers simple and the format unambiguous. Common workarounds are a dedicated \"_comment\" key, JSON5 for humans, or YAML where comments are first-class."}},{"@type":"Question","name":"Can this tool fix broken JSON automatically?","acceptedAnswer":{"@type":"Answer","text":"It validates and reports the error position precisely, but it won't guess intent. Repairing means deciding what the author meant — removing a trailing comma is safe, but choosing between two possible quotes for an unclosed string is not a judgment a tool should make silently."}},{"@type":"Question","name":"Does formatting change my data?","acceptedAnswer":{"@type":"Answer","text":"No. Formatting only adjusts whitespace between tokens. Key order, values, and structure are preserved exactly; the output re-parses to the identical data as the input."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>JSON Formatter & Validator</h1>
@@ -75,15 +80,50 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>What is JSON?</h2>
-    <p>JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy for humans to read and write, and easy for machines to parse and generate. It's the standard format for APIs, configuration files, and data storage.</p>
+    <h2>What Is JSON?</h2>
+    <p>JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy for humans to read and write, and easy for machines to parse and generate. It's the standard format for APIs, configuration files, and data storage. JSON supports exactly six data types — strings, numbers, booleans, null, objects, and arrays — and its grammar is strict enough that a single misplaced comma or quote makes the whole document unparsable. That strictness is why a formatter with instant validation matters: it tells you not only that something is wrong but where the parser gave up.</p>
+    <p>Everything this formatter does happens in your browser. Your JSON is never uploaded, so it's safe for API responses containing private data, credentials in config files, or payloads still under development.</p>
+    <h2>Formatting, Minifying, and Validating</h2>
+    <p>Formatting (also called beautifying or pretty-printing) re-inserts indentation and line breaks so the structure of nested objects and arrays is visually obvious. Minifying does the opposite — it strips every byte that isn't required by the grammar, producing the smallest valid document for transmission. Validating parses the document and reports success or the exact position of the first syntax error without changing anything. All three operate on the same text, so you can round-trip freely: minify an API response to see its size, format it to read its structure, validate after every edit.</p>
     <h2>Common JSON Errors</h2>
     <ul>
       <li><strong>Trailing commas:</strong> <code>{"a": 1,}</code> — remove the last comma</li>
       <li><strong>Single quotes:</strong> <code>{'a': 1}</code> — JSON requires double quotes</li>
       <li><strong>Unquoted keys:</strong> <code>{a: 1}</code> — keys must be in double quotes</li>
       <li><strong>Comments:</strong> JSON doesn't support // or /* */ comments</li>
+      <li><strong>Undisclosed control characters:</strong> raw newlines inside strings must be escaped as \n</li>
+      <li><strong>Hex or NaN numbers:</strong> only decimal (optionally exponential) numbers are legal</li>
     </ul>
+    <h2>Strict JSON vs Everyday JavaScript</h2>
+    <p>Many documents that look like JSON are actually JavaScript object literals, and the difference is exactly where most validation errors come from. The table below lists the constructs JavaScript tolerates but strict JSON forbids.</p>
+    <div class="table-wrap">
+    <table class="data-table">
+    <tr><th>Construct</th><th>JavaScript</th><th>Strict JSON</th><th>Fix</th></tr>
+    <tr><td>Single-quoted strings</td><td>Allowed</td><td>Invalid</td><td>Use double quotes</td></tr>
+    <tr><td>Unquoted keys</td><td>Allowed</td><td>Invalid</td><td>Quote every key</td></tr>
+    <tr><td>Trailing commas</td><td>Allowed</td><td>Invalid</td><td>Delete the final comma</td></tr>
+    <tr><td>Comments</td><td>Allowed</td><td>Invalid</td><td>Remove or move to a wrapper format</td></tr>
+    <tr><td>Undefined values</td><td>Allowed</td><td>Not a JSON type</td><td>Use null or omit the key</td></tr>
+    <tr><td>NaN / Infinity</td><td>Allowed</td><td>Invalid numbers</td><td>Use null or a string</td></tr>
+    </table>
+    </div>
+    <h2>When Size Matters: Minification Trade-offs</h2>
+    <p>Minified JSON is what APIs actually ship — indentation costs bytes on every request. But the savings only come from whitespace: minification does not rename keys, shorten strings, or restructure data. A large minified document and its formatted twin contain identical information, so gzip compression largely erases the difference on the wire; formatting matters most for local files, logs, and developer tooling rather than production transfer. A useful workflow is to keep source files formatted for readability and generate the minified version as a build step, exactly as you would with JavaScript or CSS.</p>
+    <h2>JSON in the Ecosystem</h2>
+    <p>JSON's dominance means most adjacent formats are JSON with extensions. JSON5 relaxes the grammar for humans, permitting comments, trailing commas, and unquoted keys. JSON Lines (JSONL) stores one JSON value per line, popular for logs and streaming datasets. JSON with Padding (JSONP) is a legacy cross-domain technique that predates CORS and is now obsolete for new work. GeoJSON adds coordinate structures for geographic data, and JSON Schema describes the shape a document must have, enabling validation beyond mere syntax. A strict formatter like this one is the common denominator across all of them: syntax-level correctness is the first gate any of these formats must pass.</p>
+    <h2>Reading Deeply Nested JSON</h2>
+    <p>The practical pain of reading JSON scales with nesting depth. At two or three levels, indentation alone is enough. Beyond that, a few habits help: scan for the key you need at each level rather than reading linearly; note array boundaries early, since a misplaced bracket is the most common reason an expected key "disappears" (it lives in a sibling element of an array you skipped); and when hunting one value inside a huge document, format it, copy the path down as you descend, and paste the fragment into a scratch file. Errors reported at the end of a document usually mean an unterminated construct somewhere above — a missing closing brace or quote — which is exactly the case where a formatter's error position beats eyeballing.</p>
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Is my JSON sent to a server?</strong></p>
+    <p>No. Formatting, minifying, and validating all run locally in your browser with JavaScript. Nothing you paste is transmitted or stored, so the tool is safe for confidential data.</p>
+    <p><strong>What's the difference between JSON formatting and validation?</strong></p>
+    <p>Formatting rewrites the document with consistent indentation while preserving its content and structure. Validation only parses the document and reports whether it is syntactically correct, changing nothing. This tool validates continuously as you type and formats on demand.</p>
+    <p><strong>Why does JSON disallow comments?</strong></p>
+    <p>JSON's specification defines a minimal data-only grammar; comments were deliberately excluded to keep parsers simple and the format unambiguous. Common workarounds are a dedicated "_comment" key, JSON5 for humans, or YAML where comments are first-class.</p>
+    <p><strong>Can this tool fix broken JSON automatically?</strong></p>
+    <p>It validates and reports the error position precisely, but it won't guess intent. Repairing means deciding what the author meant — removing a trailing comma is safe, but choosing between two possible quotes for an unclosed string is not a judgment a tool should make silently.</p>
+    <p><strong>Does formatting change my data?</strong></p>
+    <p>No. Formatting only adjusts whitespace between tokens. Key order, values, and structure are preserved exactly; the output re-parses to the identical data as the input.</p>
   </div>
 
   <div class="ad-slot">Advertisement</div>

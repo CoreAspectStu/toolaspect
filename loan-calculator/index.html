@@ -4,8 +4,8 @@
 <script src="/shared/domain-redirect.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Calculator | ToolAspect</title>
-<meta name="description" content="Calculate monthly loan payments for personal loans, auto loans, and student loans. Enter amount, rate, and term to see your payment, total interest, and full amortization.">
+<title>Loan Calculator — Monthly Payment & Interest | ToolAspect</title>
+<meta name="description" content="Calculate monthly loan payments with the amortization formula. See payment, total interest, and interest share of principal for any term.">
 <link rel="canonical" href="https://toolaspect.com/loan-calculator/">
 <meta property="og:title" content="Loan Calculator">
 <meta property="og:type" content="website">
@@ -38,9 +38,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the loan payment formula?","acceptedAnswer":{"@type":"Answer","text":"The standard amortization formula: monthly payment = P × r(1+r)^n ÷ ((1+r)^n − 1), with P the principal, r the monthly rate (APR ÷ 12), and n the number of payments. At 0% interest the calculator correctly falls back to P ÷ n."}},{"@type":"Question","name":"How much is a $25,000 loan per month?","acceptedAnswer":{"@type":"Answer","text":"It depends on rate and term. At 8.5% APR over 5 years the payment is $512.91 per month; over 3 years it is $789.19, and over 10 years it drops to $309.96 — but longer terms cost far more in total interest."}},{"@type":"Question","name":"Does a longer loan term cost more?","acceptedAnswer":{"@type":"Answer","text":"Yes in total interest, no per month. Stretching $25,000 at 8.5% from 5 to 10 years cuts the payment from $512.91 to $309.96 but raises total interest from $5,774.80 to $12,195.62 — more than double."}},{"@type":"Question","name":"Does this calculator handle extra payments or fees?","acceptedAnswer":{"@type":"Answer","text":"No. It computes the fixed payment for a fully amortizing loan only. Model an origination fee by adding it to the loan amount; for extra-payment scenarios use a dedicated payoff calculator that recomputes the schedule."}},{"@type":"Question","name":"Is my data sent anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. All computation happens in your browser with JavaScript. No loan details leave your device, and there is no signup or account requirement."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Loan Calculator</h1>
@@ -92,27 +93,39 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Loan Payment Formula</h2>
-    <p><strong>M = P × [r(1+r)^n] / [(1+r)^n − 1]</strong></p>
-    <p>Where M = monthly payment, P = principal, r = monthly rate, n = number of payments</p>
-    <h2>Average Interest Rates by Loan Type (2026)</h2>
-    <ul>
-      <li><strong>Auto loan (new car):</strong> 5-8%</li>
-      <li><strong>Auto loan (used car):</strong> 7-12%</li>
-      <li><strong>Personal loan:</strong> 8-36% (depends on credit)</li>
-      <li><strong>Student loan (federal):</strong> 4.5-7.5%</li>
-      <li><strong>Student loan (private):</strong> 4-15%</li>
-      <li><strong>Business loan (SBA):</strong> 8-13%</li>
-    </ul>
-    <h2>Tips for Getting the Best Rate</h2>
-    <ul>
-      <li>Check and improve your credit score before applying</li>
-      <li>Compare offers from multiple lenders</li>
-      <li>Consider credit unions — often 1-2% lower than banks</li>
-      <li>Shorter terms = lower rates but higher monthly payments</li>
-      <li>Make a larger down payment to reduce the loan amount</li>
-    </ul>
-  </div>
+<h2>How the Loan Calculator Works</h2>
+<p>This calculator uses the standard amortization formula that banks, credit unions, and online lenders apply to installment loans: monthly payment = P × r(1+r)^n ÷ ((1+r)^n − 1), where P is the principal, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments. It is the same math behind personal loans, auto loans, and student loans, so you can trust the figures when comparing loan offers.</p>
+<p>Enter your loan amount, annual percentage rate (APR), and term in years. The calculator instantly returns the monthly payment, total interest paid over the life of the loan, total of all payments, the term in years, and interest as a percentage of the amount borrowed. Everything runs locally in your browser — nothing is sent to a server.</p>
+<h2>What the Results Mean</h2>
+<p>The monthly payment card shows the fixed amount due each month for a fully amortizing loan — one that pays off both interest and principal by the final payment. The total interest card is the sum of every interest charge across the whole term, and the interest percentage card divides that interest by the original principal so you can see the true cost of borrowing at a glance.</p>
+<p>A useful rule of thumb: the longer the term, the smaller the payment but the larger the total interest. Shortening a term raises the monthly amount but can save thousands in interest, which the comparison table below makes concrete.</p>
+<h2>Loan Payments by Term: $25,000 at 8.5% APR</h2>
+<p>The table below shows the exact monthly payment this calculator produces for a $25,000 loan at 8.5% APR across the terms offered in the dropdown (computed with the amortization formula above). Use it to see how term length trades payment size against total cost.</p>
+<p>At the default settings — $25,000 borrowed at 8.5% for 5 years (60 payments) — the monthly payment is $512.91, total interest is $5,774.80, and interest equals 23.1% of the principal.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Term</th><th>Monthly Payment</th><th>Total Interest</th><th>Interest % of Loan</th></tr><tr><td>1 year</td><td>$2,180.49</td><td>$1,165.84</td><td>4.7%</td></tr><tr><td>3 years</td><td>$789.19</td><td>$3,410.96</td><td>13.6%</td></tr><tr><td>5 years</td><td>$512.91</td><td>$5,774.80</td><td>23.1%</td></tr><tr><td>10 years</td><td>$309.96</td><td>$12,195.62</td><td>48.8%</td></tr><tr><td>15 years</td><td>$246.18</td><td>$19,311.65</td><td>77.2%</td></tr></table>
+</div>
+<h2>Loan Types and Typical Rates</h2>
+<p>The loan type dropdown (Custom, Auto, Personal, Student, Business) is a convenience label for saving and comparing scenarios; the math depends only on amount, rate, and term. For context on realistic rate inputs: as of 2025–2026, US personal loan APRs commonly range from roughly 8% to 36%, new auto loan rates frequently fall between 5% and 12%, and federal student loan rates for new undergraduates have been in the 6–8% band. Always enter the APR quoted on your actual loan disclosure.</p>
+<p>Note that APR reflects the loan's interest rate; it does not include fees rolled into the amount financed. If a lender charges an origination fee and you finance it, add it to the loan amount here to model the full cost.</p>
+<h2>Amortization and Principal Paydown</h2>
+<p>An amortizing loan doesn't pay down principal evenly. Early payments are mostly interest because the balance is large; later payments are mostly principal because the balance has shrunk. On the default $25,000 / 8.5% / 5-year loan, the first $512.91 payment includes about $177 of interest and $336 of principal, while the final payment is almost entirely principal. That asymmetry is why extra principal payments early in the term save so much interest.</p>
+<p>This calculator reports the payment and totals rather than a full schedule. If you want to see the month-by-month split of interest versus principal — or model extra payments — pair it with a full amortization schedule tool. The monthly payment figure here will match exactly, since both use the same formula.</p>
+<p>A quick sanity check on any loan quote: multiply the quoted monthly payment by the number of payments and subtract the amount borrowed. Whatever remains is your total interest, and dividing by the principal gives the interest percentage this calculator displays. If a lender's numbers don't reconcile with the formula, ask what fees are embedded in the payment.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What is the loan payment formula?</strong></p>
+<p>The standard amortization formula: monthly payment = P × r(1+r)^n ÷ ((1+r)^n − 1), with P the principal, r the monthly rate (APR ÷ 12), and n the number of payments. At 0% interest the calculator correctly falls back to P ÷ n.</p>
+<p><strong>How much is a $25,000 loan per month?</strong></p>
+<p>It depends on rate and term. At 8.5% APR over 5 years the payment is $512.91 per month; over 3 years it is $789.19, and over 10 years it drops to $309.96 — but longer terms cost far more in total interest.</p>
+<p><strong>Does a longer loan term cost more?</strong></p>
+<p>Yes in total interest, no per month. Stretching $25,000 at 8.5% from 5 to 10 years cuts the payment from $512.91 to $309.96 but raises total interest from $5,774.80 to $12,195.62 — more than double.</p>
+<p><strong>Does this calculator handle extra payments or fees?</strong></p>
+<p>No. It computes the fixed payment for a fully amortizing loan only. Model an origination fee by adding it to the loan amount; for extra-payment scenarios use a dedicated payoff calculator that recomputes the schedule.</p>
+<p><strong>Is my data sent anywhere?</strong></p>
+<p>No. All computation happens in your browser with JavaScript. No loan details leave your device, and there is no signup or account requirement.</p>
+<h2>Related Tools</h2>
+<div class="related"><a href="/amortization-schedule/">Amortization Schedule</a><a href="/auto-loan-calculator/">Auto Loan Calculator</a><a href="/mortgage-calculator/">Mortgage Calculator</a><a href="/credit-card-payoff/">Credit Card Payoff</a></div>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

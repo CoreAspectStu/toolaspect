@@ -36,9 +36,14 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my text uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The comparison runs entirely in your browser using JavaScript. Neither the original nor the modified text is transmitted anywhere, so the tool is safe for confidential documents."}},{"@type":"Question","name":"Does the diff checker detect moved blocks of text?","acceptedAnswer":{"@type":"Answer","text":"No. It compares line-by-line in order. A paragraph moved from the top of a document to the bottom shows as one deletion plus one insertion. Move detection requires structural diff algorithms found in version-control tooling."}},{"@type":"Question","name":"Can it compare files instead of pasted text?","acceptedAnswer":{"@type":"Answer","text":"Yes, indirectly — open each file in any text editor, copy its contents, and paste into the two boxes. Since there is no upload step, there is also no file-size limit beyond what your browser can comfortably hold in a text box."}},{"@type":"Question","name":"Why does every line show as different when the text looks identical?","acceptedAnswer":{"@type":"Answer","text":"The comparison is exact, character for character. Invisible differences — Windows versus Unix line endings, trailing spaces, or tab versus space indentation — mark lines as changed. Normalizing those before comparing usually resolves it."}},{"@type":"Question","name":"Is there a limit on text size?","acceptedAnswer":{"@type":"Answer","text":"There is no hard limit. Because the comparison is a single pass over both texts, even documents with tens of thousands of lines render quickly; very large inputs are bounded mainly by your browser's text-box capacity."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Diff Checker</h1>
@@ -64,14 +69,47 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
   <div class="ad-slot">Advertisement</div>
   <div class="seo-content">
-  <h2>Text Diff Checker</h2>
-  <p>Compare two blocks of text line by line to see what changed. Lines in red were removed, lines in green were added, and grey lines are unchanged.</p>
+  <h2>About the Diff Checker</h2>
+  <p>A diff checker (also called a text-compare or diff tool) shows you exactly what changed between two versions of a piece of text. Instead of re-reading an entire revised document line by line, you paste the original in the first box and the modified version in the second, and the tool marks every line that differs. Lines shown in red with a minus sign exist only in the original, lines in green with a plus sign exist only in the modified version, and unchanged lines appear in grey. This is the same red/green convention used by GitHub pull requests and version-control tools, so the output reads the same way a code review does.</p>
+  <p>Everything runs locally in your browser with plain JavaScript. Neither text block is uploaded, stored, or logged anywhere, which matters when you are comparing contracts, unpublished content, credentials embedded in config files, or customer data. You can disconnect from the internet after the page loads and the comparison still works.</p>
+  <h2>How the Comparison Works</h2>
+  <p>The tool splits each input on line breaks and walks both lists in parallel, comparing line N of the original against line N of the modified text. When a pair matches, it is rendered as context; when it differs, both versions are shown as a removed/added pair. This produces a straightforward, predictable view that is ideal for document revisions, configuration files, release notes, and any text where changes are line-shaped.</p>
+  <p>For a visual quick-check, this line-pairing view is usually faster to scan than a unified diff. If you need a merge-style diff with hunk headers (the <code>@@ -1,4 +1,4 @@</code> markers produced by the diff utility and Git), a line-paired view can be translated by eye: every consecutive run of removed/added pairs corresponds to one hunk.</p>
+  <h2>Common Use Cases</h2>
   <ul>
-  <li>Compare document revisions</li>
-  <li>Check code changes between versions</li>
-  <li>Review editing changes in content</li>
-  <li>Verify data transformations</li>
+  <li><strong>Document revisions:</strong> see every edit between draft versions of contracts, policies, or articles before accepting them</li>
+  <li><strong>Code review:</strong> compare a file before and after a change when you do not have Git available</li>
+  <li><strong>Content QA:</strong> verify a copyeditor touched only what they were asked to touch</li>
+  <li><strong>Data transformations:</strong> confirm an export or migration only changed the rows it was supposed to</li>
+  <li><strong>Config drift:</strong> compare a working server config against a broken one to isolate the difference</li>
   </ul>
+  <h2>Diff Tool Output Conventions Compared</h2>
+  <p>Different tools render the same underlying differences in different ways. The table below summarizes the conventions you are most likely to encounter, so output from this checker can be cross-read against Git or the classic <code>diff</code> command.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+  <tr><th>Convention</th><th>Removed lines</th><th>Added lines</th><th>Typical source</th></tr>
+  <tr><td>Side-by-side paired lines</td><td>Red with − prefix</td><td>Green with + prefix</td><td>This tool, many GUI compares</td></tr>
+  <tr><td>Unified diff</td><td>Lines starting with −</td><td>Lines starting with +</td><td>diff -u, git diff</td></tr>
+  <tr><td>Context diff</td><td>Lines marked with !</td><td>Lines marked with !</td><td>diff -c</td></tr>
+  <tr><td>Word-level highlight</td><td>Strikethrough spans</td><td>Underlined spans</td><td>Word processors, some web diffs</td></tr>
+  <tr><td>Copy-edit markup</td><td>Strikethrough</td><td>Underline</td><td>Tracked changes in word processors</td></tr>
+  </table>
+  </div>
+  <h2>Tips for Cleaner Results</h2>
+  <p>Diff output is only as clean as the input. Normalize line endings first if the two texts came from different operating systems — Windows CRLF versus Unix LF differences will make every line appear changed even when the visible characters are identical. Watch trailing whitespace too: a line that differs only by an invisible space at the end still counts as different, because the comparison is exact. If one text has indentation converted to spaces and the other to tabs, consider re-indenting before comparing so the real edits stand out. Finally, when comparing long documents, split large changes into sections and compare each section separately — a wall of red and green is harder to review than several focused passes.</p>
+  <h2>When a Diff Checker Is the Wrong Tool</h2>
+  <p>A line comparison assumes both texts describe roughly the same content in roughly the same order. When that assumption breaks — comparing two completely different documents, hunting for a single changed number inside a minified single-line file, or diffing binary data — the output becomes noise. For minified JavaScript, JSON, or CSS, run the file through a formatter first so each logical element sits on its own line; the diff will then isolate the actual edit instead of flagging one enormous line. For binary files such as images, archives, or compiled executables, use byte-level or checksum comparison instead.</p>
+  <h2>Frequently Asked Questions</h2>
+  <p><strong>Is my text uploaded to a server?</strong></p>
+  <p>No. The comparison runs entirely in your browser using JavaScript. Neither the original nor the modified text is transmitted anywhere, so the tool is safe for confidential documents.</p>
+  <p><strong>Does the diff checker detect moved blocks of text?</strong></p>
+  <p>No. It compares line-by-line in order. A paragraph moved from the top of a document to the bottom shows as one deletion plus one insertion. Move detection requires structural diff algorithms found in version-control tooling.</p>
+  <p><strong>Can it compare files instead of pasted text?</strong></p>
+  <p>Yes, indirectly — open each file in any text editor, copy its contents, and paste into the two boxes. Since there is no upload step, there is also no file-size limit beyond what your browser can comfortably hold in a text box.</p>
+  <p><strong>Why does every line show as different when the text looks identical?</strong></p>
+  <p>The comparison is exact, character for character. Invisible differences — Windows versus Unix line endings, trailing spaces, or tab versus space indentation — mark lines as changed. Normalizing those before comparing usually resolves it.</p>
+  <p><strong>Is there a limit on text size?</strong></p>
+  <p>There is no hard limit. Because the comparison is a single pass over both texts, even documents with tens of thousands of lines render quickly; very large inputs are bounded mainly by your browser's text-box capacity.</p>
   </div>
   <div class="ad-slot">Advertisement</div>
 </div>

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Regex Tester & Debugger | ToolAspect</title>
-<meta name="description" content="Test and debug regular expressions in real-time. Enter your regex pattern and test text, see matches highlighted instantly with capture groups. Free online regex tester.">
+<meta name="description" content="Test regular expressions live with matches highlighted, groups captured, and common patterns explained. Free online regex tester with cheat sheet.">
 <link rel="canonical" href="https://toolaspect.com/regex-tester/">
 <meta property="og:title" content="Regex Tester & Debugger">
 <meta property="og:type" content="website">
@@ -48,9 +48,10 @@ textarea:focus{border-color:rgba(99,102,241,.3)}
 .seo-content h2{font-size:1.15rem;font-weight:600;margin-bottom:10px}
 .seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
 @media(max-width:640px){.container{padding:1rem}.cheat{grid-template-columns:1fr}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does \\d mean in regex?","acceptedAnswer":{"@type":"Answer","text":"\\d matches any single digit (0-9). Its negation \\D matches any non-digit. Related: \\w matches word characters (letters, digits, underscore), \\s matches whitespace, each with an uppercase negation."}},{"@type":"Question","name":"What's the difference between * and +?","acceptedAnswer":{"@type":"Answer","text":"* matches zero or more of the preceding element; + requires at least one. So a* matches the empty string but a+ does not. Both are greedy — add ? (*?, +?) for lazy matching that stops at the first opportunity."}},{"@type":"Question","name":"How do I test if a string matches a regex in JavaScript?","acceptedAnswer":{"@type":"Answer","text":"Use /pattern/.test(string) for a boolean, or string.match(/pattern/g) to get all matches. This tester runs the same JavaScript engine, so results here equal results in your code."}},{"@type":"Question","name":"What is catastrophic backtracking?","acceptedAnswer":{"@type":"Answer","text":"When nested quantifiers like (a+)+ fail to match, the engine retries exponentially many sub-paths, hanging the process. Avoid adjacent ambiguous quantifiers and prefer bounded classes like [^x]* — the vulnerability class is known as ReDoS."}},{"@type":"Question","name":"Can regex parse HTML or JSON?","acceptedAnswer":{"@type":"Answer","text":"No. Regular expressions cannot handle arbitrary nesting — that requires a context-free grammar and a real parser. Regex is fine for finding tokens inside HTML (like an attribute value) but not for validating document structure."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Regex Tester & Debugger</h1>
@@ -112,9 +113,39 @@ textarea:focus{border-color:rgba(99,102,241,.3)}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Regular Expression Cheat Sheet</h2>
-    <p>Regular expressions (regex) are patterns used to match character combinations in strings. They're essential for form validation, data extraction, search-and-replace, and log parsing.</p>
-  </div>
+<h2>About the Regex Tester</h2>
+<p>This regex tester evaluates your patterns live against sample text, highlighting matches, capture groups, and boundaries as you type. It uses your browser's JavaScript regex engine, so behavior matches what your web code will actually do.</p>
+<p>Regular expressions are a miniature language for describing text shapes. Ten or so concepts cover ninety percent of practical regex — and knowing them beats memorizing patterns.</p>
+<p>Because the tester runs entirely in your browser, nothing you type is uploaded, and results appear on every keystroke with no submit button. Paste a log excerpt, a CSV line, or a user-submitted form field into the test string area, then iterate on the pattern until the highlights land exactly where you expect. Capture groups appear below the matches so you can confirm each group grabs the right slice of text before the pattern ships into production code.</p>
+<h2>The Building Blocks of Regex</h2>
+<p>Character classes match sets: \d (digits), \w (word characters), \s (whitespace), and negations \D, \W, \S. The dot matches any character except newline. Anchors position rather than consume: ^ start of line/string, $ end, \b word boundary.</p>
+<p>Quantifiers repeat: * (zero or more), + (one or more), ? (optional), and {n,m} (between n and m). Alternation with | offers choices, and parentheses capture for reuse — either in replace patterns ($1) or back-references (\1). Flags change meaning: i (case-insensitive), g (all matches), m (^/$ per line).</p>
+<h2>Cheat Sheet: The Workhorse Patterns</h2>
+<p>The table lists the patterns that solve most everyday tasks, each with a concrete example match. These follow standard syntax shared by JavaScript, Python, and PCRE.</p>
+<p>Compose them: an email shape check like [\w.+-]+@[\w-]+\.[\w.]+ catches obvious typos (missing @ or TLD) while deliberately not attempting full RFC 5322 validation, which is famously impractical — the spec permits addresses no simple pattern accepts.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Pattern</th><th>Example match</th><th>Use</th></tr><tr><td>\d{3}-\d{4}</td><td>555-1234</td><td>Phone-style segment</td></tr><tr><td>[\w.+-]+@[\w-]+\.[\w.]+</td><td>user@example.com</td><td>Email shape check</td></tr><tr><td>^https?://[^\s/$.?#].[^\s]*$</td><td>https://example.com</td><td>URL shape (Fleischman/Gruber style)</td></tr><tr><td>\b\d{1,3}(\.\d{1,3}){3}\b</td><td>192.168.1.1</td><td>IPv4 shape</td></tr><tr><td>^(\d{4})-(\d{2})-(\d{2})$</td><td>2026-08-26</td><td>ISO date with capture groups</td></tr><tr><td>(?i)\berror\b</td><td>ERROR: failed</td><td>Case-insensitive flag (inline)</td></tr></table>
+</div>
+<h2>Greediness, Backtracking, and Catastrophe</h2>
+<p>Quantifiers are greedy by default: <.*> on '<a><b>' matches the whole string because .* stretches to the last '>' — add ? for the lazy version (<.*?>) that stops at the first. This greedy/lazy distinction is the most common regex bug.</p>
+<p>Nested quantifiers like (a+)+ can trigger catastrophic backtracking — exponentially many retry paths on a non-matching input — which freezes engines and ReDoS-vulnerable websites. Keep quantifiers non-overlapping and prefer explicit character classes (e.g. [^<]* instead of .*) when a delimiter exists.</p>
+<h2>Regex vs. Parsing, and Testing Discipline</h2>
+<p>Regex cannot parse nested structures (HTML, JSON, arithmetic) because regular languages don't support recursion — the classic admonition is to not parse HTML with regex. Use regex to find tokens, then a real parser for structure.</p>
+<p>Test discipline: always include should-match AND should-NOT-match cases, boundaries (empty string, unicode, accents), and the pathological backtracking input if your pattern has adjacent quantifiers. This tool shows every match with its groups, making misses visible at a glance.</p>
+<h2>Regex Across Languages and Flags</h2>
+<p>['Regex syntax is mostly portable, but engines differ: JavaScript supports lookbehind in modern browsers, named groups as (?<name>...), and the s flag (dot matches newline); Python uses (?P<name>...) naming and re.VERBOSE; PCRE adds recursion. When a pattern works here but not in your runtime, flags and lookarounds are the first suspects.', "The global flag changes everything in JavaScript: without /g, .match() returns only the first match (with groups); with /g, it returns all matched strings (without groups). The /u flag enables full Unicode handling, including emoji — without it, surrogate pairs split characters mid-symbol. Test emoji and accented input explicitly; it's where engines disagree most.", "Real-world habit: keep patterns short, name the intent with comments (Python's VERBOSE or free-spacing in JS via construction), and unit-test them like code — because they are code. A three-line test file of should-match and should-reject strings catches regressions the moment someone 'improves' the pattern."]</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What does \d mean in regex?</strong></p>
+<p>\d matches any single digit (0-9). Its negation \D matches any non-digit. Related: \w matches word characters (letters, digits, underscore), \s matches whitespace, each with an uppercase negation.</p>
+<p><strong>What's the difference between * and +?</strong></p>
+<p>* matches zero or more of the preceding element; + requires at least one. So a* matches the empty string but a+ does not. Both are greedy — add ? (*?, +?) for lazy matching that stops at the first opportunity.</p>
+<p><strong>How do I test if a string matches a regex in JavaScript?</strong></p>
+<p>Use /pattern/.test(string) for a boolean, or string.match(/pattern/g) to get all matches. This tester runs the same JavaScript engine, so results here equal results in your code.</p>
+<p><strong>What is catastrophic backtracking?</strong></p>
+<p>When nested quantifiers like (a+)+ fail to match, the engine retries exponentially many sub-paths, hanging the process. Avoid adjacent ambiguous quantifiers and prefer bounded classes like [^x]* — the vulnerability class is known as ReDoS.</p>
+<p><strong>Can regex parse HTML or JSON?</strong></p>
+<p>No. Regular expressions cannot handle arbitrary nesting — that requires a context-free grammar and a real parser. Regex is fine for finding tokens inside HTML (like an attribute value) but not for validating document structure.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

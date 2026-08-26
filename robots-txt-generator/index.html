@@ -61,9 +61,10 @@ h1{font-size:1.75rem;font-weight:700;text-align:center;margin-bottom:8px;color:v
 .seo-content ul{margin-left:1.5rem;margin-bottom:14px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:6px;font-size:.92rem}
 @media(max-width:640px){.form-row{grid-template-columns:1fr}.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Where do I put robots.txt?","acceptedAnswer":{"@type":"Answer","text":"At the root of your domain: https://example.com/robots.txt — served with HTTP 200 and text/plain content type. Subdomains each require their own file; paths like /blog/robots.txt are ignored."}},{"@type":"Question","name":"Does robots.txt block a page from Google?","acceptedAnswer":{"@type":"Answer","text":"It blocks crawling, not indexing. A URL blocked in robots.txt can still appear in results (without content) if other pages link to it. To fully exclude a page, allow crawling and use a noindex meta tag or X-Robots-Tag header."}},{"@type":"Question","name":"How do I block all bots except Google?","acceptedAnswer":{"@type":"Answer","text":"Write a permissive group for Googlebot (User-agent: Googlebot with Disallow: of only what's needed), then a restrictive group for everything else: User-agent: * with Disallow: /. Specific agents pick their own group; * applies to the rest."}},{"@type":"Question","name":"What does Disallow: / do?","acceptedAnswer":{"@type":"Answer","text":"It blocks the entire site for the user agents in that group — the nuclear option. Used intentionally for staging servers and internal tools; accidentally it deindexes a live site's visibility in short order."}},{"@type":"Question","name":"Do I need a robots.txt if I want everything crawled?","acceptedAnswer":{"@type":"Answer","text":"No — an absent file means 'no restrictions' (served as 404). Many sites still ship one to declare their sitemap URL and manage crawl budget on large URL spaces."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Robots.txt Generator</h1>
@@ -148,30 +149,38 @@ h1{font-size:1.75rem;font-weight:700;text-align:center;margin-bottom:8px;color:v
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>Robots.txt Best Practices for SEO</h2>
-    <p>Robots.txt is a text file placed in your website's root directory that tells search engine crawlers which pages they can and cannot access. It's one of the most fundamental SEO tools — misconfiguring it can block Google from indexing your entire site.</p>
-
-    <h2>When to Use Robots.txt</h2>
-    <ul>
-      <li><strong>Block duplicate content:</strong> Prevent indexing of search results, filtered pages, and tagged archives</li>
-      <li><strong>Save crawl budget:</strong> Block low-value pages so Googlebot focuses on important content</li>
-      <li><strong>Staging environments:</strong> Disallow all bots on dev/staging subdomains</li>
-      <li><strong>AI training crawlers:</strong> Control whether GPTBot, ClaudeBot, and others can scrape your content for model training</li>
-      <li><strong>Resource management:</strong> Block crawlers from accessing large media files or API endpoints</li>
-    </ul>
-
-    <h2>Common Mistakes to Avoid</h2>
-    <ul>
-      <li>Don't block CSS/JS files — Google needs them to render your page properly</li>
-      <li>Robots.txt doesn't prevent indexing — use <code>noindex</code> meta tags for that</li>
-      <li>Always include your sitemap URL to help crawlers discover new pages</li>
-      <li>Test with Google Search Console's Robots Testing Tool before deploying</li>
-      <li>Be specific with paths — <code>/admin</code> also matches <code>/administrator</code></li>
-    </ul>
-
-    <h2>AI Crawler Decisions</h2>
-    <p>With the rise of AI training crawlers, many sites are choosing to block them. Consider the tradeoffs: blocking GPTBot prevents your content from being used in ChatGPT training, but it doesn't prevent your competitors from benefiting. Some publishers allow certain AI crawlers (like PerplexityBot for citation links) while blocking others.</p>
-  </div>
+<h2>About the Robots.txt Generator</h2>
+<p>This robots.txt generator builds a valid robots.txt file from your rules — which crawlers may or may not fetch which paths — with live preview and one-click copy. It runs entirely in your browser.</p>
+<p>robots.txt is the oldest and simplest crawler control on the web: a plain-text file at the site root that well-behaved crawlers read before fetching pages. Simple, but with sharp edges worth knowing.</p>
+<h2>How Robots.txt Works</h2>
+<p>The file groups rules by user agent (crawler). Each group contains Allow and/or Disallow path prefixes, and crawlers pick the most specific matching group for their name. A bare Disallow: (empty value) permits everything; Disallow: / blocks the entire site for that agent.</p>
+<p>Google's documented precedence: the most specific (longest) matching path wins, so 'Allow: /folder/page' beats 'Disallow: /folder'. A robots.txt is advisory for compliant crawlers — it blocks fetching, not indexing (a page linked elsewhere can still appear in results without content; to keep pages out of indexes entirely, use noindex meta tags or authentication).</p>
+<h2>Common Rule Patterns</h2>
+<p>The table shows the effect of canonical directives exactly as crawlers interpret them. Note the Crawl-delay line: Google ignores it, Bing honors it as milliseconds historically (seconds in some eras) — treat it as a politeness hint, not a throttle you can rely on.</p>
+<p>Also common: blocking crawl traps (faceted search URLs like /search? or calendar pages that generate infinitely), staging folders, and API endpoints with crawl budget implications. Sitemap declarations in robots.txt help discovery: a 'Sitemap:' line is read by all major engines.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Directive(s)</th><th>Effect</th></tr><tr><td>User-agent: * Disallow:</td><td>Allows all crawlers everywhere</td></tr><tr><td>User-agent: * Disallow: /</td><td>Blocks entire site for all crawlers</td></tr><tr><td>Disallow: /admin/</td><td>Blocks the /admin/ directory</td></tr><tr><td>Disallow: /*?s=</td><td>Blocks search query URLs (wildcard)</td></tr><tr><td>Allow: /folder/page$ Disallow: /folder/</td><td>Permits one page, blocks rest of folder</td></tr><tr><td>Sitemap: https://example.com/sitemap.xml</td><td>Declares sitemap location</td></tr></table>
+</div>
+<h2>Crawl Budget and Big Sites</h2>
+<p>On large sites, robots.txt is a crawl-budget tool: Googlebot allocates limited fetch capacity per site, and wasting it on parameter permutations or duplicate paths delays indexing of pages you care about. Blocking low-value URL spaces (filters, sorts, internal search) redirects that budget to meaningful pages.</p>
+<p>Measure before and after: Google Search Console's Crawl Stats and Pages reports show fetch volume and discovered-vs-indexed counts. Change robots.txt gradually — an over-broad Disallow silently deindexes a whole section, and Google caches robots.txt for up to 24 hours, so mistakes linger.</p>
+<h2>File Placement, Validation, and Testing</h2>
+<p>The file must be served at https://example.com/robots.txt (site root, lowercase name) with a 200 status and text/plain type. Subdomains each need their own. Comments start with #. Rule of thumb: keep it small — every major engine reads only the first few hundred kilobytes.</p>
+<p>Validate before deploying: Google Search Console has a robots.txt tester that checks rule syntax and lets you test URLs against the file, and the robots exclusion protocol is documented at robots-txt.com and by each engine. This generator emits only syntactically valid directives in standard order.</p>
+<h2>Edge Cases and Crawler Etiquette</h2>
+<p>["Wildcards (*) and end-anchors ($) exist in the robots exclusion extensions Google supports: 'Disallow: /*.pdf$' blocks all PDFs, 'Disallow: /*?' blocks every parameterized URL. Use them surgically — an anchored rule that's too broad is invisible until traffic data shows a section gone.", "AI crawlers are the new neighbors: GPTBot, ClaudeBot, CCBot, and Google-Extended each honor robots.txt under their own user-agent names, so opting in or out of AI training crawls is a per-agent decision made in this same file. Blocking an agent that doesn't exist yet is harmless; the file is read fresh on every major crawl.", "Finally, robots.txt is public — anyone can read your Disallow list, so never use it to hide sensitive paths (that's a directory for attackers). Sensitive areas belong behind authentication. And after any deploy, fetch /robots.txt directly in a browser to confirm it's served as expected; a broken rewrite rule serving HTML where the text file should be quietly drops all rules for compliant crawlers."]</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>Where do I put robots.txt?</strong></p>
+<p>At the root of your domain: https://example.com/robots.txt — served with HTTP 200 and text/plain content type. Subdomains each require their own file; paths like /blog/robots.txt are ignored.</p>
+<p><strong>Does robots.txt block a page from Google?</strong></p>
+<p>It blocks crawling, not indexing. A URL blocked in robots.txt can still appear in results (without content) if other pages link to it. To fully exclude a page, allow crawling and use a noindex meta tag or X-Robots-Tag header.</p>
+<p><strong>How do I block all bots except Google?</strong></p>
+<p>Write a permissive group for Googlebot (User-agent: Googlebot with Disallow: of only what's needed), then a restrictive group for everything else: User-agent: * with Disallow: /. Specific agents pick their own group; * applies to the rest.</p>
+<p><strong>What does Disallow: / do?</strong></p>
+<p>It blocks the entire site for the user agents in that group — the nuclear option. Used intentionally for staging servers and internal tools; accidentally it deindexes a live site's visibility in short order.</p>
+<p><strong>Do I need a robots.txt if I want everything crawled?</strong></p>
+<p>No — an absent file means 'no restrictions' (served as 404). Many sites still ship one to declare their sitemap URL and manage crawl budget on large URL spaces.</p>
+</div>
 
   <div class="ad-slot">Advertisement</div>
 </div>

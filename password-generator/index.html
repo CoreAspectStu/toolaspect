@@ -290,11 +290,12 @@
             .related-links { flex-direction: column; }
             .related-links a { text-align: center; }
         }
-    </style>
+    .table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
   <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Password Generator", "item": "https://toolaspect.com/password-generator/"}]}</script>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long should my password be?","acceptedAnswer":{"@type":"Answer","text":"Use at least 16 randomly generated characters, or a 5-to-6 word passphrase. NIST SP 800-63B emphasizes length over composition rules; every extra random character multiplies the search space by the alphabet size."}},{"@type":"Question","name":"Are random passwords really stronger than human ones?","acceptedAnswer":{"@type":"Answer","text":"Yes. Random generation achieves its full mathematical entropy, while human-chosen passwords cluster around predictable patterns (names, dates, substitutions) that attackers guess first with dictionaries — often cracking 'complex-looking' 10-character passwords faster than a random 8-character one."}},{"@type":"Question","name":"Is it safe to generate passwords in my browser?","acceptedAnswer":{"@type":"Answer","text":"This tool uses the Web Crypto API's cryptographically secure random generator locally — no password ever leaves your device. That's the same security primitive protecting HTTPS connections. Avoid generators that create passwords on a server and transmit them."}},{"@type":"Question","name":"What is password entropy?","acceptedAnswer":{"@type":"Answer","text":"Entropy measures randomness in bits: length × log2(alphabet size). A 12-character full-ASCII password has 12 × 6.57 = 78.8 bits. Each additional bit doubles the work an attacker must do; 70+ bits is considered very strong against offline attacks."}},{"@type":"Question","name":"Should I change my passwords regularly?","acceptedAnswer":{"@type":"Answer","text":"Current NIST guidance recommends changing passwords only when compromise is suspected, not on a fixed schedule — forced rotation drives weaker passwords. Do keep every account's password unique, so one breach can't cascade."}}]}</script>
 <script src="../shared/nav.js"></script>
 
 <header>
@@ -386,11 +387,38 @@
     <div class="ad-slot">Advertisement</div>
 
     <section class="seo-content card">
-        <h2>Why Password Security Matters</h2>
-        <p>Strong passwords are your first line of defense against unauthorized access to your accounts and personal data. A secure password should be long, unpredictable, and unique to each service. Using a password generator ensures randomness that human-created passwords simply can't match — eliminating common patterns, dictionary words, and personal information that attackers exploit.</p>
-        <p>Cryptographic hash functions like SHA-256 and SHA-512 are one-way algorithms that transform any input into a fixed-size digest. They are essential for verifying data integrity, storing credentials securely, and powering blockchain technologies. This tool uses the Web Crypto API built into your browser, so your data never leaves your device — ensuring complete privacy.</p>
-        <p>For best security practices, use passwords of at least 16 characters with a mix of character types, enable two-factor authentication wherever possible, and never reuse passwords across services. Consider using a dedicated password manager to store and auto-fill your credentials securely.</p>
-    </section>
+<h2>About the Password Generator</h2>
+<p>This password generator creates cryptographically random passwords directly in your browser using the Web Crypto API, with options for length, character sets, and batch generation. Nothing is transmitted or stored — refresh the page and the passwords are gone.</p>
+<p>Password strength is mathematics: length times alphabet size determines how many combinations an attacker must try. Understanding that arithmetic explains every piece of password advice you've ever heard.</p>
+<h2>The Math of Password Strength</h2>
+<p>A password's search space is character-set size raised to the password's length. With the full printable ASCII set (about 95 characters), an 8-character password has 95^8 ≈ 6.6 quadrillion combinations, while a 16-character password has 95^16 ≈ 4.4 × 10^31. Each additional character multiplies the space by 95.</p>
+<p>Offline cracking rigs test hashed passwords at enormous speeds — modern GPU clusters attempt hundreds of billions of simple hashes per second against fast algorithms like unsalted MD5. At 10^12 guesses per second, an 8-character full-ASCII password (95^8 ≈ 6.6 quadrillion combinations) falls in about 1.8 hours, while 16 characters (95^16 ≈ 4.4 × 10^31) would take on the order of 10^12 years. Slow, salted hash functions (bcrypt, scrypt, Argon2) are how defenders shrink that speed.</p>
+<h2>Entropy: Comparing Password Strength</h2>
+<p>Entropy measures randomness in bits: log2 of the search space. The table below computes exact entropy for common configurations using the formula L × log2(N), where L is length and N is alphabet size. NIST guidance (SP 800-63B) treats length as the primary strength driver and recommends allowing at least 64 characters.</p>
+<p>Random passwords from this tool achieve their full listed entropy. Human-chosen 'Chosen1!'-style passwords achieve far less in practice because attackers guess human patterns first — dictionaries, substitutions, capitalization, dates.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Configuration</th><th>Entropy (exact)</th><th>Equivalent ASCII password length</th></tr><tr><td>8 characters, lowercase (26)</td><td>37.6 bits</td><td>6-char password</td></tr><tr><td>8 characters, full ASCII (95)</td><td>52.6 bits</td><td>10-char password</td></tr><tr><td>12 characters, full ASCII (95)</td><td>78.8 bits</td><td>13-char password</td></tr><tr><td>16 characters, full ASCII (95)</td><td>105.1 bits</td><td>17-char password</td></tr><tr><td>5 Diceware words (7,776)</td><td>64.6 bits</td><td>10-char password</td></tr></table>
+</div>
+<h2>Why Browser-Side Generation Is Safe</h2>
+<p>This generator uses crypto.getRandomValues(), the browser's cryptographically secure random number generator — the same primitive behind TLS. Generation happens entirely on your device; no network request carries the password. That stands in contrast to online generators that create passwords server-side and send them over the wire.</p>
+<p>Pair generated passwords with a password manager: the manager remembers the random strings so you don't have to, and each site gets a unique password. Then enable two-factor authentication on important accounts so a leaked password alone can't log an attacker in.</p>
+<h2>Passphrases and PINs</h2>
+<p>Passphrases — random word sequences like the Diceware method — trade alphabet size for memorable length: five words from a 7,776-word list carry 5 × log2(7,776) ≈ 64.6 bits, comparable to a 10-character full-ASCII random password. Four dice-word phrases (about 51.7 bits) are reasonable for most accounts; six (77.5 bits) for high-value ones.</p>
+<p>PINs are a different regime: 4-digit PINs have just 10,000 possibilities (13.3 bits), which is why PIN systems rate-limit attempts and lock out after a few failures. Never reuse a short PIN as a password — the math doesn't survive offline attack.</p>
+<h2>Passwords, Hashes, and Breaches</h2>
+<p>["The password tool's companion tab hashes input with SHA-256 and friends — worth understanding because sites never store your password itself, only its hash. When a breach leaks hashed passwords, attackers run offline dictionaries against them; a slow salted hash (bcrypt, Argon2) makes each guess expensive, while a leaked unsalted MD5 falls to GPU rigs at trillions of guesses per second.", 'Breaches are the main reason uniqueness matters: credential-stuffing attacks replay email/password pairs from one breach against banking, email, and social logins everywhere. A unique random password per site confines the damage of any single leak to exactly that site.', "Have-I-Been-Pwned and similar services let you check whether an account's credentials have appeared in known breaches — the breach itself is public record at that point. If a password of yours surfaces there, change it everywhere it was used, and prioritize 2FA on the account before you do anything else."]</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How long should my password be?</strong></p>
+<p>Use at least 16 randomly generated characters, or a 5-to-6 word passphrase. NIST SP 800-63B emphasizes length over composition rules; every extra random character multiplies the search space by the alphabet size.</p>
+<p><strong>Are random passwords really stronger than human ones?</strong></p>
+<p>Yes. Random generation achieves its full mathematical entropy, while human-chosen passwords cluster around predictable patterns (names, dates, substitutions) that attackers guess first with dictionaries — often cracking 'complex-looking' 10-character passwords faster than a random 8-character one.</p>
+<p><strong>Is it safe to generate passwords in my browser?</strong></p>
+<p>This tool uses the Web Crypto API's cryptographically secure random generator locally — no password ever leaves your device. That's the same security primitive protecting HTTPS connections. Avoid generators that create passwords on a server and transmit them.</p>
+<p><strong>What is password entropy?</strong></p>
+<p>Entropy measures randomness in bits: length × log2(alphabet size). A 12-character full-ASCII password has 12 × 6.57 = 78.8 bits. Each additional bit doubles the work an attacker must do; 70+ bits is considered very strong against offline attacks.</p>
+<p><strong>Should I change my passwords regularly?</strong></p>
+<p>Current NIST guidance recommends changing passwords only when compromise is suspected, not on a fixed schedule — forced rotation drives weaker passwords. Do keep every account's password unique, so one breach can't cascade.</p>
+</section>
 </div>
 
 <footer>© 2026 UtilityTools</footer>

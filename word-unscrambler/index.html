@@ -57,9 +57,15 @@ header p{color:var(--muted);font-size:0.95rem}
 footer{border-top:1px solid var(--border);padding:20px;text-align:center;color:var(--muted);font-size:.75rem}
 @media(max-width:600px){header h1{font-size:1.3rem}.word-grid{columns:2}.filters{flex-direction:column;align-items:stretch}}
 @media(min-width:601px) and (max-width:900px){.word-grid{columns:3}}
+.seo-content .table-wrap{overflow-x:auto;margin:12px 0}
+.seo-content table{width:100%;border-collapse:collapse;font-size:.85rem}
+.seo-content th,.seo-content td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left}
+.seo-content th{color:var(--text);background:var(--surface)}
+.seo-content td{color:var(--muted)}
 </style>
   <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Word Unscrambler", "item": "https://toolaspect.com/word-unscrambler/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a word unscrambler?","acceptedAnswer":{"@type":"Answer","text":"A word unscrambler takes a jumble of letters and returns every valid dictionary word that can be built from them, including both full anagrams and shorter partial words. It is commonly used for Scrabble, Words With Friends, crossword puzzles, and anagram games."}},{"@type":"Question","name":"How do I unscramble words from letters?","acceptedAnswer":{"@type":"Answer","text":"Type your letters into the input box and results appear instantly. Filter by word length, starting letters, or letters the word must contain. Click any word to copy it to your clipboard."}},{"@type":"Question","name":"Does the unscrambler find full anagrams?","acceptedAnswer":{"@type":"Answer","text":"Yes. Full anagrams — words that use every letter you enter — appear first in the results because they are sorted longest first. Shorter partial words made from a subset of your letters follow below them."}},{"@type":"Question","name":"Is this word unscrambler free?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely free with no sign-up, no limits, and no ads covering the tool. The entire word search runs locally in your browser, so your input never leaves your device."}},{"@type":"Question","name":"Which word games does it help with?","acceptedAnswer":{"@type":"Answer","text":"Any game that involves rearranging letters: Scrabble, Words With Friends, Wordle-style puzzles, Boggle, anagram crosswords, and newspaper jumbles. The letter-value table on this page helps you pick the highest-scoring plays in tile games."}}]}</script>
 </head>
 <body>
 <script src="../shared/nav.js"></script>
@@ -88,6 +94,39 @@ footer{border-top:1px solid var(--border);padding:20px;text-align:center;color:v
 <p>Use the length filter to show only words of a specific length, or the starts-with and contains filters to narrow down results. Click any word to copy it. Works entirely in your browser with no server needed.</p>
 <h2>Tips for Finding More Words</h2>
 <p>Look for common prefixes (re-, un-, dis-) and suffixes (-ing, -ed, -tion, -ly) within your letters. Try rearranging letters around common bigrams like TH, CH, SH, QU, and ST. Shorter words are often overlooked but can be high-value plays in word games.</p>
+<h2>Scrabble Letter Values Reference</h2>
+<p>Most word unscramblers exist to serve crossword solvers and tile games, so it helps to know what each letter is worth when you play a result. The standard English Scrabble tile distribution contains 100 tiles, and the letter values below follow that standard set. When you unscramble letters here, you can score your candidate words yourself using this table — high-value letters like Q, Z, J, and X are worth 8 to 10 points each, while common vowels are worth just 1.</p>
+<p>Strategy follows directly from the values. A word that dumps a Q or a Z on a double-letter square usually beats a longer word made only of one-point letters, and unscrambling a way to use the J in your rack is often better than saving it. The table lists every letter with its tile count in a standard set and its face value.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Letter</th><th>Tile value</th><th>Tiles in a standard set</th></tr>
+<tr><td>A, E, I, O, U, L, N, S, T, R</td><td>1</td><td>varies by letter (E has 12, most others 1–9)</td></tr>
+<tr><td>D, G</td><td>2</td><td>D has 4, G has 3</td></tr>
+<tr><td>B, C, M, P</td><td>3</td><td>2 each</td></tr>
+<tr><td>F, H, V, W, Y</td><td>4</td><td>2 each</td></tr>
+<tr><td>K</td><td>5</td><td>1</td></tr>
+<tr><td>J, X</td><td>8</td><td>1 each</td></tr>
+<tr><td>Q, Z</td><td>10</td><td>1 each</td></tr>
+<tr><td>Blank</td><td>0</td><td>2</td></tr>
+</table>
+</div>
+<h2>How the Unscrambler Works</h2>
+<p>Under the hood, the tool compares your letter multiset against a large English word list using letter-frequency counting: a candidate word matches only if every letter it needs is available in the quantities you entered. That means repeats matter — entering two E's finds words with up to two E's, not three. Results are sorted longest-first so the full anagrams and highest-scoring plays appear at the top, with alphabetical order breaking ties within each length.</p>
+<p>Because the search runs client-side in JavaScript, nothing you type is sent to a server. There is no rate limit, no sign-up, and no delay beyond your own device's processing. The dictionary embedded in the page covers common English words plus many rarer entries, which is why some results may be unfamiliar — tournament word lists include thousands of short, obscure two- and three-letter words that are perfectly legal in competitive play.</p>
+<h2>Anagrams vs. Partial Words</h2>
+<p>A full anagram uses every letter you supply exactly once — CINEMA from ICENAM is a classic six-letter example. Partial words use a subset of your letters, which is what makes unscramblers so useful in tile games where you rarely want to empty the whole rack. When you search here, both kinds appear together: a six-letter result from six letters is your full anagram; anything shorter is a partial. For puzzle clues that specify a letter count, use the length filter buttons to jump straight to that size.</p>
+<p>The starts-with and contains filters help when you know part of the answer — a crossword's crossing letters, for example, or a Words With Friends board where a specific opening square rewards a word beginning with a particular letter. Combine filters freely; each one narrows the live result set instantly.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What is a word unscrambler?</strong></p>
+<p>A word unscrambler takes a jumble of letters and returns every valid dictionary word that can be built from them, including both full anagrams and shorter partial words. It is commonly used for Scrabble, Words With Friends, crossword puzzles, and anagram games.</p>
+<p><strong>How do I unscramble words from letters?</strong></p>
+<p>Type your letters into the input box and results appear instantly. Filter by word length, starting letters, or letters the word must contain. Click any word to copy it to your clipboard.</p>
+<p><strong>Does the unscrambler find full anagrams?</strong></p>
+<p>Yes. Full anagrams — words that use every letter you enter — appear first in the results because they are sorted longest first. Shorter partial words made from a subset of your letters follow below them.</p>
+<p><strong>Is this word unscrambler free?</strong></p>
+<p>Yes, completely free with no sign-up, no limits, and no ads covering the tool. The entire word search runs locally in your browser, so your input never leaves your device.</p>
+<p><strong>Which word games does it help with?</strong></p>
+<p>Any game that involves rearranging letters: Scrabble, Words With Friends, Wordle-style puzzles, Boggle, anagram crosswords, and newspaper jumbles. The letter-value table above helps you pick the highest-scoring plays in tile games.</p>
 </div>
 <footer><p>&copy; 2026 UtilityTools &mdash; Free online tools</p></footer>
 </div>

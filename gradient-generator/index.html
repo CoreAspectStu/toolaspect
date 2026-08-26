@@ -36,9 +36,14 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between linear, radial, and conic gradients?","acceptedAnswer":{"@type":"Answer","text":"Linear gradients blend along a straight line at a chosen angle. Radial gradients blend outward from a center point. Conic gradients blend around a circle like a pie or radar sweep. All three are set as values of the CSS background property."}},{"@type":"Question","name":"How do I set a gradient's angle in CSS?","acceptedAnswer":{"@type":"Answer","text":"Add an angle before the color list: <code>linear-gradient(135deg, color1, color2)</code>. Zero degrees points up and angles increase clockwise, so 90deg points right and 180deg points down."}},{"@type":"Question","name":"Can I use more than two colors in a CSS gradient?","acceptedAnswer":{"@type":"Answer","text":"Yes. List as many colors as you like, optionally with percentage stops such as <code>#6366f1 20%</code> to control where each color begins its transition. This generator supports up to three colors; you can hand-edit the copied CSS to add more."}},{"@type":"Question","name":"Do CSS gradients work in all browsers?","acceptedAnswer":{"@type":"Answer","text":"Linear, radial, and conic gradients are supported by all modern browsers. Very old browsers ignore the gradient and fall back to a declared background-color, so include one as a fallback when the surface needs color regardless."}},{"@type":"Question","name":"Are gradients better than gradient images?","acceptedAnswer":{"@type":"Answer","text":"Yes for most uses. A CSS gradient adds no download, scales infinitely without artifacts, and can be changed by editing one line of code. Images make sense only when the effect cannot be expressed as a gradient, such as complex textures or mesh blends with irregular shapes."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>CSS Gradient Generator</h1>
@@ -63,14 +68,48 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
   <div class="ad-slot">Advertisement</div>
   <div class="seo-content">
-  <h2>CSS Gradient Generator</h2>
-  <p>Create beautiful CSS gradients with a live preview. Supports linear, radial, and conic gradients with up to 3 colors.</p>
+  <h2>About the CSS Gradient Generator</h2>
+  <p>CSS gradients let you transition smoothly between two or more colors without loading a single image file. This generator builds gradient CSS interactively: pick your colors, drag the angle slider, choose a gradient type, and the tool renders a live preview while emitting ready-to-paste CSS. Because a gradient is pure CSS rather than an image asset, it scales to any size without quality loss, adds zero HTTP requests to your page load, and can be tweaked in seconds when a design changes. Modern browsers have supported all three gradient types for years, so a gradient that previews here will render the same way for essentially all visitors.</p>
+  <p>Everything happens in your browser. Nothing is saved, and the CSS you copy is standard code that works in any stylesheet, inline style attribute, Tailwind arbitrary value, or CSS-in-JS object.</p>
+  <h2>The Three Gradient Types</h2>
+  <p>A <strong>linear gradient</strong> progresses along a straight line at the angle you choose — 0deg points upward, 90deg to the right, 135deg toward the bottom-right diagonal. It is the workhorse for hero sections, buttons, and section dividers. A <strong>radial gradient</strong> radiates outward from a center point, which makes it a natural fit for glows, spotlight effects, and soft background ambience behind content. A <strong>conic gradient</strong> sweeps color around a circle like a radar or pie chart, useful for spinners, progress dials, and angular decorative effects that used to require SVG.</p>
+  <p>The angle control applies to linear gradients as a direction, and to conic gradients as a starting rotation. Radial gradients ignore the angle and always emanate from the center in this tool.</p>
+  <h2>How to Use the Generator</h2>
   <ul>
-  <li>Linear gradients with custom angles (0-360°)</li>
-  <li>Radial and conic gradient support</li>
-  <li>Randomize for inspiration</li>
-  <li>Copy-ready CSS code</li>
+  <li><strong>Pick colors:</strong> use the two color pickers; enable the third color option for a mid-transition or tri-color blend.</li>
+  <li><strong>Set the angle:</strong> drag the slider from 0 to 360 degrees and watch the preview update live.</li>
+  <li><strong>Choose the type:</strong> switch between linear, radial, and conic to see which suits the design.</li>
+  <li><strong>Randomize:</strong> click Randomize for a fresh pair of colors and angle — useful for breaking out of a palette rut.</li>
+  <li><strong>Copy:</strong> the Copy CSS button puts the full <code>background:</code> declaration on your clipboard, ready to paste into your stylesheet.</li>
   </ul>
+  <h2>Gradient Syntax Across CSS Features</h2>
+  <p>Gradients are values, not properties, and several CSS features accept them. The table below shows where the generated code can be pasted and what to keep in mind in each context.</p>
+  <div class="table-wrap">
+  <table class="data-table">
+  <tr><th>Where it's used</th><th>Example</th><th>Notes</th></tr>
+  <tr><td>background</td><td>background: linear-gradient(135deg, #6366f1, #ec4899);</td><td>The most common use; shorthand sets background-image</td></tr>
+  <tr><td>background-image</td><td>background-image: linear-gradient(...);</td><td>Can be layered with other images, comma-separated</td></tr>
+  <tr><td>border-image</td><td>border-image: linear-gradient(...) 1;</td><td>Gradient borders; needs border-image-slice</td></tr>
+  <tr><td>text fill</td><td>background-clip: text; color: transparent;</td><td>Gradient text effect in supporting browsers</td></tr>
+  <tr><td>list of gradients</td><td>background: linear-gradient(...), radial-gradient(...);</td><td>First item renders on top</td></tr>
+  </table>
+  </div>
+  <h2>Choosing Colors That Work Together</h2>
+  <p>Gradients look best when the two colors have a deliberate relationship. Analogous pairs — neighboring hues on the color wheel, such as blue sliding into violet — produce calm, professional transitions. Complementary pairs — opposite hues, such as indigo and pink — produce vibrant, high-energy blends with a grayish midpoint where the hues cross. Keeping both colors at similar lightness usually reads as more polished than mixing a very dark and a very light color, which can make the midpoint appear muddy. If the blend band looks dirty, insert a third color at the midpoint (this generator's third-color option) to steer the transition through a cleaner middle tone.</p>
+  <p>For accessibility, remember that text placed on a gradient must maintain contrast against the lightest point of the blend. Dark text on a light-to-mid gradient, or white text on a darker blend with a slight overlay, keeps readable contrast across the whole surface.</p>
+  <h2>Performance and Fallbacks</h2>
+  <p>A gradient is computed by the browser's paint system, so it is effectively free at runtime — there is no image to decode and no extra network request. That makes gradients one of the cheapest ways to add visual richness to a page. Older browsers that predate gradient support simply ignore the declaration and fall back to whatever background-color you declare alongside it; adding a plain <code>background-color</code> before the gradient line is a one-line safety net that costs nothing in modern browsers. Very complex multi-stop gradients painted over huge areas can cost some paint time on low-powered devices during scrolling, but the two- and three-color gradients this tool generates are negligible in practice.</p>
+  <h2>Frequently Asked Questions</h2>
+  <p><strong>What is the difference between linear, radial, and conic gradients?</strong></p>
+  <p>Linear gradients blend along a straight line at a chosen angle. Radial gradients blend outward from a center point. Conic gradients blend around a circle like a pie or radar sweep. All three are set as values of the CSS background property.</p>
+  <p><strong>How do I set a gradient's angle in CSS?</strong></p>
+  <p>Add an angle before the color list: <code>linear-gradient(135deg, color1, color2)</code>. Zero degrees points up and angles increase clockwise, so 90deg points right and 180deg points down.</p>
+  <p><strong>Can I use more than two colors in a CSS gradient?</strong></p>
+  <p>Yes. List as many colors as you like, optionally with percentage stops such as <code>#6366f1 20%</code> to control where each color begins its transition. This generator supports up to three colors; you can hand-edit the copied CSS to add more.</p>
+  <p><strong>Do CSS gradients work in all browsers?</strong></p>
+  <p>Linear, radial, and conic gradients are supported by all modern browsers. Very old browsers ignore the gradient and fall back to a declared background-color, so include one as a fallback when the surface needs color regardless.</p>
+  <p><strong>Are gradients better than gradient images?</strong></p>
+  <p>Yes for most uses. A CSS gradient adds no download, scales infinitely without artifacts, and can be changed by editing one line of code. Images make sense only when the effect cannot be expressed as a gradient, such as complex textures or mesh blends with irregular shapes.</p>
   </div>
   <div class="ad-slot">Advertisement</div>
 </div>

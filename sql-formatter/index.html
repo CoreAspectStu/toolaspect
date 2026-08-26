@@ -36,9 +36,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does formatting change what my query does?","acceptedAnswer":{"@type":"Answer","text":"No. A SQL formatter only inserts and normalize whitespace, which the SQL parser ignores outside string literals and comments. Execution plans, results, and semantics are identical before and after."}},{"@type":"Question","name":"What SQL dialects does the formatter support?","acceptedAnswer":{"@type":"Answer","text":"It handles the common core — SELECT/INSERT/UPDATE/DELETE, JOINs, CTEs (WITH clauses), window functions, and CASE expressions — shared by MySQL, PostgreSQL, SQL Server, SQLite, and Oracle. Dialect-specific extensions are formatted reasonably but may not be recognized as keywords."}},{"@type":"Question","name":"Why do keywords get uppercased?","acceptedAnswer":{"@type":"Answer","text":"Uppercase keywords visually separate the query structure from table and column names. It is purely convention — SQL is case-insensitive for keywords in virtually every dialect — and the formatter lets you choose lowercase or capitalized instead."}},{"@type":"Question","name":"Will it reformat text inside strings or comments?","acceptedAnswer":{"@type":"Answer","text":"No. A syntax-aware formatter preserves string literals, quoted identifiers, and comment contents exactly as written, since changing them could alter data comparisons or documentation."}},{"@type":"Question","name":"Is my SQL uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Formatting runs entirely in your browser with JavaScript, so the query never leaves your machine — suitable for proprietary or sensitive schema and data references."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>SQL Formatter</h1>
@@ -61,15 +62,34 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
   <div class="ad-slot">Advertisement</div>
   <div class="seo-content">
-  <h2>SQL Formatter</h2>
-  <p>Format and beautify your SQL queries with proper indentation and keyword capitalization. Supports SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, JOIN, and more.</p>
-  <ul>
-  <li>Capitalize SQL keywords automatically</li>
-  <li>Newlines before major clauses</li>
-  <li>Readable indentation</li>
-  <li>Minify for production</li>
-  </ul>
-  </div>
+<h2>Why Format Your SQL</h2>
+<p>SQL that runs is not the same as SQL that reads. Over months of edits, queries accumulate inconsistent capitalization, tangled join conditions, and subqueries squeezed onto a single line. A formatter — also called a beautifier or pretty-printer — applies a consistent layout to the text without changing what the query does, because it only inserts whitespace where whitespace is meaningless to the parser. The result is code that survives review, diffs cleanly in version control, and can be handed to a colleague without a walkthrough.</p>
+<p>This tool formats SQL in the browser using a syntax-aware engine, not naive keyword replacement. That means it understands string literals, quoted identifiers, and comments well enough to leave their contents untouched, reflows SELECT lists, ON clauses, and CASE blocks onto predictable lines, and normalizes keyword casing to your chosen convention — uppercase, lowercase, or capitalized. Nothing is sent to a server; the formatting happens locally in your browser.</p>
+<p>Formatted output is a starting point, not a style verdict. Teams that adopt one layout convention — and enforce it with a formatter in the editor or CI — spend less time arguing about indentation and more time reading the logic, which is the entire point.</p>
+<h2>What the Formatter Changes</h2>
+<p>The engine performs a fixed set of transformations. It inserts line breaks before major clauses such as FROM, WHERE, GROUP BY, and ORDER BY; indents join conditions under their JOIN keyword; breaks long column lists onto one column per line; aligns CASE WHEN branches; and standardizes keyword case. It does not rename aliases, add missing keywords, remove dead columns, or otherwise alter the query semantics — a formatter is deliberately not an optimizer or a linter.</p>
+<p>Preservation rules matter more than the changes. Text inside single-quoted string literals is left exactly as written, because 'USA' and 'usa' are different data values in most collations. Contents of comments, both line comments with double dashes and block comments, survive untouched. Identifier casing is left alone by default since many databases on Linux fold unquoted identifiers to lowercase while preserving quoted ones.</p>
+<h2>Formatting Conventions Compared</h2>
+<p>There is no ANSI or ISO standard for SQL layout — only widely followed conventions. The table below summarizes the main options teams pick between. Any of them works; the professional norm is to pick one and apply it uniformly.</p>
+<p>Keyword casing is the most visible choice. Uppercase keywords (SELECT ... FROM) descend from an era of scarce syntax highlighting and remain the most common convention in published documentation. Lowercase reads more like modern application code. Indent style — tabs versus a fixed two-space indent — is usually inherited from the surrounding language team: two or four spaces dominate, and the formatter supports both.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Convention</th><th>Example</th><th>Where you see it</th></tr><tr><td>Uppercase keywords</td><td>SELECT id FROM users;</td><td>Vendor docs, DBA scripts, textbooks</td></tr><tr><td>Lowercase keywords</td><td>select id from users;</td><td>Application codebases, ORM-adjacent SQL</td></tr><tr><td>Leading comma lists</td><td>…id<br>, name</td><td>Teams that comment out columns often</td></tr><tr><td>Trailing comma lists</td><td>id,<br>name</td><td>Most SQL style guides</td></tr><tr><td>2-space indent</td><td>joins indented two spaces</td><td>Matches common app-code style</td></tr></table>
+</div>
+<h2>Using a Formatter in a Team Workflow</h2>
+<p>The strongest argument for automated formatting is diff hygiene. When everyone's SELECT list lines up the same way, a code review shows only the columns that actually changed instead of a wall of re-indented text. Most database IDEs can format on save, and formatters are available as CLI tools that can run in CI to reject unformatted SQL, the same way linters treat code. Paste, format, commit — the habit takes a week to form and pays off indefinitely.</p>
+<p>A few practical notes make formatting sessions smoother. Very large statements — long INSERT value lists or wide reporting queries with dozens of columns — are handled fine, but browsers do have practical text limits, so for multi-megabyte dump files a command-line formatter is the better tool. Pasting from spreadsheets or word processors can carry smart quotes that SQL does not recognize; if a formatted query suddenly errors, non-breaking spaces and curly quotes are the first suspects. And if a fragment is incomplete — a missing closing parenthesis, an unterminated string — the formatter will show it plainly, which makes it a quick syntax sanity check before a query ever reaches the database driver.</p>
+    <h2>Frequently Asked Questions</h2>
+<p><strong>Does formatting change what my query does?</strong></p>
+<p>No. A SQL formatter only inserts and normalize whitespace, which the SQL parser ignores outside string literals and comments. Execution plans, results, and semantics are identical before and after.</p>
+<p><strong>What SQL dialects does the formatter support?</strong></p>
+<p>It handles the common core — SELECT/INSERT/UPDATE/DELETE, JOINs, CTEs (WITH clauses), window functions, and CASE expressions — shared by MySQL, PostgreSQL, SQL Server, SQLite, and Oracle. Dialect-specific extensions are formatted reasonably but may not be recognized as keywords.</p>
+<p><strong>Why do keywords get uppercased?</strong></p>
+<p>Uppercase keywords visually separate the query structure from table and column names. It is purely convention — SQL is case-insensitive for keywords in virtually every dialect — and the formatter lets you choose lowercase or capitalized instead.</p>
+<p><strong>Will it reformat text inside strings or comments?</strong></p>
+<p>No. A syntax-aware formatter preserves string literals, quoted identifiers, and comment contents exactly as written, since changing them could alter data comparisons or documentation.</p>
+<p><strong>Is my SQL uploaded anywhere?</strong></p>
+<p>No. Formatting runs entirely in your browser with JavaScript, so the query never leaves your machine — suitable for proprietary or sensitive schema and data references.</p>
+</div>
   <div class="ad-slot">Advertisement</div>
 </div>
 <script>

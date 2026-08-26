@@ -13,6 +13,9 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"YAML Validator","description":"Validate YAML syntax and convert to JSON. Free online YAML parser and validator for configs and manifests.","url":"https://toolaspect.com/yaml-validator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I validate YAML syntax?","acceptedAnswer":{"@type":"Answer","text":"Paste your YAML into the input box and click Validate. The tool parses the document and reports either the number of root keys found or the exact syntax error, including indentation and structure problems."}},{"@type":"Question","name":"Can tabs be used for indentation in YAML?","acceptedAnswer":{"@type":"Answer","text":"No. The YAML specification forbids tab characters in indentation; only spaces are allowed. A single tab can make an entire document fail to parse, so configure your editor to insert spaces when you press Tab."}},{"@type":"Question","name":"How do I convert YAML to JSON?","acceptedAnswer":{"@type":"Answer","text":"Paste your YAML and click Convert to JSON. The parsed structure is serialized as formatted JSON that you can copy with one click. Nested objects, arrays, booleans, nulls, and numbers all convert to their JSON equivalents."}},{"@type":"Question","name":"Is my YAML uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing, validation, and JSON conversion all run locally in your browser with JavaScript. Nothing you paste is transmitted anywhere, making the tool safe for configs that contain credentials or internal hostnames."}},{"@type":"Question","name":"Why does my YAML work locally but fail in CI?","acceptedAnswer":{"@type":"Answer","text":"Usually a difference in parser strictness: duplicate keys, tab characters, or YAML 1.1-style boolean coercion (yes/no/on/off) can be tolerated by one loader and rejected by another. Validate with the same strictness your pipeline uses and quote ambiguous scalar values."}}]}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
@@ -35,6 +38,11 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
+.seo-content .table-wrap{overflow-x:auto;margin:12px 0}
+.seo-content table{width:100%;border-collapse:collapse;font-size:.85rem}
+.seo-content th,.seo-content td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left}
+.seo-content th{color:var(--text);background:var(--bg)}
+.seo-content td{color:var(--text-secondary)}
 @media(max-width:640px){.container{padding:1rem}}
 </style>
 </head>
@@ -62,7 +70,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
   <div class="ad-slot">Advertisement</div>
   <div class="seo-content">
-  <h2>YAML Validator</h2>
+  <h2>About the YAML Validator</h2>
   <p>Validate YAML syntax and convert to JSON. Checks for indentation errors, type mismatches, and structural issues.</p>
   <ul>
   <li>Validate Kubernetes manifests, CI/CD configs, and docker-compose files</li>
@@ -70,6 +78,42 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <li>Convert YAML to JSON with one click</li>
   <li>Supports nested objects and arrays</li>
   </ul>
+  <h2>Why YAML Breaks: The Common Errors</h2>
+  <p>YAML is whitespace-sensitive, and that single design decision causes most of the errors people hit. Mixing tabs with spaces is the classic failure: the YAML specification forbids tabs in indentation, so one stray tab character can invalidate an otherwise perfect file. Inconsistent spacing — indenting a sibling key by two spaces in one place and three in another — produces silent structure changes or parse errors instead. Duplicated keys at the same level are rejected by strict parsers but tolerated by lenient ones, which is why a file that loads locally can fail a CI schema check.</p>
+  <p>Scalar handling trips people up too. A value like <code>version: 1.0</code> parses as a float, while <code>version: "1.0"</code> stays a string — Kubernetes resource versions are strings, so quoting matters. Unquoted <code>yes</code>, <code>no</code>, <code>on</code>, and <code>off</code> are treated as booleans by the YAML 1.1 spec that most tools implement, even though YAML 1.2 dropped that behavior. Colons inside unquoted values, unescaped <code>@</code> or backticks at the start of a scalar, and missing spaces after the colon in a mapping are all frequent parse failures in CI pipelines.</p>
+  <h2>YAML Compared to JSON and Other Formats</h2>
+  <p>Choosing between YAML and JSON is usually about who edits the file. YAML's block style is readable and comment-friendly, which suits hand-edited configs; JSON's strict grammar makes it machine-friendly for APIs. The comparison table below summarizes the practical differences you care about when validating and converting.</p>
+  <div class="table-wrap">
+  <table>
+  <tr><th>Feature</th><th>YAML</th><th>JSON</th></tr>
+  <tr><td>Comments</td><td>Yes (<code>#</code>)</td><td>No</td></tr>
+  <tr><td>Multi-line strings</td><td>Yes (literal <code>|</code> and folded <code>&gt;</code> blocks)</td><td>Escaped \n only</td></tr>
+  <tr><td>Quoting required</td><td>Usually optional</td><td>Always for strings and keys</td></tr>
+  <tr><td>Trailing commas</td><td>Not used in block style</td><td>Forbidden</td></tr>
+  <tr><td>Anchors &amp; references</td><td>Yes (<code>&amp;anchor</code> / <code>*ref</code>)</td><td>No</td></tr>
+  <tr><td>Multiple documents per file</td><td>Yes (<code>---</code> separators)</td><td>No (one value per document)</td></tr>
+  <tr><td>Typical use</td><td>Configs, K8s manifests, CI pipelines</td><td>APIs, data interchange</td></tr>
+  </table>
+  </div>
+  <h2>Where YAML Is Used in Practice</h2>
+  <p>Nearly every modern deployment pipeline parses YAML somewhere. Kubernetes manifests define pods, deployments, and services as (often multi-document) YAML files. GitHub Actions workflows live in <code>.github/workflows/*.yml</code>, GitLab CI in <code>.gitlab-ci.yml</code>, and Ansible playbooks, docker-compose files, and OpenAPI specifications are all YAML. Because these files gate deploys, a syntax error costs real time — which is exactly when a fast local validator earns its keep: paste, check, fix, paste back.</p>
+  <p>Multi-document files deserve special care. A single <code>---</code> separates documents, and Kubernetes uses this to pack many resources into one manifest. If your file mixes resources with different schemas, validate each document separately; an error in the third document does not stop the first two from being valid.</p>
+  <h2>Validating Before You Commit</h2>
+  <p>The cheapest workflow is validation at the moment of editing rather than at the moment of deploying. Paste your YAML here before committing, fix any reported structure errors, and convert to JSON when a tool downstream wants JSON instead. Because this validator runs entirely in your browser, nothing you paste — including any values you would rather not send across the network — ever leaves your machine. For cluster-critical manifests, pair the local syntax check with a server-side schema validation step in CI, since syntax validity and schema compliance are different checks.</p>
+  <h2>The Anatomy of a YAML Document</h2>
+  <p>A well-formed YAML document has a predictable shape. Mappings use <code>key: value</code> pairs; sequences use dashes; nesting is expressed purely by indentation of two spaces per level by convention. Strings rarely need quotes, numbers and booleans are auto-detected, and <code>null</code> or <code>~</code> represent a null value. A comment starts with <code>#</code> and runs to the end of the line. Literal block scalars introduced by <code>|</code> preserve newlines exactly, while folded scalars introduced by <code>&gt;</code> collapse single newlines into spaces — the right choice for long paragraphs and the wrong one for scripts and certificates.</p>
+  <p>Two more constructs matter in real files. Anchors (<code>&amp;name</code>) attach a label to a node and aliases (<code>*name</code>) reference it later, giving you reuse without copy-paste; merge keys (<code>&lt;&lt;:</code>) pull a mapped anchor's values into another mapping. These are powerful but confuse converters, so if your JSON output looks wrong, check for aliases before assuming a parse bug. Document markers come last: an optional <code>---</code> starts a document and <code>...</code> ends one, which is how Kubernetes stacks several resources in a single file.</p>
+  <h2>Frequently Asked Questions</h2>
+  <p><strong>How do I validate YAML syntax?</strong></p>
+  <p>Paste your YAML into the input box and click Validate. The tool parses the document and reports either the number of root keys found or the exact syntax error, including indentation and structure problems.</p>
+  <p><strong>Can tabs be used for indentation in YAML?</strong></p>
+  <p>No. The YAML specification forbids tab characters in indentation; only spaces are allowed. A single tab can make an entire document fail to parse, so configure your editor to insert spaces when you press Tab.</p>
+  <p><strong>How do I convert YAML to JSON?</strong></p>
+  <p>Paste your YAML and click Convert to JSON. The parsed structure is serialized as formatted JSON that you can copy with one click. Nested objects, arrays, booleans, nulls, and numbers all convert to their JSON equivalents.</p>
+  <p><strong>Is my YAML uploaded to a server?</strong></p>
+  <p>No. Parsing, validation, and JSON conversion all run locally in your browser with JavaScript. Nothing you paste is transmitted anywhere, making the tool safe for configs that contain credentials or internal hostnames.</p>
+  <p><strong>Why does my YAML work locally but fail in CI?</strong></p>
+  <p>Usually a difference in parser strictness: duplicate keys, tab characters, or YAML 1.1-style boolean coercion (yes/no/on/off) can be tolerated by one loader and rejected by another. Validate with the same strictness your pipeline uses and quote ambiguous scalar values.</p>
   </div>
   <div class="ad-slot">Advertisement</div>
 </div>

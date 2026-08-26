@@ -43,9 +43,14 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Password storage is deliberately not on this list.</strong> Plain fast hashes like SHA-256 are poor password hashes because modern GPUs can compute billions per second when attacking leaked databases. Passwords should be hashed with deliberately slow, salted algorithms such as bcrypt, scrypt, or Argon2.</p>\n    <h2>Which Hash Should I Use?</h2>\n    <p><strong>SHA-256</strong> is the sensible default for integrity checks, signatures, and general fingerprinting — it is fast, universally available, and unbroken. <strong>SHA-512</strong> (or SHA-384) offers a larger margin with similar speed on 64-bit hardware and is common in certificate and TLS contexts. <strong>SHA-1</strong> and <strong>MD5</strong> must never be used for security decisions, but remain useful as non-adversarial checksums for legacy systems that still expect them — verifying that a file you downloaded matches a published digest is fine, but a digest an attacker could influence is not.</p>\n    <h2>Reading and Comparing Digests</h2>\n    <p>A digest is normally written as hexadecimal: each byte becomes two characters, so SHA-256's 32 bytes render as 64 hex characters. When comparing a file against a published checksum, the comparison must be exact — any difference at all means the inputs differ. There is no \"almost matching\" hash; a one-character difference in a digest means the underlying data is different, and a matching digest is strong (though for broken algorithms, not absolute) evidence the data is identical. Note that hashing is about verification, not secrecy: a hash hides nothing about small inputs, because an attacker who guesses a candidate input can simply hash it and check.</p>\n    <h2>Hashing Text vs Hashing Files</h2>\n    <p>When you type into the box, the tool encodes your text as UTF-8 bytes and hashes those bytes. When you load a file, it hashes the file's raw bytes directly. That distinction matters: a text editor that saves your file with a different encoding, a byte-order mark, or Windows line endings will produce a different digest than the visually identical text you pasted, even though the content reads the same. To reproduce a published file checksum, always hash the file itself rather than pasting its contents, and confirm the published digest is for the same algorithm — a SHA-256 digest cannot be checked against a SHA-512 value.</p>\n    <h2>Frequently Asked Questions</h2>\n    <p><strong>Can a hash be reversed to reveal the original input?","acceptedAnswer":{"@type":"Answer","text":"No. Hashing is one-way. You cannot compute the input from the digest; you can only hash candidate inputs and compare. For small or predictable inputs like short passwords, attackers use lookup tables and brute force, which is why passwords need dedicated slow hash algorithms like bcrypt or Argon2."}},{"@type":"Question","name":"Why do I get a different hash for the same text?","acceptedAnswer":{"@type":"Answer","text":"You almost certainly don't — identical byte-for-byte input always yields an identical digest. Hidden differences such as a trailing newline, different line endings, or whitespace changes produce a completely different hash, because the algorithm processes bytes, not visual appearance."}},{"@type":"Question","name":"What's the difference between hashing and encryption?","acceptedAnswer":{"@type":"Answer","text":"Encryption is reversible with a key: ciphertext can be decrypted back to plaintext. Hashing is not reversible: the digest is a fixed-size fingerprint and the original cannot be recovered, even by the person who hashed it."}},{"@type":"Question","name":"Is SHA-256 still secure?","acceptedAnswer":{"@type":"Answer","text":"Yes. No practical collision or preimage attack against SHA-2 exists. It secures TLS certificates, code signing, and Bitcoin. Its successor SHA-3 exists as an independent alternative, not because SHA-2 is broken."}},{"@type":"Question","name":"Can this tool hash files as well as text?","acceptedAnswer":{"@type":"Answer","text":"Yes — use the Load File button. The file is read in your browser and hashed locally with the same Web Crypto algorithms; nothing is uploaded. For very large files, a command-line tool such as sha256sum will be faster."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Hash Generator</h1>
@@ -67,18 +72,47 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>What is a Hash Function?</h2>
-    <p>A hash function takes input data of any size and produces a fixed-size output string. The same input always produces the same hash, but even a tiny change creates a completely different hash.</p>
+    <h2>What Is a Hash Function?</h2>
+    <p>A hash function takes input data of any size — a single character, a paragraph, or an entire file — and produces a fixed-size output string called a digest or hash. The same input always produces the same hash, but even a tiny change creates a completely different hash: flip one bit of the input and roughly half the bits of the output change, a property called the avalanche effect. Good cryptographic hash functions are also one-way: you cannot reconstruct the input from the digest, and it is computationally infeasible to find two different inputs that produce the same hash.</p>
+    <p>This generator uses your browser's built-in Web Crypto API, which implements the same SHA algorithms used by operating systems, certificate authorities, and blockchain networks. Hashing runs locally; nothing is transmitted.</p>
+    <h2>The Algorithms This Tool Generates</h2>
+    <p>SHA-256, SHA-384, and SHA-512 are members of the SHA-2 family, designed by the NSA and published by NIST in 2001. They remain the global standard for TLS certificates, code signing, package integrity, and Bitcoin's proof-of-work (SHA-256 specifically). SHA-1, published in 1995, produces a 160-bit digest and is now deprecated for security uses — Google's 2017 SHAttered attack demonstrated practical collisions. MD5 (128-bit, from 1991) has been collision-broken since 2004 and is omitted here for that reason; it survives only in legacy checksum use.</p>
+    <div class="table-wrap">
+    <table class="data-table">
+    <tr><th>Algorithm</th><th>Digest length</th><th>Hex characters</th><th>Status</th></tr>
+    <tr><td>SHA-256</td><td>256 bits</td><td>64</td><td>Current standard, safe for all uses</td></tr>
+    <tr><td>SHA-384</td><td>384 bits</td><td>96</td><td>Standard, used in higher-security suites</td></tr>
+    <tr><td>SHA-512</td><td>512 bits</td><td>128</td><td>Standard, fast on 64-bit CPUs</td></tr>
+    <tr><td>SHA-1</td><td>160 bits</td><td>40</td><td>Deprecated — collisions demonstrated in 2017</td></tr>
+    <tr><td>MD5</td><td>128 bits</td><td>32</td><td>Broken — collisions trivial since mid-2000s</td></tr>
+    </table>
+    </div>
     <h2>Common Use Cases</h2>
     <ul>
-      <li><strong>Data integrity:</strong> Verify files haven't been tampered with</li>
-      <li><strong>Password storage:</strong> Store hashes instead of plain text</li>
-      <li><strong>Digital signatures:</strong> Sign document hashes for authenticity</li>
-      <li><strong>Checksums:</strong> Verify downloaded files are complete</li>
-      <li><strong>Blockchain:</strong> SHA-256 powers Bitcoin and other cryptocurrencies</li>
+      <li><strong>File integrity:</strong> software distributors publish SHA-256 checksums so you can verify a download matches the original byte for byte</li>
+      <li><strong>Checksums:</strong> confirm a file transfer or copy completed without corruption</li>
+      <li><strong>Digital signatures:</strong> documents and certificates are signed by hashing the content first, because signing a short digest is faster than signing the whole file</li>
+      <li><strong>Deduplication and caching:</strong> hashes serve as compact fingerprints to detect duplicate content</li>
+      <li><strong>Blockchain:</strong> SHA-256 links each Bitcoin block to the previous one</li>
     </ul>
+    <p><strong>Password storage is deliberately not on this list.</strong> Plain fast hashes like SHA-256 are poor password hashes because modern GPUs can compute billions per second when attacking leaked databases. Passwords should be hashed with deliberately slow, salted algorithms such as bcrypt, scrypt, or Argon2.</p>
     <h2>Which Hash Should I Use?</h2>
-    <p><strong>SHA-256</strong> is the current standard. <strong>SHA-512</strong> for extra security. <strong>MD5</strong> and <strong>SHA-1</strong> are broken for security but still useful for checksums.</p>
+    <p><strong>SHA-256</strong> is the sensible default for integrity checks, signatures, and general fingerprinting — it is fast, universally available, and unbroken. <strong>SHA-512</strong> (or SHA-384) offers a larger margin with similar speed on 64-bit hardware and is common in certificate and TLS contexts. <strong>SHA-1</strong> and <strong>MD5</strong> must never be used for security decisions, but remain useful as non-adversarial checksums for legacy systems that still expect them — verifying that a file you downloaded matches a published digest is fine, but a digest an attacker could influence is not.</p>
+    <h2>Reading and Comparing Digests</h2>
+    <p>A digest is normally written as hexadecimal: each byte becomes two characters, so SHA-256's 32 bytes render as 64 hex characters. When comparing a file against a published checksum, the comparison must be exact — any difference at all means the inputs differ. There is no "almost matching" hash; a one-character difference in a digest means the underlying data is different, and a matching digest is strong (though for broken algorithms, not absolute) evidence the data is identical. Note that hashing is about verification, not secrecy: a hash hides nothing about small inputs, because an attacker who guesses a candidate input can simply hash it and check.</p>
+    <h2>Hashing Text vs Hashing Files</h2>
+    <p>When you type into the box, the tool encodes your text as UTF-8 bytes and hashes those bytes. When you load a file, it hashes the file's raw bytes directly. That distinction matters: a text editor that saves your file with a different encoding, a byte-order mark, or Windows line endings will produce a different digest than the visually identical text you pasted, even though the content reads the same. To reproduce a published file checksum, always hash the file itself rather than pasting its contents, and confirm the published digest is for the same algorithm — a SHA-256 digest cannot be checked against a SHA-512 value.</p>
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Can a hash be reversed to reveal the original input?</strong></p>
+    <p>No. Hashing is one-way. You cannot compute the input from the digest; you can only hash candidate inputs and compare. For small or predictable inputs like short passwords, attackers use lookup tables and brute force, which is why passwords need dedicated slow hash algorithms like bcrypt or Argon2.</p>
+    <p><strong>Why do I get a different hash for the same text?</strong></p>
+    <p>You almost certainly don't — identical byte-for-byte input always yields an identical digest. Hidden differences such as a trailing newline, different line endings, or whitespace changes produce a completely different hash, because the algorithm processes bytes, not visual appearance.</p>
+    <p><strong>What's the difference between hashing and encryption?</strong></p>
+    <p>Encryption is reversible with a key: ciphertext can be decrypted back to plaintext. Hashing is not reversible: the digest is a fixed-size fingerprint and the original cannot be recovered, even by the person who hashed it.</p>
+    <p><strong>Is SHA-256 still secure?</strong></p>
+    <p>Yes. No practical collision or preimage attack against SHA-2 exists. It secures TLS certificates, code signing, and Bitcoin. Its successor SHA-3 exists as an independent alternative, not because SHA-2 is broken.</p>
+    <p><strong>Can this tool hash files as well as text?</strong></p>
+    <p>Yes — use the Load File button. The file is read in your browser and hashed locally with the same Web Crypto algorithms; nothing is uploaded. For very large files, a command-line tool such as sha256sum will be faster.</p>
   </div>
 
   <div class="ad-slot">Advertisement</div>

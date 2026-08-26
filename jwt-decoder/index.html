@@ -32,9 +32,14 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is decoding a JWT the same as verifying it?","acceptedAnswer":{"@type":"Answer","text":"No. Decoding simply Base64url-decodes the header and payload so anyone can read them. Verification cryptographically checks the signature against the header's declared algorithm and the issuer's key. This tool decodes only and never verifies signatures."}},{"@type":"Question","name":"Are JWT payloads encrypted?","acceptedAnswer":{"@type":"Answer","text":"No. The payload is Base64url-encoded, which is encoding, not encryption. Anyone who obtains the token can read its claims. If payload confidentiality matters, the token must be encrypted separately, for example as a JWE."}},{"@type":"Question","name":"What standard claims appear in a JWT payload?","acceptedAnswer":{"@type":"Answer","text":"Common registered claims include iss (issuer), sub (subject), aud (audience), exp (expiration time), nbf (not before), and iat (issued-at), all defined in RFC 7519. Applications may add arbitrary public or private claims alongside them."}},{"@type":"Question","name":"Why do JWTs expire?","acceptedAnswer":{"@type":"Answer","text":"The exp claim bounds how long a token is valid, limiting the damage if a token leaks. Once expired, conforming servers reject it and the client must obtain a new one, typically via a refresh token."}},{"@type":"Question","name":"Is it safe to paste a production token into an online decoder?","acceptedAnswer":{"@type":"Answer","text":"It is safe here because decoding runs entirely in your browser and nothing is transmitted. As a general rule, avoid pasting live tokens into sites you do not control, and treat any bearer token as a password."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>JWT Decoder</h1>
@@ -65,17 +70,48 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   <div class="ad-slot">Advertisement</div>
 
   <div class="seo-content">
-    <h2>What is a JWT?</h2>
-    <p>JSON Web Tokens are an open standard for securely transmitting information between parties as a JSON object. Commonly used for authentication and authorization in web applications.</p>
-    <h2>JWT Structure</h2>
-    <p>A JWT has three parts: <strong>header.payload.signature</strong></p>
+    <h2>What Is a JWT?</h2>
+    <p>A JSON Web Token is an open standard (RFC 7519) for securely transmitting information between parties as a JSON object. It has become the default format for authentication and authorization in web applications and APIs: after you sign in, the server issues a signed token that your client presents on subsequent requests, letting the server verify identity without a session lookup. A JWT is self-contained — the token itself carries the claims (user ID, roles, issuer, expiry) — which is what makes stateless APIs possible and also why being able to inspect one matters.</p>
+    <p>Decoding runs entirely in your browser. Paste a token and the tool splits, Base64url-decodes, and pretty-prints the header and payload locally; the token never leaves your device.</p>
+    <h2>JWT Structure: header.payload.signature</h2>
+    <p>A JWT is three Base64url-encoded segments joined by dots:</p>
     <ul>
-      <li><strong>Header:</strong> Token type and signing algorithm</li>
-      <li><strong>Payload:</strong> Claims (user data, expiration, issuer)</li>
-      <li><strong>Signature:</strong> Cryptographic signature to verify integrity</li>
+      <li><strong>Header:</strong> metadata about the token, typically the token type (<code>typ: JWT</code>) and the signing algorithm (<code>alg</code>), such as HS256 or RS256</li>
+      <li><strong>Payload:</strong> the claims — statements about the subject (user ID, roles), token metadata (issuer, audience, expiry), and any custom data the application added</li>
+      <li><strong>Signature:</strong> a cryptographic signature over the first two segments, produced with the algorithm named in the header and a secret or private key</li>
     </ul>
-    <h2>Security Note</h2>
-    <p>This tool decodes JWTs but does NOT verify signatures. JWT payloads are Base64-encoded, not encrypted — anyone can read them. Never put production secrets into online tools.</p>
+    <p>The signature is what lets a server trust the token: anyone can craft a payload, but only someone holding the key can produce a valid signature. This decoder shows all three parts and additionally interprets the <code>exp</code> and <code>iat</code> timestamps, marking expired tokens with a clear warning.</p>
+    <h2>Registered Claims and What They Mean</h2>
+    <p>RFC 7519 defines a set of reserved claim names with defined semantics. The table below lists the ones you will encounter in almost every real-world token, including the two this tool checks for expiry and issuance.</p>
+    <div class="table-wrap">
+    <table class="data-table">
+    <tr><th>Claim</th><th>Name</th><th>Meaning</th></tr>
+    <tr><td>iss</td><td>Issuer</td><td>Who created and signed the token</td></tr>
+    <tr><td>sub</td><td>Subject</td><td>Who the token is about, usually the user ID</td></tr>
+    <tr><td>aud</td><td>Audience</td><td>Who the token is intended for; a server should reject tokens issued for a different audience</td></tr>
+    <tr><td>exp</td><td>Expiration time</td><td>Unix timestamp after which the token must be rejected</td></tr>
+    <tr><td>nbf</td><td>Not before</td><td>Unix timestamp before which the token is not yet valid</td></tr>
+    <tr><td>iat</td><td>Issued at</td><td>Unix timestamp when the token was created</td></tr>
+    <tr><td>jti</td><td>JWT ID</td><td>Unique identifier for the token, used to prevent replay</td></tr>
+    </table>
+    </div>
+    <h2>Decoding vs Verifying</h2>
+    <p>The single most important distinction in JWT work: decoding is not verifying. The header and payload are only Base64url-encoded — an encoding, not encryption — so anyone can read them without any key. What you cannot do without the key is forge a valid signature. A server's job when receiving a token is to verify that signature and enforce the claims (expiry, audience, issuer); this tool's job is the developer-facing half: showing you what is actually inside a token so you can debug claim names, check timestamps, confirm an algorithm, or audit what a third-party service is sending. Never rely on decoded payload contents as proof of authenticity.</p>
+    <h2>Security Notes</h2>
+    <p>JWT payloads are readable by design, so tokens must never carry secrets, passwords, or sensitive personal data they don't need. Treat a bearer token as a credential: anyone holding it can act as the user until it expires. Short expiry windows and refresh tokens limit the blast radius of a leaked token. If you paste a production token into any online tool, you are trusting that tool — safe here only because decoding is purely client-side, but the habit is worth avoiding in general. Finally, be aware of the <code>alg</code> header's history: attacks such as <code>alg: none</code> and algorithm-confusion exploits worked by tricking verifiers into using the wrong algorithm, which is why verifiers must pin the expected algorithm rather than trust the header.</p>
+    <h2>Working with Tokens in Practice</h2>
+    <p>Real-world debugging sessions with JWTs follow a familiar arc: a request returns 401, and you need to know whether the token expired, was issued by the wrong party, or is missing a claim the API expects. Decoding answers all three in seconds — check <code>exp</code> against the current time, read <code>iss</code> against the expected issuer, and scan the payload for the claim name the server complained about. Common gotchas worth knowing: clocks matter (a token valid on the server may look expired on a machine with a skewed clock), refresh tokens are usually longer-lived JWTs or opaque strings separate from the access token, and a token that works in one environment but not another is often audience-mismatched, which the <code>aud</code> claim reveals immediately.</p>
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>Is decoding a JWT the same as verifying it?</strong></p>
+    <p>No. Decoding simply Base64url-decodes the header and payload so anyone can read them. Verification cryptographically checks the signature against the header's declared algorithm and the issuer's key. This tool decodes only and never verifies signatures.</p>
+    <p><strong>Are JWT payloads encrypted?</strong></p>
+    <p>No. The payload is Base64url-encoded, which is encoding, not encryption. Anyone who obtains the token can read its claims. If payload confidentiality matters, the token must be encrypted separately, for example as a JWE.</p>
+    <p><strong>What standard claims appear in a JWT payload?</strong></p>
+    <p>Common registered claims include iss (issuer), sub (subject), aud (audience), exp (expiration time), nbf (not before), and iat (issued-at), all defined in RFC 7519. Applications may add arbitrary public or private claims alongside them.</p>
+    <p><strong>Why do JWTs expire?</strong></p>
+    <p>The exp claim bounds how long a token is valid, limiting the damage if a token leaks. Once expired, conforming servers reject it and the client must obtain a new one, typically via a refresh token.</p>
+    <p><strong>Is it safe to paste a production token into an online decoder?</strong></p>
+    <p>It is safe here because decoding runs entirely in your browser and nothing is transmitted. As a general rule, avoid pasting live tokens into sites you do not control, and treat any bearer token as a password.</p>
   </div>
 
   <div class="ad-slot">Advertisement</div>

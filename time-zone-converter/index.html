@@ -13,6 +13,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Time Zone Converter","description":"Convert times between any two time zones instantly.","url":"https://toolaspect.com/time-zone-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert between two time zones?","acceptedAnswer":{"@type":"Answer","text":"Convert the source time to UTC by subtracting its offset, then add the destination's offset. Example: 9:00 AM New York (UTC−5) = 14:00 UTC = 22:30 in Mumbai (UTC+5:30)."}},{"@type":"Question","name":"What is UTC?","acceptedAnswer":{"@type":"Answer","text":"Coordinated Universal Time — the global reference time scale derived from atomic clocks, equivalent to GMT for everyday purposes. Every civil zone is defined as an offset from UTC, from UTC−12 to UTC+14."}},{"@type":"Question","name":"Why do time zone offsets change during the year?","acceptedAnswer":{"@type":"Answer","text":"Zones that observe daylight saving time shift their offset by an hour in summer. Since regions switch on different dates (US in March/November, EU in March/October), offsets between two cities can vary through the year."}},{"@type":"Question","name":"Which countries use half-hour time zones?","acceptedAnswer":{"@type":"Answer","text":"India (UTC+5:30), Nepal (UTC+5:45), parts of Australia including Adelaide (UTC+9:30), Newfoundland in Canada (UTC−3:30), and Iran historically. Always use the exact offset — assuming whole hours gives the wrong answer for these zones."}},{"@type":"Question","name":"Does this converter handle daylight saving time?","acceptedAnswer":{"@type":"Answer","text":"Yes. Conversions apply each zone's current rules from the IANA time zone database, the same data operating systems use, so the result reflects whether each side is on standard or daylight time on the date you convert."}}]}</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -39,7 +40,7 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
 <div class="page-container">
@@ -107,7 +108,31 @@
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
 <h2>About the Time Zone Converter</h2>
-<p>Convert times between any two time zones instantly. Perfect for scheduling meetings across global teams. DST-aware.</p>
+<p>Coordinated Universal Time (UTC) is the continuous reference scale the world syncs to; every civil time zone is defined as an offset from it, from UTC−12 to UTC+14. This converter takes a wall-clock time in one zone and returns the simultaneous wall-clock time in another — the same instant, expressed twice. It accounts for whether each zone is currently on standard time or daylight saving time (DST), which is where hand conversion usually goes wrong.</p>
+<p>The mechanics are stable and worth knowing. Conversion is pure offset arithmetic: convert the source time to 24-hour UTC by subtracting its offset, then add the destination's offset. New York on standard time is UTC−5, so 3:00 PM there is 20:00 UTC, which is 21:00 in London (UTC+0 in winter) — but when the UK is on British Summer Time (UTC+1), the same instant reads 22:00. Nothing about the instant changed; only the labels did.</p>
+<p>The trap is that DST transitions do not happen simultaneously worldwide. The US shifts in March and November, Europe in late March and late October, and much of the world — including China, India, Japan, and most of Africa and South America — does not observe DST at all. During the weeks when zones are out of step, the US–Europe offset differs by an hour from its usual value, and meetings scheduled on the old offset silently shift by an hour.</p>
+<h2>Major UTC Offsets Reference</h2>
+<p>The table below lists widely referenced zones and their standard-time offsets with DST variants. It is a lookup aid for sanity-checking conversions; for scheduled events, always confirm against a current database such as the IANA time zone database, which is what operating systems and this converter rely on.</p>
+<p>A note on odd offsets: not every zone sits on a whole hour. India is UTC+5:30, Nepal UTC+5:45, parts of Australia UTC+9:30, and Newfoundland UTC−3:30. These fractional offsets are historical and persist, so any converter that assumes whole-hour zones will be wrong for roughly a billion people.</p>
+<h2>Daylight Saving Time Edge Cases</h2>
+<p>DST creates two pathological hours a year in observing zones: in spring, the local hour between 2:00 and 3:00 AM does not exist (times in that window are invalid or represent the hour after the jump), and in fall, the hour between 1:00 and 2:00 AM occurs twice. Meeting schedulers resolve these explicitly. The southern hemisphere inverts the calendar — Australia and New Zealand shift in April and October — so a Sydney–New York call can have its offset change twice a year from each side at different dates.</p>
+<p>The other silent failure is zone renaming and rule changes; governments occasionally change offsets permanently (Samoa skipped a day in 2011; Turkey abolished DST in 2016). This is why converters keyed to IANA zone names rather than fixed offsets stay correct — the zone carries its rules with it.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Zone</th><th>Standard offset</th><th>DST offset</th><th>Observes DST?</th></tr><tr><td>Los Angeles</td><td>UTC−8</td><td>UTC−7</td><td>Yes (Mar–Nov)</td></tr><tr><td>New York</td><td>UTC−5</td><td>UTC−4</td><td>Yes (Mar–Nov)</td></tr><tr><td>London</td><td>UTC+0</td><td>UTC+1</td><td>Yes (Mar–Oct)</td></tr><tr><td>Berlin / Paris</td><td>UTC+1</td><td>UTC+2</td><td>Yes (Mar–Oct)</td></tr><tr><td>Mumbai</td><td>UTC+5:30</td><td>—</td><td>No</td></tr><tr><td>Shanghai</td><td>UTC+8</td><td>—</td><td>No</td></tr><tr><td>Sydney</td><td>UTC+10</td><td>UTC+11</td><td>Yes (Oct–Apr)</td></tr></table>
+</div>
+<h2>Working Across Time Zones Well</h2>
+<p>Practical conventions reduce the pain: store and exchange times in UTC or with explicit zone names, never bare local times; when scheduling, send the UTC instant plus each participant's local rendering; and for recurring meetings, note the dates when offsets change so nobody is surprised in March or November. The converter is fastest for one-off checks — paste a time, pick two zones, read the answer.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How do I convert between two time zones?</strong></p>
+<p>Convert the source time to UTC by subtracting its offset, then add the destination's offset. Example: 9:00 AM New York (UTC−5) = 14:00 UTC = 22:30 in Mumbai (UTC+5:30).</p>
+<p><strong>What is UTC?</strong></p>
+<p>Coordinated Universal Time — the global reference time scale derived from atomic clocks, equivalent to GMT for everyday purposes. Every civil zone is defined as an offset from UTC, from UTC−12 to UTC+14.</p>
+<p><strong>Why do time zone offsets change during the year?</strong></p>
+<p>Zones that observe daylight saving time shift their offset by an hour in summer. Since regions switch on different dates (US in March/November, EU in March/October), offsets between two cities can vary through the year.</p>
+<p><strong>Which countries use half-hour time zones?</strong></p>
+<p>India (UTC+5:30), Nepal (UTC+5:45), parts of Australia including Adelaide (UTC+9:30), Newfoundland in Canada (UTC−3:30), and Iran historically. Always use the exact offset — assuming whole hours gives the wrong answer for these zones.</p>
+<p><strong>Does this converter handle daylight saving time?</strong></p>
+<p>Yes. Conversions apply each zone's current rules from the IANA time zone database, the same data operating systems use, so the result reflects whether each side is on standard or daylight time on the date you convert.</p>
 </div>
 <div class="related-links">
 <a href="/date-difference-calculator/">Date Difference Calculator</a>

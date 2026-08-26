@@ -36,9 +36,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What size should a placeholder image be?","acceptedAnswer":{"@type":"Answer","text":"Match the exact pixel dimensions of the final asset slot: width, height, and aspect ratio should be identical so layout doesn't shift when real images arrive. Common slots include 1200×675 (16:9 hero) and 1200×630 (social preview)."}},{"@type":"Question","name":"What is the aspect ratio of 1920x1080?","acceptedAnswer":{"@type":"Answer","text":"1920 ÷ 1080 = 1.78, the 16:9 ratio — the standard for video and widescreen heroes. Other anchors: 4:3 = 1.33, 3:2 = 1.5, and 1:1 square."}},{"@type":"Question","name":"How do I calculate image dimensions from an aspect ratio?","acceptedAnswer":{"@type":"Answer","text":"Multiply the known side by the ratio: at 16:9 (1.778), height × 1.778 gives width, and width ÷ 1.778 gives height. A 400-pixel-tall hero at 16:9 is 711 pixels wide."}},{"@type":"Question","name":"Why include width and height attributes on images?","acceptedAnswer":{"@type":"Answer","text":"Browsers use them to reserve layout space before the image loads, preventing cumulative layout shift (CLS) — a Core Web Vitals metric that affects both UX and search ranking. This applies to placeholders and final images alike."}},{"@type":"Question","name":"How do HiDPI (Retina) displays affect image sizes?","acceptedAnswer":{"@type":"Answer","text":"Serve 2× pixel dimensions for the same CSS size: a 600×400 CSS slot needs a 1200×800 asset for sharp rendering on 2× screens. Use srcset to let the browser pick the right resolution."}}]}</script>
 <script src="../shared/nav.js"></script>
 <div class="container">
   <h1>Placeholder Image Generator</h1>
@@ -58,15 +59,39 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
   <div class="ad-slot">Advertisement</div>
   <div class="seo-content">
-  <h2>Placeholder Image Generator</h2>
-  <p>Generate placeholder images for your mockups, wireframes, and prototypes. Choose custom dimensions, colors, and text — then download as PNG.</p>
-  <ul>
-  <li>Any dimension from 1×1 to 4000×4000</li>
-  <li>Custom background and text colors</li>
-  <li>Add custom labels or use auto dimensions</li>
-  <li>Download as PNG with transparent option</li>
-  </ul>
-  </div>
+<h2>About the Placeholder Image Tool</h2>
+<p>This placeholder image tool generates instant placeholder graphics in any dimension and color, live in your browser — or as URL parameters you can drop directly into HTML, CSS, or design mockups. No account, no upload, nothing tracked.</p>
+<p>Placeholder images are scaffolding for design: they hold the exact size and aspect ratio a final asset will occupy so layouts can be built before photography exists. Doing that well is pure geometry.</p>
+<h2>Dimensions, Aspect Ratios, and Common Sizes</h2>
+<p>An image's aspect ratio is width ÷ height. Standard ratios anchor most layouts: 16:9 (1.78) for video and hero banners, 4:3 (1.33) for classic content, 1:1 for avatars and social squares, 3:2 (1.5) for photography. The table lists exact pixel dimensions used across the web.</p>
+<p>When a design calls for a custom ratio, multiply the target height by the ratio to get width: a 16:9 hero 400 pixels tall is 711 pixels wide (400 × 1.778 = 711.1). Conversely, a fixed width of 1200 at 16:9 implies 675 pixels tall (1200 ÷ 1.778 = 675.0).</p>
+<h2>Common Placeholder Dimensions</h2>
+<p>These exact dimensions cover the majority of layout slots in modern responsive design, from Open Graph cards to hero images. Width ÷ height verifies each ratio.</p>
+<p>Retina/HiDPI builds double pixel dimensions at the same CSS size: a 1200×675 slot serves crisply with a 2400×1350 asset at 2× device pixel ratio. Placeholder images make that distinction visible while layout work is in progress.</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Dimensions (px)</th><th>Ratio</th><th>Typical use</th></tr><tr><td>1200 × 675</td><td>16:9</td><td>Open Graph / hero</td></tr><tr><td>1920 × 1080</td><td>16:9</td><td>Full HD video / wide hero</td></tr><tr><td>800 × 600</td><td>4:3</td><td>Classic content image</td></tr><tr><td>1200 × 630</td><td>1.90:1</td><td>Social link preview (og:image)</td></tr><tr><td>1080 × 1080</td><td>1:1</td><td>Social square / avatar</td></tr><tr><td>1600 × 900</td><td>16:9</td><td>Section banner</td></tr></table>
+</div>
+<h2>Using Placeholders in HTML and CSS</h2>
+<p>Direct URL: a service-style URL with width and height in the path renders an exact-size image — <img src='.../800/600' width='800' height='600'>. Always include the width and height attributes even with placeholders: browsers reserve layout space and prevent content shift, a measurable Core Web Vitals factor (CLS).</p>
+<p>In CSS, placeholders slot into background-image or object-fit contexts: object-fit: cover crops an image to fill its box while preserving ratio, and object-fit: contain letterboxes instead. Testing both with placeholders reveals how real photography will behave once it arrives.</p>
+<h2>From Placeholder to Production</h2>
+<p>A disciplined workflow marks every placeholder with its final asset specification — dimensions, ratio, subject, and safe-area margins for text overlay. When photography lands, matching the spec exactly means no layout surprises.</p>
+<p>Performance targets to keep in mind while scaffolding: hero images compressed to a few hundred kilobytes, content images lazy-loaded with loading='lazy', and modern formats (WebP/AVIF) served with fallbacks. Placeholders keep layout stable while those optimizations are wired up.</p>
+<h2>Responsive Images and Layout Stability</h2>
+<p>["Modern layout is fluid, so placeholders should reflect real responsive behavior: use srcset to offer 1×, 2× variants, and sizes to describe the slot's width at breakpoints. A hero that spans full width on mobile and 60% on desktop needs differently cropped or sized assets, and placeholders make those slots explicit before content exists.", "Aspect-ratio boxes are the modern CSS solution to reserve space: setting aspect-ratio: 16/9 on a container with width 100% reserves height perfectly without padding hacks. Placeholder images that match the container's ratio verify the reservation works — zero layout shift when the real image swaps in.", "For design handoff, annotate every placeholder with its slot spec: ratio, pixel range, focal point, and whether text overlays it (text-over-image slots need low-busy centers and darkening gradients specified up front). Photography that doesn't match those constraints reshoots expensively — placeholders are the cheapest place to catch the mismatch."]</p>
+<p>Beyond static slots, placeholders shine in the trickiest responsive cases: art direction with <picture> and multiple crops per breakpoint, intrinsic versus extrinsic sizing debates, and fluid typography layouts where an image's ratio must hold as everything around it scales. A placeholder sized to each breakpoint's true ratio exposes croppable regions before a single photo is commissioned — and a placeholder at the wrong ratio is a five-second fix, while production photography at the wrong ratio is a reshoot.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>What size should a placeholder image be?</strong></p>
+<p>Match the exact pixel dimensions of the final asset slot: width, height, and aspect ratio should be identical so layout doesn't shift when real images arrive. Common slots include 1200×675 (16:9 hero) and 1200×630 (social preview).</p>
+<p><strong>What is the aspect ratio of 1920x1080?</strong></p>
+<p>1920 ÷ 1080 = 1.78, the 16:9 ratio — the standard for video and widescreen heroes. Other anchors: 4:3 = 1.33, 3:2 = 1.5, and 1:1 square.</p>
+<p><strong>How do I calculate image dimensions from an aspect ratio?</strong></p>
+<p>Multiply the known side by the ratio: at 16:9 (1.778), height × 1.778 gives width, and width ÷ 1.778 gives height. A 400-pixel-tall hero at 16:9 is 711 pixels wide.</p>
+<p><strong>Why include width and height attributes on images?</strong></p>
+<p>Browsers use them to reserve layout space before the image loads, preventing cumulative layout shift (CLS) — a Core Web Vitals metric that affects both UX and search ranking. This applies to placeholders and final images alike.</p>
+<p><strong>How do HiDPI (Retina) displays affect image sizes?</strong></p>
+<p>Serve 2× pixel dimensions for the same CSS size: a 600×400 CSS slot needs a 1200×800 asset for sharp rendering on 2× screens. Use srcset to let the browser pick the right resolution.</p>
+</div>
   <div class="ad-slot">Advertisement</div>
 </div>
 <script>
