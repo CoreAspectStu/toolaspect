@@ -66,3 +66,29 @@
 - social-security-disability-benefits-calculator — live 200
 - alimony-calculator-california — live 200
 - alimony-calculator-texas — live 200
+
+## 2026-08-26 — Health trio (ADAG + protein + hydration) — built, NOT deployed (manual run, no deploy)
+- glucose-a1c-converter — tool + embed + guide (guides/a1c-to-average-glucose), ADA eAG table + diagnostic thresholds, ADAG formula node-verified
+- ideal-protein-intake-calculator — tool + embed + guide (guides/how-much-protein-per-day), extends macro-calculator (interlinked), RDA→2.2 g/kg table, USDA food values
+- hydration-needs-by-weight — tool + embed + guide (guides/how-much-water-by-weight), extends water-intake-calculator (interlinked), weight table + IOM/EFSA benchmarks
+- all-tools Health 5→8; health-calculators Body Composition 7→9, Pregnancy & Health 5→6
+- embeds 23-25 added to /embed/ index; llm.txt regenerated locally; sitemap NOT regenerated (deploy.sh not run per instruction)
+
+## 2026-08-26 — Five-tool batch (legal + fitness + pregnancy) — built, NOT deployed (manual run, no deploy)
+- wrongful-termination-compensation-calculator — tool + embed + guide (guides/how-wrongful-termination-compensation-is-calculated); benefits-stack math (KFF 2025 premiums, 401k match, bonus), BLS at-will exceptions table, §1981a caps; $87,102 worked example node-verified
+- calorie-deficit-calculator — tool + embed + guide (guides/how-to-calculate-a-calorie-deficit); Mifflin-St Jeor TDEE, NIH 1200/1500 floors, 2 worked examples node-verified
+- macro-split-calculator — tool + embed + guide (guides/how-to-calculate-your-macro-split); %-to-grams + g/lb anchor modes, AMDR bands, 6 presets node-verified
+- heart-rate-zone-calculator — tool + embed + guide (guides/heart-rate-zones-explained); Karvonen HRR zones, classic vs Tanaka max-HR, 2 worked examples node-verified
+- pregnancy-week-by-week — tool + embed + guide (guides/pregnancy-week-by-week-guide) + 40 programmatic week pages (scripts/gen-pregnancy-week-pages.py); Naegele 280-day math node-verified; week pages 159-205 word unique intros, own canonicals
+- all-tools Legal 11→12, Health 8→12 (merged with concurrent health trio), Programmatic Pages 5→6 (pregnancy weeks); health-calculators Body Composition 9→10, new Fitness & Training (2), Pregnancy & Health 6→7; legal-tools Employment 3→4, Guides 10→11, meta 12→13 calculators
+- embeds 26-30 added to /embed/ index; llm.txt regenerated locally; sitemap NOT regenerated (deploy.sh not run per instruction)
+
+## 2026-08-26 — Burst (parallel GLM x2)
+- calorie-deficit-calculator — live 200
+- macro-split-calculator — live 200
+- heart-rate-zone-calculator — live 200
+- pregnancy-week-by-week — live 200
+- glucose-a1c-converter — live 200
+- ideal-protein-intake-calculator — live 200
+- hydration-needs-by-weight — live 200
+- wrongful-termination-compensation-calculator — live 200

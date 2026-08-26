@@ -10,7 +10,7 @@
 # medical-malpractice-settlement-calculator, mesothelioma-settlement-calculator ($40-90),
 # lawsuit-loan-calculator (wave 5) — see tool-factory-done.md
 
-wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC niche, zero good tools
+# DONE 2026-08-26: wrongful-termination-compensation-calculator
 
 ## Wave 3 — OSS-wrap generators (MIT repos verified Aug-25)
 # DONE 2026-08-26: resume-builder, cover-letter-generator, form-builder, gantt-chart-maker,
@@ -23,15 +23,15 @@ wrongful-termination-compensation-calculator | legal | calc | $38 | highest CPC 
 
 ## Wave 4 — Health/Medical AIO magnets
 
-calorie-deficit-calculator | health | calc | $7 | huge volume
-macro-split-calculator | health | calc | $6 | bodybuilding longtails
+# DONE 2026-08-26: calorie-deficit-calculator
+# DONE 2026-08-26: macro-split-calculator
 blood-alcohol-calculator-by-weight | health | exists-check | $8 | widen bac-calculator longtails
-heart-rate-zone-calculator | health | calc | $6 | Karvonen formula = citation fodder
-pregnancy-week-by-week | health | data | $9 | 40 programmatic pages
+# DONE 2026-08-26: heart-rate-zone-calculator
+# DONE 2026-08-26: pregnancy-week-by-week
 ovulation-fertility-window-calculator | health | exists-check | $8 | extend ovulation-calculator
-glucose-a1c-converter | health | calc | $10 | medical tables, tiny comp
-ideal-protein-intake-calculator | health | calc | $5 | extend macro
-hydration-needs-by-weight | health | calc | $4 | extend water-intake
+# DONE 2026-08-26: glucose-a1c-converter
+# DONE 2026-08-26: ideal-protein-intake-calculator
+# DONE 2026-08-26: hydration-needs-by-weight
 
 ## Wave 5 — Deep-research additions (subagent-ranked, Aug-25)
 # Legal PI — highest CPC on the web ($20-90). Build with by-state/injury variant potential.
