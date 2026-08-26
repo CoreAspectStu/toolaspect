@@ -197,9 +197,9 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  /* Run immediately (this script is included in <body> before ads.js,
+     so .ad-slot exists and we claim it before ads.js can). Also re-run
+     on DOMContentLoaded as a safety net for late-parsed markup. */
+  init();
+  document.addEventListener('DOMContentLoaded', init);
 })();

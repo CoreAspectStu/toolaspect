@@ -31,6 +31,7 @@
     var slots = document.querySelectorAll('.ad-slot');
     slots.forEach(function (slot, i) {
       if (slot.dataset.adsenseInit) return;
+      if (slot.dataset.funnelCta) return; /* funnel-cta.js claimed this slot */
       slot.dataset.adsenseInit = '1';
 
       /* Determine position based on location in page */

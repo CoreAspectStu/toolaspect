@@ -56,8 +56,18 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
 - 2026-08-26 depth passes: ovulation-calculator (83 → 967 words, 2 tables, 4 FAQs + FAQ/Breadcrumb JSON-LD);
   amortization-schedule (79 → 953 words, 2 reference tables, 4 FAQs + FAQ/Breadcrumb JSON-LD,
   guide links added; calculator JS untouched on both)
-  Next in queue: amortization has no dedicated guide (guide candidate), then roi, calorie, macro,
-  body-fat, bmr, water-intake, ideal-weight, age-calculator.
+- 2026-08-27 batch guides: amortization → guides/how-does-loan-amortization-work/;
+  roi → guides/what-is-a-good-roi/;
+  calorie → guides/how-many-calories-should-i-eat/
+  (each: 1,316–1,407 words, computed data tables, FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; all-tools guides section updated, count 59→62)
+- 2026-08-27 depth passes: roi-calculator (870 → 1,226 words, benchmark reference table, +2 FAQs
+  with FAQPage JSON-LD update, BreadcrumbList added, related links + guide link; repaired corrupted
+  JS-array-in-HTML paragraph in ROI Pitfalls section; calculator JS untouched);
+  calorie-calculator (895 → 1,301 words, DGA reference table, +2 FAQs with FAQPage JSON-LD update,
+  BreadcrumbList added, guide link in related; calculator JS untouched)
+  Next in queue: body-fat, bmr, ideal-weight, age-calculator
+  (macro and water-intake already have guides: how-to-calculate-your-macro-split, how-much-water-by-weight).
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
