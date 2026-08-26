@@ -13,6 +13,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Coin Flip","description":"Flip a virtual coin for heads or tails. Random and fair. Free online coin flip simulator.","url":"https://toolaspect.com/coin-flip/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is an online coin flip really 50/50?","acceptedAnswer":{"@type":"Answer","text":"Yes. The virtual coin draws a fresh random value for every flip and maps half of the possible values to heads and half to tails, which reproduces the 50/50 odds of an ideal fair coin. Physical coins are also very close to fair — a large Stanford study led by Persi Diaconis found a slight bias (about 51/49) toward the side facing up when flipped by a person."}},{"@type":"Question","name":"Does the coin remember previous flips?","acceptedAnswer":{"@type":"Answer","text":"No. Each flip is an independent event. If you flip five heads in a row, the probability of heads on the next flip is still exactly 50% — this common misunderstanding is called the gambler's fallacy."}},{"@type":"Question","name":"What are the odds of getting 10 heads in a row?","acceptedAnswer":{"@type":"Answer","text":"The probability of ten consecutive heads is (1/2)^10, which is 1/1,024, or about 0.098%. It is uncommon but far from impossible if you flip often enough."}},{"@type":"Question","name":"How many flips do I need for the results to look close to 50/50?","acceptedAnswer":{"@type":"Answer","text":"There is no guarantee at any count, but the law of large numbers means the observed percentage converges toward 50% as flips accumulate. After around 100 flips a 55–45 split is still quite ordinary, while after 10,000 flips the split is usually within about one percentage point of even."}},{"@type":"Question","name":"Where are coin flips used officially?","acceptedAnswer":{"@type":"Answer","text":"Coin tosses decide the opening kick in American football, which side bats first in cricket, and the first serve or side choice in sports like tennis and volleyball. They are also used in some academic contexts, such as randomized controlled trials, to assign participants fairly between groups."}}]}</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:680px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -42,7 +43,7 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary);transition:all var(--transition)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
 <div class="page-container">
@@ -64,7 +65,42 @@
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
 <h2>About the Coin Flip</h2>
-<p>Flip a virtual coin for heads or tails. Random and fair. Free online coin flip simulator.</p>
+<p>A coin flip is the classic way to make a binary decision between two equally likely outcomes. This page provides a free virtual coin that lands on heads or tails with a 50/50 chance on every flip, and keeps a running tally so you can see how your results compare to the theoretical expectation.</p>
+<p>Because each flip is independent, the coin has no memory: after five heads in a row, the chance of a sixth head is still exactly one half. People often expect tails to be "due" after a streak — a belief known as the gambler's fallacy — but independence means streaks neither raise nor lower the next flip's probability.</p>
+<h2>Why a virtual coin is fair</h2>
+<p>A fair physical coin has a 50% chance of heads and a 50% chance of tails, ignoring the negligible chance of landing on its edge. A virtual coin uses a random number generator to reproduce those same odds. Each click draws a fresh random value, so every flip is an independent event with probability 0.5 for each side, just like an ideal physical coin.</p>
+<p>The running heads, tails, and total counters let you watch the law of large numbers in action. Over a small number of flips the split can be very lopsided — ten heads out of ten happens about once in every 1,024 sets of ten flips — but as the total grows, the observed proportion of heads drifts closer and closer to 50%.</p>
+<h2>Coin flip probability and streaks</h2>
+<p>Individual flips are 50/50, but specific sequences are not. The probability of getting heads on n consecutive flips is (1/2)^n, which shrinks fast: two heads in a row happens 1 time in 4, five heads in a row 1 time in 32, and twenty heads in a row only about 1 time in 1,048,576. The table below shows the chance of seeing at least one head within a given number of flips, which climbs toward certainty as 1 − (1/2)^n.</p>
+<p>Coin flips also have real-world uses beyond settling disputes: they decide the opening possession in the NFL, the first serve in many tennis and volleyball matches, and which team bats or kicks first in cricket. In 2023 the NFL modified its overtime rules so that both teams get a possession even after a playoff coin flip, showing how much can ride on a single toss.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Number of flips</th><th>Chance of at least one head</th><th>Chance of all heads</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>50%</td><td>50%</td></tr>
+<tr><td>2</td><td>75%</td><td>25%</td></tr>
+<tr><td>3</td><td>87.5%</td><td>12.5%</td></tr>
+<tr><td>5</td><td>96.875%</td><td>3.125%</td></tr>
+<tr><td>10</td><td>99.90234%</td><td>0.09766%</td></tr>
+<tr><td>20</td><td>99.999905%</td><td>0.000095%</td></tr>
+</tbody>
+</table>
+</div>
+<h2>Fair ways to use a coin flip</h2>
+<p>Flipping twice and using the sequences heads-heads, heads-tails, tails-heads, and tails-tails gives four equally likely outcomes — the standard von Neumann trick for turning a biased coin into a fair four-way or two-way decision. If the coin or generator is biased, von Neumann's procedure (flip twice; HT means A, TH means B, HH or TT means reflip) still yields a perfectly fair binary choice at the cost of extra flips.</p>
+<p>For best-of-three or best-of-five decisions, flip repeatedly and take the majority; this reduces the influence of any single unlucky toss. Keep in mind that a majority of flips is not the same as repeated independent decisions — once you have committed to a rule, follow it to the end, or the fairness guarantee does not apply.</p>
+<p>Finally, record your results. The heads and tails counters on this page make it easy to keep score across a session, which is useful for classroom demonstrations of probability, settling a series of choices, or simply settling an argument with visible evidence rather than memory.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>Is an online coin flip really 50/50?</strong></p>
+<p>Yes. The virtual coin draws a fresh random value for every flip and maps half of the possible values to heads and half to tails, which reproduces the 50/50 odds of an ideal fair coin. Physical coins are also very close to fair — a large Stanford study led by Persi Diaconis found a slight bias (about 51/49) toward the side facing up when flipped by a person.</p>
+<p><strong>Does the coin remember previous flips?</strong></p>
+<p>No. Each flip is an independent event. If you flip five heads in a row, the probability of heads on the next flip is still exactly 50% — this common misunderstanding is called the gambler's fallacy.</p>
+<p><strong>What are the odds of getting 10 heads in a row?</strong></p>
+<p>The probability of ten consecutive heads is (1/2)^10, which is 1/1,024, or about 0.098%. It is uncommon but far from impossible if you flip often enough.</p>
+<p><strong>How many flips do I need for the results to look close to 50/50?</strong></p>
+<p>There is no guarantee at any count, but the law of large numbers means the observed percentage converges toward 50% as flips accumulate. After around 100 flips a 55–45 split is still quite ordinary, while after 10,000 flips the split is usually within about one percentage point of even.</p>
+<p><strong>Where are coin flips used officially?</strong></p>
+<p>Coin tosses decide the opening kick in American football, which side bats first in cricket, and the first serve or side choice in sports like tennis and volleyball. They are also used in some academic contexts, such as randomized controlled trials, to assign participants fairly between groups.</p>
 </div>
 <div class="related-links"><a href="/finance-calculator/">Finance Calculator</a><a href="/percentage-calculator/">Percentage Calculator</a><a href="/unit-converter/">Unit Converter</a></div>
 </div>

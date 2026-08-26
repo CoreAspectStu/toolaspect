@@ -13,6 +13,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Online Notepad","description":"Free online notepad with auto-save.","url":"https://toolaspect.com/notepad/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are my notes uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Notes are stored in your browser's localStorage on your device. Nothing is transmitted or stored remotely."}},{"@type":"Question","name":"Will my notes still be there after I close the tab?","acceptedAnswer":{"@type":"Answer","text":"Yes. localStorage persists across tab closes and browser restarts until you clear the browser's site data for this site or the notepad itself."}},{"@type":"Question","name":"Do notes sync between my devices?","acceptedAnswer":{"@type":"Answer","text":"No. Storage is per browser profile on each device. If you need a note elsewhere, copy the text or use the download option and move the file."}},{"@type":"Question","name":"Can I save notes as a file?","acceptedAnswer":{"@type":"Answer","text":"Yes — copy the text into any editor and save, or use the download feature if available on your notepad version to export the note as a plain .txt file."}},{"@type":"Question","name":"Is a plain-text notepad safe for passwords?","acceptedAnswer":{"@type":"Answer","text":"It is safer than a server-backed app because nothing leaves your device, but on a shared computer anyone with access to the browser profile can read the note. Use a dedicated password manager for credentials."}}]}</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:800px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -33,7 +34,7 @@ textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgb
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
 <div class="page-container">
@@ -56,8 +57,36 @@ textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgb
 </div>
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
-<h2>About the Online Notepad</h2>
-<p>A simple, distraction-free notepad that auto-saves your notes to your browser's local storage. No account needed. Works offline after first load.</p>
+<h2>About Online Notepads</h2>
+<p>An online notepad is a plain-text editor that opens instantly in a browser tab — no account, no installation, no formatting toolbar. It is the digital equivalent of a scratch pad: ideal for pasting a phone number, drafting a message before sending it, stripping formatting from copied text, or keeping temporary notes you do not want to save anywhere permanent. This notepad stores your text in your browser's local storage on your own device, so notes persist between visits without being uploaded to any server.</p>
+<p>Plain text has real advantages over rich text for scratch work. Pasting into a plain-text notepad removes hidden styling that often breaks formatting when text is moved between applications, and plain text files are universally readable by every editor and operating system ever made — a durability property few proprietary formats can claim.</p>
+<h2>How this notepad stores your notes</h2>
+<p>Every keystroke is saved to localStorage, a browser feature that keeps key-value data on your device with no expiry. Unlike cookies, localStorage data is not sent to servers with each request; unlike session storage, it survives closing the tab and restarting the browser. Clearing your browser's site data will erase the notes, so for anything important, use the copy or download capability and keep a backup.</p>
+<p>Because storage is local to the browser profile on the device you are using, notes do not synchronize between your phone and laptop. That is a feature for private scratch notes, and a limitation for anything you need everywhere.</p>
+<h2>Common uses and typical lengths</h2>
+<p>The table below shows common notepad use cases alongside rough size figures. Modern browsers commonly allocate around 5 MB of localStorage per origin (the figure in the W3C Web Storage spec discussion and current browser documentation), which is roughly 5 million characters — far more than any scratch note needs.</p>
+<p>None</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Use case</th><th>Typical size</th><th>Persistence needed</th></tr><tr><td>Phone number or address</td><td>&lt;100 characters</td><td>Minutes</td></tr><tr><td>Draft message before sending</td><td>100–500 characters</td><td>Minutes</td></tr><tr><td>Meeting scratch notes</td><td>500–2,000 characters</td><td>Hours</td></tr><tr><td>Text formatting cleanup</td><td>Varies</td><td>Seconds</td></tr><tr><td>Typical localStorage budget</td><td>~5 million characters (≈5 MB)</td><td>Until site data cleared</td></tr></table>
+</div>
+<h2>Privacy and text tools</h2>
+<p>Server-backed note apps read your notes to sync them; a local notepad cannot, because there is no server involved. If you handle passwords, API keys, client drafts, or personal information in scratch notes, a browser-only notepad materially reduces exposure — though you should still avoid leaving secrets on shared machines, since anyone with access to the browser profile can read localStorage. For sensitive work on shared devices, clear the note when finished.</p>
+<p>Plain text is the most durable digital format in existence. The .txt convention predates the web, is readable on every operating system, and carries no vendor lock-in — a stark contrast to proprietary document formats whose old versions can become hard to open. Notes started in a browser notepad can be pasted into any application ever written, which is exactly what you want from scratch content.</p>
+<p>The paste-and-clean workflow is one of the most common notepad uses. Text copied from PDFs, web pages, and word processors often carries invisible styling, non-breaking spaces, and smart quotes that break downstream systems such as content management forms and code editors. Pasting through a plain-text notepad strips all of it in one step, leaving clean characters.</p>
+<p>Local-first tools like this notepad are part of a broader shift toward keeping data on the user's device by default, reducing both privacy exposure and dependence on a service staying online. The Web Storage API that powers it has been a stable browser standard since it was specified by the W3C Web Applications Working Group in 2009 and is implemented in every modern browser.</p>
+<p>Practical habits make a scratch notepad more useful: keep one pinned tab as an inbox for quick captures during the day; paste long error messages or IDs there before reformatting; and treat it as ephemeral — anything worth keeping tomorrow should be moved into proper notes or a document today, since browser data clearing will remove it without warning.</p>
+<p>A notepad also pairs well with keyboard-driven workflows. Because it is plain HTML with no chrome, focus lands in the text area immediately; Ctrl+A/Ctrl+C moves content out, and browser autofill never interferes. Writers drafting in distraction-free conditions often prefer this minimal surface to full word processors, which display menus, statistics, and suggestions that compete for attention during early drafting.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>Are my notes uploaded to a server?</strong></p>
+<p>No. Notes are stored in your browser's localStorage on your device. Nothing is transmitted or stored remotely.</p>
+<p><strong>Will my notes still be there after I close the tab?</strong></p>
+<p>Yes. localStorage persists across tab closes and browser restarts until you clear the browser's site data for this site or the notepad itself.</p>
+<p><strong>Do notes sync between my devices?</strong></p>
+<p>No. Storage is per browser profile on each device. If you need a note elsewhere, copy the text or use the download option and move the file.</p>
+<p><strong>Can I save notes as a file?</strong></p>
+<p>Yes — copy the text into any editor and save, or use the download feature if available on your notepad version to export the note as a plain .txt file.</p>
+<p><strong>Is a plain-text notepad safe for passwords?</strong></p>
+<p>It is safer than a server-backed app because nothing leaves your device, but on a shared computer anyone with access to the browser profile can read the note. Use a dedicated password manager for credentials.</p>
 </div>
 <div class="related-links">
 <a href="/word-counter/">Word Counter</a>

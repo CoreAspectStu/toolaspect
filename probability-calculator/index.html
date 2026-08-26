@@ -13,6 +13,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Probability Calculator","description":"Calculate probability of events.","url":"https://toolaspect.com/probability-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I calculate the probability of two events both happening?","acceptedAnswer":{"@type":"Answer","text":"If the events are independent, multiply: P(A and B) = P(A) × P(B). Two consecutive heads is 0.5 × 0.5 = 0.25. If the events are dependent, replace the second factor with the conditional probability P(B given A) — the chance of B after accounting for A having happened."}},{"@type":"Question","name":"How do I calculate the probability of either of two events?","acceptedAnswer":{"@type":"Answer","text":"Add the probabilities, then subtract the chance of both occurring so the overlap is not double-counted: P(A or B) = P(A) + P(B) − P(A and B). For mutually exclusive events like distinct die faces, the overlap is zero and you simply add."}},{"@type":"Question","name":"What is the difference between probability and odds?","acceptedAnswer":{"@type":"Answer","text":"Probability is the chance of success out of all trials; odds compare success to failure. A probability of 0.25 is odds of 1:3, or 1-to-3 against. Decimal odds of 4.0 correspond to 25% probability. The calculator works in probabilities; divide p by (1−p) to express a result as odds."}},{"@type":"Question","name":"Can a probability be greater than 1?","acceptedAnswer":{"@type":"Answer","text":"No. Probability runs from 0 (impossible) to 1 (certain) by definition, which is also why probabilities of all possible outcomes must sum to exactly 1. If your computed combination exceeds 1, a premise is wrong — most often treating dependent events as independent, or adding non-exclusive events without subtracting their overlap."}},{"@type":"Question","name":"What is the birthday paradox?","acceptedAnswer":{"@type":"Answer","text":"The surprising fact that a shared birthday becomes more likely than not in a group of just 23 people (probability ≈ 50.7%, ignoring February 29). It feels wrong because we think about one person's birthday rather than the 253 distinct pairs a group of 23 contains, each pair a separate chance to match."}},{"@type":"Question","name":"How is expected value different from probability?","acceptedAnswer":{"@type":"Answer","text":"Expected value weights each outcome by money or utility, not just likelihood: multiply each outcome's value by its probability and sum. A 25% chance to win $300 and 75% chance to lose $50 has EV of +$37.50. It predicts the long-run average, not any single result — which is why short-term outcomes routinely defy a positive EV."}}]}</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -38,7 +39,7 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
 <div class="page-container">
@@ -64,7 +65,45 @@
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
 <h2>About the Probability Calculator</h2>
-<p>Calculate the probability of an event occurring. Enter favorable and total outcomes to get probability, percentage, and odds ratios.</p>
+<p>Probability quantifies how likely an event is, on a scale from 0 (impossible) to 1 (certain). This calculator handles the two core combinations: the chance that two independent events both happen (multiply their probabilities) and the chance that at least one of two events happens (the union, computed as P(A) + P(B) − P(A)×P(B) for independent events).</p>
+<p>Enter probabilities as decimals between 0 and 1 — 0.5 for a coin flip, 1/6 ≈ 0.1667 for a die face — or as percentages. The tool reports both the combined probability and its complement, the chance the event does not occur, since most real questions are answered by looking at both sides.</p>
+<h2>The rules that matter</h2>
+<p>Two events are independent when one outcome has no effect on the other — successive coin flips, dice rolls, or draws with replacement. For independent events, P(A and B) = P(A) × P(B): two consecutive heads is 0.5 × 0.5 = 0.25. Dependence changes the rule to conditional probability, P(A and B) = P(A) × P(B|A), where the second factor is the probability of B given that A occurred.</p>
+<p>For 'or' questions, the addition rule subtracts the overlap so it is not counted twice: P(A or B) = P(A) + P(B) − P(A and B). With mutually exclusive events — a single die cannot show both 3 and 5 — the overlap is zero and you simply add: P(3 or 5) = 1/6 + 1/6 = 1/3.</p>
+<h2>Classic probability reference</h2>
+<p>The table below collects the probabilities most often needed, from single dice to poker hands. Poker probabilities are computed for a five-card hand from a standard 52-card deck — the number of distinct hands is C(52,5) = 2,598,960, which is the denominator for every row. Note how quickly probabilities fall: three of a kind is roughly one hand in 47, while a royal flush is one in nearly 650,000.</p>
+<p>The birthday problem is the famous counterintuitive entry: in a group of just 23 people, the chance that two share a birthday exceeds 50% — not because anyone's birthday is special, but because there are 23 × 22 ÷ 2 = 253 different pairs, each with a 364/365 chance of not matching. Small per-pair chances accumulate across many pairs.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Event</th><th>Probability</th><th>As odds</th></tr></thead>
+<tbody>
+<tr><td>Coin flip: heads</td><td>1/2 = 50%</td><td>1:1</td></tr>
+<tr><td>Die roll: a specific face</td><td>1/6 ≈ 16.67%</td><td>1:5</td></tr>
+<tr><td>Two dice: sum of 7</td><td>6/36 ≈ 16.67%</td><td>1:5</td></tr>
+<tr><td>Two dice: sum of 12</td><td>1/36 ≈ 2.78%</td><td>1:35</td></tr>
+<tr><td>Shared birthday in a group of 23</td><td>50.73%</td><td>≈1:1</td></tr>
+<tr><td>Poker: three of a kind</td><td>≈2.11%</td><td>≈1:46</td></tr>
+<tr><td>Poker: flush</td><td>≈0.197%</td><td>≈1:508</td></tr>
+<tr><td>Poker: royal flush</td><td>1/649,740 ≈ 0.000154%</td><td>1:649,739</td></tr>
+</tbody>
+</table>
+</div>
+<h2>From probability to odds and expectation</h2>
+<p>Probability and odds are different currencies. A probability of 0.25 equals odds of 1:3 (one way to win, three to lose) and decimal odds of 4.0 — a fair payout of $4 per $1 staked. Converting matters wherever gambling, insurance, or betting markets quote odds: decimal odds of 4.0 imply a 25% chance, and markets with a margin quote implied probabilities summing above 100%.</p>
+<p>Expected value multiplies each outcome by its probability and sums: a 25% chance of winning $300 and 75% chance of losing $50 has EV = 0.25 × 300 + 0.75 × (−50) = $37.50 per play. Positive EV does not guarantee a win on any single trial — it describes the long-run average, which is why a positive-EV bet can still lose money for a long stretch before the average asserts itself.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>How do I calculate the probability of two events both happening?</strong></p>
+<p>If the events are independent, multiply: P(A and B) = P(A) × P(B). Two consecutive heads is 0.5 × 0.5 = 0.25. If the events are dependent, replace the second factor with the conditional probability P(B given A) — the chance of B after accounting for A having happened.</p>
+<p><strong>How do I calculate the probability of either of two events?</strong></p>
+<p>Add the probabilities, then subtract the chance of both occurring so the overlap is not double-counted: P(A or B) = P(A) + P(B) − P(A and B). For mutually exclusive events like distinct die faces, the overlap is zero and you simply add.</p>
+<p><strong>What is the difference between probability and odds?</strong></p>
+<p>Probability is the chance of success out of all trials; odds compare success to failure. A probability of 0.25 is odds of 1:3, or 1-to-3 against. Decimal odds of 4.0 correspond to 25% probability. The calculator works in probabilities; divide p by (1−p) to express a result as odds.</p>
+<p><strong>Can a probability be greater than 1?</strong></p>
+<p>No. Probability runs from 0 (impossible) to 1 (certain) by definition, which is also why probabilities of all possible outcomes must sum to exactly 1. If your computed combination exceeds 1, a premise is wrong — most often treating dependent events as independent, or adding non-exclusive events without subtracting their overlap.</p>
+<p><strong>What is the birthday paradox?</strong></p>
+<p>The surprising fact that a shared birthday becomes more likely than not in a group of just 23 people (probability ≈ 50.7%, ignoring February 29). It feels wrong because we think about one person's birthday rather than the 253 distinct pairs a group of 23 contains, each pair a separate chance to match.</p>
+<p><strong>How is expected value different from probability?</strong></p>
+<p>Expected value weights each outcome by money or utility, not just likelihood: multiply each outcome's value by its probability and sum. A 25% chance to win $300 and 75% chance to lose $50 has EV of +$37.50. It predicts the long-run average, not any single result — which is why short-term outcomes routinely defy a positive EV.</p>
 </div>
 <div class="related-links">
 <a href="/percentage-calculator/">Percentage Calculator</a>

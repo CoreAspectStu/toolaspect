@@ -13,6 +13,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Random Number Generator","description":"Generate random numbers within any range.","url":"https://toolaspect.com/random-number-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this generator truly random?","acceptedAnswer":{"@type":"Answer","text":"No software generator is truly random. This tool uses JavaScript's Math.random(), a pseudorandom generator whose output passes statistical randomness tests. For cryptographic purposes use a secure source such as crypto.getRandomValues."}},{"@type":"Question","name":"Can I generate a number between any two values?","acceptedAnswer":{"@type":"Answer","text":"Yes. Set the minimum and maximum bounds and each draw returns an integer within that range inclusive, with every value in the range equally likely."}},{"@type":"Question","name":"Why did the same number come up twice in a row?","acceptedAnswer":{"@type":"Answer","text":"With a uniform independent generator, repeats are expected. Drawing from 1–6, the chance the next roll matches the previous one is 1/6; over many draws, runs and clusters are normal, not evidence of bias."}},{"@type":"Question","name":"Is it fair for a giveaway drawing?","acceptedAnswer":{"@type":"Answer","text":"It is uniform and unbiased in the ordinary statistical sense, but it is not auditable by third parties. For publicly contested drawings, use a method witnesses can verify or a certified randomization service."}},{"@type":"Question","name":"What is the difference between pseudorandom and cryptographically secure?","acceptedAnswer":{"@type":"Answer","text":"Pseudorandom generators are deterministic algorithms fine for games and sampling; cryptographically secure generators (CSPRNGs) resist prediction even after observing many outputs and are required for keys, tokens, and security-sensitive randomness."}}]}</script>
 <script src="/shared/nav.js"></script>
 <style>
 .page-container{max-width:600px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}
@@ -40,7 +41,7 @@
 .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
 .related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;color:var(--text-secondary)}
 .related-links a:hover{border-color:var(--primary);color:var(--text)}
-</style>
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
 </head>
 <body>
 <div class="page-container">
@@ -65,8 +66,36 @@
 </div>
 <div class="ad-slot" data-position="middle"></div>
 <div class="content-section">
-<h2>About the Random Number Generator</h2>
-<p>Generate random numbers within any range. Options for unique numbers, sorting, and bulk generation. Uses cryptographically strong Math.random.</p>
+<h2>About Random Numbers</h2>
+<p>A random number generator (RNG) produces numbers that lack any predictable pattern. This page generates random integers between any two bounds you choose, entirely in your browser. Typical uses include picking giveaway winners, assigning presentation order, sampling items for review, generating lottery-style picks, dice rolls, and randomized practice problems.</p>
+<p>Computers cannot produce true randomness from arithmetic alone — a fact formalized by John von Neumann's 1951 remark that anyone considering arithmetic methods of random digits is "in a state of sin." Software RNGs are therefore pseudorandom: they run a deterministic algorithm whose output passes statistical tests for randomness. JavaScript's Math.random(), which this tool uses, is a pseudorandom generator; for cryptographic keys or gambling-grade fairness, use a cryptographic RNG such as the Web Crypto API's crypto.getRandomValues, which browsers implement from a cryptographically secure source.</p>
+<h2>How random sampling from this generator works</h2>
+<p>To draw a random integer between min and max inclusive, the generator produces a uniformly distributed value and maps it onto the integer range. When every number in the range is equally likely, each individual draw of a number between 1 and N has probability 1/N. Uniform draws are independent: the generator has no memory, so a number that has not appeared recently is not "due" — the belief otherwise is known as the gambler's fallacy.</p>
+<p>For sampling without replacement (for example, assigning unique positions to a list of people), draw repeatedly but skip numbers already used until each has been assigned once, or shuffle the list and read off the order.</p>
+<h2>Common random ranges and probability reference</h2>
+<p>The table below lists frequently used ranges and the probability that a specific value appears on a single uniform draw.</p>
+<p>None</p>
+<div class="table-wrap">
+<table class="data-table"><tr><th>Range</th><th>Values</th><th>Chance of a specific value</th></tr><tr><td>Dice roll (1–6)</td><td>6</td><td>1/6 ≈ 16.7%</td></tr><tr><td>Coin-style (0–1)</td><td>2</td><td>1/2 = 50%</td></tr><tr><td>Roulette wheel (0–36, European)</td><td>37</td><td>1/37 ≈ 2.7%</td></tr><tr><td>Lottery 6/49 single match</td><td>49</td><td>1/49 ≈ 2.0%</td></tr><tr><td>Pick 1 of 100</td><td>100</td><td>1%</td></tr><tr><td>Raffle among 250 entries</td><td>250</td><td>1/250 = 0.4%</td></tr></table>
+</div>
+<h2>Seeds, pseudorandomness, and reproducibility</h2>
+<p>A pseudorandom generator starts from an internal state (a seed) and advances deterministically; the same seed yields the same sequence, which is why scientific simulations often accept a seed for reproducibility. Browser Math.random() implementations are seeded automatically and are not designed to be reproducible or cryptographically secure. For statistics-grade simulations, tools supporting fixed seeds or the Python NumPy Generator API are a better fit; for drawings where fairness matters publicly, prefer a transparent method such as a filmed dice roll or a certified lottery terminal.</p>
+<p>Randomness is a foundational resource in computing, statistics, and cryptography. Monte Carlo methods — used across physics, finance, and engineering — obtain numerical results by repeated random sampling, a technique named after the casino district of Monaco and developed on early computers by Stanislaw Ulam and John von Neumann at Los Alamos in the 1940s. Randomized algorithms also underpin modern machine-learning training, in the form of random weight initialization, shuffling, and dropout.</p>
+<p>Randomized controlled trials, the gold standard in medicine, depend on unbiased random assignment of participants to treatment and control groups. Proper randomization prevents selection bias from systematically favoring one group; that is why trial registries publish the randomization method. The same principle applies at smaller scale: randomly assigning chore orders, presentation slots, or A/B test variants removes the quiet biases of alphabetization or self-selection.</p>
+<p></p>
+<p>In games, dice and shuffled decks are physical randomizers with centuries of history; digital games replicate them with pseudorandom calls, and competitive formats increasingly publish their randomization procedures so participants can verify fairness. Tabletop role-playing games use polyhedral dice — d4, d6, d8, d10, d12, d20 — each a uniform draw over its face count, exactly what a range-limited integer generator reproduces.</p>
+<p>A brief fairness note for drawings: assign each entrant a number first, generate one integer in the full range, and record the result before announcing it. Avoid re-rolling "until it feels right," which introduces human bias and, over many drawings, systematically distorts outcomes. For high-stakes selections, publish the method and the seed or use an independent third-party drawing service.</p>
+<h2>Frequently Asked Questions</h2>
+<p><strong>Is this generator truly random?</strong></p>
+<p>No software generator is truly random. This tool uses JavaScript's Math.random(), a pseudorandom generator whose output passes statistical randomness tests. For cryptographic purposes use a secure source such as crypto.getRandomValues.</p>
+<p><strong>Can I generate a number between any two values?</strong></p>
+<p>Yes. Set the minimum and maximum bounds and each draw returns an integer within that range inclusive, with every value in the range equally likely.</p>
+<p><strong>Why did the same number come up twice in a row?</strong></p>
+<p>With a uniform independent generator, repeats are expected. Drawing from 1–6, the chance the next roll matches the previous one is 1/6; over many draws, runs and clusters are normal, not evidence of bias.</p>
+<p><strong>Is it fair for a giveaway drawing?</strong></p>
+<p>It is uniform and unbiased in the ordinary statistical sense, but it is not auditable by third parties. For publicly contested drawings, use a method witnesses can verify or a certified randomization service.</p>
+<p><strong>What is the difference between pseudorandom and cryptographically secure?</strong></p>
+<p>Pseudorandom generators are deterministic algorithms fine for games and sampling; cryptographically secure generators (CSPRNGs) resist prediction even after observing many outputs and are required for keys, tokens, and security-sensitive randomness.</p>
 </div>
 <div class="related-links">
 <a href="/password-generator/">Password Generator</a>
