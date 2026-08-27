@@ -67,7 +67,7 @@
     {
       match: [
         'image-compressor', 'image-tools', 'image-converter', 'image-resizer',
-        'photo-', 'watermark', 'exif', 'metadata', 'c2pa', 'provenance',
+        'photo-', 'watermark', 'image-watermark', 'exif', 'metadata', 'exif-viewer', 'image-metadata', 'c2pa', 'provenance',
         'picture-', 'crop-image', 'reverse-image', 'dmca-'
       ],
       product: 'authaspect'
