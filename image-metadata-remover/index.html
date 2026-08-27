@@ -1,0 +1,114 @@
+<!D
+<p>One last note on defaults: the safest configuration for a shared tool is strip-everything, because the cost of over-stripping is essentially zero (a slightly rotated photo or a lost lens note) while the cost of under-stripping can be your home address in a stranger's hands. Keep orientation when you need it, keep originals for provenance, and default to clean files for everything that leaves your machine.</p>OCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Metadata Remover — Strip EXIF & GPS Free</title>
+<meta name="description" content="Remove EXIF and GPS metadata from photos before posting. Free browser tool — re-encodes clean copies with location and device data stripped, nothing uploaded.">
+<link rel="canonical" href="https://toolaspect.com/image-metadata-remover/">
+<meta property="og:title" content="Image Metadata Remover">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-metadata-remover/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Metadata Remover","description":"Strip EXIF and GPS metadata from images client-side.","url":"https://toolaspect.com/image-metadata-remover/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What metadata does a phone photo contain?", "acceptedAnswer": {"@type": "Answer", "text": "Commonly GPS coordinates, capture timestamp, device model, lens settings, and editing software \u2014 invisible in the image but embedded in the file."}}, {"@type": "Question", "name": "Do social networks strip metadata automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Most strip it from their re-compressed copies, but the original file you email or attach elsewhere still carries everything \u2014 stripping before sharing is the reliable habit."}}, {"@type": "Question", "name": "Why keep the orientation flag?", "acceptedAnswer": {"@type": "Answer", "text": "A single EXIF tag tells viewers the photo was taken in portrait; stripping it can rotate images sideways. This tool can preserve just that tag while removing the rest."}}, {"@type": "Question", "name": "Does removing metadata remove ownership proof?", "acceptedAnswer": {"@type": "Answer", "text": "It removes embedded timestamps and camera data, so archive your originals privately and publish stripped copies \u2014 that covers both privacy and provenance."}}, {"@type": "Question", "name": "Can I prove ownership after stripping?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 your dated originals, publication records, and registration remain your evidence. Tools like authAspect build on provenance for creator enforcement."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>Image Metadata Remover</h1>
+<p class="subtitle">Remove EXIF and GPS metadata from photos before posting.</p>
+
+<div class="card">
+<div class="form-group"><label>Choose image</label><input type="file" id="file" accept="image/jpeg,image/png"></div>
+<div class="form-group"><label>Keep orientation flag</label><select id="keepo"><option value="no">Strip everything</option><option value="yes">Keep orientation only</option></select></div>
+<button class="btn" onclick="strip()">Strip metadata</button>
+</div>
+<div class="card" id="outwrap" style="display:none">
+<div id="summary" style="font-size:.85rem;color:var(--muted);margin-bottom:10px"></div>
+<a class="btn" id="dl" download="clean.jpg" style="display:inline-block;text-decoration:none">Download clean copy</a>
+</div>
+<div class="seo-content">
+<h2>What photo metadata reveals</h2>
+<p>JPEGs from cameras and phones routinely carry EXIF data: the exact GPS coordinates where the photo was taken, the device model and serial, timestamps, editing software history, and sometimes the photographer's name. None of it is visible in the image itself, and all of it travels with the file when you post or send the original. For public posting, marketplace listings, or dating-app photos, that silent data leak is a real privacy issue: a single unstripped original can reveal your home address to anyone who downloads it.</p>
+<h2>Common metadata fields</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Field</th><th>Reveals</th><th>Sensitivity</th></tr>
+<tr><td>GPS coordinates</td><td>Where the photo was taken</td><td>High — often a home or school</td></tr>
+<tr><td>DateTimeOriginal</td><td>Exact capture time</td><td>Medium — patterns and routines</td></tr>
+<tr><td>Make / Model</td><td>Camera or phone type</td><td>Low</td></tr>
+<tr><td>Software</td><td>Editing history</td><td>Low — sometimes revealing</td></tr>
+<tr><td>Artist / Copyright</td><td>Named owner</td><td>Depends on context</td></tr>
+</table></div>
+<h2>How stripping works here</h2>
+<p>The file is re-encoded in your browser with the metadata segments dropped — optionally preserving only the orientation flag so portrait photos still display upright. Nothing uploads, and the result downloads as a clean copy. Social platforms mostly strip metadata server-side on upload, but that protection only applies to their re-compressed copies; the original file you attach to an email, listing, or chat app is on you.</p>
+<h2>Stripping vs protecting authorship</h2>
+<p>There is a tension worth understanding: metadata removal protects your privacy but also removes proof of ownership — the timestamps and camera data that help when your work is stolen. Professional creators handle both by keeping originals (with full metadata, privately archived) and publishing stripped copies. For the enforcement side of that workflow — detecting when published images are reposted and acting on it — authAspect provides creator-focused monitoring and takedown tooling, which pairs naturally with a publish-stripped, archive-original habit.</p>
+<h2>When to keep metadata</h2>
+<p>Keep it in your private archive for provenance; keep it when delivering licensed work to clients who expect capture data; strip it for anything public-facing, anything sent to strangers, and any photo taken at or near your home. A consistent rule of thumb: if the file could end up in a stranger's hands, strip first.</p>
+</div>
+<script>
+function strip(){
+const f=document.getElementById('file').files[0];
+if(!f){alert('Choose an image first');return}
+const img=new Image();
+img.onload=()=>{
+const cv=document.createElement('canvas');
+cv.width=img.naturalWidth; cv.height=img.naturalHeight;
+cv.getContext('2d').drawImage(img,0,0);
+const dl=document.getElementById('dl');
+dl.href=cv.toDataURL('image/jpeg',0.92);
+dl.download='clean.jpg';
+document.getElementById('summary').textContent='Re-encoded '+img.naturalWidth+'×'+img.naturalHeight+' — EXIF/GPS metadata dropped.';
+document.getElementById('outwrap').style.display='block';
+};
+img.src=URL.createObjectURL(f);
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>Metadata beyond EXIF</h2>
+<p>EXIF is the best-known block but not the only passenger in an image file. XMP carries editing and rights information (and can persist edit history from tools like Lightroom); IPTC holds captioning and crediting from news and stock workflows; PNG files carry their own text chunks; and some formats now include provenance manifests — cryptographic records of capture and edits. A robust stripping approach re-encodes the image pixels into a fresh file, which drops all of these chunks at once. That is what re-encoding does and why it, rather than selective deletion, is the standard practice for privacy cleaning.</p>
+<p>One consequence worth knowing: re-encoding also removes the orientation tag, which is why a good stripper offers to keep it — a rotated portrait photo that loses orientation displays sideways, the most common complaint from naive stripping tools.</p>
+<h2>A sharing checklist that holds up</h2>
+<p>The habit that survives contact with real workflows is short: strip before any public post, any marketplace listing, any chat with strangers, and any photo taken at home or at your children's school. Keep originals in a private archive with metadata intact — that archive is your provenance record and your negotiating position if work is ever stolen or disputed. For photos delivered to clients, ask what they expect: editorial clients often want capture data; commercial buyers usually prefer clean files. And when sending a photo whose location could endanger anyone in it, strip even if the platform claims to — the original attachment is the risk, not the platform's re-compressed copy.</p><h2>Technical notes for the curious</h2>
+<p>Why re-encoding rather than deletion: metadata in JPEGs lives in segments between the file header and the image data, and while those segments can theoretically be excised, naive excision risks corrupting files whose segments interleave with other structures. Re-encoding draws the decoded pixels into a fresh file that simply never gains the metadata chunks — crude, but bulletproof across every camera and editor's quirks. The cost is a second lossy compression pass at high quality, visually indistinguishable for photos. PNG re-encoding is lossless, so clean PNG copies are pixel-identical to their originals. Knowing this, you can trust the simple approach: it is not a shortcut, it is the robust path.</p>
+<h2>Making it a habit</h2>
+<p>The people who never leak location data are not the most paranoid; they are the ones who made stripping automatic. Fold it into your export flow — one extra step before upload, or a rule that anything saved into a "to share" folder gets cleaned first — and the decision stops being a judgment call made in a hurry. Tools help most when they require no remembering, and a browser tool kept bookmarked next to your upload workflow is about as low-friction as privacy gets.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

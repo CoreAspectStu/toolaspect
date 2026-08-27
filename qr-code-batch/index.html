@@ -1,0 +1,125 @@
+<!D
+<p>Whatever scale you choose, generate a test batch of five first. Five codes, one test print, one scan check — then commit to the full run. The failure modes above are all invisible in a list and obvious on paper, and the five-code dry run is the cheapest inspection point in the entire workflow.</p>
+<p>Start the pilot anyway. A hundred static codes generated in an afternoon is the cheapest possible way to learn what your organization actually needs from a QR program — which destinations change, who edits them, what scan data would have helped — and those lessons transfer directly when you graduate to a managed platform. The batch is the prototype; the requirement list it produces is the real deliverable.</p>OCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Batch QR Code Generator — Bulk QR Codes as ZIP</title>
+<meta name="description" content="Generate many QR codes at once from a list: one PNG per line, consistent size and error correction, delivered as a ZIP — all in your browser.">
+<link rel="canonical" href="https://toolaspect.com/qr-code-batch/">
+<meta property="og:title" content="Batch QR Code Generator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/qr-code-batch/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Batch QR Code Generator","description":"Generate bulk QR codes from a list into a ZIP, client-side.","url":"https://toolaspect.com/qr-code-batch/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many QR codes can I generate at once?", "acceptedAnswer": {"@type": "Answer", "text": "Hundreds comfortably \u2014 rendering happens in your browser with no server limits; very large sets just take a few seconds longer."}}, {"@type": "Question", "name": "How should I name each code?", "acceptedAnswer": {"@type": "Answer", "text": "The label before the comma names the PNG file. Use short stable names matching your asset IDs so reprints and audits line up."}}, {"@type": "Question", "name": "What error correction for printed batches?", "acceptedAnswer": {"@type": "Answer", "text": "M suits standard printing; choose H for codes on rough or outdoor surfaces where scuffs are likely."}}, {"@type": "Question", "name": "Can I change the URLs after printing?", "acceptedAnswer": {"@type": "Answer", "text": "Not with static codes \u2014 the URL is fixed in the pattern. Print codes that redirect through a managed service (Objexi does this) if destinations will change."}}, {"@type": "Question", "name": "Is my list uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 parsing, rendering and ZIP assembly all run locally in your browser."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>Batch QR Code Generator</h1>
+<p class="subtitle">Generate many QR codes at once from a list: one PNG per line, consistent size and error correction, delivered as a ZIP — all in your browser.</p>
+
+<div class="card">
+<div class="form-group"><label>One entry per line: label,URL</label>
+<textarea id="list" rows="8" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-family:monospace;font-size:.8rem">Front desk,https://example.com/desk
+Warehouse A,https://example.com/wh-a
+Meeting room,https://example.com/mr</textarea></div>
+<div class="form-row">
+<div class="form-group"><label>Size (px)</label><input type="number" id="size" value="512"></div>
+<div class="form-group"><label>Error correction</label><select id="ec"><option value="M" selected>M — 15%</option><option value="H">H — 30%</option><option value="Q">Q — 25%</option><option value="L">L — 7%</option></select></div>
+</div>
+<button class="btn" onclick="genZip()">Generate ZIP of QR codes</button>
+<div id="status" style="font-size:.85rem;color:var(--muted);margin-top:10px"></div>
+</div>
+<div class="seo-content">
+<h2>Why batch-generate QR codes</h2>
+<p>One QR code takes seconds in any generator. Fifty — one per asset, room, product SKU, event badge — is a different task entirely: tracking naming, consistent sizing, and a deliverable someone can actually print from. Batch generation solves it the way mail-merge solved letters: paste a list, get a folder of consistently-formatted PNGs named predictably. The typical trigger is an inventory project, a multi-site rollout, an event, or a classroom set — anywhere many physical things each need their own link.</p>
+<h2>How this batch generator works</h2>
+<p>Each line of your list becomes one code: the label names the PNG file (sanitized for filesystem safety), the URL is encoded, and all codes render at identical size and error-correction level so a mixed print sheet looks intentional. The ZIP is assembled in your browser — nothing uploads, nothing is stored, and it works fine for hundreds of entries. For label printing, most workflows want one PNG per sticker cell, which is exactly what you get.</p>
+<h2>Choosing settings for a fleet of codes</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Setting</th><th>Recommendation</th><th>Why</th></tr>
+<tr><td>Size</td><td>512px minimum</td><td>Print scaling down, never up</td></tr>
+<tr><td>Error correction</td><td>M standard; H for rough surfaces</td><td>H tolerates scuffs but densifies codes</td></tr>
+<tr><td>Naming</td><td>Short, stable labels</td><td>Reprints and audits match files to assets</td></tr>
+</table></div>
+<h2>Managing codes over time</h2>
+<p>The weakness of any static batch is obsolescence: the URL is baked into the pixels forever. Teams doing serious asset tagging therefore print codes that point at manageable redirects, so a destination change doesn't mean a reprint campaign. That management layer — per-object identity, editable targets, scan analytics — is what a platform like Objexi adds; if your batch is a pilot for a permanent physical-to-digital system, it's the natural continuation.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+function genZip(){
+const lines=document.getElementById('list').value.split('\n').map(l=>l.trim()).filter(l=>l&&l.includes(','));
+if(!lines.length){alert('Enter at least one label,URL line');return}
+const size=+document.getElementById('size').value||512;
+const ec=document.getElementById('ec').value;
+const zip=new JSZip();
+document.getElementById('status').textContent='Generating '+lines.length+' codes…';
+let done=0;
+lines.forEach(line=>{
+ const i=line.lastIndexOf(','); // last comma: label may contain commas? use first comma instead
+ const j=line.indexOf(',');
+ const label=line.slice(0,j).trim(), url=line.slice(j+1).trim();
+ const safe=label.replace(/[^a-z0-9-_ ]/gi,'').replace(/\s+/g,'-')||'code';
+ QRCode.toCanvas(url,{width:size,errorCorrectionLevel:ec,margin:2},(err,cv)=>{
+  if(!err) zip.file(safe+'.png',cv.toDataURL('image/png').split(',')[1],{base64:true});
+  if(++done===lines.length){
+   zip.generateAsync({type:'blob'}).then(b=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b); a.download='qr-codes.zip'; a.click();
+    document.getElementById('status').textContent='Done — '+lines.length+' codes in qr-codes.zip';
+   });
+  }
+ });
+});
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>Naming and file discipline at scale</h2>
+<p>The difference between a batch that helps and one that haunts you is almost always naming. Codes named by human-readable labels ("Front Desk") are friendly today and ambiguous in a year when there are two front desks; codes named by stable IDs (asset numbers, SKU codes, room codes) stay unambiguous forever and match other records you keep. The best pattern is both: the stable ID as the filename and a printed human label beside the code on the physical tag. Decide the scheme before generating — renaming a printed fleet later means regenerating everything, since the filename is your only link between ZIP contents and physical locations until each code is placed.</p>
+<p>Keep the source list. The list you pasted is the batch's master record: store it beside the ZIP (or in your asset system) and every reprint, audit, or expansion starts from truth rather than reverse-engineering PNG filenames.</p>
+<h2>From one-off batch to standing system</h2>
+<p>Batch generation serves the moment of rollout. What follows is the longer life of the codes: destinations that need to change, assets that move between sites, staff who need to know what a code resolved to last quarter. Static PNGs cannot answer any of that — the file is dumb pattern. Teams that keep scaling typically graduate to a code-management platform where each printed pattern is an object with history, editable target, and scan analytics. Objexi builds that layer for exactly this progression; a batch like the one this page produces is usually the pilot that reveals the need.</p><h2>Common batch pitfalls</h2>
+<p>The failures repeat across teams. Inconsistent sizing between batches — codes that visually match on screen but print at different scales — fixed by locking the size setting in your source list doc. Labels with characters filesystems reject, producing mystery filenames — fixed by the sanitization every generator should do, including this one. Destinations entered inconsistently (with and without https, with tracking parameters on some lines) — fixed by normalizing URLs before pasting. And the quiet one: forgetting which version of the list was actually generated, so the ZIP and the spreadsheet disagree about what exists. The source-list-as-master-record discipline from earlier is the single fix that prevents all of these downstream.</p>
+<h2>Scale considerations</h2>
+<p>Browser-based generation comfortably serves hundreds of codes; thousands work but deserve chunking into batches for sanity and error isolation. Beyond that, or once codes need per-object pages, editable destinations, and scan analytics, a management platform stops being optional — not because generation gets hard, but because governance does. Knowing which side of that line you are on is the practical planning question, and the honest answer for most first rollouts is: start with a static batch, learn, and migrate the parts that hurt.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

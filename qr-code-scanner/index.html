@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Scanner — Scan With Camera or Image</title>
+<meta name="description" content="Scan QR codes with your camera or decode from screenshots and saved images. Free browser QR scanner — nothing uploaded, results shown before opening.">
+<link rel="canonical" href="https://toolaspect.com/qr-code-scanner/">
+<meta property="og:title" content="QR Code Scanner">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/qr-code-scanner/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"QR Code Scanner","description":"Scan QR codes via camera or image file, entirely client-side.","url":"https://toolaspect.com/qr-code-scanner/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it safe to scan unknown QR codes?", "acceptedAnswer": {"@type": "Answer", "text": "Scanning itself cannot execute anything. This page shows the decoded text first so you can read the destination before deciding to open it \u2014 always check URLs from codes on public fixtures."}}, {"@type": "Question", "name": "Can I scan a QR code from a screenshot?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 choose 'Decode from image' and select the screenshot; decoding works on saved photos exactly like camera frames."}}, {"@type": "Question", "name": "Does my camera feed get uploaded?", "acceptedAnswer": {"@type": "Answer", "text": "No. Decoding runs in your browser; the camera stream and image files never leave your device."}}, {"@type": "Question", "name": "What can a QR code contain?", "acceptedAnswer": {"@type": "Answer", "text": "Most often URLs, but also plain text, WiFi credentials, contact cards, and payment strings \u2014 all inert data until you act on them."}}, {"@type": "Question", "name": "Can QR codes be updated after printing?", "acceptedAnswer": {"@type": "Answer", "text": "Only indirectly: print a code that points at a redirect you control. Platforms like Objexi manage smart codes whose targets change without reprinting."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>QR Code Scanner</h1>
+<p class="subtitle">Scan QR codes with your camera or decode from screenshots and saved images.</p>
+
+<div class="card">
+<div class="form-group"><label>Scan method</label><select id="mode"><option value="cam">Camera (live)</option><option value="img">Decode from image</option></select></div>
+<div class="form-group" id="camwrap" style="display:none"><label>Camera preview</label><div id="reader" style="width:100%"></div></div>
+<div class="form-group" id="imgwrap" style="display:none"><label>Choose QR image</label><input type="file" id="qrfile" accept="image/*"></div>
+<button class="btn" onclick="startScan()">Start scan</button>
+</div>
+<div class="card" id="reswrap" style="display:none">
+<h2 style="font-size:1rem;margin-bottom:10px">Decoded</h2>
+<textarea id="result" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px;font-family:monospace"></textarea>
+<a class="btn" id="openlink" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;text-decoration:none">Open link</a>
+</div>
+<div class="seo-content">
+<h2>What a QR scanner actually does</h2>
+<p>A QR code stores data in a pattern of black and white modules arranged in a grid with fixed finder patterns in three corners. A scanner locates those patterns, samples the grid, applies the code's error correction, and returns the decoded payload — usually a URL, but also plain text, WiFi credentials, contact cards, or payment details. Because decoding is pure image processing, it can happen entirely on your device: this page uses your camera stream or an image file and never sends anything anywhere.</p>
+<h2>Camera vs image decoding</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Method</th><th>Best for</th><th>Notes</th></tr>
+<tr><td>Live camera</td><td>Posters, menus, packaging</td><td>Needs camera permission; works in real time</td></tr>
+<tr><td>Decode from image</td><td>Screenshots, saved photos</td><td>Perfect for codes you can't physically reach</td></tr>
+<tr><td>Printed + phone camera</td><td>General use</td><td>Any modern phone camera app does this natively</td></tr>
+</table></div>
+<h2>Safety: check before you open</h2>
+<p>QR codes hide their destination behind a pattern, which makes them occasionally attractive to scammers — stickered over legitimate codes on parking meters or restaurant tables. The safe habit is to let the scanner show you the decoded URL first, as this page does, and read it before tapping through: a legitimate parking payment URL should name the operator, not a lookalike domain. If the decoded text is a plain string rather than a URL, nothing opens at all.</p>
+<h2>Common payloads beyond links</h2>
+<p>URLs dominate, but the format also encodes plain text, WiFi network names and passwords (so guests can join without typing), vCard contact details, calendar events, and app-specific strings like payment requests. When you scan an unknown code and see structured junk, it is usually one of these — the data is still just text, and nothing executes on your device from scanning alone.</p>
+<h2>From scanning to smart codes</h2>
+<p>Static QR codes encode fixed data forever. The more powerful pattern is a code whose destination you can change after printing — pointing at a page that redirects — because the physical artifact stays valid while the target evolves. Businesses take this further by giving each physical object a code that resolves to live information about it: manuals, warranty status, reordering. That object-intelligence pattern is what Objexi builds for companies; if you print codes that need to do real work, it is the natural next step.</p>
+</div>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+let scanner=null;
+function startScan(){
+const mode=document.getElementById('mode').value;
+document.getElementById('camwrap').style.display=mode==='cam'?'block':'none';
+document.getElementById('imgwrap').style.display=mode==='img'?'block':'none';
+document.getElementById('reswrap').style.display='none';
+if(mode==='cam'){
+ if(scanner){scanner.stop().catch(()=>{})}
+ scanner=new Html5Qrcode('reader');
+ scanner.start({facingMode:'environment'},{fps:10,qrbox:250},
+  (txt)=>{showResult(txt);scanner.stop().catch(()=>{})},
+  ()=>{}).catch(e=>alert('Camera unavailable: '+e));
+}else{
+ document.getElementById('qrfile').onchange=(ev)=>{
+  const f=ev.target.files[0]; if(!f)return;
+  Html5Qrcode.getCfgFromString;
+  const h=new Html5Qrcode('reader');
+  h.scanFile(f,true).then(txt=>showResult(txt)).catch(e=>alert('No QR found in image'));
+ };
+}
+}
+function showResult(txt){
+document.getElementById('result').value=txt;
+const a=document.getElementById('openlink');
+if(/^https?:\/\//.test(txt)){a.style.display='inline-block';a.href=txt}else{a.style.display='none'}
+document.getElementById('reswrap').style.display='block';
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>Troubleshooting scans that fail</h2>
+<p>Most failed scans trace to four causes. Distance and size: the code should fill roughly a third of the camera frame — step closer rather than zooming. Glare: laminated or glossy surfaces reflect light into blank white patches; tilt the code or move your light source. Damage: scuffed or torn codes may still decode thanks to error correction, but printing with level H from the start buys that resilience. Contrast: light-on-dark inversions fail on some scanner software, which is why serious print runs stick to dark modules on light backgrounds. Trying the image-decode path on a photo of the problem code often succeeds where live camera scanning struggles, because you control framing and lighting in the photo.</p>
+<h2>QR codes and physical-world business</h2>
+<p>The quiet story of QR adoption is how thoroughly it became the bridge between physical objects and software: restaurant menus, equipment service records, rental check-ins, event badges, payment terminals. Each of those uses shares one architecture — a durable printed pattern resolving to a live digital endpoint — and the pattern's weakness is also shared: a static print pointing at a fixed URL ages badly. Businesses that scale past a handful of codes move to managed codes where the printed pattern stays stable and the destination evolves: rebranding, seasonal menus, asset handover. That managed-code layer, with per-object pages and scan histories, is the space Objexi operates in; a phone scan today is the entry point to an object's whole digital record.</p>
+<p>For individual users, the takeaway is simpler: scanning is safe, checking the decoded destination before opening is the whole of the caution required, and a browser-based scanner like this one keeps even that step local.</p>
+<p>For the everyday user the mental model is worth restating plainly: a QR code is a link you scan instead of type, and it deserves exactly the suspicion you would give a link from a stranger — which is to say, a glance at the destination, not paranoia. The overwhelming majority of codes in the wild are menus and manuals; the caution is for codes in contested public places where anyone could have stickered over the original. With the decoded text shown before anything opens, this page gives you exactly that glance by default.</p><h2>Choosing where to scan</h2>
+<p>Device-native camera apps scan quickly but open decoded URLs with minimal friction, which is convenient for trusted codes and slightly risky for unknown ones. A browser scanner like this page adds a deliberate stop — the decoded text displayed before you proceed — which costs one tap and buys you the chance to read what you are about to open. For codes on payment terminals, parking meters, and anything stickered in public, that stop is worth the habit; for the menu on the cafe table, either path is fine. The right posture is not fear of codes but a small amount of process exactly where the attack surface actually exists, and nowhere else.</p>
+<h2>Recap</h2>
+<p>Scanning is local image processing, this page does it entirely in your browser, decoded text shows before anything opens, and camera or image decoding both work on the same principle. If you also create codes, the companion generators on this site cover logos and batch production; if you deploy codes for a business at any scale, the managed-code pattern is where the format's real leverage lives.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>
