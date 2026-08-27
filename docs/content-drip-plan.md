@@ -68,6 +68,21 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   BreadcrumbList added, guide link in related; calculator JS untouched)
   Next in queue: body-fat, bmr, ideal-weight, age-calculator
   (macro and water-intake already have guides: how-to-calculate-your-macro-split, how-much-water-by-weight).
+- 2026-08-28 batch guides: body-fat → guides/what-is-a-healthy-body-fat-percentage/;
+  bmr → guides/how-to-calculate-bmr/;
+  ideal-weight → guides/how-much-should-i-weigh/
+  (each: 1,226–1,274 words, computed data tables, FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; all-tools guides section updated, count 62→65)
+- 2026-08-28 depth passes: body-fat-calculator (949 → 1,368 words, +ACE bands table + worked-example
+  section, +2 FAQs with FAQPage JSON-LD update (5→7), BreadcrumbList added, guide link in related;
+  calculator JS untouched, verified byte-identical to HEAD);
+  bmr-calculator (951 → 1,385 words, +BMR-by-age table + equation-comparison table + worked-example
+  section, +2 FAQs with FAQPage JSON-LD update (5→7), BreadcrumbList added, guide link in related;
+  calculator JS untouched, verified byte-identical to HEAD)
+  Next in queue: age-calculator (guide + depth pass if <900), then wave 2:
+  currency-converter, qr-code-generator, password-generator, image-compressor,
+  csv-to-json, prompt-library. (macro and water-intake have guides already — depth
+  passes only if their tool pages are still thin.)
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
