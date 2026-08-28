@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Image Detector — Check if a Photo is AI Generated</title>
+<meta name="description" content="Inspect an image's metadata for AI-generation signals: camera data, software tags, provenance hints. Free local analysis plus a visual-signals guide.">
+<link rel="canonical" href="https://toolaspect.com/ai-image-detector/">
+<meta property="og:title" content="AI Image Detector">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/ai-image-detector/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"AI Image Detector","description":"Check image metadata for AI-generation signals, client-side.","url":"https://toolaspect.com/ai-image-detector/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can you reliably detect AI images?", "acceptedAnswer": {"@type": "Answer", "text": "Not with certainty from any single signal: metadata is conclusive when present but strippable, and pixel analysis is probabilistic. Combining signals \u2014 metadata, visual artifacts, provenance records \u2014 is the reliable approach."}}, {"@type": "Question", "name": "Do AI images have EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "Usually less than camera photos \u2014 many generators write minimal or no EXIF, though some embed software tags or C2PA manifests naming the tool."}}, {"@type": "Question", "name": "What is C2PA?", "acceptedAnswer": {"@type": "Answer", "text": "A provenance standard where cameras and editing tools cryptographically sign files, making a photo's history verifiable rather than guessed."}}, {"@type": "Question", "name": "Why do detectors disagree?", "acceptedAnswer": {"@type": "Answer", "text": "Different methods and training data: each detector keys on different fingerprints, and resized or recompressed images degrade pixel signals differently for each."}}, {"@type": "Question", "name": "How do creators protect against AI fakes?", "acceptedAnswer": {"@type": "Answer", "text": "Sign and watermark originals, monitor for unauthorized use, and enforce takedowns \u2014 the provenance-plus-enforcement stack that authAspect provides for image professionals."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}.out{margin-top:10px;font-size:.9rem}.big{font-size:1.4rem;font-weight:700;color:var(--primary)}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>AI Image Detector</h1>
+<p class="subtitle">Inspect an image's metadata for AI-generation signals: camera data, software tags, provenance hints.</p>
+
+<div class="card">
+<div class="form-group"><label>Choose image to inspect</label><input type="file" id="file" accept="image/*"></div>
+<button class="btn" onclick="analyze()">Analyze metadata</button>
+<div class="out" id="out"></div>
+</div>
+<div class="seo-content">
+<h2>How AI image detection works</h2>
+<p>AI-generated images are detected in two broad ways, and it matters which one any given tool uses. Metadata analysis reads the file's embedded information: generator watermarks (visible or invisible), C2PA content credentials recording the creation tool, EXIF quirks that cameras produce and generators usually do not. Signal analysis examines the pixels: diffusion models leave statistical fingerprints — texture regularity, frequency-domain patterns, impossible physics in reflections and hands — that classifiers can learn to spot. Metadata is conclusive when present but trivially stripped; pixel analysis survives stripping but is probabilistic and degrades with resizing and compression.</p>
+<h2>Signals anyone can check</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Signal</th><th>What to look for</th><th>Reliability</th></tr>
+<tr><td>Metadata presence</td><td>Real camera photos carry EXIF; many AI images have none</td><td>Moderate — strippable</td></tr>
+<tr><td>Content credentials</td><td>C2PA manifest naming the creating tool</td><td>High when present</td></tr>
+<tr><td>Hands and text</td><td>Malformed fingers, garbled signage</td><td>High when visible</td></tr>
+<tr><td>Reflections and shadows</td><td>Inconsistent light sources, missing reflections</td><td>Moderate</td></tr>
+<tr><td>Texture uniformity</td><td>Over-smooth skin, repeating patterns</td><td>Moderate</td></tr>
+</table></div>
+<h2>What this page checks</h2>
+<p>The button above runs the metadata half locally: it reads the file's embedded blocks and reports what creation information survives — camera data, software tags, C2PA hints. A file with full Canon EXIF and consistent timestamps is probably a camera photo; a pristine image with no provenance at all is ambiguous, because screenshots and stripped files look identical to generated ones. For pixel-level classification, dedicated detector models exist, and honest ones publish accuracy on adversarial benchmarks rather than marketing pages.</p>
+<h2>Why detection is an arms race</h2>
+<p>Every public detector's method eventually feeds back into generator training, and each generation of models erases the previous fingerprints — the tell-tale hands of a few years ago are refined away, frequency signatures diminish with better samplers. Provenance approaches sidestep the race entirely: rather than detecting fakes after the fact, cameras and editing tools cryptographically sign what they produce, so authenticity becomes verifiable rather than inferred. The two approaches are converging in practice: detection for the existing image sea, provenance for everything created going forward.</p>
+<h2>Why this matters for image professionals</h2>
+<p>For photographers and creators, AI imagery is a commercial threat on two fronts — flooded stock and print-on-demand markets undercutting real work, and synthesized content damaging reputations. Provenance tooling has become part of the professional stack: signing your own work, monitoring for unauthorized use, and acting on what monitoring finds. That protection layer — provenance plus detection plus enforcement — is authAspect's territory, built specifically for image creators navigating exactly this landscape.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/full.umd.js"></script>
+<script>
+async function analyze(){
+const f=document.getElementById('file').files[0];
+if(!f){alert('Choose an image first');return}
+const data=await exifr.parse(f,{gps:true,tiff:true,ifd0:true,exif:true,xmp:true});
+let h='<div style="font-weight:600;margin-bottom:6px">Findings:</div>';
+const rows=[];
+if(!data){rows.push(['No metadata at all','Ambiguous — screenshot, stripped file, or generated image'])}
+else{
+ const make=data.Make||data.make, model=data.Model||data.model;
+ if(make)rows.push(['Camera: '+make+' '+(model||''),'Points toward a real camera photo']);
+ if(data.Software)rows.push(['Software tag: '+data.Software,'Edited or generated — check the tool named']);
+ if(data.DateTimeOriginal)rows.push(['Capture timestamp present','Consistent with camera capture']);
+ if(data.GPSLatitude)rows.push(['GPS coordinates present','Almost always a real-world capture']);
+ const keys=Object.keys(data).length;
+ rows.push([keys+' metadata fields present',keys>15?'Rich metadata typical of cameras':'Sparse metadata — inconclusive']);
+}
+rows.forEach(r=>h+='<div style="font-size:.85rem;margin-bottom:4px"><b>'+r[0]+'</b> — <span style="color:var(--muted)">'+r[1]+'</span></div>');
+h+='<div style="margin-top:8px;font-size:.8rem;color:var(--muted)">Metadata alone is never proof — cross-check visual signals (hands, text, reflections) or a dedicated pixel-level detector.</div>';
+out.innerHTML=h;
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>Reading the ambiguity honestly</h2>
+<p>The hardest class of image to assess is the stripped one: no metadata, no credentials, no history. Detection tools return a probability, visual checks return impressions, and the truthful summary is "inconclusive leaning generated" or the reverse. What breaks the tie is context — where the image appeared, who posted it, what it claims to show — and provenance going forward: the ecosystem is moving toward cameras and tools signing their outputs so that the question "where did this come from" has an answer built into the file. Until coverage is universal, the practical stack remains: metadata when present, visual signals when visible, context always.</p>
+<h2>A workflow for people who receive images professionally</h2>
+<p>Editors, buyers, and investigators process unknown images in volume and need a repeatable pass: pull metadata first (fast, free, sometimes conclusive), run a reverse image search second (an image that has circulated for years with an established origin is usually its own verification), check visual signals third, and only then pay for pixel-level detection on the cases that still matter. This orders the checks by cost, and the cheap ones resolve most images. The residual hard cases — fresh, stripped, plausible — are precisely what provenance systems are being built to eliminate.</p><h2>What to conclude, and when to stop</h2>
+<p>Know when you have enough. For casual skepticism — is this viral photo real — the free stack settles most cases: metadata plus reverse search plus visual checks reaches a defensible conclusion in minutes. For consequential decisions — publication, purchase, legal — inconclusive means inconclusive: do not squeeze certainty from tools that honestly report probability, and either find the provenance or act on the uncertainty itself. The discipline of stopping is underrated; most misjudgments around AI imagery come not from bad tools but from demanding binary answers the current technology does not give.</p><h2>Try it on a known sample</h2>
+<p>The fastest way to calibrate your judgment: run the analyzer on one photo you know is genuine (from your own camera) and one you suspect. Seeing what real metadata looks like versus ambiguous absence, once, does more for your detection instincts than any description. From there the workflow above takes over, and your conclusions get faster with every image.</p><h2>Keep your calibration current</h2>
+<p>Detection instincts decay as generators improve, so refresh them periodically: run a known-real and a known-generated image through your checks every few months and notice what changed. The signal that mattered last year may be gone; a new one may have appeared. Five minutes of deliberate recalibration keeps your conclusions anchored to the current generation rather than the one you first learned — and that is the difference between a skill and a memory.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duplicate Image Finder — Find Similar Photos Locally</title>
+<meta name="description" content="Find duplicate and near-duplicate images with perceptual hashing, entirely in your browser. Free duplicate photo finder for libraries and assets.">
+<link rel="canonical" href="https://toolaspect.com/duplicate-image-finder/">
+<meta property="og:title" content="Duplicate Image Finder">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/duplicate-image-finder/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Duplicate Image Finder","description":"Group duplicate and near-duplicate images with perceptual hashing, client-side.","url":"https://toolaspect.com/duplicate-image-finder/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does duplicate image detection work?", "acceptedAnswer": {"@type": "Answer", "text": "Perceptual hashing reduces each image to a fingerprint that survives resizing and compression; comparing fingerprints groups visually identical images even when the files differ."}}, {"@type": "Question", "name": "Can it find resized or watermarked copies?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 that is the point of perceptual matching. A repost that was resized and recompressed still produces a similar fingerprint to the original."}}, {"@type": "Question", "name": "Does it work on photos in the cloud?", "acceptedAnswer": {"@type": "Answer", "text": "This tool works on files you select locally; nothing uploads. Cloud photo services implement the same hashing server-side for their dedup features."}}, {"@type": "Question", "name": "What similarity threshold should I use?", "acceptedAnswer": {"@type": "Answer", "text": "Hamming distance zero to five is virtually always the same image; six to twelve catches edited versions; above that you are matching lookalikes rather than duplicates."}}, {"@type": "Question", "name": "Can this detect image theft?", "acceptedAnswer": {"@type": "Answer", "text": "The mechanism scales to theft detection \u2014 hash your originals, match against images found elsewhere \u2014 which, with continuous monitoring and takedown tooling, is what authAspect automates for creators."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}.out{margin-top:10px;font-size:.9rem}.big{font-size:1.4rem;font-weight:700;color:var(--primary)}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>Duplicate Image Finder</h1>
+<p class="subtitle">Find duplicate and near-duplicate images with perceptual hashing, entirely in your browser.</p>
+
+<div class="card">
+<div class="form-group"><label>Choose images to compare</label><input type="file" id="files" accept="image/*" multiple></div>
+<button class="btn" onclick="findDups()">Find duplicates</button>
+<div class="out" id="out"></div>
+</div>
+<div class="seo-content">
+<h2>How duplicate detection works</h2>
+<p>Finding identical files is trivial — compare bytes. Finding visually identical images is the real problem: the same photo reposted has been resized, recompressed, cropped, or watermarked, and none of those copies match byte-for-byte. The solution is the perceptual hash: an algorithm reduces each image to a small fingerprint that captures its visual structure, such that visually similar images produce similar fingerprints. Comparing fingerprints — a Hamming distance, counting differing bits — then groups images that look the same regardless of their file differences.</p>
+<h2>Exact vs near-duplicate methods</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Method</th><th>Catches</th><th>Misses</th></tr>
+<tr><td>Checksum (MD5/SHA)</td><td>Byte-identical copies</td><td>Any edit, even re-saving</td></tr>
+<tr><td>Average hash</td><td>Resizes, compression</td><td>Crops, color shifts</td></tr>
+<tr><td>pHash (DCT-based)</td><td>Resizes, compression, minor crops</td><td>Heavy edits, flips</td></tr>
+<tr><td>Feature/embedding matching</td><td>Crops, collages, heavy edits</td><td>Cost, complexity</td></tr>
+</table></div>
+<p>The practical sweet spot for local tools is perceptual hashing with a distance threshold around ten bits: near-zero false positives on distinct photos, reliable grouping of reposted copies.</p>
+<h2>What this tool does</h2>
+<p>Select a folder's worth of images and it computes a perceptual hash of each, entirely in your browser, then groups everything whose fingerprints fall within similarity tolerance. Nothing uploads — which matters if you are sorting a private library. Typical uses: cleaning photo libraries after years of imports from three phones, deduplicating a website's image assets before a migration, and finding the reposted copies within a downloaded set.</p>
+<h2>Finding theft, not just clutter</h2>
+<p>The same technique scales from tidying to enforcement. A photographer who publishes work can hash their originals and — with the right tooling — compare against hashes of images found elsewhere, because a stolen copy that was resized for the thief's site still produces a similar fingerprint. At library scale, with continuous web monitoring and evidence capture, this becomes image-theft detection; that monitoring-and-enforcement layer is what authAspect does for creators, with perceptual matching as one of its core mechanisms.</p>
+<h2>Practical thresholds</h2>
+<p>When tuning tolerance: distance zero to five almost always means the same image; six to twelve usually means edited versions worth reviewing; beyond fifteen you are mostly finding similar-looking photos, which is useful for mood-boards and less useful for deduplication. When in doubt, run at a strict threshold, review the groups, then widen. Your definition of a duplicate is a judgment call the math can only approximate.</p>
+</div>
+<script>
+async function findDups(){
+const fs=[...document.getElementById('files').files];
+if(fs.length<2){alert('Select at least two images');return}
+const PH=8;
+function ahash(cv){
+ const small=document.createElement('canvas'); small.width=PH; small.height=PH;
+ small.getContext('2d').drawImage(cv,0,0,PH,PH);
+ const d=small.getContext('2d').getImageData(0,0,PH,PH).data;
+ const gray=[]; for(let i=0;i<d.length;i+=4)gray.push((d[i]+d[i+1]+d[i+2])/3);
+ const avg=gray.reduce((a,b)=>a+b,0)/gray.length;
+ return gray.map(g=>g>avg?1:0);
+}
+function dist(a,b){let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])n++;return n}
+const hashes=[];
+for(const f of fs){
+ const img=await createImageBitmap(f);
+ const cv=document.createElement('canvas'); cv.width=Math.min(400,img.width); cv.height=Math.round(img.height*cv.width/img.width);
+ cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+ hashes.push({name:f.name,h:ahash(cv)});
+}
+const groups=[];
+const used=new Array(hashes.length).fill(false);
+for(let i=0;i<hashes.length;i++){
+ if(used[i])continue;
+ const g=[i]; used[i]=true;
+ for(let j=i+1;j<hashes.length;j++){
+  if(!used[j]&&dist(hashes[i].h,hashes[j].h)<=10){g.push(j);used[j]=true}
+ }
+ if(g.length>1)groups.push(g);
+}
+let h='<div>'+fs.length+' images hashed, <b>'+groups.length+' duplicate group(s)</b></div>';
+groups.forEach((g,i)=>{
+ h+='<div style="font-size:.85rem;margin-top:6px">Group '+(i+1)+': '+g.map(k=>hashes[k].name).join(' · ')+'</div>';
+});
+if(!groups.length)h+='<div style="font-size:.85rem;color:var(--muted);margin-top:6px">No near-duplicates within tolerance.</div>';
+out.innerHTML=h;
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>Privacy by architecture</h2>
+<p>Local-first deduplication is a privacy decision as much as a technical one: family photo libraries, client shoots, and unreleased work should not need a round-trip through anyone's server just to find internal copies. Browser-based hashing keeps the images on your machine by construction — there is no upload path to audit because there is no upload. The same principle scales up: serious photo management and theft-detection systems process originals where they live rather than where it is convenient, and it is a fair question to ask of any tool before handing it a decade of family photos or a client's unreleased campaign.</p>
+<h2>Beyond duplicates: the same math, bigger questions</h2>
+<p>Perceptual hashing is a general similarity tool, and the jump from "these two files are the same photo" to "this photo appeared on a site I never authorized" is a change of index, not of mechanism. That is the trajectory worth knowing: local dedup today, original-vs-web matching tomorrow, continuous monitoring the day after. For creators whose images are their income, that last step — with alerting and takedown tooling attached — is the operational layer authAspect runs, and the jump in value from "duplicate finder" to "theft response system" is exactly the jump from tool to platform.</p><h2>Before you delete anything</h2>
+<p>Deduplication's irreversible step deserves one guardrail: verify groups before deleting, because hash similarity occasionally groups distinct photos of the same scene — a burst of near-identical shots is exactly what you bought the burst for. Keep the largest or highest-quality member of each group by default, export the deletion list before executing it on any irreplaceable library, and remember that "duplicate" and "redundant" are different judgments: the second is yours to make, not the algorithm's. A tool this simple earns trust by staying on its side of that line.</p><h2>Run it on your messiest folder tonight</h2>
+<p>The tool is sitting above this text and works on whatever folder annoys you most — downloads, camera dumps, the assets folder of a website. One run usually surfaces a surprising number of groups, and the mental load of "I should clean that up someday" converts into a reviewed list you can act on in minutes. Local, private, reversible if you keep the guardrails. That is the whole pitch.</p><h2>Performance notes</h2>
+<p>The local algorithm comfortably handles a few hundred images per run in the browser; beyond that, expect the tab to work in visible stages and consider batching. Hashing cost scales with image dimensions, so the tool downsamples before fingerprinting — results are identical, speed is not. For libraries in the tens of thousands, desktop dedup tools using the same algorithms run faster simply by avoiding the browser layer, and the concepts on this page transfer directly.</p><h2>What hashes cannot see</h2>
+<p>Know the blind spots before trusting any fingerprint method: flipped and rotated images defeat simple hashes unless the tool checks transforms too; heavy crops that keep less than half the frame register as different pictures; and artistically reworked versions — recolored, collaged, redrawn — share too little structure to match. If your use case involves adversarial copiers (people who crop your watermark out), expect them to fall outside hash tolerance, and expect feature-matching or human review to pick up what the fingerprint misses. The tool is a fast first pass, not a complete net.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

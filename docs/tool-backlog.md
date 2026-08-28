@@ -568,3 +568,22 @@ weighted-grade-calculator | education | calc | $1-3 | "weighted grade calculator
 
 ## Enhancement wave (queued — after AIO/SEO uplift wave lands) — charts on money tools
 - chart-pass-money-tools | enhancement | chart layer | n/a | uPlot/Chart.js deferred, render FROM existing HTML table data (table stays crawlable source of truth); ~30-40 loan/amortization/retirement/compound/tax/macro tools; engagement + linkability play, NOT an AIO substitute
+
+## Wave E — DataForSEO-validated lateral plays (2026-08-28 research)
+
+| slug | vol/mo | CPC | product | note |
+|---|---|---|---|---|
+| face-recognition-search | 45k combined (face search 27k + face recognition search 18k) | high intent | authAspect | explainer + engine comparison; core authAspect buyer |
+| loyalfans | 165k | — | veyzi | platform guide + fees page |
+| pimeyes-alternative | 4.4k | — | authAspect | comparison page, "free alternatives" angle |
+| ai-image-detector | 1.6k | — | authAspect | client-side heuristics + guide |
+| duplicate-image-finder | 1.6k | — | authAspect | perceptual hash, fully client-side |
+| deepfake-detector | 1k | — | authAspect | detection signals guide |
+| boosty | 12.1k | — | veyzi | platform fees/earnings calculator |
+| copyright-infringement-damages | 720 | — | authAspect | content-only legal guide |
+| video-watermark | 880 + add-watermark-to-video 390 | — | authAspect | add-only; NEVER removal |
+| rumble-earnings | 140 | — | veyzi | platform calculator |
+| dmca-notice-template / cease-and-desist-template | 430 combined | — | authAspect | content-only templates |
+| patreon-fees-calculator | 40 | — | veyzi | small but zero competition |
+
+HARD RULE (standing): never build watermark-removal or any content-theft tooling — "watermark remover" (135k/mo) and "remove watermark from video" (22k/mo) deliberately skipped.

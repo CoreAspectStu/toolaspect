@@ -68,7 +68,9 @@
       match: [
         'image-compressor', 'image-tools', 'image-converter', 'image-resizer',
         'photo-', 'watermark', 'image-watermark', 'exif', 'metadata', 'exif-viewer', 'image-metadata', 'c2pa', 'provenance',
-        'picture-', 'crop-image', 'reverse-image', 'dmca-'
+        'picture-', 'crop-image', 'reverse-image', 'dmca-',
+        'face-recognition', 'face-search', 'pimeyes', 'ai-image-detector',
+        'duplicate-image', 'deepfake', 'c2pa', 'content-credentials'
       ],
       product: 'authaspect'
     },
@@ -90,7 +92,7 @@
         'follower-growth', 'influencer', 'hashtag', 'creator-tools',
         'creator-earnings', 'social-media', 'instagram', 'kick-', 'patreon',
         'link-in-bio', 'onlyfans', 'fansly', 'creator-revenue',
-        'custom-content', 'churn-rate'
+        'custom-content', 'churn-rate', 'loyalfans'
       ],
       product: 'veyzi'
     }
