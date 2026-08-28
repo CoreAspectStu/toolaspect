@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tire Size Calculator — Compare &amp; Speedo Check | ToolAspect</title>
+<meta name="description" content="Compare two tire sizes: diameter, circumference, revs per mile, and speedometer error. 225/65R17 to 235/65R17 changes your speedo by 1.8%.">
+<link rel="canonical" href="https://toolaspect.com/tire-size-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Tire Size Calculator">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Enter two tire sizes and get diameter, revs per mile, speedometer error, and a fit verdict.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/tire-size-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tire Size Calculator | ToolAspect">
+<meta name="twitter:description" content="Diameter, revs/mile, and speedo error for any two tire sizes.">
+<meta name="keywords" content="tire size calculator, tire size comparison, tire diameter calculator, speedometer correction, revs per mile, 225/65r17, plus sizing">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Tire Size Calculator","description":"Free calculator that compares two tire sizes: overall diameter, sidewall height, circumference, revolutions per mile, speedometer error, and whether the difference stays within the 3% safe window.","url":"https://toolaspect.com/tire-size-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What do the numbers in a tire size mean?","acceptedAnswer":{"@type":"Answer","text":"In 225/65R17: 225 is the section width in millimeters, 65 is the aspect ratio (sidewall height as a percent of width, so 65% of 225 = 146.25mm), R means radial construction, and 17 is the wheel diameter in inches. Overall diameter = 17in + 2 × 146.25mm converted to inches = 28.52 inches, or 724mm."}},
+{"@type":"Question","name":"How much can tire diameter differ before it's a problem?","acceptedAnswer":{"@type":"Answer","text":"Stay within 3% of the original overall diameter. Within 1% is ideal - speedometer and odometer error stay under 1 mph at 60. Beyond 3%, speedometer error becomes noticeable, odometer accuracy drifts, ABS and traction-control logic can misbehave, and gearing changes enough to affect acceleration and fuel economy."}},
+{"@type":"Question","name":"Will bigger tires make my speedometer read wrong?","acceptedAnswer":{"@type":"Answer","text":"Yes. The speedometer counts wheel revolutions, so a taller tire travels farther per revolution than the system assumes. Going from 225/65R17 to 235/65R17 (+1.8% diameter) makes an indicated 60 mph an actual 61.1 mph - you're speeding while the dash says you aren't. Shorter tires understate actual speed the same way."}},
+{"@type":"Question","name":"Can I use a 235 tire instead of a 225?","acceptedAnswer":{"@type":"Answer","text":"Same wheel diameter, often yes: 235/65R17 is only 1.8% taller than 225/65R17, inside the 3% guideline. But width needs wheel and clearance room - the 235 is 10mm wider and needs an appropriately wide rim (a 7-inch wheel handles both), plus clearance at full lock and suspension compression. Check a fitment guide for your exact vehicle before buying."}},
+{"@type":"Question","name":"What is plus sizing?","acceptedAnswer":{"@type":"Answer","text":"Plus sizing keeps overall diameter constant while shrinking sidewalls on bigger wheels: 205/55R16 to 225/45R17 is +0.38% and 225/40R18 is +0.84% - all three turn the axle at nearly the same rate. You get sharper steering response and a shorter, stiffer sidewall; ride quality and tire price usually pay for it."}},
+{"@type":"Question","name":"Do wider tires hurt fuel economy?","acceptedAnswer":{"@type":"Answer","text":"Usually a little. Wider tires weigh more and roll with more resistance - expect a 1 to 3% fuel-economy penalty for a common one-or-two-step width increase, more if you choose an aggressive tread. Diameter changes matter too: taller tires effectively gear the car taller, which can help highway economy and hurt around-town response."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Auto Calculators","item":"https://toolaspect.com/auto-tools/"},{"@type":"ListItem","position":3,"name":"Tire Size Calculator","item":"https://toolaspect.com/tire-size-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.verdict{border-radius:var(--radius);padding:.9rem 1rem;margin-top:1rem;text-align:center;font-weight:600}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🛞 Tire Size Calculator</h1>
+<p>Compare two sizes: diameter, revs per mile, and what happens to your speedometer</p>
+</div>
+
+<div class="aio-answer"><strong>Quick answer:</strong> 225/65R17 means 225mm wide, a sidewall that's 65% of that (146.25mm), on a 17-inch wheel &mdash; a <strong>28.5-inch (724mm)</strong> overall diameter. Swapping to 235/65R17 makes the tire <strong>1.8% taller</strong>: your speedometer reads 60 when you're doing <strong>61.1 mph</strong>, and the odometer under-counts by 1.8%. Keep any swap within <strong>&plusmn;3%</strong> of the original diameter.</div>
+
+<div class="section-card">
+<h2>Current Tire</h2>
+<div class="input-grid">
+<div class="input-group"><label>Width (mm)</label><input type="number" id="w1" value="225" min="125" max="355" step="5"></div>
+<div class="input-group"><label>Aspect Ratio (%)</label><input type="number" id="a1" value="65" min="25" max="90" step="5"></div>
+<div class="input-group"><label>Wheel (in)</label><input type="number" id="r1" value="17" min="10" max="24" step="0.5"></div>
+<div class="input-group"><label>&nbsp;</label><div style="padding:.7rem 0;font-size:.9rem;color:var(--muted)" id="label1">225/65R17</div></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>New Tire</h2>
+<div class="input-grid">
+<div class="input-group"><label>Width (mm)</label><input type="number" id="w2" value="235" min="125" max="355" step="5"></div>
+<div class="input-group"><label>Aspect Ratio (%)</label><input type="number" id="a2" value="65" min="25" max="90" step="5"></div>
+<div class="input-group"><label>Wheel (in)</label><input type="number" id="r2" value="17" min="10" max="24" step="0.5"></div>
+<div class="input-group"><label>&nbsp;</label><div style="padding:.7rem 0;font-size:.9rem;color:var(--muted)" id="label2">235/65R17</div></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Overall Diameter Difference</div>
+<div class="value" id="heroVal">&mdash;</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Current Diameter</div><div class="ri-value" id="d1">&mdash;</div></div>
+<div class="result-item"><div class="ri-label">New Diameter</div><div class="ri-value" id="d2">&mdash;</div></div>
+<div class="result-item"><div class="ri-label">Revs per Mile (current &rarr; new)</div><div class="ri-value" id="revs">&mdash;</div></div>
+<div class="result-item"><div class="ri-label">Actual Speed at Indicated 60</div><div class="ri-value" id="speedo">&mdash;</div></div>
+<div class="result-item"><div class="ri-label">Odometer Reads 100, Actual</div><div class="ri-value" id="odo">&mdash;</div></div>
+<div class="result-item"><div class="ri-label">Sidewall Height (current &rarr; new)</div><div class="ri-value" id="sw">&mdash;</div></div>
+</div>
+<div class="verdict" id="verdict">&mdash;</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/mpg-calculator/">MPG Calculator</a></li><li style="margin:4px 0"><a href="/fuel-cost-calculator/">Fuel Cost</a></li><li style="margin:4px 0"><a href="/car-repair-cost-calculator/">Car Repair Cost</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> &middot; <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Equivalent Sizes for Common 225/65R17 &amp; 205/55R16 Fits</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Size</th><th>Diameter</th><th>Circumference</th><th>Revs/Mile</th><th>vs. Original</th></tr></thead>
+<tbody>
+<tr><td>225/65R17 (original)</td><td>28.52 in / 724 mm</td><td>89.6 in</td><td>707</td><td>&mdash;</td></tr>
+<tr><td>235/65R17</td><td>29.03 in / 737 mm</td><td>91.2 in</td><td>695</td><td>+1.8%</td></tr>
+<tr><td>245/60R17</td><td>28.57 in / 726 mm</td><td>89.8 in</td><td>706</td><td>+0.2%</td></tr>
+<tr><td>235/60R17</td><td>28.10 in / 714 mm</td><td>88.3 in</td><td>718</td><td>&minus;1.4%</td></tr>
+<tr><td>225/60R18</td><td>28.63 in / 727 mm</td><td>89.9 in</td><td>704</td><td>+0.4%</td></tr>
+<tr><td>245/55R18</td><td>28.61 in / 727 mm</td><td>89.9 in</td><td>705</td><td>+0.3%</td></tr>
+<tr><td colspan="5" style="background:var(--bg);color:var(--muted);font-size:.8rem">Classic plus-sizing set for the 205/55R16 crowd:</td></tr>
+<tr><td>205/55R16 (original)</td><td>24.88 in / 632 mm</td><td>78.2 in</td><td>811</td><td>&mdash;</td></tr>
+<tr><td>225/45R17</td><td>24.97 in / 634 mm</td><td>78.5 in</td><td>808</td><td>+0.4%</td></tr>
+<tr><td>225/40R18</td><td>25.09 in / 637 mm</td><td>78.8 in</td><td>804</td><td>+0.8%</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Sizes within &plusmn;3% of the original diameter keep speedometer error under about 2 mph at 60. Width changes also need the correct rim width range and fender clearance for your specific vehicle &mdash; diameter math alone doesn't guarantee fit.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Tire Size Calculator Works</h2>
+<p>Tire sizes look like part numbers but they're pure geometry. Decode them once and every comparison on this page becomes arithmetic.</p>
+<h3>The formula</h3>
+<p>Sidewall height = width &times; aspect ratio &divide; 100 (225 &times; 0.65 = 146.25mm). Overall diameter = wheel diameter + 2 &times; sidewall, all in one unit: 17 in &times; 25.4 + 2 &times; 146.25mm = 724.3mm, or 28.52 inches. Circumference = &pi; &times; diameter = 89.6 inches, and revs per mile = 63,360 &divide; 89.6 = 707. The swap's effect on your dash: actual speed = indicated &times; (new diameter &divide; old diameter), same ratio for odometer distance.</p>
+<h3>How to use it</h3>
+<p>Type both sizes in &mdash; the code from your current sidewall and the size you're considering. The verdict line grades the swap: within 1% is ideal, within 3% acceptable, beyond that expect speedometer drift you can feel and electronics that may notice. This calculator covers the metric P-metric system (205/55R16 style); letter-type and flotation sizes (like 31x10.50R15) need converting first.</p>
+<h3>A worked example</h3>
+<p>Upgrading from 225/65R17 to 235/65R17 &mdash; same wheel, 10mm wider, same profile. New sidewall: 235 &times; 0.65 = 152.75mm. New diameter: 431.8mm + 305.5mm = 737.3mm (29.03 in), which is <strong>+1.8%</strong> over the original 724.3mm.</p>
+<p>What that does: revs per mile drop from 707 to 695 (12.5 fewer rotations every mile). At an indicated 60 mph you're actually traveling <strong>61.1 mph</strong>; every 100 miles the odometer records is really 101.8. Acceptable on paper &mdash; and a real speedometer calibration question at a 10-over traffic stop. The calculator exists so this is a decision, not an accident.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What do the numbers in a tire size mean?</h3><p>In 225/65R17: 225 is the section width in millimeters, 65 is the aspect ratio (sidewall height as a percent of width, so 65% of 225 = 146.25mm), R means radial construction, and 17 is the wheel diameter in inches. Overall diameter = 17in + 2 &times; 146.25mm converted to inches = 28.52 inches, or 724mm.</p></div>
+<div class="faq-item"><h3>How much can tire diameter differ before it's a problem?</h3><p>Stay within 3% of the original overall diameter. Within 1% is ideal &mdash; speedometer and odometer error stay under 1 mph at 60. Beyond 3%, speedometer error becomes noticeable, odometer accuracy drifts, ABS and traction-control logic can misbehave, and gearing changes enough to affect acceleration and fuel economy.</p></div>
+<div class="faq-item"><h3>Will bigger tires make my speedometer read wrong?</h3><p>Yes. The speedometer counts wheel revolutions, so a taller tire travels farther per revolution than the system assumes. Going from 225/65R17 to 235/65R17 (+1.8% diameter) makes an indicated 60 mph an actual 61.1 mph &mdash; you're speeding while the dash says you aren't. Shorter tires understate actual speed the same way.</p></div>
+<div class="faq-item"><h3>Can I use a 235 tire instead of a 225?</h3><p>Same wheel diameter, often yes: 235/65R17 is only 1.8% taller than 225/65R17, inside the 3% guideline. But width needs wheel and clearance room &mdash; the 235 is 10mm wider and needs an appropriately wide rim (a 7-inch wheel handles both), plus clearance at full lock and suspension compression. Check a fitment guide for your exact vehicle before buying.</p></div>
+<div class="faq-item"><h3>What is plus sizing?</h3><p>Plus sizing keeps overall diameter constant while shrinking sidewalls on bigger wheels: 205/55R16 to 225/45R17 is +0.38% and 225/40R18 is +0.84% &mdash; all three turn the axle at nearly the same rate. You get sharper steering response and a shorter, stiffer sidewall; ride quality and tire price usually pay for it.</p></div>
+<div class="faq-item"><h3>Do wider tires hurt fuel economy?</h3><p>Usually a little. Wider tires weigh more and roll with more resistance &mdash; expect a 1 to 3% fuel-economy penalty for a common one-or-two-step width increase, more if you choose an aggressive tread. Diameter changes matter too: taller tires effectively gear the car taller, which can help highway economy and hurt around-town response.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/mpg-calculator/">⛽ MPG Calculator</a>
+<a href="/fuel-cost-calculator/">🛣️ Fuel Cost Calculator</a>
+<a href="/car-repair-cost-calculator/">🔧 Car Repair Cost</a>
+<a href="/hybrid-battery-replacement-cost-calculator/">🔋 Hybrid Battery Cost</a>
+<a href="/vin-decoder/">🔎 VIN Decoder</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function tire(w,a,r){
+  var sw=w*a/100;
+  var diaMM=r*25.4+2*sw;
+  var diaIN=diaMM/25.4;
+  var circ=Math.PI*diaIN;
+  return{sw:sw,diaMM:diaMM,diaIN:diaIN,circ:circ,revs:63360/circ};
+}
+function num(id){return parseFloat(document.getElementById(id).value)||0;}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var t1=tire(num('w1'),num('a1'),num('r1'));
+  var t2=tire(num('w2'),num('a2'),num('r2'));
+  document.getElementById('label1').textContent=Math.round(num('w1'))+'/'+Math.round(num('a1'))+'R'+(+num('r1')%1?num('r1').toFixed(1):num('r1'));
+  document.getElementById('label2').textContent=Math.round(num('w2'))+'/'+Math.round(num('a2'))+'R'+(+num('r2')%1?num('r2').toFixed(1):num('r2'));
+  if(t1.diaMM<=0||t2.diaMM<=0)return;
+  var diff=(t2.diaMM-t1.diaMM)/t1.diaMM*100;
+  animateValue(document.getElementById('heroVal'),(diff>=0?'+':'')+diff.toFixed(2)+'%');
+  document.getElementById('heroSub').textContent=(diff>=0?'taller':'shorter')+' by '+Math.abs(t2.diaMM-t1.diaMM).toFixed(1)+' mm overall';
+  animateValue(document.getElementById('d1'),t1.diaIN.toFixed(2)+' in ('+Math.round(t1.diaMM)+' mm)');
+  animateValue(document.getElementById('d2'),t2.diaIN.toFixed(2)+' in ('+Math.round(t2.diaMM)+' mm)');
+  animateValue(document.getElementById('revs'),Math.round(t1.revs)+' → '+Math.round(t2.revs));
+  animateValue(document.getElementById('speedo'),(60*t2.diaMM/t1.diaMM).toFixed(1)+' mph');
+  animateValue(document.getElementById('odo'),(100*t2.diaMM/t1.diaMM).toFixed(1)+' mi');
+  animateValue(document.getElementById('sw'),Math.round(t1.sw)+' → '+Math.round(t2.sw)+' mm');
+  var v=document.getElementById('verdict');
+  var ad=Math.abs(diff);
+  if(ad<=1){v.style.background='rgba(34,197,94,.15)';v.style.color='var(--success)';v.textContent='✅ Ideal match — within 1% of original diameter';}
+  else if(ad<=3){v.style.background='rgba(34,197,94,.10)';v.style.color='var(--success)';v.textContent='✅ Acceptable — within the 3% window; speedometer error '+(60*ad/100).toFixed(1)+' mph at 60';}
+  else if(ad<=5){v.style.background='rgba(234,179,8,.12)';v.style.color='#eab308';v.textContent='⚠️ Marginal — '+ad.toFixed(1)+'% off; expect noticeable speedometer/odometer drift and gearing changes';}
+  else{v.style.background='rgba(239,68,68,.12)';v.style.color='var(--danger)';v.textContent='❌ Too far — '+ad.toFixed(1)+'% off original diameter; speedometer, ABS/traction logic, and gearing all affected';}
+}
+['w1','a1','r1','w2','a2','r2'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

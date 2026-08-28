@@ -44,6 +44,7 @@
         { label: 'Mortgage Calculator',    href: '/mortgage-calculator/' },
         { label: 'Loan Calculator',        href: '/loan-calculator/' },
         { label: 'Wedding Loan',           href: '/wedding-loan-calculator/' },
+        { label: 'HotelRoomBlock',        href: '/hotel-room-block-calculator/' },
         { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
         { label: 'BMI Calculator',         href: '/bmi-calculator/' },
         { label: 'Discount Calculator',    href: '/discount-calculator/' },
@@ -90,6 +91,7 @@
       tools: [
         { label: 'Unit Converter', href: '/unit-converter/' },
         { label: 'Age Calculator', href: '/age-calculator/' },
+        { label: 'Epoch Converter', href: '/epoch-converter/' },
       ]
     },
   /* ---- Categories added 2026-08-28 to cover full tool inventory ---- */
@@ -206,6 +208,10 @@
         { label: 'RoofReplacementCost', href: '/roof-replacement-cost-calculator/' },
         { label: 'Countertop', href: '/countertop-calculator/' },
         { label: 'InvisalignCost', href: '/invisalign-cost-calculator/' },
+        { label: 'DentalImplantCost', href: '/dental-implant-cost-calculator/' },
+        { label: 'AllOn4Texas', href: '/all-on-4-dental-implants-cost-texas/' },
+        { label: 'AllOn4California', href: '/all-on-4-dental-implants-cost-california/' },
+        { label: 'AllOn4Florida', href: '/all-on-4-dental-implants-cost-florida/' },
         { label: 'PlasticSurgeryCost', href: '/plastic-surgery-cost-calculator/' },
         { label: 'VasectomyReversalCost', href: '/vasectomy-reversal-cost-calculator/' },
         { label: 'IncorporationCost', href: '/incorporation-cost-calculator/' },
@@ -235,6 +241,8 @@
         { label: 'AutoRefinance', href: '/auto-refinance-calculator/' },
         { label: 'ExtendedCarWarrantyCost', href: '/extended-car-warranty-cost-calculator/' },
         { label: 'Mpg', href: '/mpg-calculator/' },
+        { label: 'HybridBatteryCost', href: '/hybrid-battery-replacement-cost-calculator/' },
+        { label: 'TireSize', href: '/tire-size-calculator/' },
       ]
     },
     {
@@ -254,8 +262,11 @@
         { label: 'WaterIntake', href: '/water-intake-calculator/' },
         { label: 'HydrationNeedsByWeight', href: '/hydration-needs-by-weight/' },
         { label: 'DogFood', href: '/dog-food-calculator/' },
+        { label: 'DogAge', href: '/dog-age-calculator/' },
         { label: 'CatFood', href: '/cat-food-calculator/' },
         { label: 'PetShippingCost', href: '/pet-shipping-cost-calculator/' },
+        { label: 'VetVisitCost', href: '/vet-visit-cost-calculator/' },
+        { label: 'DogDnaCost', href: '/dog-dna-test-cost-comparison/' },
         { label: 'HeartRateZone', href: '/heart-rate-zone-calculator/' },
         { label: 'GlucoseA1cConverter', href: '/glucose-a1c-converter/' },
         { label: 'Bac', href: '/bac-calculator/' },
@@ -423,6 +434,12 @@
         { label: 'Age', href: '/age-calculator/' },
         { label: 'Gpa', href: '/gpa-calculator/' },
         { label: 'SatScore', href: '/sat-score-calculator/' },
+        { label: 'ApScore', href: '/ap-score-calculator/' },
+        { label: 'AnniversaryGifts', href: '/anniversary-gifts-by-year/' },
+        { label: 'Anniversary1stPaper', href: '/1st-anniversary-gifts/' },
+        { label: 'Anniversary5thWood', href: '/5th-anniversary-gifts/' },
+        { label: 'Anniversary25thSilver', href: '/25th-anniversary-gifts/' },
+        { label: 'Anniversary50thGold', href: '/50th-anniversary-gifts/' },
       ]
     },
     {
@@ -664,7 +681,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 320+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 340+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +
