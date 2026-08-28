@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV Charging Cost Calculator — Free Auto Tool | ToolAspect</title>
+<meta name="description" content="Free EV charging cost calculator. Home charging at $0.17/kWh runs about $49/mo for 1,000 miles. Compare kWh × mi/kWh against a gas car's MPG.">
+<link rel="canonical" href="https://toolaspect.com/ev-charging-cost-calculator/">
+<meta name="keywords" content="ev charging cost calculator, how much to charge an ev, electric car charging cost, ev cost per mile, home charging cost, kwh cost calculator, ev vs gas cost">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"EV Charging Cost Calculator","description":"Free EV charging cost calculator. Estimate home and public charging costs from electricity price, efficiency in mi/kWh, and monthly mileage, with a gas-car comparison.","url":"https://toolaspect.com/ev-charging-cost-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much does it cost to charge an EV per month?","acceptedAnswer":{"@type":"Answer","text":"A typical EV driven 1,000 miles a month uses about 286 kWh (at 3.5 mi/kWh). At the U.S. average home rate of roughly $0.17/kWh that's $49 a month, or about $583 a year. The same miles in a 30-mpg gas car at $3.20 a gallon cost about $107 a month."}},
+{"@type":"Question","name":"Is charging an EV cheaper than gas?","acceptedAnswer":{"@type":"Answer","text":"At home, almost always. Home charging at $0.17/kWh works out to about 4.9 cents a mile, versus 10.7 cents a mile for a 30-mpg car at $3.20 a gallon. Public DC fast charging flips the math at some stations: $0.48/kWh costs 13.7 cents a mile, more than that gas car."}},
+{"@type":"Question","name":"How do I calculate EV charging cost?","acceptedAnswer":{"@type":"Answer","text":"Divide your monthly miles by your efficiency in miles per kWh to get kWh used, then multiply by your electricity price per kWh. For a Tesla Model 3 at 3.9 mi/kWh driving 1,000 miles: 256 kWh × $0.17 = about $44 a month."}},
+{"@type":"Question","name":"What is a good mi/kWh efficiency for an EV?","acceptedAnswer":{"@type":"Answer","text":"Most EVs average 2.5 to 4 mi/kWh. Compact and midsize EVs like the Model 3, Model Y, and Chevy Bolt run 3.4 to 4.0; heavier electric trucks like the F-150 Lightning and Rivian R1T run closer to 2.0 to 2.5. Cold weather, highway speeds, and heat pump use can cut efficiency 10 to 25 percent."}},
+{"@type":"Question","name":"Does Level 1 vs Level 2 charging change the cost?","acceptedAnswer":{"@type":"Answer","text":"Not the rate you pay per kWh, which is set by your utility, but Level 1 (120V) is so slow many owners end up topping up at public stations, where prices run 2 to 3 times the home rate. A Level 2 home charger keeps nearly all your kWh on the cheap home meter."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Auto Calculators","item":"https://toolaspect.com/auto-tools/"},{"@type":"ListItem","position":3,"name":"EV Charging Cost Calculator","item":"https://toolaspect.com/ev-charging-cost-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⚡ EV Charging Cost Calculator</h1>
+<p>What it really costs to charge an electric car, at home or on the road</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> Charging a typical EV (3.5 mi/kWh) for 1,000 miles a month costs about <strong>$49 a month at the U.S. average home rate of $0.17/kWh</strong> (286 kWh). The same miles in a 30-mpg gas car at $3.20/gallon run about $107. But public DC fast charging at $0.48/kWh flips it: $137 a month, or 13.7¢ a mile versus the gas car's 10.7¢.
+</div>
+
+<div class="section-card">
+<h2>Your EV</h2>
+<div class="input-grid">
+<div class="input-group"><label>Miles per Month</label><input type="number" id="miles" value="1000" min="0" step="10"></div>
+<div class="input-group"><label>Efficiency (mi/kWh)</label><input type="number" id="eff" value="3.5" min="0.5" max="8" step="0.1"></div>
+<div class="input-group"><label>% Charging at Home</label><input type="number" id="homePct" value="100" min="0" max="100" step="5"></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Electricity &amp; Gas Prices</h2>
+<div class="input-grid">
+<div class="input-group"><label>Home Rate ($/kWh)</label><input type="number" id="homeRate" value="0.17" min="0" step="0.01"></div>
+<div class="input-group"><label>Public Rate ($/kWh)</label><input type="number" id="pubRate" value="0.48" min="0" step="0.01"></div>
+<div class="input-group"><label>Gas Price ($/gal)</label><input type="number" id="gasPrice" value="3.20" min="0" step="0.01"></div>
+<div class="input-group"><label>Comparison Car (MPG)</label><input type="number" id="mpg" value="30" min="1" max="200" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Monthly Charging Cost</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">kWh Used / Month</div><div class="ri-value" id="kwhVal">—</div></div>
+<div class="result-item"><div class="ri-label">Effective $/kWh (blended)</div><div class="ri-value" id="blendVal">—</div></div>
+<div class="result-item"><div class="ri-label">EV Cost per Mile</div><div class="ri-value" id="cpmVal">—</div></div>
+<div class="result-item"><div class="ri-label">Gas Car Cost / Month</div><div class="ri-value" id="gasVal">—</div></div>
+<div class="result-item"><div class="ri-label">Monthly Savings vs Gas</div><div class="ri-value" id="saveVal">—</div></div>
+<div class="result-item"><div class="ri-label">Annual Savings vs Gas</div><div class="ri-value" id="saveYr">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/fuel-cost-calculator/">Fuel Cost</a></li><li style="margin:4px 0"><a href="/mpg-calculator/">MPG Calculator</a></li><li style="margin:4px 0"><a href="/car-payment-calculator/">Car Payment</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-much-does-it-cost-to-charge-an-ev/">Read the EV charging guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Typical EV Efficiency (mi/kWh)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Vehicle</th><th>Approx. Efficiency</th><th>Cost per Mile @ $0.17/kWh</th><th>1,000 mi/mo at Home</th></tr></thead>
+<tbody>
+<tr><td>Tesla Model 3</td><td>3.6 – 4.0</td><td>4.3¢ – 4.7¢</td><td>$43 – $47</td></tr>
+<tr><td>Tesla Model Y</td><td>3.3 – 3.7</td><td>4.6¢ – 5.2¢</td><td>$46 – $52</td></tr>
+<tr><td>Chevy Bolt / Equinox EV</td><td>3.3 – 3.7</td><td>4.6¢ – 5.2¢</td><td>$46 – $52</td></tr>
+<tr><td>Hyundai Ioniq 5 / Kia EV6</td><td>3.0 – 3.4</td><td>5.0¢ – 5.7¢</td><td>$50 – $57</td></tr>
+<tr><td>Ford Mustang Mach-E</td><td>3.0 – 3.3</td><td>5.2¢ – 5.7¢</td><td>$52 – $57</td></tr>
+<tr><td>VW ID.4</td><td>3.0 – 3.2</td><td>5.3¢ – 5.7¢</td><td>$53 – $57</td></tr>
+<tr><td>Nissan Leaf</td><td>3.0 – 3.4</td><td>5.0¢ – 5.7¢</td><td>$50 – $57</td></tr>
+<tr><td>Ford F-150 Lightning</td><td>2.0 – 2.4</td><td>7.1¢ – 8.5¢</td><td>$71 – $85</td></tr>
+<tr><td>Rivian R1T / R1S</td><td>2.1 – 2.5</td><td>6.8¢ – 8.1¢</td><td>$68 – $81</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Approximate EPA-rated combined figures; real-world results drop 10 to 25% in cold weather, at highway speed, or with heavy loads. The per-mile and monthly columns are computed at $0.17/kWh.</p>
+</div>
+
+<div class="section-card">
+<h2>Home Electricity Rates, Approximate (¢/kWh)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>State</th><th>Typical Residential Rate</th><th>Cost per Mile @ 3.5 mi/kWh</th></tr></thead>
+<tbody>
+<tr><td>Hawaii</td><td>40¢ – 45¢</td><td>11.4¢ – 12.9¢</td></tr>
+<tr><td>California</td><td>29¢ – 33¢</td><td>8.3¢ – 9.4¢</td></tr>
+<tr><td>Massachusetts / Connecticut</td><td>28¢ – 32¢</td><td>8.0¢ – 9.1¢</td></tr>
+<tr><td>New York</td><td>23¢ – 27¢</td><td>6.6¢ – 7.7¢</td></tr>
+<tr><td>Michigan</td><td>19¢ – 21¢</td><td>5.4¢ – 6.0¢</td></tr>
+<tr><td>U.S. average</td><td>16¢ – 18¢</td><td>4.6¢ – 5.1¢</td></tr>
+<tr><td>Texas / Florida</td><td>14¢ – 17¢</td><td>4.0¢ – 4.9¢</td></tr>
+<tr><td>Georgia / North Carolina</td><td>13¢ – 15¢</td><td>3.7¢ – 4.3¢</td></tr>
+<tr><td>Washington / Louisiana</td><td>11¢ – 14¢</td><td>3.1¢ – 4.0¢</td></tr>
+<tr><td>Idaho / Utah / North Dakota</td><td>9¢ – 12¢</td><td>2.6¢ – 3.4¢</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Approximate recent residential rates based on EIA data; check your utility bill for your exact rate. Many utilities also offer off-peak EV rates of 5¢ to 12¢, which cut these numbers by half or more.</p>
+</div>
+
+<div class="content-section">
+<h2>How the EV Charging Cost Calculator Works</h2>
+<p>Charging cost is the product of two numbers: how much electricity the car uses (kWh) and what you pay for it ($/kWh). The car side is your mileage divided by efficiency in mi/kWh. The price side is your utility's rate at home, or the station's rate in public, blended by the share of charging you do at each.</p>
+<h3>The formula</h3>
+<p>kWh per month = miles ÷ mi/kWh. Monthly cost = kWh × price per kWh. For a mix, each share uses its own price: cost = miles × (home% ÷ efficiency × home rate + public% ÷ efficiency × public rate). Per-mile cost is just price ÷ efficiency, which makes the gas comparison easy: gas per mile = price per gallon ÷ MPG.</p>
+<h3>How to use it</h3>
+<p>Enter your monthly miles and your car's mi/kWh (use the table above if you're not sure; 3.5 is a decent default for most non-truck EVs). Put your actual utility rate in the home field, from your bill or your utility's website. Adjust the public rate to match the networks you actually use, and set the gas price and MPG to the car you'd otherwise drive.</p>
+<h3>A worked example</h3>
+<p>Take 1,000 miles a month in a Hyundai Ioniq 5 at 3.3 mi/kWh. That's 1000 ÷ 3.3 = 303 kWh. At a $0.15 home rate in Georgia, the month costs $45.45, or 4.5¢ a mile. A 32-mpg gas compact at $3.20 costs $100 a month for the same miles, so the EV saves about $655 a year charging at home.</p>
+<p>Now the flip side. Charge that same car exclusively on DC fast chargers at $0.48/kWh and the month costs $145.45, or 14.5¢ a mile — 4.5¢ more per mile than the gas compact. That's the whole EV budget lesson in one calculation: home kWh are cheap, public kWh often aren't, and the percent-at-home slider does more for your bill than the car you pick.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How much does it cost to charge an EV per month?</h3><p>A typical EV driven 1,000 miles a month uses about 286 kWh (at 3.5 mi/kWh). At the U.S. average home rate of roughly $0.17/kWh that's $49 a month, or about $583 a year. The same miles in a 30-mpg gas car at $3.20 a gallon cost about $107 a month.</p></div>
+<div class="faq-item"><h3>Is charging an EV cheaper than gas?</h3><p>At home, almost always. Home charging at $0.17/kWh works out to about 4.9 cents a mile, versus 10.7 cents a mile for a 30-mpg car at $3.20 a gallon. Public DC fast charging flips the math at some stations: $0.48/kWh costs 13.7 cents a mile, more than that gas car.</p></div>
+<div class="faq-item"><h3>How do I calculate EV charging cost?</h3><p>Divide your monthly miles by your efficiency in miles per kWh to get kWh used, then multiply by your electricity price per kWh. For a Tesla Model 3 at 3.9 mi/kWh driving 1,000 miles: 256 kWh × $0.17 = about $44 a month.</p></div>
+<div class="faq-item"><h3>What is a good mi/kWh efficiency for an EV?</h3><p>Most EVs average 2.5 to 4 mi/kWh. Compact and midsize EVs like the Model 3, Model Y, and Chevy Bolt run 3.4 to 4.0; heavier electric trucks like the F-150 Lightning and Rivian R1T run closer to 2.0 to 2.5. Cold weather, highway speeds, and heat pump use can cut efficiency 10 to 25 percent.</p></div>
+<div class="faq-item"><h3>Does Level 1 vs Level 2 charging change the cost?</h3><p>Not the rate you pay per kWh, which is set by your utility, but Level 1 (120V) is so slow many owners end up topping up at public stations, where prices run 2 to 3 times the home rate. A Level 2 home charger keeps nearly all your kWh on the cheap home meter.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/fuel-cost-calculator/">⛽ Fuel Cost Calculator</a>
+<a href="/mpg-calculator/">🚗 MPG Calculator</a>
+<a href="/car-payment-calculator/">💳 Car Payment Calculator</a>
+<a href="/car-affordability-calculator/">🧮 Car Affordability</a>
+<a href="/car-insurance-estimator/">🛡️ Car Insurance Estimator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt$(n){return (n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:0});}
+function fmt2(n){return (n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var miles=parseFloat(document.getElementById('miles').value)||0;
+  var eff=parseFloat(document.getElementById('eff').value)||0;
+  var homePct=Math.min(100,Math.max(0,parseFloat(document.getElementById('homePct').value)||0))/100;
+  var homeRate=parseFloat(document.getElementById('homeRate').value)||0;
+  var pubRate=parseFloat(document.getElementById('pubRate').value)||0;
+  var gasPrice=parseFloat(document.getElementById('gasPrice').value)||0;
+  var mpg=parseFloat(document.getElementById('mpg').value)||0;
+  var hero=document.getElementById('heroVal'),sub=document.getElementById('heroSub');
+  if(miles<=0||eff<=0){
+    animateValue(hero,'—');sub.textContent='Enter your miles and efficiency';
+    ['kwhVal','blendVal','cpmVal','gasVal','saveVal','saveYr'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+  var kwh=miles/eff;
+  var blend=homePct*homeRate+(1-homePct)*pubRate;
+  var cost=kwh*blend;
+  var cpm=blend/eff;
+  var gasMo=mpg>0?miles/mpg*gasPrice:0;
+  var save=gasMo-cost;
+  animateValue(hero,fmt2(cost)+'/mo');
+  sub.textContent=fmt2(cost*12)+' per year · '+kwh.toFixed(0)+' kWh at '+blend.toFixed(3)+' $/kWh';
+  animateValue(document.getElementById('kwhVal'),kwh.toFixed(0)+' kWh');
+  animateValue(document.getElementById('blendVal'),'$'+blend.toFixed(3));
+  animateValue(document.getElementById('cpmVal'),(cpm*100).toFixed(1)+'¢');
+  animateValue(document.getElementById('gasVal'),mpg>0?fmt2(gasMo):'—');
+  animateValue(document.getElementById('saveVal'),fmt2(save));
+  animateValue(document.getElementById('saveYr'),fmt$(save*12));
+}
+['miles','eff','homePct','homeRate','pubRate','gasPrice','mpg'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease vs Buy Car Calculator — Free Auto Tool | ToolAspect</title>
+<meta name="description" content="Lease vs buy with real NPV math. A $35,000 car costs $19,851 leased vs $21,458 bought over 36 months at 12k mi/yr. Payments, mileage, and equity compared.">
+<link rel="canonical" href="https://toolaspect.com/lease-vs-buy-car-calculator/">
+<meta name="keywords" content="lease vs buy calculator, lease vs buy car, should i lease or buy a car, leasing vs buying a car math, money factor calculator, lease payment formula, npv lease vs buy">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Lease vs Buy Car Calculator","description":"Free lease vs buy calculator. Builds the lease payment from depreciation plus the money-factor rent charge, runs the loan in parallel, credits the equity left at lease-end, prices mileage overage, and totals both paths over the same months.","url":"https://toolaspect.com/lease-vs-buy-car-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is it better to lease or buy a car?","acceptedAnswer":{"@type":"Answer","text":"Over the lease term, buying usually costs less per mile if you keep the car past the loan; leasing usually costs less out-of-pocket per month and can win over exactly the term if the residual is high and your mileage is low. On a $35,000 car (36-month lease, 57% residual, 0.0025 money factor, 6% tax) leasing runs $476.43 a month and $19,851 total, while buying with a 60-month 7% loan runs $663.54 a month and nets $21,458 after selling at lease-end value. But drive 18,000 miles a year and $4,500 of overage flips it: buying wins by $2,894."}},
+{"@type":"Question","name":"How is a lease payment calculated?","acceptedAnswer":{"@type":"Answer","text":"Three parts. Depreciation: (negotiated price minus down payment, minus residual value) / months. Rent charge: (cap cost plus residual) x money factor. Tax, in most states, applied to the monthly payment. On a $35,000 car leased at $33,500 with $2,000 down for 36 months at a 57% residual and 0.0025 MF: depreciation is $320.83, rent is $128.63, and with 6% tax the payment is $476.43."}},
+{"@type":"Question","name":"What is a money factor and how do I convert it to APR?","acceptedAnswer":{"@type":"Answer","text":"The money factor is the lease's interest rate expressed small: multiply by 2400 to get the equivalent APR. A 0.00250 MF is a 6% APR, 0.00350 is 8.4%, and 0.00150 is 3.6%. If a dealer quotes the money factor as something like 2.5, that's the APR divided by ten, so 2.5 means 0.00250. Always convert before comparing a lease's financing cost to a loan rate."}},
+{"@type":"Question","name":"Does mileage really decide lease vs buy?","acceptedAnswer":{"@type":"Answer","text":"Often. A 36,000-mile allowance over three years covers 12,000 a year. At 15,000 a year you're 9,000 over, which is $2,250 at the typical $0.25 per mile, and at 18,000 you're $4,500 in penalties, payable at turn-in. Buying has no mileage meter. If your annual miles vary or run above 12-15k, either negotiate a higher allowance up front (15k typically adds $20-$30 a month) or buy."}},
+{"@type":"Question","name":"Why does buying look worse over 36 months but win long-term?","acceptedAnswer":{"@type":"Answer","text":"The comparison horizon. Over exactly 36 months, the buyer has paid 36 loan payments but still holds a car worth roughly the residual value; subtract that equity and the net cost is competitive. From month 37 on, the lessee starts paying for a whole new car while the buyer's remaining payments shrink the gap and eventually stop. Buying's advantage compounds the longer you keep the car after payoff."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Auto Calculators","item":"https://toolaspect.com/auto-tools/"},{"@type":"ListItem","position":3,"name":"Lease vs Buy Car Calculator","item":"https://toolaspect.com/lease-vs-buy-car-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🚗 Lease vs Buy Car Calculator</h1>
+<p>Same car, same months, honest totals: payments, depreciation, mileage, equity</p>
+</div>
+<p class="direct-answer">On a $35,000 car (negotiated to $33,500, $2,000 down, 36 months, 57% residual, 0.0025 money factor, 6% sales tax), the lease payment is $476.43 and the 3-year total with fees is $19,851. Buying with a 60-month loan at 7% APR runs $663.54 a month, but after 36 months the car is worth about $19,950 against a $14,820 loan balance, so the net cost is $21,458. Leasing wins that race by $1,606, at 12,000 miles a year. Drive 15,000 and $2,250 of mileage penalties hand the win to buying; at 18,000, buying wins by $2,894. That's the whole lease-vs-buy decision in one lever: how many miles you drive, against how much equity you end up holding.</p>
+
+<div class="section-card">
+<h2>The Car</h2>
+<div class="input-grid">
+<div class="input-group"><label>MSRP ($)</label><input type="number" id="msrp" value="35000" min="1000" step="500"></div>
+<div class="input-group"><label>Negotiated Price ($)</label><input type="number" id="price" value="33500" min="1000" step="500"></div>
+<div class="input-group"><label>Down Payment / Cap Reduction ($)</label><input type="number" id="down" value="2000" min="0" step="250"></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Upfront Fees, Both Paths ($)</label><input type="number" id="fees" value="700" min="0" step="50"></div>
+<div class="input-group"><label>Sales Tax Rate (%)</label><input type="number" id="tax" value="6" min="0" max="12" step="0.25"></div>
+<div class="input-group"><label>&nbsp;</label><div style="padding:.55rem 0;color:var(--muted);font-size:.8rem">Lease taxes each payment (most states); buying pays tax on the price, rolled into the loan here.</div></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>The Lease</h2>
+<div class="input-grid">
+<div class="input-group"><label>Term (months)</label><select id="term"><option>24</option><option selected>36</option><option>48</option></select></div>
+<div class="input-group"><label>Residual Value (% of MSRP)</label><input type="number" id="resPct" value="57" min="30" max="85" step="1"></div>
+<div class="input-group"><label>Money Factor</label><input type="number" id="mf" value="0.0025" min="0.0001" max="0.01" step="0.0001"></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Miles Allowed per Year</label><select id="miles"><option>10000</option><option selected>12000</option><option>15000</option></select></div>
+<div class="input-group"><label>Your Miles per Year</label><input type="number" id="myMiles" value="12000" min="2000" max="40000" step="500"></div>
+<div class="input-group"><label>Overage Charge ($/mile)</label><input type="number" id="over" value="0.25" min="0" max="1" step="0.05"></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>The Loan (Buy)</h2>
+<div class="input-grid">
+<div class="input-group"><label>Loan APR (%)</label><input type="number" id="apr" value="7" min="0" max="30" step="0.1"></div>
+<div class="input-group"><label>Loan Term (months)</label><select id="loanTerm"><option>48</option><option selected>60</option><option>72</option></select></div>
+<div class="input-group"><label>&nbsp;</label><div style="padding:.55rem 0;color:var(--muted);font-size:.8rem">Equity at lease-end = car's value (residual) minus loan balance after the lease term's months.</div></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Cheaper Over the Lease Term</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Lease Payment / mo</div><div class="ri-value" id="leaseMo">—</div></div>
+<div class="result-item"><div class="ri-label">Loan Payment / mo</div><div class="ri-value" id="buyMo">—</div></div>
+<div class="result-item"><div class="ri-label">Lease Total (term, incl. overage)</div><div class="ri-value" id="leaseTot">—</div></div>
+<div class="result-item"><div class="ri-label">Buy Net Cost (term, minus equity)</div><div class="ri-value" id="buyTot">—</div></div>
+<div class="result-item"><div class="ri-label">Equity If You Buy</div><div class="ri-value" id="equity">—</div></div>
+<div class="result-item"><div class="ri-label">Mileage Overage at Turn-In</div><div class="ri-value" id="overage">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/lease-payment-calculator/">Lease Payment</a></li><li style="margin:4px 0"><a href="/car-payment-calculator/">Car Payment</a></li><li style="margin:4px 0"><a href="/car-affordability-calculator/">Car Affordability</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/lease-vs-buy-a-car/">Lease vs buy: the real math</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Money Factor to APR Conversion</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Money Factor</th><th>Equivalent APR</th><th>Rent charge per month on $50,000 (cap + residual)</th></tr></thead>
+<tbody>
+<tr><td>0.00150</td><td>3.60%</td><td>$75</td></tr>
+<tr><td>0.00200</td><td>4.80%</td><td>$100</td></tr>
+<tr><td>0.00250</td><td>6.00%</td><td>$125</td></tr>
+<tr><td>0.00300</td><td>7.20%</td><td>$150</td></tr>
+<tr><td>0.00350</td><td>8.40%</td><td>$175</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">APR = money factor x 2400. Dealers sometimes quote the "lease rate" as 2.5 instead of 0.00250, which is the same number divided by 100 and multiplied by 10; convert everything to a money factor before comparing. The rent charge is applied to the average of cap cost and residual, not the cap cost alone, so a high residual softens the finance charge.</p>
+</div>
+
+<div class="section-card">
+<h2>Typical Residuals by Lease Term (% of MSRP)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Term</th><th>Typical residual range</th><th>Residual of a $35,000 MSRP</th><th>Depreciation fee (at $31,500 cap, 36 mo row uses its own term)</th></tr></thead>
+<tbody>
+<tr><td>24 mo</td><td>60% – 68%</td><td>$21,000 – $23,800</td><td>$321 – $438/mo</td></tr>
+<tr><td>36 mo</td><td>50% – 60%</td><td>$17,500 – $21,000</td><td>$292 – $389/mo</td></tr>
+<tr><td>48 mo</td><td>40% – 48%</td><td>$14,000 – $16,800</td><td>$306 – $365/mo</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Depreciation fee = (cap cost $31,500 − residual) / term months: 24-month rows at 60% and 68%, 36-month at 50% and 60%, 48-month at 40% and 48%. Popular, supply-constrained models hold residuals near the top of the band, which is why the same payment goes further on a Civic than on a slow-selling sedan. The manufacturer's lease subvention (a subsidized MF or inflated residual) can beat both bands, so check current lease programs before assuming these ranges.</p>
+</div>
+
+<div class="section-card">
+<h2>The Mileage Table: Who Wins at What Mileage</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Your driving</th><th>Mileage overage</th><th>Lease 3-yr total</th><th>Buy net cost</th><th>Winner</th></tr></thead>
+<tbody>
+<tr><td>10,000 mi/yr</td><td>$0</td><td>$19,851</td><td>$21,458</td><td>Lease by $1,606</td></tr>
+<tr><td>12,000 mi/yr</td><td>$0</td><td>$19,851</td><td>$21,458</td><td>Lease by $1,606</td></tr>
+<tr><td>15,000 mi/yr</td><td>$2,250</td><td>$22,101</td><td>$21,458</td><td>Buy by $644</td></tr>
+<tr><td>18,000 mi/yr</td><td>$4,500</td><td>$24,351</td><td>$21,458</td><td>Buy by $2,894</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Base case: $35,000 MSRP at $33,500, $2,000 down, $700 fees, 36-month lease at 57% residual and 0.0025 MF with 6% tax, versus a 60-month 7% loan, comparing over 36 months with the car valued at residual. The lease allowance is 36,000 miles over the term. This table is the entire argument: below the allowance the lease's lower total wins, above it the overage flips the verdict fast, at $0.25 a mile.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Lease vs Buy Calculator Works</h2>
+<p>Most lease-vs-buy advice compares a monthly payment to a monthly payment, which is not a comparison. This calculator runs both paths to the same finish line, the end of the lease term, and nets out who holds what when the music stops.</p>
+<h3>The formulas</h3>
+<p><strong>Lease:</strong> residual = MSRP x residual %. Cap cost = negotiated price − down payment. Depreciation fee = (cap cost − residual) / months. Rent charge = (cap cost + residual) x money factor. Payment = (depreciation + rent) x (1 + tax). Lease total = down + fees + payments + mileage overage, and the lessee owns nothing at the end.</p>
+<p><strong>Buy:</strong> loan = price x (1 + tax) − down, amortized at APR over the loan term. At the end of the lease term's months, equity = car's value (estimated at residual) − remaining loan balance. Net cost = down + fees + payments made − equity.</p>
+<h3>How to use it</h3>
+<p>Enter the deal in front of you: sticker, negotiated price, and the down payment the dealer's quoting. Pull the money factor and residual off the lease worksheet (ask; they're required to disclose them in the contract). Set your real annual mileage, not your aspirational one. The verdict updates as you type, and the mileage table shows how close the call is around your number.</p>
+<h3>A worked example</h3>
+<p>The $35,000 SUV again, leased at $33,500 with $2,000 down for 36 months, 57% residual ($19,950), 0.0025 money factor, 6% tax. Cap cost is $31,500. Depreciation: (31,500 − 19,950) / 36 = $320.83. Rent: (31,500 + 19,950) x 0.0025 = $128.63. Payment with tax: ($320.83 + $128.63) x 1.06 = $476.43, and the 36-month total with down and fees is $19,851.</p>
+<p>Buying the same car: sales tax on the price goes into the loan, so you finance $33,510 at 7% for 60 months, a $663.54 payment. After 36 payments the balance is $14,820 while the SUV is still worth about $19,950, so the buyer's net cost is down + fees + 36 payments − $5,130 equity = $21,458. Leasing saved $1,606 over the term, but the lessee walks away empty-handed while the buyer is 39 months from owning outright.</p>
+<p>Now push the mileage. At 15,000 miles a year the lessee owes 9,000 over x $0.25 = $2,250 at turn-in, and the lease total becomes $22,101: buying wins by $644. At 18,000, buying wins by $2,894. And a 60% residual (a hot model) drops the payment to $448.29 and the lease total to $18,839, widening the lease's win to $2,619. Every lever, priced.</p>
+<p>What this calculator deliberately leaves out: maintenance (lease cars are under warranty; owned cars past year 3 aren't), the option value of walking away from a lemon, disposition fees on some leases ($300-$500), and disposition of the buy-side car's actual resale value versus the residual guess. None of those change the direction of the answer in most cases, but they can move a close call.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is it better to lease or buy a car?</h3><p>Over the lease term, buying usually costs less per mile if you keep the car past the loan; leasing usually costs less out-of-pocket per month and can win over exactly the term if the residual is high and your mileage is low. On a $35,000 car (36-month lease, 57% residual, 0.0025 money factor, 6% tax) leasing runs $476.43 a month and $19,851 total, while buying with a 60-month 7% loan runs $663.54 a month and nets $21,458 after selling at lease-end value. But drive 18,000 miles a year and $4,500 of overage flips it: buying wins by $2,894.</p></div>
+<div class="faq-item"><h3>How is a lease payment calculated?</h3><p>Three parts. Depreciation: (negotiated price minus down payment, minus residual value) / months. Rent charge: (cap cost plus residual) x money factor. Tax, in most states, applied to the monthly payment. On a $35,000 car leased at $33,500 with $2,000 down for 36 months at a 57% residual and 0.0025 MF: depreciation is $320.83, rent is $128.63, and with 6% tax the payment is $476.43.</p></div>
+<div class="faq-item"><h3>What is a money factor and how do I convert it to APR?</h3><p>The money factor is the lease's interest rate expressed small: multiply by 2400 to get the equivalent APR. A 0.00250 MF is a 6% APR, 0.00350 is 8.4%, and 0.00150 is 3.6%. If a dealer quotes the money factor as something like 2.5, that's the APR divided by ten, so 2.5 means 0.00250. Always convert before comparing a lease's financing cost to a loan rate.</p></div>
+<div class="faq-item"><h3>Does mileage really decide lease vs buy?</h3><p>Often. A 36,000-mile allowance over three years covers 12,000 a year. At 15,000 a year you're 9,000 over, which is $2,250 at the typical $0.25 per mile, and at 18,000 you're $4,500 in penalties, payable at turn-in. Buying has no mileage meter. If your annual miles vary or run above 12-15k, either negotiate a higher allowance up front (15k typically adds $20-$30 a month) or buy.</p></div>
+<div class="faq-item"><h3>Why does buying look worse over 36 months but win long-term?</h3><p>The comparison horizon. Over exactly 36 months, the buyer has paid 36 loan payments but still holds a car worth roughly the residual value; subtract that equity and the net cost is competitive. From month 37 on, the lessee starts paying for a whole new car while the buyer's remaining payments shrink the gap and eventually stop. Buying's advantage compounds the longer you keep the car after payoff.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/lease-payment-calculator/">🧾 Lease Payment Calculator</a>
+<a href="/car-payment-calculator/">💳 Car Payment Calculator</a>
+<a href="/car-affordability-calculator/">🚘 Car Affordability</a>
+<a href="/auto-loan-calculator/">🏦 Auto Loan Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n){return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function pmt(P,aprPct,n){
+  var r=aprPct/100/12;
+  if(n<=0||P<=0)return 0;
+  if(r===0)return P/n;
+  return P*r/(1-Math.pow(1+r,-n));
+}
+function balanceAfter(P,aprPct,pay,m){
+  var r=aprPct/100/12;
+  return P*Math.pow(1+r,m)-pay*((Math.pow(1+r,m)-1)/r);
+}
+function calc(){
+  var msrp=parseFloat(document.getElementById('msrp').value)||0;
+  var price=parseFloat(document.getElementById('price').value)||0;
+  var down=parseFloat(document.getElementById('down').value)||0;
+  var fees=parseFloat(document.getElementById('fees').value)||0;
+  var tax=parseFloat(document.getElementById('tax').value)||0;
+  var term=parseInt(document.getElementById('term').value,10)||36;
+  var resPct=parseFloat(document.getElementById('resPct').value)||0;
+  var mf=parseFloat(document.getElementById('mf').value)||0;
+  var milesAllow=parseInt(document.getElementById('miles').value,10)||12000;
+  var myMiles=parseFloat(document.getElementById('myMiles').value)||0;
+  var overRate=parseFloat(document.getElementById('over').value)||0;
+  var apr=parseFloat(document.getElementById('apr').value)||0;
+  var loanTerm=parseInt(document.getElementById('loanTerm').value,10)||60;
+
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+  if(msrp<=0||price<=0||term<=0){
+    animateValue(hero,'—');
+    sub.textContent='Enter the deal numbers';
+    ['leaseMo','buyMo','leaseTot','buyTot','equity','overage'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+
+  var residual=msrp*resPct/100;
+  var cap=price-down;
+  var depFee=(cap-residual)/term;
+  var rentFee=(cap+residual)*mf;
+  var leaseMo=(depFee+rentFee)*(1+tax/100);
+  var overMiles=Math.max(0,myMiles*term/12-milesAllow*term/12);
+  var overage=overMiles*overRate;
+  var leaseTot=down+fees+leaseMo*term+overage;
+
+  var loan=price*(1+tax/100)-down;
+  var buyMo=pmt(loan,apr,loanTerm);
+  var bal=balanceAfter(loan,apr,buyMo,term);
+  var equity=residual-bal;
+  var buyTot=down+fees+buyMo*term-equity;
+
+  animateValue(document.getElementById('leaseMo'),fmt(leaseMo));
+  animateValue(document.getElementById('buyMo'),fmt(buyMo));
+  animateValue(document.getElementById('leaseTot'),fmt(leaseTot));
+  animateValue(document.getElementById('buyTot'),fmt(buyTot));
+  animateValue(document.getElementById('equity'),fmt(equity));
+  animateValue(document.getElementById('overage'),overage>0?fmt(overage)+' ('+Math.round(overMiles).toLocaleString('en-US')+' mi over)':'$0');
+
+  var diff=Math.abs(buyTot-leaseTot);
+  if(leaseTot<buyTot){
+    animateValue(hero,'Lease');
+    sub.textContent='by '+fmt(diff)+' over '+term+' months ('+myMiles.toLocaleString('en-US')+' mi/yr, '+resPct.toFixed(0)+'% residual, MF '+mf.toFixed(4)+')';
+  }else{
+    animateValue(hero,'Buy');
+    sub.textContent='by '+fmt(diff)+' over '+term+' months ('+myMiles.toLocaleString('en-US')+' mi/yr, '+apr.toFixed(1)+'% APR loan)';
+  }
+}
+['msrp','price','down','fees','tax','resPct','mf','myMiles','over','apr'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+['term','miles','loanTerm'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

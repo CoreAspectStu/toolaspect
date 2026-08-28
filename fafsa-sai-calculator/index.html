@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAFSA SAI Calculator — Free Financial Aid Tool | ToolAspect</title>
+<meta name="description" content="Free FAFSA SAI calculator for 2026-27. Official Formula A math: IPA, 22-47% brackets, Pell estimate. A $95k family of 4 scores SAI 7,978.">
+<link rel="canonical" href="https://toolaspect.com/fafsa-sai-calculator/">
+<meta name="keywords" content="fafsa sai calculator, sai calculator, student aid index calculator, efc calculator, how is sai calculated, fafsa estimate, pell grant eligibility calculator, 2026-27 sai">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"FAFSA SAI Calculator","description":"Free FAFSA SAI calculator that follows the Department of Education's 2026-27 Formula A worksheet for dependent students, including income protection allowances, the 22-47% assessment brackets, asset conversion, and a Pell Grant eligibility estimate.","url":"https://toolaspect.com/fafsa-sai-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is the SAI calculated?","acceptedAnswer":{"@type":"Answer","text":"SAI = parents' contribution + student's contribution from income + student's contribution from assets. Parent available income is AGI minus taxes paid, payroll tax, an income protection allowance, and an employment allowance; the result plus 12% of parent assets is assessed on brackets from 22% to 47%. The student's income above an $11,770 allowance is assessed at 50%, and student assets at 20%."}},
+{"@type":"Question","name":"What SAI number qualifies for a Pell Grant?","acceptedAnswer":{"@type":"Answer","text":"An SAI of 0 or below gets the maximum Pell Grant ($7,395 for 2026-27). Students with an SAI between 0 and roughly the maximum award get a partial grant of about max minus SAI. Families can also bypass the formula: if parent AGI is at or below 175% of the poverty line (225% for single parents), the student qualifies for the maximum Pell automatically."}},
+{"@type":"Question","name":"Can SAI be negative?","acceptedAnswer":{"@type":"Answer","text":"Yes, from -1,500 to 999,999. A negative SAI signals maximum financial need; -1,500 is the floor. Schools see more need than a zero SAI conveys, and some institutional aid formulas treat -1,500 as the deepest-need bucket."}},
+{"@type":"Question","name":"What's a good SAI score?","acceptedAnswer":{"@type":"Answer","text":"Lower is better. Zero or below means maximum Pell eligibility. As a rough scale for 2026-27: SAI 0-3,000 tends to qualify for large grants, 3,000-6,000 partial grants, 6,000-7,395 small grants, and above that mostly loans unless the family hits a minimum-Pell income test (AGI up to 275% of the poverty line for two-parent families, 325% for single parents)."}},
+{"@type":"Question","name":"How much does $10,000 more income change my SAI?","acceptedAnswer":{"@type":"Answer","text":"In the middle brackets, each additional $10,000 of parent AGI raises SAI by roughly $2,200 to $3,300 after taxes and allowances absorb part of it. Student income is assessed far harder: each $1,000 of student income above the $11,770 allowance adds about $500 to SAI."}},
+{"@type":"Question","name":"Do parent assets hurt more or less than income?","acceptedAnswer":{"@type":"Answer","text":"Much less. Parent assets (excluding your home and retirement accounts) convert at 12%, then get assessed inside the same brackets, so effective damage is roughly 2.6% to 5.6% of asset value. Student assets are hit at a flat 20%, which is why savings in a student's name cost about four times more than the same dollars in a parent's name."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"FAFSA SAI Calculator","item":"https://toolaspect.com/fafsa-sai-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-row{display:flex;align-items:center;gap:.5rem;margin-top:.25rem}
+.check-row input{width:1.05rem;height:1.05rem;accent-color:var(--primary);cursor:pointer}
+.check-row label{color:var(--text);font-size:.9rem;cursor:pointer}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.pell-note{background:var(--bg);border-radius:var(--radius);padding:1rem;margin-top:1rem;font-size:.92rem;line-height:1.6;color:var(--text)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.disclaimer{font-size:.8rem;color:var(--muted);line-height:1.6;margin-top:1rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🎓 FAFSA SAI Calculator</h1>
+<p>Estimate your Student Aid Index with the official 2026-27 Formula A method</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> SAI (Student Aid Index) replaces the old EFC on the FAFSA. It runs from −1,500 to 999,999, and <strong>0 or below means maximum Pell Grant eligibility</strong> ($7,395 for 2026-27). Rough benchmarks: a family of 4 earning $95,000 with $30,000 in assets scores SAI <strong>7,978</strong> (no Pell); the same family earning $48,000 scores below 0 (full Pell). Formula math: parent income above allowances is assessed 22-47%, parent assets ~2.6-5.6% effective, student income above $11,770 at 50%, student assets at 20%.
+</div>
+
+<div class="section-card">
+<h2>Parent Information (from your tax return)</h2>
+<div class="input-grid">
+<div class="input-group"><label>Parent AGI ($)</label><input type="number" id="agi" value="95000" min="0" step="500"></div>
+<div class="input-group"><label>Income Earned From Work ($)</label><input type="number" id="work" value="90000" min="0" step="500"></div>
+<div class="input-group"><label>Filing Status</label><select id="fs"><option value="mfj" selected>Married Filing Jointly</option><option value="single">Single / Head of Household</option></select></div>
+<div class="input-group"><label>Income Tax Paid, Fed + State ($)</label><input type="number" id="tax" value="9000" min="0" step="100"></div>
+<div class="input-group"><label>Untaxed Income &amp; Deductions ($)</label><input type="number" id="untaxed" value="0" min="0" step="100"></div>
+<div class="input-group"><label>Family Size (incl. student)</label><input type="number" id="fam" value="4" min="2" max="12" step="1"></div>
+<div class="input-group"><label>Cash + Investments ($)</label><input type="number" id="assets" value="30000" min="0" step="500"></div>
+<div class="input-group"><label>Child Support Received ($/yr)</label><input type="number" id="csup" value="0" min="0" step="100"></div>
+<div class="input-group"><label>Business/Farm Net Worth ($)</label><input type="number" id="biz" value="0" min="0" step="500"></div>
+</div>
+<div class="check-row"><input type="checkbox" id="singleParent"><label for="singleParent">Parent is a single parent (affects Pell income tests)</label></div>
+</div>
+
+<div class="section-card">
+<h2>Student Information</h2>
+<div class="input-grid">
+<div class="input-group"><label>Student Income ($/yr)</label><input type="number" id="sInc" value="4000" min="0" step="250"></div>
+<div class="input-group"><label>Student Tax Paid ($)</label><input type="number" id="sTax" value="0" min="0" step="50"></div>
+<div class="input-group"><label>Student Savings &amp; Investments ($)</label><input type="number" id="sAssets" value="1000" min="0" step="100"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Estimated SAI (2026-27)</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Parents' Contribution</div><div class="ri-value" id="pc">—</div></div>
+<div class="result-item"><div class="ri-label">Student Contribution (income + assets)</div><div class="ri-value" id="sc">—</div></div>
+<div class="result-item"><div class="ri-label">Parent Available Income</div><div class="ri-value" id="pai">—</div></div>
+<div class="result-item"><div class="ri-label">Parent Asset Contribution (12% × net worth)</div><div class="ri-value" id="pca">—</div></div>
+<div class="result-item"><div class="ri-label">Max-Pell AGI Cutoff</div><div class="ri-value" id="maxCut">—</div></div>
+<div class="result-item"><div class="ri-label">Min-Pell AGI Cutoff</div><div class="ri-value" id="minCut">—</div></div>
+</div>
+<div class="pell-note" id="pellNote"></div>
+<p class="disclaimer">This calculator follows the Department of Education's published 2026-27 SAI Formula A worksheet for dependent students (Tables A1, A2, A3, A5). It's an estimate for planning, not your official SAI. Your FAFSA's IRS data, state tax tables, and verification can move the number; only your school's financial aid office can tell you the real figure. Nothing here is financial aid advice.</p>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/private-student-loan-calculator/">Private Student Loan</a></li><li style="margin:4px 0"><a href="/student-loan-refinance-calculator/">Student Loan Refinance</a></li><li style="margin:4px 0"><a href="/parent-plus-loan-calculator/">Parent PLUS Loan</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-is-sai-calculated/">Read how SAI is calculated</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>2026-27 Income Protection Allowance (Table A2)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Family Size (incl. student)</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>Each additional</th></tr></thead>
+<tbody>
+<tr><td>Income protection allowance</td><td>$29,190</td><td>$36,330</td><td>$44,880</td><td>$52,950</td><td>$61,930</td><td>+$6,990</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">This much parent income is shielded from assessment before the brackets apply. The 2026-27 formula sets the parent asset protection allowance to $0 for every age, so all reported parent assets convert at 12%.</p>
+</div>
+
+<div class="section-card">
+<h2>SAI Brackets: Parents' Contribution From Adjusted Available Income (Table A5)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Adjusted Available Income</th><th>Parents' Contribution</th></tr></thead>
+<tbody>
+<tr><td>Below −$8,500</td><td>−$1,870 (a credit)</td></tr>
+<tr><td>−$8,500 to $21,800</td><td>22% of AAI</td></tr>
+<tr><td>$21,801 to $27,300</td><td>$4,796 + 25% over $21,800</td></tr>
+<tr><td>$27,301 to $32,800</td><td>$6,171 + 29% over $27,300</td></tr>
+<tr><td>$32,801 to $38,400</td><td>$7,766 + 34% over $32,800</td></tr>
+<tr><td>$38,401 to $43,900</td><td>$9,670 + 40% over $38,400</td></tr>
+<tr><td>$43,901 and up</td><td>$11,870 + 47% over $43,900</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Adjusted Available Income = Available Income (AGI + untaxed income − taxes − payroll tax − IPA − employment allowance) + 12% of parent assets. The student side is flat: 50% of student income above an $11,770 allowance, and 20% of student assets.</p>
+</div>
+
+<div class="section-card">
+<h2>Maximum Pell Grant Income Cutoffs (2024 Poverty Guidelines, 48 states)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Family Size</th><th>Poverty Line</th><th>Max Pell: Single Parent (225%)</th><th>Max Pell: Two Parents (175%)</th><th>Min Pell: Two Parents (275%)</th></tr></thead>
+<tbody>
+<tr><td>3</td><td>$25,820</td><td>$58,095</td><td>$45,185</td><td>$71,005</td></tr>
+<tr><td>4</td><td>$31,200</td><td>$70,200</td><td>$54,600</td><td>$85,800</td></tr>
+<tr><td>5</td><td>$36,580</td><td>$82,305</td><td>$64,015</td><td>$100,595</td></tr>
+<tr><td>6</td><td>$41,960</td><td>$94,410</td><td>$73,430</td><td>$115,390</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">AGI at or below these amounts shortcuts the formula to automatic maximum (or minimum) Pell consideration. Alaska and Hawaii use higher guidelines. 2026-27 uses the 2024 poverty guidelines because FAFSA looks at prior-prior year income.</p>
+</div>
+
+<div class="content-section">
+<h2>How the FAFSA SAI Calculator Works</h2>
+<p>Since 2024-25, the FAFSA produces a Student Aid Index instead of the old Expected Family Contribution. The name change is also a meaning change: SAI is strictly a need number. Schools use it to sort aid eligibility, and it's no longer divided by the number of children in college at the same time, which raised costs for multi-kid families.</p>
+<h3>The formula (Formula A, dependent students)</h3>
+<p>Parent side: start with AGI, add untaxed income, subtract taxes paid, a payroll tax allowance (Medicare + Social Security on income earned from work), the income protection allowance for your family size, and an employment expense allowance (the lesser of 35% of earned income or $5,000). That yields Available Income. Add 12% of reportable assets (cash, investments, child support received, adjusted business worth; your home and retirement accounts don't count). The total is Adjusted Available Income, assessed through the 22-47% brackets above. Student side: income above an $11,770 protection allowance counts at 50%, and student assets at 20%, flat.</p>
+<h3>How to use it</h3>
+<p>Pull the parent numbers from the tax return the FAFSA will import (for 2026-27, that's your 2024 return): AGI from line 11, income tax from the total tax line, income earned from work from W-2 box 1 or Schedule 1. Skip retirement balances and your primary home in assets. The single-parent checkbox only affects the Pell income cutoffs, not the formula itself.</p>
+<h3>A worked example</h3>
+<p>A married couple, family of four, AGI $95,000, $90,000 earned from work, $9,000 total tax, $30,000 in savings and investments. Payroll allowance: $90,000 × 7.65% = $6,885. Allowances total $9,000 + $6,885 + $44,880 (IPA) + $5,000 (EEA) = $65,765. Available income: $95,000 − $65,765 = $29,235. Assets add $3,600 (12%), so AAI is $32,835, which lands in the $32,801-$38,400 bracket: $7,766 + 34% of $35 over the top = $7,778. The student's $4,000 income falls under its $11,770 protection, but $1,000 of student savings adds $200. SAI = $7,978. That's above the $7,395 Pell maximum, so no Pell Grant — aid would come from institutional and loan offers.</p>
+<p>Now the same family structure as a single parent of two with $48,000 AGI: her income after allowances is negative, assets add only $240, and the formula produces SAI 10. But her AGI is under the 225% single-parent cutoff ($58,095 for a family of three), so the max-Pell rule caps the result at SAI 0 — full Pell Grant eligibility, roughly $7,395 in free money for the year.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How is the SAI calculated?</h3><p>SAI = parents' contribution + student's contribution from income + student's contribution from assets. Parent available income is AGI minus taxes paid, payroll tax, an income protection allowance, and an employment allowance; the result plus 12% of parent assets is assessed on brackets from 22% to 47%. The student's income above an $11,770 allowance is assessed at 50%, and student assets at 20%.</p></div>
+<div class="faq-item"><h3>What SAI number qualifies for a Pell Grant?</h3><p>An SAI of 0 or below gets the maximum Pell Grant ($7,395 for 2026-27). Students with an SAI between 0 and roughly the maximum award get a partial grant of about max minus SAI. Families can also bypass the formula: if parent AGI is at or below 175% of the poverty line (225% for single parents), the student qualifies for the maximum Pell automatically.</p></div>
+<div class="faq-item"><h3>Can SAI be negative?</h3><p>Yes, from -1,500 to 999,999. A negative SAI signals maximum financial need; -1,500 is the floor. Schools see more need than a zero SAI conveys, and some institutional aid formulas treat -1,500 as the deepest-need bucket.</p></div>
+<div class="faq-item"><h3>What's a good SAI score?</h3><p>Lower is better. Zero or below means maximum Pell eligibility. As a rough scale for 2026-27: SAI 0-3,000 tends to qualify for large grants, 3,000-6,000 partial grants, 6,000-7,395 small grants, and above that mostly loans unless the family hits a minimum-Pell income test (AGI up to 275% of the poverty line for two-parent families, 325% for single parents).</p></div>
+<div class="faq-item"><h3>How much does $10,000 more income change my SAI?</h3><p>In the middle brackets, each additional $10,000 of parent AGI raises SAI by roughly $2,200 to $3,300 after taxes and allowances absorb part of it. Student income is assessed far harder: each $1,000 of student income above the $11,770 allowance adds about $500 to SAI.</p></div>
+<div class="faq-item"><h3>Do parent assets hurt more or less than income?</h3><p>Much less. Parent assets (excluding your home and retirement accounts) convert at 12%, then get assessed inside the same brackets, so effective damage is roughly 2.6% to 5.6% of asset value. Student assets are hit at a flat 20%, which is why savings in a student's name cost about four times more than the same dollars in a parent's name.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/parent-plus-loan-calculator/">🏦 Parent PLUS Loan Calculator</a>
+<a href="/private-student-loan-calculator/">🎓 Private Student Loan Calculator</a>
+<a href="/student-loan-refinance-calculator/">🔄 Student Loan Refinance</a>
+<a href="/student-loan-payoff-calculator/">📅 Student Loan Payoff</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function fmt(n){return (n<0?'-$':'$')+Math.abs(Math.round(n)).toLocaleString('en-US');}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+// 2024 HHS poverty guidelines (48 contiguous), prior-prior year for 2026-27
+function fpl(n){return 15060+(n-1)*5380;}
+function ipa(n){var t={2:29190,3:36330,4:44880,5:52950,6:61930};return n<=6?t[n]:61930+(n-6)*6990;}
+function payroll(inc,mfj){
+  var hiT=mfj?250000:200000, cap=mfj?337200:168600;
+  var hi=inc<=hiT?inc*0.0145:hiT*0.0145+(inc-hiT)*0.0235;
+  var oa=Math.min(inc,cap)*0.062;
+  return Math.round(Math.round(hi*1000)/1000+Math.round(oa*1000)/1000);
+}
+function bizAdj(nw){
+  if(nw<1)return 0;
+  if(nw<=175000)return nw*0.40;
+  if(nw<=520000)return 70000+(nw-175000)*0.50;
+  if(nw<=870000)return 242500+(nw-520000)*0.60;
+  return 452500+(nw-870000)*1.00;
+}
+function contribFromAAI(aai){
+  if(aai<-8500)return -1870;
+  if(aai<=21800)return Math.round(aai*0.22);
+  if(aai<=27300)return Math.round(4796+(aai-21800)*0.25);
+  if(aai<=32800)return Math.round(6171+(aai-27300)*0.29);
+  if(aai<=38400)return Math.round(7766+(aai-32800)*0.34);
+  if(aai<=43900)return Math.round(9670+(aai-38400)*0.40);
+  return Math.round(11870+(aai-43900)*0.47);
+}
+var PELL_MAX=7395;
+function calc(){
+  var agi=parseFloat(document.getElementById('agi').value)||0;
+  var work=parseFloat(document.getElementById('work').value)||0;
+  var mfj=document.getElementById('fs').value==='mfj';
+  var tax=parseFloat(document.getElementById('tax').value)||0;
+  var untaxed=parseFloat(document.getElementById('untaxed').value)||0;
+  var fam=Math.max(2,Math.min(12,parseInt(document.getElementById('fam').value)||2));
+  var assets=parseFloat(document.getElementById('assets').value)||0;
+  var csup=parseFloat(document.getElementById('csup').value)||0;
+  var biz=parseFloat(document.getElementById('biz').value)||0;
+  var sInc=parseFloat(document.getElementById('sInc').value)||0;
+  var sTax=parseFloat(document.getElementById('sTax').value)||0;
+  var sAssets=parseFloat(document.getElementById('sAssets').value)||0;
+  var single=document.getElementById('singleParent').checked;
+
+  var hero=document.getElementById('heroVal'),sub=document.getElementById('heroSub');
+  // Parent side (Formula A)
+  var pr=payroll(work,mfj);
+  var eea=Math.min(0.35*work,5000);
+  var allow=tax+pr+ipa(fam)+eea;
+  var pai=agi+untaxed-allow;
+  var netWorth=Math.max(0,assets+csup+bizAdj(biz));
+  var pca=Math.max(0,netWorth*0.12);
+  var aai=pai+pca;
+  var pc=contribFromAAI(aai);
+  // Student side
+  var sPay=payroll(sInc,false);
+  var negAllow=aai<0?-aai:0;
+  var sAvail=sInc-sTax-sPay-11770-negAllow;
+  var sci=sAvail>0?Math.round(sAvail*0.50):0;
+  var sca=Math.round(sAssets*0.20);
+  var sai=pc+sci+sca;
+  if(sai<-1500)sai=-1500;
+
+  // Max/min Pell income tests (dependent student)
+  var pl=fpl(fam);
+  var maxCut=Math.round(pl*(single?2.25:1.75));
+  var minCut=Math.round(pl*(single?3.25:2.75));
+  var maxPellAuto=agi>0&&agi<=maxCut;
+  var finalSai=maxPellAuto?Math.min(sai,0):sai;
+
+  animateValue(hero,finalSai.toLocaleString('en-US'));
+  sub.textContent=(maxPellAuto?'Max-Pell income test met: SAI capped at 0 or below':'Calculated from Formula A');
+  animateValue(document.getElementById('pc'),fmt(pc));
+  animateValue(document.getElementById('sc'),fmt(sci+sca));
+  animateValue(document.getElementById('pai'),fmt(Math.round(pai)));
+  animateValue(document.getElementById('pca'),fmt(pca));
+  animateValue(document.getElementById('maxCut'),fmt(maxCut)+' AGI');
+  animateValue(document.getElementById('minCut'),fmt(minCut)+' AGI');
+
+  var note=document.getElementById('pellNote');
+  if(maxPellAuto){
+    note.innerHTML='<strong>Pell estimate: maximum award, about $'+PELL_MAX.toLocaleString()+'</strong> for the year (full-time). Your AGI is at or below the '+(single?'225% single-parent':'175%')+' cutoff of '+fmt(maxCut)+', which triggers automatic maximum-Pell consideration regardless of the formula result.';
+  }else if(sai<=0){
+    note.innerHTML='<strong>Pell estimate: maximum award, about $'+PELL_MAX.toLocaleString()+'</strong>. An SAI of 0 or below qualifies for the maximum Pell Grant at full-time enrollment.';
+  }else if(sai<PELL_MAX){
+    note.innerHTML='<strong>Pell estimate: about $'+(PELL_MAX-sai).toLocaleString()+'</strong> for the year, roughly max ($7,395) minus SAI ('+sai.toLocaleString()+') at full-time enrollment. Actual awards follow the official schedule and your enrollment intensity.';
+  }else if(agi<=minCut){
+    note.innerHTML='<strong>Pell estimate: minimum Pell possible.</strong> Your SAI ('+sai.toLocaleString()+') is above the formula-based range, but your AGI is at or below the '+(single?'325% single-parent':'275%')+' cutoff of '+fmt(minCut)+', which qualifies for a minimum Pell Grant.';
+  }else{
+    note.innerHTML='<strong>Pell estimate: $0.</strong> With SAI '+sai.toLocaleString()+' and AGI above the minimum-Pell cutoff ('+fmt(minCut)+'), federal grant aid is unlikely; expect loans, work-study, and institutional aid offers. Institutional need-based aid may still use the SAI directly.';
+  }
+}
+['agi','work','tax','untaxed','fam','assets','csup','biz','sInc','sTax','sAssets'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+document.getElementById('fs').addEventListener('change',calc);
+document.getElementById('singleParent').addEventListener('change',calc);
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

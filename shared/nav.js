@@ -43,6 +43,8 @@
         { label: 'Compound Interest',      href: '/compound-interest-calculator/' },
         { label: 'Mortgage Calculator',    href: '/mortgage-calculator/' },
         { label: 'Loan Calculator',        href: '/loan-calculator/' },
+        { label: 'Wedding Loan',           href: '/wedding-loan-calculator/' },
+        { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
         { label: 'BMI Calculator',         href: '/bmi-calculator/' },
         { label: 'Discount Calculator',    href: '/discount-calculator/' },
         { label: 'Sales Tax Calculator',   href: '/sales-tax-calculator/' },
@@ -204,6 +206,7 @@
         { label: 'RoofReplacementCost', href: '/roof-replacement-cost-calculator/' },
         { label: 'Countertop', href: '/countertop-calculator/' },
         { label: 'InvisalignCost', href: '/invisalign-cost-calculator/' },
+        { label: 'PlasticSurgeryCost', href: '/plastic-surgery-cost-calculator/' },
         { label: 'VasectomyReversalCost', href: '/vasectomy-reversal-cost-calculator/' },
         { label: 'IncorporationCost', href: '/incorporation-cost-calculator/' },
       ]
@@ -214,9 +217,21 @@
       tools: [
         { label: 'Auto Tools', href: '/auto-tools/' },
         { label: 'CarRepairCost', href: '/car-repair-cost-calculator/' },
+        { label: 'CatalyticConverterCost', href: '/catalytic-converter-replacement-cost-calculator/' },
+        { label: 'Obd2CodeLookup', href: '/obd2-code-lookup/' },
+        { label: 'TotaledCarValue', href: '/totaled-car-value-calculator/' },
+        { label: 'JunkCarValue', href: '/junk-car-value-calculator/' },
+        { label: 'BrakeReplacementCost', href: '/brake-replacement-cost-calculator/' },
+        { label: 'TimingBeltCost', href: '/timing-belt-replacement-cost-calculator/' },
+        { label: 'TransmissionRepairCost', href: '/transmission-repair-cost-calculator/' },
+        { label: 'EvChargerInstallationCost', href: '/ev-charger-installation-cost-calculator/' },
+        { label: 'EvChargingCost', href: '/ev-charging-cost-calculator/' },
+        { label: 'WindshieldReplacementCost', href: '/windshield-replacement-cost-calculator/' },
+        { label: 'TowingCost', href: '/towing-cost-calculator/' },
         { label: 'CarShippingCost', href: '/car-shipping-cost-calculator/' },
         { label: 'CarWrapCost', href: '/car-wrap-cost-calculator/' },
         { label: 'CarAffordability', href: '/car-affordability-calculator/' },
+        { label: 'NewVsUsedCar', href: '/new-vs-used-car-calculator/' },
         { label: 'AutoRefinance', href: '/auto-refinance-calculator/' },
         { label: 'ExtendedCarWarrantyCost', href: '/extended-car-warranty-cost-calculator/' },
         { label: 'Mpg', href: '/mpg-calculator/' },
@@ -239,6 +254,8 @@
         { label: 'WaterIntake', href: '/water-intake-calculator/' },
         { label: 'HydrationNeedsByWeight', href: '/hydration-needs-by-weight/' },
         { label: 'DogFood', href: '/dog-food-calculator/' },
+        { label: 'CatFood', href: '/cat-food-calculator/' },
+        { label: 'PetShippingCost', href: '/pet-shipping-cost-calculator/' },
         { label: 'HeartRateZone', href: '/heart-rate-zone-calculator/' },
         { label: 'GlucoseA1cConverter', href: '/glucose-a1c-converter/' },
         { label: 'Bac', href: '/bac-calculator/' },
@@ -271,6 +288,7 @@
         { label: 'ExtendedCarWarrantyCost', href: '/extended-car-warranty-cost-calculator/' },
         { label: 'VinDecoder', href: '/vin-decoder/' },
         { label: 'LeasePayment', href: '/lease-payment-calculator/' },
+        { label: 'LeaseVsBuy', href: '/lease-vs-buy-car-calculator/' },
         { label: 'Dti', href: '/dti-calculator/' },
         { label: 'RothConversion', href: '/roth-conversion-calculator/' },
       ]
@@ -283,6 +301,8 @@
         { label: 'Student Loan Refinance', href: '/student-loan-refinance-calculator/' },
         { label: 'Loan Consolidation', href: '/student-loan-consolidation-calculator/' },
         { label: 'Private Student Loan', href: '/private-student-loan-calculator/' },
+        { label: 'FAFSA SAI Calculator', href: '/fafsa-sai-calculator/' },
+        { label: 'Parent PLUS Loan', href: '/parent-plus-loan-calculator/' },
         { label: 'Student Loan Payoff', href: '/student-loan-payoff-calculator/' },
         { label: 'RAP at $30k Salary', href: '/rap-calculator-30000-salary/' },
         { label: 'RAP at $50k Salary', href: '/rap-calculator-50000-salary/' },
@@ -294,6 +314,7 @@
       dot: '#818cf8',
       tools: [
         { label: 'CarInsuranceEstimator', href: '/car-insurance-estimator/' },
+        { label: 'GapInsuranceCost', href: '/gap-insurance-cost-calculator/' },
         { label: 'LifeInsuranceNeeds', href: '/life-insurance-needs-calculator/' },
         { label: 'RentersInsurance', href: '/renters-insurance-calculator/' },
         { label: 'BoatInsuranceCost', href: '/boat-insurance-cost-calculator/' },
@@ -305,6 +326,7 @@
         { label: 'DisabilityInsurance', href: '/disability-insurance-calculator/' },
         { label: 'UmbrellaInsurance', href: '/umbrella-insurance-calculator/' },
         { label: 'IdentityTheftProtection', href: '/identity-theft-protection-calculator/' },
+        { label: 'IRMAA Calculator', href: '/irmaa-calculator/' },
       ]
     },
     {
@@ -345,6 +367,9 @@
       tools: [
         { label: 'IncomeTax', href: '/income-tax-calculator/' },
         { label: 'CapitalGainsTax', href: '/capital-gains-tax-calculator/' },
+        { label: 'StudentLoanInterest', href: '/student-loan-interest-calculator/' },
+        { label: 'StudentLoanInterestDeduction', href: '/student-loan-interest-deduction-calculator/' },
+        { label: 'CarDonationTaxDeduction', href: '/car-donation-tax-deduction-calculator/' },
         { label: 'SelfEmploymentTax', href: '/self-employment-tax-calculator/' },
         { label: 'EstimatedQuarterlyTax', href: '/estimated-quarterly-tax-calculator/' },
         { label: 'Payroll', href: '/payroll-calculator/' },
@@ -639,7 +664,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 290+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 320+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +
