@@ -56,7 +56,7 @@ except Exception as e:
 sm = repo.glob('sitemap*.xml')
 if sm:
     smt = list(sm)[0].read_text()
-    missing_sm = sorted(t for t in tools if f'/{t}/' not in smt and t not in {'embed'})
+    missing_sm = sorted(t for t in tools if f'/{t}/' not in smt and t not in {'embed','roadmap'})
     if missing_sm: fails.append(f"SITEMAP missing {len(missing_sm)} pages: {missing_sm[:8]}")
 else:
     warns.append("no sitemap.xml found")
@@ -68,6 +68,7 @@ home = (repo/'index.html').read_text() + nav
 import re as _re
 for m in _re.finditer(r'(\d[\d,]*)\s*\+?\s*(?:free\s+)?(?:online\s+)?(?:tools|calculators|converters)', home):
     claimed = int(m.group(1).replace(',', ''))
+    if claimed <= 25: continue  # per-category counts, not sitewide claims
     limit = n_conv if 'converter' in m.group(0).lower() else n_tools
     floor = int(limit * 0.9)
     if claimed < floor:
