@@ -255,6 +255,19 @@
       ]
     },
     {
+      label: 'Student Loans',
+      dot: '#818cf8',
+      tools: [
+        { label: 'RAP Payment', href: '/rap-student-loan-calculator/', badge: 'New' },
+        { label: 'Student Loan Refinance', href: '/student-loan-refinance-calculator/' },
+        { label: 'Loan Consolidation', href: '/student-loan-consolidation-calculator/' },
+        { label: 'Private Student Loan', href: '/private-student-loan-calculator/' },
+        { label: 'RAP at $30k Salary', href: '/rap-calculator-30000-salary/' },
+        { label: 'RAP at $50k Salary', href: '/rap-calculator-50000-salary/' },
+        { label: 'RAP at $80k Salary', href: '/rap-calculator-80000-salary/' },
+      ]
+    },
+    {
       label: 'Insurance',
       dot: '#818cf8',
       tools: [
@@ -277,6 +290,13 @@
       dot: '#818cf8',
       tools: [
         { label: 'CarAccidentSettlement', href: '/car-accident-settlement-calculator/' },
+        { label: 'Truck Accident Settlement', href: '/truck-accident-settlement-calculator/', badge: 'New' },
+        { label: 'Diminished Value Claim', href: '/diminished-value-claim-calculator/', badge: 'New' },
+        { label: 'Divorce Cost', href: '/divorce-cost-calculator/', badge: 'New' },
+        { label: 'Speeding Ticket Cost', href: '/speeding-ticket-cost-calculator/', badge: 'New' },
+        { label: 'Speeding Ticket: California', href: '/speeding-ticket-cost-california/' },
+        { label: 'Speeding Ticket: Florida', href: '/speeding-ticket-cost-florida/' },
+        { label: 'Speeding Ticket: Texas', href: '/speeding-ticket-cost-texas/' },
         { label: 'DogBiteSettlement', href: '/dog-bite-settlement-calculator/' },
         { label: 'SlipAndFallSettlement', href: '/slip-and-fall-settlement-calculator/' },
         { label: 'MotorcycleAccidentSettlement', href: '/motorcycle-accident-settlement-calculator/' },
