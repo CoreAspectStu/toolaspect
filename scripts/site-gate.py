@@ -82,5 +82,23 @@ if (repo/'sitemap.xml').exists() and '/roadmap/' in (repo/'sitemap.xml').read_te
 if 'toolaspect.com/roadmap/' in (repo/'llm.txt').read_text() if (repo/'llm.txt').exists() else False:
     fails.append("ROADMAP EXPOSED: /roadmap/ listed in llm.txt")
 
+# 7. SOCIAL META COVERAGE — every public page needs full OG + Twitter tags
+NEED_META = ['og:title','og:type','og:url','og:description','og:image','og:image:width',
+             'og:image:height','og:site_name','twitter:card','twitter:title',
+             'twitter:description','twitter:image']
+incomplete = []
+for p in repo.glob('*/index.html'):
+    if p.parent.name in {'roadmap'}: continue
+    if not p.exists(): continue
+    t = p.read_text(errors='ignore')
+    miss = [n for n in NEED_META if f'property="{n}"' not in t and f'name="{n}"' not in t]
+    if miss: incomplete.append(f"{p.parent.name} (missing {len(miss)})")
+if incomplete:
+    fails.append(f"INCOMPLETE SOCIAL META ({len(incomplete)} pages): {incomplete[:8]}... — run scripts/fix-og-tags.py")
+
+# 8. INDEXNOW KEY — key file present (ping script depends on it; key must be served at /indexnow-key.txt)
+if not (repo/'indexnow-key.txt').exists():
+    fails.append("INDEXNOW key file missing (indexnow-key.txt)")
+
 print(json.dumps({"when": "pre-deploy gate", "pages": len(tools), "tools": n_tools, "converters": n_conv, "fails": fails, "warns": warns}, indent=1))
 sys.exit(1 if fails else 0)
