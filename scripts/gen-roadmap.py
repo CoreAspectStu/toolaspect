@@ -157,7 +157,7 @@ for p in pending[:24]:
 n_tools = len(tools); n_guides = len(guide_dirs)
 avg_seo = sum(t["seo"] for t in tools)//max(n_tools,1)
 avg_aio = sum(t["aio"] for t in tools)//max(n_tools,1)
-page = f'''<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+page = f'''<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Tool Roadmap — Every Calculator &amp; What's Next | ToolAspect</title>
 <meta name="description" content="The complete ToolAspect directory: {n_tools} live calculators with quality scores, plus the build schedule for what's coming next. Updated daily.">

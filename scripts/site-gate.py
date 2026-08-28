@@ -61,5 +61,25 @@ if sm:
 else:
     warns.append("no sitemap.xml found")
 
-print(json.dumps({"when": "pre-deploy gate", "pages": len(tools), "fails": fails, "warns": warns}, indent=1))
+# 3. HOMEPAGE TOOL-COUNT CLAIMS — numbers must match reality (±10% floor)
+n_tools = len([t for t in tools if t not in HUBS | {'account','about','contact','privacy','terms','disclaimer','blog','okf-policy'}])
+n_conv = len(list((repo/'convert').glob('*/index.html')))
+home = (repo/'index.html').read_text() + nav
+import re as _re
+for m in _re.finditer(r'(\d[\d,]*)\s*\+?\s*(?:free\s+)?(?:online\s+)?(?:tools|calculators|converters)', home):
+    claimed = int(m.group(1).replace(',', ''))
+    limit = n_conv if 'converter' in m.group(0).lower() else n_tools
+    floor = int(limit * 0.9)
+    if claimed < floor:
+        fails.append(f"STALE COUNT '{m.group(0).strip()}' on homepage/nav — reality ≈{limit} (floor {floor})")
+
+# 4. ROADMAP PRIVACY — build plan must not be crawler-visible
+if 'href="/roadmap/"' in nav:
+    fails.append("ROADMAP EXPOSED: footer/nav links to /roadmap/ (game plan leak)")
+if (repo/'sitemap.xml').exists() and '/roadmap/' in (repo/'sitemap.xml').read_text():
+    fails.append("ROADMAP EXPOSED: /roadmap/ in sitemap.xml")
+if 'toolaspect.com/roadmap/' in (repo/'llm.txt').read_text() if (repo/'llm.txt').exists() else False:
+    fails.append("ROADMAP EXPOSED: /roadmap/ listed in llm.txt")
+
+print(json.dumps({"when": "pre-deploy gate", "pages": len(tools), "tools": n_tools, "converters": n_conv, "fails": fails, "warns": warns}, indent=1))
 sys.exit(1 if fails else 0)

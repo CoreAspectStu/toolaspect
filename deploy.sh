@@ -14,6 +14,7 @@ for root, dirs, files in os.walk('.'):
     if 'node_modules' in root or '.git' in root: continue
     if 'index.html' not in files: continue
     path = root.replace('./', '').replace('.', '')
+    if path == 'roadmap': continue  # internal build plan — not for crawlers/competitors
     if not path:
         url = 'https://toolaspect.com/'
         priority, freq = '1.0', 'daily'

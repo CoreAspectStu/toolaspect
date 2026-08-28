@@ -23,7 +23,7 @@ def main():
                   if os.path.isdir(os.path.join(REPO, d))
                   and os.path.exists(os.path.join(REPO, d, "index.html"))
                   and not d.startswith(("_", "."))
-                  and d not in ("guides", "shared", "docs"))
+                  and d not in ("guides", "shared", "docs", "roadmap"))
     cats = {
         "finance-tools": "Finance calculators (mortgage, loans, tax, salary, insurance)",
         "contractor-tools": "Contractor + construction calculators (concrete, roofing, materials)",
