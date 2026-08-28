@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OnlyFans Earnings Calculator — Income Estimator</title>
+<meta name="description" content="Estimate OnlyFans income from subscribers, price, PPV and tips with the 80/20 split applied. Free earnings calculator with churn scenarios.">
+<link rel="canonical" href="https://toolaspect.com/onlyfans-earnings-calculator/">
+<meta property="og:title" content="OnlyFans Earnings Calculator">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/onlyfans-earnings-calculator/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OnlyFans Earnings Calculator","description":"Estimate subscription-platform earnings after the platform cut, with growth scenarios.","url":"https://toolaspect.com/onlyfans-earnings-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What percentage does OnlyFans take?", "acceptedAnswer": {"@type": "Answer", "text": "OnlyFans retains 20% of creator earnings and pays out 80% \u2014 the split applied by this calculator and commonly cited as the baseline across subscription platforms."}}, {"@type": "Question", "name": "How much do creators actually make?", "acceptedAnswer": {"@type": "Answer", "text": "Creator-reported earnings range from tens of dollars monthly for new accounts to six figures monthly at the very top; income mostly tracks audience size, content cadence, and external marketing."}}, {"@type": "Question", "name": "Is OnlyFans income taxed?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 payouts are self-employment income with no withholding; many creators set aside roughly 25\u201330% and file quarterly. Consult a tax professional for your jurisdiction."}}, {"@type": "Question", "name": "What earns more: subscriptions or PPV?", "acceptedAnswer": {"@type": "Answer", "text": "For many established creators, pay-per-view and custom content exceed subscription income; subs provide the recurring floor, PPV the upside."}}, {"@type": "Question", "name": "How long until an account earns meaningfully?", "acceptedAnswer": {"@type": "Answer", "text": "Commonly reported as several months of consistent posting plus off-platform marketing; accounts without an existing audience usually ramp slowly."}}]}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:640px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:var(--muted);margin-bottom:24px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.9rem;font-family:inherit;outline:none}
+.form-group input:focus,.form-group select:focus{border-color:rgba(96,165,250,.4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.result-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.result-card .amount{font-size:1.35rem;font-weight:700}
+.result-card.primary .amount{color:#60a5fa;font-size:1.6rem}
+.result-card.green .amount{color:#34d399}
+.result-card .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.seo-content{margin-top:28px}
+.seo-content h2{font-size:1.15rem;font-weight:600;margin:18px 0 10px}
+.seo-content p{color:var(--text-secondary);margin-bottom:12px;font-size:.9rem;line-height:1.7}
+.seo-content ul{margin-left:1.5rem;margin-bottom:12px;list-style:disc;color:var(--text-secondary)}
+.seo-content li{margin-bottom:5px;font-size:.9rem}
+.related{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.related a{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text-secondary)}
+.related a:hover{border-color:rgba(96,165,250,.35);color:var(--text)}
+@media(max-width:640px){.container{padding:1rem}.form-row{grid-template-columns:1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}</style>
+<style>.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:.85rem;cursor:pointer}.out{margin-top:10px;font-size:.9rem}.big{font-size:1.4rem;font-weight:700;color:var(--primary)}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="container">
+<h1>OnlyFans Earnings Calculator</h1>
+<p class="subtitle">Estimate OnlyFans income from subscribers, price, PPV and tips with the 80/20 split applied.</p>
+
+<h2>Estimate your earnings</h2>
+<div class="card"><div class="form-group"><label>Subscribers</label><input type="number" id="subs" value="100" step="1"></div><div class="form-group"><label>Subscription price ($/mo)</label><input type="number" id="price" value="9.99" step="0.01"></div><div class="form-group"><label>PPV income ($/mo)</label><input type="number" id="ppv" value="200" step="10"></div><div class="form-group"><label>Tips ($/mo)</label><input type="number" id="tips" value="50" step="5"></div><button class="btn" onclick="calc()">Calculate</button><div class="out" id="out"></div></div>
+<div class="seo-content">
+<h2>How the money actually flows</h2>
+<p>Subscription platforms pay creators a share of four income streams: monthly subscriptions, pay-per-view messages, tips, and custom-request sales. OnlyFans pays out 80% of creator earnings and retains 20% for processing, hosting, and platform costs — a split that has stayed fixed since launch and is commonly cited as the industry baseline. So the mental math is simple: for every dollar a fan spends on you, roughly eighty cents reaches your payout account, before taxes. The calculator above applies that split to your subscription, PPV, and tip inputs.</p>
+<h2>Realistic expectations</h2>
+<p>The honest framing that gets skipped in marketing: income follows audience, and audience follows months of consistent posting and marketing. Creator-reported earnings vary enormously — from tens of dollars a month for new accounts to six figures monthly for the top fraction with large existing followings. The dominant pattern is that new creators earn little for the first months, growth compounds with content volume and external traffic (social channels drive most discovery, since the platforms themselves offer limited on-site discovery), and PPV plus custom income frequently exceeds subscription income for established accounts. There is no typical number; there is a ramp.</p>
+<h2>Scenario planning with churn</h2>
+<div class="table-wrap"><table class="data-table"><tr><th>Month-over-month</th><th>What it implies</th><th>Yearly trajectory</th></tr>
+<tr><td>Losing 10% of subs</td><td>Content cadence or marketing slipping</td><td>Declining toward a floor</td></tr>
+<tr><td>Flat subscriber count</td><td>Replaces churn but not compounding</td><td>Steady side income</td></tr>
+<tr><td>Gaining 10%/mo</td><td>Strong pipeline feeding the funnel</td><td>Roughly triples in a year</td></tr>
+</table></div>
+<p>Churn is the silent variable: subscriber counts that look stable hide a constant inflow-outflow, so the lever that matters most is usually new-fan acquisition, not retention tricks. The math: a flat count with typical churn means most of your current fans will be different people in a year, and your pipeline — not your retention — decides whether the business grows.</p>
+<h2>Taxes and contractor reality</h2>
+<p>Payouts arrive as self-employment income, not wages: no withholding, quarterly estimated taxes in many jurisdictions, and deductible business expenses (equipment, editing, marketing, a portion of home costs where applicable). A commonly cited rule of thumb is to set aside 25–30% of payouts for tax until a professional gives you a real number — this is the line item that surprises first-year creators most. Consult a tax professional familiar with creator income; the rules differ by country and by how you structure the work.</p>
+<h2>Running it as a business</h2>
+<p>Creators who last treat the account like a product: a content calendar, a pricing structure for customs, defined marketing channels, and a clear separation between the public funnel and paid content. That is also where tooling earns its keep — fan management, link-in-bio funnels, and cross-platform presence are the operational layer sitting on top of the content itself. Veyzi builds exactly that layer for creators: the site, funnel, and fan-facing infrastructure that turns an audience into a durable business, so the creative hours go into content rather than admin.</p>
+</div>
+<script>
+function calc(){
+const s=+subs.value, p=+price.value, v=+ppv.value, t=+tips.value;
+const gross=s*p+v+t, net=gross*0.8;
+let h='<div>Monthly gross: <span class="big">$'+gross.toFixed(0)+'</span></div>';
+h+='<div>After 20% platform cut: <span class="big">$'+net.toFixed(0)+'</span>/mo · $'+(net*12).toFixed(0)+'/yr</div>';
+h+='<div style="margin-top:8px;font-size:.8rem;color:var(--muted)">Yearly scenarios (net):</div>';
+[[-0.1,'-10%/mo subs'],[0,'flat'],[0.1,'+10%/mo']].forEach(function(sc){
+ let m=net, sub=s;
+ for(let i=0;i<12;i++){sub=Math.max(0,sub*(1+sc[0])); m+=(sub*p+v+t)*0.8;}
+ h+='<div style="font-size:.85rem">'+sc[1]+': <b>$'+m.toFixed(0)+'</b> total</div>';
+});
+h+='<div style="margin-top:8px;font-size:.8rem;color:var(--muted)">Set aside ~25–30% for taxes (estimate — consult a professional).</div>';
+out.innerHTML=h;
+}
+</script>
+<div class="ad-slot">Advertisement</div>
+<h2>The income streams in detail</h2>
+<p>Subscriptions are the visible stream but rarely the whole story. Pay-per-view messages — content locked behind an additional payment, delivered through DMs — routinely become the largest line for creators who work their messaging channel daily, because PPV monetizes urgency and novelty rather than access. Tips are the gesture layer: small, unpredictable, and a surprisingly honest signal of which content resonates, since fans tip what moved them. Custom requests sit on top as bespoke work priced individually. New creators commonly overweight subscriptions and ignore the messaging channel entirely, leaving the highest-engagement surface idle; the fix is as simple as a consistent DM cadence with something worth unlocking.</p>
+<h2>Reading your own payout data</h2>
+<p>Whatever the calculators say, your platform's payout dashboard is ground truth, and reading it monthly turns vague feelings into decisions. Three checks: the PPV-plus-tips share of gross (healthy when meaningfully above 30% — it means fans engage beyond the door), the ratio of active to total subscribers (defines your true recurring base), and the month-over-month net trend with promos stripped out (reveals whether growth is real or discounted). Creators who instrument those three numbers make pricing and content decisions with evidence; everyone else is steering by vibe.</p>
+<p>The calculator above exists to make the structure visible; your dashboard tells you where you actually sit inside it. Use both.</p><h2>The first ninety days</h2>
+<p>Ninety days is the horizon where fantasy math meets reality, so it deserves its own plan. Month one: establish the cadence you can actually sustain — three posts a week held for a month beats daily posting abandoned by week two — and build the funnel basics: link in bio, one social channel posting consistently, a welcome message that introduces the PPV rhythm. Month two: work the messaging channel deliberately; PPV income typically appears when DMs do. Month three: first pricing and content review against your dashboard, first content retirements (underperformers), and the first decision about paid promotion. Creators who treat the first ninety days as setup rather than harvest consistently outperform those who expect launch-week income.</p>
+<p>The calculator's scenario rows map directly onto this: flat-month energy in month one is normal; the growth scenario is a month-four-plus story.</p>
+<p>One more time, plainly, because it is the single most common gap between projection and reality: the platform does not deliver an audience. Everything above — the split, the streams, the scenarios — activates only after fans arrive, and fans arrive through work you do off the platform. Budget your energy accordingly: for most of the first year, creation is half the job and distribution is the other half. The creators who model that split honestly in their calendars are the ones whose calculators eventually need bigger numbers.</p></div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>
