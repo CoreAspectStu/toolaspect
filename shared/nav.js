@@ -646,6 +646,13 @@
         '<a href="/developer-tools/">Developer</a>' +
         '<a href="/guides/">Guides</a>' +
       '<a href="/all-tools/">All Tools</a>' +
+      '<a href="/converters/">Converters</a>' +
+      '<a href="/finance-tools/">Finance</a>' +
+      '<a href="/health-calculators/">Health</a>' +
+      '<a href="/insurance-tools/">Insurance</a>' +
+      '<a href="/legal-tools/">Legal</a>' +
+      '<a href="/convert/">Convert</a>' +
+      '<a href="/all-tools/">All Tools</a>' +
       '<a href="/finance-tools/">Finance</a>' +
         '<a href="/text-tools/">Text</a>' +
       '</div>';
