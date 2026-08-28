@@ -89,7 +89,8 @@
         'youtube', 'tiktok', 'twitch', 'spotify', 'podcast', 'engagement-rate',
         'follower-growth', 'influencer', 'hashtag', 'creator-tools',
         'creator-earnings', 'social-media', 'instagram', 'kick-', 'patreon',
-        'link-in-bio'
+        'link-in-bio', 'onlyfans', 'fansly', 'creator-revenue',
+        'custom-content', 'churn-rate'
       ],
       product: 'veyzi'
     }
