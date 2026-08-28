@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Calculate Sample Size (With Worked Examples) | ToolAspect</title>
+<meta name="description" content="Cochran's formula, the finite population correction, and the mean version, worked step by step. Why 385 is the magic number for 95% confidence at 5% margin.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-calculate-sample-size/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Calculate Sample Size","description":"Cochran's formula, the finite population correction, and the sample-mean formula, with worked examples for surveys and experiments.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What sample size do I need for a survey?","acceptedAnswer":{"@type":"Answer","text":"At the standard settings, 95% confidence with a 5% margin of error and p=0.5, you need 385 completed responses for a large or unknown population. If you can name your population and it's small, apply the finite population correction: 278 for 1,000 people, 218 for 500, 80 for 100. Completed responses, not invitations; if your response rate is 20%, invite five times as many people."}},
+{"@type":"Question","name":"Why does the sample size barely grow with the population?","acceptedAnswer":{"@type":"Answer","text":"Because a random sample's precision depends on its own size, not on what fraction of the population it represents. Going from 10,000 to 10 million people moves the requirement from 370 to 385 at 95%/5%. Sample size scales with 1/e², the squared margin of error, and not with N. That's the counterintuitive core of survey sampling."}},
+{"@type":"Question","name":"How does the margin of error affect sample size?","acceptedAnswer":{"@type":"Answer","text":"Halve the margin and you quadruple the sample. At 95% with p=0.5, a 10% margin needs 97 responses, 5% needs 385, 3% needs 1,068, and 1% needs 9,605. The margin enters the formula squared, so precision gets expensive fast, which is why national pollsters live around n=1,000 and a ±3.1% margin."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 8px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg-elevated)}code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Calculate Sample Size</h1>
+<div class="meta"><span>📊 8 min read</span><span>🎯 For stats students &amp; survey builders</span></div>
+<p class="intro">"How many people do I need to survey?" has a real answer, and it isn't "as many as possible." It falls out of three inputs: how confident you want to be, how tight your margin of error should be, and what you already know about the answer. Here's the formula, the correction for small populations, and worked examples you can check by hand.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does sample size actually control?</h2>
+<p>A survey estimates a number: the share of customers who'd cancel, the average time on hold. Two things can be wrong with an estimate: it's off by some amount (that's the <strong>margin of error</strong>), and the true value might sit outside your interval some fraction of the time (that's what <strong>confidence level</strong> measures). Sample size is the dial that improves both at once. Bigger sample, tighter margin at the same confidence.</p>
+<p>The catch is the price curve. Margin of error shrinks with the square root of n, so cutting the margin in half quadruples the sample. This one fact explains most survey design decisions, including why national polls interview about a thousand people and stop.</p>
+<h2>What is Cochran's formula?</h2>
+<p>For estimating a proportion (a percentage), the standard tool is Cochran's formula:</p>
+<p style="text-align:center"><strong>n0 = z² x p(1-p) / e²</strong></p>
+<ul>
+<li><strong>z</strong> — critical value for your confidence level: 1.96 at 95%, 1.645 at 90%, 2.576 at 99%</li>
+<li><strong>p</strong> — your best guess at the proportion, as a decimal. No guess? Use 0.5, the maximally cautious default</li>
+<li><strong>e</strong> — margin of error as a decimal (0.05 = ±5 points)</li>
+</ul>
+<p>Run the classic case: z=1.96, p=0.5, e=0.05. Then n0 = (1.96)² x 0.25 / (0.05)² = 3.8416 x 0.25 / 0.0025 = 0.9604 / 0.0025 = 384.16. Round up (always up, since 384.16 people don't exist): <strong>385 responses</strong>. That's the famous number behind "margin of error ±5 points at 95% confidence."</p>
+<h2>What if my population is small?</h2>
+<p>Cochran's formula assumes the population is effectively infinite. When you're surveying a defined small group, the <strong>finite population correction</strong> applies:</p>
+<p style="text-align:center"><strong>n = n0 / (1 + (n0 − 1)/N)</strong></p>
+<p>where N is the population size. Say your company has 1,000 employees. Take the 384.16 from above: n = 384.16 / (1 + 383.16/1000) = 384.16 / 1.38316 = 277.7, round up to <strong>278</strong>. Survey 278 randomly chosen employees and you know the company-wide answer to ±5% at 95% confidence.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Population N</th><th>95% / 5% sample</th><th>Sampling fraction</th></tr></thead>
+<tbody>
+<tr><td>100</td><td>80</td><td>80%</td></tr>
+<tr><td>500</td><td>218</td><td>44%</td></tr>
+<tr><td>1,000</td><td>278</td><td>28%</td></tr>
+<tr><td>5,000</td><td>357</td><td>7.1%</td></tr>
+<tr><td>10,000</td><td>370</td><td>3.7%</td></tr>
+<tr><td>1,000,000</td><td>385</td><td>0.04%</td></tr>
+</tbody>
+</table>
+</div>
+<p>Read that last row again. A million-person population needs 385 people — 0.04% of it. Precision comes from the sample's absolute size, not the fraction sampled. Skip the hand arithmetic entirely with the <a href="/sample-size-calculator/">sample size calculator</a>, which applies the correction automatically.</p>
+<h2>How do I calculate sample size for a mean?</h2>
+<p>Percentages aren't the only thing surveys measure. When your statistic is an average, the formula becomes:</p>
+<p style="text-align:center"><strong>n = (z x s / e)²</strong></p>
+<p>s is the standard deviation, which you take from a pilot run, last year's data, or a comparable study. e is the margin in the same units as s. Worked example: you want average delivery time to within ±3 minutes at 95% confidence, and last quarter's times had a standard deviation of 15 minutes. n = (1.96 x 15 / 3)² = 9.8² = 96.04, so <strong>97 timed deliveries</strong>. Need only ±5 minutes? (1.96 x 15/5)² = 34.6, so 35.</p>
+<p>The mean formula hides the same lesson as the proportion one: sample size squares with the z you demand. Dropping from 95% to 99% confidence multiplies the workload by (2.576/1.96)² = 1.73 with zero change in the margin.</p>
+<h2>What about response rates and dropouts?</h2>
+<p>The formulas return completed responses you can use, not emails sent. Bridge the gap with your response rate: need 385 completes at a 20% response rate? Invite 385 / 0.20 = 1,925 people. In experiments and clinical-style studies, inflate for expected attrition the same way, plus 5-10% buffer for unusable data.</p>
+<p>And remember what the math assumes: a simple random sample. A convenience sample of 2,000 Twitter replies doesn't have a ±2.2% margin of error; it has an unknown bias that no n fixes. If you're rusty on the probability underneath, the <a href="/probability-calculator/">probability calculator</a> is good warm-up, and once data lands, the <a href="/average-calculator/">average calculator</a> handles the descriptive side.</p>
+<div class="cta-box"><h3>Run your own numbers</h3><p style="color:#fff;opacity:.9">Confidence level, margin, population size. Get the required sample for both proportions and means.</p><a href="/sample-size-calculator/">Sample Size Calculator →</a></div>
+<h2>What settings should I actually pick?</h2>
+<ul>
+<li><strong>Confidence:</strong> 95% is the academic and industry default. Drop to 90% for exploratory work, rise to 99% only when a wrong answer is expensive.</li>
+<li><strong>Margin:</strong> ±5 points for binary opinions, ±3 when results will drive spending decisions, ±10 for quick pulse checks.</li>
+<li><strong>p:</strong> stick with 0.5 unless prior data says otherwise. At 80/20 the required n falls 36%.</li>
+<li><strong>Population:</strong> enter it whenever the group is under about 20,000. The correction is free precision.</li>
+</ul>
+<p>One more habit worth building: sanity-check any published poll's claimed margin with the back-solve. At n=1,000, the margin at 95% is 1.96 x √(0.25/1000) = ±3.1%, which is exactly what serious pollsters report. If a press release claims ±2% from 600 respondents, something else is going on.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What sample size do I need for a survey?</h3><p>At the standard settings, 95% confidence with a 5% margin of error and p=0.5, you need 385 completed responses for a large or unknown population. If you can name your population and it's small, apply the finite population correction: 278 for 1,000 people, 218 for 500, 80 for 100. Completed responses, not invitations; if your response rate is 20%, invite five times as many people.</p></div>
+<div class="faq-item"><h3>Why does the sample size barely grow with the population?</h3><p>Because a random sample's precision depends on its own size, not on what fraction of the population it represents. Going from 10,000 to 10 million people moves the requirement from 370 to 385 at 95%/5%. Sample size scales with 1/e², the squared margin of error, and not with N. That's the counterintuitive core of survey sampling.</p></div>
+<div class="faq-item"><h3>How does the margin of error affect sample size?</h3><p>Halve the margin and you quadruple the sample. At 95% with p=0.5, a 10% margin needs 97 responses, 5% needs 385, 3% needs 1,068, and 1% needs 9,605. The margin enters the formula squared, so precision gets expensive fast, which is why national pollsters live around n=1,000 and a ±3.1% margin.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/sample-size-calculator/">Sample Size Calculator</a>
+<a href="/probability-calculator/">Probability Calculator</a>
+<a href="/average-calculator/">Average Calculator</a>
+<a href="/percentage-calculator/">Percentage Calculator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

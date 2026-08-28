@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrix Calculator — Determinant & Inverse | ToolAspect</title>
+<meta name="description" content="Free matrix calculator. Determinant, inverse, transpose, and multiply for 2×2 to 4×4 matrices, with the formula shown. [[4,7],[2,6]] has det 10.">
+<link rel="canonical" href="https://toolaspect.com/matrix-calculator/">
+<meta property="og:title" content="Matrix Calculator — Determinant & Inverse">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Determinant, inverse, transpose, and multiplication for 2×2, 3×3, and 4×4 matrices.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/matrix-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Matrix Calculator | Free Online Tool">
+<meta name="twitter:description" content="Determinant, inverse, transpose, and multiply, 2×2 through 4×4.">
+<meta name="keywords" content="matrix calculator, determinant calculator, inverse matrix calculator, matrix multiplication, 3x3 determinant, singular matrix, linear algebra calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Matrix Calculator","description":"Free matrix calculator. Compute the determinant, inverse, transpose, and product of 2×2, 3×3, and 4×4 matrices, with the formula shown for each result.","url":"https://toolaspect.com/matrix-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you find the determinant of a 2×2 matrix?","acceptedAnswer":{"@type":"Answer","text":"Multiply the main diagonal, multiply the anti-diagonal, subtract: det = ad − bc. For [[4, 7], [2, 6]] that's (4)(6) − (7)(2) = 24 − 14 = 10. If the result is 0, the matrix is singular and has no inverse."}},
+{"@type":"Question","name":"How do you find the inverse of a 2×2 matrix?","acceptedAnswer":{"@type":"Answer","text":"Swap the diagonal entries, negate the off-diagonal entries, and divide everything by the determinant: inverse = (1/det) × [[d, −b], [−c, a]]. For [[4, 7], [2, 6]], det = 10, so the inverse is [[6/10, −7/10], [−2/10, 4/10]] = [[0.6, −0.7], [−0.2, 0.4]]. Check it: A × A⁻¹ should give the identity matrix."}},
+{"@type":"Question","name":"How do you find the determinant of a 3×3 matrix?","acceptedAnswer":{"@type":"Answer","text":"Cofactor expansion along the first row. For [[2, 1, 3], [0, 4, 5], [1, 2, 6]]: det = 2(4·6 − 5·2) − 1(0·6 − 5·1) + 3(0·2 − 4·1) = 2(14) − 1(−5) + 3(−4) = 28 + 5 − 12 = 21. Expand along whichever row or column has the most zeros — the zeros make minors vanish."}},
+{"@type":"Question","name":"When does a matrix not have an inverse?","acceptedAnswer":{"@type":"Answer","text":"When its determinant is 0 — a singular matrix. Geometrically, the transformation squashes space flat (all of 2D onto a line, or 3D onto a plane), and information is lost that no matrix can recover. Algebraically, some system Ax = b under it has no solution or infinitely many. Rows that are multiples of each other, like [[2, 4], [1, 2]], always produce det = 0."}},
+{"@type":"Question","name":"Does matrix multiplication order matter?","acceptedAnswer":{"@type":"Answer","text":"Yes. AB and BA are usually different matrices, and sometimes only one of them is even defined when the shapes differ. For [[1, 2], [3, 4]] × [[5, 6], [7, 8]] the product is [[19, 22], [43, 50]], but reversing the order gives [[23, 34], [31, 46]]. Multiply row-into-column in the order the problem states."}},
+{"@type":"Question","name":"What is the transpose of a matrix?","acceptedAnswer":{"@type":"Answer","text":"The matrix with rows and columns swapped: entry (i, j) moves to (j, i). The transpose of [[1, 2, 3], [4, 5, 6]] is [[1, 4], [2, 5], [3, 6]]. A symmetric matrix equals its own transpose, and (AB)ᵀ = BᵀAᵀ — the order flips."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Matrix Calculator","item":"https://toolaspect.com/matrix-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.mode-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1.2rem;font-size:.85rem;cursor:pointer;font-family:inherit}
+.mode-btn.active{background:rgba(99,102,241,.15);border-color:var(--primary);color:var(--text);font-weight:600}
+.op-select{display:flex;gap:6px;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap}
+.op-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1rem;font-size:.85rem;cursor:pointer;font-family:inherit}
+.op-btn.active{background:rgba(34,197,94,.12);border-color:var(--success);color:var(--text);font-weight:600}
+.matrix-block{margin:1rem 0}
+.matrix-block .mb-label{font-size:.85rem;color:var(--muted);font-weight:500;margin-bottom:.5rem}
+.matrix-grid{display:inline-grid;gap:6px;padding:10px;border:2px solid var(--border);border-left:6px solid var(--border);border-right:6px solid var(--border);border-radius:6px;background:var(--bg)}
+.matrix-grid input{width:70px;padding:.5rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:1rem;box-sizing:border-box;text-align:center}
+.matrix-grid input:focus{outline:none;border-color:var(--primary)}
+.matrices-row{display:flex;gap:2.2rem;flex-wrap:wrap;justify-content:center;align-items:center}
+.result-hero{text-align:center;padding:1rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.4rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .value.small{font-size:1.3rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.5rem;line-height:1.7;word-break:break-word}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔢 Matrix Calculator</h1>
+<p>Determinant, inverse, transpose, and multiplication for 2×2 through 4×4</p>
+<p class="direct-answer">For a 2×2 matrix [[a, b], [c, d]]: det = ad − bc, and the inverse is (1/det) × [[d, −b], [−c, a]]. So [[4, 7], [2, 6]] has det = 24 − 14 = 10 and inverse [[0.6, −0.7], [−0.2, 0.4]]. A 3×3 determinant expands along a row: [[2, 1, 3], [0, 4, 5], [1, 2, 6]] gives 2(14) − 1(−5) + 3(−4) = 21. If det = 0 the matrix is singular — no inverse exists.</p>
+</div>
+
+<div class="section-card">
+<div class="mode-toggle">
+<button type="button" class="mode-btn active" data-size="2">2 × 2</button>
+<button type="button" class="mode-btn" data-size="3">3 × 3</button>
+<button type="button" class="mode-btn" data-size="4">4 × 4</button>
+</div>
+<div class="op-select">
+<button type="button" class="op-btn active" data-op="det">Determinant</button>
+<button type="button" class="op-btn" data-op="inv">Inverse</button>
+<button type="button" class="op-btn" data-op="transpose">Transpose</button>
+<button type="button" class="op-btn" data-op="mult">A × B</button>
+</div>
+<div class="matrices-row">
+<div class="matrix-block"><div class="mb-label">Matrix A</div><div class="matrix-grid" id="gridA"></div></div>
+<div class="matrix-block" id="blockB" style="display:none"><div class="mb-label">Matrix B</div><div class="matrix-grid" id="gridB"></div></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label" id="resLabel">Result</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/quadratic-equation-solver/">Quadratic Equation Solver</a></li><li style="margin:4px 0"><a href="/scientific-calculator/">Scientific Calculator</a></li><li style="margin:4px 0"><a href="/standard-deviation-calculator/">Standard Deviation Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-calculate-matrix-determinant/">How to calculate a determinant</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Formulas Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Operation</th><th>Formula</th><th>Works when</th></tr></thead>
+<tbody>
+<tr><td>2×2 determinant</td><td>det = ad − bc</td><td>Always</td></tr>
+<tr><td>2×2 inverse</td><td>(1/det) × [[d, −b], [−c, a]]</td><td>det ≠ 0</td></tr>
+<tr><td>3×3 determinant</td><td>a(ei − fh) − b(di − fg) + c(dh − eg)</td><td>Always (expansion along row 1)</td></tr>
+<tr><td>Transpose</td><td>Entry (i, j) moves to (j, i)</td><td>Always</td></tr>
+<tr><td>Multiply A × B</td><td>Row of A into column of B; (AB)ᵢⱼ = Σₖ AᵢₖBₖⱼ</td><td>Columns of A = rows of B</td></tr>
+<tr><td>Identity I</td><td>1s on the diagonal, 0s elsewhere; A × I = A</td><td>Always</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The calculator computes 4×4 determinants and inverses by Gaussian elimination (row reduction with partial pivoting), which is the same method software libraries use. Results are exact for integer-friendly inputs and rounded to 4 decimals otherwise.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Matrix Calculator Works</h2>
+<p>Matrices package a system of linear equations into a grid you can compute with. The determinant tells you whether the system has a unique solution, the inverse undoes the transformation, and multiplication chains transformations together. This calculator handles all four operations on square matrices up to 4×4 and shows the formula behind each answer.</p>
+<h3>Determinant</h3>
+<p>For 2×2, it's ad − bc, the difference of the diagonal products. For 3×3, cofactor expansion along the first row: a(ei − fh) − b(di − fg) + c(dh − eg). The determinant is the signed scale factor of the transformation — det 10 means areas grow 10×, det 0 means space collapses flat.</p>
+<h3>Inverse</h3>
+<p>The inverse undoes a matrix: A × A⁻¹ = I, the identity. For 2×2 it's swap-and-negate over the determinant. For 3×3 and 4×4 the calculator uses Gauss-Jordan elimination, row-reducing [A | I] until the left half becomes I and the right half is A⁻¹. Singular matrices (det = 0) get flagged instead of producing garbage.</p>
+<h3>Transpose and multiplication</h3>
+<p>Transpose flips rows and columns across the main diagonal. Multiplication takes each row of A into each column of B — element (i, j) of the product is the dot product of row i of A with column j of B. Order matters: AB ≠ BA in general, so enter the matrices in the order the problem gives.</p>
+<h3>A worked example</h3>
+<p>Start with A = [[4, 7], [2, 6]]. Determinant: (4)(6) − (7)(2) = 10. Inverse: (1/10) × [[6, −7], [−2, 4]] = [[0.6, −0.7], [−0.2, 0.4]]. Multiply A × A⁻¹ and you get [[1, 0], [0, 1]] — the identity, which is the definition of an inverse and a free way to check your work.</p>
+<p>Now 3×3: [[2, 1, 3], [0, 4, 5], [1, 2, 6]]. Expanding along the first row: 2(4·6 − 5·2) − 1(0·6 − 5·1) + 3(0·2 − 4·1) = 2(14) − 1(−5) + 3(−4) = 28 + 5 − 12 = 21. Nonzero, so an inverse exists, and the calculator gives it to 4 decimals: [[0.67, 0, −0.33], [0.24, 0.43, −0.48], [−0.19, −0.14, 0.38]].</p>
+<p>Counter-example worth knowing: [[2, 4], [1, 2]] has det = 4 − 4 = 0. The second row is half the first, so the matrix squashes the plane onto a line and no inverse exists.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do you find the determinant of a 2×2 matrix?</h3><p>Multiply the main diagonal, multiply the anti-diagonal, subtract: det = ad − bc. For [[4, 7], [2, 6]] that's (4)(6) − (7)(2) = 24 − 14 = 10. If the result is 0, the matrix is singular and has no inverse.</p></div>
+<div class="faq-item"><h3>How do you find the inverse of a 2×2 matrix?</h3><p>Swap the diagonal entries, negate the off-diagonal entries, and divide everything by the determinant: inverse = (1/det) × [[d, −b], [−c, a]]. For [[4, 7], [2, 6]], det = 10, so the inverse is [[6/10, −7/10], [−2/10, 4/10]] = [[0.6, −0.7], [−0.2, 0.4]]. Check it: A × A⁻¹ should give the identity matrix.</p></div>
+<div class="faq-item"><h3>How do you find the determinant of a 3×3 matrix?</h3><p>Cofactor expansion along the first row. For [[2, 1, 3], [0, 4, 5], [1, 2, 6]]: det = 2(4·6 − 5·2) − 1(0·6 − 5·1) + 3(0·2 − 4·1) = 2(14) − 1(−5) + 3(−4) = 28 + 5 − 12 = 21. Expand along whichever row or column has the most zeros — the zeros make minors vanish.</p></div>
+<div class="faq-item"><h3>When does a matrix not have an inverse?</h3><p>When its determinant is 0 — a singular matrix. Geometrically, the transformation squashes space flat (all of 2D onto a line, or 3D onto a plane), and information is lost that no matrix can recover. Algebraically, some system Ax = b under it has no solution or infinitely many. Rows that are multiples of each other, like [[2, 4], [1, 2]], always produce det = 0.</p></div>
+<div class="faq-item"><h3>Does matrix multiplication order matter?</h3><p>Yes. AB and BA are usually different matrices, and sometimes only one of them is even defined when the shapes differ. For [[1, 2], [3, 4]] × [[5, 6], [7, 8]] the product is [[19, 22], [43, 50]], but reversing the order gives [[23, 34], [31, 46]]. Multiply row-into-column in the order the problem states.</p></div>
+<div class="faq-item"><h3>What is the transpose of a matrix?</h3><p>The matrix with rows and columns swapped: entry (i, j) moves to (j, i). The transpose of [[1, 2, 3], [4, 5, 6]] is [[1, 4], [2, 5], [3, 6]]. A symmetric matrix equals its own transpose, and (AB)ᵀ = BᵀAᵀ — the order flips.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/quadratic-equation-solver/">🧮 Quadratic Equation Solver</a>
+<a href="/scientific-calculator/">🔬 Scientific Calculator</a>
+<a href="/standard-deviation-calculator/">📊 Standard Deviation</a>
+<a href="/slope-calculator/">📈 Slope Calculator</a>
+<a href="/average-calculator/">🎯 Average Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var size=2,op='det';
+var DEFAULTS={
+  A2:[[4,7],[2,6]],B2:[[1,2],[3,4]],
+  A3:[[2,1,3],[0,4,5],[1,2,6]],B3:[[1,0,2],[3,1,0],[0,2,1]],
+  A4:[[1,2,0,1],[0,1,3,0],[2,0,1,1],[1,1,1,1]],B4:[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
+};
+function fmt(n){
+  var r=Math.round(n*10000)/10000;
+  if(Object.is(r,-0))r=0;
+  return String(r);
+}
+function animateValue(el,text,small){
+  el.textContent=text;
+  el.classList.toggle('small',!!small);
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function buildGrid(el,vals){
+  var n=vals.length,h='';
+  for(var i=0;i<n;i++){for(var j=0;j<n;j++){
+    h+='<input type="number" step="any" data-i="'+i+'" data-j="'+j+'" value="'+vals[i][j]+'">';
+  }}
+  el.style.gridTemplateColumns='repeat('+n+',70px)';
+  el.innerHTML=h;
+}
+function readGrid(el){
+  var inputs=el.querySelectorAll('input'),n=Math.sqrt(inputs.length),M=[];
+  for(var i=0;i<n;i++){M.push([]);for(var j=0;j<n;j++){
+    var v=parseFloat(inputs[i*n+j].value);
+    M[i].push(isNaN(v)?0:v);
+  }}
+  return M;
+}
+function det2(A){return A[0][0]*A[1][1]-A[0][1]*A[1][0];}
+function det3(A){
+  return A[0][0]*(A[1][1]*A[2][2]-A[1][2]*A[2][1])
+        -A[0][1]*(A[1][0]*A[2][2]-A[1][2]*A[2][0])
+        +A[0][2]*(A[1][0]*A[2][1]-A[1][1]*A[2][0]);
+}
+function detN(A){ // Gaussian elimination with partial pivot, exact for n<=3 handled above
+  var n=A.length,M=A.map(function(r){return r.slice();}),det=1;
+  for(var c=0;c<n;c++){
+    var p=c;
+    for(var r=c+1;r<n;r++){if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;}
+    if(Math.abs(M[p][c])<1e-14)return 0;
+    if(p!==c){var t=M[p];M[p]=M[c];M[c]=t;det=-det;}
+    det*=M[c][c];
+    for(var r2=c+1;r2<n;r2++){
+      var f=M[r2][c]/M[c][c];
+      for(var k=c;k<n;k++)M[r2][k]-=f*M[c][k];
+    }
+  }
+  return det;
+}
+function inverse(A){
+  var n=A.length,M=A.map(function(r,i){return r.concat(identityRow(n,i));});
+  function identityRow(n,i){var row=[];for(var j=0;j<n;j++)row.push(j===i?1:0);return row;}
+  for(var c=0;c<n;c++){
+    var p=c;
+    for(var r=c+1;r<n;r++){if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;}
+    if(Math.abs(M[p][c])<1e-12)return null;
+    if(p!==c){var t=M[p];M[p]=M[c];M[c]=t;}
+    var pv=M[c][c];
+    for(var k=0;k<2*n;k++)M[c][k]/=pv;
+    for(var r2=0;r2<n;r2++){
+      if(r2===c)continue;
+      var f=M[r2][c];
+      if(f===0)continue;
+      for(var k2=0;k2<2*n;k2++)M[r2][k2]-=f*M[c][k2];
+    }
+  }
+  return M.map(function(r){return r.slice(n);});
+}
+function transpose(A){
+  return A[0].map(function(_,j){return A.map(function(row){return row[j];});});
+}
+function multiply(A,B){
+  var n=A.length,C=[];
+  for(var i=0;i<n;i++){C.push([]);for(var j=0;j<n;j++){
+    var s=0;for(var k=0;k<n;k++)s+=A[i][k]*B[k][j];
+    C[i].push(s);
+  }}
+  return C;
+}
+function matStr(M){
+  return M.map(function(r){return '['+r.map(fmt).join(', ')+']';}).join('<br>');
+}
+function calc(){
+  var A=readGrid(document.getElementById('gridA'));
+  var hero=document.getElementById('heroVal'),sub=document.getElementById('heroSub'),label=document.getElementById('resLabel');
+  if(op==='det'){
+    label.textContent='Determinant of A';
+    var d=size===2?det2(A):(size===3?det3(A):detN(A));
+    animateValue(hero,fmt(d));
+    if(Math.abs(d)<1e-12){
+      sub.innerHTML='det = 0 → A is singular; it has no inverse.';
+    }else{
+      sub.innerHTML=(size===2
+        ?'det = ('+fmt(A[0][0])+')('+fmt(A[1][1])+') − ('+fmt(A[0][1])+')('+fmt(A[1][0])+')'
+        :(size===3
+          ?'Expansion along row 1: '+fmt(A[0][0])+'('+fmt(A[1][1]*A[2][2]-A[1][2]*A[2][1])+') − '+fmt(A[0][1])+'('+fmt(A[1][0]*A[2][2]-A[1][2]*A[2][0])+') + '+fmt(A[0][2])+'('+fmt(A[1][0]*A[2][1]-A[1][1]*A[2][0])+')'
+          :'Computed by Gaussian elimination with partial pivoting'));
+    }
+  }else if(op==='inv'){
+    label.textContent='Inverse of A';
+    var inv=inverse(A);
+    if(inv===null){
+      animateValue(hero,'Singular',true);
+      sub.innerHTML='det = 0, so A⁻¹ does not exist. No matrix undoes this transformation.';
+    }else{
+      animateValue(hero,matStr(inv),true);
+      sub.innerHTML='A × A⁻¹ = I (the identity). Multiply A by this matrix to check.';
+    }
+  }else if(op==='transpose'){
+    label.textContent='Transpose of A (Aᵀ)';
+    animateValue(hero,matStr(transpose(A)),true);
+    sub.textContent='Rows and columns swapped: entry (i, j) moved to (j, i).';
+  }else{
+    label.textContent='Product A × B';
+    var B=readGrid(document.getElementById('gridB'));
+    animateValue(hero,matStr(multiply(A,B)),true);
+    sub.textContent='Each entry is a row of A into a column of B. Order matters: AB ≠ BA.';
+  }
+}
+function setOp(newOp){
+  op=newOp;
+  document.querySelectorAll('.op-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-op')===op);});
+  document.getElementById('blockB').style.display=op==='mult'?'':'none';
+  calc();
+}
+function setSize(n){
+  size=n;
+  document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('active',+b.getAttribute('data-size')===n);});
+  buildGrid(document.getElementById('gridA'),DEFAULTS['A'+n]);
+  buildGrid(document.getElementById('gridB'),DEFAULTS['B'+n]);
+  calc();
+}
+document.querySelectorAll('.mode-btn').forEach(function(b){
+  b.addEventListener('click',function(){setSize(+b.getAttribute('data-size'));});
+});
+document.querySelectorAll('.op-btn').forEach(function(b){
+  b.addEventListener('click',function(){setOp(b.getAttribute('data-op'));});
+});
+document.addEventListener('input',function(e){
+  if(e.target.closest && e.target.closest('.matrix-grid'))calc();
+});
+setSize(2);
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMD Calculator — Required Minimum Distribution | ToolAspect</title>
+<meta name="description" content="Free RMD calculator using the IRS Uniform Lifetime Table. At 75 with $500,000 saved, your required withdrawal is $20,325 — about 4.07% of the balance.">
+<link rel="canonical" href="https://toolaspect.com/rmd-calculator/">
+<meta property="og:title" content="RMD Calculator — Required Minimum Distribution">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Calculate your required minimum distribution from the IRS Uniform Lifetime Table by age and account balance.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/rmd-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RMD Calculator | Free Online Tool">
+<meta name="twitter:description" content="Required minimum distribution by age and prior year-end balance.">
+<meta name="keywords" content="rmd calculator, required minimum distribution calculator, rmd table, uniform lifetime table, rmd age, irmaa, rmd deadline, rmd penalty">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"RMD Calculator","description":"Free RMD calculator. Estimate your required minimum distribution from your age and prior December 31 account balance using the IRS Uniform Lifetime Table, plus the IRMAA interaction.","url":"https://toolaspect.com/rmd-calculator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is an RMD calculated?","acceptedAnswer":{"@type":"Answer","text":"Divide your account balance as of December 31 of the prior year by the distribution period for your age in the IRS Uniform Lifetime Table. At 75 the factor is 24.6, so $500,000 requires a $20,325 withdrawal (500,000 ÷ 24.6). The factor shrinks each year, so the same balance forces out a growing share over time."}},
+{"@type":"Question","name":"What age do RMDs start?","acceptedAnswer":{"@type":"Answer","text":"73 for people born 1951 through 1959, and 75 for those born in 1960 or later (effective 2033) under the SECURE 2.0 Act. RMDs before 2023 started at 72. You calculate each year's RMD using the age you turn that calendar year."}},
+{"@type":"Question","name":"What is the RMD on $500,000 at age 75?","acceptedAnswer":{"@type":"Answer","text":"$20,325.20, which is $500,000 divided by the age-75 distribution period of 24.6. That equals 4.07% of the balance, or about $1,694 a month if you spread it evenly. The custodian's number is official; this is the same table they use."}},
+{"@type":"Question","name":"What happens if I don't take my full RMD?","acceptedAnswer":{"@type":"Answer","text":"The excise tax is 25% of the amount you failed to withdraw, cut to 10% if you fix the shortfall within the correction period, generally by taking the missed amount and filing Form 5329 in time. Before SECURE 2.0 it was 50%, one of the harshest penalties in the tax code, so the current version is genuinely more forgiving."}},
+{"@type":"Question","name":"Do Roth IRAs have RMDs?","acceptedAnswer":{"@type":"Answer","text":"Roth IRAs never require distributions while the owner is alive. Roth 401(k) accounts did require them, but SECURE 2.0 aligned them with Roth IRAs starting in 2024, and you can also roll Roth 401(k) money into a Roth IRA. Traditional IRAs, SEP and SIMPLE IRAs, and most 401(k)/403(b) plans all carry RMDs."}},
+{"@type":"Question","name":"Can I delay my first RMD?","acceptedAnswer":{"@type":"Answer","text":"Yes, to April 1 of the year after you hit RMD age. The catch: that delay means taking two RMDs in one calendar year, both counted in your income together. That stacked income can push you into a higher tax bracket or over an IRMAA threshold, so most people take the first one in the year it's due."}},
+{"@type":"Question","name":"Do RMDs affect IRMAA Medicare premiums?","acceptedAnswer":{"@type":"Answer","text":"Yes. RMDs are ordinary income, so they count in the MAGI Medicare uses to set Part B and D surcharges two years later. In 2025, MAGI above $106,000 single or $212,000 married triggers IRMAA; the top bracket more than triples the standard premium. Roth withdrawals don't count, which is one reason people run Roth conversions before RMDs begin."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"RMD Calculator","item":"https://toolaspect.com/rmd-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.disclaimer{margin-top:2rem;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);font-size:.82rem;line-height:1.7}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏦 RMD Calculator</h1>
+<p>Required minimum distribution from the IRS Uniform Lifetime Table</p>
+<p class="direct-answer">Your RMD is your account balance as of last December 31, divided by the IRS distribution period for your age. At 75 the factor is 24.6, so $500,000 requires a withdrawal of $20,325 this year (4.07% of the balance, about $1,694 a month). RMDs begin at 73 (75 for anyone born in 1960 or later), the deadline is December 31 each year, and the penalty for a shortfall is 25% — cut to 10% if you correct it in time. Roth IRAs are exempt.</p>
+</div>
+
+<div class="section-card">
+<h2>Your Age &amp; Balance</h2>
+<div class="input-grid">
+<div class="input-group"><label>Age This Year</label><input type="number" id="age" value="75" min="72" max="120" step="1"></div>
+<div class="input-group"><label>Balance as of Dec 31 Last Year ($)</label><input type="number" id="balance" value="500000" min="0" step="1000"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Required Minimum Distribution</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Distribution Period</div><div class="ri-value" id="factor">—</div></div>
+<div class="result-item"><div class="ri-label">Percent of Balance</div><div class="ri-value" id="pctVal">—</div></div>
+<div class="result-item"><div class="ri-label">Monthly Equivalent</div><div class="ri-value" id="moVal">—</div></div>
+<div class="result-item"><div class="ri-label">Next Year's Factor (age +1)</div><div class="ri-value" id="nextFactor">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/roth-conversion-calculator/">Roth Conversion Calculator</a></li><li style="margin:4px 0"><a href="/retirement-calculator/">Retirement Calculator</a></li><li style="margin:4px 0"><a href="/annuity-calculator/">Annuity Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-rmds-are-calculated/">How RMDs are calculated</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>IRS Uniform Lifetime Table (2022–present)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Age</th><th>Distribution Period</th><th>% of Balance Required</th><th>RMD on $500,000</th><th>Age</th><th>Distribution Period</th><th>% of Balance Required</th><th>RMD on $500,000</th></tr></thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Source: IRS Publication 590-B, Uniform Lifetime Table, effective for distribution years beginning on or after January 1, 2022. If your sole beneficiary is a spouse more than 10 years younger, you use the Joint and Last Survivor Table instead, which produces smaller RMDs. The $500,000 column is RMD = 500,000 ÷ factor.</p>
+</div>
+
+<div class="section-card">
+<h2>2025 IRMAA Brackets: Where RMDs Get Expensive</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>MAGI (Single)</th><th>MAGI (Married Joint)</th><th>Part B Premium (per person/mo)</th></tr></thead>
+<tbody>
+<tr><td>Up to $106,000</td><td>Up to $212,000</td><td>$185.00 (standard)</td></tr>
+<tr><td>$106,001 – $133,000</td><td>$212,001 – $266,000</td><td>$259.00</td></tr>
+<tr><td>$133,001 – $167,000</td><td>$266,001 – $334,000</td><td>$370.00</td></tr>
+<tr><td>$167,001 – $200,000</td><td>$334,001 – $400,000</td><td>$480.90</td></tr>
+<tr><td>$200,001 – $500,000</td><td>$400,001 – $750,000</td><td>$591.90</td></tr>
+<tr><td>Over $500,000</td><td>Over $750,000</td><td>$628.90</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">IRMAA is set by your MAGI from two years earlier, and RMDs count toward it. For 2026 coverage the thresholds rise to $109,000 single / $218,000 married with a $202.90 standard premium. The top bracket costs a couple about $10,600 a year extra versus standard. The cliffs are hard edges: $1 of MAGI over a line buys the whole surcharge, which is why people plan withdrawals to land just under a bracket.</p>
+</div>
+
+<div class="content-section">
+<h2>How the RMD Calculator Works</h2>
+<p>Congress doesn't want tax-deferred accounts compounding forever, so traditional IRAs and workplace plans force a yearly withdrawal once you hit the RMD age. The withdrawal is taxed as ordinary income, and the amount is set by formula: balance divided by a life-expectancy factor that shrinks as you age.</p>
+<h3>The formula</h3>
+<p>RMD = prior-year December 31 balance ÷ distribution period from the Uniform Lifetime Table. At 72 the factor is 27.4, at 80 it's 20.2, at 90 it's 12.2. The shrinking factor means the required percentage of your balance climbs every year — roughly 3.6% at 72, 5% at 80, 8.2% at 90.</p>
+<h3>How to use it</h3>
+<p>Enter the age you turn this calendar year and your balance as of December 31 of last year (the custodian statement shows it). The result is this year's required withdrawal. It's per account type aggregated: traditional IRAs can be totaled and the RMD taken from any one of them, but 401(k) RMDs must come from each plan separately.</p>
+<h3>A worked example</h3>
+<p>Maria is 75 and ended last year with $500,000 in her traditional IRA. Her factor is 24.6, so her RMD is 500,000 ÷ 24.6 = <strong>$20,325.20</strong>, due by December 31. Spread evenly that's $1,693.77 a month. Next year, at 76, the factor drops to 23.7 — if the balance held at $500,000, she'd need $21,097.05.</p>
+<p>Now the interaction people miss. That $20,325 lands in her MAGI. If she's single and her other income puts her near the $106,000 IRMAA line, the RMD itself can push her over it, adding $74 a month to Medicare Part B two years later — $888 a year, every year, until MAGI drops back under the bracket. This is exactly why the years <em>before</em> RMDs start matter: filling low-tax brackets with <a href="/roth-conversion-calculator/">Roth conversions</a> shrinks the future RMD base, since Roth accounts never require distributions. Our <a href="/guides/when-to-do-a-roth-conversion/">Roth conversion timing guide</a> walks through that window year by year.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How is an RMD calculated?</h3><p>Divide your account balance as of December 31 of the prior year by the distribution period for your age in the IRS Uniform Lifetime Table. At 75 the factor is 24.6, so $500,000 requires a $20,325 withdrawal (500,000 ÷ 24.6). The factor shrinks each year, so the same balance forces out a growing share over time.</p></div>
+<div class="faq-item"><h3>What age do RMDs start?</h3><p>73 for people born 1951 through 1959, and 75 for those born in 1960 or later (effective 2033) under the SECURE 2.0 Act. RMDs before 2023 started at 72. You calculate each year's RMD using the age you turn that calendar year.</p></div>
+<div class="faq-item"><h3>What is the RMD on $500,000 at age 75?</h3><p>$20,325.20, which is $500,000 divided by the age-75 distribution period of 24.6. That equals 4.07% of the balance, or about $1,694 a month if you spread it evenly. The custodian's number is official; this is the same table they use.</p></div>
+<div class="faq-item"><h3>What happens if I don't take my full RMD?</h3><p>The excise tax is 25% of the amount you failed to withdraw, cut to 10% if you fix the shortfall within the correction period, generally by taking the missed amount and filing Form 5329 in time. Before SECURE 2.0 it was 50%, one of the harshest penalties in the tax code, so the current version is genuinely more forgiving.</p></div>
+<div class="faq-item"><h3>Do Roth IRAs have RMDs?</h3><p>Roth IRAs never require distributions while the owner is alive. Roth 401(k) accounts did require them, but SECURE 2.0 aligned them with Roth IRAs starting in 2024, and you can also roll Roth 401(k) money into a Roth IRA. Traditional IRAs, SEP and SIMPLE IRAs, and most 401(k)/403(b) plans all carry RMDs.</p></div>
+<div class="faq-item"><h3>Can I delay my first RMD?</h3><p>Yes, to April 1 of the year after you hit RMD age. The catch: that delay means taking two RMDs in one calendar year, both counted in your income together. That stacked income can push you into a higher tax bracket or over an IRMAA threshold, so most people take the first one in the year it's due.</p></div>
+<div class="faq-item"><h3>Do RMDs affect IRMAA Medicare premiums?</h3><p>Yes. RMDs are ordinary income, so they count in the MAGI Medicare uses to set Part B and D surcharges two years later. In 2025, MAGI above $106,000 single or $212,000 married triggers IRMAA; the top bracket more than triples the standard premium. Roth withdrawals don't count, which is one reason people run Roth conversions before RMDs begin.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/roth-conversion-calculator/">🔄 Roth Conversion Calculator</a>
+<a href="/retirement-calculator/">🎯 Retirement Calculator</a>
+<a href="/social-security-calculator/">🏛️ Social Security Calculator</a>
+<a href="/annuity-calculator/">📜 Annuity Calculator</a>
+<a href="/income-tax-calculator/">🧾 Income Tax Calculator</a>
+</div>
+</div>
+
+<div class="disclaimer">This calculator is an educational estimate built on the published IRS Uniform Lifetime Table (Publication 590-B). It is not tax, legal, or financial advice. Your custodian computes the official RMD for each account, and special rules (spouse more than 10 years younger, inherited accounts, still working at the plan sponsor) can change the number. Talk to a tax professional about your situation.</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var FACTORS={72:27.4,73:26.5,74:25.5,75:24.6,76:23.7,77:22.9,78:22.0,79:21.1,80:20.2,81:19.4,82:18.5,83:17.7,84:16.8,85:16.0,86:15.2,87:14.4,88:13.7,89:12.9,90:12.2,91:11.5,92:10.8,93:10.1,94:9.5,95:8.9,96:8.4,97:7.8,98:7.3,99:6.8,100:6.4,101:6.0,102:5.6,103:5.2,104:4.9,105:4.6,106:4.3,107:4.1,108:3.9,109:3.7,110:3.5,111:3.4,112:3.3,113:3.1,114:3.0,115:2.9,116:2.8,117:2.7,118:2.5,119:2.3,120:2.0};
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function fmt2(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var age=parseInt(document.getElementById('age').value,10);
+  var bal=parseFloat(document.getElementById('balance').value)||0;
+  var hero=document.getElementById('heroVal'),sub=document.getElementById('heroSub');
+  if(!FACTORS[age]){
+    animateValue(hero,'—');
+    sub.textContent=age&&age<72?'No RMD required before age 73 under current law':'Enter an age from 72 to 120';
+    ['factor','pctVal','moVal','nextFactor'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+  var f=FACTORS[age],rmd=bal/f;
+  animateValue(hero,fmt2(rmd));
+  sub.textContent='Due December 31 — balance ÷ '+f;
+  animateValue(document.getElementById('factor'),f+' years');
+  animateValue(document.getElementById('pctVal'),(100/f).toFixed(2)+'%');
+  animateValue(document.getElementById('moVal'),fmt2(rmd/12)+'/mo');
+  animateValue(document.getElementById('nextFactor'),FACTORS[age+1]?FACTORS[age+1]+' years':'—');
+}
+(function buildTable(){
+  var ages=[];for(var a=72;a<=100;a++)ages.push(a);
+  var rows='',half=Math.ceil(ages.length/2);
+  for(var i=0;i<half;i++){
+    var left=ages[i],right=ages[i+half];
+    function cell(age){
+      if(age===undefined)return '<td></td><td></td><td></td><td></td>';
+      var f=FACTORS[age];
+      return '<td>'+age+'</td><td>'+f+'</td><td>'+(100/f).toFixed(2)+'%</td><td>'+fmt(500000/f)+'</td>';
+    }
+    rows+='<tr>'+cell(left)+cell(right)+'</tr>';
+  }
+  document.getElementById('tableBody').innerHTML=rows;
+})();
+['age','balance'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

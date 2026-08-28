@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Size Calculator — Free Survey Stats Tool | ToolAspect</title>
+<meta name="description" content="Free sample size calculator for surveys and studies. 95% confidence, 5% margin, 50/50 split needs 385 people; a population of 1,000 only needs 278.">
+<link rel="canonical" href="https://toolaspect.com/sample-size-calculator/">
+<meta property="og:title" content="Sample Size Calculator — Free Survey Stats Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Cochran's formula and the finite population correction, with z-scores, margin of error, and population tables.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sample-size-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sample Size Calculator | Free Online Tool">
+<meta name="twitter:description" content="How many survey responses do you need? Confidence level, margin of error, population size.">
+<meta name="keywords" content="sample size calculator, survey sample size, cochran formula, margin of error calculator, how many survey responses do i need, finite population correction, sample size formula">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Sample Size Calculator","description":"Free sample size calculator. Cochran's formula for proportions and the sample mean formula, with finite population correction, margin of error, and z-score tables.","url":"https://toolaspect.com/sample-size-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How many people do I need to survey for 95% confidence?","acceptedAnswer":{"@type":"Answer","text":"For a large or unknown population at a 5% margin of error and a 50/50 response split, Cochran's formula gives 385 responses. Tighten the margin to 3% and it jumps to 1,068; loosen it to 7% and it falls to 196. If your population is small, the finite population correction shrinks the number: 278 for 1,000 people, 218 for 500."}},
+{"@type":"Question","name":"What is Cochran's sample size formula?","acceptedAnswer":{"@type":"Answer","text":"n0 = z² x p(1-p) / e², where z is the critical value for your confidence level, p is the estimated proportion, and e is the margin of error. With z=1.96, p=0.5, and e=0.05, that's 1.96² x 0.25 / 0.0025 = 384.16, rounded up to 385. For a finite population N, apply the correction n = n0 / (1 + (n0-1)/N)."}},
+{"@type":"Question","name":"Why does 385 work for almost any population?","acceptedAnswer":{"@type":"Answer","text":"Sample size grows with the square root of population, so it flattens fast. At 95%/5%, you need 278 of 1,000 people, 357 of 5,000, 370 of 10,000, and 385 of a million or more. The intuition: absolute precision depends on sample size, not what fraction of the population you sampled. That's why a national poll of ~1,000 people has a ±3.1% margin of error."}},
+{"@type":"Question","name":"When do I use the sample mean formula instead?","acceptedAnswer":{"@type":"Answer","text":"When you're estimating an average rather than a percentage, use n = (z x s / e)², where s is the standard deviation from a pilot study or prior data and e is the margin of error in the same units. Estimating average delivery time to within 3 minutes when s=15 needs (1.96 x 15/3)² = 96.04, so 97 measurements."}},
+{"@type":"Question","name":"What z-score goes with each confidence level?","acceptedAnswer":{"@type":"Answer","text":"The common pairs: 80% uses 1.282, 90% uses 1.645, 95% uses 1.96, 98% uses 2.326, and 99% uses 2.576. The z-score is how many standard errors you flank the estimate with; wider confidence needs a bigger z, which raises sample size with the square of it."}},
+{"@type":"Question","name":"Why is p = 0.5 the default?","acceptedAnswer":{"@type":"Answer","text":"p(1-p) hits its maximum at p=0.5, so assuming a 50/50 split guarantees your sample is big enough whatever the true proportion turns out to be. If you already know the answer is lopsided, say 80/20, you can lower n: p(1-p) drops from 0.25 to 0.16, a 36% smaller sample."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Sample Size Calculator","item":"https://toolaspect.com/sample-size-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-toggle{display:flex;gap:6px;margin-bottom:1rem;justify-content:center}
+.mode-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1.1rem;font-size:.85rem;cursor:pointer}
+.mode-btn.active{background:rgba(99,102,241,.15);border-color:var(--primary);color:var(--text);font-weight:600}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📊 Sample Size Calculator</h1>
+<p>How many survey responses or measurements do you actually need?</p>
+</div>
+<p class="direct-answer">Cochran's formula: n = z² x p(1-p) / e². At 95% confidence, a 5% margin of error, and a 50/50 split, that's 1.96² x 0.25 / 0.05² = 385 responses for a large or unknown population. The finite population correction shrinks it against small groups: 278 for a population of 1,000, 218 for 500, 80 for 100. For estimating a mean instead of a proportion, n = (z x s/e)² — with a standard deviation of 15 and a 3-unit margin, that's (1.96 x 15/3)² = 97 measurements. Sample size scales with 1/e², so halving the margin quadruples the work.</p>
+
+<div class="section-card">
+<div class="mode-toggle">
+<button class="mode-btn active" id="btnProp" type="button">Proportion (%)</button>
+<button class="mode-btn" id="btnMean" type="button">Mean (average)</button>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>Confidence Level</label><select id="conf">
+<option value="1.282">80%</option>
+<option value="1.645">90%</option>
+<option value="1.96" selected>95% (standard)</option>
+<option value="2.326">98%</option>
+<option value="2.576">99%</option>
+</select></div>
+<div class="input-group" id="grpP"><label>Response Distribution p (%)</label><input type="number" id="p" value="50" min="1" max="99" step="1"></div>
+<div class="input-group" id="grpS" style="display:none"><label>Std Deviation s (pilot)</label><input type="number" id="s" value="15" min="0.1" step="0.5"></div>
+<div class="input-group"><label>Margin of Error</label><input type="number" id="moe" value="5" min="0.1" step="0.5"></div>
+<div class="input-group"><label>Population Size (blank = infinite)</label><input type="number" id="pop" value="" min="1" step="1" placeholder="e.g. 1000"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label" id="heroLabel">Required Sample Size</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Infinite-Population n</div><div class="ri-value" id="nInf">—</div></div>
+<div class="result-item"><div class="ri-label">Adjusted for Population</div><div class="ri-value" id="nAdj">—</div></div>
+<div class="result-item"><div class="ri-label">Achieved Margin of Error</div><div class="ri-value" id="moeAch">—</div></div>
+<div class="result-item"><div class="ri-label">Confidence z-score</div><div class="ri-value" id="zVal">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/probability-calculator/">Probability Calculator</a></li><li style="margin:4px 0"><a href="/average-calculator/">Average Calculator</a></li><li style="margin:4px 0"><a href="/percentage-calculator/">Percentage Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-calculate-sample-size/">How to calculate sample size</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Sample Size by Population Size (95% confidence, 5% margin, p=50%)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Population</th><th>Required Sample</th><th>Sampling Fraction</th><th>Achieved Margin if You Survey 385 Anyway</th></tr></thead>
+<tbody>
+<tr><td>100</td><td>80</td><td>80%</td><td>— (385 &gt; population)</td></tr>
+<tr><td>200</td><td>132</td><td>66%</td><td>— (385 &gt; population)</td></tr>
+<tr><td>500</td><td>218</td><td>44%</td><td>±2.4%</td></tr>
+<tr><td>1,000</td><td>278</td><td>28%</td><td>±3.9%</td></tr>
+<tr><td>5,000</td><td>357</td><td>7.1%</td><td>±4.8%</td></tr>
+<tr><td>10,000</td><td>370</td><td>3.7%</td><td>±4.9%</td></tr>
+<tr><td>100,000</td><td>383</td><td>0.4%</td><td>±5.0%</td></tr>
+<tr><td>1,000,000+</td><td>385</td><td>&lt;0.04%</td><td>±5.0%</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The pattern to internalize: sample size grows with the square root of the population, so it flattens fast. That's why a national poll of about 1,000 people carries a ±3.1% margin of error while surveying your 200-person company takes 132 responses for ±5%.</p>
+</div>
+
+<div class="section-card">
+<h2>Confidence Levels and z-Scores</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Confidence Level</th><th>z-score</th><th>n at 5% margin, p=50%</th><th>n at 3% margin, p=50%</th></tr></thead>
+<tbody>
+<tr><td>80%</td><td>1.282</td><td>165</td><td>457</td></tr>
+<tr><td>90%</td><td>1.645</td><td>271</td><td>752</td></tr>
+<tr><td>95%</td><td>1.96</td><td>385</td><td>1,068</td></tr>
+<tr><td>98%</td><td>2.326</td><td>542</td><td>1,503</td></tr>
+<tr><td>99%</td><td>2.576</td><td>664</td><td>1,844</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Notice the cost curve: going from 95% to 99% confidence adds 72% more responses for the same margin. Most academic and market research stops at 95%, and student projects are commonly graded against it.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Sample Size Calculator Works</h2>
+<p>Every confidence interval is an estimate flanked by a margin of error, and the margin depends on how much data backs it. These formulas, standard in intro stats courses, invert that relationship: tell them the precision you want, and they return the n that delivers it.</p>
+<h3>The formulas</h3>
+<p><strong>Proportion (Cochran):</strong> n0 = z² x p(1-p) / e². Plug in the z-score for your confidence level, your best guess at the proportion p (0.5 is the safe default), and the margin of error e as a decimal. <strong>Finite population correction:</strong> if you're sampling from a small group of N people, n = n0 / (1 + (n0-1)/N). <strong>Mean:</strong> n = (z x s / e)², with s the standard deviation from a pilot sample and e the margin in real units. Always round up: you need 385 completed responses, not 384.16 people.</p>
+<h3>How to use it</h3>
+<p>Pick the mode: Proportion for questions like "what percent of customers would churn?" and Mean for questions like "what's the average delivery time?" Choose 95% unless you have a reason otherwise. Set p to 50% when you have no prior data; enter your population size when the group is small enough that the correction matters (roughly under 20,000). The achieved-margin output shows what your final n actually buys you.</p>
+<h3>A worked example</h3>
+<p>A student council wants to know what fraction of a 1,000-student school favors later start times, within ±5%, at 95% confidence, with no prior data. Cochran: n0 = 1.96² x 0.5 x 0.5 / 0.05² = 384.16, so 385. But the population is only 1,000, so the correction gives n = 384.16 / (1 + 383.16/1000) = 277.7, so <strong>278 students</strong>. Surveying all 1,000 would be pointless overkill; 278 delivers the promised ±5%.</p>
+<p>Now a mean example. A logistics team knows delivery times have a standard deviation of about 15 minutes from last quarter's data and wants the average to within ±3 minutes at 95%. n = (1.96 x 15 / 3)² = 96.04, so <strong>97 timed deliveries</strong>. If they only need ±5 minutes, n drops to (1.96 x 15/5)² = 34.6, or 35. Precision is expensive exactly when you demand it.</p>
+<p>One caution: these formulas assume a simple random sample and honest responses. Non-response bias, convenience samples, and self-selection break the math no matter how big n is. A survey of 2,000 volunteers can be worse than 400 randomly chosen people.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How many people do I need to survey for 95% confidence?</h3><p>For a large or unknown population at a 5% margin of error and a 50/50 response split, Cochran's formula gives 385 responses. Tighten the margin to 3% and it jumps to 1,068; loosen it to 7% and it falls to 196. If your population is small, the finite population correction shrinks the number: 278 for 1,000 people, 218 for 500.</p></div>
+<div class="faq-item"><h3>What is Cochran's sample size formula?</h3><p>n0 = z² x p(1-p) / e², where z is the critical value for your confidence level, p is the estimated proportion, and e is the margin of error. With z=1.96, p=0.5, and e=0.05, that's 1.96² x 0.25 / 0.0025 = 384.16, rounded up to 385. For a finite population N, apply the correction n = n0 / (1 + (n0-1)/N).</p></div>
+<div class="faq-item"><h3>Why does 385 work for almost any population?</h3><p>Sample size grows with the square root of population, so it flattens fast. At 95%/5%, you need 278 of 1,000 people, 357 of 5,000, 370 of 10,000, and 385 of a million or more. The intuition: absolute precision depends on sample size, not what fraction of the population you sampled. That's why a national poll of ~1,000 people has a ±3.1% margin of error.</p></div>
+<div class="faq-item"><h3>When do I use the sample mean formula instead?</h3><p>When you're estimating an average rather than a percentage, use n = (z x s/e)², where s is the standard deviation from a pilot study or prior data and e is the margin of error in the same units. Estimating average delivery time to within 3 minutes when s=15 needs (1.96 x 15/3)² = 96.04, so 97 measurements.</p></div>
+<div class="faq-item"><h3>What z-score goes with each confidence level?</h3><p>The common pairs: 80% uses 1.282, 90% uses 1.645, 95% uses 1.96, 98% uses 2.326, and 99% uses 2.576. The z-score is how many standard errors you flank the estimate with; wider confidence needs a bigger z, which raises sample size with the square of it.</p></div>
+<div class="faq-item"><h3>Why is p = 0.5 the default?</h3><p>p(1-p) hits its maximum at p=0.5, so assuming a 50/50 split guarantees your sample is big enough whatever the true proportion turns out to be. If you already know the answer is lopsided, say 80/20, you can lower n: p(1-p) drops from 0.25 to 0.16, a 36% smaller sample.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/probability-calculator/">🎲 Probability Calculator</a>
+<a href="/average-calculator/">📐 Average Calculator</a>
+<a href="/percentage-calculator/">💯 Percentage Calculator</a>
+<a href="/scientific-calculator/">🔬 Scientific Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var mode='prop';
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('btnProp').classList.toggle('active',m==='prop');
+  document.getElementById('btnMean').classList.toggle('active',m==='mean');
+  document.getElementById('grpP').style.display=m==='prop'?'':'none';
+  document.getElementById('grpS').style.display=m==='mean'?'':'none';
+  document.getElementById('moe').value=m==='prop'?5:3;
+  calc();
+}
+function calc(){
+  var z=parseFloat(document.getElementById('conf').value);
+  var eRaw=parseFloat(document.getElementById('moe').value)||0;
+  var popRaw=parseFloat(document.getElementById('pop').value);
+  var N=popRaw>0?popRaw:0;
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+
+  var n0;
+  if(mode==='prop'){
+    var p=(parseFloat(document.getElementById('p').value)||50)/100;
+    var e=eRaw/100;
+    if(e<=0||p<=0||p>=1){animateValue(hero,'—');sub.textContent='Margin must be > 0% and p between 1 and 99';return;}
+    n0=z*z*p*(1-p)/(e*e);
+  }else{
+    var s=parseFloat(document.getElementById('s').value)||0;
+    if(eRaw<=0||s<=0){animateValue(hero,'—');sub.textContent='Enter std deviation and margin in the same units';return;}
+    n0=(z*s/eRaw)*(z*s/eRaw);
+  }
+  var n0c=Math.ceil(n0);
+  var nAdj=N>0?Math.ceil(n0/(1+(n0-1)/N)):n0c;
+
+  animateValue(hero,nAdj.toLocaleString('en-US')+' '+(mode==='prop'?'responses':'measurements'));
+  sub.textContent=N>0?'of a population of '+N.toLocaleString('en-US')+' (finite population correction applied)':'infinite or unknown population — no correction needed';
+  animateValue(document.getElementById('nInf'),n0c.toLocaleString('en-US'));
+  animateValue(document.getElementById('nAdj'),N>0?nAdj.toLocaleString('en-US'):'n/a');
+
+  // achieved margin at nAdj (with FPC when N given)
+  var ach;
+  if(mode==='prop'){
+    var se;
+    if(N>0){
+      var f=nAdj/N;
+      se=Math.sqrt(0.25/nAdj*(1-f));
+    }else{
+      se=Math.sqrt(0.25/nAdj);
+    }
+    ach='±'+(z*se*100).toFixed(1)+'%';
+  }else{
+    ach='±'+(z*(parseFloat(document.getElementById('s').value)||0)/Math.sqrt(nAdj)).toFixed(1)+' units';
+  }
+  animateValue(document.getElementById('moeAch'),ach);
+  animateValue(document.getElementById('zVal'),z);
+}
+document.getElementById('btnProp').addEventListener('click',function(){setMode('prop');});
+document.getElementById('btnMean').addEventListener('click',function(){setMode('mean');});
+['moe','p','s','pop'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+document.getElementById('conf').addEventListener('change',calc);
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

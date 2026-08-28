@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAT Score Calculator — Raw to Scaled | ToolAspect</title>
+<meta name="description" content="Free SAT score calculator. Convert raw correct answers to scaled scores and percentiles. RW 53 + Math 38 right scores 1200–1250, the 75th–80th percentile.">
+<link rel="canonical" href="https://toolaspect.com/sat-score-calculator/">
+<meta property="og:title" content="SAT Score Calculator — Raw to Scaled">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Raw score to scaled score to percentile, using College Board's official conversion table.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sat-score-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SAT Score Calculator | Free Online Tool">
+<meta name="twitter:description" content="Raw to scaled to percentile, from published College Board tables.">
+<meta name="keywords" content="sat score calculator, sat raw score, sat scaled score, sat percentile, sat conversion table, digital sat scoring, what is a good sat score">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SAT Score Calculator","description":"Free SAT score calculator. Convert raw scores (questions correct per module) to scaled section scores and total score ranges, then to national percentiles, using College Board's published conversion tables.","url":"https://toolaspect.com/sat-score-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is the SAT scored?","acceptedAnswer":{"@type":"Answer","text":"Each correct answer is 1 raw point, with no penalty for wrong answers. Your raw score in each section (Reading & Writing and Math) converts to a scaled score of 200–800 through equating, which adjusts for small difficulty differences between test forms. The two section scores add up to the 400–1600 total."}},
+{"@type":"Question","name":"How many questions can I miss and still get 1400?","acceptedAnswer":{"@type":"Answer","text":"On the College Board practice form this calculator uses, a raw 61/66 in Reading & Writing scales to 710–730 and a raw 46/54 in Math scales to 690–720, for a 1400–1450 total. That's roughly 5 questions wrong in RW and 8 in Math. Exact allowances shift a few questions by form, so treat it as a target band, not a guarantee."}},
+{"@type":"Question","name":"Is there a penalty for wrong answers on the SAT?","acceptedAnswer":{"@type":"Answer","text":"No. Since 2016 the SAT has used rights-only scoring: wrong answers and blanks both score 0, and a wrong guess can never hurt you. If time is running out, fill in an answer for every remaining question — a coin-flip guess has positive expected value."}},
+{"@type":"Question","name":"Is the SAT curved?","acceptedAnswer":{"@type":"Answer","text":"No, and this distinction matters. A curve would set your score relative to that day's test takers. Instead the SAT is equated: each form's raw-to-scaled conversion is calibrated in advance against a reference group, so a raw score earns the same scaled score no matter when you test or who else is in the room."}},
+{"@type":"Question","name":"What is a good SAT score?","acceptedAnswer":{"@type":"Answer","text":"Context sets the bar. The national mean has run about 1020–1030 in recent graduating classes, so 1050 clears the average, 1200 (roughly the 75th percentile) is competitive for state flagships, 1400+ (93rd percentile and up) opens selective admissions, and 1500+ puts you in the top 2–3%. Match the target to your actual college list rather than chasing the ceiling."}},
+{"@type":"Question","name":"Why does this calculator show a score range instead of one number?","acceptedAnswer":{"@type":"Answer","text":"Because the source is College Board's official scoring worksheet for the paper edition of its practice tests, which is deliberately simplified: it reports each section as a lower–upper range instead of a single equated score. Bluebook, the digital testing app, scores the real adaptive test precisely. Treat the range as the honest uncertainty band — your official score should land inside it."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"SAT Score Calculator","item":"https://toolaspect.com/sat-score-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.input-hint{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🎓 SAT Score Calculator</h1>
+<p>Raw correct answers → scaled scores → national percentile</p>
+<p class="direct-answer">The SAT scores each section 200–800 from your raw score (questions correct, no penalty for wrong answers), then adds them for a 400–1600 total. On College Board's official practice-test conversion, 53/66 right in Reading &amp; Writing scales to 630–650 and 38/54 in Math to 570–600, for a total of 1200–1250 — the 75th–80th percentile nationally. A raw 61 + 46 gets you to the 1400s. Equating means every form's conversion differs slightly, so expect your official score inside, not exactly at, the midpoint.</p>
+</div>
+
+<div class="section-card">
+<h2>Questions Correct (Raw Score)</h2>
+<div class="input-grid">
+<div class="input-group"><label>Reading &amp; Writing — Module 1</label><input type="number" id="rw1" value="25" min="0" max="33" step="1"><span class="input-hint">0–33 correct</span></div>
+<div class="input-group"><label>Reading &amp; Writing — Module 2</label><input type="number" id="rw2" value="28" min="0" max="33" step="1"><span class="input-hint">0–33 correct</span></div>
+<div class="input-group"><label>Math — Module 1</label><input type="number" id="m1" value="18" min="0" max="27" step="1"><span class="input-hint">0–27 correct</span></div>
+<div class="input-group"><label>Math — Module 2</label><input type="number" id="m2" value="20" min="0" max="27" step="1"><span class="input-hint">0–27 correct</span></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Total SAT Score Range</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Reading &amp; Writing (200–800)</div><div class="ri-value" id="rwVal">—</div></div>
+<div class="result-item"><div class="ri-label">Math (200–800)</div><div class="ri-value" id="mathVal">—</div></div>
+<div class="result-item"><div class="ri-label">RW Raw / 66</div><div class="ri-value" id="rwRaw">—</div></div>
+<div class="result-item"><div class="ri-label">Math Raw / 54</div><div class="ri-value" id="mathRaw">—</div></div>
+<div class="result-item"><div class="ri-label">Percentile (lower bound)</div><div class="ri-value" id="pctLo">—</div></div>
+<div class="result-item"><div class="ri-label">Percentile (upper bound)</div><div class="ri-value" id="pctHi">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/gpa-calculator/">GPA Calculator</a></li><li style="margin:4px 0"><a href="/words-per-minute-test/">Typing Speed Test</a></li><li style="margin:4px 0"><a href="/molar-mass-calculator/">Molar Mass Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-the-sat-is-scored/">How the SAT is scored</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Raw to Scaled Conversion (Official Practice Test)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Raw Score</th><th>Reading &amp; Writing</th><th>Math</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>200</td><td>200</td></tr>
+<tr><td>10</td><td>230–250</td><td>250–280</td></tr>
+<tr><td>20</td><td>370–390</td><td>360–390</td></tr>
+<tr><td>30</td><td>450–470</td><td>470–500</td></tr>
+<tr><td>40</td><td>530–550</td><td>590–620</td></tr>
+<tr><td>50</td><td>610–630</td><td>750–780</td></tr>
+<tr><td>54</td><td>640–660</td><td>790–800</td></tr>
+<tr><td>61</td><td>710–730</td><td>—</td></tr>
+<tr><td>66 (max RW)</td><td>790–800</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Source: College Board's official scoring guide for SAT Practice Test 4 (paper edition of the digital SAT, © 2023 College Board). The SAT is equated, not curved: each test form has its own slightly different table, and the paper worksheet reports ranges. Full table (every raw score) is built into the calculator above.</p>
+</div>
+
+<div class="section-card">
+<h2>SAT Percentiles by Total Score (User Group)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Total Score</th><th>User Percentile</th><th>What It Means</th></tr></thead>
+<tbody>
+<tr><td>1550–1600</td><td>99+</td><td>Top 1% — elite admissions territory</td></tr>
+<tr><td>1500</td><td>97</td><td>Top 3%</td></tr>
+<tr><td>1450</td><td>95</td><td>Top 5% — strong at almost any school</td></tr>
+<tr><td>1400</td><td>93</td><td>Top 7% — competitive for selective admissions</td></tr>
+<tr><td>1350</td><td>89</td><td>Top 11%</td></tr>
+<tr><td>1300</td><td>85</td><td>Top 15%</td></tr>
+<tr><td>1250</td><td>80</td><td>Top 20%</td></tr>
+<tr><td>1200</td><td>75</td><td>Top quartile</td></tr>
+<tr><td>1100</td><td>62</td><td>Above average</td></tr>
+<tr><td>1030</td><td>50</td><td>National median (recent classes average ≈1020–1030)</td></tr>
+<tr><td>900</td><td>32</td><td>Below average</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Source: College Board's published SAT percentile tables (user group: students who took the SAT across the past three graduating classes). Nationally representative percentiles, which weight for all 11th–12th graders, run a few points higher at the same score.</p>
+</div>
+
+<div class="content-section">
+<h2>How the SAT Score Calculator Works</h2>
+<p>The SAT reports two section scores, Reading &amp; Writing and Math, each from 200 to 800, summing to a 400–1600 total. Getting there takes three steps: count your correct answers per module (that's your raw score), convert raw to scaled through the form's equating table, then place the total on the national percentile distribution.</p>
+<h3>Raw score: no guessing penalty</h3>
+<p>Every correct answer adds 1 raw point. Wrong answers and blanks both add 0, and a wrong answer never subtracts — the guessing penalty died in 2016. Strategy follows the rule: never leave bubbles empty at the end of a section.</p>
+<h3>Scaled score: equated, not curved</h3>
+<p>Raw counts aren't comparable across forms — one month's math section might be a touch harder than another's. Equating fixes that: College Board pre-calibrates each form's raw-to-scaled table so a raw 38 earns essentially the same scaled score whenever you sit for the test. This calculator uses the official table published for the practice-test form; your real form's table will differ by a question here or there, which is part of why you get a range.</p>
+<h3>A worked example</h3>
+<p>Say you count 25 and 28 correct in the two Reading &amp; Writing modules — raw 53 out of 66 — and 18 plus 20 in Math, raw 38 out of 54. The conversion gives RW 630–650 and Math 570–600, so the total lands between <strong>1200 and 1250</strong>. On the user-group percentile table that's the 75th to 80th percentile: you scored even with or better than three-quarters of test takers.</p>
+<p>Push to the 1400s: raw 61/66 in RW scales to 710–730, and 46/54 in Math to 690–720, totaling 1400–1450 — the 92nd–95th percentile. On this form that's about 5 questions wrong in RW and 8 in Math. The margin is thin up top: one raw point in Math around 50 is worth about 10 scaled points.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How is the SAT scored?</h3><p>Each correct answer is 1 raw point, with no penalty for wrong answers. Your raw score in each section (Reading &amp; Writing and Math) converts to a scaled score of 200–800 through equating, which adjusts for small difficulty differences between test forms. The two section scores add up to the 400–1600 total.</p></div>
+<div class="faq-item"><h3>How many questions can I miss and still get 1400?</h3><p>On the College Board practice form this calculator uses, a raw 61/66 in Reading &amp; Writing scales to 710–730 and a raw 46/54 in Math scales to 690–720, for a 1400–1450 total. That's roughly 5 questions wrong in RW and 8 in Math. Exact allowances shift a few questions by form, so treat it as a target band, not a guarantee.</p></div>
+<div class="faq-item"><h3>Is there a penalty for wrong answers on the SAT?</h3><p>No. Since 2016 the SAT has used rights-only scoring: wrong answers and blanks both score 0, and a wrong guess can never hurt you. If time is running out, fill in an answer for every remaining question — a coin-flip guess has positive expected value.</p></div>
+<div class="faq-item"><h3>Is the SAT curved?</h3><p>No, and this distinction matters. A curve would set your score relative to that day's test takers. Instead the SAT is equated: each form's raw-to-scaled conversion is calibrated in advance against a reference group, so a raw score earns the same scaled score no matter when you test or who else is in the room.</p></div>
+<div class="faq-item"><h3>What is a good SAT score?</h3><p>Context sets the bar. The national mean has run about 1020–1030 in recent graduating classes, so 1050 clears the average, 1200 (roughly the 75th percentile) is competitive for state flagships, 1400+ (93rd percentile and up) opens selective admissions, and 1500+ puts you in the top 2–3%. Match the target to your actual college list rather than chasing the ceiling.</p></div>
+<div class="faq-item"><h3>Why does this calculator show a score range instead of one number?</h3><p>Because the source is College Board's official scoring worksheet for the paper edition of its practice tests, which is deliberately simplified: it reports each section as a lower–upper range instead of a single equated score. Bluebook, the digital testing app, scores the real adaptive test precisely. Treat the range as the honest uncertainty band — your official score should land inside it.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/gpa-calculator/">🎓 GPA Calculator</a>
+<a href="/words-per-minute-test/">⌨️ Typing Speed Test</a>
+<a href="/molar-mass-calculator/">🧪 Molar Mass Calculator</a>
+<a href="/reading-time-calculator/">📖 Reading Time Calculator</a>
+<a href="/standard-deviation-calculator/">📊 Standard Deviation</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// Raw -> [lower, upper] scaled score. Source: College Board scoring guide,
+// SAT Practice Test 4 (paper edition of the digital SAT), (c) 2023 College Board.
+var RW={0:[200,200],1:[200,200],2:[200,200],3:[200,200],4:[200,200],5:[200,200],6:[200,200],7:[200,210],8:[200,220],9:[210,230],10:[230,250],11:[240,260],12:[250,270],13:[260,280],14:[280,300],15:[290,310],16:[320,340],17:[340,360],18:[350,370],19:[360,380],20:[370,390],21:[370,390],22:[380,400],23:[390,410],24:[400,420],25:[410,430],26:[420,440],27:[420,440],28:[430,450],29:[440,460],30:[450,470],31:[460,480],32:[460,480],33:[470,490],34:[480,500],35:[490,510],36:[490,510],37:[500,520],38:[510,530],39:[520,540],40:[530,550],41:[540,560],42:[540,560],43:[550,570],44:[560,580],45:[570,590],46:[580,600],47:[590,610],48:[590,610],49:[600,620],50:[610,630],51:[620,640],52:[630,650],53:[630,650],54:[640,660],55:[650,670],56:[660,680],57:[670,690],58:[680,700],59:[690,710],60:[700,720],61:[710,730],62:[720,740],63:[730,750],64:[750,770],65:[770,790],66:[790,800]};
+var MA={0:[200,200],1:[200,200],2:[200,200],3:[200,200],4:[200,200],5:[200,200],6:[200,200],7:[200,220],8:[200,230],9:[220,250],10:[250,280],11:[280,310],12:[290,320],13:[300,330],14:[310,340],15:[320,350],16:[330,360],17:[330,360],18:[340,370],19:[350,380],20:[360,390],21:[370,400],22:[370,400],23:[380,410],24:[390,420],25:[400,430],26:[420,450],27:[430,460],28:[440,470],29:[460,490],30:[470,500],31:[480,510],32:[500,530],33:[510,540],34:[520,550],35:[530,560],36:[550,580],37:[560,590],38:[570,600],39:[580,610],40:[590,620],41:[600,630],42:[620,650],43:[630,660],44:[650,680],45:[670,700],46:[690,720],47:[710,740],48:[730,760],49:[740,770],50:[750,780],51:[760,790],52:[770,800],53:[780,800],54:[790,800]};
+// Total score -> user-group percentile. Source: College Board published SAT percentile tables.
+var PCT={1600:'99+',1590:'99+',1580:'99+',1570:'99+',1560:'99+',1550:'99',1540:'99',1530:'99',1520:'98',1510:'98',1500:'97',1490:'97',1480:'97',1470:'96',1460:'96',1450:'95',1440:'95',1430:'94',1420:'94',1410:'93',1400:'93',1390:'92',1380:'91',1370:'91',1360:'90',1350:'89',1340:'88',1330:'88',1320:'87',1310:'86',1300:'85',1290:'84',1280:'83',1270:'82',1260:'81',1250:'80',1240:'79',1230:'78',1220:'77',1210:'76',1200:'75',1190:'74',1180:'72',1170:'71',1160:'70',1150:'69',1140:'67',1130:'66',1120:'65',1110:'63',1100:'62',1090:'60',1080:'59',1070:'58',1060:'56',1050:'55',1040:'53',1030:'52',1020:'50',1010:'48',1000:'47',990:'45',980:'44',970:'42',960:'41',950:'39',940:'38',930:'36',920:'35',910:'33',900:'32',890:'30',880:'29',870:'27',860:'26',850:'24',840:'23',830:'21',820:'20',810:'18',800:'17',790:'16',780:'14',770:'13',760:'12',750:'11',740:'10',730:'9',720:'8',710:'7',700:'6',690:'5',680:'5',670:'4',660:'4',650:'3',640:'3',630:'3',620:'2',610:'2',600:'2',590:'2',580:'2',570:'1',560:'1',550:'1',540:'1',530:'1',520:'1',510:'1',500:'1',490:'1-',480:'1-',470:'1-',460:'1-',450:'1-',440:'1-',430:'1-',420:'1-',410:'1-',400:'1-'};
+function clamp(v,lo,hi){return Math.min(hi,Math.max(lo,isNaN(v)?0:v));}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function pctAt(score){
+  var s=Math.round(clamp(score,400,1600)/10)*10;
+  return PCT[s]||'1-';
+}
+function calc(){
+  var rw1=clamp(parseInt(document.getElementById('rw1').value,10)||0,0,33);
+  var rw2=clamp(parseInt(document.getElementById('rw2').value,10)||0,0,33);
+  var mm1=clamp(parseInt(document.getElementById('m1').value,10)||0,0,27);
+  var mm2=clamp(parseInt(document.getElementById('m2').value,10)||0,0,27);
+  var rwRaw=rw1+rw2,mRaw=mm1+mm2;
+  var rwS=RW[rwRaw],mS=MA[mRaw];
+  var lo=rwS[0]+mS[0],hi=rwS[1]+mS[1];
+  animateValue(document.getElementById('heroVal'),lo+'–'+hi);
+  document.getElementById('heroSub').textContent=pctAt(lo)+' to '+pctAt(hi)+' percentile (user group)';
+  animateValue(document.getElementById('rwVal'),rwS[0]+'–'+rwS[1]);
+  animateValue(document.getElementById('mathVal'),mS[0]+'–'+mS[1]);
+  animateValue(document.getElementById('rwRaw'),rwRaw+' / 66');
+  animateValue(document.getElementById('mathRaw'),mRaw+' / 54');
+  animateValue(document.getElementById('pctLo'),pctAt(lo)+' percentile');
+  animateValue(document.getElementById('pctHi'),pctAt(hi)+' percentile');
+}
+['rw1','rw2','m1','m2'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

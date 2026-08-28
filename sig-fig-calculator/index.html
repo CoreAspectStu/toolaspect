@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sig Fig Calculator — Free Math Tool | ToolAspect</title>
+<meta name="description" content="Free sig fig calculator. Round 0.004578 to 2 significant figures (0.0046) or count the sig figs in any number, scientific notation included.">
+<link rel="canonical" href="https://toolaspect.com/sig-fig-calculator/">
+<meta property="og:title" content="Sig Fig Calculator — Free Math Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Count significant figures and round any number to the precision you need, with the rules explained.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sig-fig-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sig Fig Calculator | Free Online Tool">
+<meta name="twitter:description" content="Round to N significant figures and count sig figs in any number.">
+<meta name="keywords" content="sig fig calculator, significant figures calculator, sig figs, how many significant figures, rounding significant figures, significant digits calculator, sig fig counter">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Sig Fig Calculator","description":"Free significant figures calculator. Round any number to N sig figs and count how many significant figures a number has, scientific notation supported.","url":"https://toolaspect.com/sig-fig-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How many significant figures are in 1000?","acceptedAnswer":{"@type":"Answer","text":"One, as written. Without a decimal point, trailing zeros in a whole number are placeholders and don't count. Write 1000. (with the decimal point shown) and it has 4 significant figures; 1.0 × 10³ has 2. If a problem says a value is known to the nearest unit, you can treat all the zeros as significant, but the number alone doesn't tell you that."}},
+{"@type":"Question","name":"Do leading zeros count as significant figures?","acceptedAnswer":{"@type":"Answer","text":"Never. In 0.004578, the three zeros after the decimal point only set the magnitude; the 4, 5, 7, and 8 are the 4 significant figures. Zeros between nonzero digits are different: 3.005 has 4 sig figs because the zeros are trapped between the 3 and the 5."}},
+{"@type":"Question","name":"Do trailing zeros count after a decimal point?","acceptedAnswer":{"@type":"Answer","text":"Yes. Once a decimal point is present, trailing zeros are measured digits, not placeholders: 2.000 has 4 sig figs and 0.050 has 2 (the 5 and the final 0). A chemist who writes 25.20 mL instead of 25.2 mL is telling you the measurement is precise to the hundredths place."}},
+{"@type":"Question","name":"Does this calculator round halves up or to even?","acceptedAnswer":{"@type":"Answer","text":"It aims for the half-away-from-zero convention most science classes use, so 1.35 to 2 sig figs rounds up to 1.4. But binary floating point nudges numbers that look like exact decimal halves: 3.15 to 2 sig figs comes out 3.1 and 2.675 to 3 sig figs comes out 2.67, because the stored values sit a hair under the decimal half. A few fields use banker's rounding (to the nearest even digit) instead, which this tool does not use."}},
+{"@type":"Question","name":"How do sig figs work in multiplication and addition?","acceptedAnswer":{"@type":"Answer","text":"Different rules. For multiplication and division, the result keeps the smallest number of sig figs among the inputs: 4.56 × 1.4 = 6.384, which rounds to 6.4 because 1.4 has 2 sig figs. For addition and subtraction, the result keeps the smallest number of decimal places: 12.11 + 0.3 = 12.41, which becomes 12.4 because 0.3 has one decimal place."}},
+{"@type":"Question","name":"How do I count sig figs in scientific notation?","acceptedAnswer":{"@type":"Answer","text":"Count only the digits in the coefficient. 6.02 × 10²³ has 3 sig figs, and 2.0 × 10³ has 2. The exponent exists to handle magnitude, so it never contributes digits. That's the whole reason scientists write big and small numbers this way: it removes the trailing-zero ambiguity of 1000-style notation."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Sig Fig Calculator","item":"https://toolaspect.com/sig-fig-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.92rem;color:var(--text);line-height:1.7}
+.aio-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔬 Sig Fig Calculator</h1>
+<p>Count significant figures and round any number to the precision you need</p>
+</div>
+
+<div class="aio-answer"><strong>Quick answer:</strong> 0.004578 rounded to 2 significant figures is <strong>0.0046</strong>; rounded to 3 it's 0.00458. The number 0.004578 has <strong>4 sig figs</strong>, because leading zeros never count. Trailing zeros count only when a decimal point is present: 100 has 1 sig fig, 100. has 3, and 2.000 has 4.</div>
+
+<div class="section-card">
+<h2>Your Number</h2>
+<div class="input-grid">
+<div class="input-group"><label>Number (e.g. 0.004578 or 6.02e23)</label><input type="text" id="num" value="0.004578" autocomplete="off" spellcheck="false"></div>
+<div class="input-group"><label>Round to N Significant Figures</label><input type="number" id="sf" value="2" min="1" max="20" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Rounded Value</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Sig Figs in Your Input</div><div class="ri-value" id="countVal">—</div></div>
+<div class="result-item"><div class="ri-label">Scientific Notation</div><div class="ri-value" id="sciVal">—</div></div>
+<div class="result-item"><div class="ri-label">Decimal Form</div><div class="ri-value" id="decVal">—</div></div>
+<div class="result-item"><div class="ri-label">What Changed</div><div class="ri-value" id="noteVal" style="font-size:.95rem">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/scientific-calculator/">Scientific Calculator</a></li><li style="margin:4px 0"><a href="/percentage-calculator/">Percentage</a></li><li style="margin:4px 0"><a href="/fraction-calculator/">Fraction</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-count-significant-figures/">How to count significant figures</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>How to Count Significant Figures</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Rule</th><th>Example</th><th>Sig Figs</th></tr></thead>
+<tbody>
+<tr><td>Nonzero digits always count</td><td>4578</td><td>4</td></tr>
+<tr><td>Leading zeros never count</td><td>0.004578</td><td>4</td></tr>
+<tr><td>Zeros between nonzero digits count</td><td>3.005</td><td>4</td></tr>
+<tr><td>Trailing zeros after a decimal count</td><td>2.000</td><td>4</td></tr>
+<tr><td>Trailing zeros after a decimal count</td><td>0.050</td><td>2</td></tr>
+<tr><td>Zeros after a decimal in a mixed number count</td><td>2500.0</td><td>5</td></tr>
+<tr><td>Trailing zeros with no decimal are ambiguous (placeholders)</td><td>100</td><td>1</td></tr>
+<tr><td>A decimal point makes trailing zeros significant</td><td>100.</td><td>3</td></tr>
+<tr><td>Scientific notation: count only the coefficient</td><td>6.02 × 10²³</td><td>3</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Rounding Examples (Verified)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Original</th><th>Round to</th><th>Result</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>0.004578</td><td>2 sf</td><td>0.0046</td><td>The 7 rounds the 5 up to 6</td></tr>
+<tr><td>0.004578</td><td>3 sf</td><td>0.00458</td><td>One more digit survives</td></tr>
+<tr><td>4578</td><td>2 sf</td><td>4600</td><td>4.6 × 10³; zeros are placeholders</td></tr>
+<tr><td>123.456</td><td>4 sf</td><td>123.5</td><td>Standard half-up rounding</td></tr>
+<tr><td>3.14159</td><td>3 sf</td><td>3.14</td><td>π trimmed for homework</td></tr>
+<tr><td>99.98</td><td>3 sf</td><td>100</td><td>The carry swallows the decimal point</td></tr>
+<tr><td>6.022 × 10²³</td><td>4 sf</td><td>6.022 × 10²³</td><td>Already exact to 4</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Sig Fig Calculator Works</h2>
+<p>Significant figures are the digits in a number that carry real measurement information. A lab balance that reads 2.000 g is claiming precision down to the milligram; "about 2 grams" written as 2 g claims none. Science teachers grade sig figs hard because calculations should never look more precise than the measurements going in.</p>
+<h3>Counting rules</h3>
+<p>Three rules settle almost every case. Nonzero digits always count. Zeros sandwiched between nonzero digits count. Zeros at the edges are the tricky ones: leading zeros (0.004578) only position the decimal and never count, while trailing zeros count exactly when a decimal point is present somewhere in the number. That last asymmetry is why 100, 100., and 1.00 × 10² all describe the same magnitude with three different claims of precision.</p>
+<h3>Rounding to N sig figs</h3>
+<p>Keep the first N significant digits, then round the Nth digit using digit N+1 (halves round away from zero, the convention most science classes use). Everything after the kept digits becomes a placeholder zero, or an exponent if you prefer scientific notation. The calculator shows both forms side by side, because 4600 written out and 4.6 × 10³ make different claims about precision on paper even though this tool treats them the same.</p>
+<h3>How to use it</h3>
+<p>Type any number, including scientific notation like 6.02e23 or 1.602e-19, and pick how many sig figs to keep. The result box shows the rounded value plus the sig-fig count of what you typed, which is half the homework battle: rounding to 4 sig figs means little if you miscount the input as 4 when it was 3.</p>
+<h3>Two worked examples</h3>
+<p>First, 0.004578 to 2 sig figs. The significant digits are 4, 5, 7, 8 (leading zeros skipped). Keep 4 and 5, then round using the 7: the 5 rounds up, giving 0.0046. Second, 4578 to 2 sig figs. Keep 4 and 5, round using the 7, and the 5 becomes 6: 4.6 × 10³, or 4600 as a plain number. Same four significant digits, same rounding step, wildly different-looking answers.</p>
+<p>Sig figs also follow your arithmetic. Multiply or divide, and the answer keeps the least number of sig figs among the inputs: 4.56 × 1.4 = 6.384, reported as 6.4 because 1.4 has 2 sig figs. Add or subtract, and the answer keeps the least number of decimal places: 12.11 + 0.3 = 12.41, reported as 12.4 because 0.3 stops at the tenths place.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How many significant figures are in 1000?</h3><p>One, as written. Without a decimal point, trailing zeros in a whole number are placeholders and don't count. Write 1000. (with the decimal point shown) and it has 4 significant figures; 1.0 × 10³ has 2. If a problem says a value is known to the nearest unit, you can treat all the zeros as significant, but the number alone doesn't tell you that.</p></div>
+<div class="faq-item"><h3>Do leading zeros count as significant figures?</h3><p>Never. In 0.004578, the three zeros after the decimal point only set the magnitude; the 4, 5, 7, and 8 are the 4 significant figures. Zeros between nonzero digits are different: 3.005 has 4 sig figs because the zeros are trapped between the 3 and the 5.</p></div>
+<div class="faq-item"><h3>Do trailing zeros count after a decimal point?</h3><p>Yes. Once a decimal point is present, trailing zeros are measured digits, not placeholders: 2.000 has 4 sig figs and 0.050 has 2 (the 5 and the final 0). A chemist who writes 25.20 mL instead of 25.2 mL is telling you the measurement is precise to the hundredths place.</p></div>
+<div class="faq-item"><h3>Does this calculator round halves up or to even?</h3><p>It aims for the half-away-from-zero convention most science classes use, so 1.35 to 2 sig figs rounds up to 1.4. But binary floating point nudges numbers that look like exact decimal halves: 3.15 to 2 sig figs comes out 3.1 and 2.675 to 3 sig figs comes out 2.67, because the stored values sit a hair under the decimal half. A few fields use banker's rounding (to the nearest even digit) instead, which this tool does not use.</p></div>
+<div class="faq-item"><h3>How do sig figs work in multiplication and addition?</h3><p>Different rules. For multiplication and division, the result keeps the smallest number of sig figs among the inputs: 4.56 × 1.4 = 6.384, which rounds to 6.4 because 1.4 has 2 sig figs. For addition and subtraction, the result keeps the smallest number of decimal places: 12.11 + 0.3 = 12.41, which becomes 12.4 because 0.3 has one decimal place.</p></div>
+<div class="faq-item"><h3>How do I count sig figs in scientific notation?</h3><p>Count only the digits in the coefficient. 6.02 × 10²³ has 3 sig figs, and 2.0 × 10³ has 2. The exponent exists to handle magnitude, so it never contributes digits. That's the whole reason scientists write big and small numbers this way: it removes the trailing-zero ambiguity of 1000-style notation.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/scientific-calculator/">🧮 Scientific Calculator</a>
+<a href="/percentage-calculator/">％ Percentage Calculator</a>
+<a href="/fraction-calculator/">½ Fraction Calculator</a>
+<a href="/quadratic-equation-solver/">𝑥 Quadratic Solver</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function countSF(raw){
+  var s=String(raw).trim().replace(/^[+-]/,'');
+  if(!/^[0-9.]*([eE][+-]?[0-9]+)?$/.test(s))return null;
+  var mant=s.toLowerCase().split('e')[0];
+  if(!/\d/.test(mant))return null;
+  var digits=mant.replace(/[^0-9]/g,'');
+  if(mant.indexOf('.')>=0){
+    return digits.replace(/^0+/,'').length;
+  }
+  var noTrail=digits.replace(/0+$/,'');
+  return noTrail.length||digits.length;
+}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function sciPretty(p){
+  return p.replace('e+',' × 10^').replace('e-',' × 10^-');
+}
+function calc(){
+  var raw=document.getElementById('num').value;
+  var sf=parseInt(document.getElementById('sf').value,10);
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+  var x=parseFloat(raw);
+  var count=countSF(raw);
+
+  if(count===null||!isFinite(x)){
+    animateValue(hero,'—');
+    sub.textContent='Enter a valid number (try 0.004578 or 6.02e23)';
+    ['countVal','sciVal','decVal'].forEach(function(id){document.getElementById(id).textContent='—';});
+    document.getElementById('noteVal').textContent='—';
+    return;
+  }
+  animateValue(document.getElementById('countVal'),count);
+  animateValue(document.getElementById('sciVal'),sciPretty(x.toExponential()));
+  animateValue(document.getElementById('decVal'),String(x));
+
+  if(!(sf>=1)||sf>count){
+    if(!(sf>=1)){animateValue(hero,'—');sub.textContent='Pick at least 1 sig fig';}
+    else{animateValue(hero,sciPretty(x.toPrecision(count)));sub.textContent='Your input only has '+count+' sig figs (showing it unrounded)';}
+    document.getElementById('noteVal').textContent=sf>count?'Already at '+count+' sf':'—';
+    return;
+  }
+  var p=x.toPrecision(sf);
+  animateValue(hero,sciPretty(p));
+  sub.textContent=p.indexOf('e')<0?p+' ('+sf+' sig figs)':''+sf+' sig figs';
+  var note=count>sf?'Dropped '+(count-sf)+' digit'+(count-sf>1?'s':''):'No rounding needed';
+  animateValue(document.getElementById('noteVal'),note);
+}
+document.getElementById('num').addEventListener('input',calc);
+document.getElementById('sf').addEventListener('input',calc);
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIN Decoder — Free Vehicle Lookup | ToolAspect</title>
+<meta name="description" content="Free VIN decoder with check digit validation, WMI manufacturer lookup, model year chart, live NHTSA decode and recall check for any 17-char VIN.">
+<link rel="canonical" href="https://toolaspect.com/vin-decoder/">
+<meta property="og:title" content="VIN Decoder — Free Vehicle Lookup">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Validate the check digit, read the WMI and model year, run a live NHTSA decode with recall check. Works entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/vin-decoder/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free VIN Decoder | ToolAspect">
+<meta name="twitter:description" content="Check digit, WMI, year code, live NHTSA decode, and recall lookup for any VIN.">
+<meta name="keywords" content="vin decoder, free vin lookup, vin check, decode vin number, vin number meaning, nhtsa vin decoder, vehicle identification number">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"VIN Decoder","description":"Free VIN decoder that validates the check digit, identifies the manufacturer from the WMI, reads the model year code, and runs a live NHTSA vPIC decode with recall lookup for any 17-character VIN.","url":"https://toolaspect.com/vin-decoder/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What do the 17 characters of a VIN mean?","acceptedAnswer":{"@type":"Answer","text":"Positions 1-3 are the World Manufacturer Identifier (who built it), 4-8 describe the vehicle per the maker (model, body, engine), position 9 is a check digit computed from the other characters, position 10 encodes the model year, position 11 is the assembly plant, and 12-17 are the serial number. Since 1981, US-market vehicles use this standardized 17-character format. Example: 1HGCM82633A004352 decodes to a Honda (1HG) built in Marysville, Ohio, model year 3 (2003), plant A, serial 004352."}},
+{"@type":"Question","name":"What is the VIN check digit and how is it calculated?","acceptedAnswer":{"@type":"Answer","text":"Position 9 exists purely to catch typos. Each character is converted to a number (letters I, O, and Q are banned so they can't be misread), multiplied by a fixed weight of 8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2, and the products are summed. Divide by 11: the remainder is the check digit, written X when it's 10. If position 9 doesn't match the computed value, the VIN was mistyped or altered, and most DMV systems reject it."}},
+{"@type":"Question","name":"Can a VIN tell me the exact trim and options?","acceptedAnswer":{"@type":"Answer","text":"Not fully. The VIN pins down manufacturer, plant, model year, and whatever attributes the maker chooses to encode in positions 4-8, which often includes body style, engine, and restraint system, but trim levels, colors, and option packages mostly live in the manufacturer's own build records. NHTSA's decode shows which attributes a manufacturer encoded; a window sticker or build sheet fills in the rest."}},
+{"@type":"Question","name":"Where do I find the VIN on a car?","acceptedAnswer":{"@type":"Answer","text":"Three places, fastest first: the driver's side dashboard at the base of the windshield (readable from outside), the driver's door jamb sticker, and paperwork: the title, registration, insurance card, and usually the sales invoice. It also appears on major body parts like the engine firewall and door panels on some vehicles. Never buy from a seller who can't produce a VIN that matches the paperwork."}},
+{"@type":"Question","name":"Is this VIN decoder really free, and is my data private?","acceptedAnswer":{"@type":"Answer","text":"Yes and yes. The check digit, WMI, and year decode run entirely in your browser with JavaScript; nothing is transmitted. The optional live decode and recall check query NHTSA's public vPIC and recalls APIs directly from your browser, the same endpoints used by commercial lookup sites. No account, no stored history, no upsell to a paid report."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Auto Calculators","item":"https://toolaspect.com/auto-tools/"},{"@type":"ListItem","position":3,"name":"VIN Decoder","item":"https://toolaspect.com/vin-decoder/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.vin-input{width:100%;padding:.9rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.25rem;font-family:monospace;letter-spacing:.12em;text-transform:uppercase;box-sizing:border-box;text-align:center}
+.vin-input:focus{outline:none;border-color:var(--primary)}
+.vin-input.invalid{border-color:var(--danger)}
+.btn-row{display:flex;gap:.6rem;margin-top:1rem;justify-content:center;flex-wrap:wrap}
+.mini-btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.75rem 1.3rem;cursor:pointer;font-size:.9rem;font-weight:600;font-family:inherit}
+.mini-btn:disabled{opacity:.45;cursor:not-allowed}
+.mini-btn.secondary{background:var(--bg);border:1px solid var(--border);color:var(--text);font-weight:500}
+.status-msg{font-size:.85rem;margin-top:.8rem;color:var(--muted);text-align:center;min-height:1.2em}
+.status-msg.ok{color:var(--success)}
+.status-msg.err{color:var(--danger)}
+.badge{display:inline-block;padding:.15rem .6rem;border-radius:999px;font-size:.75rem;font-weight:600;margin-left:.5rem}
+.badge.ok{background:rgba(34,197,94,.15);color:var(--success)}
+.badge.bad{background:rgba(239,68,68,.15);color:var(--danger)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.15rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.mono,.mono{font-family:monospace;letter-spacing:.06em}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🚙 VIN Decoder</h1>
+<p>Check digit, manufacturer, model year, live NHTSA decode, and recalls</p>
+<p class="direct-answer">A VIN is 17 characters that say exactly who built your vehicle and where. Positions 1-3 are the World Manufacturer Identifier (1HG = Honda of America, WBA = BMW, 3VW = Volkswagen Mexico), position 9 is a check digit computed from the rest to catch typos, position 10 encodes the model year (3 = 2003 or 2013, L = 1990 or 2020), position 11 is the assembly plant, and 12-17 are the serial. This decoder validates and reads all of it instantly in your browser, then a live NHTSA vPIC decode adds make, model, body, engine, and fuel type, plus a recall lookup. Example: 1HGCM82633A004352 is a 2003 Honda Accord, 6-cylinder automatic coupe built in Marysville, Ohio.</p>
+</div>
+
+<div class="section-card">
+<h2>Enter a VIN</h2>
+<input type="text" class="vin-input" id="vinInput" maxlength="21" placeholder="1HGCM82633A004352" value="1HGCM82633A004352" spellcheck="false" autocomplete="off">
+<div class="btn-row">
+<button class="mini-btn secondary" id="sampleBtn" type="button">Load sample VIN</button>
+<button class="mini-btn" id="decodeBtn" type="button">Decode with NHTSA</button>
+<button class="mini-btn" id="recallBtn" type="button" disabled>Check recalls</button>
+</div>
+<div class="status-msg" id="vinStatus"></div>
+<div class="result-grid" id="staticGrid"></div>
+</div>
+
+<div class="section-card" id="liveCard" style="display:none">
+<h2>NHTSA Decode <span class="badge ok" id="liveBadge">live</span></h2>
+<div class="table-wrap">
+<table class="data-table" id="liveTable"></table>
+</div>
+<div class="status-msg" id="recallStatus"></div>
+<div class="table-wrap" id="recallWrap" style="display:none">
+<h3 style="font-size:.95rem;font-weight:600;margin:.75rem 0 .5rem">Open recalls from NHTSA</h3>
+<table class="data-table" id="recallTable"></table>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/auto-loan-calculator/">Auto Loan</a></li><li style="margin:4px 0"><a href="/car-insurance-estimator/">Car Insurance Estimator</a></li><li style="margin:4px 0"><a href="/extended-car-warranty-cost-calculator/">Warranty Cost</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-read-a-vin/">How to read a VIN</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each VIN Position Means</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Position</th><th>Meaning</th><th>Example (1HGCM82633A004352)</th></tr></thead>
+<tbody>
+<tr><td class="mono">1-3</td><td>World Manufacturer Identifier (WMI)</td><td class="mono">1HG = Honda of America (passenger cars)</td></tr>
+<tr><td class="mono">4-8</td><td>Vehicle attributes: model, body, engine (maker-defined)</td><td class="mono">CM826 = Accord coupe, V6, trim codes</td></tr>
+<tr><td class="mono">9</td><td>Check digit (validates the VIN)</td><td class="mono">3 = computed check digit, matches</td></tr>
+<tr><td class="mono">10</td><td>Model year code</td><td class="mono">3 = 2003</td></tr>
+<tr><td class="mono">11</td><td>Assembly plant</td><td class="mono">A = Marysville, Ohio</td></tr>
+<tr><td class="mono">12-17</td><td>Serial number (production sequence)</td><td class="mono">004352</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Model Year Codes (Position 10)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Code</th><th>Year</th><th>Code</th><th>Year</th><th>Code</th><th>Year</th></tr></thead>
+<tbody>
+<tr><td class="mono">A</td><td>1980 / 2010</td><td class="mono">K</td><td>1989 / 2019</td><td class="mono">U</td><td>— (unused)</td></tr>
+<tr><td class="mono">B</td><td>1981 / 2011</td><td class="mono">L</td><td>1990 / 2020</td><td class="mono">V</td><td>1997 / 2027</td></tr>
+<tr><td class="mono">C</td><td>1982 / 2012</td><td class="mono">M</td><td>1991 / 2021</td><td class="mono">W</td><td>1998 / 2028</td></tr>
+<tr><td class="mono">D</td><td>1983 / 2013</td><td class="mono">N</td><td>1992 / 2022</td><td class="mono">X</td><td>1999 / 2029</td></tr>
+<tr><td class="mono">E</td><td>1984 / 2014</td><td class="mono">P</td><td>1993 / 2023</td><td class="mono">Y</td><td>2000 / 2030</td></tr>
+<tr><td class="mono">F</td><td>1985 / 2015</td><td class="mono">R</td><td>1994 / 2024</td><td class="mono">1</td><td>2001</td></tr>
+<tr><td class="mono">G</td><td>1986 / 2016</td><td class="mono">S</td><td>1995 / 2025</td><td class="mono">5</td><td>2005</td></tr>
+<tr><td class="mono">H</td><td>1987 / 2017</td><td class="mono">T</td><td>1996 / 2026</td><td class="mono">9</td><td>2009</td></tr>
+<tr><td class="mono">J</td><td>1988 / 2018</td><td colspan="4" class="mono">I, O, Q never appear in a VIN; digits 2-4 fill 2002-2004, 6-8 fill 2006-2008</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The cycle repeats every 30 years, which is why a letter alone narrows the year to two candidates; the WMI and model range settle which one.</p>
+</div>
+
+<div class="section-card">
+<h2>Common WMI Codes (Positions 1-3)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>WMI</th><th>Manufacturer</th><th>WMI</th><th>Manufacturer</th><th>WMI</th><th>Manufacturer</th></tr></thead>
+<tbody>
+<tr><td class="mono">1FA / 1FT</td><td>Ford (cars / trucks)</td><td class="mono">JHM</td><td>Honda (Japan)</td><td class="mono">WBA / WBS</td><td>BMW (cars / M)</td></tr>
+<tr><td class="mono">1FM</td><td>Ford SUV</td><td class="mono">2HG</td><td>Honda (Canada)</td><td class="mono">WVW</td><td>Volkswagen</td></tr>
+<tr><td class="mono">1G1 / 1GC</td><td>Chevrolet (cars / trucks)</td><td class="mono">19U</td><td>Acura (US)</td><td class="mono">WAU</td><td>Audi (Germany)</td></tr>
+<tr><td class="mono">1GT</td><td>GMC trucks</td><td class="mono">JH4</td><td>Acura (Japan)</td><td class="mono">TRU</td><td>Audi (Hungary)</td></tr>
+<tr><td class="mono">1G6</td><td>Cadillac</td><td class="mono">1N4 / 1N6</td><td>Nissan (cars / trucks)</td><td class="mono">WDB / WDD</td><td>Mercedes-Benz</td></tr>
+<tr><td class="mono">1C3</td><td>Chrysler cars</td><td class="mono">3N1</td><td>Nissan (Mexico)</td><td class="mono">WDC</td><td>Mercedes SUV</td></tr>
+<tr><td class="mono">1C4</td><td>Jeep</td><td class="mono">JN1 / JN8</td><td>Nissan (Japan)</td><td class="mono">WP0 / WP1</td><td>Porsche (cars / SUV)</td></tr>
+<tr><td class="mono">1C6</td><td>Ram trucks</td><td class="mono">4T1</td><td>Toyota (US, Kentucky)</td><td class="mono">ZFA</td><td>Fiat</td></tr>
+<tr><td class="mono">1HG</td><td>Honda (Ohio)</td><td class="mono">5TD</td><td>Toyota (US, Texas)</td><td class="mono">ZAR</td><td>Alfa Romeo</td></tr>
+<tr><td class="mono">5FN</td><td>Honda (Alabama)</td><td class="mono">JTD / JTM</td><td>Toyota (Japan)</td><td class="mono">ZFF</td><td>Ferrari</td></tr>
+<tr><td class="mono">5YJ</td><td>Tesla (Fremont)</td><td class="mono">JTH / JTJ</td><td>Lexus</td><td class="mono">ZHW</td><td>Lamborghini</td></tr>
+<tr><td class="mono">7SA</td><td>Tesla (Austin)</td><td class="mono">KNA / KND</td><td>Kia</td><td class="mono">ZAM</td><td>Maserati</td></tr>
+<tr><td class="mono">LRW</td><td>Tesla (Shanghai)</td><td class="mono">KMH</td><td>Hyundai</td><td class="mono">SAJ</td><td>Jaguar</td></tr>
+<tr><td class="mono">7FC</td><td>Rivian</td><td class="mono">JF1 / JF2</td><td>Subaru (Japan)</td><td class="mono">SAL</td><td>Land Rover</td></tr>
+<tr><td class="mono">1FT</td><td>Ford F-Series</td><td class="mono">4S3</td><td>Subaru (US)</td><td class="mono">YV1</td><td>Volvo</td></tr>
+<tr><td class="mono">3VW</td><td>VW (Mexico)</td><td class="mono">JM1</td><td>Mazda (Japan)</td><td class="mono">WMW</td><td>Mini</td></tr>
+<tr><td class="mono">5N1</td><td>Nissan (Smyrna)</td><td class="mono">JA3</td><td>Mitsubishi</td><td class="mono">SCB / SCA</td><td>Bentley / Rolls-Royce</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A few hundred WMIs exist; these cover the vehicles you're most likely to meet. The first character's region: 1/4/5 US, 2 Canada, 3 Mexico, 6 Australia, 8/9 South America, J Japan, K Korea, L China, M India/Thailand, S UK, T Czechia/Hungary, V France/Spain, W Germany, X Russia, Y Sweden/Finland/Norway, Z Italy.</p>
+</div>
+
+<div class="content-section">
+<h2>How the VIN Decoder Works</h2>
+<p>This page reads a VIN two ways. The static decode runs instantly and entirely in your browser: character validation, check-digit verification, WMI lookup, year-code translation, and the plant/serial split. The live decode is optional and queries NHTSA's public vPIC API, the US government's official database, straight from your browser. No account, no vehicle history upsell.</p>
+<h3>The check digit, verified</h3>
+<p>Position 9 is computed, not assigned. Each of the 16 other characters maps to a number (A=1 through Z=9, skipping I, O, and Q entirely), gets multiplied by the weight for its position (8, 7, 6, 5, 4, 3, 2, 10, then 0 for position 9 itself, then 9 down to 2), and the products are summed. Sum mod 11 is the check digit; a remainder of 10 is written X. Feed it 1HGCM82633A004352 and the arithmetic produces 3, which is exactly what sits in position 9. A mismatch almost always means one character was mistyped, which is why DMVs and insurers validate it before processing anything.</p>
+<h3>What the live NHTSA decode adds</h3>
+<p>vPIC returns the attributes each manufacturer registers: make, model, model year, body class, engine cylinders and displacement, fuel type, transmission style, door count, and the assembly plant with city, state, and country. For our sample, that's Honda, Accord, 2003, coupe, 6 cylinders, gasoline, automatic, 2 doors, Marysville, Ohio. The recall button then queries NHTSA's recall database for that make, model, and year, listing any open safety campaigns with dates and component descriptions.</p>
+<h3>A second worked example</h3>
+<p>JH4KA7561PC008269: the WMI JH4 says Acura built in Japan, position 10's P says 1993 (or 2023, which no JH4 Acura ever was), and the check digit computes to 1, matching position 9. NHTSA confirms: Acura Legend sedan, 6 cylinders, assembled in Sayama, Japan. Notice how the static and live layers check each other; when they agree, you can trust the transcription.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What do the 17 characters of a VIN mean?</h3><p>Positions 1-3 are the World Manufacturer Identifier (who built it), 4-8 describe the vehicle per the maker (model, body, engine), position 9 is a check digit computed from the other characters, position 10 encodes the model year, position 11 is the assembly plant, and 12-17 are the serial number. Since 1981, US-market vehicles use this standardized 17-character format. Example: 1HGCM82633A004352 decodes to a Honda (1HG) built in Marysville, Ohio, model year 3 (2003), plant A, serial 004352.</p></div>
+<div class="faq-item"><h3>What is the VIN check digit and how is it calculated?</h3><p>Position 9 exists purely to catch typos. Each character is converted to a number (letters I, O, and Q are banned so they can't be misread), multiplied by a fixed weight of 8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2, and the products are summed. Divide by 11: the remainder is the check digit, written X when it's 10. If position 9 doesn't match the computed value, the VIN was mistyped or altered, and most DMV systems reject it.</p></div>
+<div class="faq-item"><h3>Can a VIN tell me the exact trim and options?</h3><p>Not fully. The VIN pins down manufacturer, plant, model year, and whatever attributes the maker chooses to encode in positions 4-8, which often includes body style, engine, and restraint system, but trim levels, colors, and option packages mostly live in the manufacturer's own build records. NHTSA's decode shows which attributes a manufacturer encoded; a window sticker or build sheet fills in the rest.</p></div>
+<div class="faq-item"><h3>Where do I find the VIN on a car?</h3><p>Three places, fastest first: the driver's side dashboard at the base of the windshield (readable from outside), the driver's door jamb sticker, and paperwork: the title, registration, insurance card, and usually the sales invoice. It also appears on major body parts like the engine firewall and door panels on some vehicles. Never buy from a seller who can't produce a VIN that matches the paperwork.</p></div>
+<div class="faq-item"><h3>Is this VIN decoder really free, and is my data private?</h3><p>Yes and yes. The check digit, WMI, and year decode run entirely in your browser with JavaScript; nothing is transmitted. The optional live decode and recall check query NHTSA's public vPIC and recalls APIs directly from your browser, the same endpoints used by commercial lookup sites. No account, no stored history, no upsell to a paid report.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/auto-loan-calculator/">💰 Auto Loan Calculator</a>
+<a href="/car-insurance-estimator/">🚗 Car Insurance Estimator</a>
+<a href="/extended-car-warranty-cost-calculator/">🔧 Warranty Cost Calculator</a>
+<a href="/car-payment-calculator/">🧾 Car Payment Calculator</a>
+<a href="/fuel-cost-calculator/">⛽ Fuel Cost Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+'use strict';
+var TR={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,J:1,K:2,L:3,M:4,N:5,P:7,R:9,S:2,T:3,U:4,V:5,W:6,X:7,Y:8,Z:9};
+var WEIGHTS=[8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+var YEAR={A:'1980 / 2010',B:'1981 / 2011',C:'1982 / 2012',D:'1983 / 2013',E:'1984 / 2014',F:'1985 / 2015',G:'1986 / 2016',H:'1987 / 2017',J:'1988 / 2018',K:'1989 / 2019',L:'1990 / 2020',M:'1991 / 2021',N:'1992 / 2022',P:'1993 / 2023',R:'1994 / 2024',S:'1995 / 2025',T:'1996 / 2026',V:'1997 / 2027',W:'1998 / 2028',X:'1999 / 2029',Y:'2000 / 2030','1':'2001','2':'2002','3':'2003','4':'2004','5':'2005','6':'2006','7':'2007','8':'2008','9':'2009'};
+var COUNTRY={'1':'United States','4':'United States','5':'United States','2':'Canada','3':'Mexico','6':'Australia','8':'South America','9':'South America','J':'Japan','K':'South Korea','L':'China','M':'India / Thailand / Indonesia','N':'Turkey','S':'United Kingdom','T':'Czechia / Hungary','V':'France / Spain','W':'Germany','X':'Russia','Y':'Sweden / Finland / Norway','Z':'Italy'};
+var WMI={'1FA':'Ford (US cars)','1FT':'Ford (US trucks/F-Series)','1FM':'Ford SUV','1G1':'Chevrolet (cars)','1GC':'Chevrolet (trucks)','1GT':'GMC trucks','1G6':'Cadillac','1C3':'Chrysler cars','1C4':'Jeep','1C6':'Ram trucks','1HG':'Honda of America (Ohio)','5FN':'Honda (Alabama)','2HG':'Honda (Canada)','JHM':'Honda (Japan)','19U':'Acura (US)','JH4':'Acura (Japan)','1N4':'Nissan (US cars)','1N6':'Nissan (US trucks)','3N1':'Nissan (Mexico)','5N1':'Nissan (Smyrna, TN)','JN1':'Nissan (Japan)','JN8':'Nissan (Japan SUVs)','4T1':'Toyota (Kentucky)','5TD':'Toyota (Texas)','2T1':'Toyota (Canada)','JTD':'Toyota (Japan)','JTM':'Toyota (Japan SUVs)','JTH':'Lexus','JTJ':'Lexus','5YJ':'Tesla (Fremont)','7SA':'Tesla (Austin)','LRW':'Tesla (Shanghai)','7FC':'Rivian','KNA':'Kia','KND':'Kia (SUVs/vans)','KMH':'Hyundai','JF1':'Subaru (Japan)','JF2':'Subaru (Japan)','4S3':'Subaru (US)','JM1':'Mazda (Japan)','JA3':'Mitsubishi','WBA':'BMW (cars)','WBS':'BMW M','WVW':'Volkswagen','3VW':'Volkswagen (Mexico)','WAU':'Audi (Germany)','TRU':'Audi (Hungary)','WDB':'Mercedes-Benz','WDD':'Mercedes-Benz','WDC':'Mercedes-Benz SUV','WP0':'Porsche (cars)','WP1':'Porsche SUV','ZFA':'Fiat','ZAR':'Alfa Romeo','ZFF':'Ferrari','ZHW':'Lamborghini','ZAM':'Maserati','SAJ':'Jaguar','SAL':'Land Rover','SCB':'Bentley','SCA':'Rolls-Royce','YV1':'Volvo','YS3':'Saab','WMW':'Mini'};
+
+function el(id){return document.getElementById(id);}
+function computeCheckDigit(vin){
+  var s=0;
+  for(var i=0;i<17;i++){
+    var c=vin.charAt(i);
+    var v=/^[0-9]$/.test(c)?+c:TR[c];
+    if(v===undefined)return null;
+    s+=v*WEIGHTS[i];
+  }
+  var r=s%11;
+  return r===10?'X':String(r);
+}
+function staticDecode(){
+  var raw=el('vinInput').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var input=el('vinInput');
+  var status=el('vinStatus');
+  var grid=el('staticGrid');
+  input.classList.remove('invalid');
+  el('decodeBtn').disabled=raw.length!==17;
+  if(!raw.length){
+    status.className='status-msg';status.textContent='Type or paste a 17-character VIN';
+    grid.innerHTML='';return;
+  }
+  if(raw.length!==17){
+    status.className='status-msg err';status.textContent=raw.length+' of 17 characters';
+    grid.innerHTML='';input.classList.add('invalid');return;
+  }
+  var bad=raw.match(/[IOQ]/g);
+  var cd=computeCheckDigit(raw);
+  if(bad||cd===null){
+    status.className='status-msg err';
+    status.textContent=bad?('VINs never contain the letters '+bad.join(', ')+' (they are misread as 1, 0, and 9)'):'Invalid characters in VIN';
+    grid.innerHTML='';input.classList.add('invalid');return;
+  }
+  var valid=cd===raw.charAt(8);
+  status.className='status-msg '+(valid?'ok':'err');
+  status.textContent=valid?'Check digit '+cd+' matches position 9 — structurally valid VIN':'Computed check digit '+cd+' does not match position 9 ('+raw.charAt(8)+') — likely a typo';
+  if(!valid)input.classList.add('invalid');
+  var wmi=raw.slice(0,3);
+  var yearC=raw.charAt(9);
+  var country=COUNTRY[raw.charAt(0)]||'Unknown region';
+  var items=[
+    ['Manufacturer (WMI)',WMI[wmi]||('WMI '+wmi+' not in common table')],
+    ['Region of Origin',country],
+    ['Model Year (pos 10)',YEAR[yearC]||('Code '+yearC+' unrecognized')],
+    ['Check Digit (pos 9)',(valid?'✓ ':'✗ ')+raw.charAt(8)+' (computed '+cd+')'],
+    ['Assembly Plant (pos 11)',raw.charAt(10)],
+    ['Serial Number (12-17)',raw.slice(11)]
+  ];
+  grid.innerHTML=items.map(function(x){
+    return '<div class="result-item"><div class="ri-label">'+x[0]+'</div><div class="ri-value'+(x[0].indexOf('Serial')>-1?' mono':'')+'">'+x[1]+'</div></div>';
+  }).join('');
+}
+function row(k,v){return v?'<tr><th style="width:38%">'+k+'</th><td>'+v+'</td></tr>':'';}
+var lastVehicle=null;
+function liveDecode(){
+  var vin=el('vinInput').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var status=el('vinStatus');
+  el('decodeBtn').disabled=true;
+  status.className='status-msg';status.textContent='Querying NHTSA vPIC…';
+  fetch('https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/'+encodeURIComponent(vin)+'?format=json')
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(j){
+      var d=(j.Results&&j.Results[0])||{};
+      var make=(d.Make||'').trim(),model=(d.Model||'').trim(),yr=(d.ModelYear||'').trim();
+      lastVehicle=make&&model&&yr?{make:make,model:model,year:yr}:null;
+      el('recallBtn').disabled=!lastVehicle;
+      el('liveCard').style.display='block';
+      el('liveTable').innerHTML=
+        row('Make',d.Make)+row('Model',d.Model)+row('Model Year',d.ModelYear)+
+        row('Body Class',d.BodyClass)+row('Doors',d.Doors)+row('Engine',((d.EngineCylinders?d.EngineCylinders+' cylinders':'')+(d.DisplacementL?' ('+d.DisplacementL+'L)':'')||'')+(d.EngineHP?', '+d.EngineHP+' hp':''))+
+        row('Fuel',d.FuelTypePrimary)+row('Transmission',d.TransmissionStyle)+row('Drive',d.DriveType)+
+        row('Assembly Plant',(d.PlantCity?d.PlantCity+', ':'')+(d.PlantState||d.PlantCountry||''))+
+        row('NHTSA Note',d.ErrorText&&d.ErrorText.indexOf('clean')>-1?'Decoded clean; check digit verified':'');
+      status.className='status-msg ok';status.textContent='Live decode complete'+(lastVehicle?' — recall check enabled':'');
+    })
+    .catch(function(e){
+      status.className='status-msg err';
+      status.textContent='NHTSA lookup failed ('+(e.message||'network error')+'). Static decode above still works.';
+    })
+    .finally(function(){el('decodeBtn').disabled=false;staticDecodeStateOnly();});
+}
+function staticDecodeStateOnly(){
+  var raw=el('vinInput').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  el('decodeBtn').disabled=raw.length!==17;
+}
+function checkRecalls(){
+  if(!lastVehicle)return;
+  var status=el('recallStatus');
+  el('recallBtn').disabled=true;
+  status.className='status-msg';status.textContent='Querying NHTSA recalls…';
+  var v=lastVehicle;
+  fetch('https://api.nhtsa.dot.gov/recalls/recallsByVehicle?make='+encodeURIComponent(v.make)+'&model='+encodeURIComponent(v.model)+'&modelYear='+encodeURIComponent(v.year))
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(j){
+      var list=j.Results||[];
+      status.className='status-msg '+(list.length?'err':'ok');
+      status.textContent=list.length?list.length+' recall campaign'+(list.length>1?'s':'')+' on record for the '+v.year+' '+v.make+' '+v.model:'No recalls on record for the '+v.year+' '+v.make+' '+v.model;
+      el('recallWrap').style.display=list.length?'block':'none';
+      el('recallTable').innerHTML='<thead><tr><th>Date</th><th>Component</th><th>Summary</th></tr></thead><tbody>'+
+        list.slice(0,12).map(function(r){
+          return '<tr><td>'+r.ReportReceivedDate+'</td><td>'+r.Component+'</td><td>'+r.Summary+'</td></tr>';
+        }).join('')+'</tbody>';
+    })
+    .catch(function(e){
+      status.className='status-msg err';
+      status.textContent='Recall lookup failed ('+(e.message||'network error')+'). Try nhtsa.gov/recalls directly.';
+    })
+    .finally(function(){el('recallBtn').disabled=false;});
+}
+el('vinInput').addEventListener('input',function(){
+  this.value=this.value.toUpperCase();
+  staticDecode();
+  el('liveCard').style.display='none';
+  el('recallBtn').disabled=true;
+});
+el('decodeBtn').addEventListener('click',liveDecode);
+el('recallBtn').addEventListener('click',checkRecalls);
+var SAMPLES=['1HGCM82633A004352','JH4KA7561PC008269','1M8GDM9AXKP042788','1FTFW1ET5DFC30329'];
+var si=0;
+el('sampleBtn').addEventListener('click',function(){
+  si=(si+1)%SAMPLES.length;
+  el('vinInput').value=SAMPLES[si];
+  el('liveCard').style.display='none';
+  el('recallBtn').disabled=true;
+  staticDecode();
+});
+staticDecode();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

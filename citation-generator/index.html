@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citation Generator: APA, MLA & Chicago — Free | ToolAspect</title>
+<meta name="description" content="Free APA 7, MLA 9 and Chicago citation generator for books, journals and websites. Paste a DOI to auto-fill from Crossref. Copy in one click.">
+<link rel="canonical" href="https://toolaspect.com/citation-generator/">
+<meta property="og:title" content="Citation Generator: APA, MLA & Chicago">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Format book, journal, and website citations in APA 7, MLA 9, or Chicago style. DOI auto-fill via Crossref, in-text citations included.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/citation-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Citation Generator | ToolAspect">
+<meta name="twitter:description" content="APA 7, MLA 9, and Chicago citations for books, articles, and websites.">
+<meta name="keywords" content="citation generator, apa citation generator, mla citation generator, chicago citation generator, doi lookup, works cited, references">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Citation Generator","description":"Free citation generator that formats books, journal articles, and websites in APA 7, MLA 9, and Chicago style, with in-text citations and DOI auto-fill via Crossref.","url":"https://toolaspect.com/citation-generator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What's the difference between APA and MLA citation style?","acceptedAnswer":{"@type":"Answer","text":"APA (7th edition) is standard in psychology, education, and the social sciences; MLA (9th edition) rules the humanities, especially literature and language. The visible differences: APA uses an author-date in-text citation like (Brysbaert, 2019) and sentence-case titles, while MLA uses an author-page form like (Brysbaert 104047), headline-style titles, and a Works Cited page instead of References. Chicago offers both a notes system and an author-date system and is common in history."}},
+{"@type":"Question","name":"Should I include a retrieval date in my citation?","acceptedAnswer":{"@type":"Answer","text":"Usually not. APA 7 dropped the retrieved-from line for stable content: only add a retrieval date when the page's content is designed to change over time (a statistics dashboard, an evolving wiki). MLA treats access dates as optional, and Chicago recommends them mainly for undated or unstable pages. If the page has a publication date, cite that instead."}},
+{"@type":"Question","name":"Do I cite the DOI or the URL in APA?","acceptedAnswer":{"@type":"Answer","text":"The DOI, always, when one exists. APA 7 formats it as a live https://doi.org/... URL and omits the database name for academic works. If there's no DOI, use the direct URL of the page, and if you're citing from a database without a stable link, end the citation with the database name. No period after a DOI or URL in APA."}},
+{"@type":"Question","name":"How do I cite a source with no author?","acceptedAnswer":{"@type":"Answer","text":"Move the title into the author slot and alphabetize by it. In APA that's: Title of the work. (2026). Source. In MLA, start with the title in quotation marks (articles) or italics (books): \"Title of Article.\" Journal Name, ... For in-text citations, use a shortened title: (\"Short Title,\" 2026) in APA or (\"Short Title\") in MLA."}},
+{"@type":"Question","name":"Is using a citation generator considered cheating?","acceptedAnswer":{"@type":"Answer","text":"No. Instructors expect correctly formatted citations; how you produce them is your business, and professionals use reference managers daily. The academic integrity line is about citing sources honestly, not about formatting them by hand. Do verify the output against your style guide, since generators can't know your source's details better than you do."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Text Tools","item":"https://toolaspect.com/text-tools/"},{"@type":"ListItem","position":3,"name":"Citation Generator","item":"https://toolaspect.com/citation-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.input-grid.two{grid-template-columns:1fr 1fr}
+@media(max-width:640px){.input-grid,.input-grid.two{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.mode-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.mode-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.55rem 1.2rem;font-size:.9rem;cursor:pointer;font-family:inherit}
+.mode-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+.author-row{display:flex;gap:.5rem;margin-bottom:.5rem;align-items:center}
+.author-row input{flex:1;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.author-row input:focus{outline:none;border-color:var(--primary)}
+.author-row button{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.55rem .8rem;cursor:pointer;font-size:.9rem}
+.author-row button:hover{color:var(--danger);border-color:var(--danger)}
+.add-author{background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1rem;cursor:pointer;font-size:.85rem}
+.add-author:hover{border-color:var(--primary);color:var(--primary)}
+.cite-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-top:.75rem}
+.cite-line{font-size:1.02rem;line-height:1.9;color:var(--text);text-indent:-2rem;padding-left:2rem;font-family:Georgia,'Times New Roman',serif;overflow-wrap:break-word}
+.intext-line{margin-top:.9rem;color:var(--muted);font-size:.9rem}
+.intext-line strong{color:var(--text);font-weight:600}
+.copy-btn{float:right;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.35rem .8rem;cursor:pointer;font-size:.8rem}
+.copy-btn:hover{border-color:var(--primary)}
+.doi-row{display:flex;gap:.5rem;align-items:flex-end}
+.doi-row .input-group{flex:1}
+.mini-btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.7rem 1rem;cursor:pointer;font-size:.85rem;font-weight:600;white-space:nowrap}
+.mini-btn:disabled{opacity:.5;cursor:wait}
+.status-msg{font-size:.82rem;margin-top:.4rem;color:var(--muted);min-height:1.1em}
+.status-msg.ok{color:var(--success)}
+.status-msg.err{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.example-cite{text-indent:-2rem;padding-left:2rem;color:var(--text);font-size:.95rem;line-height:1.8;font-family:Georgia,'Times New Roman',serif;margin-bottom:.6rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.direct-answer{max-width:760px;margin:1rem auto 0;text-align:left;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 10px 10px 0;padding:14px 16px;color:var(--muted);font-size:.92rem;line-height:1.7}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📚 Citation Generator</h1>
+<p>APA 7, MLA 9, and Chicago citations for books, articles, and websites</p>
+<p class="direct-answer">Pick a style, pick a source type, fill the fields, copy the result. APA 7 cites journal articles as Author, A. A. (Year). Title of article. <em>Journal Name, Volume</em>(Issue), pages, with a https://doi.org/ link when one exists; MLA 9 formats the same source as Author. "Title of Article." <em>Journal Name</em>, vol. X, no. X, Year, pp. X-X; Chicago as Author. "Title." <em>Journal Name</em> X, no. X (Year): X. Paste a DOI and the Crossref lookup fills the author, journal, volume, issue, and year for you. Titles you enter stay in the case you give them, except APA's sentence case, which the tool applies for you.</p>
+</div>
+
+<div class="section-card">
+<div class="mode-toggle" id="styleToggle">
+<button class="mode-btn active" data-style="apa">APA 7</button>
+<button class="mode-btn" data-style="mla">MLA 9</button>
+<button class="mode-btn" data-style="chicago">Chicago</button>
+</div>
+<div class="input-grid two" style="margin-bottom:1rem">
+<div class="input-group"><label>Source Type</label>
+<select id="srcType">
+<option value="journal" selected>Journal article</option>
+<option value="book">Book</option>
+<option value="website">Website / webpage</option>
+</select></div>
+<div class="input-group"><label>&nbsp;</label><div></div></div>
+</div>
+
+<h2 style="font-size:.95rem;font-weight:600;margin-bottom:.5rem;color:var(--muted)">Author(s) — enter as <em>Last, First</em> or plain <em>First Last</em></h2>
+<div id="authorList"></div>
+<button class="add-author" id="addAuthor" type="button">+ Add author</button>
+
+<div id="doiBlock" style="margin-top:1.25rem">
+<div class="doi-row">
+<div class="input-group"><label>DOI lookup (fills everything it can)</label><input type="text" id="doiInput" placeholder="10.1016/j.jml.2019.104047"></div>
+<button class="mini-btn" id="doiBtn" type="button">Look up DOI</button>
+</div>
+<div class="status-msg" id="doiStatus"></div>
+</div>
+</div>
+
+<div class="section-card" id="fieldsCard">
+<h2>Source Details</h2>
+<div class="input-grid" id="fieldsGrid"></div>
+</div>
+
+<div class="section-card">
+<h2>Your Citation</h2>
+<div class="cite-box">
+<button class="copy-btn" id="copyBtn" type="button">Copy</button>
+<div class="cite-line" id="citeOut"></div>
+<div class="intext-line" id="intextOut"></div>
+</div>
+<p style="color:var(--muted);font-size:.8rem;margin-top:.6rem">Copy grabs both formatted (italic) and plain-text versions when your browser allows. Always check the result against your assignment's style requirements; fields you leave blank are skipped, not invented.</p>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/word-counter/">Word Counter</a></li><li style="margin:4px 0"><a href="/case-converter/">Case Converter</a></li><li style="margin:4px 0"><a href="/gpa-calculator/">GPA</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/apa-vs-mla-citation/">APA vs MLA explained</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>APA vs MLA vs Chicago at a Glance</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th></th><th>APA 7</th><th>MLA 9</th><th>Chicago 17</th></tr></thead>
+<tbody>
+<tr><td>Used in</td><td>Psychology, education, social sciences</td><td>Literature, languages, humanities</td><td>History, some social sciences</td></tr>
+<tr><td>Reference list name</td><td>References</td><td>Works Cited</td><td>Bibliography</td></tr>
+<tr><td>In-text form</td><td>(Author, Year)</td><td>(Author Page)</td><td>Note or (Author Year)</td></tr>
+<tr><td>Author format</td><td>Last, F. M.</td><td>Last, First.</td><td>Last, First.</td></tr>
+<tr><td>3+ authors in-text</td><td>First author et al.</td><td>First author et al.</td><td>All listed (notes may shorten)</td></tr>
+<tr><td>Article titles</td><td>Sentence case, no quotes</td><td>Headline case, quotes</td><td>Headline case, quotes</td></tr>
+<tr><td>Journal name</td><td>Italics, Title Case</td><td>Italics, Title Case</td><td>Italics, Title Case</td></tr>
+<tr><td>Date position</td><td>Right after author, in ( )</td><td>Near the end</td><td>After journal/publisher</td></tr>
+<tr><td>DOI</td><td>https://doi.org/... preferred</td><td>DOI or URL allowed</td><td>DOI or URL allowed</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>MLA's Nine Core Elements, in Order</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>#</th><th>Element</th><th>Example</th><th>Skipped when absent</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Author</td><td>Brysbaert, Marc.</td><td>Start with title</td></tr>
+<tr><td>2</td><td>Title of source</td><td>"How many words do we read per minute?"</td><td>Never (find it)</td></tr>
+<tr><td>3</td><td>Title of container</td><td><em>Journal of Memory and Language</em>,</td><td>Stand-alone sources</td></tr>
+<tr><td>4</td><td>Other contributors</td><td>translated by Anne Applebaum,</td><td>Yes</td></tr>
+<tr><td>5</td><td>Version</td><td>2nd ed.,</td><td>Yes</td></tr>
+<tr><td>6</td><td>Number</td><td>vol. 109, no. 2,</td><td>Yes</td></tr>
+<tr><td>7</td><td>Publisher</td><td>Alfred A. Knopf,</td><td>Yes (journals often omit)</td></tr>
+<tr><td>8</td><td>Publication date</td><td>2019,</td><td>Yes</td></tr>
+<tr><td>9</td><td>Location</td><td>p. 104047, or a URL/DOI</td><td>Use one locator</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Citation Generator Works</h2>
+<p>Citation styles disagree about punctuation and order more than about substance, so this tool keeps one set of source details and restyles it three ways. Fill in what the source actually says; the formatter assembles each style's pattern and skips anything blank rather than guessing.</p>
+<h3>What it does with your input</h3>
+<p>Authors accept either "Last, First" or "First Last"; a comma tells the parser the name is already inverted. APA converts names to initials (Brysbaert, Marc becomes Brysbaert, M.), joins two authors with an ampersand, and uses et al. in-text for three or more. MLA inverts only the first author, writes the rest naturally, and truncates three or more to et al. Chicago keeps up to ten authors before shortening. For APA output, titles get automatic sentence case with protection for words that contain internal capitals or common acronyms, since APA lowercases most words but never NASA.</p>
+<h3>The DOI lookup</h3>
+<p>Paste a DOI and press the button: the tool queries Crossref's public API and fills in the authors, title, journal, volume, issue, pages, and publication date from the publisher's registered metadata. It's the same data Zotero and other reference managers use. The lookup runs straight from your browser; nothing is sent to our servers.</p>
+<h3>A worked example, three ways</h3>
+<p>Take a real journal article, Marc Brysbaert's 2019 meta-analysis of reading rate in the <em>Journal of Memory and Language</em>, volume 109, article 104047, DOI 10.1016/j.jml.2019.104047. The same source in each dress:</p>
+<div class="example-cite">Brysbaert, M. (2019). How many words do we read per minute? A meta-analysis of reading rate. <em>Journal of Memory and Language</em>, <em>109</em>, 104047. https://doi.org/10.1016/j.jml.2019.104047</div>
+<div class="example-cite">Brysbaert, Marc. "How many words do we read per minute? A meta-analysis of reading rate." <em>Journal of Memory and Language</em>, vol. 109, 2019, p. 104047, https://doi.org/10.1016/j.jml.2019.104047.</div>
+<div class="example-cite">Brysbaert, Marc. "How many words do we read per minute? A meta-analysis of reading rate." <em>Journal of Memory and Language</em> 109 (2019): 104047. https://doi.org/10.1016/j.jml.2019.104047</div>
+<p>And a book, Toni Morrison's <em>Beloved</em> (Alfred A. Knopf, 1987, New York):</p>
+<div class="example-cite">Morrison, T. (1987). <em>Beloved</em>. Alfred A. Knopf.</div>
+<div class="example-cite">Morrison, Toni. <em>Beloved</em>. Alfred A. Knopf, 1987.</div>
+<div class="example-cite">Morrison, Toni. <em>Beloved</em>. New York: Alfred A. Knopf, 1987.</div>
+<p>Notice the tells: APA's initials and sentence case, MLA's absence of a city, Chicago's insistence on one. That's most of what separates the three styles on a day-to-day basis.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What's the difference between APA and MLA citation style?</h3><p>APA (7th edition) is standard in psychology, education, and the social sciences; MLA (9th edition) rules the humanities, especially literature and language. The visible differences: APA uses an author-date in-text citation like (Brysbaert, 2019) and sentence-case titles, while MLA uses an author-page form like (Brysbaert 104047), headline-style titles, and a Works Cited page instead of References. Chicago offers both a notes system and an author-date system and is common in history.</p></div>
+<div class="faq-item"><h3>Should I include a retrieval date in my citation?</h3><p>Usually not. APA 7 dropped the retrieved-from line for stable content: only add a retrieval date when the page's content is designed to change over time (a statistics dashboard, an evolving wiki). MLA treats access dates as optional, and Chicago recommends them mainly for undated or unstable pages. If the page has a publication date, cite that instead.</p></div>
+<div class="faq-item"><h3>Do I cite the DOI or the URL in APA?</h3><p>The DOI, always, when one exists. APA 7 formats it as a live https://doi.org/... URL and omits the database name for academic works. If there's no DOI, use the direct URL of the page, and if you're citing from a database without a stable link, end the citation with the database name. No period after a DOI or URL in APA.</p></div>
+<div class="faq-item"><h3>How do I cite a source with no author?</h3><p>Move the title into the author slot and alphabetize by it. In APA that's: Title of the work. (2026). Source. In MLA, start with the title in quotation marks (articles) or italics (books): "Title of Article." Journal Name, ... For in-text citations, use a shortened title: ("Short Title," 2026) in APA or ("Short Title") in MLA.</p></div>
+<div class="faq-item"><h3>Is using a citation generator considered cheating?</h3><p>No. Instructors expect correctly formatted citations; how you produce them is your business, and professionals use reference managers daily. The academic integrity line is about citing sources honestly, not about formatting them by hand. Do verify the output against your style guide, since generators can't know your source's details better than you do.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/case-converter/">🔠 Case Converter</a>
+<a href="/gpa-calculator/">🎓 GPA Calculator</a>
+<a href="/reading-time-calculator/">⏱️ Reading Time Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+'use strict';
+var STYLE='apa',TYPE='journal';
+var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var MABBR=['Jan.','Feb.','Mar.','Apr.','May','June','July','Aug.','Sept.','Oct.','Nov.','Dec.'];
+var KEEP={'US':1,'USA':1,'U.S.':1,'UK':1,'U.K.':1,'APA':1,'MLA':1,'NIH':1,'NASA':1,'FBI':1,'CIA':1,'DNA':1,'RNA':1,'TV':1,'AI':1,'II':1,'III':1,'IV':1,'CEO':1,'IQ':1,'GPA':1,'SAT':1,'ACT':1,'MRI':1,'PDF':1,'URL':1,'DOI':1,'PhD':1};
+
+function el(id){return document.getElementById(id);}
+function parseAuthor(s){
+  s=(s||'').trim();
+  if(!s)return null;
+  if(s.indexOf(',')>-1){
+    var p=s.split(',');
+    return {last:p[0].trim(),first:p.slice(1).join(',').trim()};
+  }
+  var w=s.split(/\s+/);
+  if(w.length===1)return {last:w[0],first:''};
+  return {last:w[w.length-1],first:w.slice(0,-1).join(' ')};
+}
+function initials(first){
+  return first.split(/\s+/).filter(Boolean).map(function(n){return n.charAt(0).toUpperCase()+'.';}).join(' ');
+}
+function getAuthors(){
+  var out=[];
+  [].forEach.call(document.querySelectorAll('#authorList input'),function(i){
+    var a=parseAuthor(i.value);
+    if(a&&a.last)out.push(a);
+  });
+  return out;
+}
+function sentenceCase(t){
+  if(!t)return t;
+  var capNext=true;
+  return t.split(/(\s+)/).map(function(tok){
+    if(/^\s+$/.test(tok))return tok;
+    var m=tok.match(/[A-Za-z][A-Za-z'’-]*/);
+    if(!m)return tok;
+    var core=m[0],i=tok.indexOf(core);
+    var lead=tok.slice(0,i),trail=tok.slice(i+core.length);
+    var res;
+    if(capNext||KEEP[core]||core.length<=1||/[A-Z]/.test(core.slice(1))){res=core;}
+    else if(core==='A'){res='a';}
+    else{res=core.charAt(0)+core.slice(1).toLowerCase();}
+    capNext=false;
+    if(/[.?!:]$/.test(trail))capNext=true;
+    return lead+res+trail;
+  }).join('');
+}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function pad(s){s=(s||'').trim();if(!s)return '';return /\.$/.test(s)?s+' ':s+'. ';}
+function fv(id){var e=el(id);return e?e.value.trim():'';}
+function shortTitle(t){
+  var w=t.split(/\s+/);
+  return w.slice(0,4).join(' ')+(w.length>4?'…':'');
+}
+function doiUrl(doi,fb){
+  doi=(doi||'').trim();
+  if(!doi)return fb||'';
+  doi=doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i,'');
+  return 'https://doi.org/'+doi;
+}
+function normUrl(u){
+  u=(u||'').trim();
+  if(!u)return '';
+  return /^https?:\/\//i.test(u)?u:'https://'+u;
+}
+
+function apaAuthors(list){
+  if(!list.length)return '';
+  var parts=list.map(function(a){
+    return a.last+(a.first?', '+initials(a.first):'');
+  });
+  if(parts.length===1)return parts[0];
+  return parts.slice(0,-1).join(', ')+', & '+parts[parts.length-1];
+}
+function mlaAuthors(list){
+  if(!list.length)return '';
+  if(list.length===1)return list[0].last+(list[0].first?', '+list[0].first:'');
+  if(list.length===2){
+    var a=list[0],b=list[1];
+    return a.last+(a.first?', '+a.first:'')+', and '+(b.first?b.first+' ':'')+b.last;
+  }
+  return list[0].last+(list[0].first?', '+list[0].first:'')+', et al.';
+}
+function chicagoAuthors(list){
+  if(!list.length)return '';
+  var rest=list.slice(1).map(function(a){return (a.first?a.first+' ':'')+a.last;});
+  var first=list[0].last+(list[0].first?', '+list[0].first:'');
+  if(list.length===1)return first;
+  if(list.length<=10)return first+', and '+rest.slice(0,-1).join(', ')+(rest.length>1?', and ':'')+rest[rest.length-1];
+  return first+', '+rest.slice(0,6).join(', ')+', et al.';
+}
+
+function apaDate(){
+  var y=fv('fYear')||'n.d.';
+  if(TYPE==='website'){
+    var mo=fv('fMonth'),d=fv('fDay');
+    if(y==='n.d.')return '(n.d.).';
+    var inner=y;
+    if(mo)inner=MONTHS[parseInt(mo,10)-1]+(d?' '+d+', ':' ')+y;
+    return '('+inner+').';
+  }
+  return '('+y+').';
+}
+function mlaDate(){
+  var y=fv('fYear');if(!y)return '';
+  if(TYPE!=='website')return y;
+  var mo=fv('fMonth'),d=fv('fDay');
+  if(!mo)return y;
+  return (d?d+' ':'')+MABBR[parseInt(mo,10)-1]+' '+y;
+}
+function chicagoDate(){
+  var y=fv('fYear')||'n.d.';
+  if(TYPE!=='website')return y;
+  var mo=fv('fMonth'),d=fv('fDay');
+  if(!mo)return y;
+  return MONTHS[parseInt(mo,10)-1]+(d?' '+d+', ':' ')+y;
+}
+
+function buildCitation(){
+  var list=getAuthors();
+  var title=fv('fTitle');
+  var container=fv('fContainer');
+  var publisher=fv('fPublisher');
+  var city=fv('fCity');
+  var vol=fv('fVolume'),iss=fv('fIssue'),pages=fv('fPages');
+  var url=normUrl(fv('fUrl'));
+  var link=doiUrl(fv('fDoi'),url);
+  var access=fv('fAccess');
+
+  if(!title&&!list.length&&!container&&!link){
+    el('citeOut').innerHTML='Fill in your source details to see the citation';
+    el('intextOut').innerHTML='';
+    return;
+  }
+  var tEsc=esc(title);
+  var cEsc=esc(container);
+  var html='',intext='',label={apa:'In-text',mla:'In-text',chicago:'Author-date in-text'}[STYLE];
+
+  if(STYLE==='apa'){
+    var a=apaAuthors(list);
+    var date=apaDate();
+    var aTitle=title?sentenceCase(title):'';
+    if(TYPE==='journal'){
+      html=pad(a)+date+' '+(aTitle?esc(aTitle)+'. ':'')+(cEsc?'<em>'+cEsc+'</em>':'')+(vol?', <em>'+esc(vol)+'</em>':'')+(iss?'('+esc(iss)+')':'')+(pages?', '+esc(pages):'')+(link?'. '+esc(link):'.');
+    }else if(TYPE==='book'){
+      html=pad(a)+date+' <em>'+(aTitle?esc(aTitle):'')+'</em>'+(publisher?'. '+esc(publisher):'')+'.';
+    }else{
+      if(access&&url){
+        html=pad(a)+date+' <em>'+(aTitle?esc(aTitle):'')+'</em>'+(cEsc?'. '+cEsc:'')+'. Retrieved '+esc(access)+', from '+esc(url);
+      }else{
+        html=pad(a)+date+' <em>'+(aTitle?esc(aTitle):'')+'</em>'+(cEsc?'. '+cEsc:'')+(url?'. '+esc(url):'');
+      }
+    }
+    if(list.length===1)intext='('+esc(list[0].last)+', '+(fv('fYear')||'n.d.')+')';
+    else if(list.length===2)intext='('+esc(list[0].last)+' & '+esc(list[1].last)+', '+(fv('fYear')||'n.d.')+')';
+    else if(list.length>2)intext='('+esc(list[0].last)+' et al., '+(fv('fYear')||'n.d.')+')';
+    else intext='("'+esc(shortTitle(title))+'", '+(fv('fYear')||'n.d.')+')';
+  }
+
+  if(STYLE==='mla'){
+    var ma=mlaAuthors(list);
+    if(TYPE==='journal'){
+      var loc=[];
+      if(vol)loc.push('vol. '+esc(vol));
+      if(iss)loc.push('no. '+esc(iss));
+      var dy=mlaDate();if(dy)loc.push(esc(dy));
+      if(pages){
+        var isRange=pages.indexOf('-')>-1;
+        loc.push((isRange?'pp. ':'p. ')+esc(pages));
+      }
+      var locator=link?esc(link):'';
+      html=pad(ma)+(title?'"'+esc(title)+'." ':'')+(cEsc?'<em>'+cEsc+'</em>':'')+(loc.length?', '+loc.join(', '):'')+(locator?', '+locator:'')+'.';
+    }else if(TYPE==='book'){
+      var md=mlaDate();
+      html=pad(ma)+(title?'<em>'+esc(title)+'</em>. ':'')+(publisher?esc(publisher):'')+(md?', '+esc(md):'')+'.';
+    }else{
+      var wd=mlaDate();
+      var mlaUrl=link||url;
+      html=pad(ma)+(title?'"'+esc(title)+'." ':'')+(cEsc?'<em>'+cEsc+'</em>':'')+(wd?', '+esc(wd):'')+(mlaUrl?', '+esc(mlaUrl):'');
+    }
+    if(list.length===1)intext='('+esc(list[0].last)+(pages?' '+esc(pages.split('-')[0]):'')+')';
+    else if(list.length===2)intext='('+esc(list[0].last)+' and '+esc(list[1].last)+')';
+    else if(list.length>2)intext='('+esc(list[0].last)+' et al.)';
+    else intext='("'+esc(shortTitle(title))+'")';
+  }
+
+  if(STYLE==='chicago'){
+    var ca=chicagoAuthors(list);
+    if(TYPE==='journal'){
+      html=pad(ca)+(title?'"'+esc(title)+'." ':'')+(cEsc?'<em>'+cEsc+'</em> ':'')+(vol?esc(vol):'')+(iss?', no. '+esc(iss):'')+' ('+esc(chicagoDate())+')'+(pages?': '+esc(pages):'')+(link? '. '+esc(link):'.');
+    }else if(TYPE==='book'){
+      html=pad(ca)+(title?'<em>'+esc(title)+'</em>. ':'')+(city&&publisher?esc(city)+': '+esc(publisher)+', ':publisher?esc(publisher)+', ':'')+(fv('fYear')||'n.d.')+'.';
+    }else{
+      var cd=chicagoDate();
+      var cUrl=link||url;
+      html=pad(ca)+(title?'"'+esc(title)+'." ':'')+(cEsc?'<em>'+cEsc+'</em>. ':'')+(cd?esc(cd)+(cd==='n.d.'?' ':'. '):'')+(cUrl?esc(cUrl):'')+(access?' Accessed '+esc(access)+'.':'');
+    }
+    if(list.length===1)intext='('+esc(list[0].last)+' '+(fv('fYear')||'n.d.')+')';
+    else if(list.length===2)intext='('+esc(list[0].last)+' and '+esc(list[1].last)+' '+(fv('fYear')||'n.d.')+')';
+    else if(list.length>2)intext='('+esc(list[0].last)+' et al. '+(fv('fYear')||'n.d.')+')';
+    else intext='('+esc(shortTitle(title))+' '+(fv('fYear')||'n.d.')+')';
+  }
+
+  el('citeOut').innerHTML=html;
+  el('intextOut').innerHTML='<strong>'+label+':</strong> '+intext;
+}
+
+function renderFields(){
+  var g=el('fieldsGrid');
+  var f=[];
+  if(TYPE==='journal'){
+    f=[['fTitle','Article title','text','How many words do we read per minute? A meta-analysis of reading rate'],
+       ['fContainer','Journal name','text','Journal of Memory and Language'],
+       ['fVolume','Volume','text','109'],['fIssue','Issue','text',''],['fPages','Pages / article no.','text','104047'],
+       ['fYear','Year','text','2019'],['fDoi','DOI','text','10.1016/j.jml.2019.104047'],['fUrl','URL (if no DOI)','text','']];
+  }else if(TYPE==='book'){
+    f=[['fTitle','Book title','text','Beloved'],['fPublisher','Publisher','text','Alfred A. Knopf'],
+       ['fCity','City (Chicago only)','text','New York'],['fYear','Year','text','1987']];
+  }else{
+    f=[['fTitle','Page title','text','Decode a VIN'],['fContainer','Website name','text',''],
+       ['fYear','Year (blank = n.d.)','text',''],['fMonth','Month','select',''],['fDay','Day','text',''],
+       ['fUrl','URL','text','https://example.com/page'],['fAccess','Access date (optional)','text','']];
+  }
+  g.innerHTML=f.map(function(x){
+    if(x[2]==='select'){
+      var opts='<option value="">—</option>'+MONTHS.map(function(m,i){return '<option value="'+(i+1)+'">'+m+'</option>';}).join('');
+      return '<div class="input-group"><label>'+x[1]+'</label><select id="'+x[0]+'">'+opts+'</select></div>';
+    }
+    return '<div class="input-group"><label>'+x[1]+'</label><input type="'+x[2]+'" id="'+x[0]+'" value="'+esc(x[3]||'')+'" placeholder="'+esc(x[3]||'')+'"></div>';
+  }).join('');
+  [].forEach.call(g.querySelectorAll('input,select'),function(i){
+    i.addEventListener('input',buildCitation);
+    i.addEventListener('change',buildCitation);
+  });
+}
+
+function addAuthorRow(name){
+  var d=document.createElement('div');
+  d.className='author-row';
+  d.innerHTML='<input type="text" placeholder="Last, First" value="'+esc(name||'')+'"><button type="button" title="Remove">×</button>';
+  d.querySelector('button').addEventListener('click',function(){d.remove();buildCitation();});
+  d.querySelector('input').addEventListener('input',buildCitation);
+  el('authorList').appendChild(d);
+}
+
+function lookupDoi(){
+  var raw=fv('doiInput');
+  var status=el('doiStatus'),btn=el('doiBtn');
+  if(!raw){status.className='status-msg err';status.textContent='Paste a DOI first (it looks like 10.1016/j.jml.2019.104047).';return;}
+  var doi=raw.replace(/^https?:\/\/(dx\.)?doi\.org\//i,'');
+  btn.disabled=true;status.className='status-msg';status.textContent='Looking up '+doi+' at Crossref…';
+  fetch('https://api.crossref.org/works/'+encodeURIComponent(doi))
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(j){
+      var m=j.message||{};
+      var typeSel=el('srcType');
+      var isJournal=(m.type==='journal-article'||(m['container-title']&&m.type!=='book'));
+      TYPE=isJournal?'journal':'book';
+      typeSel.value=TYPE;
+      renderFields();
+      el('authorList').innerHTML='';
+      var au=(m.author&&m.author.length)?m.author:(m.editor&&m.editor.length?m.editor:[]);
+      au.forEach(function(a){
+        addAuthorRow((a.family||'')+(a.given?', '+a.given:''));
+      });
+      if(m.title&&m.title.length)el('fTitle').value=m.title[0];
+      if(m['container-title']&&m['container-title'].length)el('fContainer').value=m['container-title'][0];
+      if(m.volume)el('fVolume').value=m.volume;
+      if(m.issue)el('fIssue').value=m.issue;
+      if(m.page)el('fPages').value=m.page;
+      else if(m['article-number'])el('fPages').value=m['article-number'];
+      var dp=(m['issued']&&m['issued']['date-parts']&&m['issued']['date-parts'][0])||[];
+      if(dp[0])el('fYear').value=String(dp[0]);
+      if(m.publisher&&TYPE==='book')el('fPublisher').value=m.publisher;
+      el('fDoi').value=doi;
+      status.className='status-msg ok';
+      status.textContent='Filled from Crossref ('+(m.type||'work')+'). Check each field against the source.';
+      buildCitation();
+    })
+    .catch(function(e){
+      status.className='status-msg err';
+      status.textContent='Lookup failed: '+(e.message||'network error')+'. Fill the fields manually — everything still works.';
+    })
+    .finally(function(){btn.disabled=false;});
+}
+
+document.querySelectorAll('#styleToggle .mode-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#styleToggle .mode-btn').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    STYLE=b.getAttribute('data-style');
+    buildCitation();
+  });
+});
+el('srcType').addEventListener('change',function(){
+  TYPE=this.value;
+  renderFields();
+  el('doiBlock').style.display=TYPE==='journal'?'block':'none';
+  buildCitation();
+});
+el('addAuthor').addEventListener('click',function(){addAuthorRow('');el('authorList').lastChild.querySelector('input').focus();});
+el('doiBtn').addEventListener('click',lookupDoi);
+el('doiInput').addEventListener('keydown',function(e){if(e.key==='Enter')lookupDoi();});
+el('copyBtn').addEventListener('click',function(){
+  var cite=el('citeOut'),inTxt=el('intextOut');
+  var text=cite.innerText+'\n'+inTxt.innerText;
+  var html=cite.innerHTML+'\n'+inTxt.innerHTML;
+  function done(ok){var b=el('copyBtn');b.textContent=ok?'Copied ✓':'Copy';setTimeout(function(){b.textContent='Copy';},1600);}
+  if(navigator.clipboard&&window.ClipboardItem){
+    navigator.clipboard.write([new ClipboardItem({
+      'text/plain':new Blob([text],{type:'text/plain'}),
+      'text/html':new Blob([html],{type:'text/html'})
+    })]).then(function(){done(true);},function(){navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});});
+  }else if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});
+  }else{done(false);}
+});
+
+window.ToolAspectCite={
+  build:buildCitation,
+  setVal:function(id,v){if(el(id))el(id).value=v;},
+  setStyle:function(s){STYLE=s;},
+  setType:function(t){TYPE=t;},
+  out:function(){return el('citeOut').innerHTML;},
+  intext:function(){return el('intextOut').innerHTML;}
+};
+addAuthorRow('Brysbaert, Marc');
+renderFields();
+buildCitation();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
