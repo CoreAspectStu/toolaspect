@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade Curve Calculator — Free Grading Tool | ToolAspect</title>
+<meta name="description" content="Free grade curve calculator. Curve exam scores with the linear (mean + SD) method or the square-root curve, plus class statistics.">
+<link rel="canonical" href="https://toolaspect.com/grade-curve-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Grade Curve Calculator — Free Grading Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Curve exam grades with the linear mean-and-standard-deviation method or the square-root curve. Instant class statistics for every score.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/grade-curve-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Grade Curve Calculator | Free Online Tool">
+<meta name="twitter:description" content="Linear and square-root grade curves with class mean, SD, and letter grades.">
+<meta name="keywords" content="grade curve calculator, curve grades, bell curve grader, grading curve, square root curve, mean standard deviation curve, test curve calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Grade Curve Calculator","description":"Free grade curve calculator. Curve exam scores with the linear mean-plus-standard-deviation method or the square-root curve, with class statistics and letter grades for every score.","url":"https://toolaspect.com/grade-curve-calculator/","applicationCategory":"EducationalApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I curve grades using the mean and standard deviation?","acceptedAnswer":{"@type":"Answer","text":"Convert each score to a z-score by subtracting the class mean and dividing by the class standard deviation, then rescale: curved = target mean + z × target SD. On a class with mean 64 and SD 12.3, a 58 is 0.49 SD below average, so with a target mean of 75 and target SD of 10 it curves to 75 − 4.9, which is about 70."}},
+{"@type":"Question","name":"What is the square-root curve?","acceptedAnswer":{"@type":"Answer","text":"The square-root curve replaces each score with 10 times its square root, capped at 100. It lifts low scores the most: a 25 becomes 50, a 49 becomes 70, and an 81 becomes 90, while a perfect 100 stays 100. Teachers reach for it when an exam was brutal for everyone and the whole distribution needs a floor."}},
+{"@type":"Question","name":"Can curving lower a student's grade?","acceptedAnswer":{"@type":"Answer","text":"Yes, with the linear method. If the class mean is above your target mean, everyone below the class average loses points. A class averaging 82 curved to a target of 75 drops an 80 to about 73. The square-root curve never lowers a score of 100 or below, since 10 × √x is at least x for every x from 0 to 100."}},
+{"@type":"Question","name":"Should I use population or sample standard deviation?","acceptedAnswer":{"@type":"Answer","text":"Use population SD, dividing by n, when the score list is the entire class, which is the normal case for curving. Sample SD, dividing by n − 1, only matters when the scores are a sample of a larger group. The gap closes fast as classes grow: on five scores with a population SD of 12.33 the sample SD is 13.78, but on 30 scores they differ by under 2%."}},
+{"@type":"Question","name":"Is grading on a curve allowed?","acceptedAnswer":{"@type":"Answer","text":"In most schools, yes. Curving is a grading-policy decision that belongs to the instructor or department, not a legal question, though some schools and states have rules about changing posted grades after the fact. If you curve, say so in the syllabus up front, and never curve down an individual student who would have scored lower after the adjustment than before."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Grade Curve Calculator","item":"https://toolaspect.com/grade-curve-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group textarea{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem;resize:vertical}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📐 Grade Curve Calculator</h1>
+<p>Curve exam scores with the linear (mean + SD) method or the square-root curve</p>
+</div>
+
+<div class="aio-answer">
+<strong>Direct answer:</strong> to curve an exam, convert each score to a z-score ((raw − class mean) ÷ class SD) and rescale it to your target mean and SD. On a class with mean 64 and SD 12.3, a 58 curves to about <strong>70</strong> with a target of 75 ± 10. The square-root curve (10 × √score) lifts the same 58 to <strong>76</strong>. Paste your scores below to curve every grade at once.
+</div>
+
+<div class="section-card">
+<h2>Scores &amp; Curve Settings</h2>
+<div class="input-grid">
+<div class="input-group" style="grid-column:1/-1"><label>Exam Scores (comma, space, or newline separated)</label><textarea id="scores" rows="4">58, 72, 66, 44, 80</textarea></div>
+<div class="input-group"><label>Target Mean</label><input type="number" id="tMean" value="75" min="0" max="100" step="1"></div>
+<div class="input-group"><label>Target SD</label><input type="number" id="tSD" value="10" min="0.5" max="40" step="0.5"></div>
+<div class="input-group"><label>Rounding</label><select id="rounding"><option value="1" selected>Round to whole points</option><option value="0">Keep decimals</option></select></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Class Statistics</h2>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Scores Entered</div><div class="ri-value" id="nVal">—</div></div>
+<div class="result-item"><div class="ri-label">Class Mean</div><div class="ri-value" id="meanVal">—</div></div>
+<div class="result-item"><div class="ri-label">Class SD (population)</div><div class="ri-value" id="sdVal">—</div></div>
+<div class="result-item"><div class="ri-label">Scores Raised / Lowered (linear)</div><div class="ri-value" id="deltaVal">—</div></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Curved Results</h2>
+<div class="table-wrap">
+<table class="data-table" id="curveTable">
+<thead><tr><th>Raw Score</th><th>z-score</th><th>Linear Curve</th><th>Square-Root Curve</th><th>Letter (linear)</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Linear curve = target mean + z × target SD. Square-root curve = 10 × √raw, capped at 100. Letter grades use the standard 10-point scale (90 A, 80 B, 70 C, 60 D).</p>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/gpa-calculator/">GPA Calculator</a></li><li style="margin:4px 0"><a href="/weighted-gpa-calculator/">Weighted GPA</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-curve-grades/">Read the curving guide</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Common Curving Methods Compared</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Method</th><th>Formula</th><th>Raw 44 →</th><th>Raw 64 (mean) →</th><th>Raw 80 →</th><th>Best When</th></tr></thead>
+<tbody>
+<tr><td>Linear (mean + SD)</td><td>M + (x − m) × (s ÷ SD)</td><td>58.8</td><td>75.0</td><td>88.0</td><td>Distribution is roughly normal; you want a controlled shift and squeeze</td></tr>
+<tr><td>Square-root</td><td>10 × √x</td><td>66.3</td><td>80.0</td><td>89.4</td><td>Everyone struggled; low scores need the biggest lift</td></tr>
+<tr><td>Flat bonus</td><td>x + 10</td><td>54</td><td>74</td><td>90</td><td>One bad question tanked the whole exam; every point counts equally</td></tr>
+<tr><td>Scale to max</td><td>x ÷ max × 100</td><td>55.0</td><td>80.0</td><td>100</td><td>The top score is the "real" 100 and should map there</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Comparison uses the worked example below (mean 64, SD 12.33, high score 80) with a 75 ± 10 linear target and a +10 flat bonus. Scale-to-max divides by the class high, so it guarantees one perfect score.</p>
+</div>
+
+<div class="section-card">
+<h2>Square-Root Curve Anchor Points</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Raw Score</th><th>25</th><th>36</th><th>49</th><th>64</th><th>81</th><th>100</th></tr></thead>
+<tbody>
+<tr><td>Curved (10 × √x)</td><td>50</td><td>60</td><td>70</td><td>80</td><td>90</td><td>100</td></tr>
+<tr><td>Points Gained</td><td>+25</td><td>+24</td><td>+21</td><td>+16</td><td>+9</td><td>0</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The pattern: the square-root curve gives back the most where scores hurt the most, and it never touches a perfect paper. Any raw score at or below 100 can only go up.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Grade Curve Calculator Works</h2>
+<p>A curve doesn't add free points at random. It rescales a set of raw exam scores so the class lands where you want it: a chosen average, a chosen spread, or a fixed boost to the bottom. This tool runs two of the most widely used methods side by side so you can see which one fits your class before you commit.</p>
+<h3>The formulas</h3>
+<p>The linear method is a z-score rescale. Compute the class mean m and population standard deviation SD, then curved = M + ((x − m) ÷ SD) × s, where M is your target mean and s your target SD. The square-root method is simply 10 × √x, capped at 100. The calculator also reports each score's z-score, which tells you how many standard deviations a student sits from the average, and a letter grade on the 10-point scale.</p>
+<h3>How to use it</h3>
+<p>Paste your scores in any format, commas or spaces or one per line. Set the target mean and SD for the linear curve. The default 75 ± 10 is a common choice: it centers the class on a solid C+ and keeps a reasonable spread. Every input updates the table instantly, and nothing is sent anywhere since it all runs in your browser.</p>
+<h3>A worked example</h3>
+<p>Say five students scored 58, 72, 66, 44, and 80. The mean is 64 and the population SD is 12.33. With a linear target of 75 ± 10, each score moves by (x − 64) × (10 ÷ 12.33): the 44 becomes 58.8, the mean 64 becomes exactly 75, and the 80 becomes 88.0. The square-root curve is more generous to the bottom: the 44 jumps to 66.3 while the 80 lands at 89.4. Neither method changes the order of the class, which is the point. Curving adjusts the scale, not the ranking.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I curve grades using the mean and standard deviation?</h3><p>Convert each score to a z-score by subtracting the class mean and dividing by the class standard deviation, then rescale: curved = target mean + z × target SD. On a class with mean 64 and SD 12.3, a 58 is 0.49 SD below average, so with a target mean of 75 and target SD of 10 it curves to 75 − 4.9, which is about 70.</p></div>
+<div class="faq-item"><h3>What is the square-root curve?</h3><p>The square-root curve replaces each score with 10 times its square root, capped at 100. It lifts low scores the most: a 25 becomes 50, a 49 becomes 70, and an 81 becomes 90, while a perfect 100 stays 100. Teachers reach for it when an exam was brutal for everyone and the whole distribution needs a floor.</p></div>
+<div class="faq-item"><h3>Can curving lower a student's grade?</h3><p>Yes, with the linear method. If the class mean is above your target mean, everyone below the class average loses points. A class averaging 82 curved to a target of 75 drops an 80 to about 73. The square-root curve never lowers a score of 100 or below, since 10 × √x is at least x for every x from 0 to 100.</p></div>
+<div class="faq-item"><h3>Should I use population or sample standard deviation?</h3><p>Use population SD, dividing by n, when the score list is the entire class, which is the normal case for curving. Sample SD, dividing by n − 1, only matters when the scores are a sample of a larger group. The gap closes fast as classes grow: on five scores with a population SD of 12.33 the sample SD is 13.78, but on 30 scores they differ by under 2%.</p></div>
+<div class="faq-item"><h3>Is grading on a curve allowed?</h3><p>In most schools, yes. Curving is a grading-policy decision that belongs to the instructor or department, not a legal question, though some schools and states have rules about changing posted grades after the fact. If you curve, say so in the syllabus up front, and never curve down an individual student who would have scored lower after the adjustment than before.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/gpa-calculator/">🎓 GPA Calculator</a>
+<a href="/weighted-gpa-calculator/">📚 Weighted GPA</a>
+<a href="/gpa-scale-converter/">🔢 GPA Scale Converter</a>
+<a href="/sat-score-calculator/">📝 SAT Score Calculator</a>
+<a href="/standard-deviation-calculator/">📊 Standard Deviation</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function parseScores(str){
+  return str.split(/[\s,;]+/).map(function(t){return parseFloat(t);}).filter(function(x){return isFinite(x)&&x>=0;});
+}
+function popMean(a){return a.reduce(function(s,x){return s+x;},0)/a.length;}
+function popSD(a,m){var s=0;for(var i=0;i<a.length;i++)s+=(a[i]-m)*(a[i]-m);return Math.sqrt(s/a.length);}
+function letter(g){
+  if(g>=90)return 'A';if(g>=80)return 'B';if(g>=70)return 'C';if(g>=60)return 'D';return 'F';
+}
+function r1(x){return document.getElementById('rounding').value==='1'?Math.round(x):+x.toFixed(2);}
+function calc(){
+  var a=parseScores(document.getElementById('scores').value);
+  var M=parseFloat(document.getElementById('tMean').value)||75;
+  var s=parseFloat(document.getElementById('tSD').value)||10;
+  var tb=document.querySelector('#curveTable tbody');
+  if(a.length<2){
+    tb.innerHTML='<tr><td colspan="5" style="color:var(--muted)">Enter at least two scores.</td></tr>';
+    ['nVal','meanVal','sdVal','deltaVal'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+  var m=popMean(a), sd=popSD(a,m);
+  document.getElementById('nVal').textContent=a.length;
+  document.getElementById('meanVal').textContent=m.toFixed(2);
+  document.getElementById('sdVal').textContent=sd.toFixed(2);
+  var up=0,down=0,h='';
+  for(var i=0;i<a.length;i++){
+    var x=a[i], z=sd>0?(x-m)/sd:0;
+    var lin=Math.min(100,M+z*s);
+    var sq=Math.min(100,10*Math.sqrt(x));
+    if(lin>x+0.005)up++;else if(lin<x-0.005)down++;
+    h+='<tr><td>'+x+'</td><td>'+z.toFixed(2)+'</td><td>'+r1(lin)+'</td><td>'+r1(sq)+'</td><td>'+letter(lin)+'</td></tr>';
+  }
+  tb.innerHTML=h;
+  document.getElementById('deltaVal').textContent=up+' up / '+down+' down';
+}
+['scores','tMean','tSD','rounding'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+  document.getElementById(id).addEventListener('change',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
