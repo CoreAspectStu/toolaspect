@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Makes a Password Strong? | ToolAspect</title>
+<meta name="description" content="Cracking a 12-character password takes ~17,000 years on a fast rig; an 8-character one falls in about 2 hours. Here is the math behind password strength.">
+<link rel="canonical" href="https://toolaspect.com/guides/what-makes-a-password-strong/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What Makes a Password Strong? Length, Entropy, and Cracking Time","description":"Password strength is arithmetic, not folklore: the number of possible combinations, written in bits, and the speed of whatever is trying every one of them. An 8-character password with every symbol on the keyboard falls to a modern cracking rig in about two hours. Twelve characters buys you seventeen thousand years. This guide walks through the entropy math, honest cracking-time tables for fast and slow hash algorithms, why NIST retired the change-it-every-90-days rule, and why a five-word passphrase you can actually remember outperforms the clever passwords nobody can. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"What Makes a Password Strong?","item":"https://toolaspect.com/guides/what-makes-a-password-strong/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is a 12-character password strong enough?","acceptedAnswer":{"@type":"Answer","text":"A 12-character random password using the full printable ASCII set carries about 78.8 bits of entropy — roughly 17,000 years to exhaust on a rig testing a trillion guesses per second, and effectively uncrackable against salted slow hashes. NIST suggests a minimum of 8 characters and recommends 15 or more, so 12 random characters is comfortably strong. The catch is random: 12 characters of a human pattern is a different animal."}},
+{"@type":"Question","name":"Are password managers safe to use?","acceptedAnswer":{"@type":"Answer","text":"Yes — for most people they're strictly safer than reusing variations of one memorized password. A manager protects one vault with one long master password and ideally two-factor authentication, instead of you protecting fifty accounts with fifty weak ones. Major commercial managers use zero-knowledge encryption, so even a breach of their servers exposes encrypted vaults, not plaintext."}},
+{"@type":"Question","name":"What characters make a password strongest?","acceptedAnswer":{"@type":"Answer","text":"All of them. Lowercase alone gives 26 options per character; the full printable ASCII set gives about 95, worth 6.57 bits per character versus 4.7. Symbols and capitals help, but they matter far less than adding characters: sixteen lowercase letters (75.2 bits) beat eight characters of everything (52.6 bits) by a factor of more than six million."}},
+{"@type":"Question","name":"Can a strong password still be hacked?","acceptedAnswer":{"@type":"Answer","text":"Yes, through paths that ignore its strength: phishing, keyloggers, a breach of the site's servers, or a weak reset process. Strong random passwords defend against exactly one attack — offline guessing — but it's the most common industrial-scale attack, so they still matter. Two-factor authentication covers the paths a password can't."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>What Makes a Password Strong? Length, Entropy, and Cracking Time</h1>
+<div class="meta"><span>💡 40K searches/mo</span><span>💰 CPC: $1</span><span>⏱️ 7 min read</span></div>
+<p class="intro">"Add a number and a symbol" is the advice everyone has heard. Taken alone, it's wrong in a way that matters: an 8-character password using every symbol on the keyboard falls to a modern cracking rig in about two hours, while sixteen plain lowercase letters would take millennia. Strength isn't punctuation — it's counting. Here's the arithmetic, honest cracking-time tables, and what NIST says now that it has retired most of the old rules.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>How is password strength actually measured?</h2>
+<p>The measure is <strong>entropy</strong>: the number of possible passwords a scheme can produce, expressed in bits. For a random password it's length × log2(alphabet size). The full printable ASCII set has about 95 characters, and log2(95) ≈ 6.57, so each random character contributes 6.57 bits — a 12-character random password carries 12 × 6.57 ≈ 78.8 bits.</p>
+<p>Every bit doubles the work — an attacker who could exhaust a 60-bit space over a weekend needs about a billion times longer for 90 bits. That compounding is why length is the whole game, and why you can <a href="/password-generator/">generate a strong password</a> in a browser tab.</p>
+<p>One caveat: entropy describes the generation process, not the string. <code>P@ssw0rd!2024</code> passes every composition rule ever written and carries almost no real strength, because attackers guess human patterns first. The math below assumes actual randomness.</p>
+<h2>How long would it take to crack your password?</h2>
+<p>Cracking time is combinations divided by guess speed, and guess speed depends on how the password was stored. A leaked database of unsalted MD5 or SHA-1 hashes feeds a GPU rig that tests on the order of a trillion guesses per second. A site that did its job — salted bcrypt, scrypt, or Argon2 — slows the same hardware to roughly ten thousand guesses per second.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Password</th><th>Combinations</th><th>Fast hash (1T guesses/s)</th><th>Slow salted hash (~10K guesses/s)</th></tr></thead>
+<tbody>
+<tr><td>8 characters, lowercase</td><td>2.1 × 10<sup>11</sup></td><td>under a second</td><td>~8 months</td></tr>
+<tr><td>8 characters, full ASCII</td><td>6.6 × 10<sup>15</sup></td><td>~2 hours</td><td>~21,000 years</td></tr>
+<tr><td>10 characters, full ASCII</td><td>6.0 × 10<sup>19</sup></td><td>~1.9 years</td><td>~190 million years</td></tr>
+<tr><td>12 characters, full ASCII</td><td>5.4 × 10<sup>23</sup></td><td>~17,000 years</td><td>~1.7 trillion years</td></tr>
+<tr><td>16 characters, full ASCII</td><td>4.4 × 10<sup>31</sup></td><td>~1.4 trillion years</td><td>not in this universe's lifetime</td></tr>
+<tr><td>5-word passphrase (Diceware)</td><td>2.8 × 10<sup>19</sup></td><td>~11 months</td><td>~90 million years</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two footnotes keep this honest: the times are to exhaust the whole space (an average crack lands halfway, so halve them), and both speeds are moving targets. The gap between the columns is the argument for caring where you reuse a password, not just what it is.</p>
+<h2>Why does length beat complexity?</h2>
+<p>Because complexity grows the alphabet but length grows the exponent. Sixteen lowercase letters carry 16 × 4.70 ≈ 75.2 bits. Eight characters drawn from all 95 printable ones carry 52.6 bits. The lowercase string is stronger by a factor of more than six million, and you can type it without hunting for the percent sign.</p>
+<p>The famous xkcd comic nailed this years ago: <code>Tr0ub4dor&3</code> looks formidable and scores about 28 bits once you account for how humans actually substitute characters, while four random common words score around 44 bits and stick in your head. Substitution patterns — a for 4, e for 3, capital first letter, exclamation point at the end — are the first things cracking dictionaries try, because everyone does them.</p>
+<p>NIST came around to the same view in SP 800-63B and doubled down in its 2024 revision: prioritize length, allow at least 64 characters, drop the composition rules, and screen new passwords against known-breach lists instead. The rules your bank still enforces are mostly a 2003 legacy the guideline's original author has publicly disowned.</p>
+<h2>Are passphrases just as strong but actually memorable?</h2>
+<p>Usually, yes — with the same caveat about randomness. Five words chosen by dice from the standard 7,776-word Diceware list carry 5 × log2(7,776) ≈ 64.6 bits, comparable to a 10-character fully random password, and unlike the random string you can hold them in your head for a week. Four words (~51.7 bits) is fine for ordinary accounts; six (77.5 bits) for the few that really matter.</p>
+<p>The failure mode is choosing the words yourself. Song lyrics, movie quotes, and famous four-word phrases are in every cracking dictionary. The words need to come from dice throws or a generator, not from your affection for a horse.</p>
+<h2>Why does every account need its own password?</h2>
+<p>Because breaches are industrial now, and the attacker's second move is automation. When a site leaks email/password pairs, those pairs get replayed against banking, email, and social logins everywhere — credential stuffing, and it works precisely because people reuse. Have I Been Pwned has catalogued these leaks for over a decade; if an account of yours shows up there, that password is public and must be retired everywhere you used it. Uniqueness turns a catastrophe into an inconvenience: one leaked password burns one account, full stop.</p>
+<p>This is also the practical case for a password manager. You can't remember fifty random 16-character strings, and you shouldn't try — the manager remembers, and you memorize the one long master passphrase protecting it. For the defending side of the picture, our <a href="/guides/hmac-explained/">guide to keyed hashes</a> covers how services verify passwords and sign webhooks, and <a href="/guides/is-identity-theft-protection-worth-it/">our identity-theft-protection walkthrough</a> covers the cleanup after the worst case.</p>
+<h2>Do you still need to change passwords every 90 days?</h2>
+<p>No — current NIST guidance says the opposite. Forced rotation pushes people toward predictable patterns (Spring2024!, Summer2024!) and minimal edits of the old password, which crackers model explicitly. Change a password when there's evidence of compromise: it appears in a breach dump, you got phished, or the service reports an incident.</p>
+<p>The rule that replaced rotation is screening: check new passwords against lists of known-breached credentials and reject the ones that have already leaked. That does more for real security than any expiry calendar ever did.</p>
+<h2>How do you put this into practice?</h2>
+<ul>
+<li><strong>Generate, don't compose.</strong> Use a random generator at 16+ characters, or 5-6 dice words for ones you must remember. Our <a href="/password-generator/">password generator</a> runs on the browser's cryptographic RNG and never transmits what it makes.</li>
+<li><strong>One password per account.</strong> The manager handles the memory; uniqueness is non-negotiable.</li>
+<li><strong>Turn on 2FA</strong> everywhere it's offered — an app or hardware key, not SMS where you can avoid it.</li>
+<li><strong>Check the damage.</strong> Search your email at Have I Been Pwned and rotate anything that surfaces.</li>
+</ul>
+<div class="cta-box"><h3>Generate a password the math approves of</h3><p style="color:#fff;opacity:.9">Cryptographically random, up to 128 characters, batch mode for onboarding the whole password manager vault — and it never leaves your browser.</p><a href="/password-generator/">Password Generator →</a></div>
+<h2>The bottom line</h2>
+<p>A strong password is long, random, and used exactly once. The symbols are garnish. Sixteen characters or five dice words put you past anything that guesses for a living, and 2FA covers the attacks that never ask for your password.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is a 12-character password strong enough?</h3><p>A 12-character random password using the full printable ASCII set carries about 78.8 bits of entropy — roughly 17,000 years to exhaust on a rig testing a trillion guesses per second, and effectively uncrackable against salted slow hashes. NIST suggests a minimum of 8 characters and recommends 15 or more, so 12 random characters is comfortably strong. The catch is random: 12 characters of a human pattern is a different animal.</p></div>
+<div class="faq-item"><h3>Are password managers safe to use?</h3><p>Yes — for most people they're strictly safer than reusing variations of one memorized password. A manager protects one vault with one long master password and ideally two-factor authentication, instead of you protecting fifty accounts with fifty weak ones. Major commercial managers use zero-knowledge encryption, so even a breach of their servers exposes encrypted vaults, not plaintext.</p></div>
+<div class="faq-item"><h3>What characters make a password strongest?</h3><p>All of them. Lowercase alone gives 26 options per character; the full printable ASCII set gives about 95, worth 6.57 bits per character versus 4.7. Symbols and capitals help, but they matter far less than adding characters: sixteen lowercase letters (75.2 bits) beat eight characters of everything (52.6 bits) by a factor of more than six million.</p></div>
+<div class="faq-item"><h3>Can a strong password still be hacked?</h3><p>Yes, through paths that ignore its strength: phishing, keyloggers, a breach of the site's servers, or a weak reset process. Strong random passwords defend against exactly one attack — offline guessing — but it's the most common industrial-scale attack, so they still matter. Two-factor authentication covers the paths a password can't.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/password-generator/">Password Generator</a>
+<a href="/uuid-generator/">UUID Generator</a>
+<a href="/base64-encoder/">Base64 Encoder</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

@@ -100,6 +100,27 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   macro-calculator (982).
   Next in queue: password-generator, image-compressor, csv-to-json (no matching guides),
   then remainder of wave-2 list.
+- 2026-08-30 batch guides: password-generator → guides/what-makes-a-password-strong/;
+  image-compressor → guides/which-image-format-should-you-use/;
+  csv-to-json → guides/csv-vs-json-when-to-use-each/
+  (each: 1,358–1,440 words, computed data tables — cracking-time, format-comparison,
+  format-by-job — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  all-tools guides section updated, count 68→71; guide backlinks added to all three
+  tool pages' related sections)
+- 2026-08-30 depth passes: password-generator (996 → 1,272 words, repaired corrupted
+  JS-array-in-HTML paragraph in Passwords/Hashes/Breaches section — same defect class as
+  the ROI page, +hash-algorithm reference table, +2 FAQs with FAQPage JSON-LD update 5→7,
+  BreadcrumbList already present; calculator JS untouched);
+  image-compressor (1,443 → 1,714 words, +format-comparison table +quality-settings
+  reference table, +2 FAQs with FAQPage JSON-LD update 7→9; compressor JS untouched)
+  Skipped depth pass: csv-to-json (1,223 words ≥ 900, format table + 5 FAQs already
+  present) — but repaired as out-of-band fix: FAQPage JSON-LD first Question name held a
+  ~4KB pasted-HTML blob (staged-blob collision class; JSON parsed but Q1 was garbage) →
+  restored to "How do I convert a CSV file to JSON?"; added missing BreadcrumbList.
+  Out-of-band: guides/index.html stale 226 claims (twitter meta + CollectionPage) → 336,
+  completing the 10d746c "all count claims" sweep that missed those three.
+  Wave-2 queue state: prompt-library guide still owed (depth pass done 8-29);
+  currency-converter, qr-code-generator, macro, water-intake, age-calculator complete.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
