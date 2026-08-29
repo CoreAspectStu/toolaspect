@@ -130,7 +130,7 @@
     resultEl.innerHTML =
       '<div class="ta-embed-big">' + (net >= 0 ? '+' : '−') + money(Math.abs(net)) + '/yr</div>'
       + '<div class="ta-embed-sub">' + (net >= 0 ? 'Filing separately wins' : 'Filing jointly wins') + '</div>'
-      + '<div class="ta-embed-line">RAP payment: <strong>$' + mfj.toFixed(2) + '/mo</strong> jointly vs <strong>$' + mfs.toFixed(2) + '/mo</strong> separately</div>'
+      + '<div class="ta-embed-line">RAP payment: <strong>$' + mfj.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '/mo</strong> jointly vs <strong>$' + mfs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '/mo</strong> separately</div>'
       + '<div class="ta-embed-line">Payment savings: <strong>' + money(save) + '/yr</strong> · Extra MFS tax: <strong>' + money(cost) + '/yr</strong></div>';
   }
 
