@@ -88,7 +88,7 @@
     + '</div>'
     + '<div class="ta-embed-form-group" style="display:flex;gap:14px;flex-wrap:wrap">'
     + '<label class="ta-embed-check"><input type="checkbox" class="ta-trial" checked style="margin-right:6px"> Bride trial (75%)</label>'
-    + '<label class="ta-embed-check"><input type="checkbox" class="ta-lash" style="margin-right:6px"> Lashes for everyone (+$20)</label>'
+    + '<label class="ta-embed-check"><input type="checkbox" class="ta-lash" checked style="margin-right:6px"> Lashes for everyone (+$20)</label>'
     + '</div>'
     + '</div>'
     + '<div class="ta-embed-result"></div>'

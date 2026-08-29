@@ -57,7 +57,7 @@
   }
 
   var ROUTES = [
-    { name: 'Group class (big-box)', lo: 119, hi: 179 },
+    { name: 'Group class (big-box)', lo: 139, hi: 179 },
     { name: 'Group class (independent)', lo: 150, hi: 250 },
     { name: 'Online course', lo: 30, hi: 200 },
     { name: 'Hybrid: class + 3 privates', lo: 375, hi: 700 },
@@ -66,7 +66,7 @@
     { name: 'Board-and-train (2 wks)', lo: 2000, hi: 5000 }
   ];
   var RECS = {
-    puppy: { route: 'Group class (big-box)', why: 'Socialization window closes around 14–16 weeks — a $119–179 puppy class is the best value in dog training.' },
+    puppy: { route: 'Group class (big-box)', why: 'Socialization window closes around 14–16 weeks — a $139–179 puppy class is the best value in dog training.' },
     manners: { route: 'Group class (independent)', why: 'A 6-week group class ($150–$250) plus daily 5-minute reps handles sit, stay, and loose leash for most dogs.' },
     leash: { route: 'Hybrid: class + 3 privates', why: 'About $444 at national prices ($159 course + 3 × $95 in-home) — group drills the behavior, privates fix your timing.' },
     recall: { route: 'Group class (independent)', why: 'Recall is built in stages on a long line; a class keeps the progression honest. Add a $30–200 online course for daily reps.' },
