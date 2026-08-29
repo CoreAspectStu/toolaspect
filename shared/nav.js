@@ -44,7 +44,11 @@
         { label: 'Mortgage Calculator',    href: '/mortgage-calculator/' },
         { label: 'Loan Calculator',        href: '/loan-calculator/' },
         { label: 'Wedding Loan',           href: '/wedding-loan-calculator/' },
-        { label: 'WeddingBudget',         href: '/wedding-budget-calculator/' },
+        { label: 'BackyardWeddingCost', href: '/backyard-wedding-cost-calculator/' },
+        { label: 'BartenderCost', href: '/bartender-cost-calculator/' },
+        { label: 'BridalHairMakeup', href: '/bridal-hair-makeup-cost-calculator/' },
+        { label: 'BounceHouseRental', href: '/bounce-house-rental-cost-calculator/' },
+        { label: 'CorporateEventBudget', href: '/corporate-event-budget-calculator/' },        { label: 'WeddingBudget',         href: '/wedding-budget-calculator/' },
         { label: 'EngagementRing',   href: '/engagement-ring-budget-calculator/' },
         { label: 'HotelRoomBlock',        href: '/hotel-room-block-calculator/' },
         { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
@@ -277,8 +281,12 @@
         { label: 'CeramicCoating', href: '/ceramic-coating-cost-calculator/' },        { label: 'CarAcRepair', href: '/car-ac-repair-cost-calculator/' },        { label: 'TireSize', href: '/tire-size-calculator/' },        { label: 'TireLoadIndex', href: '/tire-load-index-chart/' },
         { label: 'BoltPattern', href: '/bolt-pattern-calculator/', badge: 'New' },
         { label: 'UpsideDownCarLoan', href: '/upside-down-car-loan-calculator/' },
-        { label: 'CarMaintenanceCost', href: '/car-maintenance-cost-calculator/' },
-        { label: 'OilChangeCost', href: '/oil-change-cost-calculator/' },      ]
+        { label: 'DealerDocFee', href: '/dealer-doc-fee-calculator/' },        { label: 'CarMaintenanceCost', href: '/car-maintenance-cost-calculator/' },
+        { label: 'OilChangeCost', href: '/oil-change-cost-calculator/' },
+        { label: 'CarBatteryCost', href: '/car-battery-replacement-cost-calculator/', badge: 'New' },
+        { label: 'CarAudioInstallCost', href: '/car-audio-installation-cost-calculator/', badge: 'New' },
+        { label: 'CarTitleTransferCost', href: '/car-title-transfer-cost-calculator/', badge: 'New' },
+        { label: 'CarWashMembership', href: '/car-wash-membership-calculator/', badge: 'New' },      ]
     },
     {
       label: 'Health',
@@ -297,7 +305,9 @@
         { label: 'WaterIntake', href: '/water-intake-calculator/' },
         { label: 'HydrationNeedsByWeight', href: '/hydration-needs-by-weight/' },
         { label: 'DogWaterIntake', href: '/dog-water-intake-calculator/' },
+        { label: 'DogExerciseNeeds', href: '/dog-exercise-needs-calculator/' },
         { label: 'DogFood', href: '/dog-food-calculator/' },
+        { label: 'DogFoodCost', href: '/dog-food-cost-comparison-calculator/' },
         { label: 'RawDogFood', href: '/raw-dog-food-calculator/' },
         { label: 'DogAge', href: '/dog-age-calculator/' },
         { label: 'HorseAge', href: '/horse-age-calculator/' },
@@ -314,10 +324,15 @@
         { label: 'DogHarnessSize', href: '/dog-harness-size-calculator/' },
         { label: 'DogChocolateToxicity', href: '/dog-chocolate-toxicity-calculator/' },
         { label: 'CatFood', href: '/cat-food-calculator/' },
+        { label: 'CatLitterCost', href: '/cat-litter-cost-calculator/', badge: 'New' },
         { label: 'CatAge', href: '/cat-age-calculator/' },
         { label: 'CatLifeExpectancy', href: '/cat-life-expectancy-calculator/' },
         { label: 'PetShippingCost', href: '/pet-shipping-cost-calculator/' },
         { label: 'VetVisitCost', href: '/vet-visit-cost-calculator/' },
+        { label: 'DogAllergyTreatmentCost', href: '/dog-allergy-treatment-cost-calculator/', badge: 'New' },
+        { label: 'DogDentalCleaningCost', href: '/dog-dental-cleaning-cost-calculator/', badge: 'New' },
+        { label: 'DogBoardingCost', href: '/dog-boarding-cost-calculator/', badge: 'New' },
+        { label: 'DogDaycareCost', href: '/dog-daycare-cost-calculator/', badge: 'New' },
         { label: 'CostOfOwningADog', href: '/cost-of-owning-a-dog-calculator/' },
         { label: 'PuppyPrice', href: '/puppy-price-calculator/' },
         { label: 'DogDnaCost', href: '/dog-dna-test-cost-comparison/' },
@@ -326,7 +341,10 @@
         { label: 'PetRent', href: '/pet-rent-calculator/' },
         { label: 'PetSitterRates', href: '/pet-sitter-rates-calculator/' },        { label: 'HeartRateZone', href: '/heart-rate-zone-calculator/' },
         { label: 'PetToolsHub', href: '/pet-tools/' },        { label: 'GlucoseA1cConverter', href: '/glucose-a1c-converter/' },
-        { label: 'Bac', href: '/bac-calculator/' },
+        { label: 'DogGroomingCost', href: '/dog-grooming-cost-calculator/' },
+        { label: 'DogTrainingCost', href: '/dog-training-cost-calculator/' },
+        { label: 'DogSurgeryCost', href: '/dog-surgery-cost-calculator/' },
+        { label: 'CostOfCat', href: '/cost-of-owning-a-cat-calculator/' },        { label: 'Bac', href: '/bac-calculator/' },
         { label: 'DueDate', href: '/due-date-calculator/' },
         { label: 'Ovulation', href: '/ovulation-calculator/' },
         { label: 'PregnancyDueDate', href: '/pregnancy-due-date-calculator/' },
@@ -358,6 +376,7 @@
         { label: 'LeasePayment', href: '/lease-payment-calculator/' },
         { label: 'LeaseVsBuy', href: '/lease-vs-buy-car-calculator/' },
         { label: 'Dti', href: '/dti-calculator/' },
+        { label: 'DebtSettlementVsBankruptcy', href: '/debt-settlement-vs-bankruptcy-calculator/', badge: 'New' },
         { label: 'RothConversion', href: '/roth-conversion-calculator/' },
       ]
     },
@@ -508,7 +527,9 @@
         { label: 'IeltsBandScore', href: '/ielts-band-score-calculator/' },
         { label: 'SatScore', href: '/sat-score-calculator/' },
         { label: 'SatToAct', href: '/sat-to-act-conversion-calculator/' },        { label: 'ApScore', href: '/ap-score-calculator/' },
-        { label: 'ActScore', href: '/act-score-calculator/' },
+        { label: 'CollegeCost', href: '/college-cost-calculator/' },
+        { label: 'CollegeRoi', href: '/college-roi-calculator/' },
+        { label: 'BootcampRoi', href: '/bootcamp-roi-calculator/' },        { label: 'ActScore', href: '/act-score-calculator/' },
         { label: 'WeddingHashtag', href: '/wedding-hashtag-generator/' },
         { label: 'WeddingAlcohol', href: '/wedding-alcohol-calculator/' },
         { label: 'WeddingVenueCost', href: '/wedding-venue-cost-calculator/' },
@@ -617,6 +638,7 @@
         { label: 'Notepad', href: '/notepad/' },
         { label: 'TextTools', href: '/text-tools/' },
         { label: 'EverydayTools', href: '/everyday-tools/' },
+        { label: 'BestFreeTools2026', href: '/best-free-online-tools-2026/' },
       ]
     },
     {
@@ -785,7 +807,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 430+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 480+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +

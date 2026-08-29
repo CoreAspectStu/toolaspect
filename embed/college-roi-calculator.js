@@ -1,0 +1,129 @@
+/*!
+ * ToolAspect College ROI Calculator Embed
+ * Install: <div id="ta-college-roi-calculator"></div>
+ *          <script src="https://toolaspect.com/embed/college-roi-calculator.js"></script>
+ * Options: add data-theme="dark" to the container div for dark theme.
+ */
+(function () {
+  'use strict';
+  var TARGET_ID = 'ta-college-roi-calculator';
+  var BASE = 'https://toolaspect.com/college-roi-calculator/';
+
+  var CSS = ''
+    + '.ta-embed-root{--ta-bg:#f8fafc;--ta-surface:#ffffff;--ta-border:#e2e8f0;--ta-text:#0f172a;--ta-muted:#64748b;--ta-accent:#2563eb;'
+    + 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--ta-bg);color:var(--ta-text);'
+    + 'line-height:1.6;max-width:640px;margin:0 auto;padding:4px;box-sizing:border-box;font-size:16px}'
+    + '.ta-embed-root[data-theme="dark"]{--ta-bg:#0f172a;--ta-surface:#1e293b;--ta-border:#334155;--ta-text:#f1f5f9;--ta-muted:#94a3b8;--ta-accent:#60a5fa}'
+    + '.ta-embed-root *,.ta-embed-root *::before,.ta-embed-root *::after{box-sizing:border-box}'
+    + '.ta-embed-title{font-size:1.35rem;font-weight:700;text-align:center;margin:8px 0 2px;color:var(--ta-text)}'
+    + '.ta-embed-subtitle{text-align:center;color:var(--ta-muted);margin-bottom:16px;font-size:.9rem}'
+    + '.ta-embed-card{background:var(--ta-surface);border:1px solid var(--ta-border);border-radius:12px;padding:18px;margin-bottom:14px}'
+    + '.ta-embed-form-group{margin-bottom:12px}'
+    + '.ta-embed-form-group label{display:block;font-size:.78rem;color:var(--ta-muted);margin-bottom:5px;font-weight:600;letter-spacing:.02em}'
+    + '.ta-embed-form-group input,.ta-embed-form-group select{width:100%;background:var(--ta-bg);border:1px solid var(--ta-border);color:var(--ta-text);'
+    + 'border-radius:8px;padding:10px 12px;font-size:.9rem;font-family:inherit;outline:none}'
+    + '.ta-embed-form-group input:focus,.ta-embed-form-group select:focus{border-color:var(--ta-accent)}'
+    + '.ta-embed-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}'
+    + '.ta-embed-result{text-align:center;padding:22px;background:var(--ta-surface);border:1px solid var(--ta-border);border-radius:12px;margin-bottom:12px}'
+    + '.ta-embed-big{font-size:2.2rem;font-weight:700;color:var(--ta-accent)}'
+    + '.ta-embed-sub{color:var(--ta-muted);font-size:.92rem;margin-top:6px}'
+    + '.ta-embed-range{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}'
+    + '.ta-embed-range div{background:var(--ta-bg);border-radius:8px;padding:10px}'
+    + '.ta-embed-range .rl{font-size:.72rem;color:var(--ta-muted);margin-bottom:2px}'
+    + '.ta-embed-range .rv{font-size:1.05rem;font-weight:700}'
+    + '.ta-embed-attrib{text-align:center;font-size:.72rem;margin-top:10px;color:var(--ta-muted)}'
+    + '.ta-embed-attrib a{color:var(--ta-accent);text-decoration:none;font-weight:600}'
+    + '.ta-embed-attrib a:hover{text-decoration:underline}'
+    + '@media(max-width:520px){.ta-embed-form-row{grid-template-columns:1fr 1fr}.ta-embed-range{grid-template-columns:1fr}}';
+
+  var styleEl = document.createElement('style');
+  styleEl.setAttribute('data-ta-embed', 'college-roi-calculator');
+  styleEl.textContent = CSS;
+  if (!document.querySelector('style[data-ta-embed="college-roi-calculator"]')) {
+    (document.head || document.documentElement).appendChild(styleEl);
+  }
+
+  function findTarget() {
+    var el = document.getElementById(TARGET_ID);
+    if (el) return el;
+    var cs = document.currentScript;
+    if (cs && cs.previousElementSibling && cs.previousElementSibling.tagName === 'DIV') return cs.previousElementSibling;
+    return null;
+  }
+
+  var target = findTarget();
+  if (!target) {
+    if (window.console) console.error('[ToolAspect] embed container #' + TARGET_ID + ' not found.');
+    return;
+  }
+
+  var root = document.createElement('div');
+  root.className = 'ta-embed-root';
+  if (target.getAttribute('data-theme') === 'dark') root.setAttribute('data-theme', 'dark');
+  root.innerHTML = ''
+    + '<div class="ta-embed-title">College ROI Calculator</div>'
+    + '<div class="ta-embed-subtitle">Cost plus missed wages vs the salary premium</div>'
+    + '<div class="ta-embed-card">'
+    + '<div class="ta-embed-form-row">'
+    + '<div class="ta-embed-form-group"><label>Field (sets salary)</label><select class="ta-field">'
+    + '<option value="82000">Engineering</option>'
+    + '<option value="78000">Computer science</option>'
+    + '<option value="70000">Nursing / health</option>'
+    + '<option value="60000" selected>Business</option>'
+    + '<option value="55000">Sciences</option>'
+    + '<option value="50000">Social sciences</option>'
+    + '<option value="48000">Communications</option>'
+    + '<option value="45000">Humanities / arts</option>'
+    + '<option value="44000">Education</option>'
+    + '</select></div>'
+    + '<div class="ta-embed-form-group"><label>Starting Salary ($/yr)</label><input type="number" class="ta-salary" value="60000" min="0" step="1000"></div>'
+    + '</div>'
+    + '<div class="ta-embed-form-row">'
+    + '<div class="ta-embed-form-group"><label>High-School Wage ($/yr)</label><input type="number" class="ta-hs" value="45000" min="0" step="1000"></div>'
+    + '<div class="ta-embed-form-group"><label>Net Cost of College ($/yr)</label><input type="number" class="ta-cost" value="20000" min="0" step="500"></div>'
+    + '</div>'
+    + '</div>'
+    + '<div class="ta-embed-result"></div>'
+    + '<div class="ta-embed-attrib">Powered by <a href="' + BASE + '" target="_blank" rel="noopener">ToolAspect</a></div>';
+  target.appendChild(root);
+
+  var resultEl = root.querySelector('.ta-embed-result');
+
+  function num(sel) { var el = root.querySelector(sel); return el ? (parseFloat(el.value) || 0) : 0; }
+  function val(sel) { var el = root.querySelector(sel); return el ? el.value : ''; }
+  function money(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString('en-US'); }
+
+  function calc() {
+    var salary = num('.ta-salary');
+    var hs = num('.ta-hs');
+    var cost = num('.ta-cost');
+    var yrs = 4, work = 40, g = 0.02, disc = 0.03;
+    var invest = cost * yrs + hs * yrs;
+    var prem = salary - hs;
+    var sum = 0, npv = 0, be = 0, cum = 0;
+    for (var t = 1; t <= work; t++) {
+      var p = prem * Math.pow(1 + g, t - 1);
+      sum += p; cum += p; npv += p / Math.pow(1 + disc, t);
+      if (!be && cum >= invest) be = t;
+    }
+    resultEl.innerHTML =
+      '<div class="ta-embed-big">' + money(sum - invest) + '</div>'
+      + '<div class="ta-embed-sub">40-year net gain &middot; ' + money(invest) + ' invested (cost + 4 yrs of wages given up)</div>'
+      + '<div class="ta-embed-range">'
+      + '<div><div class="rl">NPV @ 3%</div><div class="rv">' + money(npv - invest) + '</div></div>'
+      + '<div><div class="rl">Break-even</div><div class="rv">' + (be ? 'Year ' + be : 'Past yr 40') + '</div></div>'
+      + '<div><div class="rl">Return Multiple</div><div class="rv">' + (invest > 0 ? (sum / invest).toFixed(1) + 'x' : '—') + '</div></div>'
+      + '</div>';
+  }
+
+  var fieldSel = root.querySelector('.ta-field');
+  fieldSel.addEventListener('change', function () {
+    root.querySelector('.ta-salary').value = this.value;
+    calc();
+  });
+  root.addEventListener('input', calc);
+  calc();
+
+  window.ToolAspectEmbeds = window.ToolAspectEmbeds || {};
+  window.ToolAspectEmbeds.collegeRoiCalculator = { recalc: calc };
+})();
