@@ -49,6 +49,7 @@
         { label: 'BridalHairMakeup', href: '/bridal-hair-makeup-cost-calculator/' },
         { label: 'BounceHouseRental', href: '/bounce-house-rental-cost-calculator/' },
         { label: 'CorporateEventBudget', href: '/corporate-event-budget-calculator/' },        { label: 'WeddingBudget',         href: '/wedding-budget-calculator/' },
+        { label: 'TradeShowBoothCost', href: '/trade-show-booth-cost-calculator/' },
         { label: 'EngagementRing',   href: '/engagement-ring-budget-calculator/' },
         { label: 'HotelRoomBlock',        href: '/hotel-room-block-calculator/' },
         { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
