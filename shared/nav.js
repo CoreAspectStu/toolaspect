@@ -51,9 +51,6 @@
         { label: 'CorporateEventBudget', href: '/corporate-event-budget-calculator/' },        { label: 'WeddingBudget',         href: '/wedding-budget-calculator/' },
         { label: 'EngagementRing',   href: '/engagement-ring-budget-calculator/' },
         { label: 'HotelRoomBlock',        href: '/hotel-room-block-calculator/' },
-        { label: 'ElopementCost', href: '/elopement-cost-calculator/' },
-        { label: 'HoneymoonBudget', href: '/honeymoon-budget-calculator/' },
-        { label: 'HoneymoonRegistryFee', href: '/honeymoon-registry-fee-calculator/' },
         { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
         { label: 'BMI Calculator',         href: '/bmi-calculator/' },
         { label: 'Discount Calculator',    href: '/discount-calculator/' },
@@ -64,9 +61,6 @@
         { label: '529 to Roth Rollover',  href: '/529-to-roth-rollover-calculator/' },
         { label: 'Tip Calculator',         href: '/tip-calculator/' },
         { label: 'Hours Calculator',       href: '/hours-calculator/' },
-        { label: 'Honeymoon Budget',  href: '/honeymoon-budget-calculator/' },
-        { label: 'Honeymoon Registry Fees',  href: '/honeymoon-registry-fee-calculator/' },
-        { label: 'Elopement Cost',  href: '/elopement-cost-calculator/' },
       ]
     },
     {
@@ -288,23 +282,18 @@
         { label: 'BoltPattern', href: '/bolt-pattern-calculator/', badge: 'New' },
         { label: 'UpsideDownCarLoan', href: '/upside-down-car-loan-calculator/' },
         { label: 'DealerDocFee', href: '/dealer-doc-fee-calculator/' },        { label: 'CarMaintenanceCost', href: '/car-maintenance-cost-calculator/' },
-        { label: 'OilChangeCost', href: '/oil-change-cost-calculator/' },
+        { label: 'NewTiresCost', href: '/new-tires-cost-calculator/' },
+        { label: 'StateVehicleInspection', href: '/state-vehicle-inspection-cost-calculator/' },        { label: 'OilChangeCost', href: '/oil-change-cost-calculator/' },
         { label: 'CarBatteryCost', href: '/car-battery-replacement-cost-calculator/', badge: 'New' },
         { label: 'CarAudioInstallCost', href: '/car-audio-installation-cost-calculator/', badge: 'New' },
         { label: 'CarTitleTransferCost', href: '/car-title-transfer-cost-calculator/', badge: 'New' },
-        { label: 'CarWashMembership', href: '/car-wash-membership-calculator/', badge: 'New' },
-        { label: 'EvBatteryReplacement', href: '/ev-battery-replacement-cost-calculator/' },
-        { label: 'FlatTowSetupCost', href: '/flat-tow-setup-cost-calculator/' },
-        { label: 'HybridVsGasPayback', href: '/hybrid-vs-gas-payback-calculator/' },
-        { label: 'HorseTrailerCost', href: '/horse-trailer-cost-calculator/' },      ]
+        { label: 'CarWashMembership', href: '/car-wash-membership-calculator/', badge: 'New' },      ]
     },
     {
       label: 'Health',
       dot: '#818cf8',
       tools: [
         { label: 'Deductible Vs Copay', href: '/deductible-vs-copay-calculator/' },
-        { label: 'IvfCost', href: '/ivf-cost-calculator/' },
-        { label: 'LasikCost', href: '/lasik-cost-calculator/' },
         { label: 'Bmi', href: '/bmi-calculator/' },
         { label: 'Bmr', href: '/bmr-calculator/' },
         { label: 'Macro', href: '/macro-calculator/' },
@@ -356,11 +345,6 @@
         { label: 'DogGroomingCost', href: '/dog-grooming-cost-calculator/' },
         { label: 'DogTrainingCost', href: '/dog-training-cost-calculator/' },
         { label: 'DogSurgeryCost', href: '/dog-surgery-cost-calculator/' },
-        { label: 'DogWalkingCost', href: '/dog-walking-cost-calculator/' },
-        { label: 'ElectricDogFenceCost', href: '/electric-dog-fence-cost-calculator/' },
-        { label: 'PetEuthanasiaCost', href: '/euthanasia-cost-calculator/' },
-        { label: 'HorseBoardCost', href: '/horse-board-cost-calculator/' },
-        { label: 'HorseCostOfOwnership', href: '/horse-cost-of-ownership-calculator/' },
         { label: 'CostOfCat', href: '/cost-of-owning-a-cat-calculator/' },        { label: 'Bac', href: '/bac-calculator/' },
         { label: 'DueDate', href: '/due-date-calculator/' },
         { label: 'Ovulation', href: '/ovulation-calculator/' },
@@ -369,20 +353,6 @@
         { label: 'PregnancyWeightGain', href: '/pregnancy-weight-gain-calculator/' },
         { label: 'PregnancyWeightGainTwins', href: '/pregnancy-weight-gain-calculator-twins/' },
         { label: 'PlusSizePregnancyWeightGain', href: '/plus-size-pregnancy-weight-gain/' },
-        { label: 'Hybrid vs Gas Payback',  href: '/hybrid-vs-gas-payback-calculator/' },
-        { label: 'EV Battery Replacement',  href: '/ev-battery-replacement-cost-calculator/' },
-        { label: 'Horse Trailer Cost',  href: '/horse-trailer-cost-calculator/' },
-        { label: 'Flat Tow Setup Cost',  href: '/flat-tow-setup-cost-calculator/' },
-        { label: 'Remote Start Install',  href: '/remote-start-installation-cost-calculator/' },
-        { label: 'Vehicle Inspection Cost',  href: '/state-vehicle-inspection-cost-calculator/' },
-        { label: 'Dog Walking Cost',  href: '/dog-walking-cost-calculator/' },
-        { label: 'Electric Dog Fence',  href: '/electric-dog-fence-cost-calculator/' },
-        { label: 'Spay & Neuter Cost',  href: '/spay-neuter-cost-calculator/' },
-        { label: 'Pet Euthanasia Cost',  href: '/euthanasia-cost-calculator/' },
-        { label: 'Horse Board Cost',  href: '/horse-board-cost-calculator/' },
-        { label: 'Horse Cost of Ownership',  href: '/horse-cost-of-ownership-calculator/' },
-        { label: 'IVF Cost',  href: '/ivf-cost-calculator/' },
-        { label: 'LASIK Cost',  href: '/lasik-cost-calculator/' },
       ]
     },
     {
@@ -419,8 +389,6 @@
         { label: 'Student Loan Refinance', href: '/student-loan-refinance-calculator/' },
         { label: 'Loan Consolidation', href: '/student-loan-consolidation-calculator/' },
         { label: 'Private Student Loan', href: '/private-student-loan-calculator/' },
-        { label: 'Federal vs Private Loans', href: '/federal-vs-private-student-loan-calculator/' },
-        { label: 'AidLetterComparison', href: '/financial-aid-award-letter-comparison-calculator/' },
         { label: 'FAFSA SAI Calculator', href: '/fafsa-sai-calculator/' },
         { label: '529 College Savings', href: '/529-college-savings-calculator/' },
         { label: 'PellGrantEligibility', href: '/pell-grant-eligibility-calculator/' },
@@ -432,7 +400,15 @@
         { label: 'RAP at $80k Salary', href: '/rap-calculator-80000-salary/' },
         { label: 'PslfForgiveness', href: '/pslf-forgiveness-calculator/' },
         { label: 'SlRehabilitation', href: '/student-loan-rehabilitation-calculator/' },
-        { label: 'SlForgivenessTaxBomb', href: '/student-loan-forgiveness-tax-bomb-calculator/' },      ]
+        { label: 'SlForgivenessTaxBomb', href: '/student-loan-forgiveness-tax-bomb-calculator/' },
+        { label: 'FedVsPrivateSl', href: '/federal-vs-private-student-loan-calculator/' },
+        { label: 'SubVsUnsubSl', href: '/subsidized-vs-unsubsidized-student-loan-calculator/' },
+        { label: 'SlRepaymentCompare', href: '/student-loan-repayment-plan-comparison-calculator/' },
+        { label: 'SlPayoffVsInvest', href: '/student-loan-payoff-vs-invest-calculator/' },
+        { label: 'Sl401kMatch', href: '/student-loan-401k-match-calculator/' },
+        { label: 'SlMarriage', href: '/student-loan-marriage-calculator/' },
+        { label: 'TeacherLoanForgiveness', href: '/teacher-loan-forgiveness-calculator/' },
+      ]
     },
     {
       label: 'Insurance',
@@ -444,7 +420,8 @@
         { label: 'HomeownersDwelling', href: '/homeowners-dwelling-coverage-calculator/' },
         { label: 'CarInsuranceRateIncrease', href: '/car-insurance-rate-increase-calculator/' },        { label: 'LifeInsuranceNeeds', href: '/life-insurance-needs-calculator/' },
         { label: 'Sr22Insurance', href: '/sr22-insurance-cost-calculator/' },        { label: 'RentersInsurance', href: '/renters-insurance-calculator/' },
-        { label: 'BoatInsuranceCost', href: '/boat-insurance-cost-calculator/' },
+        { label: 'NonOwnerCarIns', href: '/non-owner-car-insurance-cost-calculator/' },
+        { label: 'TeenDriverIns', href: '/teen-driver-car-insurance-cost-calculator/' },        { label: 'BoatInsuranceCost', href: '/boat-insurance-cost-calculator/' },
         { label: 'MotorcycleInsuranceCost', href: '/motorcycle-insurance-cost-calculator/' },
         { label: 'RvInsuranceCost', href: '/rv-insurance-cost-calculator/' },
         { label: 'FloodInsuranceCost', href: '/flood-insurance-cost-calculator/' },
@@ -454,12 +431,6 @@
         { label: 'UmbrellaInsurance', href: '/umbrella-insurance-calculator/' },
         { label: 'IdentityTheftProtection', href: '/identity-theft-protection-calculator/' },
         { label: 'IRMAA Calculator', href: '/irmaa-calculator/' },
-        { label: 'HorseInsuranceCost', href: '/horse-insurance-cost-calculator/' },
-        { label: 'Federal vs Private Loans',  href: '/federal-vs-private-student-loan-calculator/' },
-        { label: 'Financial Aid Comparison',  href: '/financial-aid-award-letter-comparison-calculator/' },
-        { label: 'Scholarship Taxability',  href: '/scholarship-taxability-calculator/' },
-        { label: 'Repayment Plan Comparison',  href: '/student-loan-repayment-plan-comparison-calculator/' },
-        { label: 'Horse Insurance',  href: '/horse-insurance-cost-calculator/' },
       ]
     },
     {
@@ -476,7 +447,6 @@
         { label: 'Speeding Ticket: California', href: '/speeding-ticket-cost-california/' },
         { label: 'Speeding Ticket: Florida', href: '/speeding-ticket-cost-florida/' },
         { label: 'Speeding Ticket: Texas', href: '/speeding-ticket-cost-texas/' },
-        { label: 'IgnitionInterlockCost', href: '/ignition-interlock-cost-calculator/' },
         { label: 'DogBiteSettlement', href: '/dog-bite-settlement-calculator/' },
         { label: 'SlipAndFallSettlement', href: '/slip-and-fall-settlement-calculator/' },
         { label: 'MotorcycleAccidentSettlement', href: '/motorcycle-accident-settlement-calculator/' },
@@ -495,7 +465,6 @@
         { label: 'AlimonyCalifornia', href: '/alimony-calculator-california/' },
         { label: 'AlimonyTexas', href: '/alimony-calculator-texas/' },
         { label: 'ChildSupport', href: '/child-support-calculator/' },
-        { label: 'Ignition Interlock Cost',  href: '/ignition-interlock-cost-calculator/' },
       ]
     },
     {
@@ -568,8 +537,6 @@
         { label: 'IeltsBandScore', href: '/ielts-band-score-calculator/' },
         { label: 'SatScore', href: '/sat-score-calculator/' },
         { label: 'SatToAct', href: '/sat-to-act-conversion-calculator/' },        { label: 'ApScore', href: '/ap-score-calculator/' },
-        { label: 'FinalGradeCalculator', href: '/final-grade-calculator/' },
-        { label: 'GradeCurveCalculator', href: '/grade-curve-calculator/' },
         { label: 'CollegeCost', href: '/college-cost-calculator/' },
         { label: 'CollegeRoi', href: '/college-roi-calculator/' },
         { label: 'BootcampRoi', href: '/bootcamp-roi-calculator/' },        { label: 'ActScore', href: '/act-score-calculator/' },
@@ -588,12 +555,6 @@
         { label: 'Anniversary5thWood', href: '/5th-anniversary-gifts/' },
         { label: 'Anniversary25thSilver', href: '/25th-anniversary-gifts/' },
         { label: 'Anniversary50thGold', href: '/50th-anniversary-gifts/' },
-        { label: 'Final Grade',  href: '/final-grade-calculator/' },
-        { label: 'Grade Curve',  href: '/grade-curve-calculator/' },
-        { label: 'Gender Reveal Party',  href: '/gender-reveal-party-cost-calculator/' },
-        { label: 'Party Rental Cost',  href: '/party-rental-cost-calculator/' },
-        { label: 'Photo Booth Rental',  href: '/photo-booth-rental-cost-calculator/' },
-        { label: 'Quinceanera Cost',  href: '/quinceanera-cost-calculator/' },
       ]
     },
     {
@@ -678,7 +639,6 @@
         { label: 'BabyShowerCost', href: '/baby-shower-cost-calculator/' },
         { label: 'BacheloretteCost', href: '/bachelorette-party-cost-calculator/' },
         { label: 'BirthdayPartyCost', href: '/birthday-party-cost-calculator/' },
-        { label: 'GenderRevealPartyCost', href: '/gender-reveal-party-cost-calculator/' },
         { label: 'DiceRoller', href: '/dice-roller/' },
         { label: 'CoinFlip', href: '/coin-flip/' },
         { label: 'RandomNumberGenerator', href: '/random-number-generator/' },
@@ -697,7 +657,10 @@
       tools: [
         { label: 'BarChartMaker', href: '/bar-chart-maker/' },
         { label: 'FlowchartMaker', href: '/flowchart-maker/' },
-        { label: 'GanttChartMaker', href: '/gantt-chart-maker/' },
+        { label: 'ClassDiagram', href: '/class-diagram-maker/' },
+        { label: 'ErDiagram', href: '/er-diagram-maker/' },
+        { label: 'SequenceDiagram', href: '/sequence-diagram-maker/' },
+        { label: 'MermaidSuite', href: '/mermaid-diagram-suite/' },        { label: 'GanttChartMaker', href: '/gantt-chart-maker/' },
         { label: 'MindMapMaker', href: '/mind-map-maker/' },
         { label: 'OrgChartMaker', href: '/org-chart-maker/' },
         { label: 'KanbanBoard', href: '/kanban-board/' },
@@ -707,10 +670,6 @@
         { label: 'PlaceholderImage', href: '/placeholder-image/' },
         { label: 'WordsPerMinuteTest', href: '/words-per-minute-test/' },
         { label: 'VideoAspectRatio', href: '/video-aspect-ratio-calculator/' },
-        { label: 'Class Diagram',  href: '/class-diagram-maker/' },
-        { label: 'ER Diagram',  href: '/er-diagram-maker/' },
-        { label: 'Sequence Diagram',  href: '/sequence-diagram-maker/' },
-        { label: 'Mermaid Diagrams',  href: '/mermaid-diagram-suite/' },
       ]
     },
   ];
@@ -861,7 +820,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 500+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 480+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +

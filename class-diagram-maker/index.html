@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Diagram Maker — Free Online UML Tool | ToolAspect</title>
+<meta name="description" content="Free class diagram maker. Type Mermaid classDiagram syntax and get a UML class diagram live. Attributes, methods, inheritance, multiplicities, SVG export.">
+<link rel="canonical" href="https://toolaspect.com/class-diagram-maker/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Class Diagram Maker — Free Online UML Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Write Mermaid class syntax, see a UML class diagram render live. Free, private, SVG and PNG export.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/class-diagram-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Class Diagram Maker | Free Online Tool">
+<meta name="twitter:description" content="Type Mermaid syntax, get a UML class diagram instantly.">
+<meta name="keywords" content="class diagram maker, uml class diagram tool, mermaid class diagram, class diagram online, draw class diagram">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Class Diagram Maker","description":"Free online class diagram maker. Write Mermaid classDiagram syntax and see a UML class diagram render live in your browser, then export it as SVG or PNG.","url":"https://toolaspect.com/class-diagram-maker/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I make a UML class diagram for free?","acceptedAnswer":{"@type":"Answer","text":"Open a file with classDiagram, declare classes with class Name { ... }, list attributes and methods inside the braces (visibility marker first: + public, - private, # protected), then connect classes with relationship arrows like Vehicle <|-- Car for inheritance. This maker renders live in your browser and exports SVG — no account, no watermark."}},
+{"@type":"Question","name":"What do the +, -, and # symbols mean in a class diagram?","acceptedAnswer":{"@type":"Answer","text":"They are UML visibility markers. + means public (any class can call it), - means private (only the class itself), and # means protected (the class and its subclasses). ~ marks package-private. You write them at the start of each member line, as in +String name or -balance() float, and Mermaid shows them as a gutter character next to each member."}},
+{"@type":"Question","name":"How do I show inheritance versus composition?","acceptedAnswer":{"@type":"Answer","text":"Inheritance is ClassA <|-- ClassB (a hollow triangle pointing at the parent). Composition, where the part dies with the whole, is Whole *-- Part. Aggregation, where parts survive, is Whole o-- Part. Plain association is --, dependency (uses-temporarily) is ..>, and realization of an interface is <|.. Implementer. The shape at the parent end and the line style carry the meaning."}},
+{"@type":"Question","name":"How do I label a relationship with cardinality?","acceptedAnswer":{"@type":"Answer","text":"Put the multiplicity on the relationship line with quotes: Customer \"1\" --&gt; \"*\" Order : places. Read it as one customer places zero-or-more orders. Common values are 1, 0..1, *, and 1..*, and you can put a label after a colon to name the relationship in plain English."}},
+{"@type":"Question","name":"Can I mark a class as abstract or an interface?","acceptedAnswer":{"@type":"Answer","text":"Yes. Inside the class body, write <<abstract>> or <<interface>> on its own line and Mermaid adds the UML stereotype label. <<enumeration>> works the same way for enums, where you then list the allowed values as members. Abstract classes render with an italic stereotype tag above the member list."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Class Diagram Maker","item":"https://toolaspect.com/class-diagram-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{margin-top:1.25rem;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.aio-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.editor-toolbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.75rem}
+.btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.45rem .9rem;font-size:.85rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text);font-weight:500}
+.code-area{width:100%;min-height:230px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;padding:.8rem;box-sizing:border-box;resize:vertical}
+.code-area:focus{outline:none;border-color:var(--primary)}
+.preview-pane{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);min-height:260px;padding:1rem;overflow:auto;text-align:center}
+.preview-pane svg{max-width:100%;height:auto}
+.status-line{font-size:.8rem;color:var(--muted);margin-top:.5rem}
+.status-line.err{color:var(--danger)}
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.editor-grid{grid-template-columns:1fr}}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏛️ Class Diagram Maker</h1>
+<p>Type Mermaid syntax, get a UML class diagram — live</p>
+</div>
+
+<div class="aio-answer">
+<strong>A class diagram maps classes as boxes with three compartments — name, attributes, methods — connected by typed arrows.</strong> In Mermaid you write <code>class Vehicle { +String name +start() void }</code> and connect with <code>Vehicle &lt;|-- Car</code> for inheritance, <code>*--</code> for composition, <code>o--</code> for aggregation. Visibility markers (<code>+</code> public, <code>-</code> private, <code>#</code> protected) prefix each member. This maker renders the MIT-licensed Mermaid 11 library in your browser and exports clean SVG or PNG.
+</div>
+
+<div class="section-card">
+<div class="editor-toolbar">
+<button class="btn" id="renderBtn">Render</button>
+<button class="btn ghost" id="svgBtn">Download SVG</button>
+<button class="btn ghost" id="pngBtn">Download PNG</button>
+<button class="btn ghost" id="copyBtn">Copy code</button>
+</div>
+<div class="editor-grid">
+<div><textarea id="code" class="code-area" spellcheck="false" aria-label="Mermaid class diagram code"></textarea>
+<div class="status-line" id="status">Loading renderer…</div></div>
+<div class="preview-pane" id="preview"></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/mermaid-diagram-suite/">Mermaid Diagram Suite</a></li><li style="margin:4px 0"><a href="/sequence-diagram-maker/">Sequence Diagram Maker</a></li><li style="margin:4px 0"><a href="/er-diagram-maker/">Er Diagram Maker</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Class Diagram Syntax Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Syntax</th><th>What it draws</th></tr></thead>
+<tbody>
+<tr><td><code>classDiagram</code></td><td>Required first line</td></tr>
+<tr><td><code>class Order { ... }</code></td><td>Box with member compartments</td></tr>
+<tr><td><code>+String email</code></td><td>Public attribute (member syntax: visibility, name, optional type)</td></tr>
+<tr><td><code>-hashPassword(pwd)</code></td><td>Private method</td></tr>
+<tr><td><code>#rowCount() int</code></td><td>Protected method with return type</td></tr>
+<tr><td><code>&lt;&lt;interface&gt;&gt;</code></td><td>Stereotype label line inside the class body</td></tr>
+<tr><td><code>&lt;&lt;abstract&gt;&gt;</code> / <code>&lt;&lt;enumeration&gt;&gt;</code></td><td>Other common stereotypes</td></tr>
+<tr><td><code>A &lt;|-- B</code></td><td>Inheritance — B extends A (triangle at A)</td></tr>
+<tr><td><code>A &lt;|.. B</code></td><td>Realization — B implements interface A</td></tr>
+<tr><td><code>Whole *-- Part</code></td><td>Composition — part dies with whole</td></tr>
+<tr><td><code>Whole o-- Part</code></td><td>Aggregation — part can outlive whole</td></tr>
+<tr><td><code>A -- B</code> / <code>A --&gt; B</code></td><td>Association / directed association</td></tr>
+<tr><td><code>A ..&gt; B : uses</code></td><td>Dependency — A temporarily uses B</td></tr>
+<tr><td><code>A "1" --&gt; "0..*" B</code></td><td>Multiplicity labels on the ends</td></tr>
+<tr><td><code>note for Order "text"</code></td><td>A note attached to one class</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The direction you write a relationship matters: in <code>Vehicle &lt;|-- Car</code> the triangle points at Vehicle, the parent. Mermaid is picky about spaces inside braces — one member per line, no blank lines inside the block.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Class Diagram Maker Works</h2>
+<p>Class diagrams are the static view of an object-oriented design: what types exist, what they hold, what they can do, and how they relate. They don't show control flow (that's a <a href="/sequence-diagram-maker/">sequence diagram</a>) or stored data (that's an <a href="/er-diagram-maker/">ER diagram</a>). They're the diagram you sketch before writing the first class, and the one you keep beside the code as it grows.</p>
+<h3>How to use it</h3>
+<p>The editor on the left renders about 400 ms after you stop typing; the status line flags parse errors. Export SVG for documentation or PNG for a slide. Both are produced locally — your code never leaves the browser.</p>
+<h3>A worked example</h3>
+<p>The default diagram models a payment flow. Count before you draw: 6 classes, 5 relationships. PaymentMethod is an interface (the <code>&lt;&lt;interface&gt;&gt;</code> stereotype); CreditCard and BankAccount each realize it with <code>&lt;|..</code>, which is why two dotted arrows point at the same box. Order *-- LineItem is composition — delete the order and its line items go with it. Customer "1" --> "0..*" Order says one customer can hold any number of orders, including none.</p>
+<ul>
+<li><code>classDiagram</code> — the type declaration</li>
+<li><code>PaymentMethod &lt;|.. CreditCard</code> — realizes</li>
+<li><code>Order *-- LineItem</code> — composition</li>
+<li><code>Customer "1" --&gt; "0..*" Order : places</code> — association with multiplicity and a label</li>
+</ul>
+<p>Six classes and five arrows fit on one screen; the same drawing in a canvas tool is twenty drag operations and an alignment pass. That's the usual experience with diagrams-as-code — structure is cheap to revise, so you revise it more often.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I make a UML class diagram for free?</h3><p>Open a file with classDiagram, declare classes with class Name { ... }, list attributes and methods inside the braces (visibility marker first: + public, - private, # protected), then connect classes with relationship arrows like Vehicle &lt;|-- Car for inheritance. This maker renders live in your browser and exports SVG — no account, no watermark.</p></div>
+<div class="faq-item"><h3>What do the +, -, and # symbols mean in a class diagram?</h3><p>They are UML visibility markers. + means public (any class can call it), - means private (only the class itself), and # means protected (the class and its subclasses). ~ marks package-private. You write them at the start of each member line, as in +String name or -balance() float, and Mermaid shows them as a gutter character next to each member.</p></div>
+<div class="faq-item"><h3>How do I show inheritance versus composition?</h3><p>Inheritance is ClassA &lt;|-- ClassB (a hollow triangle pointing at the parent). Composition, where the part dies with the whole, is Whole *-- Part. Aggregation, where parts survive, is Whole o-- Part. Plain association is --, dependency (uses-temporarily) is ..&gt;, and realization of an interface is &lt;|.. Implementer. The shape at the parent end and the line style carry the meaning.</p></div>
+<div class="faq-item"><h3>How do I label a relationship with cardinality?</h3><p>Put the multiplicity on the relationship line with quotes: Customer "1" --&gt; "*" Order : places. Read it as one customer places zero-or-more orders. Common values are 1, 0..1, *, and 1..*, and you can put a label after a colon to name the relationship in plain English.</p></div>
+<div class="faq-item"><h3>Can I mark a class as abstract or an interface?</h3><p>Yes. Inside the class body, write &lt;&lt;abstract&gt;&gt; or &lt;&lt;interface&gt;&gt; on its own line and Mermaid adds the UML stereotype label. &lt;&lt;enumeration&gt;&gt; works the same way for enums, where you then list the allowed values as members. Abstract classes render with an italic stereotype tag above the member list.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/mermaid-diagram-suite/">🧩 Mermaid Diagram Suite</a>
+<a href="/sequence-diagram-maker/">🔄 Sequence Diagram Maker</a>
+<a href="/er-diagram-maker/">🗃️ ER Diagram Maker</a>
+<a href="/flowchart-maker/">🔀 Flowchart Maker</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var DEFAULT='classDiagram\n  direction LR\n  class PaymentMethod {\n    <<interface>>\n    +pay(amount) bool\n  }\n  class CreditCard {\n    -String last4\n    +pay(amount) bool\n  }\n  class BankAccount {\n    -String routing\n    +pay(amount) bool\n  }\n  class Customer {\n    +String email\n    +addOrder(o) void\n  }\n  class Order {\n    -int totalCents\n    +checkout() bool\n  }\n  class LineItem {\n    -int qty\n    -int unitCents\n  }\n  PaymentMethod <|.. CreditCard\n  PaymentMethod <|.. BankAccount\n  Customer "1" --> "0..*" Order : places\n  Order *-- "1..*" LineItem\n  Order ..> PaymentMethod : pays with';
+var codeEl=document.getElementById('code'),prevEl=document.getElementById('preview'),statEl=document.getElementById('status');
+var renderCount=0,ready=false;
+codeEl.value=DEFAULT;
+function setStatus(msg,err){statEl.textContent=msg;statEl.className='status-line'+(err?' err':'');}
+function loadLib(cb){
+  if(window.mermaid){cb();return;}
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+  s.onload=function(){
+    mermaid.initialize({startOnLoad:false,theme:'dark',securityLevel:'loose',fontFamily:'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace'});
+    ready=true;cb();
+  };
+  s.onerror=function(){setStatus('Could not load the Mermaid library (network blocked?). Retry in a moment.',true);};
+  document.head.appendChild(s);
+}
+function doRender(){
+  if(!ready)return;
+  var src=codeEl.value;
+  if(!src.trim()){setStatus('Editor is empty — start with classDiagram.');return;}
+  renderCount++;
+  mermaid.render('cls-svg-'+renderCount,src).then(function(res){
+    prevEl.innerHTML=res.svg;
+    setStatus('Rendered with Mermaid 11 (MIT).');
+  }).catch(function(e){
+    setStatus(String(e.message||e),true);
+  });
+}
+var deb;
+codeEl.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(doRender,400);});
+document.getElementById('renderBtn').addEventListener('click',doRender);
+function dl(name,blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},2000);}
+document.getElementById('svgBtn').addEventListener('click',function(){
+  var svg=prevEl.querySelector('svg');
+  if(!svg){setStatus('Render a diagram first.',true);return;}
+  dl('class-diagram.svg',new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}));
+});
+document.getElementById('pngBtn').addEventListener('click',function(){
+  var svg=prevEl.querySelector('svg');
+  if(!svg){setStatus('Render a diagram first.',true);return;}
+  var ser=new XMLSerializer().serializeToString(svg);
+  var img=new Image();
+  img.onload=function(){
+    var w=svg.viewBox&&svg.viewBox.baseVal&&svg.viewBox.baseVal.width?svg.viewBox.baseVal.width:svg.getBoundingClientRect().width;
+    var h=svg.viewBox&&svg.viewBox.baseVal&&svg.viewBox.baseVal.height?svg.viewBox.baseVal.height:svg.getBoundingClientRect().height;
+    var scale=2;
+    var cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w*scale));cv.height=Math.max(1,Math.round(h*scale));
+    var ctx=cv.getContext('2d');ctx.fillStyle='#0f1117';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
+    cv.toBlob(function(b){dl('class-diagram.png',b);},'image/png');
+  };
+  img.onerror=function(){setStatus('PNG export failed — use SVG instead.',true);};
+  img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(ser)));
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  navigator.clipboard.writeText(codeEl.value).then(function(){setStatus('Code copied.');},function(){setStatus('Copy blocked by browser — select the text manually.',true);});
+});
+setStatus('Renderer ready.');
+loadLib(doRender);
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mermaid Syntax Cheat Sheet: Sequence, ER &amp; Class Diagrams | ToolAspect</title>
+<meta name="description" content="Mermaid syntax explained with copy-paste examples: sequence diagrams, ER diagrams, and class diagrams, plus the 5 errors that break most first renders.">
+<link rel="canonical" href="https://toolaspect.com/guides/mermaid-diagram-syntax/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Mermaid Syntax: A Working Cheat Sheet for Sequence, ER, and Class Diagrams","description":"How Mermaid's text-to-diagram syntax works, with copy-paste starters for sequence, ER, and class diagrams and the errors that break first renders.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is Mermaid syntax?","acceptedAnswer":{"@type":"Answer","text":"Mermaid syntax is plain text that describes a diagram line by line. You open with a diagram type keyword (sequenceDiagram, erDiagram, classDiagram, flowchart TD) and then write statements like Alice ->> Bob: Login request. The renderer turns each line into boxes, arrows, and labels automatically. Because it's text, diagrams live happily in version control, code review, and README files — GitHub, GitLab, and Notion render Mermaid blocks natively."}},
+{"@type":"Question","name":"How do you write a sequence diagram in Mermaid?","acceptedAnswer":{"@type":"Answer","text":"Start with the line sequenceDiagram, list participants if you want friendly names, then write messages as Source ->> Target: label. Solid arrows with a filled head are ->>, dashed replies are -->>, and activation bars are added with activate Target / deactivate Target or the plus/minus shorthand + and -. Frames like loop, alt/else, and opt group messages into the boxes readers expect from UML."}},
+{"@type":"Question","name":"How do you draw an ER diagram in Mermaid?","acceptedAnswer":{"@type":"Answer","text":"Open with erDiagram, then write relationship lines in the pattern ENTITY1 ||--o{ ENTITY2 : labels. The two crow's-foot pieces before and after the dashed line set each side's cardinality: || is exactly one, o| is zero or one, }o is zero or more, }| is one or more. Add attributes under an entity with a block: entity name, then lines like string email PK. Attribute keys are PK, FK, and UK."}},
+{"@type":"Question","name":"Why won't my Mermaid diagram render?","acceptedAnswer":{"@type":"Answer","text":"Five mistakes cause almost every broken render: a missing or misspelled diagram type on the first line, special characters inside node labels (parentheses and quotes need the label wrapped in quotes), using o or x arrows where the syntax expects a plain line, text after the closing keyword on end lines, and indentation that turns a statement into code the parser rejects. Paste the block into a live editor and the error line is usually highlighted."}},
+{"@type":"Question","name":"Is Mermaid free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. Mermaid is open source under the MIT license, free for commercial use, and renders client-side in the browser — your diagram text never has to leave your machine. GitHub, GitLab, and Notion support it out of the box, and most documentation tools (Obsidian, Joplin, Confluence via plugins) do too."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 8px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.7;margin:12px 0}pre code{background:none;padding:0}</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Mermaid Diagram Syntax","item":"https://toolaspect.com/guides/mermaid-diagram-syntax/"}]}
+</script>
+</head>
+<body>
+<div class="wrap">
+<h1>Mermaid Syntax: A Working Cheat Sheet for Sequence, ER, and Class Diagrams</h1>
+<div class="meta"><span>🧩 8 min read</span><span>📝 Copy-paste starters + fix list</span></div>
+<p class="intro">Mermaid turns plain text into real diagrams. One keyword declares the diagram type, then each line is a statement the renderer draws for you — no dragging boxes, no aligning arrows. That makes it the fastest way to get a sequence, ER, or class diagram into a README or a design doc, and the easiest one to update in a pull request. Here's the syntax that covers 95% of real-world diagrams, plus the handful of mistakes that break almost every first render.</p>
+<div class="ad-slot">Advertisement</div>
+
+<h2>What is Mermaid syntax?</h2>
+<p>Every Mermaid block starts with a <strong>diagram type keyword</strong> on the first line. Everything after it is the diagram body, one statement per line:</p>
+<pre><code>flowchart TD
+    A[Start] --&gt; B{Is it written in text?}
+    B -- Yes --&gt; C[Use Mermaid]
+    B -- No --&gt; D[Draw it by hand]</code></pre>
+<p>That's the whole mental model. The keyword says what kind of picture; the lines say what's in it. Mermaid (MIT-licensed, free for anything including commercial use) renders it client-side, which is why GitHub, GitLab, and Notion display Mermaid blocks in markdown files without any plugin. The same block pasted into the <a href="/mermaid-diagram-suite/">Mermaid diagram suite</a> renders live and exports SVG or PNG.</p>
+<p>The most useful type keywords: <code>flowchart</code> (boxes and arrows), <code>sequenceDiagram</code> (interactions over time), <code>erDiagram</code> (database entities), <code>classDiagram</code> (code structure), and <code>gantt</code> (timelines). Flowcharts and Gantt charts have their own dedicated builders here — the <a href="/flowchart-maker/">flowchart maker</a> and <a href="/gantt-chart-maker/">Gantt chart maker</a> — so this guide focuses on the three text-first diagram types where Mermaid is the de facto standard.</p>
+
+<h2>How do you write a sequence diagram in Mermaid?</h2>
+<p>Sequence diagrams show messages between actors over time. The skeleton:</p>
+<pre><code>sequenceDiagram
+    actor U as User
+    participant A as App
+    participant S as Auth Server
+
+    U-&gt;&gt;A: Tap "Sign in"
+    A-&gt;&gt;S: POST /login
+    activate S
+    S--&gt;&gt;A: 200 OK + token
+    deactivate S
+    A--&gt;&gt;U: Show dashboard
+
+    loop Every page load
+        A-&gt;&gt;S: Validate token
+        S--&gt;&gt;A: valid
+    end</code></pre>
+<p>Read the arrows like this:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Line</th><th>Draws</th></tr></thead>
+<tbody>
+<tr><td><code>A-&gt;&gt;B: msg</code></td><td>Solid arrow, filled head — a request</td></tr>
+<tr><td><code>A--&gt;&gt;B: msg</code></td><td>Dashed arrow — a response or reply</td></tr>
+<tr><td><code>A-&gt;B: msg</code> / <code>A--&gt;B: msg</code></td><td>Thin open-head variants</td></tr>
+<tr><td><code>activate B</code> … <code>deactivate B</code></td><td>Activation bar on B's lifeline while it works</td></tr>
+<tr><td><code>A-&gt;&gt;+B: msg</code> then <code>A-&gt;&gt;-B: msg</code></td><td>Shorthand: activate on send, deactivate on return</td></tr>
+<tr><td><code>loop … end</code></td><td>Loop frame around the messages inside</td></tr>
+<tr><td><code>alt … else … end</code></td><td>Branch frame (if/else)</td></tr>
+<tr><td><code>opt … end</code> / <code>par … end</code></td><td>Optional / parallel frames</td></tr>
+<tr><td><code>Note over A,B: text</code></td><td>A note spanning participants</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>actor</code> draws a stick figure, <code>participant</code> a box; both take an <code>as</code> alias so your code says <code>S</code> and readers see "Auth Server". The <a href="/sequence-diagram-maker/">sequence diagram maker</a> runs this live with a cheatsheet alongside the editor.</p>
+
+<h2>How do you draw an ER diagram in Mermaid?</h2>
+<p>ER diagrams in Mermaid are relationship-first. Each line connects two entities with crow's-foot notation on the line itself:</p>
+<pre><code>erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER   ||--|{ LINE_ITEM : contains
+    PRODUCT ||--o{ LINE_ITEM : "appears in"
+
+    CUSTOMER {
+        string email PK
+        string name
+    }
+    ORDER {
+        int id PK
+        string customer_email FK
+        date placed_on
+    }</code></pre>
+<p>The cardinality marks are the part worth memorizing — each side of the dashed line gets one:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Mark</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>||</code></td><td>Exactly one</td></tr>
+<tr><td><code>o|</code></td><td>Zero or one</td></tr>
+<tr><td><code>}o</code></td><td>Zero or more</td></tr>
+<tr><td><code>}|</code></td><td>One or more</td></tr>
+</tbody>
+</table>
+</div>
+<p>So <code>CUSTOMER ||--o{ ORDER</code> reads left to right: one customer, zero-or-many orders. Attribute blocks go under an entity by name, one attribute per line as <code>type name key</code>, where key is <code>PK</code>, <code>FK</code>, or <code>UK</code> for unique. Try your schema in the <a href="/er-diagram-maker/">ER diagram maker</a> — it keeps the crow's-foot table on screen while you type.</p>
+
+<h2>How do you draw a class diagram in Mermaid?</h2>
+<p>Class diagrams describe code structure: classes, their members, and how they relate. Members use visibility symbols borrowed from UML:</p>
+<pre><code>classDiagram
+    class Account {
+        +String owner
+        -int balance_cents
+        +deposit(int amount) bool
+        -validate() void
+    }
+    Account &lt;|-- SavingsAccount
+    Account &lt;|-- CheckingAccount
+    Bank "1" *-- "many" Account : holds
+    Statement o-- Account : summarizes</code></pre>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Symbol</th><th>Visibility</th><th>Relationship line</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>+</code></td><td>Public</td><td><code>A --|&gt; B</code></td><td>Inheritance (B is parent)</td></tr>
+<tr><td><code>-</code></td><td>Private</td><td><code>A *-- B</code></td><td>Composition (B owned by A)</td></tr>
+<tr><td><code>#</code></td><td>Protected</td><td><code>A o-- B</code></td><td>Aggregation (B referenced by A)</td></tr>
+<tr><td><code>~</code></td><td>Package/internal</td><td><code>A --&gt; B</code></td><td>Dependency (uses)</td></tr>
+<tr><td><code>$</code></td><td>Static (after symbol)</td><td><code>A "1" -- "0..*" B</code></td><td>Multiplicity labels</td></tr>
+</tbody>
+</table>
+</div>
+<p>The <a href="/class-diagram-maker/">class diagram maker</a> has the full member and relationship table next to a live editor.</p>
+
+<h2>Why won't my Mermaid diagram render?</h2>
+<p>Almost every broken diagram comes down to one of five things:</p>
+<ol>
+<li><strong>Missing or misspelled first line.</strong> The diagram type must be the very first token: <code>sequenceDiagram</code> is one word, <code>erDiagram</code> is camelCase, <code>flowchart TD</code> needs a direction.</li>
+<li><strong>Special characters in labels.</strong> Parentheses, quotes, and colons inside node text need the label wrapped in quotes: <code>A["Login (retry)"]</code> instead of <code>A[Login (retry)]</code>.</li>
+<li><strong>Wrong arrow for the diagram type.</strong> Flowcharts use <code>--&gt;</code>; sequence diagrams need <code>-&gt;&gt;</code> for messages. ER diagrams don't use arrows at all — cardinality marks joined by a dashed line.</li>
+<li><strong>Stray text on <code>end</code> lines.</strong> Frames close with <code>end</code> alone. <code>end # comment</code> breaks the parser in several versions.</li>
+<li><strong>Indentation surprises.</strong> Mermaid is mostly indent-insensitive, but tabs mixed with spaces inside class member blocks can fail. Stick to consistent spaces.</li>
+</ol>
+<p>The fastest fix loop: paste the block into the <a href="/mermaid-diagram-suite/">live suite editor</a>, and the error view points at the failing line. Then re-export or copy the corrected text back into your doc.</p>
+
+<div class="cta-box"><h3>Draw it in text, ship it anywhere</h3><p style="color:#fff;opacity:.9">Live editor, sequence / ER / class cheatsheets, SVG and PNG export — all client-side, no signup.</p><a href="/mermaid-diagram-suite/">Open the Mermaid Diagram Suite →</a></div>
+
+<h2>FAQ</h2>
+<div class="faq-item"><h3>What is Mermaid syntax?</h3><p>Mermaid syntax is plain text that describes a diagram line by line. You open with a diagram type keyword (sequenceDiagram, erDiagram, classDiagram, flowchart TD) and then write statements like Alice -&gt;&gt; Bob: Login request. The renderer turns each line into boxes, arrows, and labels automatically. Because it's text, diagrams live happily in version control, code review, and README files — GitHub, GitLab, and Notion render Mermaid blocks natively.</p></div>
+<div class="faq-item"><h3>How do you write a sequence diagram in Mermaid?</h3><p>Start with the line sequenceDiagram, list participants if you want friendly names, then write messages as Source -&gt;&gt; Target: label. Solid arrows with a filled head are -&gt;&gt;, dashed replies are --&gt;&gt;, and activation bars are added with activate/deactivate or the plus/minus shorthand. Frames like loop, alt/else, and opt group messages into the boxes readers expect from UML.</p></div>
+<div class="faq-item"><h3>How do you draw an ER diagram in Mermaid?</h3><p>Open with erDiagram, then write relationship lines in the pattern ENTITY1 ||--o{ ENTITY2 : labels. The two crow's-foot pieces before and after the dashed line set each side's cardinality: || is exactly one, o| is zero or one, }o is zero or more, }| is one or more. Add attributes under an entity with a block: entity name, then lines like string email PK.</p></div>
+<div class="faq-item"><h3>Why won't my Mermaid diagram render?</h3><p>Five mistakes cause almost every broken render: a missing or misspelled diagram type on the first line, special characters inside node labels (wrap the label in quotes), using arrows where the syntax expects cardinality marks or plain lines, text after the closing keyword on end lines, and tab/space mixups inside member blocks. Paste the block into a live editor and the error line is usually highlighted.</p></div>
+<div class="faq-item"><h3>Is Mermaid free to use?</h3><p>Yes. Mermaid is open source under the MIT license, free for commercial use, and renders client-side in the browser — your diagram text never has to leave your machine. GitHub, GitLab, and Notion support it out of the box, and most documentation tools (Obsidian, Joplin, Confluence via plugins) do too.</p></div>
+
+<div class="ad-slot">Advertisement</div>
+<p><strong>Related tools:</strong></p>
+<div class="related-tools">
+<a href="/mermaid-diagram-suite/">Mermaid Diagram Suite</a>
+<a href="/sequence-diagram-maker/">Sequence Diagram Maker</a>
+<a href="/er-diagram-maker/">ER Diagram Maker</a>
+<a href="/class-diagram-maker/">Class Diagram Maker</a>
+<a href="/flowchart-maker/">Flowchart Maker</a>
+<a href="/gantt-chart-maker/">Gantt Chart Maker</a>
+</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

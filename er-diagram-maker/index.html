@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ER Diagram Maker — Free Online ERD Tool | ToolAspect</title>
+<meta name="description" content="Free ER diagram maker. Type Mermaid erDiagram syntax and get an entity relationship diagram live. PK/FK keys, cardinality crows feet, SVG export.">
+<link rel="canonical" href="https://toolaspect.com/er-diagram-maker/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="ER Diagram Maker — Free Entity Relationship Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Write Mermaid ER syntax, see an entity relationship diagram render live. Free, private, SVG and PNG export.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/er-diagram-maker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ER Diagram Maker | Free Online Tool">
+<meta name="twitter:description" content="Type Mermaid syntax, get an ER diagram instantly.">
+<meta name="keywords" content="er diagram maker, entity relationship diagram tool, mermaid er diagram, erd online, database schema diagram">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"ER Diagram Maker","description":"Free online ER diagram maker. Write Mermaid erDiagram syntax and see an entity relationship diagram render live in your browser, then export it as SVG or PNG.","url":"https://toolaspect.com/er-diagram-maker/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I draw an ER diagram for free?","acceptedAnswer":{"@type":"Answer","text":"Start the first line with erDiagram, define each entity as a block listing its attributes with key markers (int id PK, string email UK), then connect entities with relationship lines like CUSTOMER ||--o{ ORDER : places. This maker renders live in your browser with crow's-foot notation and exports SVG or PNG — free, no signup, nothing uploaded."}},
+{"@type":"Question","name":"What does ||--o{ mean in an ER diagram?","acceptedAnswer":{"@type":"Answer","text":"It is crow's-foot cardinality read left to right: || means exactly one, o{ means zero-or-more. So CUSTOMER ||--o{ ORDER : places says each customer places zero or more orders, and each order belongs to exactly one customer. Other endings: |{ one-or-more, || exactly one, o| zero-or-one. The two halves sit on either side of the double dash, one for each direction."}},
+{"@type":"Question","name":"How do I mark primary keys and foreign keys?","acceptedAnswer":{"@type":"Answer","text":"Put the key marker after the attribute name inside the entity block: int id PK for primary key, int customer_id FK for foreign key, string email UK for a unique (alternate) key. Mermaid renders the marker as a small badge on that attribute row. Composite keys list PK on two lines."}},
+{"@type":"Question","name":"What attribute types can I write?","acceptedAnswer":{"@type":"Answer","text":"The type is free-form text before the attribute name — string, int, float, bool, date, or anything your stack calls it (varchar(255), uuid, decimal(10,2) all render fine). Mermaid does not validate types; it prints them exactly as written, so use the names your actual database uses to keep the diagram honest."}},
+{"@type":"Question","name":"How is an ER diagram different from a class diagram?","acceptedAnswer":{"@type":"Answer","text":"An ER diagram models persisted data: tables or entities, their attributes, and the cardinality of the links between them. A class diagram models code: classes with behavior (methods) and object relationships like inheritance. Overlap exists — a Customer appears in both — but methods belong to class diagrams and PK/FK badges belong to ER diagrams."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"ER Diagram Maker","item":"https://toolaspect.com/er-diagram-maker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{margin-top:1.25rem;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.aio-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.editor-toolbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.75rem}
+.btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.45rem .9rem;font-size:.85rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text);font-weight:500}
+.code-area{width:100%;min-height:230px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;padding:.8rem;box-sizing:border-box;resize:vertical}
+.code-area:focus{outline:none;border-color:var(--primary)}
+.preview-pane{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);min-height:260px;padding:1rem;overflow:auto;text-align:center}
+.preview-pane svg{max-width:100%;height:auto}
+.status-line{font-size:.8rem;color:var(--muted);margin-top:.5rem}
+.status-line.err{color:var(--danger)}
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.editor-grid{grid-template-columns:1fr}}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🗃️ ER Diagram Maker</h1>
+<p>Type Mermaid syntax, get an entity relationship diagram — live</p>
+</div>
+
+<div class="aio-answer">
+<strong>An ER diagram shows data entities as tables, their attributes with key badges (PK, FK, UK), and crow's-foot cardinality between them.</strong> In Mermaid: <code>erDiagram</code> on line one, entity blocks like <code>CUSTOMER { int id PK }</code>, then relationship lines such as <code>CUSTOMER ||--o{ ORDER : places</code> — exactly one customer places zero-or-more orders. This maker renders the MIT-licensed Mermaid 11 library locally in your browser and exports SVG or PNG.
+</div>
+
+<div class="section-card">
+<div class="editor-toolbar">
+<button class="btn" id="renderBtn">Render</button>
+<button class="btn ghost" id="svgBtn">Download SVG</button>
+<button class="btn ghost" id="pngBtn">Download PNG</button>
+<button class="btn ghost" id="copyBtn">Copy code</button>
+</div>
+<div class="editor-grid">
+<div><textarea id="code" class="code-area" spellcheck="false" aria-label="Mermaid ER diagram code"></textarea>
+<div class="status-line" id="status">Loading renderer…</div></div>
+<div class="preview-pane" id="preview"></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/mermaid-diagram-suite/">Mermaid Diagram Suite</a></li><li style="margin:4px 0"><a href="/sequence-diagram-maker/">Sequence Diagram Maker</a></li><li style="margin:4px 0"><a href="/class-diagram-maker/">Class Diagram Maker</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>ER Diagram Syntax Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Syntax</th><th>What it draws</th></tr></thead>
+<tbody>
+<tr><td><code>erDiagram</code></td><td>Required first line</td></tr>
+<tr><td><code>CUSTOMER { ... }</code></td><td>Entity block (attribute rows go inside)</td></tr>
+<tr><td><code>int id PK</code></td><td>Attribute row: type, name, key marker</td></tr>
+<tr><td><code>int customer_id FK</code></td><td>Foreign key badge</td></tr>
+<tr><td><code>string email UK</code></td><td>Unique / alternate key badge</td></tr>
+<tr><td><code>string note "free text"</code></td><td>Quoted comment on an attribute</td></tr>
+<tr><td><code>A ||--|| B : has</code></td><td>One-to-one</td></tr>
+<tr><td><code>A ||--o{ B : contains</code></td><td>One-to-zero-or-more</td></tr>
+<tr><td><code>A |{--|{ B : requires</code></td><td>One-or-more to one-or-more</td></tr>
+<tr><td><code>A o|--o| B : maybe</code></td><td>Zero-or-one to zero-or-one</td></tr>
+<tr><td><code>A }o--o{ B : links</code></td><td>Many-to-many (both sides crow's feet)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Read the cardinality symbols in pairs: <code>||</code> exactly one, <code>o|</code> zero-or-one, <code>|{</code> one-or-more, <code>o{</code> zero-or-more. The left pair describes the left entity's count of the right one, and the right pair the reverse. Types before names are free-form — write whatever your database actually uses.</p>
+</div>
+
+<div class="content-section">
+<h2>How the ER Diagram Maker Works</h2>
+<p>An entity relationship diagram is the map of stored data: which tables exist, which columns identify rows, and how many of each side a connection allows. It earns its keep at design time — before the first migration — and later as the picture new engineers orient by. Because it describes structure rather than behavior, it pairs naturally with a <a href="/class-diagram-maker/">class diagram</a> for the code that reads and writes these tables.</p>
+<h3>How to use it</h3>
+<p>Edit on the left; the preview re-renders about 400 ms after you pause, with parse errors shown under the editor. Export SVG for wikis and design docs, PNG for slides. Everything runs locally in your browser.</p>
+<h3>A worked example</h3>
+<p>The default diagram is a small storefront schema. Count it out: 5 entities, 4 relationships, 4 primary keys. The chain CUSTOMER ||--o{ ORDER ||--|{ LINE_ITEM }o--|| PRODUCT is the classic order spine — one customer places many orders, each order contains one-or-more line items, and each line item points back to exactly one product. LINE_ITEM carries a composite identity: both order_id and product_id are FK, which is how a join table with attributes is usually modeled.</p>
+<ul>
+<li><code>erDiagram</code> — the type declaration</li>
+<li><code>CUSTOMER ||--o{ ORDER : places</code> — crow's-foot one-to-many</li>
+<li><code>string email UK</code> — unique key badge on the attribute row</li>
+<li><code>PRODUCT ||--o{ CATEGORY : "sorted into"</code> — labels can carry spaces when quoted</li>
+</ul>
+<p>Renaming a column or flipping a cardinality is a one-line edit followed by an automatic redraw, which is why text-based ERDs stay closer to the real schema than hand-drawn ones ever do.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I draw an ER diagram for free?</h3><p>Start the first line with erDiagram, define each entity as a block listing its attributes with key markers (int id PK, string email UK), then connect entities with relationship lines like CUSTOMER ||--o{ ORDER : places. This maker renders live in your browser with crow's-foot notation and exports SVG or PNG — free, no signup, nothing uploaded.</p></div>
+<div class="faq-item"><h3>What does ||--o{ mean in an ER diagram?</h3><p>It is crow's-foot cardinality read left to right: || means exactly one, o{ means zero-or-more. So CUSTOMER ||--o{ ORDER : places says each customer places zero or more orders, and each order belongs to exactly one customer. Other endings: |{ one-or-more, || exactly one, o| zero-or-one. The two halves sit on either side of the double dash, one for each direction.</p></div>
+<div class="faq-item"><h3>How do I mark primary keys and foreign keys?</h3><p>Put the key marker after the attribute name inside the entity block: int id PK for primary key, int customer_id FK for foreign key, string email UK for a unique (alternate) key. Mermaid renders the marker as a small badge on that attribute row. Composite keys list PK on two lines.</p></div>
+<div class="faq-item"><h3>What attribute types can I write?</h3><p>The type is free-form text before the attribute name — string, int, float, bool, date, or anything your stack calls it (varchar(255), uuid, decimal(10,2) all render fine). Mermaid does not validate types; it prints them exactly as written, so use the names your actual database uses to keep the diagram honest.</p></div>
+<div class="faq-item"><h3>How is an ER diagram different from a class diagram?</h3><p>An ER diagram models persisted data: tables or entities, their attributes, and the cardinality of the links between them. A class diagram models code: classes with behavior (methods) and object relationships like inheritance. Overlap exists — a Customer appears in both — but methods belong to class diagrams and PK/FK badges belong to ER diagrams.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/mermaid-diagram-suite/">🧩 Mermaid Diagram Suite</a>
+<a href="/sequence-diagram-maker/">🔄 Sequence Diagram Maker</a>
+<a href="/class-diagram-maker/">🏛️ Class Diagram Maker</a>
+<a href="/flowchart-maker/">🔀 Flowchart Maker</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var DEFAULT='erDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ LINE_ITEM : contains\n  PRODUCT ||--o{ LINE_ITEM : "listed as"\n  CATEGORY ||--o{ PRODUCT : "sorts into"\n  CUSTOMER {\n    int id PK\n    string email UK\n    string name\n  }\n  ORDER {\n    int id PK\n    int customer_id FK\n    date placed_on\n  }\n  LINE_ITEM {\n    int order_id FK\n    int product_id FK\n    int qty\n  }\n  PRODUCT {\n    int id PK\n    string name\n    int price_cents\n    int category_id FK\n  }\n  CATEGORY {\n    int id PK\n    string name UK\n  }';
+var codeEl=document.getElementById('code'),prevEl=document.getElementById('preview'),statEl=document.getElementById('status');
+var renderCount=0,ready=false;
+codeEl.value=DEFAULT;
+function setStatus(msg,err){statEl.textContent=msg;statEl.className='status-line'+(err?' err':'');}
+function loadLib(cb){
+  if(window.mermaid){cb();return;}
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+  s.onload=function(){
+    mermaid.initialize({startOnLoad:false,theme:'dark',securityLevel:'loose',fontFamily:'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace'});
+    ready=true;cb();
+  };
+  s.onerror=function(){setStatus('Could not load the Mermaid library (network blocked?). Retry in a moment.',true);};
+  document.head.appendChild(s);
+}
+function doRender(){
+  if(!ready)return;
+  var src=codeEl.value;
+  if(!src.trim()){setStatus('Editor is empty — start with erDiagram.');return;}
+  renderCount++;
+  mermaid.render('er-svg-'+renderCount,src).then(function(res){
+    prevEl.innerHTML=res.svg;
+    setStatus('Rendered with Mermaid 11 (MIT).');
+  }).catch(function(e){
+    setStatus(String(e.message||e),true);
+  });
+}
+var deb;
+codeEl.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(doRender,400);});
+document.getElementById('renderBtn').addEventListener('click',doRender);
+function dl(name,blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},2000);}
+document.getElementById('svgBtn').addEventListener('click',function(){
+  var svg=prevEl.querySelector('svg');
+  if(!svg){setStatus('Render a diagram first.',true);return;}
+  dl('er-diagram.svg',new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}));
+});
+document.getElementById('pngBtn').addEventListener('click',function(){
+  var svg=prevEl.querySelector('svg');
+  if(!svg){setStatus('Render a diagram first.',true);return;}
+  var ser=new XMLSerializer().serializeToString(svg);
+  var img=new Image();
+  img.onload=function(){
+    var w=svg.viewBox&&svg.viewBox.baseVal&&svg.viewBox.baseVal.width?svg.viewBox.baseVal.width:svg.getBoundingClientRect().width;
+    var h=svg.viewBox&&svg.viewBox.baseVal&&svg.viewBox.baseVal.height?svg.viewBox.baseVal.height:svg.getBoundingClientRect().height;
+    var scale=2;
+    var cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w*scale));cv.height=Math.max(1,Math.round(h*scale));
+    var ctx=cv.getContext('2d');ctx.fillStyle='#0f1117';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
+    cv.toBlob(function(b){dl('er-diagram.png',b);},'image/png');
+  };
+  img.onerror=function(){setStatus('PNG export failed — use SVG instead.',true);};
+  img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(ser)));
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  navigator.clipboard.writeText(codeEl.value).then(function(){setStatus('Code copied.');},function(){setStatus('Copy blocked by browser — select the text manually.',true);});
+});
+setStatus('Renderer ready.');
+loadLib(doRender);
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
