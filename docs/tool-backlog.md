@@ -43,6 +43,28 @@
 student-loan-refinance-calculator | finance | calc | $30-80 | highest CPC in the file; SoFi/Earnest/Credible bid hard; weighted rate vs offer, break-even + interest saved; reuses loan-calculator pattern | suggest(score 100, 2/2 seeds, depth 20)
 
 ## Score 60-79 (10 slugs)
+business-card-qr-generator | qr | tool | $4-8 | vCard 3.0/4.0 correctness + PNG/SVG/PDF print sheet; 12.1K/mo $5.55 CPC; funnel to objexi dynamic vCard | research #1
+google-review-qr-generator | qr | tool | $4-9 | Place-ID review-link QR + forms QR combined 4.9K/mo; local-business magnet | research #2
+wifi-qr-code-generator | qr | tool | $1-4 | full WPA2/Enterprise EAP encoding (most free tools PSK-only); 2.9K/mo | research #3
+content-calendar-template | creator | tool | $8-14 | interactive planner + ICS export + platform best-times DB; 2.9K/mo $11.31 | research #4
+social-media-calendar-generator | creator | tool | $18-28 | auto-generate 30-day plan from niche; highest creator CPC $24.27; 2.4K/mo | research #5
+pdf-to-qr-code | qr | tool | $4-8 | drag-drop PDF -> hosted QR; objexi asset-manual upsell; 1.6K/mo | research #10
+youtube-title-generator | creator | tool | $1-4 | title-pattern library + CTR scoring, no LLM cost; 1.6K/mo | research #8
+youtube-thumbnail-tester | creator | tool | $1-4 | side-by-side attention-scoring; 2.6K/mo combined | research #9
+youtube-rpm-calculator | creator | calc | $1-2 | category x geo RPM matrix differentiator | research #25
+mtbf-calculator | objexi-icp | calc | $6-11 | trivial math, LOW competition, reliability-engineer traffic; 480/mo | research #13
+osha-incident-rate-calculator | objexi-icp | calc | $5-10 | TRIR/DART/LTIR bundle; compliance trust builder | research #15
+oee-calculator | objexi-icp | calc | $5-10 | A x P x Q with benchmark bands; plant-manager magnet | research #16
+equipment-depreciation-calculator | objexi-icp | calc | $4-9 | MACRS 179 + straight-line; asset-tag story pair | research #19
+equipment-downtime-cost-calculator | objexi-icp | calc | $6-12 | cost-of-the-problem calc; best objexi sales free tool | research #24
+preventive-maintenance-checklist-builder | objexi-icp | tool | $7-12 | template generator + printable PDF + QR link; bridges to objexi Equipment | research #12
+job-hazard-analysis-builder | objexi-icp | tool | $5-9 | OSHA JHA form builder + QR-to-field PDF; construction ICP | research #14
+work-order-template-generator | objexi-icp | tool | $10-16 | Excel/CSV/PDF export + digital-work-order CTA; $13.05 CPC | research #17
+maintenance-schedule-template | objexi-icp | tool | $7-12 | run-hours + calendar interval calc -> printable schedule | research #18
+toolbox-talk-template-library | objexi-icp | tool | $3-6 | 50-topic safety library + sign-off QR sheet | research #20
+asset-tag-generator | objexi-icp | tool | $13-22 | Avery-preset label-sheet PDF; 1:1 objexi flagship; $17.32 CPC | research #21
+facility-maintenance-checklist | objexi-icp | tool | $18-28 | HVAC/fire template; highest objexi CPC $22.72 | research #22
+lockout-tagout-builder | objexi-icp | tool | $3-7 | OSHA 1910.147 procedure generator; zero good free tools | research #23
 rap-student-loan-calculator | finance | calc | $10-30 | Repayment Assistance Plan live since 2026-07-01: 1-10% of AGI sliding scale + $10 floor + 20/25-yr forgiveness; SERP is news articles, zero quality tools = first-mover AIO slot; payments-by-salary table ($30k/50k/80k) = triple citable; loan-lawyer + refi CPC; shares repayment-comparison engine (add the column there anyway, see flag below) | — w15e
 student-loan-consolidation-calculator | finance | calc | $15-40 | federal weighted-average rate ROUNDED UP to 1/8% (generic calcs get this wrong = the moat); 15-25k/mo; loans-category CPCs $30-55 | suggest(score 66, 2/2 seeds, depth 19)
 speeding-ticket-cost-calculator | legal | calc | $8-25 | traffic attorneys bid $10-30/click in this lane; "how much is a speeding ticket" 20-40k/mo + "in texas/california/florida" state longtails = 60-100k/mo cluster with a blog-heavy, calculator-thin SERP; 50-state fine-band + points table with insurance-surcharge projection cross-linking car-insurance-rate-increase row (the fine vs the surcharge = distinct intents) | — w7c
