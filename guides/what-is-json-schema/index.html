@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Is JSON Schema? Drafts, Keywords and Validation | ToolAspect</title>
+<meta name="description" content="JSON Schema is a contract for JSON: type, required, properties, minimum and friends describe what valid looks like. Draft-07 vs 2020-12, the core keywords, and how validators report errors.">
+<link rel="canonical" href="https://toolaspect.com/guides/what-is-json-schema/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What Is JSON Schema? Drafts, Keywords and Validation","description":"A plain-English tour of JSON Schema: the keyword vocabulary, the draft-07 to 2020-12 differences that bite in production, and how validators pinpoint exactly where a document breaks the contract.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"What Is JSON Schema?","item":"https://toolaspect.com/guides/what-is-json-schema/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is JSON Schema used for?","acceptedAnswer":{"@type":"Answer","text":"Four jobs, mostly: validating API request and response bodies before your code trusts them, documenting payload shapes in one machine-readable place, generating forms and client code from the contract, and guarding config files at deploy time instead of discovering a typo in production. One schema can serve all four, which is why it beats ad-hoc validation functions that drift from the docs."}},
+{"@type":"Question","name":"Is a JSON Schema itself JSON?","acceptedAnswer":{"@type":"Answer","text":"Yes — a schema is a JSON document describing other JSON documents. That means you can store it next to your code, serve it from an endpoint, diff it in code review, and validate it against the spec's own meta-schema to catch typos like reqired before they do damage."}},
+{"@type":"Question","name":"Which draft should I use?","acceptedAnswer":{"@type":"Answer","text":"Follow your ecosystem. OpenAPI 3.0 is built on draft-07, OpenAPI 3.1 on 2020-12, and Ajv 8 supports draft-07, 2019-09, and 2020-12 out of the box. If nothing forces your hand, draft-07 remains the safest interop choice because every tool understands it; pick 2020-12 when you want prefixItems, unevaluatedProperties, or full $ref composition."}},
+{"@type":"Question","name":"What's the difference between required and properties?","acceptedAnswer":{"@type":"Answer","text":"properties declares what a key must look like if it's present; required lists keys that must be present. A field can appear in required without appearing in properties — it's then mandatory but unconstrained. To demand a field and constrain it, list it in both. This split trips up nearly everyone writing their first schema."}},
+{"@type":"Question","name":"Why did my exclusiveMinimum stop working between drafts?","acceptedAnswer":{"@type":"Answer","text":"Draft-04 used booleans alongside minimum (exclusiveMinimum: true). Draft-06 and later replaced that with a number (exclusiveMinimum: 18), dropping the companion keyword. Ajv 8 rejects the boolean form as invalid for modern dialects, so a schema migrated between eras can fail compilation with a confusing message — the fix is rewriting it as the numeric form."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>What Is JSON Schema? Drafts, Keywords and Validation</h1>
+<div class="meta"><span>💡 10K searches/mo</span><span>💰 CPC: $1.5</span><span>⏱️ 7 min read</span></div>
+<p class="intro">JSON Schema answers a deceptively simple question: "is this JSON the JSON we agreed on?" A schema is itself just JSON — a handful of keywords describing shapes, types, and limits — yet it powers API validation, config checking, form generation, and documentation across most of the industry. Here's the mental model, the vocabulary that matters, and the draft-version traps that bite in production.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>The core idea in one example</h2>
+<p>Take a user object. A schema for it might read:</p>
+<p><code>{"type":"object","properties":{"name":{"type":"string","minLength":1},"age":{"type":"integer","minimum":18},"email":{"type":"string"}},"required":["name","email"],"additionalProperties":false}</code></p>
+<p>Read it aloud: it's an object; if <code>name</code> appears it's a non-empty string; <code>age</code>, if present, is an integer of at least 18; <code>name</code> and <code>email</code> must be present; nothing else is allowed. Feed that schema and any document to a validator and you get a verdict — plus, when it fails, a list of exactly where and why. That's the whole discipline. Everything else is vocabulary.</p>
+<h2>The keywords that do 95% of the work</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Keyword</th><th>What it enforces</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>type</code></td><td>The JSON type: object, array, string, number, integer, boolean, null</td><td><code>{"type":"integer"}</code></td></tr>
+<tr><td><code>properties</code></td><td>Per-key subschemas for object members</td><td><code>{"properties":{"age":{"minimum":0}}}</code></td></tr>
+<tr><td><code>required</code></td><td>Keys that must exist (any value)</td><td><code>{"required":["id"]}</code></td></tr>
+<tr><td><code>items</code></td><td>Schema every array element must match</td><td><code>{"items":{"type":"string"}}</code></td></tr>
+<tr><td><code>enum</code></td><td>Exact allowed values</td><td><code>{"enum":["red","green"]}</code></td></tr>
+<tr><td><code>minimum</code> / <code>maximum</code></td><td>Numeric bounds (inclusive)</td><td><code>{"minimum":18}</code></td></tr>
+<tr><td><code>minLength</code> / <code>maxLength</code></td><td>String length bounds</td><td><code>{"maxLength":280}</code></td></tr>
+<tr><td><code>pattern</code></td><td>ECMAScript regex the string must match</td><td><code>{"pattern":"^\\\\d{5}$"}</code></td></tr>
+<tr><td><code>format</code></td><td>Well-known shape hint (email, date, uuid)</td><td><code>{"format":"date-time"}</code></td></tr>
+<tr><td><code>additionalProperties</code></td><td>Forbid or constrain stray keys</td><td><code>{"additionalProperties":false}</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Two composition keywords deserve special mention because they replace hand-written conditional logic. <code>anyOf</code> accepts a document matching any listed subschema (a value that's either a string or null — the classic nullable-field problem). <code>oneOf</code> demands exactly one match, which is stricter and a common source of accidental failures when two branches overlap. <code>allOf</code> merges constraints and is the standard way to compose a base schema with per-endpoint extras.</p>
+<h2>required ≠ properties, and other first-week traps</h2>
+<ul>
+<li><strong>Declaring a property doesn't require it.</strong> <code>properties</code> only constrains keys that appear; <code>required</code> is the must-exist list. Missing from both? Unconstrained.</li>
+<li><strong><code>integer</code> vs <code>number</code>.</strong> 2.0 satisfies integer; 2.5 doesn't. In draft-07 and later, "integer" means no fractional part, and JSON parsers keep 2.0 as a float in most languages — validators handle it, your hand-rolled checks might not.</li>
+<li><strong><code>format</code> is advisory by default.</strong> The spec says validators may ignore it, and Ajv 8 does unless formats are registered — so <code>"format":"email"</code> alone can silently pass garbage.</li>
+<li><strong>Regexes are unanchored.</strong> <code>pattern</code> searches, it doesn't full-match. Pin your patterns with <code>^</code> and <code>$</code>.</li>
+</ul>
+<h2>Drafts: the versioning story that actually matters</h2>
+<p>JSON Schema has no releases in the npm sense; it has dialects, declared via <code>$schema</code>. The three you'll meet:</p>
+<ul>
+<li><strong>draft-07 (2018)</strong> — the interop workhorse. OpenAPI 3.0 speaks it, most tooling speaks it, and Ajv's default when no <code>$schema</code> is present is still it. Reusable chunks live under <code>definitions</code>.</li>
+<li><strong>2019-09</strong> — the cleanup release. <code>$defs</code> replaces <code>definitions</code>, <code>$ref</code> stops ignoring sibling keywords, and vocabularies formalize extension. Adoption stayed thin.</li>
+<li><strong>2020-12</strong> — what OpenAPI 3.1 targets. Tuple validation grows <code>prefixItems</code>, <code>items</code> becomes the tail schema, and <code>unevaluatedProperties</code> catches keys nothing claimed.</li>
+</ul>
+<p>The practical damage shows up at API boundaries: a 3.0-era schema dropped into a 3.1 toolchain can misfire on <code>$ref</code> composition or items handling, and the error surfaces as a validation anomaly rather than a version complaint. When something validates in one tool and not another, <code>$schema</code> is the first thing to check.</p>
+<h2>How validators report failures</h2>
+<p>A good validator doesn't say "invalid." It says where and why, using three fields per error: an <em>instance path</em> (JSON Pointer into your document, like <code>/items/2/price</code>), a <em>schema path</em> (which keyword fired, like <code>#/properties/price/minimum</code>), and a <em>message</em> with keyword params. Ajv — the library behind most Node.js validation stacks — compiles your schema to a JavaScript function for speed and returns exactly this structure. Turn on <code>allErrors</code> or you'll fix problems one render at a time.</p>
+<div class="cta-box"><h3>Try it on your own schema</h3><p style="color:#fff;opacity:.9">Paste a schema and a document, pick a dialect, and see every violation with its pointer path — all in your browser.</p><a href="/json-schema-validator/">Open the JSON Schema Validator →</a></div>
+<h2>Where schemas come from</h2>
+<p>Writing schemas by hand is fine for small contracts. For bigger surfaces, generate a starting point and edit: many tools infer a schema from sample documents, database rows, or TypeScript types. The result won't be tight — generators err permissive — but it gives you the property skeleton, and you add <code>required</code>, bounds, and enums where the business rules live. Once the schema exists, keep it in the repo next to the code it guards and let CI validate your fixtures against it, so drift gets caught at pull-request time.</p>
+<p>Working with schemas day to day pairs naturally with the rest of the JSON toolchain: our <a href="/json-schema-validator/">JSON Schema validator</a> runs the checks, the <a href="/json-formatter/">JSON formatter</a> untangles minified payloads while you debug, and the <a href="/yaml-validator/">YAML validator</a> handles the config files that need the same discipline in YAML form. Converting tabular exports to test fixtures? <a href="/csv-to-json/">CSV to JSON</a> closes that loop.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is JSON Schema used for?</h3><p>Four jobs, mostly: validating API request and response bodies before your code trusts them, documenting payload shapes in one machine-readable place, generating forms and client code from the contract, and guarding config files at deploy time instead of discovering a typo in production. One schema can serve all four, which is why it beats ad-hoc validation functions that drift from the docs.</p></div>
+<div class="faq-item"><h3>Is a JSON Schema itself JSON?</h3><p>Yes — a schema is a JSON document describing other JSON documents. That means you can store it next to your code, serve it from an endpoint, diff it in code review, and validate it against the spec's own meta-schema to catch typos like reqired before they do damage.</p></div>
+<div class="faq-item"><h3>Which draft should I use?</h3><p>Follow your ecosystem. OpenAPI 3.0 is built on draft-07, OpenAPI 3.1 on 2020-12, and Ajv 8 supports draft-07, 2019-09, and 2020-12 out of the box. If nothing forces your hand, draft-07 remains the safest interop choice because every tool understands it; pick 2020-12 when you want prefixItems, unevaluatedProperties, or full $ref composition.</p></div>
+<div class="faq-item"><h3>What's the difference between required and properties?</h3><p>properties declares what a key must look like if it's present; required lists keys that must be present. A field can appear in required without appearing in properties — it's then mandatory but unconstrained. To demand a field and constrain it, list it in both. This split trips up nearly everyone writing their first schema.</p></div>
+<div class="faq-item"><h3>Why did my exclusiveMinimum stop working between drafts?</h3><p>Draft-04 used booleans alongside minimum (exclusiveMinimum: true). Draft-06 and later replaced that with a number (exclusiveMinimum: 18), dropping the companion keyword. Ajv 8 rejects the boolean form as invalid for modern dialects, so a schema migrated between eras can fail compilation with a confusing message — the fix is rewriting it as the numeric form.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/json-schema-validator/">JSON Schema Validator</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/yaml-validator/">YAML Validator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

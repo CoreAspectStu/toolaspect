@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML to Markdown: Tag Cheat Sheet and Clean Conversions | ToolAspect</title>
+<meta name="description" content="Convert HTML to Markdown without breaking tables, code blocks, or nested lists. Full tag cheat sheet plus what gets dropped and why.">
+<link rel="canonical" href="https://toolaspect.com/guides/html-to-markdown-cheat-sheet/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"HTML to Markdown: Tag Cheat Sheet and Clean Conversions","description":"How HTML converts to GitHub-Flavored Markdown tag by tag, which constructs survive the trip, and how to avoid the three conversions that always break.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can every HTML tag be converted to Markdown?","acceptedAnswer":{"@type":"Answer","text":"No. Markdown covers structure (headings, lists, quotes, code) but has no representation for scripts, styles, forms, iframes, or inline styling, so converters drop them. Semantic containers like div and span pass their inner content through. GFM extensions add tables, strikethrough, and task lists, which is why GFM is the usual target format."}},
+{"@type":"Question","name":"Why do my HTML tables sometimes convert badly?","acceptedAnswer":{"@type":"Answer","text":"Usually colspan, rowspan, or cells with embedded lists. GFM pipe tables are strictly a header row plus same-width body rows, so any spanning or multi-line cell has no target. Fix it before converting: split merged cells into plain rows, or lift cell lists out into paragraphs under the table."}},
+{"@type":"Question","name":"What happens to nested HTML lists?","acceptedAnswer":{"@type":"Answer","text":"They convert cleanly as long as the indentation is consistent: each nesting level indents the child items two spaces past the parent marker. The common failure is HTML where the nested ul sits outside the closing li tag, which browsers tolerate but produces a broken list in Markdown. A parser-based converter normalizes this; regex-based ones don't."}},
+{"@type":"Question","name":"Should I use a library or a paste-and-copy tool?","acceptedAnswer":{"@type":"Answer","text":"For a one-off chunk of HTML, a browser tool like the ToolAspect converter is faster than setting up a project. For recurring conversion in a build pipeline, use Turndown (MIT licensed) or the converter inside your static-site generator, so the rules run identically on every commit."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.table-wrap{overflow-x:auto;margin:10px 0 16px}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 10px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}code{background:var(--surface);padding:.1rem .35rem;border-radius:5px;font-size:.83rem}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>HTML to Markdown: Tag Cheat Sheet and Clean Conversions</h1>
+<div class="meta"><span>📄 ~10K searches/mo</span><span>⏱️ 6 min read</span></div>
+<p class="intro">Every docs migration hits the same moment: 40 HTML files in, one table with merged cells, and a converter that quietly eats your code fence. Here's the full tag map, the three conversions that always break, and how to get clean GitHub-Flavored Markdown out the other side.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why convert HTML to Markdown at all?</h2>
+<p>Most modern docs stacks (GitHub, GitLab, Hugo, Jekyll, Docusaurus) treat Markdown as the source of truth. Markdown diffs line by line in pull requests, survives merges better than HTML, and reads fine unrendered. If the content lives in an old CMS, a rich-text editor, or an export from a tool that only speaks HTML, conversion is the bridge.</p>
+<p>The usual workflow: export the HTML, convert it, then fix the handful of constructs Markdown can't express. Knowing which constructs those are beforehand is the whole game.</p>
+<h2>The cheat sheet</h2>
+<div class="table-wrap"><table class="data-table">
+<thead><tr><th>HTML</th><th>Markdown (GFM)</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code></td><td><code>#</code> to <code>######</code></td></tr>
+<tr><td><code>&lt;p&gt;</code></td><td>paragraph text, blank line between</td></tr>
+<tr><td><code>&lt;strong&gt;</code> / <code>&lt;b&gt;</code></td><td><code>**bold**</code></td></tr>
+<tr><td><code>&lt;em&gt;</code> / <code>&lt;i&gt;</code></td><td><code>*italic*</code></td></tr>
+<tr><td><code>&lt;del&gt;</code> / <code>&lt;s&gt;</code></td><td><code>~~struck~~</code></td></tr>
+<tr><td><code>&lt;a href="…"&gt;</code></td><td><code>[text](url)</code></td></tr>
+<tr><td><code>&lt;img src alt&gt;</code></td><td><code>![alt](src)</code></td></tr>
+<tr><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code></td><td><code>- item</code> / <code>1. item</code>, nested by 2 spaces</td></tr>
+<tr><td><code>&lt;blockquote&gt;</code></td><td><code>&gt; prefix</code> on each line</td></tr>
+<tr><td><code>&lt;pre&gt;&lt;code class="language-py"&gt;</code></td><td><code>```py fenced block```</code></td></tr>
+<tr><td><code>&lt;code&gt;</code></td><td><code>`inline code`</code></td></tr>
+<tr><td><code>&lt;hr&gt;</code></td><td><code>---</code></td></tr>
+<tr><td><code>&lt;br&gt;</code></td><td>two trailing spaces + newline</td></tr>
+<tr><td><code>&lt;table&gt;</code></td><td>pipe table, pipes in cells escaped as <code>\|</code></td></tr>
+<tr><td><code>&lt;li&gt;&lt;input type=checkbox&gt;</code></td><td><code>- [x] task list item</code></td></tr>
+</tbody></table></div>
+<p>Everything on the left converts with a one-line tool. Try it live on the <a href="/html-to-markdown/">HTML to Markdown converter</a> as you read; paste any row's HTML and watch it come out the right side.</p>
+<div class="cta-box"><h3>Paste HTML, get clean GFM</h3><p style="color:#fff;opacity:.9">Headings, links, tables, code fences, nested lists. Runs in your browser, nothing uploaded.</p><a href="/html-to-markdown/">HTML to Markdown Converter &rarr;</a></div>
+<h2>What always breaks (and the fix)</h2>
+<ul>
+<li><strong>Merged table cells.</strong> <code>colspan</code> and <code>rowspan</code> have no GFM equivalent. Split them into separate rows before converting, or the table comes out lopsided.</li>
+<li><strong>Deeply nested emphasis.</strong> <code>&lt;em&gt;</code> inside <code>&lt;strong&gt;</code> inside a link usually survives, but <code>&lt;b&gt;&lt;i&gt;&lt;b&gt;</code> nesting collapses to a single level because Markdown can't express the third. Re-add by hand where it matters.</li>
+<li><strong>Definition lists and footnotes.</strong> <code>&lt;dl&gt;</code>/<code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code> have no standard Markdown form (a few flavors add one). Expect them to flatten into paragraphs.</li>
+</ul>
+<p>Scripts, styles, iframes, and inline CSS vanish by design. That's usually what you want, but skim the output once for anything that lived inside those tags, like a styled callout box.</p>
+<h2>Does the converter choice matter?</h2>
+<p>More than people expect. There are two breeds: regex-based converters that pattern-match tags, and parser-based ones that read the markup into a DOM tree first and walk it. Sloppy HTML (unclosed <code>&lt;li&gt;</code>, attributes without quotes, HTML entities like <code>&amp;nbsp;</code>) breaks regex converters silently and passes through parser-based ones cleanly. Browser tools get the parser for free, since the browser ships one. In a pipeline, Turndown (MIT) is the standard parser-based library; it's what most wrappers use under the hood.</p>
+<p>Whichever you use, check three things on output: blank lines between blocks (or your paragraphs collapse into one), the language tag on code fences (it usually lives in a <code>class="language-…"</code> attribute), and pipes inside table cells (unescaped pipes shred the table into columns).</p>
+<h2>Going the other way</h2>
+<p>Markdown to HTML is the easier direction and every static-site generator does it at build time. When you need it ad hoc, the <a href="/markdown-to-html/">Markdown to HTML converter</a> is the mirror tool: paste GFM, copy rendered HTML. Keeping both directions in one place covers the round trip, and if your HTML comes from an API or a JSON blob, run it through the <a href="/json-formatter/">JSON formatter</a> first to see what you're actually holding.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can every HTML tag be converted to Markdown?</h3><p>No. Markdown covers structure (headings, lists, quotes, code) but has no representation for scripts, styles, forms, iframes, or inline styling, so converters drop them. Semantic containers like div and span pass their inner content through. GFM extensions add tables, strikethrough, and task lists, which is why GFM is the usual target format.</p></div>
+<div class="faq-item"><h3>Why do my HTML tables sometimes convert badly?</h3><p>Usually colspan, rowspan, or cells with embedded lists. GFM pipe tables are strictly a header row plus same-width body rows, so any spanning or multi-line cell has no target. Fix it before converting: split merged cells into plain rows, or lift cell lists out into paragraphs under the table.</p></div>
+<div class="faq-item"><h3>What happens to nested HTML lists?</h3><p>They convert cleanly as long as the indentation is consistent: each nesting level indents the child items two spaces past the parent marker. The common failure is HTML where the nested ul sits outside the closing li tag, which browsers tolerate but produces a broken list in Markdown. A parser-based converter normalizes this; regex-based ones don't.</p></div>
+<div class="faq-item"><h3>Should I use a library or a paste-and-copy tool?</h3><p>For a one-off chunk of HTML, a browser tool like the ToolAspect converter is faster than setting up a project. For recurring conversion in a build pipeline, use Turndown (MIT licensed) or the converter inside your static-site generator, so the rules run identically on every commit.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/html-to-markdown/">HTML to Markdown Converter</a>
+<a href="/markdown-to-html/">Markdown to HTML</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/diff-checker/">Diff Checker</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

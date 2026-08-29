@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Diff — Compare JSON &amp; Find Changes | ToolAspect</title>
+<meta name="description" content="Free structural JSON diff: objects diff by key, arrays pair by value and detect moves. Changes shown as paths like $.items[1], all client-side.">
+<link rel="canonical" href="https://toolaspect.com/json-diff/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="JSON Diff — Compare JSON &amp; Find Changes">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Structural JSON comparison with array-move detection and JSON-path change list. Nothing leaves your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/json-diff/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON Diff | Free Online Tool">
+<meta name="twitter:description" content="Compare two JSON documents structurally, with move detection.">
+<meta name="keywords" content="json diff, json compare, compare two json files, json difference checker, json diff online, json diff tool, array move detection">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Diff","description":"Free structural JSON diff. Compare two JSON documents and get additions, removals, modifications, and array moves as JSON paths, with an option to ignore array order. Runs entirely in your browser.","url":"https://toolaspect.com/json-diff/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I compare two JSON files?","acceptedAnswer":{"@type":"Answer","text":"Paste the first document into the left box and the second into the right, then hit Compare. The tool parses both, walks the structure, and lists every difference as a path with its old and new value. Invalid JSON is reported with the parser's error position so you can fix it before diffing."}},
+{"@type":"Question","name":"What does a JSON diff do that a text diff doesn't?","acceptedAnswer":{"@type":"Answer","text":"A text diff compares characters, so reformatting, reordering keys, or changing indentation shows up as noise across every line. A structural diff parses both documents first: key order is ignored, whitespace never matters, and array items that merely moved position are reported as single moves instead of delete-add pairs spanning the whole array."}},
+{"@type":"Question","name":"How does array-move detection work?","acceptedAnswer":{"@type":"Answer","text":"The tool pairs array items by deep equality, matching each item in the original to an identical item in the changed document, with duplicates paired in document order. Paired items whose index changed are reported as moves with both positions. If you'd rather treat reordering as irrelevant, the ignore-array-order option suppresses move reports entirely."}},
+{"@type":"Question","name":"Why does a changed array item show up as removed and added?","acceptedAnswer":{"@type":"Answer","text":"Because pairing happens by exact deep equality. An item whose contents changed is no longer identical to anything in the other array, so it can't be paired; the old version is reported removed at its index and the new version added at its index. This is the same trade-off the classic MIT-licensed diff libraries make: unambiguous correctness at the cost of not guessing that two similar objects are 'the same' item."}},
+{"@type":"Question","name":"Is my JSON uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing, diffing, and rendering all run in your browser with plain JavaScript, and there's no backend call involved. That makes the tool safe for API responses, config files, and anything else you wouldn't paste into a random web form."}},
+{"@type":"Question","name":"What do the paths like $.items[1] mean?","acceptedAnswer":{"@type":"Answer","text":"They're the JSON-path style addresses of each change: $ is the document root, .key walks into an object property, and [n] indexes into an array. $.customer.email points at one field; $.items[1] at the second element of the items array. Paths let you turn a diff into a patch list you can apply or review by hand."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON Diff","item":"https://toolaspect.com/json-diff/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#eab308;--move:#38bdf8;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.92rem;color:var(--text);line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pane-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.pane-grid{grid-template-columns:1fr}}
+.pane{display:flex;flex-direction:column;gap:.35rem}
+.pane label{font-size:.85rem;color:var(--muted);font-weight:500}
+.pane textarea{width:100%;min-height:230px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.55;box-sizing:border-box;resize:vertical}
+.pane textarea:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;align-items:center}
+.btn{padding:.55rem 1.1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.88rem;cursor:pointer}
+.btn:hover{border-color:var(--primary)}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover)}
+.chk{display:flex;align-items:center;gap:.45rem;font-size:.85rem;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--primary)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:640px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.75rem;text-align:center}
+.stat .n{font-size:1.4rem;font-weight:700}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stat.added .n{color:var(--success)}
+.stat.removed .n{color:var(--danger)}
+.stat.modified .n{color:var(--warn)}
+.stat.moved .n{color:var(--move)}
+.diff-list{display:flex;flex-direction:column;gap:.5rem}
+.diff-row{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem .8rem;font-size:.82rem;line-height:1.55}
+.diff-row .path{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);font-weight:600;word-break:break-all}
+.diff-row .op{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.1rem .45rem;border-radius:6px;margin-right:.5rem;vertical-align:1px}
+.op-added{background:rgba(34,197,94,.15);color:var(--success)}
+.op-removed{background:rgba(239,68,68,.15);color:var(--danger)}
+.op-modified{background:rgba(234,179,8,.15);color:var(--warn)}
+.op-moved{background:rgba(56,189,248,.15);color:var(--move)}
+.diff-row .val{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);word-break:break-all}
+.diff-row .val b{color:var(--text);font-weight:600}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔀 JSON Diff</h1>
+<p>Structural comparison with array-move detection</p>
+</div>
+
+<div class="aio-answer"><strong>What a JSON diff does:</strong> it parses both documents and compares structure instead of text. Matching keys are compared recursively, missing keys become additions or removals, and array items are paired by deep equality, so a reordered list reports moves like <code>$.items[0] 2&rarr;0</code> instead of rewriting the whole array as deletes and adds. Key order and whitespace never count as changes, and everything runs in your browser.</div>
+
+<div class="section-card">
+<h2>Compare Two JSON Documents</h2>
+<div class="pane-grid">
+<div class="pane"><label for="ta-a">Original JSON</label><textarea id="ta-a" spellcheck="false" placeholder='{"paste": "your first JSON here"}'></textarea></div>
+<div class="pane"><label for="ta-b">Changed JSON</label><textarea id="ta-b" spellcheck="false" placeholder='{"paste": "your second JSON here"}'></textarea></div>
+</div>
+<div class="btn-row">
+<button type="button" class="btn btn-primary" id="btnCompare">Compare</button>
+<button type="button" class="btn" id="btnSwap">Swap</button>
+<button type="button" class="btn" id="btnSample">Load sample</button>
+<button type="button" class="btn" id="btnCopy">Copy report</button>
+<label class="chk"><input type="checkbox" id="chkOrder"> Ignore array order</label>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Results</h2>
+<div class="stat-grid">
+<div class="stat added"><div class="n" id="nAdded">0</div><div class="l">Added</div></div>
+<div class="stat removed"><div class="n" id="nRemoved">0</div><div class="l">Removed</div></div>
+<div class="stat modified"><div class="n" id="nModified">0</div><div class="l">Modified</div></div>
+<div class="stat moved"><div class="n" id="nMoved">0</div><div class="l">Moved</div></div>
+</div>
+<div class="diff-list" id="diffList"><div class="diff-row"><span class="val">Paste two documents and press Compare.</span></div></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/diff-checker/">Diff Checker</a></li><li style="margin:4px 0"><a href="/csv-to-json/">Csv To Json</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-compare-json-files/">How to compare JSON files</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Change Types and Path Syntax</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Operation</th><th>Meaning</th><th>Example Path</th></tr></thead>
+<tbody>
+<tr><td><span class="op op-added">added</span></td><td>Key or array item exists only in the changed document</td><td><code>$.coupon</code></td></tr>
+<tr><td><span class="op op-removed">removed</span></td><td>Key or array item exists only in the original</td><td><code>$.items[1]</code></td></tr>
+<tr><td><span class="op op-modified">modified</span></td><td>Same location, different value (or different type)</td><td><code>$.total</code></td></tr>
+<tr><td><span class="op op-moved">moved</span></td><td>Deep-equal array item whose index changed</td><td><code>$.items[0]</code> 2&rarr;0</td></tr>
+<tr><td colspan="3" style="color:var(--muted)">Root is <code>$</code>, object keys walk as <code>.key</code>, arrays index as <code>[n]</code>, and keys with special characters use bracket form: <code>$["weird key!"]</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Structural Diff vs Line Diff</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Change</th><th>Text diff shows</th><th>JSON diff shows</th></tr></thead>
+<tbody>
+<tr><td>Reordered object keys</td><td>Every affected line changed</td><td>Nothing (order is irrelevant in JSON)</td></tr>
+<tr><td>Reformatted / re-indented</td><td>Whole file changed</td><td>Nothing</td></tr>
+<tr><td>Array reordered</td><td>Delete-add pairs across the array</td><td>Moves with from&rarr;to indexes</td></tr>
+<tr><td>One field changed</td><td>One changed line, plus context</td><td>One modified entry with old and new value</td></tr>
+<tr><td>Key renamed</td><td>Two line changes</td><td>One removal + one addition (no way to know intent)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">For prose, code, and CSVs, a line diff is still the right tool, and our <a href="/diff-checker/" style="color:var(--primary-hover)">diff checker</a> handles those. The JSON diff earns its keep the moment structure, not text, is what changed.</p>
+</div>
+
+<div class="content-section">
+<h2>How the JSON Diff Works</h2>
+<p>This tool follows the structural approach popularized by the classic MIT-licensed JSON diff libraries (jsondiffpatch, json-diff): parse both documents, then recurse. Objects compare key by key, and every leaf comparison that fails becomes one modification entry. Nothing is guessed: two objects that merely look similar are never reported as a single "edit."</p>
+<h3>The algorithm</h3>
+<p>For objects, keys present in only one side become additions or removals; shared keys recurse. For arrays, items are paired by deep equality, duplicates pair in document order. Paired items whose index changed are reported as moves; unpaired originals are removals and unpaired newcomers are additions. The output is a flat list of operations with full paths from the root, which is exactly the shape you want for review or for driving a patch.</p>
+<h3>How to use it</h3>
+<p>Paste your two documents and press Compare. Invalid JSON surfaces the parser error with its position instead of a garbage diff. Toggle ignore-array-order when the sequence of a list shouldn't count, common with sets of tags or IDs. Copy report produces a plain-text summary you can paste into a pull request or ticket.</p>
+<h3>A worked example</h3>
+<p>The Load sample button fills both panes with an order record before and after an edit. Comparing them produces seven changes: <code>$.customer.email</code> modified from <code>a@x.com</code> to <code>b@x.com</code>, <code>$.total</code> modified from 42 to 50, item A1 moved from index 0 to 1, item C3 moved from index 2 to 0, item B2 removed, item D4 added, and a new <code>$.coupon</code> key set to <code>"SAVE5"</code>. A line diff on the same pair shows the entire items array rewritten, which is technically true and completely useless for review.</p>
+<p>Worth knowing: <code>1.0</code> and <code>1</code> compare equal because JSON doesn't distinguish them after parsing, and two arrays with the same items in a different order are genuinely different JSON, which is why move detection exists rather than silent tolerance.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I compare two JSON files?</h3><p>Paste the first document into the left box and the second into the right, then hit Compare. The tool parses both, walks the structure, and lists every difference as a path with its old and new value. Invalid JSON is reported with the parser's error position so you can fix it before diffing.</p></div>
+<div class="faq-item"><h3>What does a JSON diff do that a text diff doesn't?</h3><p>A text diff compares characters, so reformatting, reordering keys, or changing indentation shows up as noise across every line. A structural diff parses both documents first: key order is ignored, whitespace never matters, and array items that merely moved position are reported as single moves instead of delete-add pairs spanning the whole array.</p></div>
+<div class="faq-item"><h3>How does array-move detection work?</h3><p>The tool pairs array items by deep equality, matching each item in the original to an identical item in the changed document, with duplicates paired in document order. Paired items whose index changed are reported as moves with both positions. If you'd rather treat reordering as irrelevant, the ignore-array-order option suppresses move reports entirely.</p></div>
+<div class="faq-item"><h3>Why does a changed array item show up as removed and added?</h3><p>Because pairing happens by exact deep equality. An item whose contents changed is no longer identical to anything in the other array, so it can't be paired; the old version is reported removed at its index and the new version added at its index. This is the same trade-off the classic MIT-licensed diff libraries make: unambiguous correctness at the cost of not guessing that two similar objects are 'the same' item.</p></div>
+<div class="faq-item"><h3>Is my JSON uploaded anywhere?</h3><p>No. Parsing, diffing, and rendering all run in your browser with plain JavaScript, and there's no backend call involved. That makes the tool safe for API responses, config files, and anything else you wouldn't paste into a random web form.</p></div>
+<div class="faq-item"><h3>What do the paths like $.items[1] mean?</h3><p>They're the JSON-path style addresses of each change: $ is the document root, .key walks into an object property, and [n] indexes into an array. $.customer.email points at one field; $.items[1] at the second element of the items array. Paths let you turn a diff into a patch list you can apply or review by hand.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/diff-checker/">📄 Diff Checker</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/csv-to-json/">🔁 CSV to JSON</a>
+<a href="/yaml-validator/">✅ YAML Validator</a>
+<a href="/epoch-converter/">⏱️ Epoch Converter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function typeOf(v){if(v===null)return 'null';if(Array.isArray(v))return 'array';return typeof v;}
+function stableStr(v){
+  if(typeOf(v)==='object'){
+    var ks=Object.keys(v).sort(),parts=[];
+    for(var i=0;i<ks.length;i++)parts.push(JSON.stringify(ks[i])+':'+stableStr(v[ks[i]]));
+    return '{'+parts.join(',')+'}';
+  }
+  if(typeOf(v)==='array'){var a=[];for(var j=0;j<v.length;j++)a.push(stableStr(v[j]));return '['+a.join(',')+']';}
+  return JSON.stringify(v);
+}
+function diff(a,b,path,out,ignoreArrayOrder){
+  path=path||'$';out=out||[];
+  var ta=typeOf(a),tb=typeOf(b);
+  if(ta!==tb){out.push({op:'modified',path:path,from:a,to:b});return out;}
+  if(ta==='object'){
+    var keys={};Object.keys(a).forEach(function(k){keys[k]=1;});Object.keys(b).forEach(function(k){keys[k]=1;});
+    Object.keys(keys).forEach(function(k){
+      var p=/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k)?path+'.'+k:path+'['+JSON.stringify(k)+']';
+      if(!(k in b))out.push({op:'removed',path:p,from:a[k]});
+      else if(!(k in a))out.push({op:'added',path:p,to:b[k]});
+      else diff(a[k],b[k],p,out,ignoreArrayOrder);
+    });
+    return out;
+  }
+  if(ta==='array')return diffArrays(a,b,path,out,ignoreArrayOrder);
+  if(stableStr(a)!==stableStr(b))out.push({op:'modified',path:path,from:a,to:b});
+  return out;
+}
+function diffArrays(a,b,path,out,ignoreArrayOrder){
+  var inA={},inB={};
+  a.forEach(function(v,i){var h=stableStr(v);(inA[h]=inA[h]||[]).push(i);});
+  b.forEach(function(v,j){var h=stableStr(v);(inB[h]=inB[h]||[]).push(j);});
+  Object.keys(inA).forEach(function(h){
+    var ai=inA[h],bi=inB[h]||[];
+    var n=Math.min(ai.length,bi.length);
+    for(var k=0;k<n;k++){
+      if(ai[k]!==bi[k]&&!ignoreArrayOrder){
+        out.push({op:'moved',path:path+'['+bi[k]+']',fromIdx:ai[k],toIdx:bi[k],value:a[ai[k]]});
+      }
+    }
+    for(var r=n;r<ai.length;r++)out.push({op:'removed',path:path+'['+ai[r]+']',from:a[ai[r]]});
+  });
+  Object.keys(inB).forEach(function(h){
+    var bi=inB[h],ai=inA[h]||[];
+    for(var s=ai.length;s<bi.length;s++)out.push({op:'added',path:path+'['+bi[s]+']',to:b[bi[s]]});
+  });
+  return out;
+}
+var SAMPLE_A='{\n  "name": "orders",\n  "customer": { "id": 7, "email": "a@x.com" },\n  "items": [\n    { "sku": "A1", "qty": 2 },\n    { "sku": "B2", "qty": 1 },\n    { "sku": "C3", "qty": 5 }\n  ],\n  "total": 42,\n  "active": true\n}';
+var SAMPLE_B='{\n  "name": "orders",\n  "customer": { "id": 7, "email": "b@x.com" },\n  "items": [\n    { "sku": "C3", "qty": 5 },\n    { "sku": "A1", "qty": 2 },\n    { "sku": "D4", "qty": 1 }\n  ],\n  "total": 50,\n  "active": true,\n  "coupon": "SAVE5"\n}';
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function vs(v){return v===undefined?'':esc(JSON.stringify(v));}
+var lastReport='';
+function run(){
+  var ta=document.getElementById('ta-a'),tb=document.getElementById('ta-b');
+  var list=document.getElementById('diffList');
+  var a,b;
+  try{a=JSON.parse(ta.value);}catch(e){list.innerHTML='<div class="diff-row"><span class="op op-removed">error</span><span class="val">Original JSON: '+esc(e.message)+'</span></div>';return;}
+  try{b=JSON.parse(tb.value);}catch(e){list.innerHTML='<div class="diff-row"><span class="op op-removed">error</span><span class="val">Changed JSON: '+esc(e.message)+'</span></div>';return;}
+  var ignore=document.getElementById('chkOrder').checked;
+  var d=diff(a,b,'$',[],ignore);
+  var counts={added:0,removed:0,modified:0,moved:0};
+  d.forEach(function(x){counts[x.op]++;});
+  document.getElementById('nAdded').textContent=counts.added;
+  document.getElementById('nRemoved').textContent=counts.removed;
+  document.getElementById('nModified').textContent=counts.modified;
+  document.getElementById('nMoved').textContent=counts.moved;
+  lastReport='JSON diff report — '+d.length+' change(s): '
+    +counts.added+' added, '+counts.removed+' removed, '+counts.modified+' modified, '+counts.moved+' moved\n';
+  if(d.length===0){
+    list.innerHTML='<div class="diff-row"><span class="val" style="color:var(--success)">The two documents are structurally identical.</span></div>';
+    return;
+  }
+  var html=d.map(function(x){
+    var body='';
+    if(x.op==='added')body='<span class="val"><b>'+vs(x.to)+'</b> added</span>';
+    else if(x.op==='removed')body='<span class="val"><b>'+vs(x.from)+'</b> removed</span>';
+    else if(x.op==='modified')body='<span class="val">'+vs(x.from)+' → <b>'+vs(x.to)+'</b></span>';
+    else body='<span class="val">'+vs(x.value)+' moved from index '+x.fromIdx+' to '+x.toIdx+'</span>';
+    lastReport+='['+x.op+'] '+x.path+(x.fromIdx!==undefined?' ('+x.fromIdx+' -> '+x.toIdx+')':'')+'\n';
+    return '<div class="diff-row"><span class="op op-'+x.op+'">'+x.op+'</span><span class="path">'+esc(x.path)+'</span><br>'+body+'</div>';
+  }).join('');
+  list.innerHTML=html;
+}
+document.getElementById('btnCompare').addEventListener('click',run);
+document.getElementById('chkOrder').addEventListener('change',run);
+document.getElementById('btnSwap').addEventListener('click',function(){
+  var ta=document.getElementById('ta-a'),tb=document.getElementById('ta-b');
+  var tmp=ta.value;ta.value=tb.value;tb.value=tmp;run();
+});
+document.getElementById('btnSample').addEventListener('click',function(){
+  document.getElementById('ta-a').value=SAMPLE_A;
+  document.getElementById('ta-b').value=SAMPLE_B;
+  run();
+});
+document.getElementById('btnCopy').addEventListener('click',function(){
+  navigator.clipboard.writeText(lastReport).then(function(){
+    var b=document.getElementById('btnCopy'),t=b.textContent;
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent=t;},1500);
+  }).catch(function(){});
+});
+document.getElementById('ta-a').value=SAMPLE_A;
+document.getElementById('ta-b').value=SAMPLE_B;
+run();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

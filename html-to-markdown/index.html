@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML to Markdown Converter — Free Dev Tool | ToolAspect</title>
+<meta name="description" content="Paste HTML, get clean GitHub-Flavored Markdown. Headings, links, tables, code fences, lists. Free converter with live preview, no upload.">
+<link rel="canonical" href="https://toolaspect.com/html-to-markdown/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="HTML to Markdown Converter — Free Dev Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert HTML to GitHub-Flavored Markdown in your browser: headings, links, tables, code fences, nested lists, blockquotes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/html-to-markdown/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML to Markdown Converter | Free Online Tool">
+<meta name="twitter:description" content="Paste HTML, get clean GFM output instantly. Nothing leaves your browser.">
+<meta name="keywords" content="html to markdown, html to markdown converter, convert html to md, paste html get markdown, github flavored markdown converter, turndown alternative">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to Markdown Converter","description":"Free HTML to Markdown converter. Paste HTML and get clean GitHub-Flavored Markdown with headings, links, images, tables, code fences, nested lists, and blockquotes. Runs entirely in your browser.","url":"https://toolaspect.com/html-to-markdown/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert HTML to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Paste your HTML into the left box on this page and the Markdown appears on the right instantly. The converter reads your markup with the browser's own HTML parser and rewrites each element as GitHub-Flavored Markdown: h1 becomes #, strong becomes **, a tags become [text](url), tables become pipe tables, and pre blocks become fenced code blocks. Nothing is uploaded; the conversion happens in your browser."}},
+{"@type":"Question","name":"Which HTML tags does this convert to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Headings h1-h6, paragraphs, bold and italic, strikethrough, inline code, links with titles, images, ordered and unordered lists (nested too), task list checkboxes, blockquotes, horizontal rules, and GFM pipe tables with header rows. Code blocks keep their language when the source has a class like language-python. Tags with no Markdown equivalent, like span or div, pass their content through."}},
+{"@type":"Question","name":"What can't be converted to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Markdown has no representation for scripts, styles, forms, iframes, or inline styling, so those are dropped. Alignment attributes on table cells (colspan, rowspan) have no GFM equivalent either. When both Markdown and HTML describe something, like nested emphasis, the converter keeps the simpler Markdown form rather than falling back to raw HTML."}},
+{"@type":"Question","name":"Is this a Turndown alternative?","acceptedAnswer":{"@type":"Answer","text":"It does the same job as Turndown, the MIT-licensed library many pipelines use, but it's a single self-contained script with no install. Turndown is the right call inside a build pipeline; this page is the right call when you just need to paste a chunk of HTML and copy Markdown out once, or when you can't add dependencies."}},
+{"@type":"Question","name":"Does my HTML get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The converter uses the DOMParser built into your browser, so your HTML never leaves the page. That makes it safe for drafts, private docs, and client content. The only network requests the page makes are for the site's own scripts."}},
+{"@type":"Question","name":"How do I convert Markdown back to HTML?","acceptedAnswer":{"@type":"Answer","text":"Use the sister tool, the Markdown to HTML converter, which renders Markdown into styled HTML in the same paste-and-copy flow. Keeping both directions in one toolbox covers the two most common format-shuffling jobs in documentation work."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"HTML to Markdown Converter","item":"https://toolaspect.com/html-to-markdown/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.quick-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.quick-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.io-grid{grid-template-columns:1fr}}
+.io-pane{display:flex;flex-direction:column;gap:.4rem}
+.io-pane label{font-size:.85rem;color:var(--muted);font-weight:500}
+.io-pane textarea{width:100%;min-height:300px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem;line-height:1.5;box-sizing:border-box;resize:vertical}
+.io-pane textarea:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.55rem 1.1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.85rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.char-count{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.5;color:var(--text);margin-bottom:.75rem}
+.content-section code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{background:var(--bg);padding:.1rem .3rem;border-radius:4px;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📄 HTML to Markdown Converter</h1>
+<p>Paste HTML on the left, clean GitHub-Flavored Markdown appears on the right</p>
+</div>
+
+<div class="quick-answer">
+Paste any HTML fragment and get <strong>GFM Markdown instantly</strong>: <code>&lt;h1&gt;</code> becomes <strong>#</strong>, <code>&lt;strong&gt;</code> becomes <strong>**bold**</strong>, links become <code>[text](url)</code>, tables become pipe tables, and <code>&lt;pre&gt;</code> blocks become fenced code. Runs fully in your browser, nothing uploaded. Going the other way? The <a href="/markdown-to-html/" style="color:var(--primary-hover)">Markdown to HTML converter</a> reverses it.
+</div>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="io-grid">
+<div class="io-pane">
+<label>HTML input</label>
+<textarea id="htmlIn" spellcheck="false" placeholder="Paste HTML here..."></textarea>
+<div class="char-count" id="inCount">0 chars</div>
+</div>
+<div class="io-pane">
+<label>Markdown output</label>
+<textarea id="mdOut" spellcheck="false" readonly placeholder="Markdown appears here..."></textarea>
+<div class="char-count" id="outCount">0 chars</div>
+</div>
+</div>
+<div class="btn-row">
+<button class="btn" id="copyBtn">Copy Markdown</button>
+<button class="btn ghost" id="exampleBtn">Load example</button>
+<button class="btn ghost" id="clearBtn">Clear</button>
+<button class="btn ghost" id="swapBtn" onclick="location.href='/markdown-to-html/'">Markdown &rarr; HTML</button>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown To Html</a></li><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/diff-checker/">Diff Checker</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/html-to-markdown-cheat-sheet/">HTML to Markdown cheat sheet</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>HTML Tag to Markdown Cheat Sheet</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>HTML</th><th>Markdown</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;h1&gt;</code> … <code>&lt;h6&gt;</code></td><td><code>#</code> … <code>######</code></td><td>One # per level</td></tr>
+<tr><td><code>&lt;p&gt;</code></td><td>plain text + blank line</td><td>Blank line separates paragraphs</td></tr>
+<tr><td><code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code></td><td><code>**bold**</code></td><td>Double asterisks</td></tr>
+<tr><td><code>&lt;em&gt;</code>, <code>&lt;i&gt;</code></td><td><code>*italic*</code></td><td>Single asterisks</td></tr>
+<tr><td><code>&lt;del&gt;</code>, <code>&lt;s&gt;</code></td><td><code>~~strike~~</code></td><td>GFM extension</td></tr>
+<tr><td><code>&lt;a href&gt;</code></td><td><code>[text](url)</code></td><td>Title kept if present</td></tr>
+<tr><td><code>&lt;img&gt;</code></td><td><code>![alt](src)</code></td><td>Alt text preserved</td></tr>
+<tr><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code></td><td><code>- item</code> / <code>1. item</code></td><td>Nesting indents 2 spaces</td></tr>
+<tr><td><code>&lt;li&gt;&lt;input checkbox&gt;</code></td><td><code>- [x] done</code></td><td>GFM task lists</td></tr>
+<tr><td><code>&lt;blockquote&gt;</code></td><td><code>&gt; quoted text</code></td><td>Every line prefixed</td></tr>
+<tr><td><code>&lt;pre&gt;&lt;code&gt;</code></td><td><code>``` fenced ```</code></td><td>Keeps <code>language-*</code> class</td></tr>
+<tr><td><code>&lt;code&gt;</code></td><td><code>`code`</code></td><td>Backticks, inline</td></tr>
+<tr><td><code>&lt;hr&gt;</code></td><td><code>---</code></td><td>Horizontal rule</td></tr>
+<tr><td><code>&lt;table&gt;</code></td><td>pipe table</td><td>Pipes in cells are escaped</td></tr>
+<tr><td><code>&lt;br&gt;</code></td><td>two trailing spaces</td><td>GFM hard line break</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Tags with no Markdown equivalent (<code>div</code>, <code>span</code>, <code>font</code>) pass their text through. Scripts, styles, and comments are dropped.</p>
+</div>
+
+<div class="content-section">
+<h2>How the HTML to Markdown Converter Works</h2>
+<p>The tool parses your markup with the browser's native DOMParser, walks the resulting tree, and rewrites each element as its Markdown equivalent. Because the real HTML parser does the reading, sloppy input (unclosed tags, missing quotes, stray entities) gets normalized before conversion instead of breaking it.</p>
+<h3>What it handles</h3>
+<p>All six heading levels, bold, italic, strikethrough, links with titles, images, nested ordered and unordered lists, GFM task lists, blockquotes (including nested ones), fenced code blocks with language detection from <code>class="language-…"</code>, horizontal rules, and pipe tables with a proper header row. Pipes inside table cells get escaped so the table doesn't break.</p>
+<h3>A worked example</h3>
+<p>Feed it this snippet:</p>
+<pre>&lt;h2&gt;Feeding Guide&lt;/h2&gt;
+&lt;p&gt;Adult dogs eat &lt;strong&gt;2-3% of body weight&lt;/strong&gt; per day.
+&lt;a href="/raw-dog-food-calculator/"&gt;See the calculator&lt;/a&gt; for portions.&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;Muscle meat: 80%&lt;/li&gt;&lt;li&gt;Edible bone: 10%&lt;/li&gt;&lt;/ul&gt;</pre>
+<p>You get this Markdown back:</p>
+<pre>## Feeding Guide
+
+Adult dogs eat **2-3% of body weight** per day. [See the calculator](/raw-dog-food-calculator/) for portions.
+
+- Muscle meat: 80%
+- Edible bone: 10%</pre>
+<p>The blank line between blocks is what makes it valid Markdown rather than one long paragraph, and the link survives with its path intact.</p>
+<h3>When you'd use it</h3>
+<p>Classic cases: moving a legacy HTML page into a Markdown-based static site or docs toolchain (Jekyll, Hugo, Docusaurus), cleaning up rich-text-editor export soup before committing it, and lifting formatted content out of CMSes whose only export is HTML. For recurring conversion inside a build pipeline, a library like Turndown (MIT) is the right tool; for one-off pastes, this page does it without installing anything.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert HTML to Markdown?</h3><p>Paste your HTML into the left box on this page and the Markdown appears on the right instantly. The converter reads your markup with the browser's own HTML parser and rewrites each element as GitHub-Flavored Markdown: h1 becomes #, strong becomes **, a tags become [text](url), tables become pipe tables, and pre blocks become fenced code blocks. Nothing is uploaded; the conversion happens in your browser.</p></div>
+<div class="faq-item"><h3>Which HTML tags does this convert to Markdown?</h3><p>Headings h1-h6, paragraphs, bold and italic, strikethrough, inline code, links with titles, images, ordered and unordered lists (nested too), task list checkboxes, blockquotes, horizontal rules, and GFM pipe tables with header rows. Code blocks keep their language when the source has a class like language-python. Tags with no Markdown equivalent, like span or div, pass their content through.</p></div>
+<div class="faq-item"><h3>What can't be converted to Markdown?</h3><p>Markdown has no representation for scripts, styles, forms, iframes, or inline styling, so those are dropped. Alignment attributes on table cells (colspan, rowspan) have no GFM equivalent either. When both Markdown and HTML describe something, like nested emphasis, the converter keeps the simpler Markdown form rather than falling back to raw HTML.</p></div>
+<div class="faq-item"><h3>Is this a Turndown alternative?</h3><p>It does the same job as Turndown, the MIT-licensed library many pipelines use, but it's a single self-contained script with no install. Turndown is the right call inside a build pipeline; this page is the right call when you just need to paste a chunk of HTML and copy Markdown out once, or when you can't add dependencies.</p></div>
+<div class="faq-item"><h3>Does my HTML get uploaded anywhere?</h3><p>No. The converter uses the DOMParser built into your browser, so your HTML never leaves the page. That makes it safe for drafts, private docs, and client content. The only network requests the page makes are for the site's own scripts.</p></div>
+<div class="faq-item"><h3>How do I convert Markdown back to HTML?</h3><p>Use the sister tool, the Markdown to HTML converter, which renders Markdown into styled HTML in the same paste-and-copy flow. Keeping both directions in one toolbox covers the two most common format-shuffling jobs in documentation work.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/markdown-to-html/">🔁 Markdown to HTML</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/diff-checker/">🔍 Diff Checker</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/developer-tools/">🧰 All Developer Tools</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var BLOCK={ADDRESS:1,ARTICLE:1,ASIDE:1,BLOCKQUOTE:1,DETAILS:1,DIV:1,DL:1,DD:1,DT:1,FIELDSET:1,FIGCAPTION:1,FIGURE:1,FOOTER:1,FORM:1,H1:1,H2:1,H3:1,H4:1,H5:1,H6:1,HEADER:1,HGROUP:1,HR:1,LI:1,MAIN:1,NAV:1,OL:1,P:1,PRE:1,SECTION:1,TABLE:1,UL:1};
+var SKIP={SCRIPT:1,STYLE:1,NOSCRIPT:1,TEMPLATE:1,HEAD:1,TITLE:1,META:1,LINK:1,IFRAME:1,OBJECT:1,SVG:1,CANVAS:1,FORM:1,INPUT:1,BUTTON:1,SELECT:1,TEXTAREA:1};
+
+function inlineMd(node){
+  var out='';
+  node.childNodes.forEach(function(ch){
+    if(ch.nodeType===3){out+=ch.nodeValue.replace(/\s+/g,' ');}
+    else if(ch.nodeType===1){
+      var t=ch.tagName,s;
+      if(t==='INPUT'&&ch.type==='checkbox'){out+=(ch.checked?'[x] ':'[ ] ');}
+      else if(SKIP[t]){return;}
+      else if(t==='STRONG'||t==='B'){s=inlineMd(ch).trim();if(s)out+='**'+s+'**';}
+      else if(t==='EM'||t==='I'){s=inlineMd(ch).trim();if(s)out+='*'+s+'*';}
+      else if(t==='DEL'||t==='S'||t==='STRIKE'){s=inlineMd(ch).trim();if(s)out+='~~'+s+'~~';}
+      else if(t==='CODE'){s=ch.textContent.replace(/\s+/g,' ').trim();if(s)out+='`'+s+'`';}
+      else if(t==='A'){s=inlineMd(ch).trim();var href=(ch.getAttribute('href')||'').trim();if(s&&href&&href.indexOf('javascript:')!==0){var title=ch.getAttribute('title');out+='['+s+']('+href+(title?' "'+title+'"':'')+')';}else out+=s;}
+      else if(t==='IMG'){out+='!['+(ch.getAttribute('alt')||'')+']('+(ch.getAttribute('src')||'')+')';}
+      else if(t==='BR'){out+='\n';}
+      else{out+=inlineMd(ch);}
+    }
+  });
+  return out;
+}
+function listMd(el,depth,ordered){
+  var out='',idx=0;
+  el.childNodes.forEach(function(li){
+    if(li.nodeType!==1||li.tagName!=='LI')return;
+    idx++;
+    var marker=ordered?(idx+'. '):'- ';
+    var pad='  '.repeat(depth);
+    var inlineRun='',subs=[],paras=[];
+    li.childNodes.forEach(function(c){
+      if(c.nodeType===3){inlineRun+=c.nodeValue.replace(/\s+/g,' ');}
+      else if(c.nodeType!==1)return;
+      else if(c.tagName==='UL'||c.tagName==='OL'){subs.push(listMd(c,depth+1,c.tagName==='OL'));}
+      else if(c.tagName==='P'){var p=inlineMd(c).trim().replace(/ *\n/g,'  \n');if(p)paras.push(p);}
+      else if(c.tagName==='PRE'){paras.push(fence(c));}
+      else if(c.tagName==='BLOCKQUOTE'){var b=blocksMd(c);paras.push(b.split('\n').map(function(l){return '> '+l;}).join('\n'));}
+      else if(BLOCK[c.tagName]){var bb=blocksMd(c);if(bb)paras.push(bb);}
+      else{inlineRun+=inlineMd(c);}
+    });
+    var first=(inlineRun.trim()||paras.shift()||'');
+    out+=pad+marker+first.trim()+'\n';
+    paras.forEach(function(p){
+      p.split('\n').forEach(function(line){out+=pad+'  '+line+'\n';});
+    });
+    subs.forEach(function(s){
+      s.split('\n').forEach(function(line){if(line)out+=line+'\n';});
+    });
+  });
+  return out;
+}
+function fence(pre){
+  var lang='';
+  var codeEl=pre.querySelector('code');
+  var cls=codeEl?codeEl.className:(pre.className||'');
+  var m=cls.match(/language-([\w+-]+)/);
+  if(m)lang=m[1];
+  var code=(codeEl?codeEl.textContent:pre.textContent).replace(/\n+$/,'');
+  return '```'+lang+'\n'+code+'\n```';
+}
+function tableMd(tb){
+  var rows=[];
+  tb.querySelectorAll('tr').forEach(function(tr){
+    var cells=[];
+    tr.childNodes.forEach(function(c){
+      if(c.nodeType!==1)return;
+      if(c.tagName==='TD'||c.tagName==='TH'){
+        cells.push(inlineMd(c).trim().replace(/\|/g,'\\|').replace(/\n/g,' '));
+      }
+    });
+    if(cells.length)rows.push(cells);
+  });
+  if(!rows.length)return '';
+  var cols=0;rows.forEach(function(r){cols=Math.max(cols,r.length);});
+  rows.forEach(function(r){while(r.length<cols)r.push('');});
+  var head=rows.shift();
+  var out='| '+head.join(' | ')+' |\n';
+  out+='|'+head.map(function(){return ' --- |';}).join('')+'\n';
+  rows.forEach(function(r){out+='| '+r.join(' | ')+' |\n';});
+  return out.replace(/\n$/,'');
+}
+function blocksMd(parent){
+  var out=[];
+  parent.childNodes.forEach(function(ch){
+    if(ch.nodeType===3){var t=ch.nodeValue.trim();if(t)out.push(t);return;}
+    if(ch.nodeType!==1)return;
+    var t=ch.tagName;
+    if(SKIP[t]){return;}
+    else if(/^H[1-6]$/.test(t)){var h=inlineMd(ch).trim();if(h)out.push('#'.repeat(+t[1])+' '+h);}
+    else if(t==='P'){var p=inlineMd(ch).trim().replace(/ *\n/g,'  \n');if(p)out.push(p);}
+    else if(t==='HR'){out.push('---');}
+    else if(t==='PRE'){out.push(fence(ch));}
+    else if(t==='UL'||t==='OL'){var l=listMd(ch,0,t==='OL');if(l)out.push(l.replace(/\n$/,''));}
+    else if(t==='BLOCKQUOTE'){var inner=blocksMd(ch).trim();if(inner)out.push(inner.split('\n').map(function(line){return line?'> '+line:'>';}).join('\n'));}
+    else if(t==='TABLE'){var tb=tableMd(ch);if(tb)out.push(tb);}
+    else if(t==='FIGURE'||t==='DETAILS'||t==='DL'){out.push(blocksMd(ch));}
+    else if(t==='FIGCAPTION'){var f=inlineMd(ch).trim();if(f)out.push('*'+f+'*');}
+    else if(BLOCK[t]){out.push(blocksMd(ch));}
+    else{var i=inlineMd(ch).trim();if(i)out.push(i);}
+  });
+  return out.filter(function(b){return b;}).join('\n\n');
+}
+function convert(html){
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  var md=blocksMd(doc.body);
+  return md.replace(/\n{3,}/g,'\n\n').trim();
+}
+var inEl=document.getElementById('htmlIn'),outEl=document.getElementById('mdOut');
+function render(){
+  var v=inEl.value;
+  document.getElementById('inCount').textContent=v.length.toLocaleString('en-US')+' chars';
+  if(!v.trim()){outEl.value='';document.getElementById('outCount').textContent='0 chars';return;}
+  var md=convert(v);
+  outEl.value=md;
+  document.getElementById('outCount').textContent=md.length.toLocaleString('en-US')+' chars';
+}
+inEl.addEventListener('input',render);
+document.getElementById('copyBtn').addEventListener('click',function(){
+  outEl.select();
+  try{document.execCommand('copy');this.textContent='Copied!';var b=this;setTimeout(function(){b.textContent='Copy Markdown';},1500);}catch(e){}
+});
+document.getElementById('clearBtn').addEventListener('click',function(){inEl.value='';render();});
+document.getElementById('exampleBtn').addEventListener('click',function(){
+  inEl.value='<h2>Feeding Guide</h2>\n<p>Adult dogs eat <strong>2-3% of body weight</strong> per day. <a href="/raw-dog-food-calculator/">See the calculator</a> for portions.</p>\n<ul><li>Muscle meat: 80%</li><li>Edible bone: 10%</li></ul>';
+  render();
+});
+render();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

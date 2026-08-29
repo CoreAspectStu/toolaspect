@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV to Excel Converter — Free XLSX Tool | ToolAspect</title>
+<meta name="description" content="Free CSV to Excel converter. Sniffs the delimiter, keeps leading zeros, and builds a real .xlsx in your browser. A 10,000-row file converts in seconds.">
+<link rel="canonical" href="https://toolaspect.com/csv-to-excel/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="CSV to Excel Converter — Free XLSX Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert CSV (or JSON) to a real .xlsx workbook in your browser. Delimiter sniffing, custom sheet names, leading zeros preserved.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/csv-to-excel/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSV to Excel Converter | Free Online Tool">
+<meta name="twitter:description" content="Turn delimited files or JSON into a real Excel workbook, entirely client-side.">
+<meta name="keywords" content="csv to excel, csv to xlsx, convert csv to excel, csv file to excel, json to excel, csv converter online free">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CSV to Excel Converter","description":"Free browser-based CSV to Excel (.xlsx) converter with delimiter sniffing, quoted-field handling, custom sheet names, and a JSON-to-Excel mode. Nothing is uploaded; the workbook is built locally with ExcelJS.","url":"https://toolaspect.com/csv-to-excel/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a CSV file to Excel?","acceptedAnswer":{"@type":"Answer","text":"Paste the CSV text (or choose the file) above, pick a delimiter or leave it on auto-detect, and press Convert to Excel. You get a real .xlsx workbook with typed number cells. Excel itself can also do this via Data > From Text/CSV, which opens an import wizard for the same result."}},
+{"@type":"Question","name":"Why does Excel destroy my leading zeros when I open a CSV?","acceptedAnswer":{"@type":"Answer","text":"Excel guesses types when opening a CSV directly and turns 00712 into 712, or 1-2 into a date. This converter writes ZIP codes and ID strings as text cells and only true numbers as numbers, so 00712 stays 00712. If you must open the CSV in Excel directly, rename it to .txt first and use the import wizard, which lets you mark columns as text."}},
+{"@type":"Question","name":"Does this converter upload my file anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and workbook generation run entirely in your browser with ExcelJS, and the download link is created from a local blob. Nothing is sent to a server, which matters for customer lists, financial exports, and anything else you wouldn't paste into a random web form."}},
+{"@type":"Question","name":"How do I convert a semicolon-delimited CSV from Excel?","acceptedAnswer":{"@type":"Answer","text":"European locales often export CSV with semicolons because the comma is the decimal separator. The auto-detect here counts delimiters in the first line and picks the winner, so a semicolon file just works; you can also force ;, tab, or pipe manually."}},
+{"@type":"Question","name":"What's the difference between CSV and XLSX?","acceptedAnswer":{"@type":"Answer","text":"CSV is plain text: one table, no types, no formatting, values separated by a delimiter. XLSX is a zipped XML package holding typed cells, formatting, formulas, and multiple sheets. CSV has no practical row limit; an XLSX sheet tops out at 1,048,576 rows by 16,384 columns (column XFD)."}},
+{"@type":"Question","name":"Can I convert JSON to Excel too?","acceptedAnswer":{"@type":"Answer","text":"Yes, the second tab takes an array of JSON objects, uses the keys of the first object as the header row, and writes one row per object. Nested objects and arrays become JSON strings in their cell, and missing keys become empty cells so ragged data still lines up."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"CSV to Excel Converter","item":"https://toolaspect.com/csv-to-excel/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-toggle{display:flex;gap:6px;margin-bottom:1rem;justify-content:center}
+.mode-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.5rem 1.2rem;font-size:.88rem;cursor:pointer;font-family:inherit}
+.mode-btn.active{background:rgba(99,102,241,.15);border-color:var(--primary);color:var(--text);font-weight:600}
+textarea{width:100%;min-height:220px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.83rem;line-height:1.5;padding:.8rem;box-sizing:border-box;resize:vertical}
+textarea:focus{outline:none;border-color:var(--primary)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group input[type="file"]{cursor:pointer;font-size:.85rem}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-group{display:flex;align-items:center;gap:.5rem;font-size:.88rem;color:var(--text);padding:.65rem 0}
+.check-group input{accent-color:var(--primary);width:16px;height:16px}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.7rem 1.8rem;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:wait}
+.result-hero{text-align:center;padding:1.25rem 0}
+.result-hero .value{font-size:2rem;font-weight:800;color:var(--primary)}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.preview-wrap{overflow-x:auto;margin-top:1.25rem;border:1px solid var(--border);border-radius:var(--radius)}
+.data-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.data-table th,.data-table td{padding:.4rem .6rem;border:1px solid var(--border);text-align:left;white-space:nowrap}
+.data-table th{background:var(--bg);position:sticky;top:0}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table.ref{font-size:.88rem}
+.data-table.ref th,.data-table.ref td{white-space:normal}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📊 CSV to Excel Converter</h1>
+<p>Turn delimited files (or JSON) into a real .xlsx workbook, right in your browser</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> to convert CSV to Excel, paste the file's text above (or pick the file), leave the delimiter on auto-detect, and click Convert to Excel. You'll download a genuine .xlsx with a header row, typed numbers, and leading zeros preserved. Unlike opening a CSV in Excel directly, nothing gets mangled into dates or stripped zeros, and your data never leaves the browser.</p>
+
+<div class="section-card">
+<div class="mode-toggle">
+<button type="button" class="mode-btn active" data-mode="csv">CSV → Excel</button>
+<button type="button" class="mode-btn" data-mode="json">JSON → Excel</button>
+</div>
+<h2 id="inputTitle">Your CSV</h2>
+<textarea id="csvIn" spellcheck="false" placeholder="name,department,salary,start_date&#10;Nguyen Lin,Engineering,94500,2021-03-15&#10;Diaz,Sales,61800,2019-11-02"></textarea>
+<div id="csvOpts">
+<div class="input-grid">
+<div class="input-group"><label>Delimiter</label>
+<select id="delim">
+<option value="auto" selected>Auto-detect</option>
+<option value=",">Comma ( , )</option>
+<option value=";">Semicolon ( ; )</option>
+<option value="	">Tab</option>
+<option value="|">Pipe ( | )</option>
+</select>
+</div>
+<div class="input-group"><label>CSV file</label><input type="file" id="fileIn" accept=".csv,.tsv,.txt"></div>
+<div class="input-group"><label>Sheet name</label><input type="text" id="sheetName" value="Sheet1" maxlength="31"></div>
+</div>
+<label class="check-group"><input type="checkbox" id="headerRow" checked> First row is a header (bolded in the workbook)</label>
+</div>
+<button type="button" class="btn" id="convertBtn">Convert to Excel</button>
+<div class="result-hero" id="hero" style="display:none">
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid" id="stats" style="display:none">
+<div class="result-item"><div class="ri-label">Rows</div><div class="ri-value" id="nRows">—</div></div>
+<div class="result-item"><div class="ri-label">Columns</div><div class="ri-value" id="nCols">—</div></div>
+<div class="result-item"><div class="ri-label">Cells</div><div class="ri-value" id="nCells">—</div></div>
+</div>
+<div class="preview-wrap" id="previewWrap" style="display:none">
+<table class="data-table" id="previewTable"></table>
+</div>
+<div class="status-line" id="status">Ready. Everything happens locally — your file is never uploaded.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/csv-to-json/">Csv To Json</a></li><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/convert-csv-to-excel/">How to convert CSV to Excel</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>CSV vs XLSX: What Actually Changes</h2>
+<div class="table-wrap">
+<table class="data-table ref">
+<thead><tr><th></th><th>CSV</th><th>XLSX</th></tr></thead>
+<tbody>
+<tr><td>What it is</td><td>Plain text, one table</td><td>Zipped XML package</td></tr>
+<tr><td>Data types</td><td>None — everything is text</td><td>Real numbers, dates, strings, formulas</td></tr>
+<tr><td>Row limit</td><td>None in the format (parser-dependent)</td><td>1,048,576 rows per sheet</td></tr>
+<tr><td>Column limit</td><td>None in the format</td><td>16,384 columns (ends at XFD)</td></tr>
+<tr><td>Sheets</td><td>One per file</td><td>Multiple sheets per workbook</td></tr>
+<tr><td>Leading zeros, long IDs</td><td>Preserved (it's just text)</td><td>Preserved if written as text cells</td></tr>
+<tr><td>Formatting, formulas</td><td>Impossible</td><td>Full support</td></tr>
+<tr><td>Typical size for the same data</td><td>Larger (uncompressed)</td><td>Smaller (zip compression)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The classic failure mode: double-clicking a CSV lets Excel guess types, turning 00712 into 712 and 3-4 into a date. Converting deliberately, with text cells where they matter, avoids the damage permanently.</p>
+</div>
+
+<div class="content-section">
+<h2>How the CSV to Excel Converter Works</h2>
+<p>Under the hood this is a small pipeline: read the text, sniff the delimiter, parse rows with full quote handling, type the values, and hand the matrix to ExcelJS to build a proper OOXML workbook that Excel, Numbers, Google Sheets, and LibreOffice all open natively.</p>
+<h3>Delimiter sniffing</h3>
+<p>On auto-detect, the parser counts commas, semicolons, tabs, and pipes in the first line and picks the most frequent. European exports that use semicolons because the comma is a decimal separator just work, as do TSVs from databases and pipe-delimited legacy feeds. If a file was hand-tampered with, force a delimiter manually.</p>
+<h3>Quoted fields and typing</h3>
+<p>Fields wrapped in double quotes can contain the delimiter, line breaks, and escaped quotes (<code>""</code>), and the parser handles all three — that's what makes <code>"Nguyen, Lin"</code> one cell instead of two. For typing, values that look like plain numbers (<code>94500</code>, <code>-3.14</code>) become number cells so Excel can sum them; anything with a leading zero, dashes, or mixed content stays text so identifiers survive.</p>
+<h3>How to use it</h3>
+<p>Paste CSV text or choose a file, confirm the delimiter and sheet name, and convert. You'll see a preview of the first rows and a row/column/cell count before the .xlsx downloads. The JSON tab uses the same engine: give it an array of objects and the keys become the header row.</p>
+<h3>A worked example</h3>
+<p>Take this seven-line CSV (one header plus six employees, four columns):</p>
+<p style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem;overflow-x:auto"><code>name,department,salary,start_date</code><br><code>"Nguyen, Lin",Engineering,94500,2021-03-15</code><br><code>Diaz,Sales,61800,2019-11-02</code><br><code>Kowalski,Engineering,101300,2018-06-20</code><br><code>Osei,Marketing,72500,2023-01-09</code><br><code>"Smith Jr., Al",Support,52900,2022-08-29</code><br><code>Petrov,Sales,67900,2020-02-14</code></p>
+<p>The parser sniffs a comma delimiter, splits it into 7 rows × 4 columns = 28 cells, keeps <code>"Nguyen, Lin"</code> and <code>"Smith Jr., Al"</code> as single cells despite the commas, writes the salary column as numbers (so <code>=SUM(C2:C7)</code> gives 450,900), and leaves the ISO dates as text. The output workbook has one sheet, a bold header, and the rest is Excel history.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a CSV file to Excel?</h3><p>Paste the CSV text (or choose the file) above, pick a delimiter or leave it on auto-detect, and press Convert to Excel. You get a real .xlsx workbook with typed number cells. Excel itself can also do this via Data &gt; From Text/CSV, which opens an import wizard for the same result.</p></div>
+<div class="faq-item"><h3>Why does Excel destroy my leading zeros when I open a CSV?</h3><p>Excel guesses types when opening a CSV directly and turns 00712 into 712, or 1-2 into a date. This converter writes ZIP codes and ID strings as text cells and only true numbers as numbers, so 00712 stays 00712. If you must open the CSV in Excel directly, rename it to .txt first and use the import wizard, which lets you mark columns as text.</p></div>
+<div class="faq-item"><h3>Does this converter upload my file anywhere?</h3><p>No. Parsing and workbook generation run entirely in your browser with ExcelJS, and the download link is created from a local blob. Nothing is sent to a server, which matters for customer lists, financial exports, and anything else you wouldn't paste into a random web form.</p></div>
+<div class="faq-item"><h3>How do I convert a semicolon-delimited CSV from Excel?</h3><p>European locales often export CSV with semicolons because the comma is the decimal separator. The auto-detect here counts delimiters in the first line and picks the winner, so a semicolon file just works; you can also force ;, tab, or pipe manually.</p></div>
+<div class="faq-item"><h3>What's the difference between CSV and XLSX?</h3><p>CSV is plain text: one table, no types, no formatting, values separated by a delimiter. XLSX is a zipped XML package holding typed cells, formatting, formulas, and multiple sheets. CSV has no practical row limit; an XLSX sheet tops out at 1,048,576 rows by 16,384 columns (column XFD).</p></div>
+<div class="faq-item"><h3>Can I convert JSON to Excel too?</h3><p>Yes, the second tab takes an array of JSON objects, uses the keys of the first object as the header row, and writes one row per object. Nested objects and arrays become JSON strings in their cell, and missing keys become empty cells so ragged data still lines up.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/csv-to-json/">🔁 CSV to JSON</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/json-schema-validator/">🧪 JSON Schema Validator</a>
+<a href="/sql-formatter/">🗄️ SQL Formatter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var EXCELJS_URL='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+var mode='csv';
+var exceljsPromise=null;
+function status(msg,isErr){var s=document.getElementById('status');s.textContent=msg;s.className='status-line'+(isErr?' err':'');}
+function loadExcelJS(){
+if(window.ExcelJS)return Promise.resolve(window.ExcelJS);
+if(exceljsPromise)return exceljsPromise;
+exceljsPromise=new Promise(function(res,rej){
+var s=document.createElement('script');
+s.src=EXCELJS_URL;
+s.onload=function(){window.ExcelJS?res(window.ExcelJS):rej(new Error('ExcelJS loaded but unavailable'));};
+s.onerror=function(){exceljsPromise=null;rej(new Error('could not load ExcelJS from CDN'));};
+document.head.appendChild(s);
+});
+return exceljsPromise;
+}
+function sniffDelim(text){
+var firstLine=(text.split(/\r?\n/)[0]||'');
+var cands=[',',';','\t','|'];
+var best=',',bestC=-1;
+cands.forEach(function(d){
+var c=firstLine.split(d).length-1;
+if(c>bestC){bestC=c;best=d;}
+});
+return best;
+}
+function parseCSV(text,delim){
+var rows=[],row=[],cur='',q=false;
+for(var i=0;i<text.length;i++){
+var ch=text[i];
+if(q){
+if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}
+else cur+=ch;
+}else{
+if(ch==='"')q=true;
+else if(ch===delim){row.push(cur);cur='';}
+else if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+else if(ch!=='\r')cur+=ch;
+}
+}
+if(cur!==''||row.length){row.push(cur);rows.push(row);}
+if(rows.length&&rows[rows.length-1].length===1&&rows[rows.length-1][0]==='')rows.pop();
+return rows;
+}
+function typed(v){
+if(typeof v!=='string')return v;
+if(/^-?\d+(\.\d+)?$/.test(v)&&!/^0\d/.test(v)&&!/^-0\d/.test(v)){
+var n=Number(v);
+if(Math.abs(n)<=1e15)return {v:n,t:'num'};
+}
+return {v:v,t:'str'};
+}
+function jsonToRows(arr){
+if(!Array.isArray(arr)||!arr.length)throw new Error('expected a non-empty array of objects');
+var cols=[];
+arr.forEach(function(o){Object.keys(o||{}).forEach(function(k){if(cols.indexOf(k)<0)cols.push(k);});});
+var rows=[cols];
+arr.forEach(function(o){
+rows.push(cols.map(function(k){
+var v=(o||{})[k];
+if(v===undefined||v===null)return '';
+if(typeof v==='object')return JSON.stringify(v);
+return v;
+}));
+});
+return rows;
+}
+function renderPreview(rows,headerRow){
+var t=document.getElementById('previewTable');
+var show=rows.slice(0,8);
+var h='<tbody>';
+show.forEach(function(r,i){
+h+='<tr>';
+if(i===0&&headerRow)h+='<th>'+r.map(esc).join('</th><th>')+'</th>';
+else h+='<td>'+r.map(esc).join('</td><td>')+'</td>';
+h+='</tr>';
+});
+if(rows.length>show.length)h+='<tr><td colspan="'+rows[0].length+'" style="color:var(--muted);text-align:center">… '+(rows.length-show.length)+' more rows in the workbook</td></tr>';
+h+='</tbody>';
+t.innerHTML=h;
+document.getElementById('previewWrap').style.display='block';
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+document.querySelectorAll('.mode-btn').forEach(function(b){
+b.addEventListener('click',function(){
+document.querySelectorAll('.mode-btn').forEach(function(x){x.classList.remove('active');});
+b.classList.add('active');
+mode=b.getAttribute('data-mode');
+document.getElementById('inputTitle').textContent=mode==='csv'?'Your CSV':'Your JSON (array of objects)';
+document.getElementById('csvOpts').style.display=mode==='csv'?'block':'none';
+document.getElementById('csvIn').placeholder=mode==='csv'
+? 'name,department,salary,start_date\nNguyen Lin,Engineering,94500,2021-03-15'
+: '[\n  {"name": "Ada", "role": "engineer", "salary": 94500},\n  {"name": "Grace", "role": "manager", "salary": 105000}\n]';
+document.getElementById('convertBtn').textContent=mode==='csv'?'Convert to Excel':'Convert JSON to Excel';
+});
+});
+document.getElementById('fileIn').addEventListener('change',function(){
+var f=this.files&&this.files[0];
+if(!f)return;
+var fr=new FileReader();
+fr.onload=function(){
+document.getElementById('csvIn').value=fr.result;
+status('Loaded '+f.name+' ('+(fr.result.length/1024).toFixed(1)+' KB). Hit Convert.');
+};
+fr.readAsText(f);
+});
+document.getElementById('convertBtn').addEventListener('click',function(){
+var btn=this;
+var raw=document.getElementById('csvIn').value;
+if(!raw.trim()){status('Paste some CSV or JSON first.',true);return;}
+var headerRow=document.getElementById('headerRow').checked;
+var sheetName=(document.getElementById('sheetName').value||'Sheet1').replace(/[\\/*?:[\]]/g,'').slice(0,31)||'Sheet1';
+var rows;
+try{
+if(mode==='csv'){
+var d=document.getElementById('delim').value;
+if(d==='auto')d=sniffDelim(raw);
+rows=parseCSV(raw,d);
+status('Parsed with delimiter "'+(d==='\t'?'tab':d)+'" — building workbook…');
+}else{
+rows=jsonToRows(JSON.parse(raw));
+status('Parsed '+rows.length+' rows from JSON — building workbook…');
+}
+}catch(e){status('Could not parse input: '+e.message,true);return;}
+if(!rows.length){status('No rows found.',true);return;}
+var nCols=rows[0].length,nCells=rows.reduce(function(a,r){return a+r.length;},0);
+btn.disabled=true;
+loadExcelJS().then(function(ExcelJS){
+var wb=new ExcelJS.Workbook();
+var ws=wb.addWorksheet(sheetName);
+ws.columns=Array.from({length:nCols},function(){return {width:16};});
+rows.forEach(function(r,i){
+ws.addRow(r.map(function(c){return typed(c).t==='num'?Number(c):c;}));
+});
+if(headerRow&&rows.length){
+var hr=ws.getRow(1);
+hr.font={bold:true};
+}
+var maxRows=1048576;
+if(rows.length>maxRows){
+status('XLSX sheets cap at '+maxRows.toLocaleString()+' rows; truncating.',true);
+while(ws.rowCount>maxRows)ws.spliceRows(maxRows+1,ws.rowCount-maxRows);
+}
+return wb.xlsx.writeBuffer().then(function(buf){
+document.getElementById('hero').style.display='block';
+document.getElementById('heroVal').textContent='Workbook ready';
+document.getElementById('heroSub').textContent=(mode==='csv'?'CSV':'JSON')+' → '+sheetName+'.xlsx · '+(buf.byteLength/1024).toFixed(1)+' KB';
+document.getElementById('stats').style.display='grid';
+document.getElementById('nRows').textContent=(rows.length-(headerRow?1:0)).toLocaleString()+' data';
+document.getElementById('nCols').textContent=nCols.toLocaleString();
+document.getElementById('nCells').textContent=nCells.toLocaleString();
+renderPreview(rows,headerRow);
+var blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download=sheetName+'.xlsx';
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+status('Downloaded '+sheetName+'.xlsx — '+(rows.length).toLocaleString()+' rows × '+nCols+' columns.');
+});
+}).catch(function(e){status('Conversion failed: '+e.message,true);}).finally(function(){btn.disabled=false;});
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

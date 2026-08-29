@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chmod Calculator — Numeric to Symbolic | ToolAspect</title>
+<meta name="description" content="Chmod calculator converts numeric to symbolic and back. See what chmod 755, 644 and 600 mean, plus setuid, setgid and sticky bit commands.">
+<link rel="canonical" href="https://toolaspect.com/chmod-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Chmod Calculator — Numeric to Symbolic">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert chmod numbers to symbolic permission strings and back, with setuid, setgid and sticky bit support.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/chmod-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chmod Calculator | Free Online Tool">
+<meta name="twitter:description" content="Convert chmod numeric modes to symbolic and back, with a copy-paste command.">
+<meta name="keywords" content="chmod calculator, chmod 755, chmod 644, chmod 600, chmod numeric to symbolic, setuid setgid sticky bit, linux permissions calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Chmod Calculator","description":"Free chmod calculator that converts between numeric (755) and symbolic (rwxr-xr-x) permission modes, including setuid, setgid and sticky bit, and outputs the ready-to-run chmod command.","url":"https://toolaspect.com/chmod-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does chmod 755 mean?","acceptedAnswer":{"@type":"Answer","text":"chmod 755 gives the owner read, write and execute (7 = 4+2+1), while group and everyone else get read and execute only (5 = 4+1). It's the default for directories and executable programs you want others to run: rwxr-xr-x."}},
+{"@type":"Question","name":"What does chmod 644 mean?","acceptedAnswer":{"@type":"Answer","text":"chmod 644 gives the owner read and write (6 = 4+2), while group and others get read-only (4). The result, rw-r--r--, is the standard permission for regular files like configs, HTML pages and source code. Nobody but the owner can modify the file."}},
+{"@type":"Question","name":"What do the numbers in chmod stand for?","acceptedAnswer":{"@type":"Answer","text":"Each digit is a sum: read is 4, write is 2, execute is 1. So 7 means read+write+execute, 6 means read+write, 5 means read+execute, and 4 means read-only. The three digits apply to owner, group, and others in that order. A fourth leading digit sets special bits: setuid 4, setgid 2, sticky 1."}},
+{"@type":"Question","name":"What is chmod 600 and when should I use it?","acceptedAnswer":{"@type":"Answer","text":"chmod 600 means read and write for the owner, no access at all for group or others (rw-------). Use it for private files like SSH keys (~/.ssh/id_ed25519), .env files with API secrets, and any credential file. SSH refuses to use a private key that group or others can read."}},
+{"@type":"Question","name":"What are setuid, setgid and the sticky bit (chmod 4755, 2775, 1777)?","acceptedAnswer":{"@type":"Answer","text":"They're the optional fourth digit. Setuid (4) runs an executable as its owner, which is why /usr/bin/passwd can edit /etc/shadow as root. Setgid (2) on a program runs it as the file's group; on a directory, new files inherit the directory's group. Sticky (1) on a directory like /tmp (1777) lets everyone write but only delete their own files."}},
+{"@type":"Question","name":"Is chmod 777 safe?","acceptedAnswer":{"@type":"Answer","text":"Almost never. 777 (rwxrwxrwx) lets every user on the system read, modify and execute the file or directory. It's a common quick fix for permission errors that instead opens the door to any local user or compromised process. Fix ownership or group membership instead, and reserve 777 for throwaway directories like test scratch space."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Chmod Calculator","item":"https://toolaspect.com/chmod-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.perm-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:.5rem .75rem;align-items:center;font-size:.9rem}
+.perm-grid .who{font-weight:600;padding:.5rem 0}
+.perm-grid .who span{display:block;font-weight:400;color:var(--muted);font-size:.75rem}
+.perm-grid label{display:flex;align-items:center;gap:.45rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .8rem;cursor:pointer;user-select:none}
+.perm-grid input{accent-color:var(--primary);width:16px;height:16px;cursor:pointer}
+.special-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+.special-row label{display:flex;align-items:center;gap:.45rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .8rem;font-size:.83rem;cursor:pointer}
+.special-row input{accent-color:var(--primary);width:15px;height:15px;cursor:pointer}
+.result-hero{text-align:center;padding:1.25rem 0}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);letter-spacing:.08em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.result-hero .sub{font-size:1.15rem;color:var(--text);margin-top:.3rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.cmd-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;margin-top:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.cmd-box code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:1rem;color:var(--success);word-break:break-all}
+.cmd-box button{background:var(--primary);border:none;color:#fff;border-radius:8px;padding:.45rem .9rem;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.cmd-box button:hover{background:var(--primary-hover)}
+.octal-input{display:flex;gap:1rem;align-items:end;flex-wrap:wrap;margin-bottom:1.25rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.1rem;padding:.55rem .8rem;box-sizing:border-box;width:140px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.15rem;font-weight:700;font-family:ui-monospace,Menlo,Consolas,monospace}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{white-space:nowrap}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔐 Chmod Calculator</h1>
+<p>Convert chmod numeric modes to symbolic permissions and back</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> chmod numbers are sums of read (4), write (2) and execute (1) for owner, group and others. 755 = rwxr-xr-x (owner does everything, everyone else reads and runs), 644 = rw-r--r-- (owner writes, everyone reads), 600 = rw------- (owner only). Toggle the boxes below or type a mode to get the exact chmod command.</p>
+
+<div class="section-card">
+<h2>Mode ⇄ Permissions</h2>
+<div class="octal-input">
+<div class="input-group"><label>Numeric mode</label><input type="text" id="octIn" value="755" maxlength="4" inputmode="numeric" spellcheck="false"></div>
+</div>
+<div class="perm-grid">
+<div class="who">Owner <span>user / u</span></div>
+<label><input type="checkbox" id="ur"> read (4)</label>
+<label><input type="checkbox" id="uw"> write (2)</label>
+<label><input type="checkbox" id="ux"> execute (1)</label>
+<div class="who">Group <span>group / g</span></div>
+<label><input type="checkbox" id="gr"> read (4)</label>
+<label><input type="checkbox" id="gw"> write (2)</label>
+<label><input type="checkbox" id="gx"> execute (1)</label>
+<div class="who">Others <span>all / o</span></div>
+<label><input type="checkbox" id="or"> read (4)</label>
+<label><input type="checkbox" id="ow"> write (2)</label>
+<label><input type="checkbox" id="ox"> execute (1)</label>
+</div>
+<div class="special-row">
+<label><input type="checkbox" id="su"> setuid (4xxx)</label>
+<label><input type="checkbox" id="sg"> setgid (2xxx)</label>
+<label><input type="checkbox" id="st"> sticky (1xxx)</label>
+</div>
+<div class="result-hero">
+<div class="value" id="octOut">755</div>
+<div class="sub" id="symOut">rwxr-xr-x</div>
+</div>
+<div class="cmd-box">
+<code id="cmdOut">chmod 755 file.txt</code>
+<button type="button" id="copyBtn">Copy command</button>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Owner</div><div class="ri-value" id="pOwner">rwx</div></div>
+<div class="result-item"><div class="ri-label">Group</div><div class="ri-value" id="pGroup">r-x</div></div>
+<div class="result-item"><div class="ri-label">Others</div><div class="ri-value" id="pOthers">r-x</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/cron-generator/">Cron Generator</a></li><li style="margin:4px 0"><a href="/regex-tester/">Regex Tester</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/chmod-explained/">chmod explained</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Common Chmod Modes Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Command</th><th>Symbolic</th><th>What it grants</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td><code>chmod 777</code></td><td><code>rwxrwxrwx</code></td><td>Everything to everyone (risky)</td><td>Throwaway scratch dirs only</td></tr>
+<tr><td><code>chmod 755</code></td><td><code>rwxr-xr-x</code></td><td>Owner full; group/others read + run</td><td>Directories, shared programs</td></tr>
+<tr><td><code>chmod 700</code></td><td><code>rwx------</code></td><td>Owner full; nobody else anything</td><td>Private dirs like <code>~/.ssh</code></td></tr>
+<tr><td><code>chmod 644</code></td><td><code>rw-r--r--</code></td><td>Owner read/write; others read-only</td><td>Regular files, web pages, configs</td></tr>
+<tr><td><code>chmod 640</code></td><td><code>rw-r-----</code></td><td>Owner read/write; group read-only</td><td>Files shared with a service group</td></tr>
+<tr><td><code>chmod 600</code></td><td><code>rw-------</code></td><td>Owner read/write only</td><td>SSH keys, <code>.env</code> secrets</td></tr>
+<tr><td><code>chmod 666</code></td><td><code>rw-rw-rw-</code></td><td>Everyone can read and write</td><td>Shared logs (prefer group perms)</td></tr>
+<tr><td><code>chmod 444</code></td><td><code>r--r--r--</code></td><td>Read-only for everyone</td><td>Locking files against edits</td></tr>
+<tr><td><code>chmod 711</code></td><td><code>rwx--x--x</code></td><td>Owner full; others may enter, not list</td><td>Public dirs with private contents</td></tr>
+<tr><td><code>chmod 4755</code></td><td><code>rwsr-xr-x</code></td><td>755 + setuid: runs as file owner</td><td><code>/usr/bin/passwd</code>, sudo binaries</td></tr>
+<tr><td><code>chmod 2775</code></td><td><code>rwxrwsr-x</code></td><td>775 + setgid dir: group inherits</td><td>Team project directories</td></tr>
+<tr><td><code>chmod 1777</code></td><td><code>rwxrwxrwt</code></td><td>777 + sticky: delete own files only</td><td><code>/tmp</code>, shared upload dirs</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A lowercase <code>s</code> or <code>t</code> means the special bit is set <em>and</em> execute is on; uppercase <code>S</code> or <code>T</code> means the special bit is set without execute, which is usually a mistake on programs.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Chmod Calculator Works</h2>
+<p>Unix permissions are three triads of flags, one each for the file's owner (user), its group, and everyone else. Each triod is written either symbolically (<code>rwx</code>) or as an octal digit where read counts 4, write counts 2, and execute counts 1. This calculator keeps a checkbox grid, the numeric mode, and the symbolic string in sync, then hands you the exact command to run.</p>
+<h3>The formula</h3>
+<p>Digit = (read ? 4 : 0) + (write ? 2 : 0) + (execute ? 1 : 0), applied to owner, group, others in that order. A fourth leading digit works the same way for special bits: setuid 4, setgid 2, sticky 1, so 4755 splits into 4 (setuid) + 7 + 5 + 5. Going the other direction, each octal digit maps back to its bits: 7 is rwx, 6 is rw-, 5 is r-x, 4 is r--.</p>
+<h3>How to use it</h3>
+<p>Type a mode like 640 into the numeric box and watch the grid and symbolic string update. Or click the checkboxes to build the permission you want and copy the finished command. The three special-bit checkboxes prepend the fourth digit. The command uses <code>file.txt</code> as a placeholder; swap in your path.</p>
+<h3>A worked example</h3>
+<p>Take <code>chmod 644</code>, the standard mode for ordinary files. The owner digit 6 = 4 + 2, so read and write, no execute: <code>rw-</code>. Group and others get 4, plain read: <code>r--</code> each. Full string <code>rw-r--r--</code>. Now <code>chmod 755</code>: owner 7 = 4+2+1 (<code>rwx</code>), group and others 5 = 4+1 (<code>r-x</code>), giving <code>rwxr-xr-x</code>, the usual choice for directories and scripts others should run but not edit.</p>
+<p>Special bits follow the same arithmetic. <code>/tmp</code> runs 1777: everyone can create files (777), and the sticky 1 restricts deletion to each file's owner. A shared team directory at 2775 adds setgid so every new file inherits the directory's group instead of the creator's, keeping collaboration tidy without constant <code>chgrp</code> calls.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does chmod 755 mean?</h3><p>chmod 755 gives the owner read, write and execute (7 = 4+2+1), while group and everyone else get read and execute only (5 = 4+1). It's the default for directories and executable programs you want others to run: rwxr-xr-x.</p></div>
+<div class="faq-item"><h3>What does chmod 644 mean?</h3><p>chmod 644 gives the owner read and write (6 = 4+2), while group and others get read-only (4). The result, rw-r--r--, is the standard permission for regular files like configs, HTML pages and source code. Nobody but the owner can modify the file.</p></div>
+<div class="faq-item"><h3>What do the numbers in chmod stand for?</h3><p>Each digit is a sum: read is 4, write is 2, execute is 1. So 7 means read+write+execute, 6 means read+write, 5 means read+execute, and 4 means read-only. The three digits apply to owner, group, and others in that order. A fourth leading digit sets special bits: setuid 4, setgid 2, sticky 1.</p></div>
+<div class="faq-item"><h3>What is chmod 600 and when should I use it?</h3><p>chmod 600 means read and write for the owner, no access at all for group or others (rw-------). Use it for private files like SSH keys (~/.ssh/id_ed25519), .env files with API secrets, and any credential file. SSH refuses to use a private key that group or others can read.</p></div>
+<div class="faq-item"><h3>What are setuid, setgid and the sticky bit (chmod 4755, 2775, 1777)?</h3><p>They're the optional fourth digit. Setuid (4) runs an executable as its owner, which is why /usr/bin/passwd can edit /etc/shadow as root. Setgid (2) on a program runs it as the file's group; on a directory, new files inherit the directory's group. Sticky (1) on a directory like /tmp (1777) lets everyone write but only delete their own files.</p></div>
+<div class="faq-item"><h3>Is chmod 777 safe?</h3><p>Almost never. 777 (rwxrwxrwx) lets every user on the system read, modify and execute the file or directory. It's a common quick fix for permission errors that instead opens the door to any local user or compromised process. Fix ownership or group membership instead, and reserve 777 for throwaway directories like test scratch space.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/cron-generator/">⏰ Cron Generator</a>
+<a href="/regex-tester/">🔍 Regex Tester</a>
+<a href="/password-generator/">🔑 Password Generator</a>
+<a href="/robots-txt-generator/">🤖 Robots.txt Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var bitIds={u:['ur','uw','ux'],g:['gr','gw','gx'],o:['or','ow','ox']};
+function modeFromUI(){
+  var m={u:{},g:{},o:{}};
+  for(var who in bitIds){
+    m[who].r=doc(bitIds[who][0]);
+    m[who].w=doc(bitIds[who][1]);
+    m[who].x=doc(bitIds[who][2]);
+  }
+  m.su=doc('su');m.sg=doc('sg');m.st=doc('st');
+  return m;
+}
+function doc(id){return document.getElementById(id).checked;}
+function modeFromOct(str){
+  var d=(str||'').split('').map(Number);
+  var bits=function(n){return {r:!!(n&4),w:!!(n&2),x:!!(n&1)};};
+  if(d.length===4)return {su:!!(d[0]&4),sg:!!(d[0]&2),st:!!(d[0]&1),u:bits(d[1]),g:bits(d[2]),o:bits(d[3])};
+  return {u:bits(d[0]),g:bits(d[1]),o:bits(d[2])};
+}
+function toOct(m){
+  var v=function(w){return (w.r?4:0)+(w.w?2:0)+(w.x?1:0);};
+  var sp=(m.su?4:0)+(m.sg?2:0)+(m.st?1:0);
+  return (sp?String(sp):'')+v(m.u)+v(m.g)+v(m.o);
+}
+function toSym(m){
+  var triad=function(w,sb){
+    var s=(w.r?'r':'-')+(w.w?'w':'-');
+    if(!w.x)s+=sb?'S':'-';else s+=sb?'s':'x';
+    return s;
+  };
+  var o=triad(m.u,m.su)+triad(m.g,m.sg);
+  var tail=(m.o.r?'r':'-')+(m.o.w?'w':'-');
+  if(!m.o.x)tail+=m.st?'T':'-';else tail+=m.st?'t':'x';
+  return o+tail;
+}
+function fmtPerms(w){return (w.r?'r':'-')+(w.w?'w':'-')+(w.x?'x':'-');}
+function animate(el,text){el.textContent=text;el.classList.remove('value-animate');void el.offsetWidth;el.classList.add('value-animate');}
+function render(m){
+  var oct=toOct(m),sym=toSym(m);
+  animate(document.getElementById('octOut'),oct);
+  animate(document.getElementById('symOut'),sym);
+  animate(document.getElementById('pOwner'),fmtPerms(m.u));
+  animate(document.getElementById('pGroup'),fmtPerms(m.g));
+  animate(document.getElementById('pOthers'),fmtPerms(m.o));
+  document.getElementById('cmdOut').textContent='chmod '+oct+' file.txt';
+  document.getElementById('octIn').value=oct;
+}
+function renderFromUI(){render(modeFromUI());}
+function setUI(m){
+  for(var who in bitIds){
+    document.getElementById(bitIds[who][0]).checked=m[who].r;
+    document.getElementById(bitIds[who][1]).checked=m[who].w;
+    document.getElementById(bitIds[who][2]).checked=m[who].x;
+  }
+  if(m.su!==undefined){document.getElementById('su').checked=!!m.su;document.getElementById('sg').checked=!!m.sg;document.getElementById('st').checked=!!m.st;}
+  render(m);
+}
+var ids=['ur','uw','ux','gr','gw','gx','or','ow','ox','su','sg','st'];
+ids.forEach(function(id){document.getElementById(id).addEventListener('change',renderFromUI);});
+document.getElementById('octIn').addEventListener('input',function(){
+  var v=this.value.replace(/[^0-7]/g,'');
+  if(v.length<3)return;
+  if(v.length>4)v=v.slice(0,4);
+  setUI(modeFromOct(v));
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var t=document.getElementById('cmdOut').textContent;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){flashCopy();});}
+  else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);flashCopy();}
+  function flashCopy(){var b=document.getElementById('copyBtn');b.textContent='Copied!';setTimeout(function(){b.textContent='Copy command';},1400);}
+});
+setUI(modeFromOct('755'));
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

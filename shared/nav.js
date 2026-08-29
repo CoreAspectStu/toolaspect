@@ -44,11 +44,13 @@
         { label: 'Mortgage Calculator',    href: '/mortgage-calculator/' },
         { label: 'Loan Calculator',        href: '/loan-calculator/' },
         { label: 'Wedding Loan',           href: '/wedding-loan-calculator/' },
+        { label: 'WeddingBudget',         href: '/wedding-budget-calculator/' },
         { label: 'HotelRoomBlock',        href: '/hotel-room-block-calculator/' },
         { label: 'MBA ROI',                href: '/mba-roi-calculator/' },
         { label: 'BMI Calculator',         href: '/bmi-calculator/' },
         { label: 'Discount Calculator',    href: '/discount-calculator/' },
         { label: 'Sales Tax Calculator',   href: '/sales-tax-calculator/' },
+        { label: 'MileageReimbursement',  href: '/mileage-reimbursement-calculator/' },
         { label: 'Tip Calculator',         href: '/tip-calculator/' },
         { label: 'Hours Calculator',       href: '/hours-calculator/' },
       ]
@@ -58,6 +60,7 @@
       dot: '#5e6ad2',
       tools: [
         { label: 'JSON Formatter',    href: '/json-formatter/' },
+        { label: 'JSON Diff',         href: '/json-diff/' },
         { label: 'Regex Tester',      href: '/regex-tester/' },
         { label: 'Base64 Encoder',    href: '/base64-encoder/' },
         { label: 'Cron Generator',    href: '/cron-generator/' },
@@ -236,14 +239,20 @@
         { label: 'TowingCost', href: '/towing-cost-calculator/' },
         { label: 'CarShippingCost', href: '/car-shipping-cost-calculator/' },
         { label: 'CarWrapCost', href: '/car-wrap-cost-calculator/' },
+        { label: 'WindowTintCost', href: '/window-tint-cost-calculator/' },
         { label: 'CarAffordability', href: '/car-affordability-calculator/' },
+        { label: 'CarSalesTax', href: '/car-sales-tax-calculator/' },
         { label: 'NewVsUsedCar', href: '/new-vs-used-car-calculator/' },
+        { label: 'CarDepreciation', href: '/car-depreciation-calculator/' },
+        { label: 'LeaseBuyout', href: '/lease-buyout-calculator/' },
+        { label: 'CostOfOwnership', href: '/car-cost-of-ownership-calculator/' },
+        { label: 'VehicleRegistrationCost', href: '/vehicle-registration-cost-calculator/' },
         { label: 'AutoRefinance', href: '/auto-refinance-calculator/' },
         { label: 'ExtendedCarWarrantyCost', href: '/extended-car-warranty-cost-calculator/' },
         { label: 'Mpg', href: '/mpg-calculator/' },
         { label: 'HybridBatteryCost', href: '/hybrid-battery-replacement-cost-calculator/' },
         { label: 'EngineReplacement', href: '/engine-replacement-cost-calculator/' },
-        { label: 'CeramicCoating', href: '/ceramic-coating-cost-calculator/' },        { label: 'CarAcRepair', href: '/car-ac-repair-cost-calculator/' },        { label: 'TireSize', href: '/tire-size-calculator/' },
+        { label: 'CeramicCoating', href: '/ceramic-coating-cost-calculator/' },        { label: 'CarAcRepair', href: '/car-ac-repair-cost-calculator/' },        { label: 'TireSize', href: '/tire-size-calculator/' },        { label: 'TireLoadIndex', href: '/tire-load-index-chart/' },
         { label: 'UpsideDownCarLoan', href: '/upside-down-car-loan-calculator/' },      ]
     },
     {
@@ -263,13 +272,18 @@
         { label: 'WaterIntake', href: '/water-intake-calculator/' },
         { label: 'HydrationNeedsByWeight', href: '/hydration-needs-by-weight/' },
         { label: 'DogFood', href: '/dog-food-calculator/' },
+        { label: 'RawDogFood', href: '/raw-dog-food-calculator/' },
         { label: 'DogAge', href: '/dog-age-calculator/' },
+        { label: 'DogHeatCycle', href: '/dog-heat-cycle-calculator/' },
+        { label: 'DogChocolateToxicity', href: '/dog-chocolate-toxicity-calculator/' },
         { label: 'CatFood', href: '/cat-food-calculator/' },
+        { label: 'CatAge', href: '/cat-age-calculator/' },
         { label: 'PetShippingCost', href: '/pet-shipping-cost-calculator/' },
         { label: 'VetVisitCost', href: '/vet-visit-cost-calculator/' },
         { label: 'DogDnaCost', href: '/dog-dna-test-cost-comparison/' },
         { label: 'PetInsuranceCost', href: '/pet-insurance-cost-calculator/' },
-        { label: 'PetRent', href: '/pet-rent-calculator/' },        { label: 'HeartRateZone', href: '/heart-rate-zone-calculator/' },
+        { label: 'PetRent', href: '/pet-rent-calculator/' },
+        { label: 'PetSitterRates', href: '/pet-sitter-rates-calculator/' },        { label: 'HeartRateZone', href: '/heart-rate-zone-calculator/' },
         { label: 'PetToolsHub', href: '/pet-tools/' },        { label: 'GlucoseA1cConverter', href: '/glucose-a1c-converter/' },
         { label: 'Bac', href: '/bac-calculator/' },
         { label: 'DueDate', href: '/due-date-calculator/' },
@@ -438,8 +452,12 @@
         { label: 'DateDifference', href: '/date-difference-calculator/' },
         { label: 'Age', href: '/age-calculator/' },
         { label: 'Gpa', href: '/gpa-calculator/' },
+        { label: 'WeightedGpa', href: '/weighted-gpa-calculator/' },
         { label: 'SatScore', href: '/sat-score-calculator/' },
         { label: 'SatToAct', href: '/sat-to-act-conversion-calculator/' },        { label: 'ApScore', href: '/ap-score-calculator/' },
+        { label: 'ActScore', href: '/act-score-calculator/' },
+        { label: 'WeddingHashtag', href: '/wedding-hashtag-generator/' },
+        { label: 'WeddingAlcohol', href: '/wedding-alcohol-calculator/' },
         { label: 'AnniversaryGifts', href: '/anniversary-gifts-by-year/' },
         { label: 'Anniversary1stPaper', href: '/1st-anniversary-gifts/' },
         { label: 'Anniversary5thWood', href: '/5th-anniversary-gifts/' },
@@ -467,7 +485,10 @@
       dot: '#818cf8',
       tools: [
         { label: 'JsonFormatter', href: '/json-formatter/' },
+        { label: 'JsonDiff', href: '/json-diff/' },
         { label: 'CsvToJson', href: '/csv-to-json/' },
+        { label: 'CsvToExcel', href: '/csv-to-excel/' },
+        { label: 'JsonSchemaValidator', href: '/json-schema-validator/' },
         { label: 'SqlFormatter', href: '/sql-formatter/' },
         { label: 'YamlValidator', href: '/yaml-validator/' },
         { label: 'Base64Encoder', href: '/base64-encoder/' },
@@ -476,6 +497,7 @@
         { label: 'UuidGenerator', href: '/uuid-generator/' },
         { label: 'JwtDecoder', href: '/jwt-decoder/' },
         { label: 'RegexTester', href: '/regex-tester/' },
+        { label: 'ChmodCalculator', href: '/chmod-calculator/' },
         { label: 'CronGenerator', href: '/cron-generator/' },
         { label: 'RobotsTxtGenerator', href: '/robots-txt-generator/' },
         { label: 'MetaTagGenerator', href: '/meta-tag-generator/' },
@@ -485,6 +507,7 @@
         { label: 'TokenCounter', href: '/token-counter/' },
         { label: 'BinaryConverter', href: '/binary-converter/' },
         { label: 'MarkdownToHtml', href: '/markdown-to-html/' },
+        { label: 'HtmlToMarkdown', href: '/html-to-markdown/' },
         { label: 'PromptLibrary', href: '/prompt-library/' },
         { label: 'LlmPricingTracker', href: '/llm-pricing-tracker/' },
         { label: 'DeveloperTools', href: '/developer-tools/' },
@@ -495,6 +518,8 @@
       dot: '#818cf8',
       tools: [
         { label: 'WordCounter', href: '/word-counter/' },
+        { label: 'WordsToPages', href: '/words-to-pages-calculator/' },
+        { label: 'FleschKincaid', href: '/flesch-kincaid-readability-calculator/' },
         { label: 'CaseConverter', href: '/case-converter/' },
         { label: 'CitationGenerator', href: '/citation-generator/' },
         { label: 'LoremIpsum', href: '/lorem-ipsum/' },
@@ -686,7 +711,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 340+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 380+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +
