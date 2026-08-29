@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV to SQL Converter — Free Online Tool | ToolAspect</title>
+<meta name="description" content="Free CSV to SQL converter. Paste CSV or upload a file and get CREATE TABLE plus INSERT statements for MySQL, PostgreSQL, or SQLite, instantly.">
+<link rel="canonical" href="https://toolaspect.com/csv-to-sql/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="CSV to SQL Converter — Free Online Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert CSV to SQL online: CREATE TABLE with inferred types plus batched INSERT statements for MySQL, PostgreSQL, or SQLite. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/csv-to-sql/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSV to SQL Converter | Free Online Tool">
+<meta name="twitter:description" content="Paste CSV, get CREATE TABLE and INSERT statements for MySQL, PostgreSQL, or SQLite. Free, private, browser-based.">
+<meta name="keywords" content="csv to sql, csv to sql converter, csv to insert statements, csv to sql online, generate sql from csv, csv to create table, convert csv to mysql, csv to postgresql, csv to sqlite, sql generator from csv">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CSV to SQL Converter","description":"Free CSV to SQL converter. Paste CSV or upload a file and get a CREATE TABLE statement with inferred column types plus batched INSERT statements for MySQL, PostgreSQL, or SQLite. Handles quoted fields, commas in quotes, and custom delimiters.","url":"https://toolaspect.com/csv-to-sql/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a CSV file to SQL?","acceptedAnswer":{"@type":"Answer","text":"Paste the CSV text or upload the file, pick your database dialect (MySQL, PostgreSQL, or SQLite), and name the table. The tool parses the rows, infers a type for every column, and emits a CREATE TABLE statement followed by INSERT statements you can run directly."}},
+{"@type":"Question","name":"How does the converter decide column types?","acceptedAnswer":{"@type":"Answer","text":"It scans every value in each column. All integers become INTEGER (BIGINT past 2^31), all numbers with decimals become DECIMAL with the observed precision, YYYY-MM-DD values become DATE, true/false values become BOOLEAN, and anything else becomes VARCHAR sized to the longest value."}},
+{"@type":"Question","name":"Does it handle commas and quotes inside fields?","acceptedAnswer":{"@type":"Answer","text":"Yes. The parser follows RFC 4180: a field wrapped in double quotes can contain commas, escaped doubled quotes, and even line breaks. Those values are re-escaped with doubled single quotes in the SQL output so nothing breaks on import."}},
+{"@type":"Question","name":"How many rows can it convert at once?","acceptedAnswer":{"@type":"Answer","text":"There is no hard limit; everything runs in your browser, so practical limits are memory (roughly tens of thousands of rows on a typical laptop). Use the batch size option to split large files into multi-row INSERT statements of 500 or 1,000 rows, which is also faster to execute."}},
+{"@type":"Question","name":"Is my CSV data uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and SQL generation happen entirely in your browser with vanilla JavaScript. Nothing is transmitted, logged, or stored, so the tool is safe for customer lists and other sensitive exports."}},
+{"@type":"Question","name":"Can I import the generated SQL into Excel or JSON instead?","acceptedAnswer":{"@type":"Answer","text":"For other destinations use the sister tools: the CSV to Excel converter produces a real .xlsx, and the CSV to JSON converter emits arrays of objects for APIs. This page covers the three SQL dialects."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"CSV to SQL Converter","item":"https://toolaspect.com/csv-to-sql/"}]}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #08090a;
+  --surface: #131516;
+  --border: rgba(255,255,255,0.06);
+  --text: #f7f8f8;
+  --muted: #8a8f98;
+  --primary: #6366f1;
+  --primary-hover: #5558e0;
+}
+body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem; padding: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.toolbar-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--muted); }
+.toolbar-item select, .toolbar-item input[type="text"], .toolbar-item input[type="number"] { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.82rem; cursor: pointer; outline: none; }
+.toolbar-item select:focus, .toolbar-item input:focus { border-color: var(--primary); }
+.toolbar-item label { user-select: none; cursor: pointer; }
+.toolbar-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+.toolbar-spacer { flex: 1; }
+
+.btn { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.82rem; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 0.35rem; }
+.btn:hover { border-color: var(--primary); color: var(--primary); }
+.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+.file-upload { position: relative; overflow: hidden; display: inline-flex; }
+.file-upload input[type="file"] { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-height: 420px; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.78rem; color: var(--muted); flex-shrink: 0; }
+.panel-header .stats { display: flex; gap: 0.75rem; align-items: center; }
+.panel-body { flex: 1; overflow: auto; position: relative; }
+textarea { width: 100%; height: 100%; min-height: 380px; padding: 1rem; background: transparent; color: var(--text); border: none; outline: none; resize: none; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; font-size: 0.875rem; line-height: 1.5; white-space: pre; overflow-wrap: normal; overflow-x: auto; }
+textarea::placeholder { color: var(--muted); opacity: 0.6; }
+pre.sql-output { padding: 1rem; margin: 0; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; font-size: 0.875rem; line-height: 1.5; white-space: pre; color: var(--text); height: 100%; min-height: 380px; overflow-x: auto; }
+.kw { color: #c084fc; } .kw2 { color: #7dd3fc; } .str { color: #86efac; } .num { color: #fbbf24; }
+.copy-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.72rem; cursor: pointer; transition: all 0.15s; }
+.copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+.actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.ad-slot { min-height: 90px; margin: 1.5rem 0; background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.8rem; }
+main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem; }
+h1 { font-size: 1.6rem; margin-bottom: 0.4rem; }
+.direct-answer { max-width: 900px; background: var(--surface); border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; padding: 14px 16px; color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin: 1rem 0 1.5rem; }
+.seo-content { max-width: 800px; margin: 0 auto; padding: 2rem 0; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+.seo-content h2 { color: var(--text); margin-bottom: 0.75rem; font-size: 1.125rem; }
+.seo-content h3 { color: var(--text); margin: 1.25rem 0 0.5rem; font-size: 1rem; }
+.seo-content p { margin-bottom: 1rem; }
+.seo-content ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+.seo-content li { margin-bottom: 0.4rem; }
+.seo-content code, .sql-block code { background: var(--surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--text); font-family: 'SF Mono', 'Fira Code', Consolas, monospace; }
+.sql-block { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 0.82rem; line-height: 1.55; color: var(--text); margin: 0.75rem 0 1rem; white-space: pre; }
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.data-table th, .data-table td { padding: 0.5rem 0.7rem; border: 1px solid var(--border); text-align: left; color: var(--muted); }
+.data-table th { background: var(--surface); color: var(--text); }
+.faq-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; }
+.faq-item h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.faq-item p { font-size: 0.88rem; color: var(--muted); }
+.related-tools { margin-top: 2rem; }
+.related-tools h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--text); }
+.related-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.related-links a { padding: 0.4rem 0.8rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; }
+.related-links a:hover { border-color: var(--primary); }
+@media (max-width: 768px) { .panels { grid-template-columns: 1fr; } .toolbar { flex-direction: column; align-items: flex-start; } .toolbar-item { width: 100%; } }
+</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<main>
+<h1>CSV to SQL Converter</h1>
+<p class="direct-answer">Paste a CSV (or upload the file), pick MySQL, PostgreSQL, or SQLite, and this converter writes the SQL for you: a CREATE TABLE statement with an inferred type for every column, followed by batched INSERT statements with strings properly escaped. Quoted fields with commas, doubled quotes, and custom delimiters all parse correctly per RFC 4180, and nothing leaves your browser — the whole conversion runs locally, so customer exports stay private.</p>
+
+<div class="toolbar">
+  <div class="toolbar-item"><label for="dialect">Dialect</label>
+    <select id="dialect">
+      <option value="mysql">MySQL</option>
+      <option value="postgres">PostgreSQL</option>
+      <option value="sqlite">SQLite</option>
+    </select>
+  </div>
+  <div class="toolbar-item"><label for="tableName">Table name</label>
+    <input type="text" id="tableName" value="my_table" spellcheck="false">
+  </div>
+  <div class="toolbar-item"><label for="delimiter">Delimiter</label>
+    <select id="delimiter">
+      <option value=",">Comma (,)</option>
+      <option value="\t">Tab (\t)</option>
+      <option value=";">Semicolon (;)</option>
+      <option value="|">Pipe (|)</option>
+    </select>
+  </div>
+  <div class="toolbar-item"><label for="batchSize">Rows per INSERT</label>
+    <input type="number" id="batchSize" value="500" min="1" step="1">
+  </div>
+  <div class="toolbar-item"><label><input type="checkbox" id="hasHeader" checked> Header row</label></div>
+  <div class="toolbar-item"><label><input type="checkbox" id="createTable" checked> CREATE TABLE</label></div>
+  <div class="toolbar-item"><label><input type="checkbox" id="nullEmpty" checked> Empty → NULL</label></div>
+  <div class="toolbar-spacer"></div>
+  <div class="toolbar-item">
+    <div class="file-upload">
+      <span class="btn">📎 Upload CSV</span>
+      <input type="file" id="csvFile" accept=".csv,.txt,.tsv">
+    </div>
+  </div>
+</div>
+
+<div class="panels">
+  <div class="panel">
+    <div class="panel-header">
+      <span>CSV Input</span>
+      <div class="stats"><span id="csvStats">0 rows · 0 cols</span></div>
+    </div>
+    <div class="panel-body">
+      <textarea id="csvInput" placeholder="Paste your CSV data here...&#10;&#10;Example:&#10;id,first_name,hire_date,salary,active&#10;1,Alice Johnson,2021-03-15,84500.50,true&#10;2,&quot;Nguyen, Bao&quot;,2022-11-02,91200,false"></textarea>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>SQL Output</span>
+      <div class="stats"><span id="sqlStats">0 statements</span><button class="copy-btn" id="copySql">Copy</button></div>
+    </div>
+    <div class="panel-body">
+      <pre class="sql-output" id="sqlOutput">-- SQL output will appear here</pre>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn btn-primary" id="convertBtn">Convert</button>
+  <button class="btn" id="downloadSql">⬇ Download .sql</button>
+  <button class="btn" id="clearBtn">Clear</button>
+  <button class="btn" id="loadSample">Load Sample</button>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="related-links"><a href="/csv-to-json/">CSV to JSON</a><a href="/csv-to-excel/">CSV to Excel</a><a href="/sql-formatter/">SQL Formatter</a><a href="/json-formatter/">JSON Formatter</a></div><p style="font-size:.85rem;margin-top:.6rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p><p style="font-size:.85rem"><a href="/guides/csv-to-sql/">Read the CSV to SQL guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<section class="seo-content">
+<h2>Type Inference: CSV Pattern to SQL Type</h2>
+<p>The converter scans every value in a column before committing to a type. An <code>id</code> column of whole numbers becomes INTEGER; a price column with decimals becomes an exact DECIMAL sized to the data; ISO dates become DATE. Here is the full mapping for each dialect:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Every value in the column matches</th><th>MySQL</th><th>PostgreSQL</th><th>SQLite</th></tr></thead>
+<tbody>
+<tr><td>Integers (optionally signed)</td><td>INTEGER (BIGINT ≥ 2^31)</td><td>INTEGER (BIGINT ≥ 2^31)</td><td>INTEGER</td></tr>
+<tr><td>Numbers with a decimal point</td><td>DECIMAL(p,s)</td><td>NUMERIC(p,s)</td><td>REAL</td></tr>
+<tr><td>YYYY-MM-DD</td><td>DATE</td><td>DATE</td><td>TEXT</td></tr>
+<tr><td>YYYY-MM-DD HH:MM[:SS]</td><td>DATETIME</td><td>TIMESTAMP</td><td>TEXT</td></tr>
+<tr><td>true / false</td><td>TINYINT(1)</td><td>BOOLEAN</td><td>INTEGER (1/0)</td></tr>
+<tr><td>Anything else</td><td>VARCHAR(n)</td><td>VARCHAR(n)</td><td>TEXT</td></tr>
+</tbody>
+</table>
+</div>
+<p>Precision is computed from the data itself: a column whose widest value is <code>84500.50</code> gets DECIMAL(7,2) — five integer digits plus two decimals. VARCHAR length is the longest observed value, so <code>Alice Johnson</code> sets VARCHAR(13). Identifiers are quoted per dialect (backticks for MySQL, double quotes for PostgreSQL and SQLite), and column names like <code>First Name!</code> are sanitized to <code>first_name</code>.</p>
+
+<h2>A Worked Example</h2>
+<p>Feed this three-row CSV (note the quoted field with a comma) into the converter with MySQL selected and table name <code>employees</code>:</p>
+<div class="sql-block">id,first_name,hire_date,salary,active
+1,Alice Johnson,2021-03-15,84500.50,true
+2,"Nguyen, Bao",2022-11-02,91200,false
+3,Carlos Diaz,2020-07-30,78000.25,true</div>
+<p>You get a table definition and one multi-row INSERT, ready to paste into a client:</p>
+<div class="sql-block">CREATE TABLE `employees` (
+  `id` INTEGER,
+  `first_name` VARCHAR(13),
+  `hire_date` DATE,
+  `salary` DECIMAL(7,2),
+  `active` TINYINT(1)
+);
+
+INSERT INTO `employees` (`id`, `first_name`, `hire_date`, `salary`, `active`) VALUES
+(1, 'Alice Johnson', '2021-03-15', 84500.50, 1),
+(2, 'Nguyen, Bao', '2022-11-02', 91200, 0),
+(3, 'Carlos Diaz', '2020-07-30', 78000.25, 1);</div>
+<p>The same input under PostgreSQL swaps in <code>NUMERIC(7,2)</code>, <code>BOOLEAN</code>, and the literals <code>TRUE</code>/<code>FALSE</code>; under SQLite every text-ish column collapses to TEXT affinity and booleans become 1/0. One CSV, three dialects, no edits.</p>
+
+<h2>How to Use the Converter</h2>
+<ul>
+<li><strong>Paste or upload</strong> your CSV. Comma, tab, semicolon, and pipe delimiters are supported.</li>
+<li><strong>Name the table.</strong> The name is sanitized the same way column headers are, so <code>Order Items</code> becomes <code>order_items</code>.</li>
+<li><strong>Set rows per INSERT.</strong> Multi-row INSERTs import dramatically faster than one statement per row; 500 is a solid default. Large single statements can hit <code>max_allowed_packet</code> in MySQL, so split when files get big.</li>
+<li><strong>Choose NULL handling.</strong> With "Empty → NULL" on, blank cells become NULL; with it off, blank text cells become empty strings.</li>
+<li><strong>Copy or download</strong> the .sql file and run it against your database.</li>
+</ul>
+
+<h2>Why Generated SQL Beats Import Wizards</h2>
+<p>Spreadsheet import wizards hide type decisions from you, and the ones they make are often wrong: ZIP codes silently become numbers and lose leading zeros, phone numbers drift into scientific notation. Generating SQL makes every choice visible and editable — you can see that <code>zip</code> landed on VARCHAR(10) and change the line before running it. Because the inference is per-column across all rows, one stray value like <code>N/A</code> in a numeric column demotes that column to VARCHAR rather than crashing an import halfway through.</p>
+<p>The parser is a character-by-character RFC 4180 state machine, the same engine behind our <a href="/csv-to-json/">CSV to JSON converter</a>. Quoted commas, doubled quotes (<code>""</code> → <code>"</code>), newlines inside quoted fields, CRLF endings, and a UTF-8 BOM are all handled. On the way out, single quotes in your data are doubled per the SQL standard, so <code>O'Brien</code> arrives as <code>'O''Brien'</code> and injection-style content in a CSV can't break out of the string literal.</p>
+<p>Going the other direction — a database dump back into a spreadsheet for a stakeholder — the <a href="/csv-to-excel/">CSV to Excel converter</a> produces a real .xlsx, and the <a href="/sql-formatter/">SQL formatter</a> cleans up queries you paste from logs.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a CSV file to SQL?</h3><p>Paste the CSV text or upload the file, pick your database dialect (MySQL, PostgreSQL, or SQLite), and name the table. The tool parses the rows, infers a type for every column, and emits a CREATE TABLE statement followed by INSERT statements you can run directly.</p></div>
+<div class="faq-item"><h3>How does the converter decide column types?</h3><p>It scans every value in each column. All integers become INTEGER (BIGINT past 2^31), all numbers with decimals become DECIMAL with the observed precision, YYYY-MM-DD values become DATE, true/false values become BOOLEAN, and anything else becomes VARCHAR sized to the longest value.</p></div>
+<div class="faq-item"><h3>Does it handle commas and quotes inside fields?</h3><p>Yes. The parser follows RFC 4180: a field wrapped in double quotes can contain commas, escaped doubled quotes, and even line breaks. Those values are re-escaped with doubled single quotes in the SQL output so nothing breaks on import.</p></div>
+<div class="faq-item"><h3>How many rows can it convert at once?</h3><p>There is no hard limit; everything runs in your browser, so practical limits are memory (roughly tens of thousands of rows on a typical laptop). Use the batch size option to split large files into multi-row INSERT statements of 500 or 1,000 rows, which is also faster to execute.</p></div>
+<div class="faq-item"><h3>Is my CSV data uploaded to a server?</h3><p>No. Parsing and SQL generation happen entirely in your browser with vanilla JavaScript. Nothing is transmitted, logged, or stored, so the tool is safe for customer lists and other sensitive exports.</p></div>
+<div class="faq-item"><h3>Can I import the generated SQL into Excel or JSON instead?</h3><p>For other destinations use the sister tools: the CSV to Excel converter produces a real .xlsx, and the CSV to JSON converter emits arrays of objects for APIs. This page covers the three SQL dialects.</p></div>
+</section>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/csv-to-json/">🔄 CSV to JSON</a>
+<a href="/csv-to-excel/">📊 CSV to Excel</a>
+<a href="/sql-formatter/">🧹 SQL Formatter</a>
+<a href="/json-formatter/">✨ JSON Formatter</a>
+</div>
+</div>
+<div class="ad-slot">Advertisement</div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── RFC 4180 CSV parser (same engine as the CSV to JSON converter) ──
+  function parseCSV(text, delimiter) {
+    var rows = [], currentRow = [], currentField = '', inQuotes = false;
+    var i = 0, len = text.length;
+    while (i < len) {
+      var ch = text[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (i + 1 < len && text[i + 1] === '"') { currentField += '"'; i += 2; }
+          else { inQuotes = false; i++; }
+        } else { currentField += ch; i++; }
+      } else {
+        if (ch === '"') { inQuotes = true; i++; }
+        else if (ch === delimiter) { currentRow.push(currentField); currentField = ''; i++; }
+        else if (ch === '\r') {
+          currentRow.push(currentField); currentField = ''; rows.push(currentRow); currentRow = [];
+          if (i + 1 < len && text[i + 1] === '\n') i += 2; else i++;
+        } else if (ch === '\n') {
+          currentRow.push(currentField); currentField = ''; rows.push(currentRow); currentRow = []; i++;
+        } else { currentField += ch; i++; }
+      }
+    }
+    if (currentField !== '' || currentRow.length > 0) { currentRow.push(currentField); rows.push(currentRow); }
+    if (rows.length > 0) { var last = rows[rows.length - 1]; if (last.length === 1 && last[0] === '') rows.pop(); }
+    return rows;
+  }
+
+  var RE_INT = /^-?(0|[1-9]\d*)$/;  // leading-zero integers (ZIPs, IDs) stay text
+  var RE_NUM = /^-?(0|[1-9]\d*)(\.\d+)?$/;  // same rule: leading zeros mean text
+  var RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
+  var RE_TS = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2})?$/;
+
+  function inferType(values) {
+    var nonEmpty = values.filter(function (v) { return v !== ''; });
+    if (nonEmpty.length === 0) return { base: 'TEXT', len: 1 };
+    var all = function (re) { return nonEmpty.every(function (v) { return re.test(v); }); };
+    if (all(RE_DATE)) return { base: 'DATE' };
+    if (all(RE_TS)) return { base: 'TIMESTAMP' };
+    if (nonEmpty.every(function (v) { return v === 'true' || v === 'false'; })) return { base: 'BOOLEAN' };
+    if (all(RE_INT)) {
+      var big = nonEmpty.some(function (v) { return Math.abs(Number(v)) >= 2147483648; });
+      return { base: big ? 'BIGINT' : 'INTEGER' };
+    }
+    if (all(RE_NUM)) {
+      var maxInt = 0, maxDec = 0;
+      nonEmpty.forEach(function (v) {
+        var m = v.match(/^-?(\d*)(?:\.(\d+))?$/);
+        var ip = (m[1] || '').replace(/^0+(?=\d)/, '').length;
+        var dp = (m[2] || '').length;
+        if (ip > maxInt) maxInt = ip;
+        if (dp > maxDec) maxDec = dp;
+      });
+      return { base: 'DECIMAL', p: maxInt + maxDec, s: maxDec };
+    }
+    var maxLen = 1;
+    nonEmpty.forEach(function (v) { if (v.length > maxLen) maxLen = v.length; });
+    return { base: 'VARCHAR', len: maxLen };
+  }
+
+  var TYPE_MAP = {
+    mysql: { INTEGER: 'INTEGER', BIGINT: 'BIGINT', DECIMAL: function (t) { return 'DECIMAL(' + t.p + ',' + t.s + ')'; }, VARCHAR: function (t) { return 'VARCHAR(' + Math.max(t.len, 1) + ')'; }, DATE: 'DATE', TIMESTAMP: 'DATETIME', BOOLEAN: 'TINYINT(1)' },
+    postgres: { INTEGER: 'INTEGER', BIGINT: 'BIGINT', DECIMAL: function (t) { return 'NUMERIC(' + t.p + ',' + t.s + ')'; }, VARCHAR: function (t) { return 'VARCHAR(' + Math.max(t.len, 1) + ')'; }, DATE: 'DATE', TIMESTAMP: 'TIMESTAMP', BOOLEAN: 'BOOLEAN' },
+    sqlite: { INTEGER: 'INTEGER', BIGINT: 'INTEGER', DECIMAL: 'REAL', VARCHAR: 'TEXT', DATE: 'TEXT', TIMESTAMP: 'TEXT', BOOLEAN: 'INTEGER' }
+  };
+
+  function sanitize(name) {
+    var s = name.trim().toLowerCase().replace(/[^a-z0-9_]+/g, '_').replace(/^_+|_+$/g, '');
+    if (/^\d/.test(s)) s = 'c_' + s;
+    return s || 'col';
+  }
+  function qi(id, dialect) { return dialect === 'mysql' ? '`' + id + '`' : '"' + id + '"'; }
+  function lit(v, t, dialect, nullEmpty) {
+    if (v === '') return nullEmpty ? 'NULL' : (t.base === 'VARCHAR' ? "''" : 'NULL');
+    if (t.base === 'BOOLEAN') return dialect === 'postgres' ? (v === 'true' ? 'TRUE' : 'FALSE') : (v === 'true' ? '1' : '0');
+    if (t.base === 'INTEGER' || t.base === 'BIGINT' || t.base === 'DECIMAL') return v;
+    return "'" + v.replace(/'/g, "''") + "'";
+  }
+
+  function generate() {
+    var input = document.getElementById('csvInput').value;
+    var dialect = document.getElementById('dialect').value;
+    var table = sanitize(document.getElementById('tableName').value || 'my_table');
+    var delimChar = (function (v) { return v === '\\t' ? '\t' : v; })(document.getElementById('delimiter').value);
+    var hasHeader = document.getElementById('hasHeader').checked;
+    var createTable = document.getElementById('createTable').checked;
+    var nullEmpty = document.getElementById('nullEmpty').checked;
+    var batchSize = Math.max(1, parseInt(document.getElementById('batchSize').value, 10) || 500);
+    var out = document.getElementById('sqlOutput');
+    var stats = document.getElementById('sqlStats');
+    var csvStats = document.getElementById('csvStats');
+
+    if (!input.trim()) {
+      out.textContent = '-- SQL output will appear here';
+      stats.textContent = '0 statements';
+      csvStats.textContent = '0 rows · 0 cols';
+      out._rawSql = '';
+      return;
+    }
+    try {
+      var rows = parseCSV(input, delimChar);
+      if (!rows.length) { out.textContent = '-- no rows found'; stats.textContent = '0 statements'; out._rawSql = ''; return; }
+      var headers = hasHeader ? rows[0].map(sanitize) : rows[0].map(function (_, i) { return 'col_' + (i + 1); });
+      var data = hasHeader ? rows.slice(1) : rows;
+      var types = headers.map(function (_, c) { return inferType(data.map(function (r) { return r[c] !== undefined ? r[c] : ''; })); });
+      var maxCols = rows.reduce(function (m, r) { return Math.max(m, r.length); }, 0);
+      csvStats.textContent = data.length + ' rows · ' + maxCols + ' cols';
+
+      var tm = TYPE_MAP[dialect], lines = [];
+      if (createTable) {
+        lines.push('CREATE TABLE ' + qi(table, dialect) + ' (');
+        lines.push(headers.map(function (h, i) {
+          var t = types[i], decl = tm[t.base];
+          return '  ' + qi(h, dialect) + ' ' + (typeof decl === 'function' ? decl(t) : decl);
+        }).join(',\n'));
+        lines.push(');');
+        lines.push('');
+      }
+      var batches = [];
+      for (var i = 0; i < data.length; i += batchSize) batches.push(data.slice(i, i + batchSize));
+      batches.forEach(function (batch) {
+        lines.push('INSERT INTO ' + qi(table, dialect) + ' (' + headers.map(function (h) { return qi(h, dialect); }).join(', ') + ') VALUES');
+        lines.push(batch.map(function (r) {
+          return '(' + headers.map(function (_, c) { return lit(r[c] !== undefined ? r[c] : '', types[c], dialect, nullEmpty); }).join(', ') + ')';
+        }).join(',\n') + ';');
+      });
+      var sql = lines.join('\n');
+      out._rawSql = sql;
+      out.innerHTML = highlight(sql);
+      stats.textContent = (createTable ? 1 : 0) + ' CREATE + ' + batches.length + ' INSERT';
+    } catch (e) {
+      out.textContent = '-- Error: ' + e.message;
+      stats.textContent = 'Error';
+      out._rawSql = '';
+    }
+  }
+
+  function highlight(sql) {
+    var esc = sql.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return esc
+      .replace(/--.*$/gm, function (m) { return '<span class="str">' + m + '</span>'; })
+      .replace(/\b(CREATE|TABLE|INSERT|INTO|VALUES)\b/g, '<span class="kw">$1</span>')
+      .replace(/\b(INTEGER|BIGINT|DECIMAL|NUMERIC|VARCHAR|DATE|DATETIME|TIMESTAMP|BOOLEAN|TINYINT|TEXT|REAL|NULL|TRUE|FALSE)\b/g, '<span class="kw2">$1</span>')
+      .replace(/'[^']*''[^']*'|'[^']*'/g, function (m) { return '<span class="str">' + m + '</span>'; })
+      .replace(/^-?\d+(\.\d+)?(?=[,\n)])/gm, function (m) { return '<span class="num">' + m + '</span>'; });
+  }
+
+  // ── copy / download / sample / wiring ──
+  function copyText(text, btn) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () {
+        var orig = btn.textContent; btn.textContent = '✓ Copied';
+        setTimeout(function () { btn.textContent = orig; }, 1500);
+      });
+    }
+  }
+  document.getElementById('copySql').addEventListener('click', function () {
+    var raw = document.getElementById('sqlOutput')._rawSql || '';
+    if (raw) copyText(raw, this);
+  });
+  document.getElementById('downloadSql').addEventListener('click', function () {
+    var raw = document.getElementById('sqlOutput')._rawSql || '';
+    if (!raw) return;
+    var blob = new Blob([raw], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (document.getElementById('tableName').value || 'data') + '.sql';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    document.getElementById('csvInput').value = '';
+    generate();
+    document.getElementById('csvInput').focus();
+  });
+  document.getElementById('loadSample').addEventListener('click', function () {
+    document.getElementById('tableName').value = 'employees';
+    document.getElementById('csvInput').value = 'id,first_name,hire_date,salary,active\n1,Alice Johnson,2021-03-15,84500.50,true\n2,"Nguyen, Bao",2022-11-02,91200,false\n3,Carlos Diaz,2020-07-30,78000.25,true\n4,"O\'Brien, Nora",2023-01-09,,true';
+    generate();
+  });
+  document.getElementById('csvFile').addEventListener('change', function (e) {
+    if (e.target.files && e.target.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (ev) { document.getElementById('csvInput').value = ev.target.result; generate(); };
+      reader.readAsText(e.target.files[0]);
+    }
+  });
+  ['dialect', 'tableName', 'delimiter', 'batchSize', 'hasHeader', 'createTable', 'nullEmpty'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', generate);
+    document.getElementById(id).addEventListener('change', generate);
+  });
+  document.getElementById('csvInput').addEventListener('input', generate);
+  document.getElementById('convertBtn').addEventListener('click', generate);
+  generate();
+})();
+</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Convert curl to Python &amp; JavaScript fetch | ToolAspect</title>
+<meta name="description" content="How curl maps to Python requests and JS fetch: headers, JSON, auth, forms, timeouts, and the quoting tricks that break naive converters.">
+<link rel="canonical" href="https://toolaspect.com/guides/convert-curl-to-python/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Convert curl to Python requests and JavaScript fetch","description":"Flag-by-flag mapping from curl to requests/fetch/axios, the implied-POST rule, and why shell quoting is the hard part.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a curl command to Python automatically?","acceptedAnswer":{"@type":"Answer","text":"Paste the full command into a converter that parses the shell syntax — our curl converter runs in your browser and emits a complete requests script. Watch three things in the output: that -H headers landed in a headers dict, that a JSON -d body became json= (not data= with a string), and that -u auth became auth=() instead of a header you have to maintain by hand."}},
+{"@type":"Question","name":"What's the difference between data= and json= in requests?","acceptedAnswer":{"@type":"Answer","text":"data= sends whatever you give it — pass a dict and it's form-encoded, pass a string and it goes raw. json= serializes the object to JSON and sets the Content-Type header for you. The curl equivalent of json= is -d with a JSON body plus an explicit 'Content-Type: application/json' header, which is why good converters drop that header from the dict when they use json=."}},
+{"@type":"Question","name":"Why does my converted code have a literal $TOKEN in it?","acceptedAnswer":{"@type":"Answer","text":"Because a static converter can't know what your shell variables contain — it never runs your shell. The safe move is to keep the reference and flag it. In Python, read it back with os.environ['TOKEN']; in JavaScript, process.env.TOKEN (Node) or inject it at build time in the browser. Never paste a production token into an online converter you don't trust."}},
+{"@type":"Question","name":"How do I convert curl -F file uploads?","acceptedAnswer":{"@type":"Answer","text":"Each -F 'field=@file' becomes a multipart part. In Python requests, use files={'field': open('file', 'rb')}; in browser JavaScript, build FormData and append a File (usually from a file input); in Node axios, pass FormData the same way. Ordinary -F 'key=value' fields ride along as form fields, not files."}},
+{"@type":"Question","name":"Is it safe to paste curl commands with API keys into an online converter?","acceptedAnswer":{"@type":"Answer","text":"Only into converters that run entirely client-side — and verify the claim: open dev tools, watch the network tab, and confirm nothing is sent while you paste. Server-side converters see your tokens. Scrubbing the command first (replace the real key with CHANGEME) costs five seconds and removes the risk entirely."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}h3{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--primary-hover)}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .6rem;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}.code{background:#0b0d12;border:1px solid var(--border);border-radius:10px;padding:14px;margin:12px 0;overflow-x:auto}.code pre{margin:0;font-size:.8rem;line-height:1.6;color:#d8dee9;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}</style>
+</head>
+<body>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Curl to Python","item":"https://toolaspect.com/guides/convert-curl-to-python/"}]}</script>
+<div class="wrap">
+<h1>Convert curl to Python requests and JavaScript fetch</h1>
+<div class="meta"><span>🔁 12K+ searches/mo</span><span>💰 CPC: $1.5–4</span><span>⏱️ 7 min read</span></div>
+<p class="intro">API docs speak curl. Your code speaks Python or JavaScript. Between them sits a translation layer that's mostly mechanical — until quoting, implied methods, and auth headers get involved. Here's the complete mapping, what breaks naive converters, and how to check a converter before you feed it a real token.</p>
+<div class="ad-slot">Advertisement</div>
+
+<h2>The mapping, flag by flag</h2>
+<p>Almost everything in curl has a direct equivalent. The trick is knowing which curl flags are load-bearing:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>curl</th><th>Python requests</th><th>JavaScript fetch</th><th>Node axios</th></tr></thead>
+<tbody>
+<tr><td>-X POST</td><td>requests.post()</td><td>method: "POST"</td><td>axios.post()</td></tr>
+<tr><td>-H 'Key: value'</td><td>headers={"Key": "value"}</td><td>headers: {"Key": "value"}</td><td>headers: {"Key": "value"}</td></tr>
+<tr><td>-d '{"a":1}'</td><td>json={"a": 1}</td><td>body: JSON.stringify({a: 1})</td><td>{a: 1} as 2nd arg</td></tr>
+<tr><td>-d 'a=1&b=2'</td><td>data={"a": "1", "b": "2"}</td><td>new URLSearchParams()</td><td>new URLSearchParams()</td></tr>
+<tr><td>-F 'f=@x.png'</td><td>files={"f": open(...)}</td><td>FormData.append()</td><td>FormData</td></tr>
+<tr><td>-u user:pass</td><td>auth=("user", "pass")</td><td>Authorization: Basic btoa(...)</td><td>auth: {username, password}</td></tr>
+<tr><td>-G -d 'q=x'</td><td>params={"q": "x"}</td><td>?q=x in the URL</td><td>params: {"q": "x"}</td></tr>
+<tr><td>-m 5</td><td>timeout=5</td><td>AbortSignal.timeout(5000)</td><td>timeout: 5000</td></tr>
+<tr><td>-k</td><td>verify=False</td><td>— (browsers refuse)</td><td>custom https.Agent</td></tr>
+<tr><td>-b 'k=v'</td><td colspan="3">becomes a Cookie header everywhere</td></tr>
+<tr><td>-A 'Bot/1.0'</td><td colspan="3">becomes a User-Agent header everywhere</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cta-box"><h3>Skip the manual translation</h3><p style="color:#fff;opacity:.9">Paste a curl command and get all three targets at once — parsed with real shell grammar (tree-sitter), entirely in your browser.</p><a href="/curl-converter/">Open the curl Converter →</a></div>
+
+<h2>A full conversion, step by step</h2>
+<p>Start with a command that has the three parts worth converting — method, headers, JSON body:</p>
+<div class="code"><pre>curl -X POST https://api.example.com/v1/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer tok_123' \
+  -d '{"name":"Ada","role":"admin"}'</pre></div>
+<p>The Python version:</p>
+<div class="code"><pre>import requests
+
+url = "https://api.example.com/v1/users"
+headers = {
+    "Authorization": "Bearer tok_123",
+}
+json_data = {
+    "name": "Ada",
+    "role": "admin",
+}
+
+response = requests.post(url, headers=headers, json=json_data)
+print(response.status_code)
+print(response.text)</pre></div>
+<p>Notice the Content-Type header is gone. When you pass <code>json=</code>, requests serializes the body and sets <code>application/json</code> itself, so carrying the header over would be redundant. A converter that keeps it isn't wrong — just noisy. The fetch version does the same dance with <code>body: JSON.stringify(...)</code>, and axios passes the object as the second argument and handles serialization internally.</p>
+
+<h2>Three curl behaviors every converter must copy</h2>
+<h3>1. -d implies POST</h3>
+<p>Most commands you'll paste have no -X at all. That's fine: curl turns any <code>-d</code>, <code>--data-raw</code>, <code>--data-binary</code>, or <code>-F</code> into a POST automatically. A converter that emits a GET because "no method was specified" produces code that looks right and hits the wrong endpoint — or the same endpoint with a 405.</p>
+<h3>2. -G moves data to the query string</h3>
+<p><code>curl -G -d 'q=hi' https://x.io/s</code> is a GET with <code>?q=hi</code>. With multiple -d flags, they join with &amp;. Converters that treat -G as decoration send the data as a body on a GET, which most servers silently drop.</p>
+<h3>3. Shell quoting is the actual hard part</h3>
+<p>A curl command isn't a list of flags — it's a line of shell. The JSON body <code>'{"name":"Ada L"}'</code> works in single quotes; swap to double quotes and <code>$</code> and backticks suddenly interpolate. Copy a command out of a doc that used <code>"It's"</code> inside double quotes, or adjacent segments like <code>'Authorization: Bearer '"$TOKEN"</code>, and regex-based converters mis-tokenize. That's why serious tools (including the MIT-licensed curlconverter project) parse the command with a real bash grammar — tree-sitter — instead of splitting on spaces.</p>
+
+<h2>Handling auth without leaking it</h2>
+<p>Bearer headers convert cleanly: they're just headers. Basic auth (<code>-u user:pass</code>) is worth converting to the library's native form — <code>auth=</code> in requests, <code>auth:</code> in axios — because the base64 dance in fetch (<code>"Basic " + btoa("user:pass")</code>) is easy to get subtly wrong.</p>
+<p>Before pasting anything with a real key anywhere: check whether the converter runs client-side (our converter parses in your browser with WebAssembly — verify it in your network tab), or scrub the token to <code>CHANGEME</code> and re-add it locally. A doc command with a production bearer token is a credential leak waiting for a paste.</p>
+
+<h2>The output nobody talks about: status codes and errors</h2>
+<p>curl prints the body and exits 0 unless the connection fails — HTTP 4xx and 5xx look like success on the terminal. Your converted code should do better: check <code>response.status_code</code> in requests (<code>response.raise_for_status()</code> is the one-liner), <code>res.ok</code> in fetch (which, like curl, doesn't throw on 4xx/5xx by default), or axios's built-in error throw. The JSON formatter next door is handy for eyeballing the error payloads you get back while debugging.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a curl command to Python automatically?</h3><p>Paste the full command into a converter that parses the shell syntax — our curl converter runs in your browser and emits a complete requests script. Watch three things in the output: that -H headers landed in a headers dict, that a JSON -d body became json= (not data= with a string), and that -u auth became auth=() instead of a header you have to maintain by hand.</p></div>
+<div class="faq-item"><h3>What's the difference between data= and json= in requests?</h3><p>data= sends whatever you give it — pass a dict and it's form-encoded, pass a string and it goes raw. json= serializes the object to JSON and sets the Content-Type header for you. The curl equivalent of json= is -d with a JSON body plus an explicit 'Content-Type: application/json' header, which is why good converters drop that header from the dict when they use json=.</p></div>
+<div class="faq-item"><h3>Why does my converted code have a literal $TOKEN in it?</h3><p>Because a static converter can't know what your shell variables contain — it never runs your shell. The safe move is to keep the reference and flag it. In Python, read it back with os.environ['TOKEN']; in JavaScript, process.env.TOKEN (Node) or inject it at build time in the browser. Never paste a production token into an online converter you don't trust.</p></div>
+<div class="faq-item"><h3>How do I convert curl -F file uploads?</h3><p>Each -F 'field=@file' becomes a multipart part. In Python requests, use files={'field': open('file', 'rb')}; in browser JavaScript, build FormData and append a File (usually from a file input); in Node axios, pass FormData the same way. Ordinary -F 'key=value' fields ride along as form fields, not files.</p></div>
+<div class="faq-item"><h3>Is it safe to paste curl commands with API keys into an online converter?</h3><p>Only into converters that run entirely client-side — and verify the claim: open dev tools, watch the network tab, and confirm nothing is sent while you paste. Server-side converters see your tokens. Scrubbing the command first (replace the real key with CHANGEME) costs five seconds and removes the risk entirely.</p></div>
+
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/curl-converter/">curl Converter</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/url-encoder/">URL Encoder</a>
+<a href="/jwt-decoder/">JWT Decoder</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

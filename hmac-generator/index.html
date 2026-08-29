@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMAC Generator — Free Online HMAC Tool | ToolAspect</title>
+<meta name="description" content="Free HMAC generator. HMAC-SHA1/256/384/512 in your browser via native WebCrypto, hex or Base64. HMAC-SHA256 of the test string is f7bc83f4.">
+<link rel="canonical" href="https://toolaspect.com/hmac-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="HMAC Generator — Free Online HMAC Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Generate HMAC-SHA1, SHA-256, SHA-384, and SHA-512 signatures with any key, entirely in your browser using native WebCrypto.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/hmac-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HMAC Generator | Free Online Tool">
+<meta name="twitter:description" content="Compute keyed HMAC signatures with SHA-1/256/384/512. Hex and Base64 output.">
+<meta name="keywords" content="hmac generator, hmac sha256 generator, hmac sha256 online, hmac calculator, keyed hash, hmac sha1, hmac sha512, hmac base64, webhook signature, jwt signing">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HMAC Generator","description":"Free HMAC generator using the browser's native WebCrypto API. Compute HMAC-SHA1, HMAC-SHA256, HMAC-SHA384, and HMAC-SHA512 signatures from any message and key, output as hex or Base64, with nothing sent to a server.","url":"https://toolaspect.com/hmac-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and a secure context (HTTPS)"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is an HMAC?","acceptedAnswer":{"@type":"Answer","text":"An HMAC (hash-based message authentication code) is a signature computed from a message AND a secret key. Anyone can recompute a plain SHA-256 digest, but only someone holding the key can produce or verify the matching HMAC. That key is what turns a hash into proof that a message came from you and wasn't tampered with."}},
+{"@type":"Question","name":"How do I compute HMAC-SHA256?","acceptedAnswer":{"@type":"Answer","text":"Take your message bytes and key, and run them through the HMAC construction with SHA-256 as the inner hash. In Node: crypto.createHmac('sha256', key).update(message).digest('hex'). In Python: hmac.new(key, message.encode(), hashlib.sha256).hexdigest(). In the browser, WebCrypto's crypto.subtle.sign with an imported HMAC key does it natively — no libraries."}},
+{"@type":"Question","name":"What is HMAC-SHA256 of a known test vector?","acceptedAnswer":{"@type":"Answer","text":"HMAC-SHA256 with key \"key\" over the message \"The quick brown fox jumps over the lazy dog\" equals f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8 in hex. RFC 4231 and RFC 2202 publish more test vectors for every SHA family size."}},
+{"@type":"Question","name":"Where is HMAC used in practice?","acceptedAnswer":{"@type":"Answer","text":"Everywhere signatures are needed without public-key machinery: Stripe and GitHub webhook signatures, AWS Signature Version 4, JWTs signed with HS256, TLS record protection, and cookie session integrity. If a service hands you a signing secret, HMAC is almost certainly behind it."}},
+{"@type":"Question","name":"HMAC vs SHA-256: what's the difference?","acceptedAnswer":{"@type":"Answer","text":"SHA-256 alone is a digest: unkeyed, and computable by anyone. HMAC-SHA256 folds a secret key into the hashing so the output depends on both the message and the key. Use a plain hash for checksums and file integrity; use HMAC when you need to prove authenticity."}},
+{"@type":"Question","name":"Does my key or message leave the browser?","acceptedAnswer":{"@type":"Answer","text":"No. This page computes HMACs with crypto.subtle, the browser's built-in WebCrypto implementation. Everything runs locally in JavaScript; there is no network call carrying your key or message. That makes it safe for testing internal webhook secrets, though production secrets should still never be pasted anywhere casually."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"HMAC Generator","item":"https://toolaspect.com/hmac-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group textarea{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem;resize:vertical;cursor:text}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.full{grid-column:1/-1}
+.out-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-top:1rem}
+.out-block .ob-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;display:flex;justify-content:space-between;align-items:center}
+.copy-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:2px 10px;font-size:.72rem;cursor:pointer;font-family:inherit;text-transform:none;letter-spacing:0}
+.copy-btn:hover{border-color:var(--primary);color:var(--text)}
+.out-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem;color:var(--success);word-break:break-all;user-select:all}
+.result-hero{text-align:center;padding:1.25rem 0 .5rem}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:1.6rem;font-weight:800;color:var(--primary);margin-top:.25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.err{color:var(--danger);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text);margin-bottom:1rem}
+.content-section code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔐 HMAC Generator</h1>
+<p>Keyed signatures with SHA-1/256/384/512, computed natively in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> HMAC = a hash + a secret key. HMAC-SHA256 with key <code>key</code> over <code>The quick brown fox jumps over the lazy dog</code> = <code>f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8</code>. Unlike a plain SHA-256 digest, nobody can produce that string without the key — which is why webhooks (Stripe, GitHub), AWS SigV4, and JWT HS256 all use HMAC. This tool uses the browser's native WebCrypto (crypto.subtle); your key never leaves the page.
+</div>
+
+<div class="section-card">
+<h2>Message &amp; Key</h2>
+<div class="input-grid">
+<div class="input-group full"><label>Message</label><textarea id="msg" rows="4">The quick brown fox jumps over the lazy dog</textarea></div>
+<div class="input-group"><label>Secret Key</label><input type="text" id="key" value="key" autocomplete="off" spellcheck="false"></div>
+<div class="input-group"><label>Key Encoding</label><select id="keyenc"><option value="utf8" selected>UTF-8 text</option><option value="hex">Hex bytes</option></select></div>
+<div class="input-group"><label>Algorithm</label><select id="alg"><option value="SHA-1">HMAC-SHA1</option><option value="SHA-256" selected>HMAC-SHA256</option><option value="SHA-384">HMAC-SHA384</option><option value="SHA-512">HMAC-SHA512</option></select></div>
+</div>
+<div class="err" id="err"></div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label" id="heroLabel">HMAC-SHA256 (Hex)</div>
+<div class="value" id="heroVal">computing…</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="out-block">
+<div class="ob-label"><span>Hexadecimal</span><button class="copy-btn" data-copy="hexOut">Copy</button></div>
+<div class="out-code" id="hexOut">—</div>
+</div>
+<div class="out-block">
+<div class="ob-label"><span>Base64</span><button class="copy-btn" data-copy="b64Out">Copy</button></div>
+<div class="out-code" id="b64Out">—</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/hash-generator/">Hash Generator</a></li><li style="margin:4px 0"><a href="/jwt-decoder/">Jwt Decoder</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>HMAC Algorithm Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Algorithm</th><th>Output size</th><th>Hex length</th><th>Common uses</th></tr></thead>
+<tbody>
+<tr><td>HMAC-SHA1</td><td>20 bytes</td><td>40 chars</td><td>Legacy systems, old JWTs (HS1), some API OTP schemes</td></tr>
+<tr><td>HMAC-SHA256</td><td>32 bytes</td><td>64 chars</td><td>Stripe/GitHub webhooks, JWT HS256, AWS SigV4, most new APIs</td></tr>
+<tr><td>HMAC-SHA384</td><td>48 bytes</td><td>96 chars</td><td>TLS cipher suites, higher-assurance API signing</td></tr>
+<tr><td>HMAC-SHA512</td><td>64 bytes</td><td>128 chars</td><td>JWT HS512, interbank/payment signing, system-to-system auth</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">SHA-256 remains the default choice for new designs; SHA-1 HMACs are still considered safe against collision attacks in the HMAC construction, but nothing new should adopt them. Longer variants add output size, not meaningful extra security against brute force.</p>
+</div>
+
+<div class="section-card">
+<h2>Known-Answer Test Vectors</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Algorithm</th><th>Key</th><th>Message</th><th>Expected HMAC (hex)</th></tr></thead>
+<tbody>
+<tr><td>HMAC-SHA1</td><td>key</td><td>The quick brown fox jumps over the lazy dog</td><td style="font-family:ui-monospace,monospace;font-size:.75rem">de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9</td></tr>
+<tr><td>HMAC-SHA256</td><td>key</td><td>The quick brown fox jumps over the lazy dog</td><td style="font-family:ui-monospace,monospace;font-size:.75rem">f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8</td></tr>
+<tr><td>HMAC-SHA384</td><td>key</td><td>The quick brown fox jumps over the lazy dog</td><td style="font-family:ui-monospace,monospace;font-size:.75rem">d7f4727e2c0b39ae0f1e40cc96f60242d5b7801841cea6fc592c5d3e1ae50700582a96cf35e1e554995fe4e03381c237</td></tr>
+<tr><td>HMAC-SHA512</td><td>key</td><td>The quick brown fox jumps over the lazy dog</td><td style="font-family:ui-monospace,monospace;font-size:.75rem">b42af09057bac1e2d41708e48a902e09b5ff7f12ab428a4fe86653c73dd248fb82f948a549f7b791a5b41915ee4d1ec3935357e4e2317250d0372afa2ebeeb3a</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row above is preloaded into the calculator defaults — switch algorithms and the output should match the table exactly. If it does, your HMAC verification code is wired correctly.</p>
+</div>
+
+<div class="content-section">
+<h2>How the HMAC Generator Works</h2>
+<p>This page signs with <code>crypto.subtle</code>, the WebCrypto API built into every modern browser. No HMAC library is loaded, no request carries your key or message, and the computation is constant-work regardless of input size. That's the same primitive Node and Python call into under the hood.</p>
+<h3>How to use it</h3>
+<p>Paste the message, type the secret, pick an algorithm, and both hex and Base64 outputs appear as you type. Switch the key encoding to Hex when your secret arrives as hex bytes — common with payment gateways — and the bytes are used exactly as given. The default message and key reproduce the classic test vector, so you can confirm your own verification code against a known answer before trusting it with real traffic. For webhook debugging, compare the computed hex against the signature header a service sent you (see the <a href="/guides/hmac-explained/">HMAC explainer</a> for header formats and timing-attack-safe comparison).</p>
+<h3>A worked example</h3>
+<p>Stripe signs webhooks as <code>Stripe-Signature: t=timestamp,v1=hex</code>, where v1 is HMAC-SHA256 of <code>timestamp + "." + raw_body</code> using your endpoint secret. To check one by hand, paste the secret as the key, build <code>1735689600.{...json...}</code> as the message, and compare with the v1 value. A match proves the request came from someone holding your secret key — a mismatch means a forged or mis-ordered payload.</p>
+<p>The tool's default state shows the same idea with friendlier numbers: message <code>The quick brown fox jumps over the lazy dog</code>, key <code>key</code>, HMAC-SHA256 → <code>f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8</code>, or <code>97yD9DBThCSxMpjmqm+xQ+9NWaFJRhdZl0edvC0aPNg=</code> in Base64. Same inputs, same key, always the same output — but no key, no way to reproduce it.</p>
+<h3>Compute HMAC in your own code</h3>
+<pre><code># Node.js
+const hmac = crypto.createHmac('sha256', 'key')
+  .update('The quick brown fox jumps over the lazy dog')
+  .digest('hex');
+
+# Python
+import hmac, hashlib
+hmac.new(b'key', b'The quick brown fox jumps over the lazy dog',
+         hashlib.sha256).hexdigest()
+
+# Browser (what this page does)
+const key = await crypto.subtle.importKey(
+  'raw', new TextEncoder().encode('key'),
+  { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+const sig = await crypto.subtle.sign('HMAC', key,
+  new TextEncoder().encode(message));
+const hex = [...new Uint8Array(sig)]
+  .map(b => b.toString(16).padStart(2, '0')).join('');</code></pre>
+<p>All three produce the same 64 hex characters. When verifying incoming signatures, compare digests with a constant-time equality function (<code>crypto.timingSafeEqual</code> in Node, <code>hmac.compare_digest</code> in Python) rather than <code>===</code>.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is an HMAC?</h3><p>An HMAC (hash-based message authentication code) is a signature computed from a message AND a secret key. Anyone can recompute a plain SHA-256 digest, but only someone holding the key can produce or verify the matching HMAC. That key is what turns a hash into proof that a message came from you and wasn't tampered with.</p></div>
+<div class="faq-item"><h3>How do I compute HMAC-SHA256?</h3><p>Take your message bytes and key, and run them through the HMAC construction with SHA-256 as the inner hash. In Node: crypto.createHmac('sha256', key).update(message).digest('hex'). In Python: hmac.new(key, message.encode(), hashlib.sha256).hexdigest(). In the browser, WebCrypto's crypto.subtle.sign with an imported HMAC key does it natively — no libraries.</p></div>
+<div class="faq-item"><h3>What is HMAC-SHA256 of a known test vector?</h3><p>HMAC-SHA256 with key "key" over the message "The quick brown fox jumps over the lazy dog" equals f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8 in hex. RFC 4231 and RFC 2202 publish more test vectors for every SHA family size.</p></div>
+<div class="faq-item"><h3>Where is HMAC used in practice?</h3><p>Everywhere signatures are needed without public-key machinery: Stripe and GitHub webhook signatures, AWS Signature Version 4, JWTs signed with HS256, TLS record protection, and cookie session integrity. If a service hands you a signing secret, HMAC is almost certainly behind it.</p></div>
+<div class="faq-item"><h3>HMAC vs SHA-256: what's the difference?</h3><p>SHA-256 alone is a digest: unkeyed, and computable by anyone. HMAC-SHA256 folds a secret key into the hashing so the output depends on both the message and the key. Use a plain hash for checksums and file integrity; use HMAC when you need to prove authenticity.</p></div>
+<div class="faq-item"><h3>Does my key or message leave the browser?</h3><p>No. This page computes HMACs with crypto.subtle, the browser's built-in WebCrypto implementation. Everything runs locally in JavaScript; there is no network call carrying your key or message. That makes it safe for testing internal webhook secrets, though production secrets should still never be pasted anywhere casually.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/hash-generator/">#️⃣ Hash Generator</a>
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/base64-encoder/">🔤 Base64 Encoder</a>
+<a href="/url-encoder/">🔗 URL Encoder</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function toHex(buf){
+  return Array.prototype.map.call(new Uint8Array(buf),function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+function toB64(buf){
+  var bytes=new Uint8Array(buf),s='';
+  for(var i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);
+  return btoa(s);
+}
+function hexToBytes(h){
+  var clean=h.replace(/[^0-9a-fA-F]/g,'');
+  if(clean.length%2!==0)throw new Error('Hex key must have an even number of digits');
+  var out=new Uint8Array(clean.length/2);
+  for(var i=0;i<out.length;i++)out[i]=parseInt(clean.substr(i*2,2),16);
+  return out;
+}
+var debounceId=null;
+function run(){
+  var msg=document.getElementById('msg').value;
+  var keyStr=document.getElementById('key').value;
+  var enc=document.getElementById('keyenc').value;
+  var alg=document.getElementById('alg').value;
+  var errEl=document.getElementById('err');
+  errEl.textContent='';
+  var keyBytes;
+  try{
+    keyBytes=enc==='hex'?hexToBytes(keyStr):new TextEncoder().encode(keyStr);
+  }catch(e){
+    errEl.textContent=e.message;
+    return;
+  }
+  if(keyBytes.length===0){errEl.textContent='Enter a secret key (at least one byte).';return;}
+  if(!window.crypto||!crypto.subtle){errEl.textContent='WebCrypto is unavailable — this page needs HTTPS and a modern browser.';return;}
+  var label='HMAC-'+(alg.replace('SHA-','SHA'))+' (Hex)';
+  document.getElementById('heroLabel').textContent=label;
+  crypto.subtle.importKey('raw',keyBytes,{name:'HMAC',hash:alg},false,['sign'])
+    .then(function(k){return crypto.subtle.sign('HMAC',k,new TextEncoder().encode(msg));})
+    .then(function(sig){
+      var hex=toHex(sig);
+      document.getElementById('heroVal').textContent=hex;
+      document.getElementById('hexOut').textContent=hex;
+      document.getElementById('b64Out').textContent=toB64(sig);
+      document.getElementById('heroSub').textContent=sig.byteLength+' bytes · key: '+keyBytes.length+' byte'+(keyBytes.length===1?'':'s')+' ('+(enc==='hex'?'hex':'UTF-8')+')';
+    })
+    .catch(function(e){errEl.textContent='Signing failed: '+e.message;});
+}
+function debouncedRun(){
+  clearTimeout(debounceId);
+  debounceId=setTimeout(run,60);
+}
+['msg','key','keyenc','alg'].forEach(function(id){document.getElementById(id).addEventListener('input',debouncedRun);});
+document.addEventListener('click',function(e){
+  if(!e.target.classList.contains('copy-btn'))return;
+  var t=document.getElementById(e.target.getAttribute('data-copy'));
+  var text=t.textContent;
+  function done(){e.target.textContent='Copied';setTimeout(function(){e.target.textContent='Copy';},1200);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done);}
+  else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}
+});
+run();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

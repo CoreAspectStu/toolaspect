@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Generate TypeScript Types from JSON | ToolAspect</title>
+<meta name="description" content="Turn JSON payloads into TypeScript types the honest way: unions for mixed arrays, null handling, merged array shapes, and where samples lie. With examples.">
+<link rel="canonical" href="https://toolaspect.com/guides/json-to-typescript/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Generate TypeScript Types from JSON","description":"Sample-to-type generation explained: inference rules, nullability, mixed arrays, and the three places a JSON sample can't tell the truth.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can TypeScript infer types from JSON automatically?","acceptedAnswer":{"@type":"Answer","text":"Not from a raw string. A JSON string is just string to the compiler. You either generate types from a sample (paste it into a converter), from a JSON Schema, or cast with a type assertion — which skips checking entirely. Generation from a real payload is the middle ground: the types describe actual data instead of a guess."}},
+{"@type":"Question","name":"What is the difference between sample-based types and JSON Schema?","acceptedAnswer":{"@type":"Answer","text":"A sample shows what one response looked like; a schema states what every valid response may look like — required versus optional fields, enums, ranges, formats. Sample generation gives you shapes fast but cannot prove a field is optional or constrain a value. If you have a schema, validate against it; if you only have examples, generate from the fattest example you can find and tighten by hand."}},
+{"@type":"Question","name":"How do you type optional fields from a JSON sample?","acceptedAnswer":{"@type":"Answer","text":"You can't infer them from one sample — absence in a sample doesn't prove a field can be absent. The practical workflow: generate from a sample, then mark fields optional (name?: string) where the API docs or several samples say they come and go. Feeding several payloads into the converter helps: fields that appear in one array element and not another get unioned, which is the hint."}},
+{"@type":"Question","name":"Should generated types use interface or type?","acceptedAnswer":{"@type":"Answer","text":"For object shapes they compile the same. Interfaces allow declaration merging, so you can extend a generated Root elsewhere without editing the generated file — handy when the file is regenerated. Type aliases can express unions, tuples and primitives. A common convention: interfaces for object payloads, aliases for the top-level when the root is an array or primitive."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}h3{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--primary-hover)}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .6rem;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text);margin:12px 0}code{font-size:.85em;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 5px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Generate TypeScript Types from JSON (2026)</h1>
+<div class="meta"><span>⌨️ ~5K searches/mo</span><span>💰 CPC: $1</span><span>⏱️ 8 min read</span></div>
+<p class="intro">The fastest honest way to type an API: paste a real payload, get <code>interface</code>s back, and tighten by hand. This guide covers the inference rules that matter — <strong>unions for mixed arrays, null handling, merged array-of-object shapes</strong> — plus the three places a sample can't tell the truth, so your generated types don't turn into runtime surprises.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why generate types from a sample at all?</h2>
+<p>Hand-writing an interface from API docs fails quietly: docs lag, fields get renamed, and optional things turn out to be conditional. Typing from a <code>curl</code> response flips the source of truth — the types describe data that provably existed. It's the same instinct as generating database types from a live schema instead of an ER diagram someone drew in 2022.</p>
+<p>The catch is that one sample is evidence, not a contract. Generation gets you 90% of the way in seconds; the last 10% (optionality, enums, dates) still needs a human. Used that way, sample-to-type is a productivity tool. Used as a contract, it's a bug generator.</p>
+<h2>What are the inference rules?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>JSON</th><th>TypeScript</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>"x"</code> / <code>1</code> / <code>true</code></td><td><code>string</code> / <code>number</code> / <code>boolean</code></td><td>Direct mapping</td></tr>
+<tr><td><code>null</code></td><td><code>null</code></td><td>JSON has no undefined; hiding nulls invites crashes</td></tr>
+<tr><td><code>["a","b"]</code></td><td><code>string[]</code></td><td>One element type wins</td></tr>
+<tr><td><code>[1,"two"]</code></td><td><code>(number | string)[]</code></td><td>Union of distinct types, sorted for stable output</td></tr>
+<tr><td><code>[{"a":1},{"b":"x"}]</code></td><td>one merged <code>Item</code> interface</td><td>Fields union per key; that's the shape you program against</td></tr>
+<tr><td><code>[]</code></td><td><code>unknown[]</code></td><td>An empty array proves nothing about elements</td></tr>
+<tr><td>nested object</td><td>named interface per path</td><td><code>address</code> under Root becomes <code>RootAddress</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The merged-array rule deserves a note, because it's where naive converters differ. Given two orders where one has a <code>discount</code> field and the other doesn't, the honest generated type unions what exists — <code>discount?: ...</code> territory — rather than emitting two near-identical interfaces you'd have to handle separately at every call site. Merge-first keeps the type ergonomics of one array, one item type.</p>
+<h2>Worked example: one payload, two outputs</h2>
+<pre>{
+  "id": 1,
+  "name": "Ada Lovelace",
+  "active": true,
+  "score": null,
+  "tags": ["math", "pioneer"],
+  "address": { "street": "12 Analytical Way", "city": "London", "zip": null },
+  "orders": [
+    { "id": 101, "total": 59.99, "items": ["book", "slide rule"] }
+  ]
+}</pre>
+<p>With strict nulls kept, generation produces three interfaces:</p>
+<pre>interface Root {
+  id: number;
+  name: string;
+  active: boolean;
+  score: null;
+  tags: string[];
+  address: RootAddress;
+  orders: RootOrdersItem[];
+}
+
+interface RootAddress {
+  street: string;
+  city: string;
+  zip: null;
+}
+
+interface RootOrdersItem {
+  id: number;
+  total: number;
+  items: string[];
+}</pre>
+<p>Switch strict nulls off and the two <code>null</code> fields become <code>any</code> — which is exactly what your types behave like in a codebase that doesn't run <code>strictNullChecks</code>. Prefer keeping nulls and letting the compiler force the <code>??</code> fallback; deleting them from the type doesn't delete them from the payload.</p>
+<div class="cta-box"><h3>Generate types from your payload</h3><p style="color:#fff;opacity:.9">Paste JSON, pick a root name, copy the interfaces. Runs 100% client-side — your payload never leaves the browser.</p><a href="/json-to-typescript/">JSON to TypeScript Converter →</a></div>
+<h2>Where can a JSON sample lie?</h2>
+<ol>
+<li><strong>Optionality.</strong> A field missing from the sample might be absent always, sometimes, or only in this response. Sample generation can't know. Mark <code>?:</code> by hand from docs or multiple samples.</li>
+<li><strong>Enums in disguise.</strong> <code>"status": "active"</code> looks like <code>string</code> but is really <code>"active" | "paused" | "closed"</code>. One sample shows one value. Tighten these manually — they're also the fields most likely to break your UI when a new value ships.</li>
+<li><strong>Dates and IDs.</strong> ISO strings and numeric-looking identifiers both infer as their primitive. Type them as <code>string</code> and parse at the boundary, or brand them (<code>type UserId = string &amp; {__brand: 'UserId'}</code>) so a <code>UserId</code> can't be passed where a <code>PostId</code> goes.</li>
+</ol>
+<h2>How does this fit a real workflow?</h2>
+<p>Three patterns, in increasing order of rigor. First, one-off: paste a payload, copy the types, adjust. Second, fixture-driven: keep a <code>__fixtures__</code> directory of real responses, regenerate on demand, and diff the output in code review — type churn becomes visible, which is the whole point. Third, schema-driven: if the backend publishes OpenAPI or JSON Schema, generate from that instead, because a schema states optionality and enums where a sample can't. The sample-first tools still win for third-party APIs that document with a shrug.</p>
+<p>Whatever the pattern, keep generated files clearly marked and mechanically produced. The moment someone hand-edits a generated interface, regeneration becomes a conflict, and the file rots. For the surrounding workflow, the <a href="/json-formatter/">JSON formatter</a> cleans up minified payloads before conversion, and the <a href="/json-schema-validator/">JSON schema validator</a> is the right next stop when you're ready to move from samples to a real contract.</p>
+<h2>Is the client-side thing a gimmick?</h2>
+<p>It's a privacy boundary, and occasionally a hard requirement. API payloads routinely contain real user data, tokens, or internal identifiers, and pasting those into a random web converter means shipping them to whoever runs it. A converter that parses and generates in the browser with no network call keeps the payload on the machine it came from. Our converter works that way, and its engine is Apache-2.0, so you can also lift the generation logic into a script for CI or codegen steps.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can TypeScript infer types from JSON automatically?</h3><p>Not from a raw string. A JSON string is just string to the compiler. You either generate types from a sample (paste it into a converter), from a JSON Schema, or cast with a type assertion — which skips checking entirely. Generation from a real payload is the middle ground: the types describe actual data instead of a guess.</p></div>
+<div class="faq-item"><h3>What is the difference between sample-based types and JSON Schema?</h3><p>A sample shows what one response looked like; a schema states what every valid response may look like — required versus optional fields, enums, ranges, formats. Sample generation gives you shapes fast but cannot prove a field is optional or constrain a value. If you have a schema, validate against it; if you only have examples, generate from the fattest example you can find and tighten by hand.</p></div>
+<div class="faq-item"><h3>How do you type optional fields from a JSON sample?</h3><p>You can't infer them from one sample — absence in a sample doesn't prove a field can be absent. The practical workflow: generate from a sample, then mark fields optional (name?: string) where the API docs or several samples say they come and go. Feeding several payloads into the converter helps: fields that appear in one array element and not another get unioned, which is the hint.</p></div>
+<div class="faq-item"><h3>Should generated types use interface or type?</h3><p>For object shapes they compile the same. Interfaces allow declaration merging, so you can extend a generated Root elsewhere without editing the generated file — handy when the file is regenerated. Type aliases can express unions, tuples and primitives. A common convention: interfaces for object payloads, aliases for the top-level when the root is an array or primitive.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/json-to-typescript/">JSON to TypeScript Converter</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/json-schema-validator/">JSON Schema Validator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

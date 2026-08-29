@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>URL Anatomy Explained: Every Part of a Link | ToolAspect</title>
+<meta name="description" content="Scheme, host, port, path, query, fragment — what each part of a URL does, how %20 encoding works, and why the # never reaches the server.">
+<link rel="canonical" href="https://toolaspect.com/guides/url-anatomy-explained/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"URL Anatomy Explained: Every Part of a Link","description":"A tour of every URL component — scheme, userinfo, host, port, path, query string, fragment — with percent-encoding, default ports, and what each part means to the browser.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What are the 7 parts of a URL?","acceptedAnswer":{"@type":"Answer","text":"Scheme, userinfo, host, port, path, query string, and fragment. In https://user:pass@example.com:8443/a/b?x=1#top those are https, user:pass@, example.com, 8443, /a/b, ?x=1, and #top. Only scheme, host, and path are required in practice; the rest appear when used."}},
+{"@type":"Question","name":"What is the difference between a URL's host and hostname?","acceptedAnswer":{"@type":"Answer","text":"Hostname is the domain alone (example.com). Host is hostname plus port when one is written (example.com:8443). HTTP's Host header technically sends the host — domain and explicit port both — which is how one server can serve multiple sites on different ports."}},
+{"@type":"Question","name":"Why do some characters become %20 in a URL?","acceptedAnswer":{"@type":"Answer","text":"URLs allow a limited ASCII set, so everything else gets percent-encoded: a % followed by the character's hex bytes. A space becomes %20, a literal % becomes %25 (which is why 10% off encodes as 10%25%20off), and non-ASCII characters encode per UTF-8 byte — é becomes %C3%A9 because é is two bytes."}},
+{"@type":"Question","name":"Does the part after # get sent to the server?","acceptedAnswer":{"@type":"Answer","text":"Never. The fragment is client-side only: the browser keeps it, jumps to the matching element, and strips it before the HTTP request. That's why server logs never contain fragments and why single-page apps use them for navigation — changing #anything never triggers a reload."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}h3{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--primary-hover)}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .6rem;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.83em;word-break:break-all}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>URL Anatomy Explained: Every Part of a Link</h1>
+<div class="meta"><span>🔗 ~15K searches/mo (est.)</span><span>💰 CPC: $0.5–1.5</span><span>⏱️ 6 min read</span></div>
+<p class="intro">You paste URLs every day, but a URL is really seven tiny fields in a trench coat: scheme, userinfo, host, port, path, query, fragment. Knowing which is which turns debugging from superstition into procedure — you'll know why the port disappeared, why <code>%20</code> shows up in your analytics, and why that <code>#</code> section never shows up in server logs.</p>
+
+<div class="cta-box">
+<h3>Dissect a URL right now</h3>
+<p style="color:#fff;opacity:.9;margin:0">Paste any link — get every component plus decoded query parameters, editable, with a rebuilt URL.</p>
+<a href="/url-parser/">Open the URL Parser</a>
+</div>
+
+<h2>The seven parts, left to right</h2>
+<p><code>https://user:pass@store.example.com:8443/products/search?q=bag&amp;max=150#results</code></p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Part</th><th>Example</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Scheme</td><td><code>https</code></td><td>Picks the protocol — and its default port (443 for https, 80 for http)</td></tr>
+<tr><td>Userinfo</td><td><code>user:pass@</code></td><td>Legacy credentials-in-URL. Rare, still valid, frowned upon</td></tr>
+<tr><td>Host</td><td><code>store.example.com</code></td><td>Where to connect — DNS name or IP</td></tr>
+<tr><td>Port</td><td><code>:8443</code></td><td>Overrides the scheme's default port</td></tr>
+<tr><td>Path</td><td><code>/products/search</code></td><td>The resource on that server; starts with <code>/</code></td></tr>
+<tr><td>Query</td><td><code>?q=bag&amp;max=150</code></td><td>&amp;-separated key=value pairs; the only place <code>?</code> and <code>&amp;</code> are structural</td></tr>
+<tr><td>Fragment</td><td><code>#results</code></td><td>In-page anchor; browser-only, never sent to the server</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Why the port sometimes vanishes</h2>
+<p>Type <code>https://example.com:443/</code> into the URL parser and the port field comes back empty. The WHATWG URL parser normalizes away any port that equals the scheme's default — 443 for https, 80 for http, 21 for ftp — because <code>https://example.com:443/</code> and <code>https://example.com/</code> are the same resource. A port like <code>:8443</code> or <code>:3000</code> (dev servers love 3000) is non-default, so it survives parsing and shows up everywhere: in the origin, in CORS checks, in your cookie domain matching. That's also why <code>localhost:3000</code> and <code>localhost</code> can't share login cookies by default — different origins.</p>
+
+<h2>Percent-encoding: the escaping system</h2>
+<p>URLs were born ASCII-only, so everything else gets escaped: a percent sign followed by two hex digits per byte. The ones you'll actually meet:</p>
+<ul>
+<li><code>%20</code> — space. In query strings, <code>+</code> also means space (form-encoding legacy); decoders treat both the same.</li>
+<li><code>%25</code> — a literal <code>%</code>. This is why "10% off" becomes <code>10%25%20off</code>.</li>
+<li><code>%26</code>, <code>%3D</code> — <code>&amp;</code> and <code>=</code>, escaped when they're <em>data</em> instead of structure.</li>
+<li><code>%C3%A9</code> — é: two percent-escapes because é is two bytes of UTF-8. Japanese and emoji run three and four.</li>
+</ul>
+<p>The classic bug: hand-building a query string with raw values. A value like <code>P&amp;G</code> silently splits into two params. The fix is one line — <code>encodeURIComponent(value)</code> — and it's why the URL parser tool rebuilds URLs for you instead of trusting string concatenation.</p>
+
+<h2>Query strings: more than key-value</h2>
+<p>Everything between <code>?</code> and <code>#</code> is the query string. Rules worth internalizing:</p>
+<ul>
+<li><strong>Order is preserved, duplicates are legal.</strong> <code>tag=a&amp;tag=b</code> is a list, and servers that expect arrays depend on it.</li>
+<li><strong>Empty values are real.</strong> <code>?flag&amp;x=1</code> — flag has no <code>=</code> at all; it's a boolean-ish flag.</li>
+<li><strong>Decoding happens once.</strong> <code>q=laptop+bag</code> reads "laptop bag". If you see <code>%2B</code>, that's an escaped real plus sign.</li>
+<li><strong>Keys get encoded too</strong>, not just values — rare, but legal, and a hand-rolled parser usually breaks on it.</li>
+</ul>
+
+<h2>The fragment: the part the server never sees</h2>
+<p>Everything after <code>#</code> stays in the browser. The browser scrolls to the matching element ID (or lets JavaScript read it via <code>location.hash</code>), strips it from the request, and logs nothing. Consequences you can verify: adding <code>#anything</code> to a URL never triggers a reload or a new server hit, analytics tools deliberately put campaign IDs after <code>?</code> rather than <code>#</code> when they <em>want</em> the server (or a redirect) to see them, and single-page apps route with fragments precisely because fragment changes are free.</p>
+
+<h2>URI versus URL, in one paragraph</h2>
+<p>A URI identifies; a URL identifies <em>and locates</em>. <code>https://example.com/x</code> is both — it names the resource and says how to fetch it. <code>mailto:someone@example.com</code> and <code>urn:isbn:0451450523</code> are URIs that aren't URLs: they identify, but there's no fetch procedure. Web people say "URL" for everything because in browser-land, everything worth parsing is one; the WHATWG spec governs that parser, and it's the exact code this site's URL parser calls.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What are the 7 parts of a URL?</h3><p>Scheme, userinfo, host, port, path, query string, and fragment. In https://user:pass@example.com:8443/a/b?x=1#top those are https, user:pass@, example.com, 8443, /a/b, ?x=1, and #top. Only scheme, host, and path are required in practice; the rest appear when used.</p></div>
+<div class="faq-item"><h3>What is the difference between a URL's host and hostname?</h3><p>Hostname is the domain alone (example.com). Host is hostname plus port when one is written (example.com:8443). HTTP's Host header technically sends the host — domain and explicit port both — which is how one server can serve multiple sites on different ports.</p></div>
+<div class="faq-item"><h3>Why do some characters become %20 in a URL?</h3><p>URLs allow a limited ASCII set, so everything else gets percent-encoded: a % followed by the character's hex bytes. A space becomes %20, a literal % becomes %25 (which is why 10% off encodes as 10%25%20off), and non-ASCII characters encode per UTF-8 byte — é becomes %C3%A9 because é is two bytes.</p></div>
+<div class="faq-item"><h3>Does the part after # get sent to the server?</h3><p>Never. The fragment is client-side only: the browser keeps it, jumps to the matching element, and strips it before the HTTP request. That's why server logs never contain fragments and why single-page apps use them for navigation — changing #anything never triggers a reload.</p></div>
+
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/url-parser/">URL Parser</a>
+<a href="/url-encoder/">URL Encoder</a>
+<a href="/user-agent-parser/">User Agent Parser</a>
+<a href="/jwt-decoder/">JWT Decoder</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>vCard QR Codes: Make a Digital Business Card | ToolAspect</title>
+<meta name="description" content="How vCard QR codes work: 3.0 vs 4.0, the escaping rules that break contact imports, print size minimums, and why vCard beats MECARD and plain text.">
+<link rel="canonical" href="https://toolaspect.com/guides/vcard-qr-code/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"vCard QR Codes: How to Make a Digital Business Card","description":"How vCard QR codes work: version 3.0 vs 4.0, the escaping rules that silently break contact imports, print size minimums from QR module math, and why vCard beats MECARD and plain text.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"vCard QR Codes","item":"https://toolaspect.com/guides/vcard-qr-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do vCard QR codes work on iPhone and Android?","acceptedAnswer":{"@type":"Answer","text":"Yes. Both iOS Camera and the Android camera or Google Lens recognize a scanned vCard QR code and offer to create a contact. Use VERSION:3.0 for the widest compatibility; 4.0 also imports but produces a larger code because phone numbers become tel: URIs."}},
+{"@type":"Question","name":"How much information fits in a business card QR code?","acceptedAnswer":{"@type":"Answer","text":"A QR code at error correction M holds up to 2,331 bytes at version 40, but business cards should stay far below that. A full card with name, company, title, two phones, email, website, address and note runs 389 octets (QR version 15, 77 by 77 modules). Each field you drop shrinks the version and makes the printed code easier to scan."}},
+{"@type":"Question","name":"Why did my vCard QR code import with garbled details?","acceptedAnswer":{"@type":"Answer","text":"Almost always escaping or encoding. Commas, semicolons and backslashes need a preceding backslash; a company name like Smith, Inc. becomes Smith\\, Inc. Lines must fold at 75 octets with CRLF plus a space, and the file needs UTF-8 encoding for accented characters. Generators that skip these rules produce cards some phones read incorrectly or reject."}},
+{"@type":"Question","name":"Should I use a dynamic QR service for my business cards?","acceptedAnswer":{"@type":"Answer","text":"Usually no for contact details. A dynamic QR redirects through a server you rent, so if the subscription lapses, every printed card stops working. A static vCard QR contains the data itself and never expires. Dynamic makes sense only when you expect the destination to change, like a portfolio URL."}},
+{"@type":"Question","name":"Can I put my photo or logo inside a vCard QR code?","acceptedAnswer":{"@type":"Answer","text":"You can embed a PHOTO property pointing at a hosted JPEG URL, which keeps the payload small, or embed the image bytes base64-encoded, which balloons the payload by megabytes and destroys scannability. Most generators skip PHOTO in QR codes for exactly this reason; link your headshot on the website instead."}}
+]}
+</script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 8px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg-elevated)}code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:12px 0}pre code{background:none;padding:0}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="wrap">
+<h1>vCard QR Codes: How to Make a Digital Business Card</h1>
+<div class="meta"><span>📇 8 min read</span><span>⚡ Everything renders in your browser</span></div>
+<p class="intro">A QR code on a business card has one job: turn a scan into a saved contact in under five seconds. The difference between a code that does that and one that opens a wall of raw text is whether the payload is a real vCard. This guide covers the format rules that make contact imports work, the size math that decides whether your code scans off cardstock, and the trade-offs the free generators rarely mention.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What is a vCard QR code?</h2>
+<p>A vCard is the standard electronic business card format (RFC 2426 for version 3.0, RFC 6350 for version 4.0) that phones, email clients and CRM systems have exchanged since the Palm Pilot era. A vCard QR code simply encodes that text into a QR code. Scan it with an iPhone or Android camera and the phone parses the properties, shows a prefilled contact sheet with name, company, phones, email and address, and saves it on tap. No app install, no typing, no "let me text you my info."</p>
+<p>The alternative most people regret is encoding plain text or a <code>mailto:</code> link. Plain text scans fine but lands in Notes. A <code>mailto:</code> opens a blank email. Neither fills in the contact fields, which is the entire point of the exercise. Try the <a href="/business-card-qr-generator/">business card QR generator</a> to see the difference live: it builds the vCard as you type and shows the exact payload going into the code.</p>
+<h2>What does a vCard actually look like inside?</h2>
+<p>Plain text, one property per line:</p>
+<pre><code>BEGIN:VCARD
+VERSION:3.0
+N:Nguyen;Bao;;;
+FN:Bao Nguyen
+ORG:Nguyen Dental\, LLC
+TITLE:Owner &amp; DDS
+TEL;TYPE=WORK,VOICE:(512) 555-0134
+TEL;TYPE=CELL:(512) 555-0192
+EMAIL;TYPE=INTERNET,WORK:bao@nguyendental.com
+URL:https://nguyendental.com
+ADR;TYPE=WORK:;;1200 S Congress Ave\, Suite 210;Austin;TX;78704;USA
+NOTE:New patients welcome.
+END:VCARD</code></pre>
+<p>Three details in there trip up homemade generators. First, the <code>N</code> property is structured: family name, given name, middle, prefix, suffix, separated by semicolons. Second, that company name: the comma in <code>Nguyen Dental, LLC</code> must be escaped as <code>\,</code>, because in vCard an unescaped comma splits a value into a list. Third, the address contains one too. Every comma, semicolon, backslash and line break in user data needs a backslash in front of it, or the card that scans perfectly on your phone gets mangled on someone else's.</p>
+<h2>vCard 3.0 or 4.0: which should a QR code use?</h2>
+<p>Both import cleanly everywhere that matters. The practical difference for printed codes is size:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th></th><th>vCard 3.0</th><th>vCard 4.0</th></tr></thead>
+<tbody>
+<tr><td>Phone numbers</td><td><code>TEL;TYPE=CELL:(512) 555-0192</code></td><td><code>TEL;VALUE=URI;TYPE="cell":tel:+15125550192</code></td></tr>
+<tr><td>Same sample card</td><td>389 octets → QR v15 (77×77)</td><td>415 octets → QR v16 (81×81)</td></tr>
+<tr><td>Where it shines</td><td>QR codes, maximum compatibility</td><td>Server-to-server contact sync, jCard</td></tr>
+</tbody>
+</table>
+</div>
+<p>Version 4.0 is the better <em>format</em>: it ranks preferred numbers with <code>PREF=1</code>, handles social profiles properly, and aligns with the JSON-based jCard. But it costs bytes, because every phone number becomes a <code>tel:</code> URI. On a business card, bytes translate directly into module count, and module count translates into how small you can print the thing. For a code glued to cardstock, 3.0 is the pragmatic pick.</p>
+<h2>How big should the QR code be on the card?</h2>
+<p>Do the module math instead of guessing. A QR code's version determines its module grid; at error correction M, a 389-octet vCard needs version 15, which is 77 modules on a side. Industry print floor is about 0.33 mm per module, so 77 × 0.33 mm ≈ 25.4 mm, almost exactly one inch. The 10:1 rule of thumb says a code that size reads comfortably from about 25 cm, which is roughly how far away a card sits when someone scans it.</p>
+<p>Cut fields and the whole chain improves. Drop the note and second phone: 293 octets, version 13, 69×69 modules, 22.8 mm minimum. Drop the address as well: 224 octets, version 11, 61×61, fine at 20.1 mm. A lean card gives you margin for print bleed, matte laminate, and the one friend whose camera lens is scratched. If you want a code smaller than 2 cm, keep the vCard to name, one phone, one email and a URL.</p>
+<h2>Why do some generators offer MECARD instead?</h2>
+<p>MECARD is a Denso-era shorthand that predates widespread vCard support: <code>MECARD:N:Nguyen,Bao;TEL:5125550192;EMAIL:bao@nguyendental.com;;</code>. It's compact, and for a name-plus-phone card it produces a visibly smaller QR code. The catch is the ceiling: no versioning, no structured addresses beyond a single string, no multiple typed phone numbers, and increasingly quirky handling on modern phones. Contact apps still accept it, but vCard is what Apple and Google actually exchange between devices, so it's the safe default for anything you're printing a thousand of.</p>
+<div class="cta-box"><h3>Build your vCard QR code</h3><p style="color:#fff;opacity:.9">Fill the form, watch the payload and QR version update live, then export PNG, SVG, the .vcf file, or a 10-up print sheet PDF.</p><a href="/business-card-qr-generator/">Business Card QR Generator →</a></div>
+<h2>What breaks contact imports (and how to fix it)?</h2>
+<ul>
+<li><strong>Unescaped punctuation.</strong> Commas, semicolons and backslashes in company names and addresses must become <code>\,</code> <code>\;</code> <code>\\</code>. This is the number one cause of half-imported contacts.</li>
+<li><strong>Missing folding.</strong> Any line over 75 octets must wrap with CRLF plus a single leading space. Long notes blow past this constantly; unfolded lines work on lenient parsers and fail on strict ones.</li>
+<li><strong>Wrong line endings.</strong> The spec says CRLF. LF-only cards usually survive but occasionally arrive as one giant property.</li>
+<li><strong>Missing FN.</strong> <code>N</code> alone isn't enough; some apps display an empty name without the formatted <code>FN</code> property.</li>
+<li><strong>Embedding a photo as base64.</strong> It balloons the payload past 2,000 octets, and the resulting version 20+ code cannot be printed at business card size. Host the headshot and put the URL in <code>URL:</code> or <code>PHOTO:</code> instead.</li>
+<li><strong>Dynamic short links that die.</strong> If the QR encodes a redirect service rather than the vCard itself, the cards stop working the day the subscription does. Print static.</li>
+</ul>
+<p>Once the card imports cleanly, the rest of your print collateral can carry codes too: point visitors at your Google listing with the <a href="/google-review-qr-generator/">Google review QR generator</a>, put the guest network on the counter with a <a href="/wifi-qr-code-generator/">WiFi QR code</a>, or run large batches of unique codes through the <a href="/qr-code-batch/">QR batch generator</a>. For general encoding questions, the <a href="/qr-code-generator/">standard QR generator</a> handles URLs and plain text.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do vCard QR codes work on iPhone and Android?</h3><p>Yes. Both iOS Camera and the Android camera or Google Lens recognize a scanned vCard QR code and offer to create a contact. Use VERSION:3.0 for the widest compatibility; 4.0 also imports but produces a larger code because phone numbers become tel: URIs.</p></div>
+<div class="faq-item"><h3>How much information fits in a business card QR code?</h3><p>A QR code at error correction M holds up to 2,331 bytes at version 40, but business cards should stay far below that. A full card with name, company, title, two phones, email, website, address and note runs 389 octets (QR version 15, 77 by 77 modules). Each field you drop shrinks the version and makes the printed code easier to scan.</p></div>
+<div class="faq-item"><h3>Why did my vCard QR code import with garbled details?</h3><p>Almost always escaping or encoding. Commas, semicolons and backslashes need a preceding backslash; a company name like Smith, Inc. becomes Smith\, Inc. Lines must fold at 75 octets with CRLF plus a space, and the file needs UTF-8 encoding for accented characters. Generators that skip these rules produce cards some phones read incorrectly or reject.</p></div>
+<div class="faq-item"><h3>Should I use a dynamic QR service for my business cards?</h3><p>Usually no for contact details. A dynamic QR redirects through a server you rent, so if the subscription lapses, every printed card stops working. A static vCard QR contains the data itself and never expires. Dynamic makes sense only when you expect the destination to change, like a portfolio URL.</p></div>
+<div class="faq-item"><h3>Can I put my photo or logo inside a vCard QR code?</h3><p>You can embed a PHOTO property pointing at a hosted JPEG URL, which keeps the payload small, or embed the image bytes base64-encoded, which balloons the payload by megabytes and destroys scannability. Most generators skip PHOTO in QR codes for exactly this reason; link your headshot on the website instead.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/business-card-qr-generator/">Business Card QR Generator</a>
+<a href="/google-review-qr-generator/">Google Review QR Generator</a>
+<a href="/wifi-qr-code-generator/">WiFi QR Code Generator</a>
+<a href="/qr-code-batch/">QR Code Batch Generator</a>
+</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

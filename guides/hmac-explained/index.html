@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Is an HMAC? Keyed Hashes Explained | ToolAspect</title>
+<meta name="description" content="What an HMAC is, why a plain hash is not authentication, how the key enters the hash, where webhooks and JWTs use it, and how to verify in code.">
+<link rel="canonical" href="https://toolaspect.com/guides/hmac-explained/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What Is an HMAC? Keyed Hashes Explained","description":"A plain-language tour of HMAC: the difference between a hash and a keyed MAC, why the construction defeats length-extension attacks, which services sign with HMAC, and how to verify webhook signatures in Node and Python.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is an HMAC the same as a hash?","acceptedAnswer":{"@type":"Answer","text":"No. A hash like SHA-256 is a one-way fingerprint anyone can compute from the message. An HMAC folds a secret key into that computation, so the output depends on both the message and a key only the sender and receiver share. That key is what makes it an authentication code rather than a checksum."}},
+{"@type":"Question","name":"Why not just hash the key and message together?","acceptedAnswer":{"@type":"Answer","text":"Naive constructions like SHA-256(key + message) fall to length-extension attacks: because of how Merkle-Damgård hashes process blocks, an attacker who sees one valid digest can forge a valid digest for the message plus arbitrary suffix data without knowing the key. HMAC's nested construction (hash of an inner hash, with two different padded keys) provably blocks this."}},
+{"@type":"Question","name":"Can an HMAC be reversed or decrypted?","acceptedAnswer":{"@type":"Answer","text":"No — there is nothing to decrypt. An HMAC is a fixed-size fingerprint of the message under the key. The only way to 'break' it is to guess the key, and a random 256-bit key makes brute force infeasible. You verify an HMAC by recomputing it, never by decoding it."}},
+{"@type":"Question","name":"How do I verify a webhook HMAC signature?","acceptedAnswer":{"@type":"Answer","text":"Read the signature header the service sends (e.g. Stripe-Signature), rebuild the exact signed payload — often timestamp + '.' + raw request body — compute HMAC-SHA256 with your endpoint secret, and compare in constant time: crypto.timingSafeEqual in Node, hmac.compare_digest in Python. Always verify the raw bytes, not a re-serialized JSON object, since key order and whitespace change the signature."}},
+{"@type":"Question","name":"What key size should I use for HMAC?","acceptedAnswer":{"@type":"Answer","text":"Match the hash: 32 random bytes for HMAC-SHA256, 48 for SHA-384, 64 for SHA-512. Anything beyond the hash's output size adds no security. Generate keys from a CSPRNG (crypto.randomBytes in Node, secrets.token_bytes in Python) — never from a password, timestamp, or dictionary word."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}h3{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--primary-hover)}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 8px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}pre{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text);margin-bottom:14px}code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>What Is an HMAC? Keyed Hashes, Explained</h1>
+<div class="meta"><span>🔐 9 min read</span><span>🧮 Construction + code</span></div>
+<p class="intro">You hash a file, you get a fingerprint. You hash a file with a secret key mixed in, you get proof. That second thing is an HMAC — hash-based message authentication code — and it's quietly running under Stripe webhooks, GitHub push events, AWS API calls, and every JWT signed with HS256. This guide covers what the key actually does, why the obvious way of combining key and message is broken, and how to verify real-world signatures without shipping the classic timing-attack bug.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Hash vs HMAC: what does the key change?</h2>
+<p>A cryptographic hash like SHA-256 is deterministic and public. Same input, same 64-hex-character output, and <em>anyone</em> can compute it. That's perfect for checksums — "is this file the file?" — and useless for authenticity, because an attacker rewriting the message can just as easily recompute the digest of their rewrite.</p>
+<p>HMAC threads a shared secret through the computation. The output now depends on two inputs: the message and the key. An attacker can rewrite the message, but without the key they cannot produce the digest that a verifier will accept. Verification becomes: "do I hold the same key the sender holds, and does the digest match the bytes I received?"</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th></th><th>Plain hash (SHA-256)</th><th>HMAC-SHA256</th></tr></thead>
+<tbody>
+<tr><td>Inputs</td><td>Message</td><td>Message + secret key</td></tr>
+<tr><td>Computable by</td><td>Anyone</td><td>Only key holders</td></tr>
+<tr><td>Proves</td><td>Data integrity</td><td>Integrity + authenticity</td></tr>
+<tr><td>Typical use</td><td>File checksums, dedupe, mining</td><td>Webhook signatures, API auth, JWTs</td></tr>
+</tbody>
+</table>
+</div>
+<h2>Why not just concatenate key and message?</h2>
+<p>The intuitive construction — <code>SHA256(key + message)</code> — is broken, and understanding why is the fastest way to respect HMAC's design. SHA-256 and its relatives process messages in blocks and expose their internal state as the final digest. That means someone who sees <code>H(key + "authorize $10")</code> can compute a valid digest for <code>H(key + "authorize $10" + attacker_suffix)</code> <em>without knowing the key</em> — the published digest already contains the keyed state, and the hash happily continues from there. This is the length-extension attack, and it's not theoretical; it broke real API authentication schemes built on MD5 and SHA-1.</p>
+<p>HMAC's fix (Bellare, Canetti, and Krawczyk, 1996) nests two hashes with two keys derived from one: <code>HMAC(K, m) = H((K' ⊕ opad) ‖ H((K' ⊕ ipad) ‖ m))</code>, where ipad and opad are fixed padding bytes and K' is the key padded to a block. The inner hash's output is squeezed through the full outer hash, so no intermediate keyed state ever leaks. The construction carries a security proof relative to the underlying hash — one reason it survived even as its building blocks aged.</p>
+<h2>Where you already rely on HMAC</h2>
+<ul>
+<li><strong>Webhook signing.</strong> Stripe's <code>Stripe-Signature</code> header, GitHub's <code>X-Hub-Signature-256</code>, Shopify, Slack, Twilio — an HMAC-SHA256 over the raw body with a per-endpoint secret, so your server can reject forged calls at the door.</li>
+<li><strong>JWTs signed with HS256/HS384/HS512.</strong> The third segment of the token is literally the HMAC of the first two, base64url-encoded. RS256 (RSA) exists for cases where signer and verifier differ; HS256 remains the compact default.</li>
+<li><strong>AWS Signature Version 4.</strong> Every S3 and API-gateway request carries a chain of HMAC-SHA256s — date key, region key, service key — ending in the request signature.</li>
+<li><strong>TLS and SSH.</strong> Record integrity and packet authentication use MAC constructions (modern suites prefer HMAC's successor, HMAC-KDF/HKDF styles and polynomial MACs, but HMAC remains everywhere in TLS 1.2).</li>
+</ul>
+<div class="cta-box"><h3>Generate an HMAC right now</h3><p style="color:#fff;opacity:.9">SHA-1/256/384/512, hex or Base64, computed by your browser's native WebCrypto — test vectors preloaded.</p><a href="/hmac-generator/">HMAC Generator →</a></div>
+<h2>How to verify a webhook signature in code</h2>
+<p>The pattern is identical across services; only the header and payload format change. Stripe, the canonical example, signs <code>timestamp + "." + raw_body</code>:</p>
+<pre><code>// Node.js (Express) — Stripe-style
+const crypto = require('crypto');
+
+app.post('/webhook', express.raw({type: 'application/json'}),
+  (req, res) =&gt; {
+    const parts = Object.fromEntries(
+      req.headers['stripe-signature'].split(',')
+        .map(p =&gt; p.split('=')));
+    // parts = { t: '1735689600', v1: 'hex...' }
+
+    const payload = parts.t + '.' + req.body.toString(); // raw bytes!
+    const expected = crypto.createHmac('sha256', process.env.WH_SECRET)
+      .update(payload).digest('hex');
+
+    const a = Buffer.from(expected);
+    const b = Buffer.from(parts.v1);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      return res.status(400).send('Bad signature');
+    }
+    res.json({received: true});
+  });</code></pre>
+<pre><code># Python (FastAPI) — same shape
+import hmac, hashlib
+
+expected = hmac.new(SECRET.encode(),
+                    f"{ts}.{raw_body}".encode(),
+                    hashlib.sha256).hexdigest()
+ok = hmac.compare_digest(expected, received_hex)</code></pre>
+<p>Three bugs account for nearly every failed verification: hashing re-serialized JSON instead of the raw request bytes (key order and whitespace change the digest), forgetting the timestamp prefix when the spec includes one, and comparing strings with <code>===</code>/<code>==</code> instead of the constant-time compare both snippets use. Plain equality leaks information through timing — each mismatched character exits a few nanoseconds earlier — and against a patient attacker, that's a real channel.</p>
+<h2>Choosing algorithms and keys</h2>
+<p>Default to HMAC-SHA256. SHA-1's collision weakness doesn't directly break HMAC-SHA1, but it buys nothing, so it survives only in legacy protocols. SHA-384 and SHA-512 matter where you're matching an existing spec (HS512 tokens, bank APIs), not for extra security margin — output length isn't the bottleneck.</p>
+<p>Keys should be random bytes at least as long as the hash output: 32 bytes for SHA-256. Derive them from a CSPRNG (<code>crypto.randomBytes(32)</code>, <code>secrets.token_bytes(32)</code>), store them in a secrets manager, and rotate them if there's any chance of exposure. Never derive signing keys from passwords — offline guessing then beats every property the MAC was supposed to provide.</p>
+<p>To sanity-check your own implementation, test against published known-answer vectors. HMAC-SHA256 with key <code>key</code> over <code>The quick brown fox jumps over the lazy dog</code> must give <code>f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8</code> — the <a href="/hmac-generator/">HMAC generator</a> ships with that vector preloaded, and RFC 4231 publishes a fuller set for every digest size.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is an HMAC the same as a hash?</h3><p>No. A hash like SHA-256 is a one-way fingerprint anyone can compute from the message. An HMAC folds a secret key into that computation, so the output depends on both the message and a key only the sender and receiver share. That key is what makes it an authentication code rather than a checksum.</p></div>
+<div class="faq-item"><h3>Why not just hash the key and message together?</h3><p>Naive constructions like SHA-256(key + message) fall to length-extension attacks: because of how Merkle-Damgård hashes process blocks, an attacker who sees one valid digest can forge a valid digest for the message plus arbitrary suffix data without knowing the key. HMAC's nested construction (hash of an inner hash, with two different padded keys) provably blocks this.</p></div>
+<div class="faq-item"><h3>Can an HMAC be reversed or decrypted?</h3><p>No — there is nothing to decrypt. An HMAC is a fixed-size fingerprint of the message under the key. The only way to 'break' it is to guess the key, and a random 256-bit key makes brute force infeasible. You verify an HMAC by recomputing it, never by decoding it.</p></div>
+<div class="faq-item"><h3>How do I verify a webhook HMAC signature?</h3><p>Read the signature header the service sends (e.g. Stripe-Signature), rebuild the exact signed payload — often timestamp + '.' + raw request body — compute HMAC-SHA256 with your endpoint secret, and compare in constant time: crypto.timingSafeEqual in Node, hmac.compare_digest in Python. Always verify the raw bytes, not a re-serialized JSON object, since key order and whitespace change the signature.</p></div>
+<div class="faq-item"><h3>What key size should I use for HMAC?</h3><p>Match the hash: 32 random bytes for HMAC-SHA256, 48 for SHA-384, 64 for SHA-512. Anything beyond the hash's output size adds no security. Generate keys from a CSPRNG (crypto.randomBytes in Node, secrets.token_bytes in Python) — never from a password, timestamp, or dictionary word.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/hmac-generator/">HMAC Generator</a>
+<a href="/hash-generator/">Hash Generator</a>
+<a href="/jwt-decoder/">JWT Decoder</a>
+<a href="/base64-encoder/">Base64 Encoder</a>
+</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

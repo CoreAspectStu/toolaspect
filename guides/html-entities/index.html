@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML Entities: Named, Decimal &amp; Hex + When to Escape | ToolAspect</title>
+<meta name="description" content="HTML entities in plain terms: &amp;amp; &amp;lt; &amp;nbsp; &amp;copy; and numeric &#169; forms, the 121 names for daily work, and single-pass decoding.">
+<link rel="canonical" href="https://toolaspect.com/guides/html-entities/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"HTML Entities Explained: Named, Decimal and Hex Forms","description":"What entities are, the three syntaxes, which characters actually need escaping, the nbsp trap, case sensitivity, and how robust libraries like fb55/entities (BSD-2-Clause) map 2,231 HTML5 names.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"HTML Entities","item":"https://toolaspect.com/guides/html-entities/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What characters must be escaped in HTML?","acceptedAnswer":{"@type":"Answer","text":"In text content: &amp; < and (practically) >. The ampersand only strictly needs escaping when what follows could parse as an entity, and < only when followed by a letter, /, ! or ?, but escaping all three unconditionally is the safe habit. In attribute values, also escape the quote character delimiting the attribute. Everything else is optional; entities for accented letters and symbols are a compatibility convenience, not a requirement in UTF-8 documents."}},
+{"@type":"Question","name":"Should I use named entities or numeric character references?","acceptedAnswer":{"@type":"Answer","text":"Named for the specials (&amp;amp; &amp;lt; &amp;gt;) because they read clearly in source. Numeric for everything else if the output feeds a system that only understands a subset of names — email clients, older CMS templating, some XML processors. XML defines exactly five named entities, so numeric is the only portable choice there. If your document is UTF-8 and stays UTF-8, raw characters are usually fine and smaller."}},
+{"@type":"Question","name":"Why does &amp;amp;nbsp; show up as a visible box or weird character in my email?","acceptedAnswer":{"@type":"Answer","text":"Encoding mismatch. The document claims one character encoding (say ISO-8859-1) while the bytes are in another (UTF-8), or vice versa, so U+00A0 or the entity's target renders through the wrong table. Declare &lt;meta charset=&quot;UTF-8&quot;&gt; as the first thing in head, send the matching Content-Type header, and the problem disappears."}},
+{"@type":"Question","name":"Do I still need entities in a UTF-8 page?","acceptedAnswer":{"@type":"Answer","text":"Only for markup-significant characters. Modern HTML is UTF-8 by default, so &eacute;, © and even emoji can be written as raw characters. Entities remain mandatory for &amp; < > in text, useful in generated HTML where you can't be sure of the encoding, and handy in email HTML where client support is years behind browsers."}},
+{"@type":"Question","name":"What library do developers use for entity handling in JavaScript?","acceptedAnswer":{"@type":"Answer","text":"The de facto standard is fb55/entities (BSD-2-Clause licensed), which powers the htmlparser2 ecosystem and supplies decode/encode maps for HTML and XML. For a handful of characters, a regex over named and numeric patterns is fine — this site's converter does exactly that in about 40 lines — but for untrusted input a maintained library handles the 2,231 HTML5 names, entity edge cases, and XML's stricter rules for you."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.08rem .35rem;font-size:.85em}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>HTML Entities Explained: The Named, Decimal, and Hex Forms</h1>
+<div class="meta"><span>💡 ~12K searches/mo</span><span>💰 CPC: $0.8-2</span><span>⏱️ 7 min read</span></div>
+<p class="intro">An HTML entity is the markup-safe spelling of a character: an ampersand, a name or number, a semicolon. <code>&amp;amp;</code> renders as &amp;, <code>&amp;lt;</code> as &lt;, <code>&amp;copy;</code> as &copy;, and the numeric <code>&amp;#169;</code> or <code>&amp;#xA9;</code> reaches the same copyright sign through its Unicode code point. That's the whole mechanic. What trips people up is the surrounding rules: which characters actually need escaping, why there are three syntaxes, and the traps (nbsp, case sensitivity, double decoding). This guide covers all of it, with a table you can paste from.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>The three syntaxes, one character</h2>
+<p>Every entity names a Unicode code point, and every Unicode character can be written three ways in HTML:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Form</th><th>Syntax</th><th>Example</th><th>Renders</th></tr></thead>
+<tbody>
+<tr><td>Named</td><td><code>&amp;name;</code></td><td><code>&amp;eacute;</code></td><td>&eacute; (code point 233)</td></tr>
+<tr><td>Decimal</td><td><code>&amp;#NNN;</code></td><td><code>&amp;#233;</code></td><td>&eacute;</td></tr>
+<tr><td>Hex</td><td><code>&amp;#xHH;</code> (x or X)</td><td><code>&amp;#xE9;</code></td><td>&eacute;</td></tr>
+</tbody>
+</table>
+</div>
+<p>The three are interchangeable in output but not in tooling. Named entities are the readable choice for hand-written HTML. Decimal and hex work everywhere, including environments that only understand a few names — XML, for instance, defines exactly five named entities (<code>&amp;amp; &amp;lt; &amp;gt; &amp;quot; &amp;apos;</code>) and requires numeric references for everything else.</p>
+<h2>What actually needs escaping</h2>
+<p>Less than most escaped documents contain. The rules for text content:</p>
+<ul>
+<li><strong><code>&amp;</code></strong> — escape it when the following text could look like an entity. In practice, escape it always; a bare <code>&amp;</code> followed by <code>amp;</code> renders as a literal <code>&amp;amp;</code> in HTML5's forgiving parsing but breaks XML entirely.</li>
+<li><strong><code>&lt;</code></strong> — escape always in text. <code>&lt;script&gt;</code> in your text becomes a real script tag otherwise.</li>
+<li><strong><code>&gt;</code></strong> — technically forgivable in text (a stray <code>&gt;</code> renders as itself), but escape it anyway; it costs two characters and removes a class of template bugs.</li>
+<li><strong>Quotes</strong> — only inside attribute values, and only the quote character delimiting that attribute. <code>title="He said &amp;quot;hi&amp;quot;"</code> works; <code>title='He said "hi"'</code> also works.</li>
+</ul>
+<p>Everything else — accented letters, currency symbols, emoji — needs no entity at all in a UTF-8 document. Entities for those exist for three honest reasons: keyboards that can't type them, systems that mangle encodings, and source code where the raw character would be invisible or confusable (two of them, <code>&amp;nbsp;</code> and soft hyphen, are genuinely invisible).</p>
+<h2>The nbsp trap and other invisible characters</h2>
+<p><code>&amp;nbsp;</code> is U+00A0, a non-breaking space. Two things make it special: browsers won't collapse runs of it (normal spaces collapse to one) and won't break lines at it. Paste one from a rendered web page into a code editor or terminal and you get a "space" that breaks parsing, diffing, and column alignment, because it isn't a space. The same goes for <code>&amp;shy;</code> (soft hyphen, U+00AD) and <code>&amp;zwnj;</code>/<code>&amp;zwj;</code>. When a string with "invisible" bugs shows up, decoding entities and grepping for U+00A0 is the standard first move — the <a href="/html-entity-converter/">HTML entity converter</a> makes that a two-click job.</p>
+<h2>Case sensitivity and the Greek letters</h2>
+<p>Names are case-sensitive, and the case usually carries meaning. <code>&amp;pi;</code> is lowercase &pi; (945) while <code>&amp;Pi;</code> is uppercase &Pi; (928). <code>&amp;copy;</code> and <code>&amp;COPY;</code> both map to the copyright sign in HTML5's table, but <code>&amp;Copy;</code> is nothing. Since the safe mental model is "names are case-sensitive, full stop," generators avoid the whole question by emitting numeric forms.</p>
+<div class="cta-box"><h3>Convert entities both directions</h3><p style="color:#fff;opacity:.9">Text in, entities out — named, decimal, or hex — and entities back to characters, all in your browser.</p><a href="/html-entity-converter/">Open the HTML Entity Converter &rarr;</a></div>
+<h2>Single-pass decoding, or why &amp;amp;lt; stays put</h2>
+<p>The string <code>&amp;amp;lt;</code> is what you get when someone escapes the literal text <code>&amp;lt;</code>. Decoding it once yields <code>&amp;lt;</code> — correct. A decoder that loops until nothing changes would yield <code>&lt;</code>, silently corrupting double-escaped content, which is exactly how stored-XSS bugs sneak through naive template systems. The HTML5 spec's own parsing decodes entities in one pass per text node. Any tool you use should do the same, and should leave unknown names (<code>&amp;fakeentity;</code>) untouched rather than guessing.</p>
+<h2>Which names exist: the numbers behind the table</h2>
+<p>HTML5 defines 2,231 named character references — 2,125 with semicolons, plus legacy semicolon-less forms like <code>&amp;copy</code> that survive from HTML 3.2 for browser-compatibility reasons nobody should rely on today. About 121 names cover daily writing: the markup specials, currency, typographic punctuation, math symbols, Greek letters, and the accented Latin-1 set. That's the working set in our converter's map; anything outside it falls back to numeric automatically.</p>
+<p>For anything serious — parsing untrusted HTML, handling XML, mapping all 2,231 names — the JavaScript ecosystem standardizes on <strong>fb55/entities</strong>, a BSD-2-Clause licensed package that underlies the htmlparser2 family and ships encode/decode maps for both HTML and XML modes. It's the right dependency when a regex stops being enough; the license is permissive enough for commercial embedding with attribution preserved.</p>
+<h2>Entities vs URL encoding vs Base64</h2>
+<p>Three escaping systems that show up in the same bug reports but solve different problems:</p>
+<ul>
+<li><strong>HTML entities</strong> protect characters from <em>markup parsing</em> — they operate on document content.</li>
+<li><strong>URL/percent-encoding</strong> (<code>%20</code>, <code>%C3%A9</code>) protects characters from <em>URI syntax</em> — spaces, ampersands in query strings, non-ASCII in URLs. The <a href="/url-parser/">URL parser</a> shows both sides of it.</li>
+<li><strong>Base64</strong> makes arbitrary bytes safe for <em>transport through text-only channels</em> — no character-level meaning at all, just encoding. The <a href="/base64-encoder/">Base64 encoder</a> handles that layer.</li>
+</ul>
+<p>Picking the wrong layer is a classic integration bug: percent-encoding HTML doesn't stop it from being parsed as markup, and entity-encoding a URL breaks the URL. Match the escape to the parser that will read the string.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What characters must be escaped in HTML?</h3><p>In text content: &amp;, &lt;, and (practically) &gt;. The ampersand only strictly needs escaping when what follows could parse as an entity, and &lt; only when followed by a letter, /, ! or ?, but escaping all three unconditionally is the safe habit. In attribute values, also escape the quote character delimiting the attribute. Everything else is optional; entities for accented letters and symbols are a compatibility convenience, not a requirement in UTF-8 documents.</p></div>
+<div class="faq-item"><h3>Should I use named entities or numeric character references?</h3><p>Named for the specials (&amp;amp; &amp;lt; &amp;gt;) because they read clearly in source. Numeric for everything else if the output feeds a system that only understands a subset of names — email clients, older CMS templating, some XML processors. XML defines exactly five named entities, so numeric is the only portable choice there. If your document is UTF-8 and stays UTF-8, raw characters are usually fine and smaller.</p></div>
+<div class="faq-item"><h3>Why does &amp;nbsp; show up as a visible box or weird character in my email?</h3><p>Encoding mismatch. The document claims one character encoding (say ISO-8859-1) while the bytes are in another (UTF-8), or vice versa, so U+00A0 or the entity's target renders through the wrong table. Declare &lt;meta charset="UTF-8"&gt; as the first thing in head, send the matching Content-Type header, and the problem disappears.</p></div>
+<div class="faq-item"><h3>Do I still need entities in a UTF-8 page?</h3><p>Only for markup-significant characters. Modern HTML is UTF-8 by default, so &eacute;, &copy;, and even emoji can be written as raw characters. Entities remain mandatory for &amp; &lt; &gt; in text, useful in generated HTML where you can't be sure of the encoding, and handy in email HTML where client support is years behind browsers.</p></div>
+<div class="faq-item"><h3>What library do developers use for entity handling in JavaScript?</h3><p>The de facto standard is fb55/entities (BSD-2-Clause licensed), which powers the htmlparser2 ecosystem and supplies decode/encode maps for HTML and XML. For a handful of characters, a regex over named and numeric patterns is fine — this site's converter does exactly that in about 40 lines — but for untrusted input a maintained library handles the 2,231 HTML5 names, entity edge cases, and XML's stricter rules for you.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/html-entity-converter/">HTML Entity Converter</a>
+<a href="/base64-encoder/">Base64 Encoder</a>
+<a href="/url-parser/">URL Parser</a>
+<a href="/curl-converter/">curl Converter</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiFi QR Code Generator — WPA2 &amp; Enterprise | ToolAspect</title>
+<meta name="description" content="Free WiFi QR code generator. Full WPA/WPA2/WPA3 and Enterprise EAP encoding with correct escaping, hidden network support, PNG and SVG export.">
+<link rel="canonical" href="https://toolaspect.com/wifi-qr-code-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="WiFi QR Code Generator — WPA2 &amp; Enterprise">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Guest WiFi in one scan: WPA, WEP, open, hidden, and 802.1X Enterprise EAP strings, with the escaping done right.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/wifi-qr-code-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WiFi QR Code Generator | WPA2 + Enterprise">
+<meta name="twitter:description" content="Encode WPA/WPA2/WPA3, hidden networks, and Enterprise EAP WiFi into a scannable QR code.">
+<meta name="keywords" content="wifi qr code generator, wifi qr, wpa2 qr code, enterprise wifi qr, eap qr code, guest network qr code, wifi password qr">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"WiFi QR Code Generator","description":"Free WiFi QR code generator with full WPA/WPA2/WPA3 personal, WEP, open, hidden network, and 802.1X Enterprise EAP encoding, correct reserved-character escaping, and PNG/SVG export.","url":"https://toolaspect.com/wifi-qr-code-generator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I create a QR code for my WiFi?","acceptedAnswer":{"@type":"Answer","text":"Encode the string WIFI:T:WPA;S:YourNetwork;P:YourPassword;; into a QR code, where S is the network name and P is the password. Most phone cameras scan it and offer to join instantly. The generator above builds the string with the required escaping for you."}},
+{"@type":"Question","name":"Why does my WiFi QR code not work?","acceptedAnswer":{"@type":"Answer","text":"Nine times out of ten it is escaping. The WiFi format treats backslash, semicolon, comma, colon and double-quote as reserved, so a password like p@ss;word must be encoded as p@ss\\;word with a backslash in front of the semicolon. Wrong network name (broadcast vs actual), a 5 GHz-only SSID scanned by a 2.4 GHz-only device, and trailing spaces pasted with the password cover most of the rest."}},
+{"@type":"Question","name":"Can a QR code connect to enterprise WiFi with a username and password?","acceptedAnswer":{"@type":"Answer","text":"On Android, yes. The extended WIFI: format supports T:WPA2-EAP plus E: (EAP method), PH2: (phase 2), I: (identity) and A: (anonymous identity) fields, following the encoding Android's setup tools accept. iOS camera scanning does not join enterprise networks from QR codes, so for Apple users print the credentials instead."}},
+{"@type":"Question","name":"Does a WiFi QR code expose my password?","acceptedAnswer":{"@type":"Answer","text":"Yes, to anyone who scans it or photographs the code. The password is inside the QR in readable text, so treat a printed WiFi QR like a post-it with the password on it. Put guests on a guest VLAN, use a separate guest SSID, and rotate the password when you retire the sign."}},
+{"@type":"Question","name":"How long can a WiFi password in a QR code be?","acceptedAnswer":{"@type":"Answer","text":"WPA/WPA2/WPA3 passphrases run 8 to 63 characters. A 63-character passphrase plus a long SSID still fits comfortably in a QR code (a typical personal WiFi payload is 50-90 bytes, QR version 3 to 5), but every character makes the printed code denser, so a 20-30 character passphrase is the sweet spot of strong and scannable."}},
+{"@type":"Question","name":"Do WiFi QR codes work for hidden networks?","acceptedAnswer":{"@type":"Answer","text":"Yes, add H:true to the string (WIFI:T:WPA;S:name;P:pass;H:true;;). Hidden networks don't broadcast their SSID, so the flag tells the phone to connect even though it can't see the network in its list. Hiding an SSID adds no real security and can make connections flakier, but the code handles it either way."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@type":"BreadcrumbList","@context":"https://schema.org","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"WiFi QR Code Generator","item":"https://toolaspect.com/wifi-qr-code-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.93rem;color:var(--text);line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.input-grid.two{grid-template-columns:1fr 1fr}
+@media(max-width:640px){.input-grid,.input-grid.two{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-row{display:flex;align-items:center;gap:.5rem;font-size:.9rem;color:var(--text);margin-top:.5rem;cursor:pointer}
+.check-row input{width:18px;height:18px;accent-color:var(--primary)}
+.psk-count{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.psk-count.bad{color:var(--danger)}
+.qr-stage{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;margin-top:1.25rem}
+.qr-box{background:#fff;padding:14px;border-radius:var(--radius);line-height:0;flex-shrink:0}
+.qr-box canvas{width:248px;height:248px;image-rendering:pixelated}
+.qr-meta{flex:1;min-width:240px}
+.qr-meta .stat-row{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.qr-meta .stat-row:last-child{border-bottom:none}
+.qr-meta .stat-row span:first-child{color:var(--muted)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.6rem 1.1rem;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.payload-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.82rem;word-break:break-all;color:var(--success);margin-top:1rem}
+.warn{background:#3b2f11;border:1px solid #a16207;color:#fde68a;border-radius:var(--radius);padding:.7rem .9rem;font-size:.83rem;margin-top:.75rem;line-height:1.5}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📶 WiFi QR Code Generator</h1>
+<p>WPA, WPA2, WPA3, hidden, and Enterprise EAP — with the escaping done right</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> a WiFi QR code encodes the string <strong>WIFI:T:WPA;S:NetworkName;P:Password;;</strong> — phones scan it and join instantly. Fill in your network below; this generator handles the five reserved characters most free tools break on, plus hidden networks and full Enterprise (802.1X) credentials.
+</div>
+
+<div class="section-card">
+<h2>Network Settings</h2>
+<div class="input-grid">
+<div class="input-group"><label>Network Name (SSID)</label><input id="ssid" type="text" value="BlueHouse 5G"></div>
+<div class="input-group"><label>Security</label><select id="sec" onchange="secChange()">
+<option value="WPA" selected>WPA / WPA2 / WPA3 (personal)</option>
+<option value="WPA2-EAP">WPA2/WPA3 Enterprise (EAP)</option>
+<option value="WEP">WEP (legacy)</option>
+<option value="nopass">Open (no password)</option>
+</select></div>
+<div class="input-group" id="pwGroup"><label>Password</label><input id="pass" type="text" value="correct horse battery staple" spellcheck="false"><div class="psk-count" id="pskCount"></div></div>
+</div>
+<label class="check-row"><input type="checkbox" id="hidden"> Hidden network (SSID not broadcast)</label>
+<div id="eapPane" style="display:none;margin-top:1rem">
+<div class="input-grid">
+<div class="input-group"><label>EAP Method (E:)</label><select id="eapM"><option>PEAP</option><option selected>TTLS</option><option>TLS</option><option>PWD</option></select></div>
+<div class="input-group"><label>Phase 2 (PH2:)</label><select id="ph2"><option selected>MSCHAPV2</option><option>PAP</option><option>MSCHAP</option><option>GTC</option><option>MD5</option><option>CHAP</option></select></div>
+<div class="input-group"><label>Identity / Username (I:)</label><input id="ident" type="text" value="jdoe@example.edu" spellcheck="false"></div>
+<div class="input-group"><label>Anonymous Identity (A:, optional)</label><input id="anonId" type="text" value="anon@example.edu" spellcheck="false"></div>
+</div>
+<div class="warn" style="display:block">Enterprise QR joins work on Android (this is the ZXing-derived extended format Android's tooling accepts). iOS camera scanning does not join enterprise networks from a QR — print the credentials for Apple users.</div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>QR Code &amp; Export</h2>
+<div class="payload-box" id="payload">—</div>
+<div class="qr-stage">
+<div class="qr-box"><canvas id="qrCanvas" width="1080" height="1080"></canvas></div>
+<div class="qr-meta">
+<div class="stat-row"><span>Payload size</span><span id="mLen">—</span></div>
+<div class="stat-row"><span>QR version</span><span id="mVersion">—</span></div>
+<div class="stat-row"><span>Modules</span><span id="mModules">—</span></div>
+<div class="stat-row"><span>Min print size (0.33 mm/module)</span><span id="mPrint">—</span></div>
+<div class="btn-row">
+<button class="btn" onclick="dlPng()">PNG (1200px)</button>
+<button class="btn ghost" onclick="dlSvg()">SVG</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/business-card-qr-generator/">Business Card QR</a></li><li style="margin:4px 0"><a href="/google-review-qr-generator/">Google Review QR</a></li><li style="margin:4px 0"><a href="/qr-code-generator/">Qr Code Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/wifi-qr-code/">Read the WiFi QR code guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>The WIFI: Format, Field by Field</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Key</th><th>Means</th><th>Example</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>T:</code></td><td>Authentication</td><td><code>WPA</code></td><td>WPA covers WPA, WPA2 and WPA3-Personal. Also <code>WEP</code>, <code>nopass</code>, or <code>WPA2-EAP</code> for enterprise</td></tr>
+<tr><td><code>S:</code></td><td>SSID</td><td><code>BlueHouse 5G</code></td><td>Must match the broadcast name exactly, spaces included</td></tr>
+<tr><td><code>P:</code></td><td>Password</td><td><code>correct horse…</code></td><td>8–63 chars for WPA; omitted entirely for <code>nopass</code></td></tr>
+<tr><td><code>H:</code></td><td>Hidden</td><td><code>true</code></td><td>Only appears when the network doesn't broadcast its SSID</td></tr>
+<tr><td><code>E:</code></td><td>EAP method</td><td><code>TTLS</code></td><td>Enterprise only: PEAP, TTLS, TLS, PWD</td></tr>
+<tr><td><code>PH2:</code></td><td>Phase 2 auth</td><td><code>MSCHAPV2</code></td><td>Enterprise only: inner tunnel method</td></tr>
+<tr><td><code>I:</code></td><td>Identity</td><td><code>jdoe@example.edu</code></td><td>Enterprise username</td></tr>
+<tr><td><code>A:</code></td><td>Anonymous identity</td><td><code>anon@example.edu</code></td><td>Outer identity for TTLS/PEAP; protects the real username</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The whole string ends with a doubled semicolon (<code>;;</code>) — one closes the last field, one closes the record. The five reserved characters <code>\ ; , : "</code> must be backslash-escaped wherever they appear in an SSID or password.</p>
+</div>
+
+<div class="section-card">
+<h2>WiFi Security Types: What to Pick in 2026</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Type</th><th>T: value</th><th>Use it?</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>WPA3-Personal</td><td><code>WPA</code></td><td>Yes</td><td>Current standard (SAE); phones join via the same QR string</td></tr>
+<tr><td>WPA2-Personal</td><td><code>WPA</code></td><td>Yes</td><td>Still the compatibility default for guest and IoT networks</td></tr>
+<tr><td>WPA2/WPA3-Enterprise</td><td><code>WPA2-EAP</code></td><td>Offices, campuses</td><td>Per-user login via 802.1X; QR join works on Android</td></tr>
+<tr><td>WEP</td><td><code>WEP</code></td><td>No</td><td>Crackable in minutes; encode only for legacy gear you can't replace yet</td></tr>
+<tr><td>Open</td><td><code>nopass</code></td><td>Captive portals only</td><td>No encryption; anyone in range can read traffic</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How This WiFi QR Code Generator Works</h2>
+<p>Every phone camera understands the WIFI: string format that originated with the ZXing barcode library and is now the de facto standard. The format is simple, but it has teeth: five characters are reserved, and a password containing one of them breaks the join if it isn't escaped. Most free generators handle WPA personal and stop there; this one covers the full format including the enterprise extension.</p>
+<h3>The format</h3>
+<p><code>WIFI:T:WPA;S:ssid;P:password;H:true;;</code> — key/value pairs separated by semicolons, terminated by a doubled semicolon. Reserved characters <code>\ ; , : "</code> take a backslash in both SSID and password. For enterprise networks, <code>T:WPA2-EAP</code> plus the <code>E:</code>, <code>PH2:</code>, <code>I:</code> and <code>A:</code> fields carry the 802.1X settings, following the extended encoding Android accepts.</p>
+<h3>How to use it</h3>
+<p>Type the SSID exactly as devices see it — spaces and capitalization included — pick the security type, and enter the password. The payload preview shows the exact string being encoded, so you can watch a semicolon in your password become <code>\;</code> in real time. For open networks the password field disappears; for hidden networks tick the box. Download a PNG for the guest sign or an SVG for print.</p>
+<h3>A worked example</h3>
+<p>Home network: SSID <code>BlueHouse 5G</code>, WPA2 password <code>correct horse battery staple</code>. The string is <code>WIFI:T:WPA;S:BlueHouse 5G;P:correct horse battery staple;;</code> — 58 bytes, no reserved characters, QR version 4 at error correction M, a 33×33 module grid. At the 0.33 mm per module floor that prints at 10.9 mm, so a 5 cm sign is enormous margin: guests scan it from across the room.</p>
+<p>Now a campus network. SSID <code>CorpWiFi</code>, TTLS with MSCHAPv2, username and anonymous identity, password <code>secretpass</code>: <code>WIFI:T:WPA2-EAP;S:CorpWiFi;P:secretpass;E:TTLS;PH2:MSCHAPV2;I:jdoe@example.edu;A:anon@example.edu;;</code> — 99 bytes, QR version 6, 41×41 modules, 13.5 mm minimum print. Still small. The practical limit isn't the QR capacity (version 40 holds 2,953 bytes); it's that denser codes need bigger prints, and passwords with reserved characters need the escaping this page applies for you.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I create a QR code for my WiFi?</h3><p>Encode the string WIFI:T:WPA;S:YourNetwork;P:YourPassword;; into a QR code, where S is the network name and P is the password. Most phone cameras scan it and offer to join instantly. The generator above builds the string with the required escaping for you.</p></div>
+<div class="faq-item"><h3>Why does my WiFi QR code not work?</h3><p>Nine times out of ten it is escaping. The WiFi format treats backslash, semicolon, comma, colon and double-quote as reserved, so a password like p@ss;word must be encoded as p@ss\;word with a backslash in front of the semicolon. Wrong network name (broadcast vs actual), a 5 GHz-only SSID scanned by a 2.4 GHz-only device, and trailing spaces pasted with the password cover most of the rest.</p></div>
+<div class="faq-item"><h3>Can a QR code connect to enterprise WiFi with a username and password?</h3><p>On Android, yes. The extended WIFI: format supports T:WPA2-EAP plus E: (EAP method), PH2: (phase 2), I: (identity) and A: (anonymous identity) fields, following the encoding Android's setup tools accept. iOS camera scanning does not join enterprise networks from QR codes, so for Apple users print the credentials instead.</p></div>
+<div class="faq-item"><h3>Does a WiFi QR code expose my password?</h3><p>Yes, to anyone who scans it or photographs the code. The password is inside the QR in readable text, so treat a printed WiFi QR like a post-it with the password on it. Put guests on a guest VLAN, use a separate guest SSID, and rotate the password when you retire the sign.</p></div>
+<div class="faq-item"><h3>How long can a WiFi password in a QR code be?</h3><p>WPA/WPA2/WPA3 passphrases run 8 to 63 characters. A 63-character passphrase plus a long SSID still fits comfortably in a QR code (a typical personal WiFi payload is 50-90 bytes, QR version 3 to 5), but every character makes the printed code denser, so a 20-30 character passphrase is the sweet spot of strong and scannable.</p></div>
+<div class="faq-item"><h3>Do WiFi QR codes work for hidden networks?</h3><p>Yes, add H:true to the string (WIFI:T:WPA;S:name;P:pass;H:true;;). Hidden networks don't broadcast their SSID, so the flag tells the phone to connect even though it can't see the network in its list. Hiding an SSID adds no real security and can make connections flakier, but the code handles it either way.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related QR Tools</h2>
+<div class="related-links">
+<a href="/business-card-qr-generator/">📇 Business Card QR</a>
+<a href="/google-review-qr-generator/">⭐ Google Review QR</a>
+<a href="/qr-code-generator/">🔲 QR Code Generator</a>
+<a href="/qr-code-with-logo/">🎨 QR Code With Logo</a>
+<a href="/qr-code-batch/">📦 QR Code Batch</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+function escWifi(s){return String(s||'').replace(/([\\;,:"])/g,'\\$1');}
+function secChange(){
+  var sec=document.getElementById('sec').value;
+  document.getElementById('eapPane').style.display=sec==='WPA2-EAP'?'block':'none';
+  document.getElementById('pwGroup').style.display=sec==='nopass'?'none':'flex';
+  calc();
+}
+var currentQr=null;
+function buildWifi(){
+  var ssid=document.getElementById('ssid').value;
+  var sec=document.getElementById('sec').value;
+  var pass=document.getElementById('pass').value;
+  var hidden=document.getElementById('hidden').checked;
+  var p=['WIFI:T:'+sec,'S:'+escWifi(ssid)];
+  if(sec!=='nopass')p.push('P:'+escWifi(pass));
+  if(hidden)p.push('H:true');
+  if(sec==='WPA2-EAP'){
+    p.push('E:'+document.getElementById('eapM').value);
+    p.push('PH2:'+document.getElementById('ph2').value);
+    var id=document.getElementById('ident').value.trim();
+    if(id)p.push('I:'+escWifi(id));
+    var an=document.getElementById('anonId').value.trim();
+    if(an)p.push('A:'+escWifi(an));
+  }
+  return p.join(';')+';;';
+}
+function calc(){
+  var s=buildWifi();
+  document.getElementById('payload').textContent=s;
+  var sec=document.getElementById('sec').value;
+  var pass=document.getElementById('pass').value;
+  var pc=document.getElementById('pskCount');
+  if(sec==='WPA'){
+    var n=pass.length;
+    pc.textContent=n+' / 63 characters'+(n>0&&n<8?' — WPA passphrases need at least 8':'');
+    pc.className='psk-count'+(n>0&&n<8?' bad':'');
+  }else if(sec==='WEP'){
+    var ok=/^([0-9a-fA-F]{10}|[0-9a-fA-F]{26}|.{5}|.{13})$/.test(pass);
+    pc.textContent=pass.length+' characters — WEP keys are 5 or 13 ASCII chars, or 10/26 hex';
+    pc.className='psk-count'+(ok?'':' bad');
+  }else pc.textContent='';
+  try{
+    var qr=qrcode(0,'M');qr.addData(s,'Byte');qr.make();
+    currentQr=qr;
+    var n2=qr.getModuleCount(),v=(n2-17)/4;
+    drawQr(qr,1080);
+    document.getElementById('mLen').textContent=new Blob([s]).size+' bytes';
+    document.getElementById('mVersion').textContent='v'+v;
+    document.getElementById('mModules').textContent=n2+'×'+n2;
+    document.getElementById('mPrint').textContent=(n2*0.33).toFixed(1)+' mm';
+  }catch(e){document.getElementById('mVersion').textContent='Too long';}
+}
+function drawQr(qr,size){
+  var c=document.getElementById('qrCanvas');c.width=size;c.height=size;
+  var ctx=c.getContext('2d'),mc=qr.getModuleCount(),cell=size/mc,quiet=cell*4;
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);ctx.fillStyle='#000000';
+  for(var r=0;r<mc;r++)for(var col=0;col<mc;col++)if(qr.isDark(r,col))ctx.fillRect(quiet+col*cell,quiet+r*cell,Math.ceil(cell),Math.ceil(cell));
+}
+function dl(name,url){var a=document.createElement('a');a.download=name;a.href=url;a.click();}
+function dlPng(){dl('wifi-qr.png',document.getElementById('qrCanvas').toDataURL('image/png'));}
+function dlSvg(){
+  var qr=currentQr;if(!qr)return;
+  var mc=qr.getModuleCount(),quiet=4,unit=10,W=(mc+quiet*2)*unit,d='';
+  for(var r=0;r<mc;r++)for(var c=0;c<mc;c++)if(qr.isDark(r,c))d+='M'+((c+quiet)*unit)+' '+((r+quiet)*unit)+'h'+unit+'v'+unit+'h-'+unit+'z';
+  var S='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+W+'" viewBox="0 0 '+W+' '+W+'"><rect width="100%" height="100%" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>';
+  dl('wifi-qr.svg',URL.createObjectURL(new Blob([S],{type:'image/svg+xml'})));
+}
+['ssid','pass','eapM','ph2','ident','anonId'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);});
+document.getElementById('hidden').addEventListener('change',calc);
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

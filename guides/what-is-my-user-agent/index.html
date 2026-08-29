@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Is My User Agent? UA Strings Explained | ToolAspect</title>
+<meta name="description" content="Your user agent is one header line announcing your browser, OS, and device. How to find yours, what each token means, and why Edge hides as Chrome.">
+<link rel="canonical" href="https://toolaspect.com/guides/what-is-my-user-agent/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What Is My User Agent? UA Strings Explained","description":"How to find your user agent string, what every token means, how bots and browsers identify themselves, and why user agent sniffing keeps breaking.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I find my user agent?","acceptedAnswer":{"@type":"Answer","text":"Open any user agent checker (ours parses yours live and entirely in your browser), or open devtools: Network tab, click any request, look for the user-agent line under Request Headers. Command line users can hit aUA echo endpoint with curl -A left unset, or just read the header their HTTP library sends."}},
+{"@type":"Question","name":"Why does every browser start with Mozilla/5.0?","acceptedAnswer":{"@type":"Answer","text":"Legacy compatibility from the 1990s browser wars. Servers used to gate features by sniffing for 'Mozilla', so every browser that came later claimed the token to get the good version of pages. It survives because removing it would break sites that still check — the web's longest-running white lie."}},
+{"@type":"Question","name":"Is my user agent unique? Can it identify me?","acceptedAnswer":{"@type":"Answer","text":"On its own, no — a stock Chrome-on-Windows UA is shared by millions. But it's one input to fingerprinting: combined with screen size, fonts, and other headers, it narrows a browser down considerably. Freezing or reducing the UA string, as Chrome and Firefox now do by default, exists precisely to shrink that surface."}},
+{"@type":"Question","name":"Can a website block me based on my user agent?","acceptedAnswer":{"@type":"Answer","text":"Yes, and they do — paywalls block 'bot' UAs, video sites serve different layouts to phones, and scrapers get 403s. It's also trivially bypassed with a one-line override, which is why serious bot management pairs UA checks with IP reputation and behavior analysis."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}h3{font-size:1rem;font-weight:600;margin:20px 0 8px;color:var(--primary-hover)}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#fff}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .6rem;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg)}th{color:var(--text)}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.83em;word-break:break-all}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>What Is My User Agent? UA Strings Explained</h1>
+<div class="meta"><span>🔍 ~90K searches/mo (est.)</span><span>💰 CPC: $0.5–1.5</span><span>⏱️ 7 min read</span></div>
+<p class="intro">Every request your browser makes announces itself with a single line of text — the user agent. That line is why sites know to serve you the mobile layout, why your analytics dashboard has a "Safari 17.5, iOS" row, and why Google's crawler shows up under its own name. Here's how to see yours, what each cryptic token actually means, and what the string can and can't tell a website about you.</p>
+
+<div class="cta-box">
+<h3>See your own user agent, parsed live</h3>
+<p style="color:#fff;opacity:.9;margin:0">Our parser decodes your UA into browser, engine, OS, and device — client-side, nothing uploaded.</p>
+<a href="/user-agent-parser/">Open the User Agent Parser</a>
+</div>
+
+<h2>How to find your user agent</h2>
+<p>Three ways, fastest first:</p>
+<ol>
+<li><strong>Open the <a href="/user-agent-parser/">User Agent Parser</a></strong> — it reads <code>navigator.userAgent</code> and decodes it in front of you. Nothing is sent anywhere; view source and confirm.</li>
+<li><strong>Devtools:</strong> F12 → Network tab → click any request → Request Headers → <code>user-agent</code>. This shows the real header, which matters if you've enabled device emulation.</li>
+<li><strong>Any page's JavaScript console:</strong> type <code>navigator.userAgent</code> and press Enter.</li>
+</ol>
+
+<h2>Anatomy of the string</h2>
+<p>A typical Windows Chrome user agent:</p>
+<p><code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36</code></p>
+<p>Read it in chunks:</p>
+<ul>
+<li><code>Mozilla/5.0</code> — the ancient compatibility flag. Every browser claims it; it means nothing.</li>
+<li><code>(Windows NT 10.0; Win64; x64)</code> — Windows 10 or 11 (both report NT 10.0), 64-bit.</li>
+<li><code>AppleWebKit/537.36 (KHTML, like Gecko)</code> — rendering-engine lineage: KHTML begat WebKit.</li>
+<li><code>Chrome/126.0.0.0</code> — Chrome 126, engine Blink.</li>
+<li><code>Safari/537.36</code> — another historical token, present even in Chrome. Ignore it.</li>
+</ul>
+<p>The parsing rule that matters: <strong>read right to left</strong>. The last meaningful browser token is the real one. Edge adds <code>Edg/126.0.0.0</code> after Chrome's token; Opera adds <code>OPR/</code>. A left-to-right reader reports every Chromium browser as Chrome, which is exactly how sites miscount Edge out of existence.</p>
+
+<h2>What the tokens look like on other platforms</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Platform</th><th>Distinguishing token</th><th>Parses as</th></tr></thead>
+<tbody>
+<tr><td>iPhone Safari</td><td><code>iPhone; CPU iPhone OS 17_5 … Version/17.5 Mobile/15E148</code></td><td>Safari 17.5, iOS 17.5, mobile, WebKit</td></tr>
+<tr><td>Android Chrome</td><td><code>Linux; Android 14; Pixel 8 … Mobile Safari</code></td><td>Chrome 126, Android 14, Pixel 8, mobile</td></tr>
+<tr><td>Mac Firefox</td><td><code>Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/ Firefox/127.0</code></td><td>Firefox 127, macOS, desktop, Gecko</td></tr>
+<tr><td>Google's crawler</td><td><code>compatible; Googlebot/2.1; +http://www.google.com/bot.html</code></td><td>Googlebot 2.1, platform type: bot</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two quirks worth knowing. Safari freezes the macOS version at 10.15 in its UA regardless of what you're running. And since iPadOS 13, iPads identify as desktop Safari — so "desktop" traffic secretly contains iPads.</p>
+
+<h2>Why do browsers lie in the user agent?</h2>
+<p>Because the web rewarded lying. In 1994-96, servers sniffed for "Mozilla" (Netscape) and served crippled content to everything else — so Internet Explorer claimed to be Mozilla. Later browsers inherited the token the same way, each adding its own name after the fact. The string is an archaeological dig: Mozilla at the top for the 90s, KHTML and Gecko for the 2000s, and the actual browser name at the far right where it was last buried.</p>
+
+<h2>Can your user agent identify you?</h2>
+<p>Not alone — a stock Chrome-on-Windows UA is shared by millions of sessions. But it's a standard input to <strong>browser fingerprinting</strong>: paired with screen resolution, installed fonts, and canvas behavior, it helps shrink "unknown browser" into "probably this machine." That's why Chrome's User-Agent Reduction froze the minor version (<code>126.0.0.0</code> forever) and why the industry is migrating to User-Agent Client Hints, where precise details are served only to sites that ask with a specific header and a stated reason.</p>
+<p>Practical takeaway: if a site's "your browser is unique among 200,000 visitors" fingerprint test scares you, the UA string is one of the easier signals to normalize — but changing it can also make you <em>more</em> rare, not less. A slightly-off UA is itself a fingerprint.</p>
+
+<h2>Bots, and how to spot them</h2>
+<p>Honest crawlers identify themselves in the open. Googlebot's UA contains <code>compatible; Googlebot/2.1; +http://www.google.com/bot.html</code>; OpenAI's GPTBot, Anthropic's ClaudeBot, and Bing's bingbot follow the same <code>Name/version; +URL</code> pattern so site owners can find their documentation and choose to allow or block them in robots.txt. A parser like bowser returns <code>platform.type: "bot"</code> for these. What UA parsing cannot do is catch a scraper wearing a stolen browser string — that takes rate analysis and IP reputation, not string matching.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I find my user agent?</h3><p>Open any user agent checker (ours parses yours live and entirely in your browser), or open devtools: Network tab, click any request, look for the user-agent line under Request Headers. Command line users can hit a UA echo endpoint with curl, or just read the header their HTTP library sends.</p></div>
+<div class="faq-item"><h3>Why does every browser start with Mozilla/5.0?</h3><p>Legacy compatibility from the 1990s browser wars. Servers used to gate features by sniffing for "Mozilla", so every browser that came later claimed the token to get the good version of pages. It survives because removing it would break sites that still check — the web's longest-running white lie.</p></div>
+<div class="faq-item"><h3>Is my user agent unique? Can it identify me?</h3><p>On its own, no — a stock Chrome-on-Windows UA is shared by millions. But it's one input to fingerprinting: combined with screen size, fonts, and other headers, it narrows a browser down considerably. Freezing or reducing the UA string, as Chrome and Firefox now do by default, exists precisely to shrink that surface.</p></div>
+<div class="faq-item"><h3>Can a website block me based on my user agent?</h3><p>Yes, and they do — paywalls block "bot" UAs, video sites serve different layouts to phones, and scrapers get 403s. It's also trivially bypassed with a one-line override, which is why serious bot management pairs UA checks with IP reputation and behavior analysis.</p></div>
+
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/user-agent-parser/">User Agent Parser</a>
+<a href="/url-parser/">URL Parser</a>
+<a href="/url-encoder/">URL Encoder</a>
+<a href="/regex-tester/">Regex Tester</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

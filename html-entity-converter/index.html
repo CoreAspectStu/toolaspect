@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Entity Converter — Free Developer Tool | ToolAspect</title>
+<meta name="description" content="Free HTML entity converter. Encode and decode 121 named entities like &amp;copy; plus decimal and hex numeric forms, all in your browser.">
+<link rel="canonical" href="https://toolaspect.com/html-entity-converter/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="HTML Entity Converter — Encode &amp; Decode Entities">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert text to HTML entities and back: named, decimal, and hex forms, with a 121-entity reference table. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/html-entity-converter/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML Entity Converter | Free Online Tool">
+<meta name="twitter:description" content="Encode text to HTML entities (named, decimal, hex) and decode entities back to characters.">
+<meta name="keywords" content="html entity converter, html entities encode decode, entity decoder, ampersand entity, nbsp entity, unicode to html entity">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HTML Entity Converter","description":"Free HTML entity converter. Encode text using named, decimal, or hex entities and decode them back, with a 121-entity reference table. Runs entirely client-side.","url":"https://toolaspect.com/html-entity-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is an HTML entity?","acceptedAnswer":{"@type":"Answer","text":"An HTML entity is a stand-in sequence for a character that would otherwise be parsed as markup or that a keyboard can't type. It starts with an ampersand and ends with a semicolon, like &amp;amp; for &, &amp;lt; for <, or &amp;copy; for the copyright sign. Numeric forms like &#169; or &#xA9; address the character's Unicode code point directly."}},
+{"@type":"Question","name":"When do I need to escape & < > in HTML?","acceptedAnswer":{"@type":"Answer","text":"Inside element text, & < and > are the three that matter: & could start an entity, and < could start a tag. Escape & whenever it's followed by something that could look like an entity, and escape < always; > is technically forgiving in text but escaping it is standard practice. Inside attribute values you should also escape quotes that match the delimiter."}},
+{"@type":"Question","name":"What is the difference between &amp;nbsp; and a regular space?","acceptedAnswer":{"@type":"Answer","text":"&amp;nbsp; (U+00A0) is a non-breaking space. A browser will not wrap a line at it, and HTML collapses runs of normal spaces down to one, while nbsp sequences render in full. That's why old-school indenting used nbsp runs and why prices like 10&nbsp;USD keep the unit glued to the number."}},
+{"@type":"Question","name":"Are named entities case-sensitive?","acceptedAnswer":{"@type":"Answer","text":"Yes. &amp;copy; is the copyright sign but &amp;COPY; also works in HTML5, while Greek letters are strictly case-linked: &amp;pi; is lowercase and &amp;Pi; is uppercase. Numeric forms sidestep the whole issue, which is one reason code generators usually emit &#...; instead of names."}},
+{"@type":"Question","name":"Why does the decoder leave &amp;lt; as &amp;lt; instead of turning it into <?","acceptedAnswer":{"@type":"Answer","text":"Because of single-pass decoding. The text &amp;lt; means the original string was literally &lt; (someone escaped an ampersand in front of lt;). Decoding in one pass preserves that; repeatedly re-decoding until nothing changes would corrupt double-escaped text, so well-behaved decoders stop after one pass."}},
+{"@type":"Question","name":"How many named entities does HTML5 define?","acceptedAnswer":{"@type":"Answer","text":"HTML5 defines 2,231 named character references, 2,125 of them terminated with a semicolon (the rest are legacy forms that work without one). This converter maps the 121 that cover everyday text: markup specials, currency, punctuation, math symbols, Greek letters, and accented Latin characters. Anything else still round-trips through numeric decimal or hex forms."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"HTML Entity Converter","item":"https://toolaspect.com/html-entity-converter/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.5rem;margin-bottom:1rem}
+@media(max-width:640px){.mode-row{grid-template-columns:1fr 1fr}}
+.mode-btn{padding:.6rem .5rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);font-size:.85rem;cursor:pointer;text-align:center;transition:all .15s}
+.mode-btn:hover{border-color:var(--primary)}
+.mode-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+textarea.ta-io{width:100%;min-height:130px;padding:.8rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5;box-sizing:border-box;resize:vertical}
+textarea.ta-io:focus{outline:none;border-color:var(--primary)}
+.io-label{font-size:.8rem;color:var(--muted);margin-bottom:.35rem;display:flex;justify-content:space-between}
+.btn-row{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+.action-btn{padding:.55rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;cursor:pointer}
+.action-btn:hover{border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔗 HTML Entity Converter</h1>
+<p>Encode text to named, decimal, or hex entities &mdash; and decode them back</p>
+</div>
+
+<div class="aio-answer"><strong>Quick answer:</strong> an HTML entity swaps a character for an <code>&amp;</code>&hellip;<code>;</code> sequence so markup can't misread it: <code>&amp;amp;</code> renders as &amp;, <code>&amp;copy;</code> as &copy;, and numeric <code>&amp;#169;</code> / <code>&amp;#xA9;</code> hit the same code point. Paste text below, pick a mode, and the conversion runs instantly in your browser.</div>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="mode-row">
+<div class="mode-btn active" data-mode="named">Encode: named</div>
+<div class="mode-btn" data-mode="specials">Encode: &amp; &lt; &gt; only</div>
+<div class="mode-btn" data-mode="dec">Encode: decimal</div>
+<div class="mode-btn" data-mode="hex">Encode: hex</div>
+</div>
+<div class="mode-row" style="grid-template-columns:1fr">
+<div class="mode-btn" data-mode="decode">Decode: named + numeric &rarr; characters</div>
+</div>
+<div class="io-label"><span>Input</span><span id="inCount">0 chars</span></div>
+<textarea class="ta-io" id="input" spellcheck="false">Tom &amp; Jerry &lt;3 "Café" — €5</textarea>
+<div class="io-label" style="margin-top:1rem"><span>Output</span><span id="outCount">0 chars</span></div>
+<textarea class="ta-io" id="output" spellcheck="false" readonly></textarea>
+<div class="btn-row">
+<div class="action-btn" id="swapBtn">&#8644; Use output as input</div>
+<div class="action-btn" id="copyBtn">&#128203; Copy output</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li><li style="margin:4px 0"><a href="/url-parser/">URL Parser</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/html-entities/">Read the HTML entities guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>HTML Entity Reference Table (42 Most-Used Named Entities)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Named</th><th>Character</th><th>Decimal</th><th>Hex</th><th>Code Point</th></tr></thead>
+<tbody>
+<tr><td>&amp;amp;</td><td style="text-align:center">&amp;</td><td>&amp;#38;</td><td>&amp;#x26;</td><td>38</td></tr>
+<tr><td>&amp;lt;</td><td style="text-align:center">&lt;</td><td>&amp;#60;</td><td>&amp;#x3c;</td><td>60</td></tr>
+<tr><td>&amp;gt;</td><td style="text-align:center">&gt;</td><td>&amp;#62;</td><td>&amp;#x3e;</td><td>62</td></tr>
+<tr><td>&amp;quot;</td><td style="text-align:center">"</td><td>&amp;#34;</td><td>&amp;#x22;</td><td>34</td></tr>
+<tr><td>&amp;apos;</td><td style="text-align:center">'</td><td>&amp;#39;</td><td>&amp;#x27;</td><td>39</td></tr>
+<tr><td>&amp;nbsp;</td><td style="text-align:center">&nbsp;</td><td>&amp;#160;</td><td>&amp;#xa0;</td><td>160</td></tr>
+<tr><td>&amp;copy;</td><td style="text-align:center">&copy;</td><td>&amp;#169;</td><td>&amp;#xa9;</td><td>169</td></tr>
+<tr><td>&amp;reg;</td><td style="text-align:center">&reg;</td><td>&amp;#174;</td><td>&amp;#xae;</td><td>174</td></tr>
+<tr><td>&amp;trade;</td><td style="text-align:center">&trade;</td><td>&amp;#8482;</td><td>&amp;#x2122;</td><td>8482</td></tr>
+<tr><td>&amp;deg;</td><td style="text-align:center">&deg;</td><td>&amp;#176;</td><td>&amp;#xb0;</td><td>176</td></tr>
+<tr><td>&amp;frac12;</td><td style="text-align:center">&frac12;</td><td>&amp;#189;</td><td>&amp;#xbd;</td><td>189</td></tr>
+<tr><td>&amp;times;</td><td style="text-align:center">&times;</td><td>&amp;#215;</td><td>&amp;#xd7;</td><td>215</td></tr>
+<tr><td>&amp;divide;</td><td style="text-align:center">&divide;</td><td>&amp;#247;</td><td>&amp;#xf7;</td><td>247</td></tr>
+<tr><td>&amp;para;</td><td style="text-align:center">&para;</td><td>&amp;#182;</td><td>&amp;#xb6;</td><td>182</td></tr>
+<tr><td>&amp;laquo;</td><td style="text-align:center">&laquo;</td><td>&amp;#171;</td><td>&amp;#xab;</td><td>171</td></tr>
+<tr><td>&amp;raquo;</td><td style="text-align:center">&raquo;</td><td>&amp;#187;</td><td>&amp;#xbb;</td><td>187</td></tr>
+<tr><td>&amp;lsquo;</td><td style="text-align:center">&lsquo;</td><td>&amp;#8216;</td><td>&amp;#x2018;</td><td>8216</td></tr>
+<tr><td>&amp;rsquo;</td><td style="text-align:center">&rsquo;</td><td>&amp;#8217;</td><td>&amp;#x2019;</td><td>8217</td></tr>
+<tr><td>&amp;ldquo;</td><td style="text-align:center">&ldquo;</td><td>&amp;#8220;</td><td>&amp;#x201c;</td><td>8220</td></tr>
+<tr><td>&amp;rdquo;</td><td style="text-align:center">&rdquo;</td><td>&amp;#8221;</td><td>&amp;#x201d;</td><td>8221</td></tr>
+<tr><td>&amp;hellip;</td><td style="text-align:center">&hellip;</td><td>&amp;#8230;</td><td>&amp;#x2026;</td><td>8230</td></tr>
+<tr><td>&amp;ndash;</td><td style="text-align:center">&ndash;</td><td>&amp;#8211;</td><td>&amp;#x2013;</td><td>8211</td></tr>
+<tr><td>&amp;mdash;</td><td style="text-align:center">&mdash;</td><td>&amp;#8212;</td><td>&amp;#x2014;</td><td>8212</td></tr>
+<tr><td>&amp;euro;</td><td style="text-align:center">&euro;</td><td>&amp;#8364;</td><td>&amp;#x20ac;</td><td>8364</td></tr>
+<tr><td>&amp;pound;</td><td style="text-align:center">&pound;</td><td>&amp;#163;</td><td>&amp;#xa3;</td><td>163</td></tr>
+<tr><td>&amp;yen;</td><td style="text-align:center">&yen;</td><td>&amp;#165;</td><td>&amp;#xa5;</td><td>165</td></tr>
+<tr><td>&amp;cent;</td><td style="text-align:center">&cent;</td><td>&amp;#162;</td><td>&amp;#xa2;</td><td>162</td></tr>
+<tr><td>&amp;bull;</td><td style="text-align:center">&bull;</td><td>&amp;#8226;</td><td>&amp;#x2022;</td><td>8226</td></tr>
+<tr><td>&amp;dagger;</td><td style="text-align:center">&dagger;</td><td>&amp;#8224;</td><td>&amp;#x2020;</td><td>8224</td></tr>
+<tr><td>&amp;larr;</td><td style="text-align:center">&larr;</td><td>&amp;#8592;</td><td>&amp;#x2190;</td><td>8592</td></tr>
+<tr><td>&amp;rarr;</td><td style="text-align:center">&rarr;</td><td>&amp;#8594;</td><td>&amp;#x2192;</td><td>8594</td></tr>
+<tr><td>&amp;infin;</td><td style="text-align:center">&infin;</td><td>&amp;#8734;</td><td>&amp;#x221e;</td><td>8734</td></tr>
+<tr><td>&amp;alpha;</td><td style="text-align:center">&alpha;</td><td>&amp;#945;</td><td>&amp;#x3b1;</td><td>945</td></tr>
+<tr><td>&amp;pi;</td><td style="text-align:center">&pi;</td><td>&amp;#960;</td><td>&amp;#x3c0;</td><td>960</td></tr>
+<tr><td>&amp;sum;</td><td style="text-align:center">&sum;</td><td>&amp;#8721;</td><td>&amp;#x2211;</td><td>8721</td></tr>
+<tr><td>&amp;aacute;</td><td style="text-align:center">&aacute;</td><td>&amp;#225;</td><td>&amp;#xe1;</td><td>225</td></tr>
+<tr><td>&amp;eacute;</td><td style="text-align:center">&eacute;</td><td>&amp;#233;</td><td>&amp;#xe9;</td><td>233</td></tr>
+<tr><td>&amp;ntilde;</td><td style="text-align:center">&ntilde;</td><td>&amp;#241;</td><td>&amp;#xf1;</td><td>241</td></tr>
+<tr><td>&amp;szlig;</td><td style="text-align:center">&szlig;</td><td>&amp;#223;</td><td>&amp;#xdf;</td><td>223</td></tr>
+<tr><td>&amp;aring;</td><td style="text-align:center">&aring;</td><td>&amp;#229;</td><td>&amp;#xe5;</td><td>229</td></tr>
+<tr><td>&amp;aelig;</td><td style="text-align:center">&aelig;</td><td>&amp;#230;</td><td>&amp;#xe6;</td><td>230</td></tr>
+<tr><td>&amp;ccedil;</td><td style="text-align:center">&ccedil;</td><td>&amp;#231;</td><td>&amp;#xe7;</td><td>231</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The converter itself knows all 121 of these plus Greek letters, math symbols, and the rest of the accented Latin set &mdash; anything outside the map falls back to a numeric form automatically, so nothing is ever lost.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Entity Converter Works</h2>
+<p>Entities exist because HTML parses certain characters as structure. An ampersand might begin a entity reference, an angle bracket might open a tag, and plenty of Unicode characters can't be typed at all. The escape hatch is the same in every case: write the character's name or code point between an ampersand and a semicolon.</p>
+<h3>The three forms</h3>
+<p>Named: <code>&amp;eacute;</code> &rarr; &eacute;. Decimal: <code>&amp;#233;</code> &rarr; &eacute;. Hex: <code>&amp;#xE9;</code> &rarr; &eacute;. All three address Unicode code point 233, and every one of the 1,645 semicolon-terminated names in the HTML5 spec has numeric equivalents you can compute from its code point.</p>
+<h3>How to use it</h3>
+<p>Paste your text, pick a mode, and the output updates as you type. "Encode: named" is the everyday choice &mdash; it escapes <code>&amp;</code>, <code>&lt;</code>, <code>&gt;</code> and converts every non-ASCII character to its named entity when the converter knows one. "Encode: &amp; &lt; &gt; only" produces the smallest safe output for HTML text nodes. The decimal and hex modes skip names entirely, which is what you want for email templates and code generation. Decode handles all three forms in one pass and leaves unknown sequences untouched.</p>
+<h3>A worked example</h3>
+<p>The input box starts with <code>Tom &amp; Jerry &lt;3 "Caf&eacute;" &mdash; &euro;5</code> &mdash; real characters, including &eacute; (code point 233), an em dash (8212), and &euro; (8364). In "Encode: named" mode that becomes <code>Tom &amp;amp; Jerry &amp;lt;3 "Caf&amp;eacute;" &amp;mdash; &amp;euro;5</code>: the ampersand and angle bracket get escaped first so nothing can be misread as markup, then each non-ASCII character swaps for its name.</p>
+<p>Switch to hex mode and the same input comes out with <code>&amp;#xe9;</code> for &eacute; and <code>&amp;#x20ac;</code> for &euro;, skipping names entirely. Emoji have no names in HTML5 at all, so &#128512; encodes as <code>&amp;#128512;</code> in every mode; numeric is the only route past the Basic Multilingual Plane. Hit decode on any of these outputs and the original text comes back in a single pass.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is an HTML entity?</h3><p>An HTML entity is a stand-in sequence for a character that would otherwise be parsed as markup or that a keyboard can't type. It starts with an ampersand and ends with a semicolon, like &amp;amp; for &amp;, &amp;lt; for &lt;, or &amp;copy; for the copyright sign. Numeric forms like &#169; or &#xA9; address the character's Unicode code point directly.</p></div>
+<div class="faq-item"><h3>When do I need to escape &amp; &lt; &gt; in HTML?</h3><p>Inside element text, &amp; &lt; and &gt; are the three that matter: &amp; could start an entity, and &lt; could start a tag. Escape &amp; whenever it's followed by something that could look like an entity, and escape &lt; always; &gt; is technically forgiving in text but escaping it is standard practice. Inside attribute values you should also escape quotes that match the delimiter.</p></div>
+<div class="faq-item"><h3>What is the difference between &amp;nbsp; and a regular space?</h3><p>&amp;nbsp; (U+00A0) is a non-breaking space. A browser will not wrap a line at it, and HTML collapses runs of normal spaces down to one, while nbsp sequences render in full. That's why old-school indenting used nbsp runs and why prices like 10&nbsp;USD keep the unit glued to the number.</p></div>
+<div class="faq-item"><h3>Are named entities case-sensitive?</h3><p>Yes. &amp;copy; is the copyright sign but &amp;COPY; also works in HTML5, while Greek letters are strictly case-linked: &amp;pi; is lowercase and &amp;Pi; is uppercase. Numeric forms sidestep the whole issue, which is one reason code generators usually emit &#...; instead of names.</p></div>
+<div class="faq-item"><h3>Why does the decoder leave &amp;amp;lt; as &amp;amp;lt; instead of turning it into &lt;?</h3><p>Because of single-pass decoding. The text &amp;amp;lt; means the original string was literally &amp;lt; (someone escaped an ampersand in front of lt;). Decoding in one pass preserves that; repeatedly re-decoding until nothing changes would corrupt double-escaped text, so well-behaved decoders stop after one pass.</p></div>
+<div class="faq-item"><h3>How many named entities does HTML5 define?</h3><p>HTML5 defines 2,231 named character references, 2,125 of them terminated with a semicolon (the rest are legacy forms that work without one). This converter maps the 121 that cover everyday text: markup specials, currency, punctuation, math symbols, Greek letters, and accented Latin characters. Anything else still round-trips through numeric decimal or hex forms.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/base64-encoder/">🔐 Base64 Encoder</a>
+<a href="/url-parser/">🔗 URL Parser</a>
+<a href="/curl-converter/">🔄 curl Converter</a>
+<a href="/json-formatter/">🧩 JSON Formatter</a>
+<a href="/case-converter/">🔠 Case Converter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var ENT={"AMP":38,"COPY":169,"DD":8517,"ENG":330,"ETH":208,"GT":62,"LT":60,"QUOT":34,"REG":174,"THORN":222,"TRADE":8482,"amp":38,"lt":60,"gt":62,"quot":34,"apos":39,"nbsp":160,"copy":169,"reg":174,"trade":8482,"deg":176,"plusmn":177,"frac12":189,"frac14":188,"frac34":190,"times":215,"divide":247,"micro":181,"para":182,"sect":167,"laquo":171,"raquo":187,"hellip":8230,"mdash":8212,"ndash":8211,"euro":8364,"pound":163,"yen":165,"cent":162,"bull":8226,"dagger":8224,"Dagger":8225,"permil":8240,"larr":8592,"uarr":8593,"rarr":8594,"darr":8595,"harr":8596,"infin":8734,"ne":8800,"le":8804,"ge":8805,"alpha":945,"beta":946,"gamma":947,"pi":960,"sigma":963,"omega":969,"Alpha":913,"Beta":914,"Gamma":915,"Pi":928,"Sigma":931,"Omega":937,"sum":8721,"prod":8719,"radic":8730,"asymp":8776,"equiv":8801,"middot":183,"lsaquo":8249,"rsaquo":8250,"lsquo":8216,"rsquo":8217,"ldquo":8220,"rdquo":8221,"sbquo":8218,"bdquo":8222,"prime":8242,"Prime":8243,"oline":8254,"frasl":8260,"alefsym":8501,"weierp":8472,"image":8465,"real":8476,"ang":8736,"and":8743,"or":8744,"cap":8745,"cup":8746,"int":8747,"there4":8756,"sim":8764,"cong":8773,"sub":8834,"sup":8835,"nsub":8836,"sube":8838,"supe":8839,"oplus":8853,"otimes":8855,"perp":8869,"sdot":8901,"loz":9674,"spades":9824,"clubs":9827,"hearts":9829,"diams":9830,"aacute":225,"eacute":233,"iacute":237,"oacute":243,"uacute":250,"agrave":224,"egrave":232,"ccedil":231,"ntilde":241,"szlig":223,"auml":228,"ouml":246,"uuml":252,"aring":229,"aelig":230,"oslash":248,"eth":240,"THORN":222,"acirc":226,"ecirc":234,"ocirc":244,"ucirc":251,"atilde":227};
+var REV={};
+for(var k in ENT){var c=ENT[k];if(!(c in REV)||k.length<REV[c].length)REV[c]=k;}
+var mode='named';
+function encodeNamed(s){return Array.from(s).map(function(ch){var cp=ch.codePointAt(0);
+if(ch==='&')return '&amp;';if(ch==='<')return '&lt;';if(ch==='>')return '&gt;';
+if(cp>126){var n=REV[cp];return n?'&'+n+';':'&#'+cp+';';}return ch;}).join('');}
+function encodeSpecials(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function encodeNum(s,hex){return Array.from(s).map(function(ch){var cp=ch.codePointAt(0);
+if(ch==='&')return '&amp;';if(ch==='<')return '&lt;';if(ch==='>')return '&gt;';
+if(cp>126)return hex?'&#x'+cp.toString(16)+';':'&#'+cp+';';return ch;}).join('');}
+function decodeEnt(s){return s.replace(/&(#[xX][0-9a-fA-F]+|#[0-9]+|[a-zA-Z][a-zA-Z0-9]*);/g,function(m,g){
+if(g.charAt(0)==='#'){var v=(g.charAt(1)==='x'||g.charAt(1)==='X')?parseInt(g.slice(2),16):parseInt(g.slice(1),10);
+if(!isFinite(v)||v<0||v>0x10FFFF||(v>=0xD800&&v<=0xDFFF))return m;
+try{return String.fromCodePoint(v);}catch(e){return m;}}
+return Object.prototype.hasOwnProperty.call(ENT,g)?String.fromCodePoint(ENT[g]):m;});}
+function convert(){
+  var inp=document.getElementById('input').value;
+  var out;
+  if(mode==='named')out=encodeNamed(inp);
+  else if(mode==='specials')out=encodeSpecials(inp);
+  else if(mode==='dec')out=encodeNum(inp,false);
+  else if(mode==='hex')out=encodeNum(inp,true);
+  else out=decodeEnt(inp);
+  document.getElementById('output').value=out;
+  document.getElementById('inCount').textContent=inp.length+' chars';
+  document.getElementById('outCount').textContent=out.length+' chars';
+}
+Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'),function(btn){
+  btn.addEventListener('click',function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'),function(b){b.classList.remove('active');});
+    btn.classList.add('active');mode=btn.getAttribute('data-mode');convert();
+  });
+});
+document.getElementById('input').addEventListener('input',convert);
+document.getElementById('swapBtn').addEventListener('click',function(){
+  document.getElementById('input').value=document.getElementById('output').value;
+  Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'),function(b){
+    b.classList.toggle('active',b.getAttribute('data-mode')==='decode');
+  });
+  mode='decode';convert();
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var out=document.getElementById('output');
+  out.select();
+  try{document.execCommand('copy');}catch(e){}
+  if(navigator.clipboard&&out.value){navigator.clipboard.writeText(out.value).catch(function(){});}
+});
+convert();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

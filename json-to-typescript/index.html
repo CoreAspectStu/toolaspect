@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to TypeScript — Free Type Generator | ToolAspect</title>
+<meta name="description" content="JSON to TypeScript converter. Paste JSON, get clean interfaces and type aliases instantly. Runs 100% client-side; engine is Apache-2.0 open source.">
+<link rel="canonical" href="https://toolaspect.com/json-to-typescript/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="JSON to TypeScript — Free Type Generator">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn any JSON payload into TypeScript interfaces, entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/json-to-typescript/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON to TypeScript Converter | Free Online Tool">
+<meta name="twitter:description" content="Paste JSON, get TypeScript interfaces. Client-side, Apache-2.0 engine.">
+<meta name="keywords" content="json to typescript, json to typescript converter, typescript type generator, json to interface, generate types from json, json typescript online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JSON to TypeScript","description":"Free JSON to TypeScript converter. Paste any JSON payload and generate clean interfaces or type aliases with inferred unions, merged array shapes and strict-null handling, entirely client-side.","url":"https://toolaspect.com/json-to-typescript/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I generate TypeScript types from JSON?","acceptedAnswer":{"@type":"Answer","text":"Paste a sample payload into the converter and it walks the structure: objects become named interfaces, arrays become T[] or a merged interface for arrays of objects, and mixed arrays become a union of the distinct types. Copy the output into a .ts file and adjust field names or optionality to taste. The whole thing runs in your browser, so API payloads never leave your machine."}},
+{"@type":"Question","name":"Should I generate interfaces or type aliases?","acceptedAnswer":{"@type":"Answer","text":"For plain data shapes they compile identically, so it's style. Interfaces support declaration merging (two declarations of the same name combine), which is useful if you want to extend generated types elsewhere in the codebase without editing the file; type aliases don't merge but can express unions and tuples. Most teams keep generated output as interfaces."}},
+{"@type":"Question","name":"How are null and undefined handled?","acceptedAnswer":{"@type":"Answer","text":"JSON has null but no undefined, so nulls appear as a null type in the output: score: null. With strictNullChecks off, the converter emits any instead, and unions like string | null collapse to string. If a field is sometimes missing across sample objects, the generator unions the types it actually saw — but a sample can't prove a field is optional, so mark those yourself."}},
+{"@type":"Question","name":"Why does my date come out as string?","acceptedAnswer":{"@type":"Answer","text":"JSON has no date type; dates arrive as ISO strings. The honest inferred type is string. If you know a string field is a date, narrow it to a branded type or parse it with new Date(...) at the API boundary rather than typing it as Date in the raw payload interface."}},
+{"@type":"Question","name":"Is my JSON uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and type generation run entirely in your browser with plain JavaScript — there is no server call, no logging, and no telemetry on your payload. The generation engine is open source under Apache-2.0, and the types it emits are yours with no attribution required."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON to TypeScript","item":"https://toolaspect.com/json-to-typescript/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.5rem;color:var(--text);font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+textarea.code-area{width:100%;min-height:220px;padding:.9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem;line-height:1.6;box-sizing:border-box;resize:vertical}
+textarea.code-area:focus{outline:none;border-color:var(--primary)}
+pre.code-out{margin:0;padding:.9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem;line-height:1.6;overflow-x:auto;white-space:pre;min-height:120px}
+.toolbar{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem}
+.btn{padding:.5rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;cursor:pointer}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+.btn:hover{border-color:var(--primary)}
+.error-msg{margin-top:.75rem;color:var(--danger);font-size:.85rem;min-height:1.2em}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⌨️ JSON to TypeScript</h1>
+<p>Paste a payload, get clean interfaces — entirely in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>How do you convert JSON to TypeScript?</strong> Paste a sample payload below: objects become named <code>interface</code>s, arrays of objects merge into one item interface, mixed arrays become unions like <code>(string | number)[]</code>, and nulls become <code>null</code> (or <code>any</code> with strict mode off). Nothing is uploaded — the engine is client-side and Apache-2.0 licensed.
+</div>
+
+<div class="section-card">
+<h2>Input JSON</h2>
+<textarea class="code-area" id="input" spellcheck="false">{
+  "id": 1,
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "active": true,
+  "score": null,
+  "tags": ["math", "pioneer"],
+  "address": {
+    "street": "12 Analytical Way",
+    "city": "London",
+    "zip": null
+  },
+  "orders": [
+    { "id": 101, "total": 59.99, "items": ["book", "slide rule"] }
+  ]
+}</textarea>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Root Type Name</label><input type="text" id="rootName" value="Root" maxlength="40"></div>
+<div class="input-group"><label>Output Style</label><select id="style">
+<option value="iface" selected>interface Root { }</option>
+<option value="alias">type Root = { }</option>
+</select></div>
+<div class="input-group"><label>Null Handling</label><select id="nullMode">
+<option value="strict" selected>Strict: keep null</option>
+<option value="loose">Loose: any / drop null</option>
+</select></div>
+</div>
+<div class="toolbar">
+<button class="btn btn-primary" id="genBtn">Generate types</button>
+<button class="btn" id="copyBtn">Copy output</button>
+<button class="btn" id="clearBtn">Clear</button>
+</div>
+<div class="error-msg" id="errMsg"></div>
+</div>
+
+<div class="section-card">
+<h2>Generated TypeScript</h2>
+<pre class="code-out" id="output">// paste JSON and press Generate</pre>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li><li style="margin:4px 0"><a href="/json-schema-validator/">JSON Schema Validator</a></li><li style="margin:4px 0"><a href="/json-diff/">JSON Diff</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/json-to-typescript/">Read the JSON-to-TypeScript guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Type Mapping Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>JSON input</th><th>TypeScript output</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>"hello"</code></td><td><code>string</code></td><td></td></tr>
+<tr><td><code>42</code>, <code>3.14</code></td><td><code>number</code></td><td>JSON has no int/float split</td></tr>
+<tr><td><code>true</code></td><td><code>boolean</code></td><td></td></tr>
+<tr><td><code>null</code></td><td><code>null</code> (strict) / <code>any</code> (loose)</td><td>JSON has no undefined</td></tr>
+<tr><td><code>["a","b"]</code></td><td><code>string[]</code></td><td>Single element type</td></tr>
+<tr><td><code>[1,"two",true]</code></td><td><code>(boolean | number | string)[]</code></td><td>Union of distinct types</td></tr>
+<tr><td><code>[{"id":1},{"id":2}]</code></td><td><code>ItemsItem[]</code> + merged interface</td><td>All keys across elements, unioned per field</td></tr>
+<tr><td><code>[]</code></td><td><code>unknown[]</code></td><td>Empty array carries no evidence</td></tr>
+<tr><td>nested object</td><td>Named interface, e.g. <code>RootAddress</code></td><td>One interface per object path</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Names are derived from the key path (root "address" becomes RootAddress; an array under "orders" becomes RootOrdersItem). Name collisions get a numeric suffix. The engine never uploads data: parsing and generation are plain client-side JavaScript, licensed Apache-2.0.</p>
+</div>
+
+<div class="content-section">
+<h2>How the JSON to TypeScript Converter Works</h2>
+<p>Every typed codebase starts the same way: an API payload, a config file, a fixture, and a hand-written interface that drifts out of sync with all three. Sample-to-type generation fixes the drift at the source: paste what the server actually sent, get the shape it implies, and adjust from there.</p>
+<h3>What the engine does</h3>
+<p>It parses your JSON (a parse error shows inline instead of output), then walks the structure depth-first. Objects emit interfaces named for their key path. Arrays collect the distinct types of their elements: one type becomes T[], several become a sorted union in parentheses, and arrays whose elements are all objects merge into a single item interface that unions each field across elements — so an orders array with inconsistent keys still yields one honest type. Nulls stay visible as null unless you switch to loose mode, which drops null from unions and emits any for bare nulls, matching how data behaves with strictNullChecks off.</p>
+<h3>How to use it</h3>
+<p>Paste a representative payload — the bigger the sample, the better the merge, since more elements means more keys discovered per array. Pick a root name that fits your codebase (ApiResponse, User, Config). Generate, copy, and paste into a .ts file. Two manual passes are usually worth it afterwards: mark fields that are genuinely optional (a sample can't prove absence), and brand or parse any string field that's secretly a date.</p>
+<h3>A worked example</h3>
+<p>The default payload generates exactly this output (interface mode, strict nulls):</p>
+<pre class="code-out">interface Root {
+  id: number;
+  name: string;
+  email: string;
+  active: boolean;
+  score: null;
+  tags: string[];
+  address: RootAddress;
+  orders: RootOrdersItem[];
+}
+
+interface RootAddress {
+  street: string;
+  city: string;
+  zip: null;
+}
+
+interface RootOrdersItem {
+  id: number;
+  total: number;
+  items: string[];
+}</pre>
+<p>Switch to loose mode and the two null fields become any, with every other line unchanged. Notice the two design decisions worth knowing: null is preserved rather than collapsed, because pretending a nullable field isn't nullable is how runtime crashes happen; and the orders array became one merged RootOrdersItem rather than a union of two near-identical shapes, because that's the type you actually want to program against.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I generate TypeScript types from JSON?</h3><p>Paste a sample payload into the converter and it walks the structure: objects become named interfaces, arrays become T[] or a merged interface for arrays of objects, and mixed arrays become a union of the distinct types. Copy the output into a .ts file and adjust field names or optionality to taste. The whole thing runs in your browser, so API payloads never leave your machine.</p></div>
+<div class="faq-item"><h3>Should I generate interfaces or type aliases?</h3><p>For plain data shapes they compile identically, so it's style. Interfaces support declaration merging (two declarations of the same name combine), which is useful if you want to extend generated types elsewhere in the codebase without editing the file; type aliases don't merge but can express unions and tuples. Most teams keep generated output as interfaces.</p></div>
+<div class="faq-item"><h3>How are null and undefined handled?</h3><p>JSON has null but no undefined, so nulls appear as a null type in the output: score: null. With strictNullChecks off, the converter emits any instead, and unions like string | null collapse to string. If a field is sometimes missing across sample objects, the generator unions the types it actually saw — but a sample can't prove a field is optional, so mark those yourself.</p></div>
+<div class="faq-item"><h3>Why does my date come out as string?</h3><p>JSON has no date type; dates arrive as ISO strings. The honest inferred type is string. If you know a string field is a date, narrow it to a branded type or parse it with new Date(...) at the API boundary rather than typing it as Date in the raw payload interface.</p></div>
+<div class="faq-item"><h3>Is my JSON uploaded anywhere?</h3><p>No. Parsing and type generation run entirely in your browser with plain JavaScript — there is no server call, no logging, and no telemetry on your payload. The generation engine is open source under Apache-2.0, and the types it emits are yours with no attribution required.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/json-schema-validator/">✅ JSON Schema Validator</a>
+<a href="/json-diff/">🔍 JSON Diff</a>
+<a href="/regex-tester/">🧪 Regex Tester</a>
+<a href="/csv-to-excel/">📊 CSV to Excel</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* JSON-to-TypeScript engine
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2026 ToolAspect
+ * Client-side inference: interfaces from object paths, merged array-of-object
+ * shapes, unions for mixed arrays, explicit null handling.
+ */
+function generateTypes(json, rootName, opts) {
+  opts = opts || {};
+  var useTypeAlias = !!opts.useTypeAlias;
+  var strictNull = opts.strictNull !== false;
+
+  var interfaces = [];
+  var usedNames = {};
+
+  function pascal(parts) {
+    return parts.map(function (p) {
+      return String(p).charAt(0).toUpperCase() + String(p).slice(1);
+    }).join('').replace(/[^A-Za-z0-9_]/g, '') || 'Obj';
+  }
+
+  function uniqueName(base) {
+    var name = base, i = 2;
+    while (usedNames[name]) { name = base + i; i++; }
+    usedNames[name] = true;
+    return name;
+  }
+
+  function stripNull(t) {
+    if (strictNull) return t;
+    var parts = t.split('|').map(function (s) { return s.trim(); })
+      .filter(function (s) { return s !== 'null'; });
+    return parts.length ? parts.join(' | ') : 'any';
+  }
+
+  function primitive(v) {
+    if (v === null) return 'null';
+    if (typeof v === 'string') return 'string';
+    if (typeof v === 'number') return 'number';
+    if (typeof v === 'boolean') return 'boolean';
+    return 'unknown';
+  }
+
+  function isPlainObject(v) {
+    return v !== null && typeof v === 'object' && !Array.isArray(v);
+  }
+
+  function infer(v, path) {
+    if (v === null) return 'null';
+    if (Array.isArray(v)) return arrayOf(v, path);
+    if (isPlainObject(v)) return objectType(v, path);
+    return primitive(v);
+  }
+
+  function unifyTypes(types) {
+    if (types.length === 0) return 'unknown';
+    if (types.length === 1) return types[0];
+    var sorted = types.slice().sort();
+    return '(' + sorted.join(' | ') + ')';
+  }
+
+  function arrayOf(arr, path) {
+    var nonEmpty = arr.length > 0;
+    var allObjects = nonEmpty && arr.every(isPlainObject);
+    if (allObjects) {
+      var itemName = uniqueName(pascal(path.concat('Item')));
+      var keys = [];
+      for (var i = 0; i < arr.length; i++) {
+        for (var k in arr[i]) {
+          if (keys.indexOf(k) === -1) keys.push(k);
+        }
+      }
+      var lines = [];
+      for (var j = 0; j < keys.length; j++) {
+        var key = keys[j];
+        var ts = [];
+        for (var m = 0; m < arr.length; m++) {
+          if (key in arr[m]) {
+            var one = infer(arr[m][key], path.concat('Item', key));
+            if (ts.indexOf(one) === -1) ts.push(one);
+          }
+        }
+        lines.push('  ' + key + ': ' + stripNull(ts.join(' | ')) + ';');
+      }
+      interfaces.push({ name: itemName, lines: lines });
+      return itemName + '[]';
+    }
+    var types = [];
+    for (var n = 0; n < arr.length; n++) {
+      var t = infer(arr[n], path);
+      if (types.indexOf(t) === -1) types.push(t);
+    }
+    return unifyTypes(types) + '[]';
+  }
+
+  function objectType(obj, path) {
+    var name = uniqueName(pascal(path));
+    var lines = [];
+    for (var k in obj) {
+      var v = obj[k];
+      var t;
+      if (Array.isArray(v) && v.length > 0 && v.every(isPlainObject)) {
+        t = arrayOf(v, path.concat(k));
+      } else {
+        t = infer(v, path.concat(k));
+      }
+      lines.push('  ' + k + ': ' + stripNull(t) + ';');
+    }
+    interfaces.unshift({ name: name, lines: lines });
+    return name;
+  }
+
+  var rootNameSafe = rootName || 'Root';
+  var header = [];
+
+  if (isPlainObject(json)) {
+    objectType(json, [rootNameSafe]);
+  } else {
+    var inner;
+    if (Array.isArray(json)) {
+      if (json.length > 0 && json.every(isPlainObject)) {
+        inner = arrayOf(json, [rootNameSafe]);
+      } else {
+        var elemTypes = [];
+        for (var e = 0; e < json.length; e++) {
+          var et = infer(json[e], [rootNameSafe, 'Item']);
+          if (elemTypes.indexOf(et) === -1) elemTypes.push(et);
+        }
+        inner = unifyTypes(elemTypes) + '[]';
+      }
+    } else {
+      inner = primitive(json);
+    }
+    header.push('type ' + rootNameSafe + ' = ' + inner + ';');
+  }
+
+  var out = header.slice();
+  for (var i2 = 0; i2 < interfaces.length; i2++) {
+    var it = interfaces[i2];
+    var open = useTypeAlias ? 'type ' + it.name + ' = {' : 'interface ' + it.name + ' {';
+    var close = useTypeAlias ? '};' : '}';
+    out.push(open + '\n' + it.lines.join('\n') + '\n' + close);
+  }
+  return out.join('\n\n') + '\n';
+}
+
+(function () {
+  var inputEl = document.getElementById('input');
+  var outEl = document.getElementById('output');
+  var errEl = document.getElementById('errMsg');
+  var debounce = null;
+
+  function run() {
+    errEl.textContent = '';
+    var raw = inputEl.value.trim();
+    if (!raw) { outEl.textContent = '// paste JSON and press Generate'; return; }
+    var json;
+    try { json = JSON.parse(raw); }
+    catch (e) { errEl.textContent = 'Invalid JSON: ' + e.message; return; }
+    var rootName = document.getElementById('rootName').value.replace(/[^A-Za-z0-9_]/g, '') || 'Root';
+    var opts = {
+      useTypeAlias: document.getElementById('style').value === 'alias',
+      strictNull: document.getElementById('nullMode').value === 'strict'
+    };
+    outEl.textContent = generateTypes(json, rootName, opts);
+  }
+
+  document.getElementById('genBtn').addEventListener('click', run);
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    inputEl.value = '';
+    outEl.textContent = '// paste JSON and press Generate';
+    errEl.textContent = '';
+  });
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    var btn = this;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(outEl.textContent).then(function () {
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = 'Copy output'; }, 1500);
+      });
+    } else {
+      inputEl.select && inputEl.select();
+    }
+  });
+  ['rootName', 'style', 'nullMode'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', run);
+  });
+  inputEl.addEventListener('input', function () {
+    clearTimeout(debounce);
+    debounce = setTimeout(run, 400);
+  });
+  run();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

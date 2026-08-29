@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Parser — Break Any URL Into Its Parts | ToolAspect</title>
+<meta name="description" content="Free URL parser, zero dependencies: paste any URL to get protocol, host, port, path, hash, and every query parameter decoded. ?q=10%25%20off reads 10% off.">
+<link rel="canonical" href="https://toolaspect.com/url-parser/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="URL Parser — Break Any URL Into Its Parts">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste any URL and get protocol, host, port, path, hash, and decoded query parameters, with an editable rebuild.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/url-parser/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="URL Parser | Free Online Tool">
+<meta name="twitter:description" content="Dissect any URL: scheme, host, port, path, query params, fragment.">
+<meta name="keywords" content="url parser, query string parser, parse url online, url breakdown, url anatomy, decode query parameters, url components, whatwg url">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"URL Parser","description":"Free online URL parser built on the browser's native WHATWG URL implementation. Paste any URL to get its protocol, username, host, port (with default), path, hash, and every query parameter decoded, with editable values that rebuild the URL live.","url":"https://toolaspect.com/url-parser/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I parse a URL in JavaScript?","acceptedAnswer":{"@type":"Answer","text":"Use the built-in URL class: const u = new URL('https://example.com:8443/p?q=hi') gives u.protocol ('https:'), u.hostname, u.port, u.pathname, and u.hash, while u.searchParams.get('q') returns the decoded value 'hi'. No library needed — every modern browser and Node.js ship the same WHATWG implementation, which is exactly what this tool runs."}},
+{"@type":"Question","name":"What is a query string in a URL?","acceptedAnswer":{"@type":"Answer","text":"Everything after the ? and before the # : a list of key=value pairs separated by &. In https://example.com/search?q=laptops&sort=price, the query string is q=laptops&sort=price. Values are usually percent-encoded (spaces become %20), and a parser decodes them automatically — sort=price stays put, but q=10%25%20off%20sale decodes to 10% off sale."}},
+{"@type":"Question","name":"What does %20 mean in a URL?","acceptedAnswer":{"@type":"Answer","text":"%20 is the percent-encoded form of a space. Percent encoding replaces unsafe characters with a % followed by two hex digits: %20 space, %3F ?, %3D =, %26 &, %2F /, %23 #, and %C3%A9 is é (two bytes of UTF-8). The % character itself becomes %25, which is why 10% off encodes as 10%25%20off."}},
+{"@type":"Question","name":"Does the # fragment get sent to the server?","acceptedAnswer":{"@type":"Answer","text":"No. The fragment (everything after #) is client-side only — the browser keeps it, scrolls to the matching anchor, and strips it before sending the HTTP request. That's why analytics tools append campaign IDs after a # (they don't cause a reload) and why server logs never contain fragments. SPAs use the fragment as routing state for the same reason."}},
+{"@type":"Question","name":"When is the port part of a URL, and when is it implied?","acceptedAnswer":{"@type":"Answer","text":"A port appears after the host as :8443 in example.com:8443. If it's omitted, the scheme implies the default: 443 for https, 80 for http, 21 for ftp. Browsers' URL parser leaves u.port empty when the URL uses the default port, so https://example.com and https://example.com:443 parse identically — one just states the implied number."}},
+{"@type":"Question","name":"What is the difference between a URI and a URL?","acceptedAnswer":{"@type":"Answer","text":"URL is the subset of URI that includes a location — how to fetch the thing. https://example.com/x is both a URI and a URL; urn:isbn:0451450523 is a URI that names a book but isn't a URL because there's no way to fetch it. In everyday web work the terms are used interchangeably, and the WHATWG URL standard effectively retired the distinction for browsers."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"URL Parser","item":"https://toolaspect.com/url-parser/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;box-sizing:border-box}
+.input-group input:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.err{color:var(--danger);font-size:.85rem;min-height:1.2rem;margin-bottom:.5rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr 1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-all}
+.result-item .ri-sub{font-size:.72rem;color:var(--muted);margin-top:.25rem}
+.param-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.param-table th,.param-table td{padding:.45rem .6rem;border:1px solid var(--border);text-align:left}
+.param-table th{background:var(--bg)}
+.param-table td input{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem;padding:.3rem .4rem;box-sizing:border-box}
+.param-table td input:hover{border-color:var(--border)}
+.param-table td input:focus{outline:none;border-color:var(--primary)}
+.param-table td .dec{color:var(--primary-hover);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;word-break:break-all}
+.del-btn{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:.2rem .5rem;font-size:.75rem}
+.del-btn:hover{border-color:var(--danger);color:var(--danger)}
+.add-btn{margin-top:.6rem;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);cursor:pointer;padding:.4rem 1rem;font-size:.8rem}
+.add-btn:hover{border-color:var(--primary);color:var(--text)}
+.rebuild{margin-top:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--success);word-break:break-all;line-height:1.6}
+.copy-btn{padding:.45rem 1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.82rem;cursor:pointer;margin-top:.6rem}
+.copy-btn:hover{background:var(--primary-hover)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--primary-hover);word-break:break-all}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.4rem .6rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;word-break:break-all;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.disclaimer{font-size:.8rem;color:var(--muted);line-height:1.6;margin-top:1rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔗 URL Parser</h1>
+<p>Paste any URL — get protocol, host, port, path, hash, and decoded query params</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> a URL breaks into <strong>scheme://user:info@host:port/path?query#fragment</strong>. Example: <code>https://www.example.com:8443/products/search?sort=price&amp;tag=summer%20sale&amp;q=10%25%20off#results</code> parses to protocol <code>https:</code>, host <code>www.example.com:8443</code>, path <code>/products/search</code>, fragment <code>#results</code>, and decoded params <code>sort=price</code>, <code>tag=summer sale</code>, <code>q=10% off</code> (percent-encoding: %20 = space, %25 = %). This tool uses your browser's native WHATWG URL parser — zero libraries — and lets you edit values and rebuild the URL.</p>
+
+<div class="section-card">
+<h2>Parse a URL</h2>
+<div class="input-group">
+<label for="urlIn">URL to dissect</label>
+<input type="text" id="urlIn" value="https://www.example.com:8443/products/search?sort=price&min_rating=4.5&tag=summer%20sale&q=10%25%20off%20%C3%A9clair#results" spellcheck="false">
+</div>
+<div class="err" id="err"></div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Protocol (scheme)</div><div class="ri-value" id="rProto">—</div><div class="ri-sub" id="rProtoSub"></div></div>
+<div class="result-item"><div class="ri-label">Host + port</div><div class="ri-value" id="rHost">—</div><div class="ri-sub" id="rHostSub"></div></div>
+<div class="result-item"><div class="ri-label">Path</div><div class="ri-value" id="rPath">—</div><div class="ri-sub" id="rPathSub"></div></div>
+<div class="result-item"><div class="ri-label">Port</div><div class="ri-value" id="rPort">—</div><div class="ri-sub" id="rPortSub"></div></div>
+<div class="result-item"><div class="ri-label">Fragment (hash)</div><div class="ri-value" id="rHash">—</div><div class="ri-sub" id="rHashSub"></div></div>
+<div class="result-item"><div class="ri-label">User info</div><div class="ri-value" id="rUser">—</div><div class="ri-sub" id="rUserSub"></div></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Query Parameters (decoded, editable)</h2>
+<div class="table-wrap">
+<table class="param-table" id="paramTable">
+<thead><tr><th style="width:22%">Key</th><th style="width:30%">Raw value (as sent)</th><th style="width:36%">Decoded / edit &amp; rebuild</th><th></th></tr></thead>
+<tbody id="paramBody"></tbody>
+</table>
+</div>
+<button class="add-btn" id="addParam" type="button">+ add parameter</button>
+<div class="rebuild" id="rebuilt">—</div>
+<button class="copy-btn" id="copyUrl" type="button">Copy rebuilt URL</button>
+<p class="disclaimer">Edit any decoded value and the rebuilt URL above updates instantly, re-encoding with encodeURIComponent. Duplicate keys are preserved in the rebuild, since real servers (and arrays like <code>tag=a&amp;tag=b</code>) depend on them.</p>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/url-encoder/">URL Encoder</a></li><li style="margin:4px 0"><a href="/user-agent-parser/">User Agent Parser</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/url-anatomy-explained/">URL anatomy, explained</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Anatomy of a URL, Token by Token</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Component</th><th>In the worked example</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Scheme</td><td class="mono">https:</td><td>Which protocol (and default port) to use</td></tr>
+<tr><td>User info</td><td class="mono">(none here)</td><td>user:password@ — legacy basic auth in the URL, e.g. https://user:secret@api.example.com/</td></tr>
+<tr><td>Host</td><td class="mono">www.example.com</td><td>DNS name (or IP) to connect to</td></tr>
+<tr><td>Port</td><td class="mono">:8443</td><td>Override the scheme's default (443 https, 80 http); empty means default</td></tr>
+<tr><td>Path</td><td class="mono">/products/search</td><td>Resource location on the server</td></tr>
+<tr><td>Query string</td><td class="mono">?sort=price&amp;min_rating=4.5&amp;tag=summer%20sale&amp;q=10%25%20off%20%C3%A9clair</td><td>&amp;-separated key=value pairs; values percent-encoded</td></tr>
+<tr><td>Fragment</td><td class="mono">#results</td><td>Client-side only: never sent to the server</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Percent-Encoding: The Codes You'll Actually Meet</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Encoded</th><th>Character</th><th>Why it's encoded</th></tr></thead>
+<tbody>
+<tr><td class="mono">%20</td><td>space</td><td>Spaces are illegal in URLs; form data often uses + instead</td></tr>
+<tr><td class="mono">%25</td><td>%</td><td>The escape character itself</td></tr>
+<tr><td class="mono">%26</td><td>&amp;</td><td>Separates parameters, so a literal &amp; in a value must be escaped</td></tr>
+<tr><td class="mono">%3D</td><td>=</td><td>Separates key from value</td></tr>
+<tr><td class="mono">%2B</td><td>+</td><td>Means space in form encoding; escaped to stay a real plus</td></tr>
+<tr><td class="mono">%2F</td><td>/</td><td>Path separator inside a query or path segment</td></tr>
+<tr><td class="mono">%3F</td><td>?</td><td>Starts the query string</td></tr>
+<tr><td class="mono">%23</td><td>#</td><td>Starts the fragment</td></tr>
+<tr><td class="mono">%C3%A9</td><td>é</td><td>Two-byte UTF-8, one %XX per byte</td></tr>
+</tbody>
+</table>
+</div>
+<p class="disclaimer">That last row is the pattern for all non-ASCII text: UTF-8 bytes, each byte escaped. Tokyo's 渋 is three bytes (%E6%B8%8B), and an emoji is four.</p>
+</div>
+
+<div class="content-section">
+<h2>How the URL Parser Works</h2>
+<p>Every browser since 2016 ships a URL parser that follows the WHATWG URL standard — the same algorithm Node.js uses — and this page calls it directly: <code>new URL(string)</code>. No regular expressions, no library, no server round-trip. That matters because URL syntax has edges a regex chokes on: default ports, IPv6 hosts in square brackets, IDN domains that resolve to punycode (xn--), empty query strings, and the difference between <code>?</code> alone and no <code>?</code> at all.</p>
+<h3>What each field means</h3>
+<p>The <code>protocol</code> includes the colon (<code>https:</code>). The <code>hostname</code> is the domain; <code>host</code> is hostname plus port when present. The <code>pathname</code> always starts with <code>/</code> for special schemes like http and https. <code>search</code> is the whole query string including the <code>?</code>, while <code>searchParams</code> is the parsed, decoded map — the tool shows both: raw value as sent, decoded value as a human reads it.</p>
+<h3>A worked example</h3>
+<p>Feed it the default URL: <code>https://www.example.com:8443/products/search?sort=price&amp;min_rating=4.5&amp;tag=summer%20sale&amp;q=10%25%20off%20%C3%A9clair#results</code>.</p>
+<p>The parse: protocol <code>https:</code> on host <code>www.example.com</code>, non-default port <code>8443</code> (the parser knows 443 is the default and would leave the field empty for it). Path is <code>/products/search</code>. Fragment <code>#results</code> never reaches the server. Four parameters: <code>sort=price</code> needs no decoding, <code>min_rating=4.5</code> neither, but <code>tag=summer%20sale</code> decodes to <code>summer sale</code> and <code>q=10%25%20off%20%C3%A9clair</code> decodes to <code>10% off éclair</code> — the %25 collapses back to a real percent sign and the two bytes of é reassemble. Want to test a change? Edit the decoded cell and the rebuilt URL re-encodes it correctly, so you never hand-escape a value again.</p>
+<p>One habit worth stealing from this tool for your own code: read parameters through <code>URLSearchParams</code> rather than splitting on <code>&amp;</code> yourself. It handles plus-as-space, repeated keys, and encoding edge cases exactly the way servers expect.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I parse a URL in JavaScript?</h3><p>Use the built-in URL class: const u = new URL('https://example.com:8443/p?q=hi') gives u.protocol ('https:'), u.hostname, u.port, u.pathname, and u.hash, while u.searchParams.get('q') returns the decoded value 'hi'. No library needed — every modern browser and Node.js ship the same WHATWG implementation, which is exactly what this tool runs.</p></div>
+<div class="faq-item"><h3>What is a query string in a URL?</h3><p>Everything after the ? and before the #: a list of key=value pairs separated by &amp;. In https://example.com/search?q=laptops&amp;sort=price, the query string is q=laptops&amp;sort=price. Values are usually percent-encoded (spaces become %20), and a parser decodes them automatically — sort=price stays put, but q=10%25%20off%20sale decodes to 10% off sale.</p></div>
+<div class="faq-item"><h3>What does %20 mean in a URL?</h3><p>%20 is the percent-encoded form of a space. Percent encoding replaces unsafe characters with a % followed by two hex digits: %20 space, %3F ?, %3D =, %26 &amp;, %2F /, %23 #, and %C3%A9 is é (two bytes of UTF-8). The % character itself becomes %25, which is why 10% off encodes as 10%25%20off.</p></div>
+<div class="faq-item"><h3>Does the # fragment get sent to the server?</h3><p>No. The fragment (everything after #) is client-side only — the browser keeps it, scrolls to the matching anchor, and strips it before sending the HTTP request. That's why analytics tools append campaign IDs after a # (they don't cause a reload) and why server logs never contain fragments. SPAs use the fragment as routing state for the same reason.</p></div>
+<div class="faq-item"><h3>When is the port part of a URL, and when is it implied?</h3><p>A port appears after the host as :8443 in example.com:8443. If it's omitted, the scheme implies the default: 443 for https, 80 for http, 21 for ftp. Browsers' URL parser leaves u.port empty when the URL uses the default port, so https://example.com and https://example.com:443 parse identically — one just states the implied number.</p></div>
+<div class="faq-item"><h3>What is the difference between a URI and a URL?</h3><p>URL is the subset of URI that includes a location — how to fetch the thing. https://example.com/x is both a URI and a URL; urn:isbn:0451450523 is a URI that names a book but isn't a URL because there's no way to fetch it. In everyday web work the terms are used interchangeably, and the WHATWG URL standard effectively retired the distinction for browsers.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/url-encoder/">🔐 URL Encoder</a>
+<a href="/user-agent-parser/">🔍 User Agent Parser</a>
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/qr-code-generator/">📱 QR Code Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function el(id){return document.getElementById(id);}
+var u=null;
+var DEFAULT_PORTS={ 'http:':'80','https:':'443','ftp:':'21','ws:':'80','wss:':'443' };
+function decodeSafe(v){
+  try{return decodeURIComponent(v.replace(/\+/g,' '));}
+  catch(e){return '(invalid encoding)';}
+}
+function rawPairs(search){
+  if(!search)return [];
+  return search.replace(/^\?/,'').split('&').filter(Boolean).map(function(pair){
+    var i=pair.indexOf('=');
+    return i<0?[pair,'']:[pair.slice(0,i),pair.slice(i+1)];
+  });
+}
+function parse(){
+  var raw=el('urlIn').value.trim();
+  u=null;
+  if(!raw){el('err').textContent='';clearAll();return;}
+  try{u=new URL(raw);}catch(e){
+    el('err').textContent='Not a valid absolute URL: '+e.message.slice(0,120)+' — include the scheme (https://…)';
+    clearAll();return;
+  }
+  el('err').textContent='';
+  el('rProto').textContent=u.protocol;
+  var dp=DEFAULT_PORTS[u.protocol];
+  el('rProtoSub').textContent=dp?('default port '+dp):'non-default scheme';
+  el('rHost').textContent=u.host;
+  el('rHostSub').textContent=u.hostname!==u.host?('hostname: '+u.hostname):'hostname = host here';
+  el('rPath').textContent=u.pathname;
+  el('rPathSub').textContent=(u.pathname.split('/').length-1)+' path segment'+((u.pathname.split('/').length-1)===1?'':'s');
+  el('rPort').textContent=u.port||'—';
+  el('rPortSub').textContent=u.port?(u.port===dp?'(default for '+u.protocol+')':'(non-default)'):(dp?'default ('+dp+') implied':'no default for scheme');
+  el('rHash').textContent=u.hash||'—';
+  el('rHashSub').textContent=u.hash?'client-side only':'no fragment';
+  el('rUser').textContent=u.username?u.username:'—';
+  el('rUserSub').textContent=u.username?(u.password?'password present':'no password'):'basic-auth style, e.g. https://user:pass@host/';
+  renderParams();
+}
+var params=[];
+function renderParams(){
+  params=[];
+  if(u){
+    var raws=rawPairs(u.search),ri=0;
+    u.searchParams.forEach(function(v,k){
+      var rv=raws[ri]?(raws[ri][1]||''):encodeVal(v);
+      ri++;
+      params.push([k,v,rv]);
+    });
+  }
+  var tb=el('paramBody');
+  tb.innerHTML=params.length?'':'<tr><td colspan="4" style="color:var(--muted);text-align:center">No query parameters in this URL</td></tr>';
+  params.forEach(function(p,i){
+    var tr=document.createElement('tr');
+    var tdK=document.createElement('td');tdK.textContent=p[0];
+    var tdR=document.createElement('td');
+    var sp=document.createElement('span');sp.className='dec';sp.textContent=p[2];tdR.appendChild(sp);
+    var tdD=document.createElement('td');
+    var inp=document.createElement('input');inp.type='text';inp.value=p[1];inp.dataset.i=i;
+    tdD.appendChild(inp);
+    var tdX=document.createElement('td');
+    var btn=document.createElement('button');btn.className='del-btn';btn.textContent='✕';btn.dataset.i=i;
+    tdX.appendChild(btn);
+    tr.appendChild(tdK);tr.appendChild(tdR);tr.appendChild(tdD);tr.appendChild(tdX);
+    tb.appendChild(tr);
+  });
+  rebuild();
+}
+function encodeVal(v){return encodeURIComponent(v);}
+function rebuild(){
+  if(!u){el('rebuilt').textContent='—';return;}
+  var out=new URL(u.href);
+  out.search='';
+  if(params.length){
+    out.search='?'+params.map(function(p){return encodeVal(p[0])+'='+encodeVal(p[1]);}).join('&');
+  }
+  el('rebuilt').textContent=out.href;
+}
+el('paramBody').addEventListener('input',function(e){
+  if(e.target.tagName==='INPUT'&&e.target.dataset.i!==undefined){
+    var i=+e.target.dataset.i;
+    params[i][1]=e.target.value;
+    params[i][2]=encodeVal(e.target.value);
+    var row=e.target.closest('tr');
+    if(row&&row.children[1].firstChild)row.children[1].firstChild.textContent=params[i][2];
+    rebuild();
+  }
+});
+el('paramBody').addEventListener('click',function(e){
+  if(e.target.classList.contains('del-btn')){
+    params.splice(+e.target.dataset.i,1);
+    renderParams();
+  }
+});
+el('addParam').addEventListener('click',function(){
+  if(!u)return;
+  var k='key'+(params.length+1);
+  params.push([k,'value','value']);
+  renderParams();
+  var inputs=el('paramBody').querySelectorAll('input');
+  if(inputs.length){inputs[inputs.length-1].select();}
+});
+el('copyUrl').addEventListener('click',function(){
+  var t=el('rebuilt').textContent;
+  if(t==='—')return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){el('copyUrl').textContent='Copied ✓';setTimeout(function(){el('copyUrl').textContent='Copy rebuilt URL';},1500);});
+  }
+});
+el('urlIn').addEventListener('input',parse);
+function clearAll(){
+  ['rProto','rHost','rPath','rPort','rHash','rUser'].forEach(function(id){el(id).textContent='—';});
+  ['rProtoSub','rHostSub','rPathSub','rPortSub','rHashSub','rUserSub'].forEach(function(id){el(id).textContent='';});
+  el('paramBody').innerHTML='';
+  el('rebuilt').textContent='—';
+}
+parse();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

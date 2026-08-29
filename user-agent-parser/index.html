@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Agent Parser — Decode Any UA String Free | ToolAspect</title>
+<meta name="description" content="Free user agent parser. See your live UA string and decode browser, version, OS, and device. iPhone Safari parses as iOS 17.5, mobile, WebKit.">
+<link rel="canonical" href="https://toolaspect.com/user-agent-parser/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="User Agent Parser — Decode Any UA String">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Check your own user agent string and parse any UA into browser, engine, OS, platform, and device type — all in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/user-agent-parser/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="User Agent Parser | Free Online Tool">
+<meta name="twitter:description" content="See your live user agent and decode any UA string into browser, OS, and device.">
+<meta name="keywords" content="user agent parser, what is my user agent, my ua string, ua parser online, browser detection, user agent checker, parse user agent javascript">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"User Agent Parser","description":"Free user agent parser that shows your own live UA string and decodes any pasted user agent into browser name and version, rendering engine, operating system, platform type (desktop, mobile, tablet, bot), and device model. Runs entirely in your browser.","url":"https://toolaspect.com/user-agent-parser/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is my user agent?","acceptedAnswer":{"@type":"Answer","text":"Your user agent is the string your browser sends with every request, announcing its name, version, operating system, and device. This page shows yours at the top, parsed into browser, engine, OS, and device type. Nothing is sent anywhere — the parsing happens locally in your browser."}},
+{"@type":"Question","name":"Why do Chrome, Edge, and Opera all say Chrome in the UA string?","acceptedAnswer":{"@type":"Answer","text":"Chromium-based browsers append their own token after the Chrome one. Edge ends with Edg/126.0.0.0 and Opera with OPR/, so a parser reads the string right to left: the last meaningful token identifies the actual browser. Left-to-right reading is how sites miscount Edge users as Chrome."}},
+{"@type":"Question","name":"How do I detect a bot from a user agent?","acceptedAnswer":{"@type":"Answer","text":"Most bots self-identify. Googlebot sends 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', and Bingbot, GPTBot, and ClaudeBot follow the same compatible; Name/version; +URL pattern. A parser like bowser returns platform.type 'bot' for these. Honest bots are easy; spoofed ones require behavioral checks, not UA sniffing."}},
+{"@type":"Question","name":"Can I change or spoof my user agent?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every major browser has devtools device emulation that overrides the UA, and extensions can set an arbitrary string. That's why user agent stats are approximate: some traffic lies. Sites that gate content on UA sniffing break the moment a browser updates its string, which is one reason UA client hints now exist."}},
+{"@type":"Question","name":"Why does my Safari UA mention Chrome?","acceptedAnswer":{"@type":"Answer","text":"It doesn't — but it does mention 'Mozilla/5.0' and 'Gecko' because Safari keeps historical tokens that once meant 'Mozilla-compatible' and 'Gecko-engine-compatible'. Nearly every browser starts with Mozilla/5.0 for the same legacy-compatibility reason. The tokens that matter for Safari are Version/x and Safari/x at the end."}},
+{"@type":"Question","name":"Is parsing user agents still reliable in 2026?","acceptedAnswer":{"@type":"Answer","text":"For coarse facts — browser family, OS, mobile vs desktop — yes, and it remains the only method that works without JavaScript or client cooperation. For exact versions it's getting weaker: Firefox and Chrome have both frozen or reduced UA strings, and Google's User-Agent Client Hints now serve precise versions only on request via Sec-CH-UA headers. Treat parsed versions as good approximations."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"User Agent Parser","item":"https://toolaspect.com/user-agent-parser/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.ua-live{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;word-break:break-all;color:var(--text);line-height:1.5}
+.input-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group textarea,.input-group input{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;box-sizing:border-box}
+.input-group textarea:focus,.input-group input:focus{outline:none;border-color:var(--primary)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.chip{padding:.3rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.78rem;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.15rem;font-weight:700}
+.result-item .ri-sub{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+.copy-btn{padding:.5rem 1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.85rem;cursor:pointer;font-family:inherit}
+.copy-btn:hover{background:var(--primary-hover)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{white-space:nowrap;font-size:.8rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.status-msg{font-size:.85rem;color:var(--muted);margin-top:.5rem;min-height:1.2em}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔍 User Agent Parser</h1>
+<p>See your own user agent string and decode any UA into browser, OS, engine, and device</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> your user agent is a single line your browser attaches to every request — it looks like <code>Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 ...) Version/17.5 Safari/604.1</code>. Parsed, that string means: <strong>Safari 17.5, WebKit engine, iOS 17.5, iPhone, mobile</strong>. A Windows Chrome UA (<code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) ... Chrome/126.0.0.0 Safari/537.36</code>) means <strong>Chrome 126, Blink engine, Windows 10, desktop</strong>. Yours is shown below, parsed live — nothing leaves your browser.
+</div>
+
+<div class="section-card">
+<h2>Your Live User Agent</h2>
+<div class="ua-live" id="liveUa">Detecting…</div>
+<p style="margin:.75rem 0 .25rem"><button class="copy-btn" id="copyLive" type="button">Copy my UA string</button></p>
+<div class="result-grid" id="liveGrid" style="margin-top:1rem"></div>
+</div>
+
+<div class="section-card">
+<h2>Parse Any User Agent String</h2>
+<div class="input-group">
+<label>Paste a user agent string</label>
+<textarea id="uaInput" rows="3" spellcheck="false" placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"></textarea>
+</div>
+<div class="chip-row" id="samples"></div>
+<div class="status-msg" id="status"></div>
+<div class="result-grid" id="parseGrid" style="margin-top:.75rem"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/url-parser/">Url Parser</a></li><li style="margin:4px 0"><a href="/url-encoder/">Url Encoder</a></li><li style="margin:4px 0"><a href="/vin-decoder/">Vin Decoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/what-is-my-user-agent/">Read what a user agent is</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Token in a UA String Means</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Token</th><th>Appears in</th><th>What it actually tells you</th></tr></thead>
+<tbody>
+<tr><td><code>Mozilla/5.0</code></td><td>Nearly everything</td><td>Nothing, anymore — a 1990s compatibility flag every browser kept</td></tr>
+<tr><td><code>(Windows NT 10.0; Win64; x64)</code></td><td>Windows browsers</td><td>Windows 10 or 11 (both report NT 10.0), 64-bit</td></tr>
+<tr><td><code>Macintosh; Intel Mac OS X 10_15</code></td><td>Safari, Firefox on Mac</td><td>macOS — version frozen at 10.15 in Safari's UA regardless of real version</td></tr>
+<tr><td><code>iPhone; CPU iPhone OS 17_5</code></td><td>iPhone browsers</td><td>iOS 17.5 on an iPhone; iPad reports like desktop Safari since iPadOS 13</td></tr>
+<tr><td><code>Linux; Android 14; Pixel 8</code></td><td>Android Chrome</td><td>Android 14 on a Pixel 8, mobile build</td></tr>
+<tr><td><code>AppleWebKit/537.36 (KHTML, like Gecko)</code></td><td>Chrome, Edge, Safari</td><td>Shared rendering heritage — KHTML begat WebKit begat Blink</td></tr>
+<tr><td><code>Chrome/126.0.0.0</code></td><td>Chromium browsers</td><td>Chrome 126 — also present in Edge, Opera, and Brave UAs</td></tr>
+<tr><td><code>Edg/126.0.0.0</code></td><td>Edge only</td><td>The real Edge marker; read right to left to beat Chromium camouflage</td></tr>
+<tr><td><code>Firefox/127.0</code></td><td>Firefox only</td><td>The only place Firefox appears — and the engine token is Gecko</td></tr>
+<tr><td><code>Version/17.5 Safari/604.1</code></td><td>Safari only</td><td>Safari 17.5; the trailing 604.1 is a frozen WebKit build number</td></tr>
+<tr><td><code>compatible; Googlebot/2.1</code></td><td>Crawlers</td><td>A bot that announces itself, with a documentation URL</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The order matters less than you'd think: the reliable rule is that the <em>last</em> browser token in the string is the real browser. First tokens survive for legacy compatibility; trailing tokens were added by the actual vendor.</p>
+</div>
+
+<div class="section-card">
+<h2>Worked Examples (Parsed With This Tool)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>User agent (abbreviated)</th><th>Browser</th><th>OS / Device</th><th>Engine</th></tr></thead>
+<tbody>
+<tr><td><code>…Windows NT 10.0…Chrome/126.0.0.0 Safari/537.36</code></td><td>Chrome 126</td><td>Windows 10, desktop</td><td>Blink</td></tr>
+<tr><td><code>…Windows NT 10.0…Chrome/126.0.0.0…Edg/126.0.0.0</code></td><td>Microsoft Edge 126</td><td>Windows 10, desktop</td><td>Blink</td></tr>
+<tr><td><code>…Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0</code></td><td>Firefox 127</td><td>macOS, desktop</td><td>Gecko</td></tr>
+<tr><td><code>…iPhone; CPU iPhone OS 17_5…Version/17.5 Mobile/15E148 Safari/604.1</code></td><td>Safari 17.5</td><td>iOS 17.5, iPhone, mobile</td><td>WebKit</td></tr>
+<tr><td><code>…Linux; Android 14; Pixel 8…Chrome/126.0.6478.122 Mobile…</code></td><td>Chrome 126</td><td>Android 14, mobile</td><td>Blink</td></tr>
+<tr><td><code>…(compatible; Googlebot/2.1; +http://www.google.com/bot.html)</code></td><td>Googlebot 2.1</td><td>Bot (Google)</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Parsing is done with <a href="https://github.com/bowser-js/bowser" rel="noopener">bowser 2.11.0</a> (MIT license), loaded from jsDelivr and executed client-side. Your UA string never touches a server — right-click this page, view source, and check: there's no form POST anywhere.</p>
+</div>
+
+<div class="content-section">
+<h2>How the User Agent Parser Works</h2>
+<p>Every HTTP request your browser makes carries a <code>User-Agent</code> header: one long, oddly-punctuated string that grew by accretion since 1993. Sites read it to pick mobile layouts, warn about unsupported browsers, block misbehaving crawlers, or — less nobly — fingerprint you. This tool parses it both directions: it shows and decodes your own string, and it accepts any pasted string so you can test bot filters, debug analytics, or settle an argument about what Edge's UA really says.</p>
+<h3>What you get back</h3>
+<p>Browser name and version, rendering engine (Blink, WebKit, or Gecko), operating system and version, platform type (desktop, mobile, or tablet), and device vendor and model when the UA includes one. Bot UAs are flagged as bots. Strings that aren't browsers at all — <code>curl/8.5.0</code>, custom app agents — return empty fields, which is honest: a UA parser can only report what the string announces.</p>
+<h3>How to use it</h3>
+<p>Hit a sample chip to load a known UA, or paste your own from devtools (Network tab → any request → Request Headers → user-agent). The parse updates as you type. Copy buttons grab either the raw string or individual fields.</p>
+<h3>A worked example</h3>
+<p>Take the iPhone Safari string above. The parser reads <code>Version/17.5</code> and <code>Safari/604.1</code> as Safari 17.5, the parenthetical <code>CPU iPhone OS 17_5</code> as iOS 17.5, and the <code>Mobile/15E148</code> token as mobile. Platform resolves to vendor Apple, model iPhone. Now the Android string: <code>Linux; Android 14; Pixel 8</code> gives Android 14 with device model Pixel 8, browser Chrome 126 on Blink, platform mobile. Same five fields, completely different devices — from one header line each.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is my user agent?</h3><p>Your user agent is the string your browser sends with every request, announcing its name, version, operating system, and device. This page shows yours at the top, parsed into browser, engine, OS, and device type. Nothing is sent anywhere — the parsing happens locally in your browser.</p></div>
+<div class="faq-item"><h3>Why do Chrome, Edge, and Opera all say Chrome in the UA string?</h3><p>Chromium-based browsers append their own token after the Chrome one. Edge ends with Edg/126.0.0.0 and Opera with OPR/, so a parser reads the string right to left: the last meaningful token identifies the actual browser. Left-to-right reading is how sites miscount Edge users as Chrome.</p></div>
+<div class="faq-item"><h3>How do I detect a bot from a user agent?</h3><p>Most bots self-identify. Googlebot sends "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)", and Bingbot, GPTBot, and ClaudeBot follow the same compatible; Name/version; +URL pattern. A parser like bowser returns platform.type "bot" for these. Honest bots are easy; spoofed ones require behavioral checks, not UA sniffing.</p></div>
+<div class="faq-item"><h3>Can I change or spoof my user agent?</h3><p>Yes. Every major browser has devtools device emulation that overrides the UA, and extensions can set an arbitrary string. That's why user agent stats are approximate: some traffic lies. Sites that gate content on UA sniffing break the moment a browser updates its string, which is one reason UA client hints now exist.</p></div>
+<div class="faq-item"><h3>Why does my Safari UA mention Chrome?</h3><p>It doesn't — but it does mention "Mozilla/5.0" and "Gecko" because Safari keeps historical tokens that once meant "Mozilla-compatible" and "Gecko-engine-compatible". Nearly every browser starts with Mozilla/5.0 for the same legacy-compatibility reason. The tokens that matter for Safari are Version/x and Safari/x at the end.</p></div>
+<div class="faq-item"><h3>Is parsing user agents still reliable in 2026?</h3><p>For coarse facts — browser family, OS, mobile vs desktop — yes, and it remains the only method that works without JavaScript or client cooperation. For exact versions it's getting weaker: Firefox and Chrome have both frozen or reduced UA strings, and Google's User-Agent Client Hints now serve precise versions only on request via Sec-CH-UA headers. Treat parsed versions as good approximations.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/url-parser/">🔗 URL Parser</a>
+<a href="/url-encoder/">🔐 URL Encoder</a>
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/vin-decoder/">🚗 VIN Decoder</a>
+<a href="/regex-tester/">🧪 Regex Tester</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script type="module">
+import bowser from 'https://cdn.jsdelivr.net/npm/bowser@2.11.0/+esm';
+
+var SAMPLES = [
+  ['Chrome / Windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'],
+  ['Edge / Windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'],
+  ['Safari / iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1'],
+  ['Firefox / Mac', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0'],
+  ['Chrome / Android', 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.122 Mobile Safari/537.36'],
+  ['Googlebot', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)']
+];
+
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+function fmtVer(v){return v?String(v):'';}
+
+function resultCards(r){
+  var b=r.browser||{},o=r.os||{},p=r.platform||{},e=r.engine||{};
+  var plat = p.type?String(p.type):'—';
+  var dev = p.model?String(p.model):(p.vendor?String(p.vendor):'');
+  return [
+    ['Browser', (b.name?b.name:'Unknown') + (b.version?' '+fmtVer(b.version):''), 'Engine: '+(e.name||'—')],
+    ['Operating System', (o.name?o.name:'Unknown') + (o.versionName?' '+o.versionName:(o.version?' '+o.version:'')), o.version?('Version '+o.version):''],
+    ['Device', plat.charAt(0).toUpperCase()+plat.slice(1), dev]
+  ];
+}
+
+function renderGrid(gridId, cards){
+  var g=document.getElementById(gridId);
+  g.innerHTML=cards.map(function(c){
+    return '<div class="result-item"><div class="ri-label">'+esc(c[0])+'</div><div class="ri-value">'+esc(c[1]||'—')+'</div><div class="ri-sub">'+esc(c[2]||'')+'</div></div>';
+  }).join('');
+}
+
+// Live UA panel
+var liveUa=(navigator.userAgent||'').trim();
+document.getElementById('liveUa').textContent=liveUa||'(browser provided an empty user agent string)';
+try{
+  renderGrid('liveGrid', resultCards(bowser.parse(liveUa)));
+}catch(err){
+  renderGrid('liveGrid',[['Parse error',err.message,'']]);
+}
+document.getElementById('copyLive').addEventListener('click',function(){
+  var btn=this;
+  var done=function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy my UA string';},1500);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(liveUa).then(done,done);}
+  else{
+    var ta=document.createElement('textarea');ta.value=liveUa;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);done();
+  }
+});
+
+// Sample chips
+var chipRow=document.getElementById('samples');
+chipRow.innerHTML=SAMPLES.map(function(s,i){
+  return '<button type="button" class="chip" data-i="'+i+'">'+esc(s[0])+'</button>';
+}).join('');
+
+var uaInput=document.getElementById('uaInput'),status=document.getElementById('status');
+
+function parseInput(){
+  var v=uaInput.value.trim();
+  if(!v){
+    status.textContent='Paste a UA string or click a sample above.';
+    renderGrid('parseGrid',[['Browser','—',''],['Operating System','—',''],['Device','—','']]);
+    return;
+  }
+  try{
+    var r=bowser.parse(v);
+    renderGrid('parseGrid', resultCards(r));
+    var bits=[];
+    if(r.platform&&r.platform.type==='bot')bits.push('flagged as bot');
+    if(!(r.browser&&r.browser.name))bits.push('no browser token found — this may not be a browser UA');
+    status.textContent=bits.length?bits.join('; ')+'.':'Parsed '+v.length+' characters.';
+  }catch(err){
+    status.textContent='Could not parse: '+err.message;
+    renderGrid('parseGrid',[['Browser','—',''],['Operating System','—',''],['Device','—','']]);
+  }
+}
+
+chipRow.addEventListener('click',function(e){
+  var b=e.target.closest('.chip');
+  if(!b)return;
+  uaInput.value=SAMPLES[parseInt(b.getAttribute('data-i'),10)][1];
+  parseInput();
+});
+uaInput.addEventListener('input',parseInput);
+uaInput.value=SAMPLES[0][1];
+parseInput();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

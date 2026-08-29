@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Card QR Generator — Free vCard Tool | ToolAspect</title>
+<meta name="description" content="Free business card QR code generator. Encodes a valid vCard 3.0 or 4.0 with correct escaping, downloads PNG, SVG, .vcf and a 10-up print sheet PDF.">
+<link rel="canonical" href="https://toolaspect.com/business-card-qr-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Business Card QR Generator — Free vCard Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn contact details into a scannable vCard QR code. Correct 3.0/4.0 syntax, PNG, SVG, .vcf and a print-ready 10-up PDF sheet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/business-card-qr-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Business Card QR Generator | Free vCard Tool">
+<meta name="twitter:description" content="Encode a valid vCard 3.0/4.0 QR code with proper escaping, then download PNG, SVG, .vcf or a print sheet.">
+<meta name="keywords" content="business card qr code generator, vcard qr code, digital business card, qr code contact details, mecard, vcard 4.0, printable qr business cards">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Business Card QR Code Generator","description":"Free business card QR generator that encodes a spec-correct vCard 3.0 or 4.0 with proper escaping and line folding, then exports PNG, SVG, .vcf and a 10-up print sheet PDF.","url":"https://toolaspect.com/business-card-qr-generator/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I put a QR code on my business card?","acceptedAnswer":{"@type":"Answer","text":"Encode your contact details as a vCard, render it as a QR code, and print the code at least 2 cm (about 0.8 in) wide on the back of the card. A full vCard with address and note produces a version 15 QR code (77 by 77 modules), which needs about a 1 inch print to scan reliably from normal card-handling distance. Trim the note field to get a smaller, easier code."}},
+{"@type":"Question","name":"Should I use vCard 3.0 or 4.0 for a QR code?","acceptedAnswer":{"@type":"Answer","text":"Use 3.0 for QR codes. Both scan fine on iOS and Android, but a 4.0 card is larger for the same data because phone numbers become tel: URIs, so the QR version grows and the code gets denser. The same contact card that takes 389 octets in 3.0 takes 415 in 4.0, jumping from a 77x77 to an 81x81 module code."}},
+{"@type":"Question","name":"What is the difference between vCard and MECARD?","acceptedAnswer":{"@type":"Answer","text":"MECARD is an older, compact format from Denso that some QR generators still emit because it is short. It only supports a name, one phone, email, address and note, with no version field, no multiple typed numbers and no structured extensions. vCard is the IETF standard (RFC 2426 for 3.0, RFC 6350 for 4.0) and is what modern contact apps exchange."}},
+{"@type":"Question","name":"Why does my vCard QR code not save the contact?","acceptedAnswer":{"@type":"Answer","text":"Usually escaping. In vCard, commas, semicolons and backslashes must be preceded by a backslash, newlines become the two characters backslash-n, and lines longer than 75 octets must be folded with CRLF plus a space. A company like Nguyen Dental, LLC encoded without the escaped comma becomes two separate ORG values and some parsers reject the whole card."}},
+{"@type":"Question","name":"How big should a QR code be on a business card?","acceptedAnswer":{"@type":"Answer","text":"At least 2 cm by 2 cm, and 2.5 cm (1 inch) if the code carries a full vCard. The rule of thumb is the code should be one tenth of the expected scanning distance, and a card is usually read from 20 to 25 cm away. Keep a white quiet zone of 4 modules around it and avoid printing over a dark background."}},
+{"@type":"Question","name":"Do business card QR codes expire?","acceptedAnswer":{"@type":"Answer","text":"No. A vCard QR code is static: the contact data lives inside the code itself, so it scans the same in ten years with no subscription. Dynamic QR services that redirect through a short link can expire when the plan lapses, which is a real risk for a card you print by the thousand."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Business Card QR Generator","item":"https://toolaspect.com/business-card-qr-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.93rem;color:var(--text);line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.input-grid.two{grid-template-columns:1fr 1fr}
+@media(max-width:640px){.input-grid,.input-grid.two{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.qr-stage{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap}
+.qr-box{background:#fff;padding:14px;border-radius:var(--radius);line-height:0;flex-shrink:0}
+.qr-box canvas{width:248px;height:248px;image-rendering:pixelated}
+.qr-meta{flex:1;min-width:240px}
+.qr-meta .stat-row{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.qr-meta .stat-row:last-child{border-bottom:none}
+.qr-meta .stat-row span:first-child{color:var(--muted)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.btn{background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.6rem 1.1rem;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.vcard-preview{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.78rem;line-height:1.6;white-space:pre-wrap;word-break:break-all;color:var(--text);max-height:260px;overflow-y:auto}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.seg button{background:var(--bg);color:var(--muted);border:none;padding:.45rem 1rem;font-size:.85rem;cursor:pointer;font-weight:600}
+.seg button.active{background:var(--primary);color:#fff}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📇 Business Card QR Generator</h1>
+<p>A vCard QR code that actually imports, with the escaping done right</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> to put a QR code on a business card, encode your details as a <strong>vCard</strong> (not plain text), because phones then save it straight into contacts. A full card lands around QR version 15 (77×77 modules), so print it at least 1 inch (2.5 cm) wide. Fill the form below, then download a PNG, SVG, the .vcf file itself, or a print-ready PDF sheet of 10 cards.
+</div>
+
+<div class="section-card">
+<h2>Contact Details</h2>
+<div class="input-grid">
+<div class="input-group"><label>First Name</label><input id="fFirst" type="text" value="Bao"></div>
+<div class="input-group"><label>Last Name</label><input id="fLast" type="text" value="Nguyen"></div>
+<div class="input-group"><label>Nickname (optional)</label><input id="fNick" type="text" placeholder="Bao"></div>
+<div class="input-group"><label>Company / Organization</label><input id="fOrg" type="text" value="Nguyen Dental, LLC"></div>
+<div class="input-group"><label>Job Title</label><input id="fTitle" type="text" value="Owner &amp; DDS"></div>
+<div class="input-group"><label>Website</label><input id="fUrl" type="url" value="https://nguyendental.com"></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Phone 1</label><input id="fTel1" type="tel" value="(512) 555-0134"></div>
+<div class="input-group"><label>Phone 1 Type</label><select id="fTel1t"><option value="WORK,VOICE" selected>Work</option><option value="CELL">Mobile</option><option value="HOME,VOICE">Home</option></select></div>
+<div class="input-group"><label>Phone 2 (optional)</label><input id="fTel2" type="tel" value="(512) 555-0192"></div>
+<div class="input-group"><label>Phone 2 Type</label><select id="fTel2t"><option value="WORK,VOICE">Work</option><option value="CELL" selected>Mobile</option><option value="HOME,VOICE">Home</option></select></div>
+<div class="input-group"><label>Email</label><input id="fEmail" type="email" value="bao@nguyendental.com"></div>
+<div class="input-group"><label>Email Type</label><select id="fEmailT"><option value="INTERNET,WORK" selected>Work</option><option value="INTERNET">Personal</option></select></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Street</label><input id="fStreet" type="text" value="1200 S Congress Ave, Suite 210"></div>
+<div class="input-group"><label>City</label><input id="fCity" type="text" value="Austin"></div>
+<div class="input-group"><label>State / ZIP</label><div style="display:flex;gap:.5rem"><input id="fState" type="text" value="TX" style="flex:1"><input id="fZip" type="text" value="78704" style="flex:1.4"></div></div>
+<div class="input-group"><label>Country</label><input id="fCountry" type="text" value="USA"></div>
+</div>
+<div class="input-group" style="margin-top:1rem"><label>Note (short = smaller, easier-to-scan code)</label><input id="fNote" type="text" value="New patients welcome. Mention this card for a free consult."></div>
+</div>
+
+<div class="section-card">
+<h2>QR Code &amp; Export</h2>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem">
+<div>
+<label style="font-size:.85rem;color:var(--muted);font-weight:500;margin-right:.5rem">vCard version</label>
+<span class="seg"><button id="ver30" class="active" onclick="setVer('3.0')">3.0 (recommended)</button><button id="ver40" onclick="setVer('4.0')">4.0</button></span>
+</div>
+<div class="input-group" style="width:150px"><label>Error Correction</label><select id="ecc"><option value="M" selected>M — 15%</option><option value="Q">Q — 25%</option><option value="H">H — 30%</option></select></div>
+</div>
+<div class="qr-stage">
+<div class="qr-box"><canvas id="qrCanvas" width="1080" height="1080"></canvas></div>
+<div class="qr-meta">
+<div class="stat-row"><span>Payload size</span><span id="mOctets">—</span></div>
+<div class="stat-row"><span>QR version</span><span id="mVersion">—</span></div>
+<div class="stat-row"><span>Modules</span><span id="mModules">—</span></div>
+<div class="stat-row"><span>Min print size (0.33 mm/module)</span><span id="mPrint">—</span></div>
+<div class="stat-row"><span>Comfortable scan distance</span><span id="mScan">—</span></div>
+<div class="btn-row">
+<button class="btn" onclick="dlPng()">PNG (1200px)</button>
+<button class="btn ghost" onclick="dlSvg()">SVG</button>
+<button class="btn ghost" onclick="dlVcf()">.vcf file</button>
+<button class="btn ghost" onclick="dlPdf()">Print sheet PDF (10-up)</button>
+</div>
+</div>
+</div>
+<h2 style="margin-top:1.5rem">vCard source (live)</h2>
+<div class="vcard-preview" id="vcPreview"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/wifi-qr-code-generator/">Wifi QR Generator</a></li><li style="margin:4px 0"><a href="/google-review-qr-generator/">Google Review QR</a></li><li style="margin:4px 0"><a href="/qr-code-generator/">Qr Code Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/vcard-qr-code/">Read the vCard QR code guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>vCard 3.0 vs 4.0: What Changes in the QR Code</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Property</th><th>vCard 3.0 (RFC 2426)</th><th>vCard 4.0 (RFC 6350)</th></tr></thead>
+<tbody>
+<tr><td>Phone</td><td><code>TEL;TYPE=CELL:(512) 555-0192</code></td><td><code>TEL;VALUE=URI;TYPE="cell":tel:+15125550192</code></td></tr>
+<tr><td>Email</td><td><code>EMAIL;TYPE=INTERNET,WORK:…</code></td><td><code>EMAIL;TYPE=internet,work:…</code> (lowercase, quoted if multi)</td></tr>
+<tr><td>Preferred number</td><td>First TEL wins in most apps</td><td><code>PREF=1</code> parameter ranks numbers explicitly</td></tr>
+<tr><td>Line folding</td><td>75 octets, CRLF + space</td><td>Same rule, same 75 octets</td></tr>
+<tr><td>Typical payload, same data</td><td>389 octets → version 15 QR (77×77)</td><td>415 octets → version 16 QR (81×81)</td></tr>
+<tr><td>Best use</td><td>QR on printed cards</td><td>Email attachments, server-side exchange</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Both versions import cleanly on iOS and Android. For printed cards 3.0 wins on physics alone: the payload is smaller, so the code has fewer modules and scans more forgivingly at small sizes.</p>
+</div>
+
+<div class="section-card">
+<h2>QR Code Size vs Print Size (Byte Mode, ECC M)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>QR version</th><th>Modules</th><th>Holds (bytes)</th><th>Min print @ 0.33 mm/module</th><th>Reads from ~</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>33×33</td><td>62</td><td>10.9 mm</td><td>11 cm</td></tr>
+<tr><td>6</td><td>41×41</td><td>106</td><td>13.5 mm</td><td>14 cm</td></tr>
+<tr><td>8</td><td>49×49</td><td>152</td><td>16.2 mm</td><td>16 cm</td></tr>
+<tr><td>10</td><td>57×57</td><td>213</td><td>18.8 mm</td><td>19 cm</td></tr>
+<tr><td>12</td><td>65×65</td><td>287</td><td>21.5 mm</td><td>21 cm</td></tr>
+<tr><td>14</td><td>73×73</td><td>362</td><td>24.1 mm</td><td>24 cm</td></tr>
+<tr><td>16</td><td>81×81</td><td>450</td><td>26.7 mm</td><td>27 cm</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Module size is the honest floor for print: below roughly 0.33 mm per module, phone cameras start struggling at card-reading distance. The scan-distance column applies the 10:1 rule (readable from about 10× the code's width). Cut the note and second phone and your card drops two versions, which is often the difference between a crisp code and a smudge.</p>
+</div>
+
+<div class="content-section">
+<h2>How This Business Card QR Generator Works</h2>
+<p>Most free "vCard QR" tools glue your fields together with naive string joins and hope for the best. That works until a company name contains a comma, or an address runs past 75 octets, and then the contact silently fails to import. This generator follows the actual vCard rules: it escapes backslashes, semicolons and commas, converts newlines to literal <code>\n</code>, folds long lines with CRLF and a single space, and joins everything with CRLF line endings the spec requires.</p>
+<h3>The format</h3>
+<p>A vCard is plain text: <code>BEGIN:VCARD</code>, a <code>VERSION</code>, one property per line, <code>END:VCARD</code>. The structured <code>N</code> property carries family, given, middle, prefix and suffix separated by semicolons, while <code>FN</code> is the display name. <code>ORG</code>, <code>TITLE</code>, <code>TEL</code>, <code>EMAIL</code>, <code>URL</code>, <code>ADR</code> and <code>NOTE</code> do what they say. In 4.0, phone numbers become <code>tel:</code> URIs with visual separators stripped.</p>
+<h3>How to use it</h3>
+<p>Fill in whatever you want on the card and leave the rest empty; empty properties are omitted rather than emitted blank. Toggle 3.0 versus 4.0 and watch the payload size and QR version react in the stats panel. Then export: PNG at 1200 pixels for digital use, SVG for print shops that want vectors, the .vcf if you'd rather email the contact or open it directly, and the 10-up PDF when you're printing sheets to cut yourself. The PDF is a standard US Letter page with ten 3.5×2 inch cards, crop ticks at each corner, and the QR at 0.95 inch (285 pixels at 300 DPI).</p>
+<h3>A worked example</h3>
+<p>Take the preloaded sample: Bao Nguyen, Nguyen Dental LLC, two phone numbers, email, website, full Austin address and a one-line note. As vCard 3.0 that's 389 octets. The generator picks the smallest QR version that holds it at error correction M, which is version 15: a 77×77 grid. At the 0.33 mm/module floor that's a 25.4 mm code, almost exactly one inch, scannable from about 25 cm. Switch to 4.0 and the same details grow to 415 octets because each phone becomes a <code>tel:</code> URI, pushing the code to version 16 (81×81) and a 26.7 mm minimum print.</p>
+<p>Now trim it the way a print shop would. Drop the note and the second phone and the card falls to 293 octets, QR version 13 (69×69 modules), with a 22.8 mm minimum print. Drop the address too and you're at 224 octets, version 11, 61×61 modules, comfortable at 20.1 mm. Same contact essentials, a code that scans from across a desk. That's the practical case for keeping printed-card vCards lean and putting the long bio behind the website URL instead.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I put a QR code on my business card?</h3><p>Encode your contact details as a vCard, render it as a QR code, and print the code at least 2 cm (about 0.8 in) wide on the back of the card. A full vCard with address and note produces a version 15 QR code (77 by 77 modules), which needs about a 1 inch print to scan reliably from normal card-handling distance. Trim the note field to get a smaller, easier code.</p></div>
+<div class="faq-item"><h3>Should I use vCard 3.0 or 4.0 for a QR code?</h3><p>Use 3.0 for QR codes. Both scan fine on iOS and Android, but a 4.0 card is larger for the same data because phone numbers become tel: URIs, so the QR version grows and the code gets denser. The same contact card that takes 389 octets in 3.0 takes 415 in 4.0, jumping from a 77x77 to an 81x81 module code.</p></div>
+<div class="faq-item"><h3>What is the difference between vCard and MECARD?</h3><p>MECARD is an older, compact format from Denso that some QR generators still emit because it is short. It only supports a name, one phone, email, address and note, with no version field, no multiple typed numbers and no structured extensions. vCard is the IETF standard (RFC 2426 for 3.0, RFC 6350 for 4.0) and is what modern contact apps exchange.</p></div>
+<div class="faq-item"><h3>Why does my vCard QR code not save the contact?</h3><p>Usually escaping. In vCard, commas, semicolons and backslashes must be preceded by a backslash, newlines become the two characters backslash-n, and lines longer than 75 octets must be folded with CRLF plus a space. A company like Nguyen Dental, LLC encoded without the escaped comma becomes two separate ORG values and some parsers reject the whole card.</p></div>
+<div class="faq-item"><h3>How big should a QR code be on a business card?</h3><p>At least 2 cm by 2 cm, and 2.5 cm (1 inch) if the code carries a full vCard. The rule of thumb is the code should be one tenth of the expected scanning distance, and a card is usually read from 20 to 25 cm away. Keep a white quiet zone of 4 modules around it and avoid printing over a dark background.</p></div>
+<div class="faq-item"><h3>Do business card QR codes expire?</h3><p>No. A vCard QR code is static: the contact data lives inside the code itself, so it scans the same in ten years with no subscription. Dynamic QR services that redirect through a short link can expire when the plan lapses, which is a real risk for a card you print by the thousand.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related QR Tools</h2>
+<div class="related-links">
+<a href="/qr-code-generator/">🔲 QR Code Generator</a>
+<a href="/wifi-qr-code-generator/">📶 WiFi QR Code Generator</a>
+<a href="/google-review-qr-generator/">⭐ Google Review QR Generator</a>
+<a href="/qr-code-with-logo/">🎨 QR Code With Logo</a>
+<a href="/qr-code-batch/">📦 QR Code Batch</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+var VC_VER='3.0';
+function setVer(v){VC_VER=v;document.getElementById('ver30').classList.toggle('active',v==='3.0');document.getElementById('ver40').classList.toggle('active',v==='4.0');calc();}
+function escVcard(s){return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r\n|\r|\n/g,'\\n');}
+function telUri(v){return 'tel:'+String(v||'').replace(/[^\d+]/g,'');}
+function foldLine(line){
+  // RFC 6350 3.2: fold at 75 octets; continuation lines begin with a space
+  if(new Blob([line]).size<=75)return [line];
+  var out=[],cur='';
+  for(var ch of String(line)){
+    var piece=cur?cur+ch:ch;
+    if(new Blob([piece]).size>(cur?74:75)){out.push(cur);cur=' '+ch;}
+    else cur=piece;
+  }
+  if(cur)out.push(cur);
+  return out;
+}
+function octets(s){return new Blob([s]).size;}
+function buildVCard(){
+  var g=function(id){return document.getElementById(id).value.trim();};
+  var L=[];
+  L.push('BEGIN:VCARD','VERSION:'+VC_VER);
+  L.push('N:'+[g('fLast'),g('fFirst'),'','',''].map(escVcard).join(';'));
+  L.push('FN:'+escVcard([g('fFirst'),g('fLast')].filter(Boolean).join(' ')||'Unnamed'));
+  if(g('fNick'))L.push('NICKNAME:'+escVcard(g('fNick')));
+  if(g('fOrg'))L.push('ORG:'+escVcard(g('fOrg')));
+  if(g('fTitle'))L.push('TITLE:'+escVcard(g('fTitle')));
+  var t1=g('fTel1'),t2=g('fTel2');
+  [[t1,document.getElementById('fTel1t').value],[t2,document.getElementById('fTel2t').value]].forEach(function(p){
+    if(!p[0])return;
+    if(VC_VER==='4.0')L.push('TEL;VALUE=URI;TYPE="'+p[1].toLowerCase()+'":'+telUri(p[0]));
+    else L.push('TEL;TYPE='+p[1]+':'+escVcard(p[0]));
+  });
+  if(g('fEmail')){
+    var et=document.getElementById('fEmailT').value;
+    L.push(VC_VER==='4.0'?'EMAIL;TYPE="'+et.toLowerCase()+'":'+escVcard(g('fEmail')):'EMAIL;TYPE='+et+':'+escVcard(g('fEmail')));
+  }
+  if(g('fUrl'))L.push('URL:'+escVcard(g('fUrl')));
+  if(g('fStreet')||g('fCity')||g('fState')||g('fZip')||g('fCountry')){
+    L.push('ADR;TYPE=WORK:'+';;'+[g('fStreet'),g('fCity'),g('fState'),g('fZip'),g('fCountry')].map(escVcard).join(';'));
+  }
+  if(g('fNote'))L.push('NOTE:'+escVcard(g('fNote')));
+  L.push('END:VCARD');
+  var flat=[];
+  L.forEach(function(l){foldLine(l).forEach(function(f){flat.push(f);});});
+  return flat.join('\r\n');
+}
+var currentQr=null;
+function calc(){
+  var vc=buildVCard();
+  document.getElementById('vcPreview').textContent=vc;
+  var ecc=document.getElementById('ecc').value;
+  try{
+    var qr=qrcode(0,ecc);qr.addData(vc,'Byte');qr.make();
+    currentQr=qr;
+    var n=qr.getModuleCount(),v=(n-17)/4;
+    drawQr(qr,1080);
+    document.getElementById('mOctets').textContent=octets(vc)+' octets';
+    document.getElementById('mVersion').textContent='v'+v+' (ECC '+ecc+')';
+    document.getElementById('mModules').textContent=n+'×'+n;
+    var mm=n*0.33;
+    document.getElementById('mPrint').textContent=(mm<25.4?mm.toFixed(1)+' mm':(mm/25.4).toFixed(2)+' in');
+    document.getElementById('mScan').textContent='~'+Math.round(mm*10/10)+' cm (10:1 rule)';
+  }catch(e){
+    document.getElementById('mVersion').textContent='Too large';
+  }
+}
+function drawQr(qr,size){
+  var c=document.getElementById('qrCanvas');c.width=size;c.height=size;
+  var ctx=c.getContext('2d'),mc=qr.getModuleCount(),cell=size/mc,quiet=cell*4;
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);ctx.fillStyle='#000000';
+  for(var r=0;r<mc;r++)for(var col=0;col<mc;col++)if(qr.isDark(r,col))ctx.fillRect(quiet+col*cell,quiet+r*cell,Math.ceil(cell),Math.ceil(cell));
+}
+function qrDataUrl(scale){
+  var c=document.getElementById('qrCanvas');
+  return c.toDataURL('image/png');
+}
+function dl(name,url){var a=document.createElement('a');a.download=name;a.href=url;a.click();}
+function dlPng(){dl('business-card-qr.png',qrDataUrl());}
+function dlSvg(){
+  var qr=currentQr,mc=qr.getModuleCount(),quiet=4,unit=10,S='<svg xmlns="http://www.w3.org/2000/svg" width="'+((mc+quiet*2)*unit)+'" height="'+((mc+quiet*2)*unit)+'" viewBox="0 0 '+((mc+quiet*2)*unit)+' '+((mc+quiet*2)*unit)+'"><rect width="100%" height="100%" fill="#fff"/><path d="';
+  var d='';
+  for(var r=0;r<mc;r++)for(var c=0;c<mc;c++)if(qr.isDark(r,c))d+='M'+((c+quiet)*unit)+' '+((r+quiet)*unit)+'h'+unit+'v'+unit+'h-'+unit+'z';
+  S+=d+'" fill="#000"/></svg>';
+  dl('business-card-qr.svg',URL.createObjectURL(new Blob([S],{type:'image/svg+xml'})));
+}
+function dlVcf(){
+  dl('contact.vcf',URL.createObjectURL(new Blob([buildVCard()],{type:'text/vcard'})));
+}
+function dlPdf(){
+  // 10-up US Letter sheet: ten 3.5x2in cards, crop ticks, 0.95in QR, 300dpi image
+  var c=document.getElementById('qrCanvas');
+  var off=document.createElement('canvas');off.width=285;off.height=285;
+  var octx=off.getContext('2d');octx.fillStyle='#fff';octx.fillRect(0,0,285,285);
+  octx.drawImage(c,0,0,285,285);
+  var b64=off.toDataURL('image/jpeg',0.95).split(',')[1];
+  var bin=atob(b64);
+  var g=function(id){return document.getElementById(id).value.trim();};
+  var name=[g('fFirst'),g('fLast')].filter(Boolean).join(' ')||'Scan to save contact';
+  var title=g('fOrg')||g('fTitle')||'';
+  var PW=612,PH=792,CW=252,CH=144,COLS=2,ROWS=5,QR=68.4;
+  var mx=(PW-COLS*CW)/2,my=(PH-ROWS*CH)/2;
+  var content='';
+  function tick(x,y){return '0.6 w 0.5 G '+(x-6)+' '+y+' m '+(x+6)+' '+y+' l S '+x+' '+(y-6)+' m '+x+' '+(y+6)+' l S\n';}
+  function esc(s){return String(s).replace(/[^\x00-\xFF]/g,'?').replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');}
+  function text(cx,y,size,s){var w=String(s).length*size*0.5;return 'BT 0 g /F1 '+size+' Tf '+(cx-w/2).toFixed(1)+' '+y+' Td ('+esc(s)+') Tj ET\n';}
+  for(var r=0;r<ROWS;r++)for(var col=0;col<COLS;col++){
+    var x=mx+col*CW,y=my+r*CH;
+    content+=tick(x,y)+tick(x+CW,y)+tick(x,y+CH)+tick(x+CW,y+CH);
+    content+='q '+QR+' 0 0 '+QR+' '+(x+(CW-QR)/2).toFixed(2)+' '+(y+CH-QR-14).toFixed(2)+' cm /Im0 Do Q\n';
+    content+=text(x+CW/2,y+22,9,name)+(title?text(x+CW/2,y+11,7,title):'');
+  }
+  var objs=[];
+  objs[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  objs[2]='<< /Type /Pages /Kids [3 0 R] /Count 1 >>';
+  objs[3]='<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /XObject << /Im0 4 0 R >> /Font << /F1 5 0 R >> >> /Contents 6 0 R >>';
+  objs[4]='<< /Type /XObject /Subtype /Image /Width 285 /Height 285 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+bin.length+' >>\nstream\n'+bin+'\nendstream';
+  objs[5]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objs[6]='<< /Length '+content.length+' >>\nstream\n'+content+'\nendstream';
+  var parts=['%PDF-1.4\n'],offsets=[0];
+  for(var i=1;i<=6;i++){offsets[i]=parts.reduce(function(a,p){return a+p.length;},0);parts.push(i+' 0 obj\n'+objs[i]+'\nendobj\n');}
+  var xrefPos=parts.reduce(function(a,p){return a+p.length;},0);
+  var xref='xref\n0 7\n0000000000 65535 f \n';
+  for(var j=1;j<=6;j++){var o=('0000000000'+offsets[j]).slice(-10);xref+=o+' 00000 n \n';}
+  xref+='trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n'+xrefPos+'\n%%EOF';
+  parts.push(xref);
+  var pdfStr=parts.join('');
+  var bytes=new Uint8Array(pdfStr.length);
+  for(var k=0;k<pdfStr.length;k++)bytes[k]=pdfStr.charCodeAt(k)&0xff;
+  dl('business-card-print-sheet.pdf',URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})));
+}
+['fFirst','fLast','fNick','fOrg','fTitle','fUrl','fTel1','fTel1t','fTel2','fTel2t','fEmail','fEmailT','fStreet','fCity','fState','fZip','fCountry','fNote','ecc'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+  document.getElementById(id).addEventListener('change',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

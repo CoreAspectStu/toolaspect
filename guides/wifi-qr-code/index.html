@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WiFi QR Codes: Format, Escaping and Traps | ToolAspect</title>
+<meta name="description" content="The WIFI: QR format explained: reserved-character escaping, hidden networks, WEP vs WPA3, the Enterprise EAP extension, and why codes fail to join.">
+<link rel="canonical" href="https://toolaspect.com/guides/wifi-qr-code/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"WiFi QR Codes: The Format, the Escaping, the Traps","description":"How the WIFI: QR string works: reserved-character escaping rules, hidden networks, WEP vs WPA2 vs WPA3, the Enterprise WPA2-EAP extension, and why generated codes fail to join.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"WiFi QR Codes","item":"https://toolaspect.com/guides/wifi-qr-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the WIFI QR code format?","acceptedAnswer":{"@type":"Answer","text":"WIFI:T:WPA;S:NetworkName;P:Password;; where T is the security type, S is the SSID and P is the password. It ends with a doubled semicolon. The five characters backslash, semicolon, comma, colon and double-quote are reserved and must be escaped with a backslash wherever they appear in the SSID or password."}},
+{"@type":"Question","name":"Which phones can scan a WiFi QR code?","acceptedAnswer":{"@type":"Answer","text":"iPhone (iOS 11+) via the Camera app, Android via Camera or Google Lens, and Windows 10+ via the camera or Settings network share. For open and WPA personal networks, effectively every phone made in the last decade joins from a scan. The enterprise (WPA2-EAP) extension is Android-only."}},
+{"@type":"Question","name":"Is it safe to put my WiFi password in a QR code?","acceptedAnswer":{"@type":"Answer","text":"As safe as writing it on the sign itself: anyone who scans or photographs the code reads the password in cleartext. For homes that is usually acceptable; for cafes and offices put the code on a guest network with client isolation, on a separate VLAN, and rotate it regularly."}},
+{"@type":"Question","name":"Why does my WiFi QR code say invalid or not connect?","acceptedAnswer":{"@type":"Answer","text":"Check escaping first (a semicolon in the password splits the string), then the SSID spelling including spaces and case, then the security type. A password shorter than 8 characters is not a valid WPA passphrase, and an SSID with a trailing space pasted from a router admin page fails silently."}},
+{"@type":"Question","name":"Can I share 5 GHz or WPA3 networks this way?","acceptedAnswer":{"@type":"Answer","text":"Yes. The T:WPA value covers WPA, WPA2 and WPA3 personal alike; the band is discovered by the phone when it joins. Very old devices (roughly pre-2014) may lack 5 GHz radios, but that is a hardware limit, not a QR limit."}}
+]}
+</script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:6px 8px;border:1px solid var(--border);text-align:left}.data-table th{background:var(--bg-elevated)}code{background:var(--surface);padding:2px 6px;border-radius:6px;font-size:.85rem}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:12px 0}pre code{background:none;padding:0}</style>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="wrap">
+<h1>WiFi QR Codes: The Format, the Escaping, the Traps</h1>
+<div class="meta"><span>📶 8 min read</span><span>⚡ Everything renders in your browser</span></div>
+<p class="intro">The fridge-magnet question of the decade: "what's the WiFi?" A QR code answers it permanently. The format behind it is small enough to learn in five minutes and strict enough that half the generators online get it wrong — usually at exactly the character your password contains. Here's the whole thing: the string, the escaping rules, the enterprise extension, and what to print it on.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What is the WIFI QR code format?</h2>
+<p>A WiFi QR code is just a short text string in a specific shape:</p>
+<pre><code>WIFI:T:WPA;S:BlueHouse 5G;P:correct horse battery staple;;</code></pre>
+<p>Fields separated by semicolons, the record closed with a doubled semicolon. <code>T</code> is the authentication type (<code>WPA</code> for WPA/WPA2/WPA3 personal, <code>WEP</code>, <code>nopass</code>, or <code>WPA2-EAP</code> for enterprise), <code>S</code> is the network name, <code>P</code> is the password, and <code>H:true</code> appears for hidden networks. The format started in the ZXing barcode project and spread: iPhone camera, Android camera and Google Lens, and Windows all parse it. Scan, confirm, join — no keyboard time, no reading "zero or the letter O" across a noisy cafe.</p>
+<h2>The escaping rule that breaks half of all generated codes</h2>
+<p>Five characters are reserved: backslash, semicolon, comma, colon, and double-quote. Any of them in your SSID or password must be preceded by a backslash.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Your password contains</th><th>Encoded as</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>p@ss;word</code></td><td><code>P:p@ss\;word</code></td><td>Bare semicolon would end the field</td></tr>
+<tr><td><code>cafe,guest</code></td><td><code>P:cafe\,guest</code></td><td>Comma is a reserved list separator</td></tr>
+<tr><td><code>a:b</code></td><td><code>P:a\:b</code></td><td>Colon would read as a new key</td></tr>
+<tr><td><code>back\slash</code></td><td><code>P:back\\slash</code></td><td>Backslash escapes itself</td></tr>
+<tr><td><code>say"hi</code></td><td><code>P:say\"hi</code></td><td>Quote is reserved for future use</td></tr>
+</tbody>
+</table>
+</div>
+<p>A generator that skips this produces a code that scans, shows a password, and fails to connect — the worst failure mode, because it looks like it should work. The <a href="/wifi-qr-code-generator/">WiFi QR generator</a> shows the exact escaped string under the code as you type, so you can see <code>\;</code> appear the moment your password needs it.</p>
+<h2>Hidden, open, and legacy networks</h2>
+<p>Hidden networks (SSID not broadcast) add <code>H:true</code>: <code>WIFI:T:WPA;S:name;P:pass;H:true;;</code>. The phone joins a network it cannot see in its list. Worth knowing: hiding an SSID is security theater — scanners extract the name from probe traffic anyway — and it makes some clients flakier. But if the network is already hidden, the flag is mandatory.</p>
+<p>Open networks use <code>T:nopass</code> and omit <code>P:</code> entirely: <code>WIFI:T:nopass;S:CoffeeShop Open;;</code>. Guests still scan and join without a password prompt. WEP uses <code>T:WEP</code> with a 5- or 13-ASCII-character key (10 or 26 hex). WEP is crackable in minutes with a laptop, so encode it only for doorbells and printers you genuinely cannot upgrade, and start planning their replacement.</p>
+<h2>The enterprise extension (the part free tools skip)</h2>
+<p>Offices and campuses run 802.1X: every user logs in with their own username and password instead of a shared passphrase. The extended format carries that:</p>
+<pre><code>WIFI:T:WPA2-EAP;S:CorpWiFi;P:secretpass;E:TTLS;PH2:MSCHAPV2;I:jdoe@example.edu;A:anon@example.edu;;</code></pre>
+<p>The fields: <code>E:</code> is the outer EAP method (PEAP and TTLS dominate, TLS where client certificates live on the device, PWD rarely), <code>PH2:</code> is the inner phase-2 authentication (MSCHAPv2 under PEAP/TTLS in most deployments), <code>I:</code> is the username, and <code>A:</code> is the anonymous outer identity — the string sent unencrypted during handshakes so the real username stays private. The full string above is 99 bytes, QR version 6, 41×41 modules: still an easy scan.</p>
+<p>The honest caveat: this extension follows the encoding Android's setup tooling accepts, and Android joins from it. iOS camera scanning does <em>not</em> join enterprise networks from QR codes. For mixed fleets, the working pattern is a QR for the personal/guest network plus printed instructions (or an MDM profile) for the corporate one.</p>
+<div class="cta-box"><h3>Generate your WiFi QR code</h3><p style="color:#fff;opacity:.9">WPA, WPA2, WPA3, WEP, open, hidden, and full Enterprise EAP strings — with live escaping and module counts.</p><a href="/wifi-qr-code-generator/">WiFi QR Code Generator →</a></div>
+<h2>How big should the printed code be?</h2>
+<p>WiFi QR payloads are small, which is the good news. A personal network lands around 50–90 bytes: QR version 3 to 5, grids of 29×29 to 37×37 modules. At the standard print floor of 0.33 mm per module, that is a 10–12 mm minimum, so a 4 cm sign has triple margin and a mug decal still works. Enterprise payloads run 90–130 bytes (version 6–7), comfortable at 2 cm. Print black on white, keep the quiet zone clear, and matte beats glossy under restaurant lighting.</p>
+<h2>Security questions worth answering honestly</h2>
+<ul>
+<li><strong>The QR exposes the password.</strong> Scanning or photographing the code reads the cleartext password. Treat the sign like the password written on it, because it is.</li>
+<li><strong>Guest networks exist for this.</strong> Put the QR on a guest SSID with client isolation and its own VLAN. Visitors get internet; your printer and NAS stay out of reach.</li>
+<li><strong>Rotation is manual.</strong> Change the password, and every printed sign goes stale together — regenerate, reprint, done. Quarterly is plenty for a cafe; a home network needs it roughly never.</li>
+<li><strong>WPA3 changes nothing here.</strong> <code>T:WPA</code> covers WPA3 personal; the phone negotiates the protocol at join time.</li>
+</ul>
+<p>QR codes around the shop can pull double duty: a WiFi code at the register, a <a href="/google-review-qr-generator/">review QR</a> on the receipt, a <a href="/business-card-qr-generator/">vCard code</a> on your business card, all generated in the browser with the <a href="/qr-code-generator/">general QR generator</a> for everything else. For a deeper look at how these codes behave over time, read <a href="/guides/do-qr-codes-expire/">do QR codes expire?</a> — the short version: static ones like these never do.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the WIFI QR code format?</h3><p>WIFI:T:WPA;S:NetworkName;P:Password;; where T is the security type, S is the SSID and P is the password. It ends with a doubled semicolon. The five characters backslash, semicolon, comma, colon and double-quote are reserved and must be escaped with a backslash wherever they appear in the SSID or password.</p></div>
+<div class="faq-item"><h3>Which phones can scan a WiFi QR code?</h3><p>iPhone (iOS 11+) via the Camera app, Android via Camera or Google Lens, and Windows 10+ via the camera or Settings network share. For open and WPA personal networks, effectively every phone made in the last decade joins from a scan. The enterprise (WPA2-EAP) extension is Android-only.</p></div>
+<div class="faq-item"><h3>Is it safe to put my WiFi password in a QR code?</h3><p>As safe as writing it on the sign itself: anyone who scans or photographs the code reads the password in cleartext. For homes that is usually acceptable; for cafes and offices put the code on a guest network with client isolation, on a separate VLAN, and rotate it regularly.</p></div>
+<div class="faq-item"><h3>Why does my WiFi QR code say invalid or not connect?</h3><p>Check escaping first (a semicolon in the password splits the string), then the SSID spelling including spaces and case, then the security type. A password shorter than 8 characters is not a valid WPA passphrase, and an SSID with a trailing space pasted from a router admin page fails silently.</p></div>
+<div class="faq-item"><h3>Can I share 5 GHz or WPA3 networks this way?</h3><p>Yes. The T:WPA value covers WPA, WPA2 and WPA3 personal alike; the band is discovered by the phone when it joins. Very old devices (roughly pre-2014) may lack 5 GHz radios, but that is a hardware limit, not a QR limit.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/wifi-qr-code-generator/">WiFi QR Code Generator</a>
+<a href="/business-card-qr-generator/">Business Card QR Generator</a>
+<a href="/google-review-qr-generator/">Google Review QR Generator</a>
+<a href="/qr-code-generator/">QR Code Generator</a>
+</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

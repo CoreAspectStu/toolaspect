@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>curl Converter — To Python &amp; JavaScript | ToolAspect</title>
+<meta name="description" content="Convert curl to Python requests, JS fetch, or Node axios. Headers, JSON, auth, forms, multi-line — free, entirely in your browser.">
+<link rel="canonical" href="https://toolaspect.com/curl-converter/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="curl Converter — To Python &amp; JavaScript">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste a curl command, get runnable Python requests, JavaScript fetch, and Node axios code. Parsed with tree-sitter bash, entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/curl-converter/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="curl Converter | Free Online Tool">
+<meta name="twitter:description" content="curl to Python requests, JS fetch, and Node axios — headers, JSON, auth, forms, multi-line.">
+<meta name="keywords" content="curl converter, curl to python, curl to fetch, curl to javascript, curl to requests, convert curl command, curl to axios">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"curl Converter","description":"Free browser-based curl command converter. Turns curl invocations into Python requests, JavaScript fetch, and Node axios code, parsing real shell syntax with tree-sitter-bash loaded on demand.","url":"https://toolaspect.com/curl-converter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a curl command to Python requests?","acceptedAnswer":{"@type":"Answer","text":"Paste the full curl command into the converter above and switch to the Python tab. The tool maps -H headers to a headers dict, JSON -d bodies to a json= argument, form bodies to data=, -u to auth=, and -m to timeout=, then emits a complete requests script you can run as-is."}},
+{"@type":"Question","name":"How do I convert curl to JavaScript fetch?","acceptedAnswer":{"@type":"Answer","text":"Paste the command and pick the JavaScript fetch tab. The method, headers, and body are rewritten as a fetch() call: JSON data becomes JSON.stringify(...), form data becomes URLSearchParams, and -m --max-time becomes AbortSignal.timeout(). The Node axios tab covers axios-style projects."}},
+{"@type":"Question","name":"Does the curl converter send my commands anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and code generation happen entirely in your browser. The parser itself (tree-sitter-bash compiled to WebAssembly, MIT licensed) loads from a CDN the first time you paste; if that fails, a built-in tokenizer takes over. Nothing you paste is transmitted."}},
+{"@type":"Question","name":"Why does curl -d make the request a POST?","acceptedAnswer":{"@type":"Answer","text":"That's curl's own behavior: any -d/--data, --data-raw, --data-binary, or -F/--form flag implies POST unless you override with -X. The converter follows the same rule, and -G flips it back to GET by moving the data into the query string."}},
+{"@type":"Question","name":"What curl flags does the converter support?","acceptedAnswer":{"@type":"Answer","text":"The common set: -X method, -H/--header, -d/--data/--data-raw/--data-binary/--data-urlencode, -F/--form, -u/--user, -b/--cookie, -A/--user-agent, -e/--referer, -G/--get, -I/--head, -L/--location, -k/--insecure, --compressed, -m/--max-time, --url, quoting styles ('...', \\\"...\\\", $'...'), and backslash line continuations. Unsupported flags are listed in a comment so nothing disappears silently."}},
+{"@type":"Question","name":"Why does my converted code use a variable like $TOKEN literally?","acceptedAnswer":{"@type":"Answer","text":"A shell command with $TOKEN can't be converted to a literal value without running the shell — the converter doesn't know what the variable holds. It keeps the reference ($TOKEN) in the generated code and warns you, so you can substitute a real value or read it from an environment variable in the target language."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"curl Converter","item":"https://toolaspect.com/curl-converter/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.quick-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.7;color:var(--text)}
+.quick-answer strong{color:var(--primary-hover)}
+.aio-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.5rem;font-size:.92rem;color:var(--muted);line-height:1.7}
+.aio-box strong{color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+textarea.curl-input{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.6;padding:.9rem;box-sizing:border-box;resize:vertical}
+textarea.curl-input:focus{outline:none;border-color:var(--primary)}
+.toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.75rem}
+.btn{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.45rem .9rem;font-size:.82rem;cursor:pointer}
+.btn:hover{border-color:var(--primary)}
+.parse-status{font-size:.78rem;color:var(--muted);margin-left:auto}
+.tabs{display:flex;gap:.4rem;margin-top:1.25rem;flex-wrap:wrap}
+.tab-btn{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;color:var(--muted);padding:.55rem 1.1rem;font-size:.85rem;cursor:pointer;font-weight:600}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--surface);background:var(--surface)}
+.code-panel{position:relative;background:#0b0d12;border:1px solid var(--border);border-top:none;border-radius:0 var(--radius) var(--radius) var(--radius);padding:1rem;overflow-x:auto}
+.code-panel pre{margin:0;font-size:.82rem;line-height:1.65;color:#d8dee9;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}
+.copy-btn{position:absolute;top:.6rem;right:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.72rem;padding:.3rem .7rem;cursor:pointer}
+.copy-btn:hover{color:var(--text);border-color:var(--primary)}
+.err-box{margin-top:1rem;color:var(--danger);font-size:.88rem;min-height:1.2em}
+.warn-box{margin-top:.5rem;color:#f5b944;font-size:.78rem;line-height:1.6}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.example-block{background:#0b0d12;border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin:.75rem 0;overflow-x:auto}
+.example-block pre{margin:0;font-size:.8rem;line-height:1.6;color:#d8dee9;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{white-space:nowrap}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔁 curl Converter</h1>
+<p>Paste a curl command — get Python requests, JavaScript fetch, and Node axios</p>
+</div>
+
+<div class="quick-answer">
+Paste a curl command, copy working code in <strong>Python (requests), JavaScript (fetch), and Node (axios)</strong> — conversion runs entirely in your browser, so tokens and API keys never leave your machine. JSON bodies become native dictionaries and objects, <code>-d</code> forms become <code>data=</code>/<code>URLSearchParams</code>, <code>-u</code> becomes basic auth, and <code>-G</code>, <code>--compressed</code>, <code>-k</code>, and <code>-m</code> map to each client's idiomatic option. Commands with real shell syntax (<code>$()</code>, pipes, <code>FOO=bar</code> prefixes) are parsed with the actual bash grammar — <strong>tree-sitter WebAssembly, lazily fetched from the CDN only when needed</strong> — with an offline tokenizer as the fallback.
+</div>
+
+<div class="aio-box"><strong>Quick answer:</strong> paste your full curl command below. The converter maps <code>-H</code> to headers, JSON <code>-d</code> to a real body, <code>-u</code> to auth, <code>-F</code> to multipart, and <code>-m</code> to a timeout in all three targets. Parsing runs <strong>entirely in your browser</strong> — tree-sitter-bash (MIT, WebAssembly) loads on first paste, with a built-in tokenizer as fallback. Nothing is sent to a server.</div>
+
+<div class="section-card">
+<h2>Your curl Command</h2>
+<textarea class="curl-input" id="curlInput" spellcheck="false" placeholder="curl -X POST https://api.example.com/v1/users \
+  -H 'Content-Type: application/json' \
+  -d '{&quot;name&quot;:&quot;Ada&quot;}'">curl -X POST https://api.example.com/v1/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer tok_123' \
+  -d '{"name":"Ada","role":"admin"}'</textarea>
+<div class="toolbar">
+<button class="btn" id="sampleBtn">Load another sample</button>
+<button class="btn" id="clearBtn">Clear</button>
+<span class="parse-status" id="parseStatus"></span>
+</div>
+
+<div class="tabs">
+<button class="tab-btn active" data-tab="python">Python · requests</button>
+<button class="tab-btn" data-tab="fetch">JavaScript · fetch</button>
+<button class="tab-btn" data-tab="axios">Node · axios</button>
+</div>
+<div class="code-panel">
+<button class="copy-btn" id="copyBtn">Copy</button>
+<pre id="codeOut"></pre>
+</div>
+<div class="err-box" id="errOut"></div>
+<div class="warn-box" id="warnOut"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li><li style="margin:4px 0"><a href="/url-encoder/">Url Encoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p><p style="font-size:.85rem"><a href="/guides/convert-curl-to-python/">Read the curl-to-Python guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>curl Flag → Target Code Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>curl flag</th><th>What it does</th><th>Python requests</th><th>JS fetch</th><th>Node axios</th></tr></thead>
+<tbody>
+<tr><td><code>-X, --request</code></td><td>HTTP method</td><td><code>requests.post(...)</code></td><td><code>method:</code></td><td><code>axios.post(...)</code></td></tr>
+<tr><td><code>-H, --header</code></td><td>Request header</td><td><code>headers={}</code></td><td><code>headers: {}</code></td><td><code>headers: {}</code></td></tr>
+<tr><td><code>-d, --data</code> (JSON)</td><td>Request body</td><td><code>json={}</code></td><td><code>JSON.stringify()</code></td><td>object arg</td></tr>
+<tr><td><code>-d</code> (k=v pairs)</td><td>Form body</td><td><code>data={}</code></td><td><code>URLSearchParams</code></td><td><code>URLSearchParams</code></td></tr>
+<tr><td><code>-F, --form</code></td><td>Multipart upload</td><td><code>files={}</code></td><td><code>FormData</code></td><td><code>FormData</code></td></tr>
+<tr><td><code>-G, --get</code></td><td>Move -d to query</td><td><code>params={}</code></td><td>query in URL</td><td><code>params: {}</code></td></tr>
+<tr><td><code>-u, --user</code></td><td>Basic auth</td><td><code>auth=(u, p)</code></td><td><code>btoa()</code> header</td><td><code>auth: {}</code></td></tr>
+<tr><td><code>-b, --cookie</code></td><td>Cookies</td><td colspan="3">Cookie header in all three</td></tr>
+<tr><td><code>-A, --user-agent</code></td><td>User agent</td><td colspan="3">User-Agent header in all three</td></tr>
+<tr><td><code>-m, --max-time</code></td><td>Timeout (s)</td><td><code>timeout=</code></td><td><code>AbortSignal.timeout()</code></td><td><code>timeout:</code> (ms)</td></tr>
+<tr><td><code>-k, --insecure</code></td><td>Skip cert check</td><td><code>verify=False</code></td><td>comment (browsers won't)</td><td>comment</td></tr>
+<tr><td><code>-L, --location</code></td><td>Follow redirects</td><td colspan="3">default behavior in all three</td></tr>
+<tr><td><code>--compressed</code></td><td>Request compression</td><td colspan="3">automatic in all three</td></tr>
+<tr><td><code>-I, --head</code></td><td>HEAD request</td><td colspan="3">HEAD method in all three</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the curl Converter Works</h2>
+<p>The tool treats your paste as what it is — a shell command — instead of guessing with regexes. On first input it lazily loads <a href="https://tree-sitter.github.io/tree-sitter/" rel="noopener">tree-sitter</a>'s bash grammar compiled to WebAssembly (both MIT licensed, served from a CDN) and parses the command into an exact token list: quoting styles, escapes, and backslash line continuations included. A built-in tokenizer produces the same tokens if the CDN is unreachable, so the tool always works offline-ish. The token list becomes a request model (method, URL, headers, body type, auth, options), and three code generators turn that model into runnable Python, browser JavaScript, and Node.js.</p>
+<h3>What the parser handles</h3>
+<ul>
+<li>All three quoting styles — <code>'single'</code>, <code>"double"</code>, <code>$'ansi-c'</code> — plus adjacent-segment concatenation like <code>'Authorization: Bearer '"$TOKEN"</code></li>
+<li>Flag clusters (<code>-sL</code>), attached values (<code>-XPUT</code>, <code>-H'X: 1'</code>), and <code>--flag=value</code> long forms</li>
+<li>Multiple <code>-d</code> parts (joined the way curl joins them), duplicate <code>-H</code> headers, and implied-POST semantics</li>
+<li>Shell variables and <code>$(...)</code> substitutions — kept literally, with a warning, since no static converter can know their values</li>
+</ul>
+<h3>A worked example</h3>
+<p>Take a typical authenticated POST:</p>
+<div class="example-block"><pre>curl -X POST https://api.example.com/v1/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer tok_123' \
+  -d '{"name":"Ada","role":"admin"}'</pre></div>
+<p>The parser reads four arguments after <code>curl</code>: the method, two headers, and a JSON body it can parse structurally. Python output:</p>
+<div class="example-block"><pre>import requests
+
+url = "https://api.example.com/v1/users"
+headers = {
+    "Authorization": "Bearer tok_123",
+}
+json_data = {
+    "name": "Ada",
+    "role": "admin",
+}
+
+response = requests.post(url, headers=headers, json=json_data)
+print(response.status_code)
+print(response.text)</pre></div>
+<p>Note the <code>Content-Type</code> header disappeared: <code>requests</code> sets it automatically when you pass <code>json=</code>, and re-sending it would be redundant. The fetch version uses <code>body: JSON.stringify(...)</code> for the same reason, and the axios version passes the object as the second argument. Paste the command above into the tool to see all three side by side.</p>
+<h3>Why browser-side matters</h3>
+<p>API tokens routinely ride inside curl commands copied from internal docs. This page never sends your paste anywhere — the parser is WebAssembly running locally, the same architecture the popular MIT-licensed curlconverter project uses. If you're pasting a command with a production bearer token, that's the difference worth knowing about.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a curl command to Python requests?</h3><p>Paste the full curl command into the converter above and switch to the Python tab. The tool maps -H headers to a headers dict, JSON -d bodies to a json= argument, form bodies to data=, -u to auth=, and -m to timeout=, then emits a complete requests script you can run as-is.</p></div>
+<div class="faq-item"><h3>How do I convert curl to JavaScript fetch?</h3><p>Paste the command and pick the JavaScript fetch tab. The method, headers, and body are rewritten as a fetch() call: JSON data becomes JSON.stringify(...), form data becomes URLSearchParams, and -m --max-time becomes AbortSignal.timeout(). The Node axios tab covers axios-style projects.</p></div>
+<div class="faq-item"><h3>Does the curl converter send my commands anywhere?</h3><p>No. Parsing and code generation happen entirely in your browser. The parser itself (tree-sitter-bash compiled to WebAssembly, MIT licensed) loads from a CDN the first time you paste; if that fails, a built-in tokenizer takes over. Nothing you paste is transmitted.</p></div>
+<div class="faq-item"><h3>Why does curl -d make the request a POST?</h3><p>That's curl's own behavior: any -d/--data, --data-raw, --data-binary, or -F/--form flag implies POST unless you override with -X. The converter follows the same rule, and -G flips it back to GET by moving the data into the query string.</p></div>
+<div class="faq-item"><h3>What curl flags does the converter support?</h3><p>The common set: -X method, -H/--header, -d/--data/--data-raw/--data-binary/--data-urlencode, -F/--form, -u/--user, -b/--cookie, -A/--user-agent, -e/--referer, -G/--get, -I/--head, -L/--location, -k/--insecure, --compressed, -m/--max-time, --url, quoting styles ('...', "...", $'...'), and backslash line continuations. Unsupported flags are listed in a comment so nothing disappears silently.</p></div>
+<div class="faq-item"><h3>Why does my converted code use a variable like $TOKEN literally?</h3><p>A shell command with $TOKEN can't be converted to a literal value without running the shell — the converter doesn't know what the variable holds. It keeps the reference ($TOKEN) in the generated code and warns you, so you can substitute a real value or read it from an environment variable in the target language.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Developer Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/jwt-decoder/">🔑 JWT Decoder</a>
+<a href="/url-encoder/">🔗 URL Encoder</a>
+<a href="/base64-encoder/">🔤 Base64 Encoder</a>
+<a href="/regex-tester/">🧪 Regex Tester</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* curl-converter pure core — no DOM, node-testable.
+ * tokenizeCurl: fallback shell tokenizer (quotes, escapes, line continuations)
+ * tokensFromTreeSitter: adapter taking a parsed tree-sitter-bash tree (browser path)
+ * parseCurlTokens: tokens -> request model
+ * toPython / toFetch / toAxios: model -> code
+ */
+'use strict';
+
+/* ---------- shell fallback tokenizer ---------- */
+function tokenizeCurl(text) {
+  var tokens = [];
+  var warnings = [];
+  var cur = '';
+  var i = 0;
+  var n = text.length;
+  var hasToken = false;
+  while (i < n) {
+    var c = text[i];
+    if (c === '\\' && i + 1 < n && (text[i + 1] === '\n' || text[i + 1] === '\r')) {
+      i += 2; // line continuation
+      continue;
+    }
+    if (c === "'" ) {
+      hasToken = true;
+      i++;
+      var j = text.indexOf("'", i);
+      if (j < 0) { warnings.push('Unterminated single quote'); j = n; }
+      cur += text.slice(i, j);
+      i = j + 1;
+      continue;
+    }
+    if (c === '"' ) {
+      hasToken = true;
+      i++;
+      while (i < n && text[i] !== '"') {
+        if (text[i] === '\\' && i + 1 < n) {
+          var nx = text[i + 1];
+          if (nx === '"' || nx === '\\' || nx === '$' || nx === '`') { cur += nx; i += 2; continue; }
+          if (nx === '\n' || nx === '\r') { i += 2; continue; }
+          cur += text[i]; i++; continue;
+        }
+        if (text[i] === '$') warnings.push('Variable expansion in double quotes — value used literally');
+        cur += text[i]; i++;
+      }
+      i++; // closing quote
+      continue;
+    }
+    if (c === ' ' || c === '\t' || c === '\n' || c === '\r') {
+      if (hasToken || cur) { tokens.push(cur); cur = ''; hasToken = false; }
+      i++;
+      continue;
+    }
+    if (c === '#' && !hasToken && !cur) {
+      while (i < n && text[i] !== '\n') i++;
+      continue;
+    }
+    if (c === '\\' && i + 1 < n && text[i + 1] !== '\n' && text[i + 1] !== '\r') {
+      cur += text[i + 1]; hasToken = true; i += 2; continue;
+    }
+    cur += c; hasToken = true; i++;
+  }
+  if (hasToken || cur) tokens.push(cur);
+  return { tokens: tokens, warnings: warnings };
+}
+
+/* ---------- argv parsing ---------- */
+var SHORT_ARGS = { X: 'request', H: 'header', d: 'data', b: 'cookie', A: 'user-agent', e: 'referer', u: 'user', m: 'max-time', o: 'output', F: 'form', c: 'cookie-jar', C: 'continue-at', D: 'dump-header', E: 'cert', K: 'config', Q: 'quote', r: 'range', T: 'upload-file', x: 'proxy', X: 'request', y: 'speed-time', Y: 'speed-limit', z: 'time-cond' };
+var SHORT_BOOLS = { s: 'silent', L: 'location', k: 'insecure', I: 'head', G: 'get', f: 'fail', i: 'include', v: 'verbose', n: 'no-buffer', N: 'no-buffer', l: 'list-only', '#': 'progress', '0': 'http1.0', '1': 'tlsv1', '2': 'sslv2', '3': 'sslv3', '4': 'ipv4', '6': 'ipv6', a: 'append', B: 'use-ascii', g: 'globoff', j: 'junk-session', J: 'remote-header-name', M: 'manual', O: 'remote-name', p: 'proxytunnel', P: 'ftp-port', q: 'disable', R: 'remote-time', S: 'show-error', t: 'telnet', u2: null, w: null, Z: 'parallel' };
+var LONG_ARGS = { request: 'request', header: 'header', 'user-agent': 'user-agent', referer: 'referer', cookie: 'cookie', user: 'user', 'max-time': 'max-time', 'connect-timeout': 'connect-timeout', form: 'form', 'form-string': 'form-string', data: 'data', 'data-raw': 'data', 'data-ascii': 'data', 'data-binary': 'data', 'data-urlencode': 'data-urlencode', 'url': 'url', output: 'output', 'upload-file': 'upload', proxy: 'proxy', cert: 'cert', 'retry': 'retry', 'write-out': 'write-out', email: 'from', 'pass': 'pass', 'cacert': 'cacert', 'key': 'key' };
+var LONG_BOOLS = { location: 'follow', insecure: 'insecure', compressed: 'compressed', head: 'head', get: 'get', silent: 'silent', verbose: 'verbose', fail: 'fail', include: 'include', 'location-trusted': 'follow', 'no-buffer': 'no-buffer', 'remote-name': 'remote-name', 'post301': 'post301', 'post302': 'post302', 'http1.1': 'http1', 'ipv4': 'ipv4', 'ipv6': 'ipv6', 'globoff': 'globoff' };
+
+function splitFlag(tok) {
+  // returns {name, value|null, hasValue} for --name=value
+  var eq = tok.indexOf('=');
+  if (eq < 0) return { name: tok, value: null };
+  return { name: tok.slice(0, eq), value: tok.slice(eq + 1) };
+}
+
+function parseCurlTokens(tokens) {
+  var m = { url: null, method: null, headers: [], dataParts: [], urlencodeParts: [], multipart: [], auth: null, insecure: false, follow: false, compressed: false, timeout: null, headFlag: false, getFlag: false, ignored: [], warnings: [] };
+  var i = 0;
+  var n = tokens.length;
+  if (n === 0) return { ok: false, error: 'Empty command' };
+  // skip env assignments before curl
+  while (i < n && /^[A-Za-z_][A-Za-z0-9_]*=/.test(tokens[i])) i++;
+  if (i >= n) return { ok: false, error: 'No curl command found' };
+  var first = tokens[i];
+  if (first !== 'curl' && first.indexOf('curl') !== 0) {
+    // allow /usr/bin/curl, curl.exe
+    if (!/(^|\/)curl(\.exe)?$/.test(first)) return { ok: false, error: 'First word should be curl' };
+  }
+  i++;
+  function nextValue(idx, flagName) {
+    if (idx + 1 < n) return idx + 1;
+    m.warnings.push('Missing value for ' + flagName);
+    return -1;
+  }
+  while (i < n) {
+    var t = tokens[i];
+    if (t.charAt(0) === '-' && t.length > 1 && !/^-\d/.test(t)) {
+      if (t.charAt(1) === '-') {
+        var f = splitFlag(t.slice(2));
+        var ln = f.name; // flag tables use dashed keys — look up verbatim
+        if (LONG_ARGS[ln]) {
+          var v = f.value;
+          if (v === null) { var ni = nextValue(i, '--' + ln); if (ni < 0) break; v = tokens[ni]; i = ni; }
+          applyArg(m, LONG_ARGS[ln], v);
+        } else if (LONG_BOOLS[ln] !== undefined) {
+          if (f.value !== null) m.warnings.push('--' + ln + ' takes no value');
+          applyBool(m, LONG_BOOLS[ln]);
+        } else {
+          m.ignored.push(t);
+        }
+      } else {
+        var chars = t.slice(1);
+        var ci = 0;
+        var consumedNext = false;
+        while (ci < chars.length) {
+          var ch = chars.charAt(ci);
+          if (SHORT_ARGS[ch]) {
+            var rest = chars.slice(ci + 1);
+            var val2 = rest !== '' ? rest : null;
+            if (val2 === null) {
+              if (i + 1 < n) { val2 = tokens[i + 1]; consumedNext = true; }
+              else { m.warnings.push('Missing value for -' + ch); val2 = ''; }
+            }
+            applyArg(m, SHORT_ARGS[ch], val2);
+            break; // rest of token was the value (or flag consumed next token)
+          } else if (SHORT_BOOLS[ch] !== undefined && SHORT_BOOLS[ch] !== null) {
+            applyBool(m, SHORT_BOOLS[ch]);
+            ci++;
+          } else {
+            m.ignored.push('-' + ch);
+            break;
+          }
+        }
+        if (consumedNext) i++;
+      }
+      i++;
+      continue;
+    }
+    if (m.url === null) m.url = t;
+    else m.ignored.push(t);
+    i++;
+  }
+  if (m.url === null) return { ok: false, error: 'No URL found' };
+  return { ok: true, model: m };
+}
+
+function applyArg(m, name, value) {
+  switch (name) {
+    case 'request': m.method = value.toUpperCase(); break;
+    case 'header': {
+      var idx = value.indexOf(':');
+      if (idx < 0) { m.warnings.push('Malformed header: ' + value); break; }
+      var hn = value.slice(0, idx).trim();
+      var hv = value.slice(idx + 1).trim();
+      // curl sends duplicate headers; keep last for common overrides, else keep both
+      var replaced = false;
+      for (var k = 0; k < m.headers.length; k++) {
+        if (m.headers[k].name.toLowerCase() === hn.toLowerCase()) { m.headers[k].value = hv; replaced = true; break; }
+      }
+      if (!replaced) m.headers.push({ name: hn, value: hv });
+      break;
+    }
+    case 'data': m.dataParts.push(value); break;
+    case 'cookie': m.headers.push({ name: 'Cookie', value: value }); break;
+    case 'user-agent': m.headers.push({ name: 'User-Agent', value: value }); break;
+    case 'referer': m.headers.push({ name: 'Referer', value: value }); break;
+    case 'user': {
+      var ci2 = value.indexOf(':');
+      m.auth = { user: ci2 < 0 ? value : value.slice(0, ci2), pass: ci2 < 0 ? '' : value.slice(ci2 + 1) };
+      break;
+    }
+    case 'max-time': { var secs = parseFloat(value); if (!isNaN(secs)) m.timeout = secs; break; }
+    case 'form': {
+      var eq2 = value.indexOf('=');
+      if (eq2 < 0) break;
+      var fname = value.slice(0, eq2);
+      var fval = value.slice(eq2 + 1);
+      if (fval.charAt(0) === '@') m.multipart.push({ name: fname, value: fval.slice(1), file: true });
+      else m.multipart.push({ name: fname, value: fval, file: false });
+      break;
+    }
+    case 'data-urlencode': { var eq3 = value.indexOf('='); m.urlencodeParts.push(eq3 < 0 ? value : value.slice(0, eq3) + '=' + value.slice(eq3 + 1)); break; }
+    case 'url': m.url = value; break;
+    default: m.ignored.push(name + ' ' + value);
+  }
+}
+
+function applyBool(m, name) {
+  switch (name) {
+    case 'insecure': m.insecure = true; break;
+    case 'follow': m.follow = true; break;
+    case 'compressed': m.compressed = true; break;
+    case 'head': m.headFlag = true; break;
+    case 'get': m.getFlag = true; break;
+    default: break;
+  }
+}
+
+/* ---------- model refinement ---------- */
+function refineModel(m) {
+  m.effectiveMethod = m.method ? m.method : (m.headFlag ? 'HEAD' : (m.getFlag ? 'GET' : ((m.dataParts.length || m.multipart.length || m.urlencodeParts.length) ? 'POST' : 'GET')));
+  // data mode
+  m.mode = 'none';
+  if (m.multipart.length) m.mode = 'multipart';
+  else if (m.getFlag && (m.dataParts.length || m.urlencodeParts.length)) m.mode = 'params';
+  else if (m.urlencodeParts.length) m.mode = 'form';
+  else if (m.dataParts.length) {
+    var joined = m.dataParts.join('&');
+    m.rawData = joined;
+    if (joined.charAt(0) === '@') { m.mode = 'raw-file'; }
+    else if (/^[[{]/.test(joined)) {
+      try { m.json = JSON.parse(joined); m.mode = 'json'; }
+      catch (e) { m.mode = 'raw'; }
+    } else if (/^[^=&\s]+=[^&]*(&[^=&\s]+=[^&]*)*$/.test(joined)) {
+      m.mode = 'form';
+    } else m.mode = 'raw';
+  }
+  m.hasBody = m.mode === 'json' || m.mode === 'form' || m.mode === 'raw' || m.mode === 'raw-file' || m.mode === 'multipart';
+  return m;
+}
+
+function formPairs(m) {
+  var pairs = [];
+  var parts = m.dataParts.slice();
+  if (m.urlencodeParts.length) parts = parts.concat(m.urlencodeParts);
+  parts.forEach(function (p) {
+    for (var _i = 0, _a = p.split('&'); _i < _a.length; _i++) {
+      var kv = _a[_i];
+      var eq = kv.indexOf('=');
+      if (eq < 0) pairs.push([kv, '']);
+      else pairs.push([kv.slice(0, eq), kv.slice(eq + 1)]);
+    }
+  });
+  return pairs;
+}
+
+/* ---------- literal emitters ---------- */
+function pyLit(v, indent) {
+  if (v === null) return 'None';
+  if (v === true) return 'True';
+  if (v === false) return 'False';
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'string') return JSON.stringify(v);
+  var pad = new Array(indent + 1).join(' ');
+  var pad2 = new Array(indent + 5).join(' ');
+  if (Array.isArray(v)) {
+    if (!v.length) return '[]';
+    return '[\n' + v.map(function (x) { return pad2 + pyLit(x, indent + 4) + ','; }).join('\n') + '\n' + pad + ']';
+  }
+  var keys = Object.keys(v);
+  if (!keys.length) return '{}';
+  return '{\n' + keys.map(function (k) { return pad2 + JSON.stringify(k) + ': ' + pyLit(v[k], indent + 4) + ','; }).join('\n') + '\n' + pad + '}';
+}
+
+function jsLit(v, indent) {
+  if (v === null || v === undefined) return 'null';
+  if (v === true) return 'true';
+  if (v === false) return 'false';
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'string') return JSON.stringify(v);
+  var pad = new Array(indent + 1).join(' ');
+  var pad2 = new Array(indent + 5).join(' ');
+  if (Array.isArray(v)) {
+    if (!v.length) return '[]';
+    return '[\n' + v.map(function (x) { return pad2 + jsLit(x, indent + 4) + ','; }).join('\n') + '\n' + pad + ']';
+  }
+  var keys = Object.keys(v);
+  if (!keys.length) return '{}';
+  return '{\n' + keys.map(function (k) {
+    var keyRe = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+    return pad2 + (keyRe.test(k) ? k : JSON.stringify(k)) + ': ' + jsLit(v[k], indent + 4) + ',';
+  }).join('\n') + '\n' + pad + '}';
+}
+
+/* ---------- code generators ---------- */
+function toPython(m) {
+  refineModel(m);
+  var L = [];
+  var reqArgs = [];
+  L.push('import requests');
+  L.push('');
+  L.push('url = ' + JSON.stringify(m.url));
+  var hdrs = m.headers.slice();
+  if (m.mode === 'json' && !hasHeader(hdrs, 'content-type')) hdrs = hdrs; // json= sets it
+  else if (m.mode === 'json' && hasHeader(hdrs, 'content-type')) dropHeader(hdrs, 'content-type');
+  else if (m.mode === 'multipart' && hasHeader(hdrs, 'content-type')) dropHeader(hdrs, 'content-type');
+  if (hdrs.length) {
+    L.push('headers = {');
+    hdrs.forEach(function (h) { L.push('    ' + JSON.stringify(h.name) + ': ' + JSON.stringify(h.value) + ','); });
+    L.push('}');
+    reqArgs.push('headers=headers');
+  }
+  if (m.mode === 'params') {
+    L.push('params = {');
+    formPairs(m).forEach(function (p) { L.push('    ' + JSON.stringify(p[0]) + ': ' + JSON.stringify(p[1]) + ','); });
+    L.push('}');
+    reqArgs.push('params=params');
+  }
+  if (m.mode === 'json') { L.push('json_data = ' + pyLit(m.json, 0)); reqArgs.push('json=json_data'); }
+  if (m.mode === 'form') {
+    L.push('data = {');
+    formPairs(m).forEach(function (p) { L.push('    ' + JSON.stringify(p[0]) + ': ' + JSON.stringify(p[1]) + ','); });
+    L.push('}');
+    reqArgs.push('data=data');
+  }
+  if (m.mode === 'multipart') {
+    var files = m.multipart.filter(function (f) { return f.file; });
+    var fields = m.multipart.filter(function (f) { return !f.file; });
+    if (fields.length) {
+      L.push('data = {');
+      fields.forEach(function (f) { L.push('    ' + JSON.stringify(f.name) + ': ' + JSON.stringify(f.value) + ','); });
+      L.push('}');
+      reqArgs.push('data=data');
+    }
+    if (files.length) {
+      L.push('files = {');
+      files.forEach(function (f) { L.push('    ' + JSON.stringify(f.name) + ': open(' + JSON.stringify(f.value) + ', "rb"),'); });
+      L.push('}');
+      reqArgs.push('files=files');
+    }
+  }
+  if (m.mode === 'raw' || m.mode === 'raw-file') {
+    L.push('body = ' + JSON.stringify(m.mode === 'raw-file' ? '<file contents>' : m.rawData));
+    reqArgs.push('data=body');
+  }
+  if (m.auth) {
+    L.push('auth = (' + JSON.stringify(m.auth.user) + ', ' + JSON.stringify(m.auth.pass) + ')');
+    reqArgs.push('auth=auth');
+  }
+  if (m.timeout !== null) reqArgs.push('timeout=' + m.timeout);
+  if (m.insecure) reqArgs.push('verify=False');
+  L.push('');
+  L.push('response = requests.' + m.effectiveMethod.toLowerCase() + '(url' + (reqArgs.length ? ', ' + reqArgs.join(', ') : '') + ')');
+  L.push('print(response.status_code)');
+  L.push('print(response.text)');
+  var notes = pyNotes(m);
+  if (notes.length) { L.push(''); notes.forEach(function (x) { return L.push(x); }); }
+  return L.join('\n');
+}
+
+function pyNotes(m) {
+  var out = [];
+  if (m.follow) out.push('# -L: requests follows redirects by default');
+  if (m.compressed) out.push('# --compressed: requests decompresses automatically');
+  if (m.insecure) out.push('# verify=False skips certificate checks (curl -k)');
+  if (m.ignored.length) out.push('# not converted: ' + m.ignored.join(' '));
+  return out;
+}
+
+function toFetch(m) {
+  refineModel(m);
+  var L = [];
+  var urlStr = m.url;
+  if (m.mode === 'params') {
+    var qs = formPairs(m).map(function (p) { return encodeURIComponent(p[0]) + '=' + encodeURIComponent(p[1]); }).join('&');
+    urlStr = m.url + (m.url.indexOf('?') >= 0 ? '&' : '?') + qs;
+  }
+  L.push('fetch(' + JSON.stringify(urlStr) + ', {');
+  var opts = [];
+  if (m.effectiveMethod !== 'GET') opts.push('  method: ' + JSON.stringify(m.effectiveMethod) + ',');
+  var hdrs = m.headers.slice();
+  if (m.mode === 'json') dropHeader(hdrs, 'content-type'); // body: JSON.stringify sets it
+  if (m.auth && !hasHeader(hdrs, 'authorization')) hdrs.push({ name: 'Authorization', raw: '"Basic " + btoa(' + JSON.stringify(m.auth.user + ':' + m.auth.pass) + ')' });
+  if (hdrs.length) {
+    opts.push('  headers: {');
+    hdrs.forEach(function (h) { opts.push('    ' + JSON.stringify(h.name) + ': ' + (h.raw || JSON.stringify(h.value)) + ','); });
+    opts.push('  },');
+  }
+  if (m.mode === 'json') opts.push('  body: JSON.stringify(' + jsLit(m.json, 2) + '),');
+  if (m.mode === 'form') {
+    opts.push('  body: new URLSearchParams({');
+    formPairs(m).forEach(function (p) { opts.push('    ' + JSON.stringify(p[0]) + ': ' + JSON.stringify(p[1]) + ','); });
+    opts.push('  }),');
+  }
+  if (m.mode === 'multipart') {
+    opts.push('  body: (() => {');
+    opts.push('    const fd = new FormData();');
+    m.multipart.forEach(function (f) {
+      if (f.file) opts.push('    fd.append(' + JSON.stringify(f.name) + ', fileInput.files[0]); // ' + JSON.stringify(f.value));
+      else opts.push('    fd.append(' + JSON.stringify(f.name) + ', ' + JSON.stringify(f.value) + ');');
+    });
+    opts.push('    return fd;');
+    opts.push('  })(),');
+  }
+  if (m.mode === 'raw') opts.push('  body: ' + JSON.stringify(m.rawData) + ',');
+  if (m.mode === 'raw-file') opts.push('  body: fileContents, // from ' + JSON.stringify(m.rawData));
+  if (m.timeout !== null) opts.push('  signal: AbortSignal.timeout(' + Math.round(m.timeout * 1000) + '), // ' + m.timeout + 's');
+  L = L.concat(opts);
+  L.push('})');
+  L.push('  .then((res) => res.text())');
+  L.push('  .then((body) => console.log(body))');
+  L.push('  .catch((err) => console.error(err));');
+  var notes = fetchNotes(m);
+  if (notes.length) { L.push(''); notes.forEach(function (x) { return L.push(x); }); }
+  return L.join('\n');
+}
+
+function fetchNotes(m) {
+  var out = [];
+  if (m.follow) out.push('// -L: fetch follows redirects by default');
+  if (m.compressed) out.push('// --compressed: browsers decompress automatically');
+  if (m.insecure) out.push('// -k: browsers always verify certificates');
+  if (m.ignored.length) out.push('// not converted: ' + m.ignored.join(' '));
+  return out;
+}
+
+function toAxios(m) {
+  refineModel(m);
+  var L = [];
+  L.push('import axios from "axios";');
+  L.push('');
+  var call = 'axios.' + m.effectiveMethod.toLowerCase() + '(';
+  var args = [JSON.stringify(m.url)];
+  var cfg = [];
+  var hdrs = m.headers.slice();
+  if (m.mode === 'json') dropHeader(hdrs, 'content-type');
+  if (hdrs.length) {
+    var hl = ['    headers: {'];
+    hdrs.forEach(function (h) { hl.push('      ' + JSON.stringify(h.name) + ': ' + JSON.stringify(h.value) + ','); });
+    hl.push('    },');
+    cfg.push(hl.join('\n'));
+  }
+  if (m.mode === 'json') args.push(jsLit(m.json, 2));
+  else if (m.mode === 'form') args.push('new URLSearchParams({\n' + formPairs(m).map(function (p) { return '  ' + JSON.stringify(p[0]) + ': ' + JSON.stringify(p[1]) + ','; }).join('\n') + '\n})');
+  else if (m.mode === 'raw') args.push(JSON.stringify(m.rawData));
+  else if (m.mode === 'raw-file') args.push('fs.readFileSync(' + JSON.stringify(m.rawData) + ', "utf8")');
+  else if (m.mode === 'multipart') {
+    var fl = [];
+    fl.push('    (() => {');
+    fl.push('      const fd = new FormData();');
+    m.multipart.forEach(function (f) {
+      if (f.file) fl.push('      fd.append(' + JSON.stringify(f.name) + ', fileBlob); // ' + JSON.stringify(f.value));
+      else fl.push('      fd.append(' + JSON.stringify(f.name) + ', ' + JSON.stringify(f.value) + ');');
+    });
+    fl.push('      return fd;');
+    fl.push('    })(),');
+    cfg.push(fl.join('\n'));
+  }
+  if (m.mode === 'params') {
+    var pl = ['    params: {'];
+    formPairs(m).forEach(function (p) { pl.push('      ' + JSON.stringify(p[0]) + ': ' + JSON.stringify(p[1]) + ','); });
+    pl.push('    },');
+    cfg.push(pl.join('\n'));
+  }
+  if (m.auth) cfg.push('    auth: {\n      username: ' + JSON.stringify(m.auth.user) + ',\n      password: ' + JSON.stringify(m.auth.pass) + ',\n    },');
+  if (m.timeout !== null) cfg.push('    timeout: ' + Math.round(m.timeout * 1000) + ',');
+  if (m.insecure) cfg.push('    // -k: set `httpAgent` with rejectUnauthorized disabled if truly needed');
+  args.push('{\n' + cfg.join('\n') + '\n  }');
+  L.push('const response = await ' + call + args.join(',\n  ') + '\n);');
+  L.push('');
+  L.push('console.log(response.status);');
+  L.push('console.log(response.data);');
+  var notes = axiosNotes(m);
+  if (notes.length) { L.push(''); notes.forEach(function (x) { return L.push(x); }); }
+  return L.join('\n');
+}
+
+function axiosNotes(m) {
+  var out = [];
+  if (m.follow) out.push('// -L: axios follows redirects by default');
+  if (m.compressed) out.push('// --compressed: axios decompresses automatically (Node 10+)');
+  if (m.ignored.length) out.push('// not converted: ' + m.ignored.join(' '));
+  return out;
+}
+
+/* ---------- shared header helpers ---------- */
+function hasHeader(hdrs, lower) {
+  return hdrs.some(function (h) { return h.name.toLowerCase() === lower; });
+}
+function dropHeader(hdrs, lower) {
+  for (var i = hdrs.length - 1; i >= 0; i--) if (hdrs[i].name.toLowerCase() === lower) hdrs.splice(i, 1);
+}
+
+/* ---------- tree-sitter adapter (browser path; takes Parser instance + tree) ---------- */
+function unescapeDq(s) {
+  return s.replace(/\\(["\\$`])/g, '$1');
+}
+function tsArgText(node, info) {
+  var t = node.type;
+  if (t === 'word' || t === 'number' || t === 'concatenation' || t === 'string' || t === 'raw_string' || t === 'ansi_c_string' || t === 'simple_expansion' || t === 'variable_name' || t === 'command_substitution') {
+    if (t === 'concatenation') {
+      var out_1 = '';
+      for (var c = 0; c < node.namedChildCount; c++) {
+        var ch = node.namedChild(c);
+        if (ch === null) continue;
+        out_1 += tsArgText(ch, info);
+      }
+      return out_1;
+    }
+    if (t === 'string') {
+      var inner = '';
+      for (var c2 = 0; c2 < node.namedChildCount; c2++) {
+        var ch2 = node.namedChild(c2);
+        if (ch2 === null) continue;
+        if (ch2.type === 'string_content') inner += unescapeDq(ch2.text);
+        else inner += tsArgText(ch2, info); // expansions inside DQ
+      }
+      return inner;
+    }
+    if (t === 'raw_string') return node.text.slice(1, -1);
+    if (t === 'ansi_c_string') return node.text.slice(2, -1);
+    if (t === 'simple_expansion' || t === 'variable_name' || t === 'command_substitution') {
+      info.dynamic = true;
+      return node.text;
+    }
+    return node.text;
+  }
+  return node.text;
+}
+function tokensFromTree(rootNode, warnings) {
+  var info = { dynamic: false };
+  var cmd = null;
+  for (var i = 0; i < rootNode.namedChildCount; i++) {
+    var n = rootNode.namedChild(i);
+    if (n === null) continue;
+    if (n.type === 'command') { cmd = n; break; }
+  }
+  if (!cmd) return null;
+  var tokens = [];
+  var nameNode = cmd.childForFieldName('name');
+  if (!nameNode || !/curl(\.exe)?$/.test(nameNode.text.replace(/^.*\//, ''))) return null;
+  for (var c = 0; c < cmd.childCount; c++) {
+    var ch = cmd.child(c);
+    if (ch === null || ch === nameNode) continue;
+    if (ch.type === 'file_redirect' || ch.type === 'heredoc_redirect' || ch.type === 'variable_assignment') continue;
+    tokens.push(tsArgText(ch, info));
+  }
+  if (info.dynamic && warnings) warnings.push('Command contains shell variables or substitutions — converted with the literal text');
+  return tokens;
+}
+
+/* ---------- public pipeline ---------- */
+function convertCurlText(text, tsTokens) {
+  var warnings = [];
+  var tokens = tsTokens;
+  if (!tokens) {
+    var tk = tokenizeCurl(text);
+    tokens = tk.tokens;
+    warnings = warnings.concat(tk.warnings);
+  }
+  var parsed = parseCurlTokens(tokens);
+  if (!parsed.ok) return { ok: false, error: parsed.error, warnings: warnings };
+  var m = refineModel(parsed.model);
+  warnings = warnings.concat(m.warnings || []);
+  return {
+    ok: true,
+    warnings: warnings,
+    model: m,
+    python: toPython(m),
+    fetch: toFetch(m),
+    axios: toAxios(m)
+  };
+}
+
+</script>
+<script>
+/* ---------- browser glue: lazy tree-sitter, tabs, copy ---------- */
+(function () {
+  var TS_MODULE = 'https://cdn.jsdelivr.net/npm/web-tree-sitter@0.24.4/tree-sitter.js';
+  var TS_WASM = 'https://cdn.jsdelivr.net/npm/web-tree-sitter@0.24.4/tree-sitter.wasm';
+  var BASH_WASM = 'https://cdn.jsdelivr.net/npm/tree-sitter-bash@0.23.3/tree-sitter-bash.wasm';
+  var tsState = 'idle';
+  var tsParserClass = null, tsLang = null, tsParser = null;
+
+  var input = document.getElementById('curlInput');
+  var out = document.getElementById('codeOut');
+  var errOut = document.getElementById('errOut');
+  var warnOut = document.getElementById('warnOut');
+  var statusEl = document.getElementById('parseStatus');
+  var current = { python: '', fetch: '', axios: '' };
+  var activeTab = 'python';
+  var debounce = null;
+
+  function setStatus(text) { statusEl.textContent = text; }
+
+  function ensureTreeSitter() {
+    if (tsState !== 'idle') return;
+    tsState = 'loading';
+    setStatus('loading tree-sitter parser…');
+    var loaded = typeof window.TreeSitter === 'function'
+      ? Promise.resolve()
+      : new Promise(function (resolve, reject) {
+          var sc = document.createElement('script');
+          sc.src = TS_MODULE;
+          sc.onload = resolve;
+          sc.onerror = function () { reject(new Error('CDN load failed')); };
+          (document.head || document.documentElement).appendChild(sc);
+        });
+    loaded.then(function () {
+      var P = window.TreeSitter;
+      tsParserClass = P;
+      return P.init({ locateFile: function () { return TS_WASM; } }).then(function () {
+        return P.Language.load(BASH_WASM);
+      });
+    }).then(function (lang) {
+      tsLang = lang;
+      tsParser = new tsParserClass();
+      tsParser.setLanguage(lang);
+      tsState = 'ready';
+      setStatus('tree-sitter parser ready');
+      runConvert();
+    }).catch(function () {
+      tsState = 'failed';
+      setStatus('using built-in tokenizer (CDN unavailable)');
+    });
+  }
+
+  function render() {
+    errOut.textContent = '';
+    warnOut.textContent = '';
+    out.textContent = current[activeTab] || '';
+  }
+
+  function runConvert() {
+    var text = input.value;
+    if (!text.trim()) { current = { python: '', fetch: '', axios: '' }; out.textContent = ''; errOut.textContent = ''; warnOut.textContent = ''; return; }
+    var tokens = null;
+    if (tsState === 'ready') {
+      try {
+        var warnings = [];
+        tokens = tsExtractTokens(tsParser, text, warnings);
+        if (!tokens) { errOut.textContent = 'No curl command found in the tree — using fallback'; tokens = null; }
+      } catch (e) {
+        errOut.textContent = 'tree-sitter hiccup — using built-in tokenizer';
+        tokens = null;
+      }
+    }
+    var result = convertCurlText(text, tokens);
+    if (!result.ok) {
+      current = { python: '', fetch: '', axios: '' };
+      out.textContent = '';
+      errOut.textContent = result.error;
+      warnOut.textContent = '';
+      return;
+    }
+    current = result;
+    render();
+    if (result.warnings && result.warnings.length) warnOut.textContent = result.warnings.join(' · ');
+    if (tsState === 'idle') ensureTreeSitter();
+  }
+
+  function tsExtractTokens(parser, text, warnings) {
+    var tree = parser.parse(text);
+    return tokensFromTree(tree.rootNode, warnings);
+  }
+
+  input.addEventListener('input', function () {
+    if (debounce) clearTimeout(debounce);
+    debounce = setTimeout(runConvert, 250);
+    if (tsState === 'idle') ensureTreeSitter();
+  });
+
+  var samples = [
+    "curl -X POST https://api.example.com/v1/users \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer tok_123' \\\n  -d '{\"name\":\"Ada\",\"role\":\"admin\"}'",
+    "curl -d 'grant_type=client_credentials&scope=read' -u my_id:my_secret https://auth.example.com/token",
+    "curl -G -d 'q=curl converter' -d 'page=2' https://search.example.com/api",
+    "curl -F 'caption=good boy' -F 'photo=@dog.jpg' https://api.example.com/upload",
+    "curl -sL --compressed -A 'MyBot/1.0' -m 8 https://api.example.com/feed.json"
+  ];
+  var sampleIdx = 0;
+  document.getElementById('sampleBtn').addEventListener('click', function () {
+    sampleIdx = (sampleIdx + 1) % samples.length;
+    input.value = samples[sampleIdx];
+    runConvert();
+  });
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    input.value = '';
+    runConvert();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function (btn) {
+    btn.addEventListener('click', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeTab = btn.getAttribute('data-tab');
+      render();
+    });
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    var text = current[activeTab] || '';
+    if (!text) return;
+    var done = function () {
+      var btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else { fallbackCopy(text); done(); }
+  });
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* noop */ }
+    document.body.removeChild(ta);
+  }
+
+  runConvert();
+})();
+</script>
+<!-- Parsing powered by tree-sitter + tree-sitter-bash (MIT): https://tree-sitter.github.io -->
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
