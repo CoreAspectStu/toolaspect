@@ -98,7 +98,7 @@
 
   function calc() {
     var hh = val('.ta-hh');
-    var order = Math.ceil(hh * 1.10);
+    var order = Math.round(hh * 1.10);
     var printing = order * val('.ta-tier');
     var perMail = 0.82 + 0.29 * (Math.max(1, val('.ta-oz')) - 1) + val('.ta-rsvp') + (chk('.ta-square') ? 0.49 : 0);
     var postage = hh * perMail;

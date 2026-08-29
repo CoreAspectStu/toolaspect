@@ -99,7 +99,7 @@
       case 'tx':
         if (c === 'none') return { hero: '$7.50', sub: 'Inspection program replacement fee at registration', req: 'No inspection required since 1/1/2025', ann: '$7.50/yr' };
         if (c === 'dfw') return { hero: '$26', sub: '$18.50 emissions + $7.50 replacement fee', req: 'Emissions only, every 12 months', ann: '$26/yr' };
-        return { hero: '$33', sub: '$25.50 emissions + $7.50 replacement fee', req: 'Emissions only, every 12 months', ann: '$33/yr' };
+        return { hero: '$19', sub: '$11.50 emissions + $7.50 replacement fee', req: 'Emissions only, every 12 months', ann: '$33/yr' };
       case 'va':
         if (c === 'ems') return { hero: '$50', sub: 'Emissions year total; $35/yr averaged', req: 'Safety annual + emissions every 24 months', ann: '≈$35/yr' };
         return { hero: '$20', sub: 'Statutory maximum (motorcycles $12)', req: 'Safety inspection only, every 12 months', ann: '$20/yr' };
