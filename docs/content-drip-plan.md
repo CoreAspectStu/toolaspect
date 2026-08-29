@@ -83,6 +83,23 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   currency-converter, qr-code-generator, password-generator, image-compressor,
   csv-to-json, prompt-library. (macro and water-intake have guides already — depth
   passes only if their tool pages are still thin.)
+- 2026-08-29 batch guides: age-calculator → guides/how-old-am-i/;
+  currency-converter → guides/why-do-exchange-rates-change/;
+  qr-code-generator → guides/do-qr-codes-expire/
+  (each: 1,387–1,399 words, computed data tables, FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; all-tools guides section updated, count 65→68; guide backlinks added
+  to all three tool pages' related sections; currency-converter visible `you\'re` typo fixed)
+- 2026-08-29 depth passes: prompt-library (141 → 1,059 words, +category-count table +prompt-anatomy
+  reference table, +5 FAQs with new FAQPage JSON-LD; calculator JS untouched, verified byte-identical
+  to HEAD; NOTE: PROMPTS array holds 53 prompts while title/meta claim "60+" — claim left untouched,
+  flagged for next tool pass);
+  water-intake-calculator (916 → 1,300 words, +worked-example section +USDA water-content-of-foods
+  table, +2 FAQs with FAQPage JSON-LD update (5→7), guide link in related; calculator JS untouched,
+  verified byte-identical to HEAD)
+  Skipped depth passes: age-calculator (990 words ≥ 900, table + FAQ JSON-LD already present),
+  macro-calculator (982).
+  Next in queue: password-generator, image-compressor, csv-to-json (no matching guides),
+  then remainder of wave-2 list.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
