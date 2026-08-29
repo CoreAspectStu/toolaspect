@@ -68,6 +68,19 @@
         { label: 'PartyRentalCost', href: '/party-rental-cost-calculator/' },
         { label: 'PhotoBoothRental', href: '/photo-booth-rental-cost-calculator/' },
         { label: 'PrenupCost', href: '/prenup-cost-calculator/' },
+        { label: 'WeddingDressCost', href: '/wedding-dress-cost-calculator/' },
+        { label: 'WeddingBandsCost', href: '/wedding-bands-cost-calculator/' },
+        { label: 'WeddingFloristCost', href: '/wedding-florist-cost-calculator/' },
+        { label: 'WeddingVideographerCost', href: '/wedding-videographer-cost-calculator/' },
+        { label: 'WeddingPhotographerCostX', href: '/wedding-photographer-cost-calculator/' },
+        { label: 'WeddingDecorLighting', href: '/wedding-decor-lighting-cost-calculator/' },
+        { label: 'WeddingInvitationCost', href: '/wedding-invitation-cost-calculator/' },
+        { label: 'WeddingTransportation', href: '/wedding-transportation-cost-calculator/' },
+        { label: 'WeddingSuitTuxRental', href: '/wedding-suit-tux-rental-cost-calculator/' },
+        { label: 'WeddingInsuranceCost', href: '/wedding-insurance-cost-calculator/' },
+        { label: 'WeddingCostPerGuest', href: '/wedding-cost-per-guest-calculator/' },
+        { label: 'WeddingGuestCost', href: '/wedding-guest-cost-calculator/' },
+        { label: 'WeddingVendorPricing', href: '/wedding-vendor-pricing-calculator/' },
       ]
     },
     {
@@ -379,6 +392,12 @@
         { label: 'RemoteStartInstall', href: '/remote-start-installation-cost-calculator/' },
         { label: 'IvfCost', href: '/ivf-cost-calculator/' },
         { label: 'LasikCost', href: '/lasik-cost-calculator/' },
+        { label: 'TherapyDogCost', href: '/therapy-dog-cost-calculator/' },
+        { label: 'VetBillFinancing', href: '/vet-bill-financing-calculator/' },
+        { label: 'VetTechSalary', href: '/vet-tech-salary-by-state-calculator/' },
+        { label: 'VeterinaryImagingCost', href: '/veterinary-imaging-cost-calculator/' },
+        { label: 'TireDotAgeDecoder', href: '/tire-dot-age-decoder/' },
+        { label: 'VehicleSection179', href: '/vehicle-section-179-calculator/' },
       ]
     },
     {
@@ -589,6 +608,10 @@
         { label: 'FinAidAwardCompare', href: '/financial-aid-award-letter-comparison-calculator/' },
         { label: 'ScholarshipTaxability', href: '/scholarship-taxability-calculator/' },
         { label: 'QuinceaneraCost', href: '/quinceanera-cost-calculator/' },
+        { label: 'TestGrade', href: '/test-grade-calculator/' },
+        { label: 'WeightedGrade', href: '/weighted-grade-calculator/' },
+        { label: 'TradeSchoolCost', href: '/trade-school-cost-calculator/' },
+        { label: 'TutoringRates', href: '/tutoring-rates-calculator/' },
       ]
     },
     {
@@ -854,7 +877,7 @@
         '</a>' +
         '<div class="ta-search-wrap">' +
           '<svg class="ta-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>' +
-          '<input type="text" class="ta-search-input" placeholder="Search 480+ tools\u2026" autocomplete="off">' +
+          '<input type="text" class="ta-search-input" placeholder="Search 550+ tools\u2026" autocomplete="off">' +
           '<span class="ta-kbd">\u2318K</span>' +
           '<div class="ta-search-results"></div>' +
         '</div>' +
