@@ -379,3 +379,6 @@ pdf-password-tools | pdf | oss-wrap | $1-3 | pdfstudio lock() + unlock() on ONE 
 | patreon-fees-calculator | 40 | — | veyzi | small but zero competition |
 
 HARD RULE (standing): never build watermark-removal or any content-theft tooling — "watermark remover" (135k/mo) and "remove watermark from video" (22k/mo) deliberately skipped.
+
+## GH scan 2026-08-30 (auto)
+gh:overshard/timelite-nextjs | oss | wrap | low | S271 BSD-2-Clause — A dead simple time tracker that keeps everything in local storage. Next.js, no accounts and no serve
