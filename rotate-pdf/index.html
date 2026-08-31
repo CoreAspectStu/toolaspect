@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotate PDF Pages — Turns That Stick | ToolAspect</title>
+<meta name="description" content="Rotate PDF pages 90, 180, or 270 degrees and make it stick — per page, range, odd, or even. Free, in-browser, no re-rendering, no upload.">
+<link rel="canonical" href="https://toolaspect.com/rotate-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Rotate PDF Pages — Turns That Stick">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Rotate pages by range, odd, even, or one at a time — the rotation is written into the file so every viewer honors it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/rotate-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rotate PDF Pages | Free Online Tool">
+<meta name="twitter:description" content="Permanent page rotation, in your browser.">
+<meta name="keywords" content="rotate pdf, rotate pdf pages, save pdf rotation, turn pdf pages, rotate scanned pdf, pdf page rotation online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Rotate PDF Pages","description":"Free browser-based tool that rotates PDF pages 90, 180, or 270 degrees and saves the change permanently by writing each page's rotation value — no re-rendering, so text stays selectable and images stay sharp. Rotate one page at a time from thumbnails, or apply a turn to a page range with specs like 1-3, 5, odd, or even. Runs entirely in the browser.","url":"https://toolaspect.com/rotate-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why doesn't the rotate button in my PDF viewer stick?","acceptedAnswer":{"@type":"Answer","text":"Most viewers rotate your view of the page for that session only and throw the setting away when the file closes. A permanent rotation has to change the page's stored rotation value inside the file — which is what this tool writes — so every viewer, printer, and phone honors the turn from then on."}},
+{"@type":"Question","name":"Does rotating a page re-render it or hurt quality?","acceptedAnswer":{"@type":"Answer","text":"No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves because only a few bytes of metadata change."}},
+{"@type":"Question","name":"How do I rotate only some pages in a PDF?","acceptedAnswer":{"@type":"Answer","text":"Type a page spec: single pages (7), ranges (1-3), or a mix (1-3, 5), plus the shortcuts all, odd, and even for duplex scans. Each rotate press adds another quarter-turn to exactly those pages, so a page already at 90 that gets another 90 lands at 180."}},
+{"@type":"Question","name":"How do I fix a duplex scan where every other page is sideways?","acceptedAnswer":{"@type":"Answer","text":"Use the odd or even shortcut. Two-sided documents fed through a sheet feeder often scan one side rotated, so selecting odd (or even) and applying a single 90-degree turn fixes the whole file in two clicks — then reset and try the other parity if the first guess was wrong."}},
+{"@type":"Question","name":"Will rotating pages break anything else in the document?","acceptedAnswer":{"@type":"Answer","text":"Rotation is one of the safest edits possible: the page contents, links, and form fields are untouched. Bookmarks keep pointing at the same pages. The only thing to check is landscape tables that were already rotated by the author — they may now double-turn past upright."}},
+{"@type":"Question","name":"What's the difference between rotating pages and saving with a viewer?","acceptedAnswer":{"@type":"Answer","text":"A viewer's File > Save after a view-rotation either discards the rotation or, in some apps, prompts to save pages — inconsistently across apps. A dedicated rotation tool writes the intended final angle for each page and hands you a clean download, which is why print shops ask for it rather than trusting viewer saves."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Rotate PDF Pages","item":"https://toolaspect.com/rotate-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.spec-row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:1rem}
+.spec-row input[type=text]{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.55rem .7rem;font-size:.92rem;width:200px;font-family:inherit}
+.spec-row label{font-size:.8rem;color:var(--muted)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.grid{margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.pcard{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:8px;text-align:center}
+.pcard.turnt{border-color:var(--warn)}
+.pcard .thumb{background:#fff;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;height:160px}
+.pcard img{max-width:100%;max-height:160px;display:block}
+.pcard .plabel{font-size:.76rem;color:var(--muted);margin:.4rem 0 .3rem}
+.pcard .plabel b{color:var(--warn);font-weight:600}
+.pcard .pctrl{display:flex;gap:4px;justify-content:center}
+.pcard .pctrl button{width:36px;height:28px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:.85rem;line-height:1}
+.pcard .pctrl button:hover{border-color:var(--primary)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.85em}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔄 Rotate PDF Pages</h1>
+<p>Write the turn into the file so every viewer, printer, and phone honors it</p>
+</div>
+
+<div class="aio-answer">To rotate PDF pages permanently: open the file below, turn single pages with the ⟳ buttons under each thumbnail, or type a page spec (<code>7</code>, <code>1-3</code>, <code>1-3, 5</code>, <code>odd</code>, <code>even</code>, <code>all</code>) and apply 90° clockwise, counterclockwise, or 180° to that whole set, then download. Each press adds a quarter-turn to the pages' stored rotation — a 5-page file with "2-3, 5" turned 90° once comes out 0°, 90°, 90°, 0°, 90°. Nothing re-renders: text stays selectable, images stay sharp, and the change survives every viewer because it's written into the file, not your view of it.</div>
+
+<div class="section-card">
+<h2>Pages</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnReset" disabled>↺ Reset all turns</button>
+<button class="btn save" id="btnSave" disabled>💾 Download rotated PDF</button>
+</div>
+<div class="spec-row">
+<label for="pageSpec">Pages</label>
+<input type="text" id="pageSpec" value="all" placeholder="all · 1-3, 5 · odd · even">
+<button class="btn" id="btnCW" disabled title="Rotate clockwise">⟳ 90° CW</button>
+<button class="btn ghost" id="btnCCW" disabled title="Rotate counterclockwise">⟲ 90° CCW</button>
+<button class="btn ghost" id="btn180" disabled title="Half turn">⇅ 180°</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="grid" id="grid"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li><li style="margin:4px 0"><a href="/rearrange-pdf-pages/">Rearrange PDF Pages</a></li><li style="margin:4px 0"><a href="/pdf-split/">Split PDF</a></li><li style="margin:4px 0"><a href="/pdf-to-jpg/">PDF to JPG</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-rotate-a-pdf/">Read the rotation guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Rotation Value Means</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Stored value</th><th>How the page displays</th><th>Typical cause</th></tr></thead>
+<tbody>
+<tr><td>0°</td><td>Upright, as authored</td><td>Normal portrait page</td></tr>
+<tr><td>90°</td><td>Quarter-turn clockwise</td><td>Landscape table; scan fed sideways</td></tr>
+<tr><td>180°</td><td>Upside down</td><td>Page fed reversed through a feeder</td></tr>
+<tr><td>270°</td><td>Quarter-turn counterclockwise</td><td>Three presses, or the other landscape direction</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:.8rem;color:var(--muted);margin-top:.6rem">Values accumulate: pressing 90° CW on a page already at 270° wraps to 0°. The download stores each page's final angle.</p>
+</div>
+
+<div class="section-card">
+<h2>Page Spec Cheat Sheet</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>You type</th><th>On an 8-page PDF it selects</th><th>Use it for</th></tr></thead>
+<tbody>
+<tr><td><code>all</code></td><td>1 2 3 4 5 6 7 8</td><td>Whole document turned the wrong way</td></tr>
+<tr><td><code>odd</code></td><td>1 3 5 7</td><td>Duplex scan, fronts sideways</td></tr>
+<tr><td><code>even</code></td><td>2 4 6 8</td><td>Duplex scan, backs sideways</td></tr>
+<tr><td><code>2-5</code></td><td>2 3 4 5</td><td>A run of landscape pages</td></tr>
+<tr><td><code>1-3, 7</code></td><td>1 2 3 7</td><td>Mixed pages</td></tr>
+<tr><td><code>7-4</code></td><td>4 5 6 7</td><td>Reversed ranges flip automatically</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How Permanent Rotation Works</h2>
+<p>Every page in a PDF carries a rotation value — one of 0, 90, 180, or 270 — that tells viewers how far to turn the page's content when displaying and printing it. Your PDF reader's rotate button changes a session view and discards it on close; a permanent fix writes a new value into the file itself. That's the whole trick, and it's why rotation is the safest edit in PDF-land: the content stream is never touched, so text stays selectable, images keep their exact pixels, and the file grows by a handful of bytes.</p>
+<p>This tool renders thumbnails with pdf.js so you can see which pages are sideways, tracks each page's extra turns, and writes the final angles with pdf-lib on download. Pages you never touch keep their original stored value exactly.</p>
+<h3>A worked example</h3>
+<p>A 5-page scanned contract comes in with pages 2, 3, and 5 sideways. Open it, type <code>2-3, 5</code>, press ⟳ 90° CW once, and the pages' stored values go from 0, 0, 0, 0, 0 to <strong>0, 90, 90, 0, 90</strong>. If page 3 was actually authored already rotated (stored 90) and you add another quarter-turn, it lands at 180 — one press of ⟲ on its card walks it back to 90. A duplex-scan job where every even page is sideways is the two-click case: type <code>even</code>, press ⟳ once, download. The math is plain modulo-360 addition, which is exactly what the exporter writes per page.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why doesn't the rotate button in my PDF viewer stick?</h3><p>Most viewers rotate your view of the page for that session only and throw the setting away when the file closes. A permanent rotation has to change the page's stored rotation value inside the file — which is what this tool writes — so every viewer, printer, and phone honors the turn from then on.</p></div>
+<div class="faq-item"><h3>Does rotating a page re-render it or hurt quality?</h3><p>No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves because only a few bytes of metadata change.</p></div>
+<div class="faq-item"><h3>How do I rotate only some pages in a PDF?</h3><p>Type a page spec: single pages (7), ranges (1-3), or a mix (1-3, 5), plus the shortcuts all, odd, and even for duplex scans. Each rotate press adds another quarter-turn to exactly those pages, so a page already at 90 that gets another 90 lands at 180.</p></div>
+<div class="faq-item"><h3>How do I fix a duplex scan where every other page is sideways?</h3><p>Use the odd or even shortcut. Two-sided documents fed through a sheet feeder often scan one side rotated, so selecting odd (or even) and applying a single 90-degree turn fixes the whole file in two clicks — then reset and try the other parity if the first guess was wrong.</p></div>
+<div class="faq-item"><h3>Will rotating pages break anything else in the document?</h3><p>Rotation is one of the safest edits possible: the page contents, links, and form fields are untouched. Bookmarks keep pointing at the same pages. The only thing to check is landscape tables that were already rotated by the author — they may now double-turn past upright.</p></div>
+<div class="faq-item"><h3>What's the difference between rotating pages and saving with a viewer?</h3><p>A viewer's File &gt; Save after a view-rotation either discards the rotation or, in some apps, prompts to save pages — inconsistently across apps. A dedicated rotation tool writes the intended final angle for each page and hands you a clean download, which is why print shops ask for it rather than trusting viewer saves.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+<a href="/rearrange-pdf-pages/">🔀 Rearrange PDF Pages</a>
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== Rotate engine: pdf.js thumbs -> pdf-lib setRotation accumulate (node-verified 0,90,90,0,90) ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+var THUMB_WIDTH=130;
+function el(id){return document.getElementById(id)}
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function loadScript(url){
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+}
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+var pdf=null,origBytes=null,origName='document';
+var turns={};  /* page number -> extra degrees applied here (0/90/180/270) */
+var thumbCache={};
+function parseRanges(spec,n){
+  var s=new Set();spec=String(spec||'all').toLowerCase().replace(/\s+/g,'');
+  if(!spec)spec='all';
+  for(var _i=0,_arr=spec.split(',');_i<_arr.length;_i++){var part=_arr[_i];
+    if(!part)continue;
+    if(part==='all'){for(var i=1;i<=n;i++)s.add(i);continue}
+    if(part==='odd'){for(var i=1;i<=n;i+=2)s.add(i);continue}
+    if(part==='even'){for(var i=2;i<=n;i+=2)s.add(i);continue}
+    var m=part.match(/^(\d+)(?:-(\d+))?$/);
+    if(!m)throw new Error('Cannot read page spec: "'+part+'"');
+    var a=+m[1],b=m[2]?+m[2]:a;
+    if(a<1||b<1||a>n||b>n)throw new Error('Page out of range 1-'+n+': '+part);
+    if(a>b){var t=a;a=b;b=t}
+    for(var i=a;i<=b;i++)s.add(i);
+  }
+  if(!s.size)throw new Error('No pages selected');
+  return s;
+}
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(doc){
+      pdf=doc;turns={};thumbCache={};
+      return renderGrid();
+    }).then(function(){
+      el('btnCW').disabled=false;el('btnCCW').disabled=false;el('btn180').disabled=false;
+      el('btnReset').disabled=false;el('btnSave').disabled=false;
+      setStatus('Loaded '+pdf.numPages+' pages. Turn singles under a thumbnail, or type a page spec and use the 90°/180° buttons.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err')});
+  };
+  fr.readAsArrayBuffer(f);
+});
+el('btnReset').addEventListener('click',function(){
+  if(!pdf)return;
+  turns={};
+  renderGrid().then(function(){setStatus('All extra turns cleared — the download will match the original orientations.','ok')});
+});
+function applyTurn(delta){
+  if(!pdf)return;
+  var sel;
+  try{sel=parseRanges(el('pageSpec').value,pdf.numPages)}
+  catch(err){setStatus(err.message,'err');return}
+  var n=0;
+  sel.forEach(function(p){turns[p]=((turns[p]||0)+delta)%360;n++});
+  renderGrid().then(function(){
+    var touched=Object.keys(turns).filter(function(k){return turns[k]});
+    setStatus('Turned '+n+' page'+(n>1?'s':'')+' by '+delta+'°. '+touched.length+' page'+(touched.length===1?' carries':'s carry')+' extra rotation.','ok');
+  });
+}
+el('btnCW').addEventListener('click',function(){applyTurn(90)});
+el('btnCCW').addEventListener('click',function(){applyTurn(270)});
+el('btn180').addEventListener('click',function(){applyTurn(180)});
+function renderThumb(n,extra){
+  var key=n+'-'+(extra||0);
+  if(thumbCache[key])return Promise.resolve(thumbCache[key]);
+  return pdf.getPage(n).then(function(page){
+    var base=page.getViewport({scale:1});
+    var vp=page.getViewport({scale:THUMB_WIDTH/base.width,rotation:(page.rotate+(extra||0))%360});
+    var c=document.createElement('canvas');
+    c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+    return page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){
+      thumbCache[key]=c.toDataURL('image/png');
+      return thumbCache[key];
+    });
+  });
+}
+function renderGrid(){
+  var grid=el('grid');
+  grid.innerHTML='';
+  var chain=Promise.resolve();
+  for(var p=1;p<=pdf.numPages;p++){
+    (function(n){
+      chain=chain.then(function(){
+        return renderThumb(n,turns[n]).then(function(src){
+          var card=document.createElement('div');
+          card.className='pcard'+(turns[n]?' turnt':'');
+          card.innerHTML=''
+            +'<div class="thumb"><img alt="Page '+n+'"></div>'
+            +'<div class="plabel">Page '+n+(turns[n]?' <b>+'+turns[n]+'°</b>':'')+'</div>'
+            +'<div class="pctrl">'
+            +'<button title="Rotate counterclockwise">&#10226;</button>'
+            +'<button title="Rotate clockwise">&#10227;</button>'
+            +'</div>';
+          card.querySelector('img').src=src;
+          var btns=card.querySelectorAll('.pctrl button');
+          btns[0].addEventListener('click',function(){turns[n]=((turns[n]||0)+270)%360;refreshCard(card,n)});
+          btns[1].addEventListener('click',function(){turns[n]=((turns[n]||0)+90)%360;refreshCard(card,n)});
+          grid.appendChild(card);
+        });
+      });
+    })(p);
+  }
+  return chain;
+}
+function refreshCard(card,n){
+  renderThumb(n,turns[n]).then(function(src){
+    card.querySelector('img').src=src;
+    card.querySelector('.plabel').innerHTML='Page '+n+(turns[n]?' <b>+'+turns[n]+'°</b>':'');
+    card.className='pcard'+(turns[n]?' turnt':'');
+  });
+}
+el('btnSave').addEventListener('click',function(){
+  el('btnSave').disabled=true;
+  setStatus('Writing rotations into the file …');
+  loadScript(PDFLIB_URL).then(function(){
+    var PDFLib=window.PDFLib;
+    return PDFLib.PDFDocument.load(origBytes.slice()).then(function(doc){
+      var pages=doc.getPages();
+      for(var i=0;i<pages.length;i++){
+        var extra=turns[i+1]||0;
+        if(extra)pages[i].setRotation(PDFLib.degrees(((pages[i].getRotation().angle||0)+extra)%360));
+      }
+      return doc.save();
+    });
+  }).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=origName+'-rotated.pdf';
+    a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+    setStatus('Downloaded '+origName+'-rotated.pdf — turns written into the pages. Original untouched.','ok');
+    el('btnSave').disabled=false;
+  }).catch(function(err){
+    setStatus('Export failed: '+(err&&err.message||err),'err');
+    el('btnSave').disabled=false;
+  });
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

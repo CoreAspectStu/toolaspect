@@ -126,6 +126,9 @@
         { label: 'Color Picker (Img)', href: '/image-color-picker/' },
         { label: 'Favicon Generator',  href: '/favicon-generator/' },
         { label: 'Barcode Generator',  href: '/barcode-generator/' },
+        { label: 'XML to JSON', href: '/xml-to-json/' },
+        { label: 'SVG to PNG', href: '/svg-to-png-converter/' },
+        { label: 'Color Contrast', href: '/color-contrast-checker/' },
         { label: 'Asset Tag Generator',href: '/asset-tag-generator/' },
       ]
     },
@@ -148,6 +151,11 @@
         { label: 'Add Text to PDF',    href: '/pdf-add-text/' },
         { label: 'Annotate PDF',       href: '/pdf-annotate/' },
         { label: 'Redact PDF',         href: '/redact-pdf/' },
+        { label: 'Watermark PDF', href: '/watermark-pdf/' },
+        { label: 'PDF to Text', href: '/pdf-to-text/' },
+        { label: 'Extract PDF Pages', href: '/extract-pdf-pages/' },
+        { label: 'Crop PDF', href: '/crop-pdf/' },
+        { label: 'Bates Numbering', href: '/bates-numbering/' },
       ]
     },
     {

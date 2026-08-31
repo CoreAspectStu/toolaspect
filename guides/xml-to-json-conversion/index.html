@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XML to JSON: Mapping Rules and Round Trips | ToolAspect</title>
+<meta name="description" content="How XML maps to JSON — attributes, text, repeated elements, namespaces — with measured byte counts and round-trip rules. Plus the mistakes that break consumers.">
+<link rel="canonical" href="https://toolaspect.com/guides/xml-to-json-conversion/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"XML to JSON: Mapping Rules and Round Trips","description":"XML and JSON disagree about attributes, ordering, and repetition. This guide walks the exact mapping rules a converter applies — attributes to _attributes, text to _text, repeated siblings to arrays — with measured byte counts, the singular-vs-array trap, and the conditions for a byte-exact round trip.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"XML to JSON Conversion","item":"https://toolaspect.com/guides/xml-to-json-conversion/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do XML attributes become JSON keys?","acceptedAnswer":{"@type":"Answer","text":"A converter has to invent a place for attributes, because JSON has no attribute concept. The common convention (used by xml-js) nests them under an _attributes object: <book id=\"bk101\"> becomes {\"book\":{\"_attributes\":{\"id\":\"bk101\"}}}. Text content gets a sibling _text key. The underscore prefix stops attributes from colliding with child elements that share a name."}},
+{"@type":"Question","name":"Why did my JSON field change from an object to an array?","acceptedAnswer":{"@type":"Answer","text":"Because XML repetition maps to JSON arrays. One <book> element produces an object; two or more produce an array of objects. If the feed you consume has zero-or-many entries, the field can disappear entirely (zero), be an object (one), or be an array (many). Defensive consuming code normalizes every such field to an array before reading it."}},
+{"@type":"Question","name":"Is XML to JSON lossless?","acceptedAnswer":{"@type":"Answer","text":"Almost. Element order, attribute order, and escaping survive, and a compact round trip can be byte-exact. What degrades: comments and processing instructions survive only if the converter keeps reserved keys for them, mixed content (text interleaved with elements) forces the text into positioned fragments, and namespace prefixes usually stay glued to element names instead of resolving to their URIs."}},
+{"@type":"Question","name":"Why is my JSON three times bigger than the XML?","acceptedAnswer":{"@type":"Answer","text":"JSON repeats the key name for every element and wraps attributes and text in extra objects. Measured on a two-book catalog: 254 bytes of XML becomes 710 bytes of pretty-printed JSON — 2.8x. Minifying the JSON and using attribute-heavy XML (instead of element-heavy) both shrink the gap, and attribute-heavy documents can actually come out smaller."}},
+{"@type":"Question","name":"Do XML namespaces survive conversion to JSON?","acceptedAnswer":{"@type":"Answer","text":"As prefixes, yes; as resolved namespaces, rarely. <ns:tag> typically becomes the literal key \"ns:tag\", and the xmlns declaration becomes an attribute like any other. If two prefixes from different parents mean different namespaces, the JSON no longer distinguishes them — resolve namespaces before converting if your consumer cares."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{font-size:.9em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>XML to JSON: Mapping Rules and Round Trips</h1>
+<div class="meta"><span>💡 37K+ searches/mo</span><span>⏱️ 7 min read</span></div>
+<p class="intro">XML and JSON disagree about the basics: XML has attributes, JSON doesn't. XML repeats elements freely, JSON doesn't repeat keys. Every XML-to-JSON converter has to make policy decisions about those gaps, and if you don't know the policy, your consuming code breaks in ways that only appear in production. Here are the actual rules — with measured byte counts, not vibes.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>The mapping, concretely</h2>
+<p>The convention most converters follow (xml-js's compact mode, and near enough every API wrapper built on it):</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>XML</th><th>JSON</th><th>Watch out</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;book id="bk101"&gt;</code></td><td><code>{"_attributes":{"id":"bk101"}}</code></td><td>JSON has no attributes; the prefix marks them</td></tr>
+<tr><td><code>&lt;title&gt;Midnight Rain&lt;/title&gt;</code></td><td><code>{"_text":"Midnight Rain"}</code></td><td>Text shares the element's object with siblings</td></tr>
+<tr><td>Two <code>&lt;book&gt;</code> siblings</td><td><code>"book":[{…},{…}]</code></td><td>One is an object, many is an array</td></tr>
+<tr><td><code>&lt;?xml version="1.0"?&gt;</code></td><td><code>"_declaration":{…}</code></td><td>Usually dropped or ignorable</td></tr>
+<tr><td><code>&lt;ns:tag/&gt;</code></td><td><code>"ns:tag":{}</code></td><td>Prefix stays glued; URIs don't resolve</td></tr>
+</tbody>
+</table>
+</div>
+<p>That table is the whole game. Everything else — pretty-printing, key naming, type coercion — is an option, not a mystery. Our <a href="/xml-to-json/">XML to JSON converter</a> exposes the two that matter (compact vs verbose structure, indentation) and nothing else, because those are the two your downstream actually notices.</p>
+<h2>The measured cost of converting</h2>
+<p>Numbers from a real run on a two-book catalog (each book: an <code>id</code> attribute, author, title, and a <code>price</code> element with a <code>unit</code> attribute):</p>
+<ul>
+<li>Compact XML: <strong>254 bytes</strong>. Pretty (2-space) XML: 297 bytes.</li>
+<li>XML → JSON, compact mode, 2-space indent: <strong>710 bytes</strong> — 2.8× the compact original.</li>
+<li>JSON → XML, no spaces: reproduces the compact original <strong>byte-for-byte</strong>.</li>
+<li>Structure preserved: 2 book objects in an array, 4 attributes, 6 text nodes, original ordering.</li>
+</ul>
+<p>The size inflation is structural. JSON spells out <code>_attributes</code> and <code>_text</code> for every element, and repeats the element name as a key. Element-heavy XML pays that tax per element; attribute-heavy XML (config files, plist-style documents) can actually shrink, because <code>id="bk101"</code> is cheaper than <code>&lt;id&gt;bk101&lt;/id&gt;</code> wrapped in an object.</p>
+<h2>The singular-vs-array trap</h2>
+<p>This is the bug that pages you at 2 a.m. An XML feed with one <code>&lt;order&gt;</code> gives you <code>data.order.id</code>. The same feed with two orders gives you <code>data.order[0].id</code> — your consumer throws on the first shape or the second, depending on which day you wrote it. And zero orders can make the key vanish entirely.</p>
+<p>The fix belongs in consuming code, not the converter: normalize. In JavaScript, <code>const orders = [].concat(data.order || [])</code> handles all three shapes in one line. Any converter that "solves" this by forcing every element into an array solves it by making every document fatter and every path longer — the cure is worse than the disease, which is why good converters leave the choice to you.</p>
+<h2>When is a round trip safe?</h2>
+<p>A conversion round trip (XML → JSON → XML) is byte-exact when three things hold:</p>
+<ol>
+<li><strong>Spacing is normalized</strong> — whitespace-only text between elements is ignorable, and you regenerate at the same indent level.</li>
+<li><strong>Nothing exotic is in the document</strong> — comments, CDATA, and processing instructions survive only via reserved keys; DTDs and entities beyond the five built-ins generally don't round-trip.</li>
+<li><strong>Attribute and element order is preserved</strong> — which the object model does keep, since JSON object key order is preserved by every serializer that matters in practice.</li>
+</ol>
+<p>Under those conditions, convert your fixtures to JSON, keep them in version control as JSON, and regenerate the XML whenever a legacy consumer asks. The byte-exact property means your diffs stay clean — no phantom changes from a converter that reorders attributes.</p>
+<h2>Namespaces: the quiet lossy part</h2>
+<p><code>&lt;ns:tag&gt;</code> becomes the literal key <code>"ns:tag"</code>, and the <code>xmlns:ns="…"</code> declaration converts as an ordinary attribute. Round-trip that and you get valid XML back with the same prefixes. What you lose is resolution: if two different parents both use prefix <code>a</code> for different namespaces, the JSON can no longer tell them apart. If namespaces carry meaning in your pipeline (SOAP, SAML, XHTML), resolve or rewrite them before converting — or use the <a href="/xml-formatter/">XML formatter</a> to inspect the structure first and convert deliberately.</p>
+<h2>Should you convert at all?</h2>
+<p>Sometimes the honest answer is no. If the XML is the system of record — a SOAP contract, a SAML assertion, an industry schema — parse it as XML and keep it as XML; bolting JSON in the middle adds a mapping layer that drifts. Convert when JSON is the destination's native tongue: browsers, JavaScript services, document stores like MongoDB or DynamoDB, and most modern REST layers. And when the source is really tabular, skip both formats' idiosyncrasies with the <a href="/csv-to-json/">CSV to JSON converter</a> — tables convert cleaner as tables.</p>
+<div class="cta-box"><h3>Convert one right now</h3><p style="color:#fff;opacity:.9">Paste XML, get JSON — flip the toggle to go back. Byte-exact round trips, entirely in your browser.</p><a href="/xml-to-json/">XML to JSON Converter →</a></div>
+<h2>The bottom line</h2>
+<p>XML to JSON is a solved problem with sharp edges. The mapping is mechanical — attributes to <code>_attributes</code>, text to <code>_text</code>, repetition to arrays — and the failure modes are predictable: shape-shifting arrays, namespace ambiguity, and threefold size growth on element-heavy documents. Know the policy your converter uses, normalize repeated fields in consuming code, and verify round trips before trusting them with fixture data. The <a href="/xml-to-json/">two-way converter</a> shows its counts (elements, attributes, text nodes) on every conversion precisely so you can check, not trust.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do XML attributes become JSON keys?</h3><p>A converter has to invent a place for attributes, because JSON has no attribute concept. The common convention (used by xml-js) nests them under an _attributes object: &lt;book id="bk101"&gt; becomes {"book":{"_attributes":{"id":"bk101"}}}. Text content gets a sibling _text key. The underscore prefix stops attributes from colliding with child elements that share a name.</p></div>
+<div class="faq-item"><h3>Why did my JSON field change from an object to an array?</h3><p>Because XML repetition maps to JSON arrays. One &lt;book&gt; element produces an object; two or more produce an array of objects. If the feed you consume has zero-or-many entries, the field can disappear entirely (zero), be an object (one), or be an array (many). Defensive consuming code normalizes every such field to an array before reading it.</p></div>
+<div class="faq-item"><h3>Is XML to JSON lossless?</h3><p>Almost. Element order, attribute order, and escaping survive, and a compact round trip can be byte-exact. What degrades: comments and processing instructions survive only if the converter keeps reserved keys for them, mixed content (text interleaved with elements) forces the text into positioned fragments, and namespace prefixes usually stay glued to element names instead of resolving to their URIs.</p></div>
+<div class="faq-item"><h3>Why is my JSON three times bigger than the XML?</h3><p>JSON repeats the key name for every element and wraps attributes and text in extra objects. Measured on a two-book catalog: 254 bytes of XML becomes 710 bytes of pretty-printed JSON — 2.8x. Minifying the JSON and using attribute-heavy XML (instead of element-heavy) both shrink the gap, and attribute-heavy documents can actually come out smaller.</p></div>
+<div class="faq-item"><h3>Do XML namespaces survive conversion to JSON?</h3><p>As prefixes, yes; as resolved namespaces, rarely. &lt;ns:tag&gt; typically becomes the literal key "ns:tag", and the xmlns declaration becomes an attribute like any other. If two prefixes from different parents mean different namespaces, the JSON no longer distinguishes them — resolve namespaces before converting if your consumer cares.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/xml-to-json/">XML to JSON</a>
+<a href="/xml-formatter/">XML Formatter</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/csv-to-json/">CSV to JSON</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

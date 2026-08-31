@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Watermark a PDF (Size, Opacity, Angle, Placement) | ToolAspect</title>
+<meta name="description" content="How to watermark a PDF: overlay vs underlay, what size and opacity read well, why scans need an overlay, placement math for diagonal stamps, and a free no-upload tool.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-watermark-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Watermark a PDF","description":"Watermarking a PDF means drawing the same content on every page — the craft is in size, opacity, angle, and choosing overlay or underlay. This guide covers the presets that work (48 pt diagonal CONFIDENTIAL at 35 percent opacity), why scanned files must use an overlay, how diagonal placement math keeps a rotated stamp centered, what a watermark can and cannot protect against, and a free browser tool that never uploads the file. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Watermark a PDF","item":"https://toolaspect.com/guides/how-to-watermark-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What should a PDF watermark say?","acceptedAnswer":{"@type":"Answer","text":"One word that states the document's status beats a paragraph: CONFIDENTIAL, DRAFT, PRELIMINARY, COPY, or DO NOT DISTRIBUTE. For leak tracing, use a tiled small stamp with the recipient and date (e.g. COPY — J.SMITH 2026-08-31) so any photographed page identifies its source. Long phrases shrink to illegibility long before they fit a diagonal."}},
+{"@type":"Question","name":"Is an overlay or underlay watermark better?","acceptedAnswer":{"@type":"Answer","text":"Underlay when the document must stay readable — letters, reports, statements — because the mark shows only in white space and margins. Overlay when the mark must be unmistakable: drafts, copies, exhibits. Scanned PDFs are full-page images, so an underlay vanishes behind them entirely — scans always need an overlay."}},
+{"@type":"Question","name":"What opacity should a watermark be?","acceptedAnswer":{"@type":"Answer","text":"25 to 40 percent for a centered diagonal stamp keeps body text readable underneath; 45 to 60 percent for drafts nobody should mistake for final; 20 to 30 percent for tiled patterns, since nine marks add up visually. Below about 20 percent a mark fades in print and can disappear on a photocopier."}},
+{"@type":"Question","name":"Can a watermark be removed from a PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes. A watermark is ordinary page content, so a determined editor can delete, cover, or crop it. Watermarks deter casual sharing and mark provenance; they don't enforce anything. Pair the mark with password encryption when you need restrictions, and keep the original unmarked file as your record."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="wrap">
+<h1>How to Watermark a PDF</h1>
+<div class="meta"><span>🔖 Document marking</span><span>⏱️ 5 min read</span><span>Free tool included</span></div>
+<p class="intro">A watermark that does its job is boring on purpose: legible at a glance, invisible to the reader trying to work, and stubborn in a photocopy. Getting there is four decisions — what it says, how big, how faint, and in front of or behind the page. This guide walks each one with numbers.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What should the watermark say?</h2>
+<p>One status word beats a paragraph. CONFIDENTIAL, DRAFT, PRELIMINARY, COPY, DO NOT DISTRIBUTE — each states the document's status in the first glance. If you're tracing leaks, flip the model: instead of one big mark, tile a small stamp with the recipient and date across every page, so any photographed corner identifies the source copy. What doesn't work: company names as "watermarks" (they read as branding, not status), sentences (they shrink to illegibility before they fit a diagonal), and anything in all-important legalese — the mark is a signal, not a contract.</p>
+<h2>How big and how faint?</h2>
+<p>PDF pages are measured in points — 612 × 792 for US Letter — and text size scales against that canvas. The classic diagonal CONFIDENTIAL is 48 pt: in Helvetica-Bold that measures 357.31 pt wide, about 58 percent of a Letter page's width, which is why it reads clearly without touching the margins. The tuning zones:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Goal</th><th>Size</th><th>Opacity</th><th>Angle</th></tr></thead>
+<tbody>
+<tr><td>Marked but readable (letters, reports)</td><td>40–48 pt</td><td>25–35%</td><td>45°</td></tr>
+<tr><td>Nobody mistakes it for final (drafts)</td><td>60 pt</td><td>45–60%</td><td>45°</td></tr>
+<tr><td>Tiled copy control</td><td>24 pt, 3 × 3</td><td>20–30%</td><td>45°</td></tr>
+<tr><td>Leak tracing per recipient</td><td>14 pt, tiled</td><td>50%</td><td>0°</td></tr>
+</tbody>
+</table>
+</div>
+<p>Opacity is the honest lever. Below roughly 20 percent, a watermark fades in print and can vanish on a photocopier — which defeats the point. Above 50 percent on a centered diagonal, it starts fighting body text for attention. Tiled patterns run fainter per mark because nine of them add up visually.</p>
+<h2>Overlay or underlay?</h2>
+<p>The PDF format has no watermark feature — a watermark is content drawn on the page, and the only question is the drawing order. An <strong>underlay</strong> is painted first, behind everything: paragraphs, tables, and images sit on top of it, so the document reads normally and the mark peeks out of the margins and white space. An <strong>overlay</strong> is painted last, on top of everything: guaranteed visible, at the cost of touching the content.</p>
+<p>One hard rule hides here: <strong>scanned PDFs must use an overlay.</strong> A scan is a full-page image, and an underlay drawn behind it is completely hidden — you'll stamp the file, get a clean "success," and see nothing. Overlays work on anything; underlays only work on born-digital pages with white space to show through.</p>
+<h2>How does a diagonal stamp stay centered?</h2>
+<p>Rotation in PDFs happens around the text's baseline start point — the lower-left corner, not the center. Rotate 45° "at the center" naively and the mark drifts down-left, often clipping off the page. Real watermark tools measure the text first, then solve for the anchor: at 48 pt, CONFIDENTIAL is 357.31 pt wide and 44.40 pt tall, and placing its rotated center on the page's center (306, 396 on Letter) puts the anchor at (195.37, 253.97). That's the entire difference between a mark that looks typed-on and one that looks dropped-in. A good diagonal also respects the page itself: Letter's diagonal is 1,000.9 pt, so a 357 pt-wide stamp spans about 36 percent of it — dramatic but contained.</p>
+<h2>Which pages should carry the mark?</h2>
+<p>All of them, by default — a watermark on pages 2–12 but not page 1 is a small gift to anyone photographing the document. The exceptions are real, though: cover-only marks ("board copy" on a title page), skipping a public summary page in an otherwise internal deck, or stamping every page except the signed signature page of an agreement. If your tool supports page ranges, use them deliberately; if it silently stamps everything, check the output before sending.</p>
+<h2>What does a watermark actually protect?</h2>
+<p>Nothing, technically — and any product claiming otherwise is overselling. A watermark is ordinary page content; a determined user can crop it, cover it, or delete it in any PDF editor. What it reliably does: mark status (this is a DRAFT), mark provenance (this copy went to J. Smith), and create friction — casual forwarding stops being casual when your name is tiled across the page. When you need enforcement, layer it: watermark for the visible signal, password encryption and usage restrictions for the teeth, and a watermark plus encryption combination for documents that genuinely circulate. None of this is legal advice about what your marks mean; that's a question for counsel.</p>
+<h2>Browser tool or desktop app?</h2>
+<p>For one-off documents, a browser-based tool that runs its engine locally (the file never uploads) is the fastest path — nothing to install, and confidential documents stay on your machine. The tell is in the mechanics: a tool that works offline after loading is processing in-page; a tool with a progress bar on someone else's server is uploading. For whole directories on a schedule, a scripted approach (qpdf, pdftk, or a small script around a PDF library) beats any GUI.</p>
+<div class="cta-box"><h3>Watermark a PDF right now</h3><p style="color:#fff;opacity:.9">Type your text, pick size, opacity, angle, overlay or underlay, and pages — stamped in your browser by qpdf-wasm, never uploaded.</p><a href="/watermark-pdf/">Watermark PDF →</a></div>
+<h2>The bottom line</h2>
+<p>Say one word, size it against the page (48 pt on Letter), keep opacity in the readable band (25–40 percent), underlay for readable documents and overlay for everything that must be seen — especially scans. Stamp every page unless you have a specific reason not to, and remember the mark is deterrence, not protection. Our <a href="/watermark-pdf/">Watermark PDF tool</a> does the whole job in-browser with no upload; for related jobs there's <a href="/pdf-add-text/">Add Text to PDF</a> for page content instead of stamps and <a href="/redact-pdf/">Redact PDF</a> for removing sensitive text before a document leaves your desk.</p>
+<div class="related-tools"><a href="/watermark-pdf/">🔖 Watermark PDF</a><a href="/pdf-add-text/">📝 Add Text to PDF</a><a href="/redact-pdf/">🔏 Redact PDF</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
