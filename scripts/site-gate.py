@@ -12,7 +12,7 @@ fails, warns = [], []
 nav = (repo/'shared/nav.js').read_text()
 nav_links = set(re.findall(r"href: '/([a-z0-9-]+)/'", nav))
 tools = {p.parent.name for p in repo.glob('*/index.html')}
-HUBS = {'roadmap','embed','best-free-online-tools-2026','guides','all-tools','convert','converters','finance-tools','health-calculators','insurance-tools','legal-tools','everyday-tools','business-tools','creator-tools','developer-tools','text-tools','image-tools','partners'}
+HUBS = {'roadmap','embed','best-free-online-tools-2026','guides','all-tools','convert','converters','finance-tools','health-calculators','insurance-tools','legal-tools','everyday-tools','business-tools','creator-tools','developer-tools','text-tools','image-tools','partners','about','editorial-policy'}
 orphans = sorted(t for t in tools - nav_links if t not in HUBS)
 if orphans:
     fails.append(f"NAV ORPHANS ({len(orphans)}): tools not in nav menu: {orphans[:10]}...")
