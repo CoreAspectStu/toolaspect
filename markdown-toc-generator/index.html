@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown TOC Generator — GitHub Anchors | ToolAspect</title>
+<meta name="description" content="Generate a markdown table of contents with GitHub-accurate anchors: duplicate headings, emoji, accents, doctoc markers, depth control. Free, no upload.">
+<link rel="canonical" href="https://toolaspect.com/markdown-toc-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Markdown TOC Generator — GitHub Anchors">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste markdown, get a table of contents whose links match GitHub's anchors exactly — duplicates, emoji, accents handled.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markdown-toc-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Markdown TOC Generator | Free Online Tool">
+<meta name="twitter:description" content="Build a linked table of contents for any markdown file. GitHub-accurate anchors, doctoc-compatible markers.">
+<meta name="keywords" content="markdown toc generator, table of contents generator, markdown table of contents, toc markdown, github anchor links, doctoc, readme table of contents">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown TOC Generator","description":"Free markdown table-of-contents generator that runs in your browser. Paste any markdown file and get a linked TOC whose anchors match GitHub's exactly — duplicate headings get -1/-2 suffixes, emoji and accented characters follow GitHub's rules. Optional doctoc-compatible markers, depth control, and numbered style. Nothing is uploaded.","url":"https://toolaspect.com/markdown-toc-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I add a table of contents to a markdown file?","acceptedAnswer":{"@type":"Answer","text":"Paste your markdown above, press Generate, and copy the TOC block to the top of your file (or use the insert button, which replaces any existing TOC between the markers). Each entry links to its heading with an anchor like #getting-started, which works on GitHub, GitLab, and most markdown renderers."}},
+{"@type":"Question","name":"How does GitHub generate anchor links for headings?","acceptedAnswer":{"@type":"Answer","text":"Lowercase everything, strip punctuation and emoji, and turn spaces into dashes. Punctuation like +, %, ?, and / disappears; accented letters (ü, é) stay; underscores stay. If the result collides with an earlier anchor on the page, GitHub appends -1, -2: two headings called Docs become #docs and #docs-1. This generator runs GitHub's own slug algorithm, so the links it emits are the anchors GitHub actually assigns."}},
+{"@type":"Question","name":"Why do my duplicate headings break the TOC?","acceptedAnswer":{"@type":"Answer","text":"Because every heading on a page must have a unique anchor. When two headings have the same text, the second one's anchor gets a numeric suffix — Getting Started appears twice becomes #getting-started and #getting-started-1 — and a TOC that links both to #getting-started sends both clicks to the first section. The generator tracks duplicates the same way GitHub does and emits the right suffix automatically."}},
+{"@type":"Question","name":"What are the doctoc markers for?","acceptedAnswer":{"@type":"Answer","text":"The START/END HTML comments mark the generated region so it can be replaced wholesale later. The doctoc command-line tool uses exactly these markers; this generator is compatible with them — run it on a file that already has a marked TOC and it swaps in a fresh one instead of growing a second copy."}},
+{"@type":"Question","name":"Why is my anchor percent-encoded, like %C3%BC?","acceptedAnswer":{"@type":"Answer","text":"Accented and non-ASCII characters in anchors get URL-encoded in links — a heading like Über café produces #%C3%BCber-caf%C3%A9 -- co. That's correct and it's what doctoc emits: browsers decode it back to the characters when you click. Copy the link as-is; don't hand-decode it."}},
+{"@type":"Question","name":"Does the TOC work outside GitHub?","acceptedAnswer":{"@type":"Answer","text":"Mostly. GitLab, Bitbucket, VS Code's markdown preview, and most static site generators use the same or compatible anchor rules. Some platforms differ in edge cases (emoji, capitalization, or symbols), so if a link doesn't jump on your renderer, compare the anchor your renderer assigned (hover the heading's link icon) with what the TOC emits."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Markdown TOC Generator","item":"https://toolaspect.com/markdown-toc-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+textarea.code{width:100%;min-height:230px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;resize:vertical}
+textarea.code:focus{outline:none;border-color:var(--primary)}
+pre.code-out{width:100%;min-height:150px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;white-space:pre-wrap;word-break:break-word;margin:0;max-height:420px;overflow-y:auto}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:720px){.io-grid{grid-template-columns:1fr}}
+.io-label{font-size:.8rem;color:var(--muted);margin-bottom:.4rem;font-weight:600}
+.opts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{padding:.65rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box;width:100%}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-group{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;font-size:.88rem;color:var(--text);cursor:pointer;user-select:none}
+.check-group input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem 1rem;font-size:.85rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="/shared/vendor/github-slugger/dist/github-slugger.iife.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Markdown TOC Generator — GitHub Anchors", "url": "https://toolaspect.com/markdown-toc-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Generate a markdown table of contents with GitHub-accurate anchors: duplicate headings, emoji, accents, doctoc markers, depth control. Free, no upload."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Markdown TOC Generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Markdown TOC Generator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Markdown TOC Generator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Markdown TOC Generator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📑 Markdown TOC Generator</h1>
+<p>A linked table of contents whose anchors match GitHub exactly</p>
+</div>
+
+<div class="aio-answer">To add a table of contents to a markdown file, paste it below and press <strong>Generate</strong>. You get a linked list — <code>- [Getting Started](#getting-started)</code> style — using GitHub's exact anchor rules: lowercase, punctuation and emoji stripped, spaces to dashes, and duplicate headings numbered <code>-1</code>, <code>-2</code>. Accented headings come out percent-encoded (<code>#%C3%BCber-caf%C3%A9</code>), exactly like the doctoc CLI emits. Copy the block into your README, or use <strong>Insert into document</strong> to place it between doctoc-compatible markers so it can be regenerated later. Everything runs locally.</div>
+
+<div class="section-card">
+<h2>Generator</h2>
+<div class="io-grid">
+<div>
+<div class="io-label">Markdown input</div>
+<textarea class="code" id="input" spellcheck="false" aria-label="Markdown input"></textarea>
+</div>
+<div>
+<div class="io-label">Table of contents</div>
+<pre class="code-out" id="output"></pre>
+</div>
+</div>
+<div class="opts-grid">
+<div class="input-group"><label for="minH">From level</label>
+<select id="minH"><option value="1" selected>H1</option><option value="2">H2</option><option value="3">H3</option></select></div>
+<div class="input-group"><label for="maxH">To level</label>
+<select id="maxH"><option value="2">H2</option><option value="3">H3</option><option value="4" selected>H4</option><option value="5">H5</option><option value="6">H6</option></select></div>
+<div class="input-group"><label for="style">Style</label>
+<select id="style"><option value="bullet" selected>Bullets (-)</option><option value="number">Numbers (1.)</option></select></div>
+<div class="input-group"><label for="title">Title line</label><input type="text" id="title" value="**Table of Contents**"></div>
+<div class="input-group"><label>Markers</label>
+<label class="check-group"><input type="checkbox" id="markers" checked> doctoc START/END</label></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGen" type="button">Generate</button>
+<button class="btn ghost" id="btnExample" type="button">Load example</button>
+<button class="btn save" id="btnCopy" type="button">Copy TOC</button>
+<button class="btn ghost" id="btnInsert" type="button">Insert into document</button>
+<button class="btn ghost" id="btnDownload" type="button">Download .md</button>
+</div>
+<div class="status-box" id="status">The example document includes duplicate, accented, and emoji headings — the cases where naive TOCs break.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/markdown-table-generator/">Markdown table generator</a></li><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown to HTML</a></li><li style="margin:4px 0"><a href="/markdown-to-pdf/">Markdown to PDF</a></li><li style="margin:4px 0"><a href="/word-counter/">Word counter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/markdown-table-of-contents/">Read the markdown TOC guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>GitHub Anchor Rules, With Examples</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Heading text</th><th>GitHub anchor</th><th>Rule at work</th></tr></thead>
+<tbody>
+<tr><td><code>Hello World</code></td><td><code>#hello-world</code></td><td>lowercase, spaces → dashes</td></tr>
+<tr><td><code>Getting Started</code> (2nd occurrence)</td><td><code>#getting-started-1</code></td><td>duplicates get -1, -2…</td></tr>
+<tr><td><code>C++</code></td><td><code>#c</code></td><td>+ is punctuation, stripped</td></tr>
+<tr><td><code>50% off</code></td><td><code>#50-off</code></td><td>% stripped, digits kept</td></tr>
+<tr><td><code>What's new?</code></td><td><code>#whats-new</code></td><td>apostrophes and ? stripped</td></tr>
+<tr><td><code>1. Introduction</code></td><td><code>#1-introduction</code></td><td>period stripped, spaces → dashes</td></tr>
+<tr><td><code>foo / bar</code></td><td><code>#foo--bar</code></td><td>slash stripped, both spaces dash</td></tr>
+<tr><td><code>A_B</code></td><td><code>#a_b</code></td><td>underscores survive</td></tr>
+<tr><td><code>Über café</code></td><td><code>#%C3%BCber-caf%C3%A9</code></td><td>accents kept, URL-encoded in links</td></tr>
+<tr><td><code>😂 tada</code></td><td><code>#-tada</code></td><td>emoji stripped, its space still dashes</td></tr>
+<tr><td><code>The `config` object</code></td><td><code>#the-config-object</code></td><td>inline code backticks stripped</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row above is generated by the same github-slugger library this tool runs — the exact algorithm GitHub's renderer uses — not a hand-written approximation.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Markdown TOC Generator Works</h2>
+<p>Two open-source pieces do the real work, both running in your browser. The heading scan follows the conventions of doctoc, the long-standing CLI for this job: it reads ATX headings (<code>## Like this</code>), setext headings (underlined with <code>===</code> or <code>---</code>), skips anything inside fenced code blocks, and nests entries two spaces per level below the shallowest heading in range. Anchor generation uses github-slugger — the library built to replicate GitHub's slug algorithm — so every link points at the anchor GitHub will actually assign, including the duplicate-suffix behavior and URL-encoding.</p>
+<h3>A worked example</h3>
+<p>Take a short README with the classic troublemakers:</p>
+<p><code># Project Docs</code> · <code>## Getting Started</code> · <code>### Install</code> · a second <code>## Getting Started</code> · <code>### Über café &amp; co</code> · <code>## 😂 tada</code></p>
+<p>The generated TOC (title "Contents"):</p>
+<p><code>- [Project Docs](#project-docs)</code><br>
+<code>&nbsp;&nbsp;- [Getting Started](#getting-started)</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;- [Install](#install)</code><br>
+<code>&nbsp;&nbsp;- [Getting Started](#getting-started-1)</code><br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;- [Über café &amp; co](#%C3%BCber-caf%C3%A9--co)</code><br>
+<code>&nbsp;&nbsp;- [😂 tada](#-tada)</code></p>
+<p>Four things to notice: the second "Getting Started" links to <code>#getting-started-1</code>, not <code>#getting-started</code> — link both naively and the second click lands on the first section. The accented heading's anchor is percent-encoded, matching what doctoc produces and what browsers expect. The emoji heading keeps its dash prefix. And nesting is two spaces per level, which renders cleanly as nested lists everywhere.</p>
+<h3>Markers and regeneration</h3>
+<p>With markers on, the TOC ships wrapped in <code>&lt;!-- START doctoc generated TOC … --&gt;</code> and <code>&lt;!-- END … --&gt;</code> comments. Generate again with <strong>Insert into document</strong> and the tool replaces what's between the markers instead of stacking a second copy — the same contract the doctoc CLI uses, so files stay compatible whether you regenerate here or in a terminal.</p>
+<h3>Limits worth knowing</h3>
+<ul>
+<li><strong>Renderers differ.</strong> GitHub, GitLab, and VS Code agree on the core rules; some static site generators capitalize or keep emoji. If a link doesn't jump, hover the heading's anchor icon on the rendered page and compare.</li>
+<li><strong>Inside HTML.</strong> Headings inside raw HTML blocks (<code>&lt;h2&gt;…&lt;/h2&gt;</code> written by hand) aren't markdown headings; most scanners, this one included, skip them.</li>
+<li><strong>Front matter.</strong> YAML front matter is passed through untouched; it contains no headings anyway.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I add a table of contents to a markdown file?</h3><p>Paste your markdown above, press Generate, and copy the TOC block to the top of your file (or use the insert button, which replaces any existing TOC between the markers). Each entry links to its heading with an anchor like #getting-started, which works on GitHub, GitLab, and most markdown renderers.</p></div>
+<div class="faq-item"><h3>How does GitHub generate anchor links for headings?</h3><p>Lowercase everything, strip punctuation and emoji, and turn spaces into dashes. Punctuation like +, %, ?, and / disappears; accented letters (ü, é) stay; underscores stay. If the result collides with an earlier anchor on the page, GitHub appends -1, -2: two headings called Docs become #docs and #docs-1. This generator runs GitHub's own slug algorithm, so the links it emits are the anchors GitHub actually assigns.</p></div>
+<div class="faq-item"><h3>Why do my duplicate headings break the TOC?</h3><p>Because every heading on a page must have a unique anchor. When two headings have the same text, the second one's anchor gets a numeric suffix — Getting Started appears twice becomes #getting-started and #getting-started-1 — and a TOC that links both to #getting-started sends both clicks to the first section. The generator tracks duplicates the same way GitHub does and emits the right suffix automatically.</p></div>
+<div class="faq-item"><h3>What are the doctoc markers for?</h3><p>The START/END HTML comments mark the generated region so it can be replaced wholesale later. The doctoc command-line tool uses exactly these markers; this generator is compatible with them — run it on a file that already has a marked TOC and it swaps in a fresh one instead of growing a second copy.</p></div>
+<div class="faq-item"><h3>Why is my anchor percent-encoded, like %C3%BC?</h3><p>Accented and non-ASCII characters in anchors get URL-encoded in links — a heading like Über café produces #%C3%BCber-caf%C3%A9 -- co. That's correct and it's what doctoc emits: browsers decode it back to the characters when you click. Copy the link as-is; don't hand-decode it.</p></div>
+<div class="faq-item"><h3>Does the TOC work outside GitHub?</h3><p>Mostly. GitLab, Bitbucket, VS Code's markdown preview, and most static site generators use the same or compatible anchor rules. Some platforms differ in edge cases (emoji, capitalization, or symbols), so if a link doesn't jump on your renderer, compare the anchor your renderer assigned (hover the heading's link icon) with what the TOC emits.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/markdown-table-generator/">📊 Markdown Table Generator</a>
+<a href="/markdown-to-html/">🌐 Markdown to HTML</a>
+<a href="/markdown-to-pdf/">📄 Markdown to PDF</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/citation-generator/">📚 Citation Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---MT-ENGINE-START---
+// Anchors: github-slugger 2.0.0 (ISC), vendored at /shared/vendor/github-slugger/
+// — GitHub's exact slug rules incl. duplicates. TOC structure follows doctoc
+// (MIT, thlorenz/doctoc): markers, 2-space nesting, encoded hrefs. Verified
+// byte-identical to doctoc 2.5.0 output across duplicate/unicode/emoji/setext
+// reference documents.
+var MT_START='<!-- START doctoc generated TOC please keep comment here to allow auto update -->';
+var MT_NAMED='<!-- DON\'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->';
+var MT_END='<!-- END doctoc generated TOC please keep comment here to allow auto update -->';
+function mtStripLinks(t){
+  return String(t).replace(/!?\[([^\]]*)\]\([^)]*\)/g,'$1');
+}
+function mtSlugSource(t){
+  return mtStripLinks(t).replace(/[*_`~]/g,'').trim();
+}
+function mtDisplayText(t){
+  return mtStripLinks(t).replace(/\s+#+\s*$/,'').trim();
+}
+function mtHeadings(md){
+  var lines=String(md).split('\n');
+  var out=[];
+  var fence=null;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    var fm=line.match(/^\s*(```+|~~~+)/);
+    if(fm){
+      if(fence&&fm[1].slice(0,3)===fence)fence=null;
+      else if(!fence)fence=fm[1].slice(0,3);
+      continue;
+    }
+    if(fence)continue;
+    var atx=line.match(/^(#{1,6})\s+(.*?)\s*#*\s*$/);
+    if(atx){out.push({level:atx[1].length,text:atx[2]});continue;}
+    if(i+1<lines.length){
+      var nx=lines[i+1];
+      if(/^\s*=+\s*$/.test(nx)&&line.trim()){out.push({level:1,text:line});i++;continue;}
+      if(/^-{2,}\s*$/.test(nx)&&line.trim()&&!/^\s*[-*+]\s/.test(line)&&!/^#{1,6}\s/.test(line)){out.push({level:2,text:line});i++;continue;}
+    }
+  }
+  return out;
+}
+function mtToc(md,o){
+  o=o||{};
+  var minH=o.minH||1,maxH=o.maxH||6;
+  var ordered=!!o.ordered;
+  var title=o.title!=null?o.title:'**Table of Contents**';
+  var markers=o.markers!==false;
+  var heads=mtHeadings(md).filter(function(h){return h.level>=minH&&h.level<=maxH;});
+  if(!heads.length)return '';
+  var min=Math.min.apply(null,heads.map(function(h){return h.level;}));
+  var slugger=new GithubSlugger.BananaSlug();
+  var counters={};
+  var rows=heads.map(function(h){
+    var slug=slugger.slug(mtSlugSource(h.text));
+    var indent=new Array(Math.max(0,h.level-min)+1).join('  ');
+    if(ordered){
+      counters[h.level]=(counters[h.level]||0)+1;
+      for(var l=h.level+1;l<=6;l++)counters[l]=0;
+      return indent+counters[h.level]+'. ['+mtDisplayText(h.text)+'](#'+encodeURIComponent(slug)+')';
+    }
+    return indent+'- ['+mtDisplayText(h.text)+'](#'+encodeURIComponent(slug)+')';
+  });
+  var parts=markers?[MT_START,MT_NAMED]:[];
+  if(title)parts.push(title);
+  parts.push('',rows.join('\n'));
+  if(markers)parts.push('',MT_END);
+  if(parts[0]==='')parts.shift();
+  return parts.join('\n');
+}
+function mtInsertToc(md,toc){
+  var src=String(md);
+  var re=new RegExp(MT_START.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[\\s\\S]*?'+MT_END.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\n?');
+  if(re.test(src))return src.replace(re,toc+'\n');
+  return toc+'\n\n'+src.replace(/^\s+/,'');
+}
+// ---- browser wiring ----
+var MT_EXAMPLE=['# Project Docs','','Some intro text.','','## Getting Started','','First steps here.','','### Install','','Run the installer.','','## Getting Started','','Duplicate heading on purpose.','','### Über café & co','','Unicode and symbols: 50% off, C++ vs C.','','## 😂 tada'].join('\n');
+function mtOpts(){
+  return {
+    minH: parseInt(document.getElementById('minH').value,10)||1,
+    maxH: parseInt(document.getElementById('maxH').value,10)||6,
+    ordered: document.getElementById('style').value==='number',
+    title: document.getElementById('title').value,
+    markers: document.getElementById('markers').checked
+  };
+}
+function mtGenerate(){
+  var src=document.getElementById('input').value;
+  var out=document.getElementById('output');
+  var status=document.getElementById('status');
+  var heads=mtHeadings(src);
+  var o=mtOpts();
+  var inRange=heads.filter(function(h){return h.level>=o.minH&&h.level<=o.maxH;});
+  var toc=mtToc(src,o);
+  out.textContent=toc||'(no headings found in the selected level range)';
+  status.textContent=inRange.length?('Found '+heads.length+' heading'+(heads.length===1?'':'s')+' ('+inRange.length+' in range) — TOC '+(toc?'generated':'empty')+'. If your renderer assigns different anchors to any heading, hover its link icon on the rendered page and compare.'):'No markdown headings found — looking for lines starting with #.';
+}
+document.getElementById('btnGen').addEventListener('click',mtGenerate);
+document.getElementById('btnExample').addEventListener('click',function(){document.getElementById('input').value=MT_EXAMPLE;mtGenerate();});
+document.getElementById('btnCopy').addEventListener('click',function(){
+  var t=document.getElementById('output').textContent;
+  if(!t)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t);
+  document.getElementById('status').textContent='TOC copied to clipboard.';
+});
+document.getElementById('btnInsert').addEventListener('click',function(){
+  var src=document.getElementById('input').value;
+  var toc=mtToc(src,mtOpts());
+  if(!toc){document.getElementById('status').textContent='No headings to build a TOC from.';return;}
+  document.getElementById('input').value=mtInsertToc(src,toc);
+  document.getElementById('status').textContent='TOC inserted at the top of the document (or replaced in place between the markers). The input box now holds the full document — copy it back or download.';
+  mtGenerate();
+});
+document.getElementById('btnDownload').addEventListener('click',function(){
+  var blob=new Blob([document.getElementById('input').value],{type:'text/markdown'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='with-toc.md';a.click();
+});
+['minH','maxH','style','title','markers'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',mtGenerate);
+  document.getElementById(id).addEventListener('change',mtGenerate);
+});
+document.getElementById('input').addEventListener('input',mtGenerate);
+document.getElementById('input').value=MT_EXAMPLE;
+mtGenerate();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

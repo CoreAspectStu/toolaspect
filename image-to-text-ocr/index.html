@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to Text OCR — Free, 100+ Languages | ToolAspect</title>
+<meta name="description" content="Extract text from images free in your browser: screenshots, photos, signs. 100+ languages, no upload. English model: 1.9 MB fast, 10.4 MB standard.">
+<link rel="canonical" href="https://toolaspect.com/image-to-text-ocr/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Image to Text OCR — Free, 100+ Languages">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn screenshots, photos of documents, and signs into editable text with Tesseract running locally in your browser. Nothing uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-to-text-ocr/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image to Text OCR | Free Online Tool">
+<meta name="twitter:description" content="OCR images to text in your browser. 100+ languages, no upload, no signup.">
+<meta name="keywords" content="image to text, ocr online, image to text converter, photo to text, picture to text, free ocr, extract text from image, tesseract online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image to Text OCR","description":"Free image-to-text OCR that runs entirely in your browser. Drop screenshots, photos of documents, or signs, pick from 100+ languages, and copy or download the recognized text. Powered by Tesseract compiled to WebAssembly; nothing is uploaded.","url":"https://toolaspect.com/image-to-text-ocr/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I extract text from an image for free?","acceptedAnswer":{"@type":"Answer","text":"Drop the image into the tool above, pick the language, and press Recognize. The text appears in seconds, ready to copy or download as .txt. It runs on the open-source Tesseract engine compiled for the browser, so there is no page limit, no account, and no upload — the image never leaves your machine."}},
+{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The image is decoded by your browser and read by Tesseract running as WebAssembly in a worker thread on your device. The only network traffic is the one-time engine download from a CDN (about 2.7 MB of WebAssembly plus your language model), which the browser then caches. Your image's pixels and the recognized text stay in the tab."}},
+{"@type":"Question","name":"Which languages does image OCR support?","acceptedAnswer":{"@type":"Answer","text":"Over 100. English, Spanish, German, French, Italian, Portuguese, Dutch, Russian, Chinese (simplified and traditional), Japanese, Korean, Arabic, Hindi, and dozens more each have a trained model. You can load multiple languages at once for mixed-language images, at the cost of downloading each model."}},
+{"@type":"Question","name":"Why is OCR less accurate on photos than scans?","acceptedAnswer":{"@type":"Answer","text":"Cameras add what scanners don't: perspective skew, uneven lighting, shadows, lens blur, and background clutter. OCR engines segment characters best from flat, evenly lit, straight-on text — which is exactly what a 300 DPI scan gives and a phone photo approximates. Straighten the page, fill the frame, avoid shadows across the text, and enable the grayscale-contrast preprocessor for phone photos."}},
+{"@type":"Question","name":"Can OCR read handwriting?","acceptedAnswer":{"@type":"Answer","text":"Not reliably. Tesseract is trained on printed type, so neat handwriting sometimes comes through partially and everyday cursive mostly doesn't. If you have handwriting at scale, you need models trained for it (or a human transcriber). For printed text — receipts, forms, screenshots, signs, book pages — image OCR is the right tool."}},
+{"@type":"Question","name":"What is the difference between fast and standard models?","acceptedAnswer":{"@type":"Answer","text":"Both are the same Tesseract engine; they differ in model size and accuracy. The fast variant of English is 1.9 MB and trades a little accuracy for speed; the standard model is 10.4 MB and the most accurate. Start with fast — if a clean image still misreads, re-run with standard. Both are cached after the first download."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Image to Text OCR","item":"https://toolaspect.com/image-to-text-ocr/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.ocr-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:640px){.ocr-inputs{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select,.input-group input{padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer;width:100%}
+.input-group select:focus,.input-group input:focus{outline:none;border-color:var(--primary)}
+.check-group{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;font-size:.88rem;color:var(--text);cursor:pointer;user-select:none}
+.check-group input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer}
+.file-list{margin-top:1rem}
+.file-row{display:flex;align-items:center;gap:.7rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .8rem;margin-top:.5rem}
+.file-row img{width:38px;height:38px;object-fit:cover;border-radius:6px}
+.file-row .name{flex:1;font-size:.85rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-row .meta{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.file-row .meta .ok{color:var(--success)}
+.file-row .meta .bad{color:var(--danger)}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);width:26px;height:26px;cursor:pointer;font-size:.75rem;line-height:1}
+.icon-btn:hover{border-color:var(--primary);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.out-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;margin-top:.75rem}
+.out-block .ob-head{font-size:.78rem;color:var(--muted);margin-bottom:.4rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.out-block pre{white-space:pre-wrap;word-break:break-word;font-size:.85rem;color:var(--text);margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;max-height:280px;overflow-y:auto}
+textarea.all-text{width:100%;min-height:200px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Image to Text OCR — Free, 100+ Languages", "url": "https://toolaspect.com/image-to-text-ocr/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Extract text from images free in your browser: screenshots, photos, signs. 100+ languages, no upload. English model: 1.9 MB fast, 10.4 MB standard."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Image to Text OCR free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Image to Text OCR on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Image to Text OCR work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Image to Text OCR calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🖼️ Image to Text OCR</h1>
+<p>Read the text out of screenshots, photos, and scans — in your browser</p>
+</div>
+
+<div class="aio-answer">To get text out of an image without uploading it: drop the PNG, JPG, or WebP below, choose the language, and press Recognize. The open-source Tesseract engine — compiled to WebAssembly — reads the image on your machine and hands you selectable, copyable text in a few seconds. A 1920×1080 screenshot processes in roughly a heartbeat; a 12-megapixel photo takes longer. Nothing is uploaded: the only download is the engine itself (2.7 MB of WebAssembly plus your language model, 1.9 MB for fast English), cached after first use.</div>
+
+<div class="section-card">
+<h2>Images</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p>Click or drag images here — PNG, JPG, WebP, BMP (multiple allowed)</p>
+<input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+</div>
+<div class="file-list" id="fileList"></div>
+</div>
+
+<div class="section-card">
+<h2>Recognition settings</h2>
+<div class="ocr-inputs">
+<div class="input-group"><label for="lang">Language</label>
+<select id="lang">
+<option value="eng" selected>English</option>
+<option value="spa">Spanish</option>
+<option value="fra">French</option>
+<option value="deu">German</option>
+<option value="ita">Italian</option>
+<option value="por">Portuguese</option>
+<option value="nld">Dutch</option>
+<option value="rus">Russian</option>
+<option value="chi_sim">Chinese (Simplified)</option>
+<option value="chi_tra">Chinese (Traditional)</option>
+<option value="jpn">Japanese</option>
+<option value="kor">Korean</option>
+<option value="ara">Arabic</option>
+<option value="hin">Hindi</option>
+<option value="tur">Turkish</option>
+<option value="pol">Polish</option>
+<option value="ukr">Ukrainian</option>
+<option value="vie">Vietnamese</option>
+<option value="tha">Thai</option>
+<option value="ell">Greek</option>
+</select></div>
+<div class="input-group"><label for="quality">Model</label>
+<select id="quality"><option value="fast">Fast (smaller, quicker)</option><option value="standard">Standard (most accurate)</option></select></div>
+<div class="input-group"><label>Preprocessing</label>
+<label class="check-group"><input type="checkbox" id="preproc"> Grayscale + contrast</label></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>Recognize text</button>
+<button class="btn ghost" id="btnClear" disabled>Clear all</button>
+<span style="color:var(--muted);font-size:.8rem" id="hint">Add at least one image to begin.</span>
+</div>
+<div class="status-box" id="status" style="display:none"></div>
+<div id="outCard" style="display:none;margin-top:1rem">
+<h2 style="font-size:1rem;margin-bottom:.5rem">Recognized text</h2>
+<div id="blocks"></div>
+<textarea class="all-text" id="allText" spellcheck="false" aria-label="All recognized text"></textarea>
+<div class="btn-row">
+<button class="btn ghost" id="btnCopy">Copy text</button>
+<button class="btn save" id="btnDownload">Download .txt</button>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/ocr-pdf/">OCR a PDF</a></li><li style="margin:4px 0"><a href="/pdf-to-text/">PDF to text (text-layer)</a></li><li style="margin:4px 0"><a href="/image-compressor/">Compress an image</a></li><li style="margin:4px 0"><a href="/word-counter/">Count words</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-convert-an-image-to-text/">Read the image-to-text guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Language Model Download Sizes</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Language</th><th>Code</th><th>Fast model</th><th>Standard model</th></tr></thead>
+<tbody>
+<tr><td>English</td><td><code>eng</code></td><td>1.9 MB</td><td>10.4 MB</td></tr>
+<tr><td>Spanish</td><td><code>spa</code></td><td>1.1 MB</td><td>8.0 MB</td></tr>
+<tr><td>German</td><td><code>deu</code></td><td>0.8 MB</td><td>6.8 MB</td></tr>
+<tr><td>French</td><td><code>fra</code></td><td>0.6 MB</td><td>6.0 MB</td></tr>
+<tr><td>Italian</td><td><code>ita</code></td><td>1.2 MB</td><td>6.6 MB</td></tr>
+<tr><td>Portuguese</td><td><code>por</code></td><td>1.0 MB</td><td>6.4 MB</td></tr>
+<tr><td>Dutch</td><td><code>nld</code></td><td>2.9 MB</td><td>9.7 MB</td></tr>
+<tr><td>Russian</td><td><code>rus</code></td><td>1.5 MB</td><td>8.2 MB</td></tr>
+<tr><td>Chinese (Simplified)</td><td><code>chi_sim</code></td><td>1.6 MB</td><td>19.2 MB</td></tr>
+<tr><td>Japanese</td><td><code>jpn</code></td><td>1.5 MB</td><td>15.4 MB</td></tr>
+<tr><td>Korean</td><td><code>kor</code></td><td>1.1 MB</td><td>6.6 MB</td></tr>
+<tr><td>Arabic</td><td><code>ara</code></td><td>0.7 MB</td><td>1.6 MB</td></tr>
+<tr><td>Hindi</td><td><code>hin</code></td><td>0.9 MB</td><td>1.3 MB</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Sizes are the compressed <code>.traineddata.gz</code> files the tool fetches once from the Tessdata CDN, then your browser caches them. Over 100 languages are available — the dropdown lists the twenty most requested. The engine core itself (LSTM WebAssembly) is 2.7 MB, downloaded once regardless of language.</p>
+</div>
+
+<div class="section-card">
+<h2>What Images OCR Well</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Image type</th><th>Typical size</th><th>Expected result</th></tr></thead>
+<tbody>
+<tr><td>Screenshot (UI, code, chat)</td><td>1200×900 = 1.08M px</td><td>Near-perfect — flat, sharp, straight</td></tr>
+<tr><td>300 DPI document scan</td><td>2550×3300 = 8.4M px</td><td>Excellent; proofread numbers</td></tr>
+<tr><td>Phone photo, page filling frame</td><td>4000×3000 = 12M px</td><td>Good with preprocessing; watch skew</td></tr>
+<tr><td>Phone photo at an angle</td><td>varies</td><td>Fair — straighten and re-shoot</td></tr>
+<tr><td>Small crop of a few words</td><td>&lt; 50px text height</td><td>Poor — text is too small to segment</td></tr>
+<tr><td>Handwriting</td><td>any</td><td>Unreliable — engine is trained on print</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The pattern: OCR rewards flat, straight, evenly lit, adequately sized text. The two failure levers you control are resolution (text needs roughly 20 pixels of x-height — the height of a lowercase letter — for reliable segmentation) and contrast.</p>
+</div>
+
+<div class="content-section">
+<h2>How Image OCR Works</h2>
+<p>Optical character recognition looks at the pixels of an image and works out which characters they form. This tool decodes your image to a canvas in the browser, optionally converts it to high-contrast grayscale, then hands the pixels to Tesseract — the OCR engine maintained as open source since the 1990s — running as WebAssembly in a worker thread. The engine segments the page into blocks, lines, and words, matches candidate shapes against a trained language model, and uses language context to fix ambiguous characters (that's how it tells "rn" from "m").</p>
+<h3>The arithmetic of an image</h3>
+<p>Everything in image OCR scales with pixel count. A 1920×1080 screenshot is 2,073,600 pixels, which is 8,294,400 bytes decoded as an RGBA buffer; a 4000×3000 photo is 12,000,000 pixels, about 5.8× more work. A 300 DPI scan of a US Letter page renders to 2550×3300 = 8,415,000 pixels — which is why "scan at 300 DPI" is the standing advice for documents and why a big photo takes visibly longer than a screenshot. Downscaling a huge photo to where the text is still crisp often runs faster and reads better.</p>
+<h3>A worked example</h3>
+<p>Receipt photo, English, fast model. The engine downloads once: 2.7 MB of WebAssembly plus the 1.9 MB fast English model — about 4.6 MB total on a cold cache, a few seconds on typical broadband, and nothing on every later visit. The 3024×4032 phone photo (12.2M pixels) is decoded, grayscaled, and contrast-stretched in the preprocessor, then recognized in a background worker; on a typical laptop that's several seconds, longer than a screenshot but far shorter than retyping the receipt. Out comes plain text — item lines, prices, totals — with the standing caveat that digits are exactly where OCR misreads, so totals get proofread.</p>
+<h3>When this is the wrong tool</h3>
+<ul>
+<li><strong>Scanned PDF?</strong> Use the <a href="/ocr-pdf/">PDF OCR tool</a> — it renders pages at your chosen DPI and numbers them for you.</li>
+<li><strong>PDF with selectable text?</strong> Skip OCR entirely: the <a href="/pdf-to-text/">PDF to text</a> extractor copies the original digital text with perfect accuracy.</li>
+<li><strong>Need a searchable PDF rather than plain text?</strong> OCR here gives you the words; combining them back into a PDF layer is a different job.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I extract text from an image for free?</h3><p>Drop the image into the tool above, pick the language, and press Recognize. The text appears in seconds, ready to copy or download as .txt. It runs on the open-source Tesseract engine compiled for the browser, so there is no page limit, no account, and no upload — the image never leaves your machine.</p></div>
+<div class="faq-item"><h3>Is my image uploaded anywhere?</h3><p>No. The image is decoded by your browser and read by Tesseract running as WebAssembly in a worker thread on your device. The only network traffic is the one-time engine download from a CDN (about 2.7 MB of WebAssembly plus your language model), which the browser then caches. Your image's pixels and the recognized text stay in the tab.</p></div>
+<div class="faq-item"><h3>Which languages does image OCR support?</h3><p>Over 100. English, Spanish, German, French, Italian, Portuguese, Dutch, Russian, Chinese (simplified and traditional), Japanese, Korean, Arabic, Hindi, and dozens more each have a trained model. You can load multiple languages at once for mixed-language images, at the cost of downloading each model.</p></div>
+<div class="faq-item"><h3>Why is OCR less accurate on photos than scans?</h3><p>Cameras add what scanners don't: perspective skew, uneven lighting, shadows, lens blur, and background clutter. OCR engines segment characters best from flat, evenly lit, straight-on text — which is exactly what a 300 DPI scan gives and a phone photo approximates. Straighten the page, fill the frame, avoid shadows across the text, and enable the grayscale-contrast preprocessor for phone photos.</p></div>
+<div class="faq-item"><h3>Can OCR read handwriting?</h3><p>Not reliably. Tesseract is trained on printed type, so neat handwriting sometimes comes through partially and everyday cursive mostly doesn't. If you have handwriting at scale, you need models trained for it (or a human transcriber). For printed text — receipts, forms, screenshots, signs, book pages — image OCR is the right tool.</p></div>
+<div class="faq-item"><h3>What is the difference between fast and standard models?</h3><p>Both are the same Tesseract engine; they differ in model size and accuracy. The fast variant of English is 1.9 MB and trades a little accuracy for speed; the standard model is 10.4 MB and the most accurate. Start with fast — if a clean image still misreads, re-run with standard. Both are cached after the first download.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/ocr-pdf/">📄 OCR PDF</a>
+<a href="/pdf-to-text/">📑 PDF to Text</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---IT-ENGINE-START---
+// Image OCR engine: tesseract.js@7.0.0 (Apache-2.0) + tesseract.js-core@7.0.0
+// wasm, models from tessdata.projectnaptha.com. Runs in a worker; no upload.
+function itRgbaBytes(w,h){return w*h*4;}
+function itPixelCount(w,h){return w*h;}
+function itWordCount(text){
+  var m=String(text).match(/[A-Za-z0-9À-ɏЀ-ӿ぀-ヿ一-鿿][A-Za-z0-9À-ɏЀ-ӿ'’-]*/g);
+  return m?m.length:0;
+}
+function itPreprocess(canvas){
+  var ctx=canvas.getContext('2d');
+  var img=ctx.getImageData(0,0,canvas.width,canvas.height);
+  var d=img.data;
+  // grayscale
+  for(var i=0;i<d.length;i+=4){
+    var g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+    d[i]=d[i+1]=d[i+2]=g;
+  }
+  // contrast stretch: find 2nd/98th percentile of luminance
+  var hist=new Array(256).fill(0);
+  for(var j=0;j<d.length;j+=4)hist[d[j]]++;
+  var total=d.length/4,lo=0,hi=255,acc=0;
+  for(var k=0;k<256;k++){acc+=hist[k];if(acc>=total*0.02){lo=k;break}}
+  acc=0;
+  for(var k2=255;k2>=0;k2--){acc+=hist[k2];if(acc>=total*0.02){hi=k2;break}}
+  var range=Math.max(1,hi-lo);
+  for(var m2=0;m2<d.length;m2+=4){
+    var v=Math.max(0,Math.min(255,(d[m2]-lo)*255/range));
+    d[m2]=d[m2+1]=d[m2+2]=v;
+  }
+  ctx.putImageData(img,0,0);
+  return canvas;
+}
+// ---- browser wiring ----
+var TESS_JS='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';
+var TESS_WORKER='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/worker.min.js';
+var TESS_CORE='https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0';
+var LANG_ROOT='https://tessdata.projectnaptha.com/4.0.0';
+var LANG_ROOT_FAST='https://tessdata.projectnaptha.com/4.0.0_fast';
+var IT={files:[]};
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){
+  var s=el('status');s.style.display='';s.textContent=msg;s.className='status-box'+(cls?' '+cls:'');
+}
+function itEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function itFmtSize(b){if(b>=1048576)return (b/1048576).toFixed(1)+' MB';if(b>=1024)return (b/1024).toFixed(0)+' KB';return b+' B';}
+function loadScript(url){return new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};(document.head||document.documentElement).appendChild(s);});}
+function itRenderList(){
+  var wrap=el('fileList');
+  wrap.innerHTML='';
+  IT.files.forEach(function(f,i){
+    var row=document.createElement('div');
+    row.className='file-row';
+    var status=f.err?'<span class="bad">'+itEsc(f.err)+'</span>':(f.text!=null?'<span class="ok">'+itWordCount(f.text)+' words</span>':(f.busy?'recognizing…':(f.dimensions?f.dimensions[0]+'×'+f.dimensions[1]:'ready')));
+    row.innerHTML='<img src="'+f.thumb+'" alt=""><span class="name">'+itEsc(f.name)+'</span><span class="meta">'+itFmtSize(f.size)+' · '+status+'</span><button class="icon-btn" data-rm="'+i+'" title="Remove">✕</button>';
+    wrap.appendChild(row);
+  });
+  el('btnGo').disabled=!IT.files.length;
+  el('btnClear').disabled=!IT.files.length;
+  el('hint').textContent=IT.files.length?IT.files.length+' image'+(IT.files.length>1?'s':'')+' queued.':'Add at least one image to begin.';
+}
+function itAddFiles(fileList){
+  var arr=Array.prototype.slice.call(fileList).filter(function(f){return /^image\//.test(f.type)||/\.(png|jpe?g|webp|bmp|gif)$/i.test(f.name);});
+  arr.forEach(function(f){
+    var entry={file:f,name:f.name,size:f.size,thumb:null,canvas:null,text:null,err:null,busy:false,dimensions:null};
+    IT.files.push(entry);
+    var url=URL.createObjectURL(f);
+    entry.thumb=url;
+    var img=new Image();
+    img.onload=function(){
+      var c=document.createElement('canvas');
+      c.width=img.naturalWidth;c.height=img.naturalHeight;
+      c.getContext('2d').drawImage(img,0,0);
+      entry.canvas=c;
+      entry.dimensions=[img.naturalWidth,img.naturalHeight];
+      itRenderList();
+    };
+    img.onerror=function(){entry.err='unreadable image';itRenderList();};
+    img.src=url;
+  });
+  itRenderList();
+}
+async function itGo(){
+  var lang=el('lang').value,quality=el('quality').value,preproc=el('preproc').checked;
+  var work=IT.files.filter(function(f){return !f.err;});
+  if(!work.length){setStatus('Add at least one readable image first.','err');return;}
+  el('btnGo').disabled=true;
+  setStatus('Loading the OCR engine (one-time download, then cached) …');
+  var worker=null;
+  try{
+    if(typeof Tesseract==='undefined')await loadScript(TESS_JS);
+    var opts={workerPath:TESS_WORKER,corePath:TESS_CORE,langPath:quality==='fast'?LANG_ROOT_FAST:LANG_ROOT,
+      logger:function(m){if(m&&m.status)setStatus((m.status==='recognizing text'?'Recognizing':m.status)+(m.progress!=null?' '+Math.round(m.progress*100)+'%':''));}};
+    worker=await Tesseract.createWorker(lang,1,opts);
+    for(var i=0;i<work.length;i++){
+      var f=work[i];
+      while(!f.canvas)await new Promise(function(r){setTimeout(r,50);});
+      f.busy=true;itRenderList();
+      var canvas=f.canvas;
+      if(preproc){canvas=document.createElement('canvas');canvas.width=f.canvas.width;canvas.height=f.canvas.height;canvas.getContext('2d').drawImage(f.canvas,0,0);itPreprocess(canvas);}
+      setStatus('Recognizing '+f.name+' ('+(i+1)+'/'+work.length+') …');
+      var r=await worker.recognize(canvas);
+      f.text=(r&&r.data&&r.data.text!=null)?r.data.text:'';
+      f.busy=false;itRenderList();
+    }
+    await worker.terminate();
+    itRenderOutputs();
+    setStatus('Done — '+work.length+' image'+(work.length>1?'s':'')+' recognized. Proofread digits and names; OCR is good, not psychic.','ok');
+  }catch(err){
+    if(worker&&worker.terminate)try{await worker.terminate();}catch(_){}
+    setStatus('OCR failed: '+(err&&err.message||err),'err');
+  }
+  el('btnGo').disabled=false;
+}
+function itRenderOutputs(){
+  el('outCard').style.display='';
+  var blocks=el('blocks');
+  blocks.innerHTML='';
+  var all=[];
+  IT.files.forEach(function(f){
+    if(f.text==null)return;
+    all.push('--- '+f.name+' ---\n'+f.text.trim());
+    var d=document.createElement('div');
+    d.className='out-block';
+    d.innerHTML='<div class="ob-head">'+itEsc(f.name)+' · '+itWordCount(f.text)+' words</div><pre>'+itEsc(f.text.trim()||'(no text recognized)')+'</pre>';
+    blocks.appendChild(d);
+  });
+  el('allText').value=all.join('\n\n');
+}
+el('dropzone').addEventListener('click',function(){el('fileInput').click();});
+el('dropzone').addEventListener('dragover',function(e){e.preventDefault();el('dropzone').classList.add('dragover');});
+el('dropzone').addEventListener('dragleave',function(){el('dropzone').classList.remove('dragover');});
+el('dropzone').addEventListener('drop',function(e){e.preventDefault();el('dropzone').classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)itAddFiles(e.dataTransfer.files);});
+el('fileInput').addEventListener('change',function(e){itAddFiles(e.target.files);e.target.value='';});
+el('fileList').addEventListener('click',function(e){
+  var rm=e.target.getAttribute&&e.target.getAttribute('data-rm');
+  if(rm!=null){IT.files.splice(parseInt(rm,10),1);itRenderList();}
+});
+el('btnGo').addEventListener('click',itGo);
+el('btnClear').addEventListener('click',function(){
+  IT.files=[];itRenderList();
+  el('outCard').style.display='none';el('blocks').innerHTML='';el('allText').value='';
+  setStatus('Cleared.');
+});
+el('btnCopy').addEventListener('click',function(){
+  el('allText').select();
+  try{document.execCommand('copy');setStatus('Copied to clipboard.','ok');}catch(e){setStatus('Select the text and copy manually.','err');}
+});
+el('btnDownload').addEventListener('click',function(){
+  var blob=new Blob([el('allText').value],{type:'text/plain'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='ocr-text.txt';a.click();
+});
+itRenderList();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

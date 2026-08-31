@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBAN Validator — Check IBAN Numbers Free | ToolAspect</title>
+<meta name="description" content="Free IBAN validator: mod-97 checksum, country, length, and BBAN structure in your browser. GB82 WEST 1234 5698 7654 32 passes — 1 wrong digit fails it.">
+<link rel="canonical" href="https://toolaspect.com/iban-validator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="IBAN Validator — Check IBAN Numbers Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Validate one IBAN or a whole batch: mod-97 checksum, country rules, length, and BBAN structure, all checked locally. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/iban-validator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IBAN Validator | Free Online Tool">
+<meta name="twitter:description" content="Check IBAN checksums, country rules, and SEPA status in your browser — free, no upload.">
+<meta name="keywords" content="iban validator, iban checker, validate iban, iban check digits, mod-97 calculator, iban length by country, sepa iban check, bulk iban validation, iban structure">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"IBAN Validator","description":"Free IBAN validator that runs entirely in your browser. It checks the mod-97 checksum, the country code against the 97-country IBAN registry, the total length, and the BBAN structure for each number, one at a time or a whole batch pasted one per line. Nothing typed is uploaded.","url":"https://toolaspect.com/iban-validator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I check if an IBAN is valid?","acceptedAnswer":{"@type":"Answer","text":"Four checks, in order: the country code must be in the official IBAN registry (97 countries participate), the total length must match that country's rule (22 characters for the UK, 22 for Germany, 27 for France), the BBAN must fit the country's structure (letters vs digits in the right slots), and the mod-97 checksum must land on exactly 1. A single mistyped digit anywhere breaks the checksum, which is why the checksum is the check that catches real-world typos."}},
+{"@type":"Question","name":"What do the first four characters of an IBAN mean?","acceptedAnswer":{"@type":"Answer","text":"The first two letters are the ISO country code (GB for the United Kingdom, DE for Germany, FR for France). The next two digits are check digits computed from the rest of the number using mod-97 arithmetic, so any typo in the account portion makes them mismatch. In GB82 WEST 1234 5698 7654 32, the GB is the country and the 82 is the checksum that validates everything after it."}},
+{"@type":"Question","name":"Does a valid IBAN mean the account exists?","acceptedAnswer":{"@type":"Answer","text":"No. Valid means well-formed: the checksum, length, and structure all check out, which rules out typos before you send money. It says nothing about whether the account is open, who owns it, or whether it can receive your currency. Only the receiving bank can confirm an account exists, either directly or when the payment is attempted. Treat a green result as 'safe to hand to your bank,' not as proof the account is live."}},
+{"@type":"Question","name":"Why is there no IBAN for US bank accounts?","acceptedAnswer":{"@type":"Answer","text":"The United States, along with Canada, Australia, Japan, China, India, and Mexico, does not participate in the IBAN system; those domestic account numbers simply have no IBAN form. US accounts use a 9-digit routing number plus an account number, and international wires to them go by SWIFT/BIC code. Trying to validate a 'US' IBAN returns an unknown-country error, which is exactly what should happen."}},
+{"@type":"Question","name":"How many characters long is an IBAN?","acceptedAnswer":{"@type":"Answer","text":"It depends on the country: 15 in Norway, 16 in Belgium, 18 in the Netherlands, 22 in the UK and Germany, 27 in France and Italy, and up to 29 in Brazil. The standard allows up to 34. That is why length alone can't tell you an IBAN is wrong without knowing the country — and why validators keep a per-country length table."}},
+{"@type":"Question","name":"Can I validate a whole list of IBANs at once?","acceptedAnswer":{"@type":"Answer","text":"Yes. Paste them one per line into the box and every line is checked separately, with a valid/invalid count at the top. Spaces and dashes are stripped automatically and the check runs in your browser, so a spreadsheet of customer IBANs never leaves your machine."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"IBAN Validator","item":"https://toolaspect.com/iban-validator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#eab308;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+textarea#ibans{width:100%;min-height:7.5rem;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;box-sizing:border-box;letter-spacing:.03em}
+textarea#ibans:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:1rem}
+@media(max-width:640px){.stat-grid{grid-template-columns:1fr}}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.5rem;font-weight:800}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.stat.ok .n{color:var(--success)}
+.stat.bad .n{color:var(--danger)}
+.iban-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:.75rem}
+.iban-card.ok{border-color:rgba(34,197,94,.45)}
+.iban-card.bad{border-color:rgba(239,68,68,.45)}
+.iban-top{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap}
+.iban-mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:1.02rem;font-weight:600;letter-spacing:.04em;word-break:break-all}
+.badge{font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:.22rem .6rem;border-radius:999px;text-transform:uppercase}
+.badge.ok{background:rgba(34,197,94,.15);color:var(--success)}
+.badge.bad{background:rgba(239,68,68,.15);color:var(--danger)}
+.iban-meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.chip{font-size:.74rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.15rem .55rem}
+.chip b{color:var(--text);font-weight:600}
+.err-list{margin-top:.6rem;font-size:.85rem;color:var(--danger);line-height:1.6}
+.hint{margin-top:.5rem;font-size:.83rem;color:var(--warn);line-height:1.6}
+.seg{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem}
+.seg span{padding:.2rem .45rem;border-radius:6px;border:1px solid var(--border)}
+.seg .cc{background:rgba(99,102,241,.18);border-color:var(--primary)}
+.seg .cd{background:rgba(234,179,8,.14);border-color:var(--warn)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.yes{color:var(--success)}
+.data-table td.no{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "IBAN Validator — Check IBAN Numbers Free", "url": "https://toolaspect.com/iban-validator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free IBAN validator: mod-97 checksum, country, length, and BBAN structure in your browser. GB82 WEST 1234 5698 7654 32 passes — 1 wrong digit fails it."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the IBAN Validator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the IBAN Validator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the IBAN Validator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the IBAN Validator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏦 IBAN Validator</h1>
+<p>Checksum, country, length, and structure checks — batch-friendly, all in your browser</p>
+</div>
+
+<div class="aio-answer">To validate an IBAN, check four things: the country code is in the 97-country IBAN registry, the length matches that country's rule (22 for the UK and Germany, 27 for France), the BBAN fits the country's letter/digit structure, and the mod-97 checksum equals exactly 1. Paste your numbers above — GB82 WEST 1234 5698 7654 32 passes all four (its check number 3214282912345698765432161182 leaves remainder 1 when divided by 97); change the final 2 to a 1 and the remainder jumps to 71, so it fails. A valid IBAN is well-formed, not proof the account exists. Nothing you paste is uploaded.</div>
+
+<div class="section-card">
+<h2>IBANs to Check (one per line)</h2>
+<div class="input-group">
+<label for="ibans">Spaces and dashes are stripped automatically. Uppercase or lowercase, both fine.</label>
+<textarea id="ibans" spellcheck="false">GB82 WEST 1234 5698 7654 32
+GB82 WEST 1234 5698 7654 31
+DE89 3704 0044 0532 0130 00
+US12 3456 7890 1234 5678 90</textarea>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo">✅ Validate</button>
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+<div class="status-box" id="status">Hit Validate. The checker loads from this site and runs locally — nothing is transmitted.</div>
+<div id="summary"></div>
+<div id="results"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/credit-card-validator/">Credit Card Validator</a></li><li style="margin:4px 0"><a href="/phone-number-validator/">Phone Number Validator</a></li><li style="margin:4px 0"><a href="/vin-decoder/">VIN Decoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/iban-validation-explained/">Read the IBAN validation guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>IBAN Length &amp; Structure by Country</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Country</th><th>Code</th><th>Total Length</th><th>BBAN Structure (after the check digits)</th><th>SEPA</th></tr></thead>
+<tbody>
+<tr><td>United Kingdom</td><td>GB</td><td>22</td><td>4 letters (bank + branch) + 14 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Germany</td><td>DE</td><td>22</td><td>18 digits (bank code + account)</td><td class="yes">Yes</td></tr>
+<tr><td>France</td><td>FR</td><td>27</td><td>10 digits + 11 letters/digits + 2-digit key</td><td class="yes">Yes</td></tr>
+<tr><td>Netherlands</td><td>NL</td><td>18</td><td>4-letter bank code + 10 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Belgium</td><td>BE</td><td>16</td><td>12 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Spain</td><td>ES</td><td>24</td><td>20 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Italy</td><td>IT</td><td>27</td><td>1 check letter + 10 digits + 12 letters/digits</td><td class="yes">Yes</td></tr>
+<tr><td>Switzerland</td><td>CH</td><td>21</td><td>5 digits + 12 letters/digits</td><td class="yes">Yes</td></tr>
+<tr><td>Austria</td><td>AT</td><td>20</td><td>16 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Ireland</td><td>IE</td><td>22</td><td>4 letters/digits + 14 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Portugal</td><td>PT</td><td>25</td><td>21 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Sweden</td><td>SE</td><td>24</td><td>20 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Norway</td><td>NO</td><td>15</td><td>11 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Denmark</td><td>DK</td><td>18</td><td>14 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Finland</td><td>FI</td><td>18</td><td>14 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Poland</td><td>PL</td><td>28</td><td>24 digits</td><td class="yes">Yes</td></tr>
+<tr><td>Türkiye</td><td>TR</td><td>26</td><td>5 digits + 17 letters/digits</td><td class="no">No</td></tr>
+<tr><td>Saudi Arabia</td><td>SA</td><td>24</td><td>2 digits + 18 letters/digits</td><td class="no">No</td></tr>
+<tr><td>UAE</td><td>AE</td><td>23</td><td>3 digits + 16 digits</td><td class="no">No</td></tr>
+<tr><td>Brazil</td><td>BR</td><td>29</td><td>23 digits + 1 letter + 1 letter/digit</td><td class="no">No</td></tr>
+<tr><td>United States</td><td>US</td><td colspan="2">Not in the IBAN system — routing number + account number instead</td><td class="no">n/a</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The IBAN registry covers 97 countries; 37 of them are in SEPA. Lengths range from 15 (Norway) to 29 (Brazil). This table is generated from the same country-rules database the validator engine uses, so the page and the tool can't drift apart.</p>
+</div>
+
+<div class="section-card">
+<h2>What Each Error Code Means</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Code</th><th>Engine error</th><th>In plain English</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>NoIBANProvided</td><td>Empty line — nothing to check</td></tr>
+<tr><td>1</td><td>NoIBANCountry</td><td>Country code isn't in the IBAN registry (US, CA, AU, JP, or a typo like XX)</td></tr>
+<tr><td>2</td><td>WrongBBANLength</td><td>Total length doesn't match the country's rule</td></tr>
+<tr><td>3</td><td>WrongBBANFormat</td><td>BBAN has letters where digits belong (or vice versa) for that country</td></tr>
+<tr><td>4</td><td>ChecksumNotNumber</td><td>Characters 3–4 aren't digits — the check digits themselves are malformed</td></tr>
+<tr><td>5</td><td>WrongIBANChecksum</td><td>Mod-97 doesn't equal 1: at least one digit is wrong somewhere</td></tr>
+<tr><td>6</td><td>WrongAccountBankBranchChecksum</td><td>The BBAN's own internal checksum failed (only fires for countries whose rule is compiled in)</td></tr>
+<tr><td>7</td><td>QRIBANNotAllowed</td><td>QR-IBAN presented where the rules reject it (Swiss QR-bill context)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Codes 1–5 are the ones you'll see in practice, and code 5 dominates: it's the checksum catching the typo. A checksum failure localizes nothing by itself — any wrong digit anywhere produces it.</p>
+</div>
+
+<div class="content-section">
+<h2>How IBAN Validation Works</h2>
+<p>An IBAN is a country code, two check digits, and a domestic account number (the BBAN) packaged so a computer can catch typos before money moves. Validation is four gates: country, length, structure, checksum. The first three are lookup tables; the fourth is arithmetic, and it's the one doing real work.</p>
+<h3>The mod-97 checksum</h3>
+<p>Move the first four characters to the end. Replace every letter with a number (A=10, B=11, …, Z=35). Read the result as one big integer and take the remainder on division by 97. If the remainder is 1, the checksum passes. The math is ISO 7064 MOD 97-10, the same family of check-digit schemes behind ISO bank account numbers generally — and it catches every single-digit substitution and most transpositions.</p>
+<h3>How to use this tool</h3>
+<p>Paste one IBAN or a hundred, one per line, and hit Validate. Each result shows the country, the expected length against the actual, the BBAN structure verdict, SEPA membership, and any error codes. When the checksum is the only failure, you also get the check digits that <em>would</em> fit the rest of the number — useful when the check digits themselves were the typo, and a hint to look elsewhere when they weren't. The engine is ibantools 4.5.4, loaded from this site; your numbers never leave the page.</p>
+<h3>A worked example</h3>
+<p>Take GB82 WEST 1234 5698 7654 32. Strip the spaces: GB82WEST12345698765432, 22 characters, which matches the UK's rule. Structure: WEST (four letters) plus 14 digits, also right. Now the checksum. Move GB82 to the end and convert letters: W=32, E=14, S=28, T=29, G=16, B=11, so the check number is</p>
+<p style="font-family:ui-monospace,Menlo,monospace;color:var(--text)">3214282912345698765432161182</p>
+<p>Divide by 97 and the remainder is exactly 1 — valid. Now the classic typo, the final digit 2 typed as 1: the check number becomes 3214282912345698765431161182, the remainder jumps to 71, and validation fails with error code 5. The tool then reports that check digits 12 would fit that (typo'd) remainder, which is a nudge, not a correction: only the receiving bank knows the real account number.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I check if an IBAN is valid?</h3><p>Four checks, in order: the country code must be in the official IBAN registry (97 countries participate), the total length must match that country's rule (22 characters for the UK, 22 for Germany, 27 for France), the BBAN must fit the country's structure (letters vs digits in the right slots), and the mod-97 checksum must land on exactly 1. A single mistyped digit anywhere breaks the checksum, which is why the checksum is the check that catches real-world typos.</p></div>
+<div class="faq-item"><h3>What do the first four characters of an IBAN mean?</h3><p>The first two letters are the ISO country code (GB for the United Kingdom, DE for Germany, FR for France). The next two digits are check digits computed from the rest of the number using mod-97 arithmetic, so any typo in the account portion makes them mismatch. In GB82 WEST 1234 5698 7654 32, the GB is the country and the 82 is the checksum that validates everything after it.</p></div>
+<div class="faq-item"><h3>Does a valid IBAN mean the account exists?</h3><p>No. Valid means well-formed: the checksum, length, and structure all check out, which rules out typos before you send money. It says nothing about whether the account is open, who owns it, or whether it can receive your currency. Only the receiving bank can confirm an account exists, either directly or when the payment is attempted. Treat a green result as "safe to hand to your bank," not as proof the account is live.</p></div>
+<div class="faq-item"><h3>Why is there no IBAN for US bank accounts?</h3><p>The United States, along with Canada, Australia, Japan, China, India, and Mexico, does not participate in the IBAN system; those domestic account numbers simply have no IBAN form. US accounts use a 9-digit routing number plus an account number, and international wires to them go by SWIFT/BIC code. Trying to validate a "US" IBAN returns an unknown-country error, which is exactly what should happen.</p></div>
+<div class="faq-item"><h3>How many characters long is an IBAN?</h3><p>It depends on the country: 15 in Norway, 16 in Belgium, 18 in the Netherlands, 22 in the UK and Germany, 27 in France and Italy, and up to 29 in Brazil. The standard allows up to 34. That is why length alone can't tell you an IBAN is wrong without knowing the country — and why validators keep a per-country length table.</p></div>
+<div class="faq-item"><h3>Can I validate a whole list of IBANs at once?</h3><p>Yes. Paste them one per line into the box and every line is checked separately, with a valid/invalid count at the top. Spaces and dashes are stripped automatically and the check runs in your browser, so a spreadsheet of customer IBANs never leaves your machine.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/credit-card-validator/">💳 Credit Card Validator</a>
+<a href="/phone-number-validator/">📞 Phone Number Validator</a>
+<a href="/vin-decoder/">🚗 VIN Decoder</a>
+<a href="/currency-converter/">💱 Currency Converter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== IBAN engine: ibantools 4.5.4 (MIT OR MPL-2.0), vendored at /iban-validator/vendor/ ===== */
+var LIB_URL='/iban-validator/vendor/ibantools.esm.js';
+var el=function(id){return document.getElementById(id)};
+var CNAMES={'GB':'United Kingdom','DE':'Germany','FR':'France','NL':'Netherlands','BE':'Belgium','ES':'Spain','IT':'Italy','CH':'Switzerland','AT':'Austria','IE':'Ireland','PT':'Portugal','SE':'Sweden','NO':'Norway','DK':'Denmark','FI':'Finland','PL':'Poland','TR':'Türkiye','SA':'Saudi Arabia','AE':'UAE','BR':'Brazil'};
+var ERRTXT={0:'empty input',1:'country not in the IBAN registry',2:'wrong length for this country',3:'BBAN structure wrong (letters/digits misplaced)',4:'check digits are not numeric',5:'mod-97 checksum failed',6:'BBAN-internal checksum failed',7:'QR-IBAN not allowed here'};
+var libPromise=null;
+function getLib(){
+  if(libPromise)return libPromise;
+  libPromise=import(LIB_URL).then(function(m){
+    return {validate:m.validateIBAN,compose:m.composeIBAN,friendly:m.friendlyFormatIBAN,specs:m.getCountrySpecifications};
+  });
+  return libPromise;
+}
+/* ---IV-ENGINE-START--- (pure helpers, node-verified) */
+function normalizeIBAN(raw){
+  return String(raw).toUpperCase().replace(/[^A-Z0-9]/g,'');
+}
+function group4(s){
+  return s.replace(/(.{4})/g,'$1 ').trim();
+}
+/* ---IV-ENGINE-END--- */
+function render(lib){
+  var lines=el('ibans').value.split(/\r?\n/).map(function(s){return s.trim()}).filter(Boolean);
+  var resEl=el('results'),sumEl=el('summary');
+  resEl.innerHTML='';sumEl.innerHTML='';
+  if(!lines.length){el('status').textContent='Paste at least one IBAN, one per line.';return}
+  var okN=0,badN=0,specs=lib.specs();
+  lines.forEach(function(line){
+    var norm=normalizeIBAN(line);
+    var v=lib.validate(norm);
+    if(v.valid)okN++;else badN++;
+    var cc=norm.slice(0,2),spec=specs[cc]||null;
+    var card=document.createElement('div');
+    card.className='iban-card '+(v.valid?'ok':'bad');
+    var segHtml='<div class="seg">'
+      +'<span class="cc">'+(norm.slice(0,2)||'—')+'</span>'
+      +'<span class="cd">'+(norm.slice(2,4)||'—')+'</span>'
+      +'<span>'+(norm.slice(4).replace(/(.{4})/g,'$1 ').trim()||'—')+'</span>'
+      +'</div>';
+    var chips='<div class="iban-meta">'
+      +'<span class="chip">country <b>'+cc+'</b>'+(CNAMES[cc]?' · '+CNAMES[cc]:'')+'</span>'
+      +(spec&&spec.chars?'<span class="chip">expected length <b>'+spec.chars+'</b> · actual <b>'+norm.length+'</b></span>':'<span class="chip">not in the 97-country registry</span>')
+      +(spec&&spec.SEPA?'<span class="chip">SEPA <b>yes</b></span>':'<span class="chip">SEPA <b>no</b></span>')
+      +'</div>';
+    var errs=v.errorCodes.length?'<div class="err-list">'+v.errorCodes.map(function(c){return '✗ code '+c+' — '+ERRTXT[c]}).join('<br>')+'</div>':'';
+    var hint='';
+    if(!v.valid&&v.errorCodes.length===1&&v.errorCodes[0]===5&&norm.length>=5){
+      try{
+        var fixed=lib.compose({countryCode:norm.slice(0,2),bban:norm.slice(4)});
+        if(fixed)hint='<div class="hint">If everything after the check digits is right, the check digits should be <b>'+fixed.slice(2,4)+'</b> ('+group4(fixed)+'). If those were already correct, the typo is inside the account number — recheck the source.</div>';
+      }catch(e){}
+    }
+    card.innerHTML='<div class="iban-top"><span class="iban-mono">'+group4(norm)+'</span><span class="badge '+(v.valid?'ok':'bad')+'">'+(v.valid?'Valid':'Invalid')+'</span></div>'
+      +segHtml+chips+errs+hint;
+    resEl.appendChild(card);
+  });
+  sumEl.innerHTML='<div class="stat-grid">'
+    +'<div class="stat ok"><div class="n">'+okN+'</div><div class="l">valid</div></div>'
+    +'<div class="stat bad"><div class="n">'+badN+'</div><div class="l">invalid</div></div>'
+    +'<div class="stat"><div class="n">'+(okN+badN)+'</div><div class="l">checked</div></div>'
+    +'</div>';
+  el('status').textContent='Checked '+(okN+badN)+' IBAN'+((okN+badN)===1?'':'s')+' locally — nothing left this page.';
+}
+el('btnGo').addEventListener('click',function(){
+  el('status').textContent='Loading the validation engine …';
+  getLib().then(render).catch(function(e){
+    el('status').textContent='Engine failed to load: '+(e&&e.message||e);
+  });
+});
+el('btnClear').addEventListener('click',function(){
+  el('ibans').value='';el('results').innerHTML='';el('summary').innerHTML='';
+  el('status').textContent='Cleared. Paste IBANs one per line.';
+});
+el('ibans').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))el('btnGo').click();
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

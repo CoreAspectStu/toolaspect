@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML to JSX: Convert Markup React Accepts | ToolAspect</title>
+<meta name="description" content="Converting HTML to JSX without surprises: className, style objects, self-closed tags, SVG camelCase fixes, wrappers, and what no converter can do.">
+<link rel="canonical" href="https://toolaspect.com/guides/html-to-jsx-conversion/">
+<meta property="og:title" content="HTML to JSX: Convert Markup React Accepts">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/html-to-jsx-conversion/">
+<meta property="og:description" content="Converting HTML to JSX without surprises: className, style objects, self-closed tags, SVG camelCase fixes, wrappers, and what no converter can do.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"HTML to JSX: How to Convert Markup React Actually Accepts","description":"Pasting HTML into a React component fails in predictable ways: class is not className, style strings are not objects, img tags cannot stay open, and SVG loses its stroke. This guide walks through every conversion JSX demands, why React made these choices, how SVG icons become components (the svgr workflow), and the few things no converter can do for you. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"HTML to JSX","item":"https://toolaspect.com/guides/html-to-jsx-conversion/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can I paste HTML directly into React?","acceptedAnswer":{"@type":"Answer","text":"Mostly no. React's JSX looks like HTML but follows DOM property names, so class, for, tabindex, and inline style strings all break or warn. A converter renames attributes, rebuilds styles as objects, and self-closes void tags — the mechanical 90 percent of the job."}},
+{"@type":"Question","name":"Why does React use className instead of class?","acceptedAnswer":{"@type":"Answer","text":"JSX attributes map to DOM properties, and the DOM property behind the class attribute is element.className. React sets properties at runtime, so it adopted the property names — which also dodges class being a reserved word in older JavaScript dialects."}},
+{"@type":"Question","name":"How do I turn an SVG file into a React component?","acceptedAnswer":{"@type":"Answer","text":"Convert the markup to JSX (rename stroke-width and friends to camelCase), then wrap it in a component that spreads props onto the root svg element so callers can set size, color, and title. That is exactly what the svgr toolchain automates at build time — and what a browser converter can do per-icon."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "HTML to JSX: Convert Markup React Accepts", "url": "https://toolaspect.com/guides/html-to-jsx-conversion/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Converting HTML to JSX without surprises: className, style objects, self-closed tags, SVG camelCase fixes, component wrappers, and what no converter can do."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the HTML to JSX: Convert Markup React Accepts free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the HTML to JSX: Convert Markup React Accepts on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the HTML to JSX: Convert Markup React Accepts work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the HTML to JSX: Convert Markup React Accepts calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>HTML to JSX: How to Convert Markup React Actually Accepts</h1>
+<div class="meta"><span>⚛️ React workflows</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">Every React developer pastes HTML into a component on day two, and every one of them hits the same wall: JSX looks like HTML but isn't. The class attribute warns, the style string throws, the &lt;img&gt; tag that never closes becomes a syntax error. The good news is that the distance between HTML and JSX is almost entirely mechanical — a fixed list of renames and rewrites — which is exactly the kind of work a converter does perfectly. Here's the full list, why React made these choices, and the boundary where automation stops.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why can't React just accept HTML?</h2>
+<p>Because JSX compiles to function calls, not to markup. When you write <code>&lt;div className="hero"&gt;</code>, Babel turns it into <code>React.createElement('div', {className: 'hero'})</code> — a JavaScript object describing the element. Attribute names in JSX become <em>keys of a props object</em>, and since they eventually set DOM <em>properties</em> (not attributes), React chose the DOM property names: <code>element.className</code>, <code>element.tabIndex</code>, <code>element.htmlFor</code>. HTML named them differently twenty years earlier, and the mismatch is permanent now.</p>
+<h2>What actually changes: the complete list</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>HTML</th><th>JSX</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td><code>class</code></td><td><code>className</code></td><td>DOM property name</td></tr>
+<tr><td><code>for</code></td><td><code>htmlFor</code></td><td><code>for</code> is reserved in JS</td></tr>
+<tr><td><code>tabindex</code>, <code>readonly</code>, <code>maxlength</code>, <code>autocomplete</code></td><td><code>tabIndex</code>, <code>readOnly</code>, <code>maxLength</code>, <code>autoComplete</code></td><td>camelCase properties</td></tr>
+<tr><td><code>colspan</code>, <code>rowspan</code>, <code>srcset</code></td><td><code>colSpan</code>, <code>rowSpan</code>, <code>srcSet</code></td><td>camelCase properties</td></tr>
+<tr><td><code>style="color:red"</code></td><td><code>style={{color: 'red'}}</code></td><td>style is an object in React</td></tr>
+<tr><td><code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code> unclosed</td><td>self-closed <code>&lt;br /&gt;</code></td><td>JSX demands closed tags</td></tr>
+<tr><td><code>onclick="fn()"</code></td><td><code>onClick={fn}</code></td><td>events are props, functions</td></tr>
+<tr><td><code>value</code> on an input</td><td><code>defaultValue</code> (usually)</td><td>uncontrolled default</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two of those deserve a beat. <strong>Style strings</strong>: the object's keys camel-case too, so <code>font-size</code> becomes <code>fontSize</code>, and values stay strings (<code>'red'</code>). <strong>value on inputs</strong>: a plain <code>value</code> makes the input controlled — React now expects you to hold that state; if you just pasted markup, <code>defaultValue</code> is the behavior the HTML had.</p>
+<h2>The SVG trap: why your icon loses its stroke</h2>
+<p>SVG adds a second rename list on top. React's SVG attributes are camelCase like everything else, so <code>stroke-width</code>, <code>stroke-linecap</code>, <code>fill-rule</code>, <code>clip-path</code>, and <code>xlink:href</code> must become <code>strokeWidth</code>, <code>strokeLinecap</code>, <code>fillRule</code>, <code>clipPath</code>, and <code>xlinkHref</code>. Paste an icon unchanged and nothing crashes — you just get a console full of "Invalid DOM property" warnings and an icon with no stroke, which is somehow more annoying than a crash. The exceptions prove the rule: <code>aria-*</code> and <code>data-*</code> keep their hyphens because React passes them through verbatim, and <code>viewBox</code> already is camelCase.</p>
+<h2>From markup to component</h2>
+<p>Converting markup is half the job; the other half is wrapping it as a component the way icon libraries expect. The svgr toolchain (what powers most design-system pipelines) turns an SVG file into:</p>
+<ul>
+<li>a named function component — <code>export default function ActivityIcon(props)</code></li>
+<li>a props spread on the root element — <code>&lt;svg {...props}&gt;</code> — so callers set <code>width</code>, <code>className</code>, or <code>aria-label</code> themselves</li>
+<li>optional TypeScript prop typing — <code>props: React.SVGProps&lt;SVGSVGElement&gt;</code></li>
+</ul>
+<p>You can reproduce that output per-icon in a browser converter (the one below has an SVG tab that does exactly this), or at build time with svgr if every icon in a folder needs it. The pattern to internalize: the component owns the geometry, the caller owns the presentation.</p>
+<h2>What no converter can do</h2>
+<p>Three things stay manual, always:</p>
+<ol>
+<li><strong>Event handlers.</strong> <code>onclick="doThing()"</code> is a string evaluated at click time; React wants <code>onClick={doThing}</code> — a function reference from your scope. A converter can rename the attribute; only you can supply the function.</li>
+<li><strong>Scripts and stylesheets.</strong> <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> don't map to React at all — move them into the app's build or effect logic.</li>
+<li><strong>Template syntax.</strong> Mustaches, ERB tags, and PHP come through as literal text; strip them before converting or you'll be hunting braces in JSX.</li>
+</ol>
+<p>Everything else — the renames, the style objects, the tag closing, the SVG camelCase, the wrapper — is mechanical, and mechanical work belongs to machines.</p>
+<div class="cta-box">
+<h3>Convert HTML or SVG to JSX, free</h3>
+<p>Runs the open-source react-magic converter in your browser: attribute fixes, SVG renames, component wrappers, TypeScript. No upload.</p>
+<a href="/html-to-jsx/">Open the HTML to JSX Converter</a>
+</div>
+<h2>Which engine should I trust?</h2>
+<p>The one with provenance. React's own HTML→JSX playground ran on an open-source converter (htmltojsx, BSD-licensed, from the react-magic project) for years, and that engine is still the most battle-tested implementation of the rename list. The <a href="/html-to-jsx/">ToolAspect converter</a> runs it locally in your tab — no upload, which matters if the markup is proprietary. For bulk pipelines, wire svgr into your build; for one-off pastes while coding, a browser tab beats a terminal round-trip.</p>
+<p>Adjacent conversions, while you're here: turning a web page into <a href="/html-to-markdown/">Markdown</a> for docs, cleaning up icons in an <a href="/svg-editor/">SVG editor</a>, or rasterizing them for non-React contexts with <a href="/svg-to-png-converter/">SVG to PNG</a>.</p>
+<div class="related-tools"><a href="/html-to-jsx/">⚙️ HTML to JSX Converter</a><a href="/html-to-markdown/">📝 HTML to Markdown</a><a href="/svg-editor/">✏️ SVG Editor</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+</body>
+</html>

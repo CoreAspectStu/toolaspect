@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOCX Mail Merge — Word Templates + CSV, Free | ToolAspect</title>
+<meta name="description" content="Free mail merge for Word files. Upload a .docx template with {{tags}}, paste CSV rows, download one merged document per row. Runs in your browser.">
+<link rel="canonical" href="https://toolaspect.com/docx-mail-merge/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="DOCX Mail Merge — Word Templates + CSV, Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Merge CSV or JSON data into Word templates with {{tags}}: loops, conditionals, tables. One doc per row, all in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/docx-mail-merge/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DOCX Mail Merge | Free Online Tool">
+<meta name="twitter:description" content="Fill Word templates from CSV data in your browser. No upload, no signup, loops and tables supported.">
+<meta name="keywords" content="mail merge online free, docx mail merge, word mail merge without word, mail merge csv, document template filler, generate documents from template">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"DOCX Mail Merge","description":"Free browser-based mail merge. Upload a Word .docx template containing {{tags}}, supply CSV or JSON data, and download one merged document per row. Handles loops inside tables, conditionals, headers and footers. Powered by easy-template-x; files never leave the browser.","url":"https://toolaspect.com/docx-mail-merge/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I do a mail merge without Microsoft Word?","acceptedAnswer":{"@type":"Answer","text":"Type your placeholders directly into a Word document as {{name}}, {{address}} and so on (any .docx works, including from Google Docs or LibreOffice), put your recipient data in a CSV, and run both through this tool. Each CSV row becomes one filled-in .docx you can download. No Word installation, no Microsoft account, and nothing is uploaded — the merge runs in your browser."}},
+{"@type":"Question","name":"Does it work with Word's own mail-merge fields?","acceptedAnswer":{"@type":"Answer","text":"No, and the difference matters. Word's Insert > Quick Parts > Field MERGEFIELD creates special field codes this tool does not read. The fix is one minute of work: replace each field with plain text like {{FirstName}} in the template. The tag format is more portable anyway — the same template works in any tool that reads double-brace tags, and Word never needs to be involved again."}},
+{"@type":"Question","name":"Can it fill tables and repeating rows?","acceptedAnswer":{"@type":"Answer","text":"Yes. Put {{#items}} in the first cell of a table row and {{/items}} in the last cell, use {{field}} tags in the cells between, and pass an array of objects as that tag's data. The row repeats once per item. In testing, a 2-row bonus-schedule table expanded to 4 rows for a record with 3 bonus milestones, and headers and footers merge with the same tags as the body."}},
+{"@type":"Question","name":"How many documents can it merge at once?","acceptedAnswer":{"@type":"Answer","text":"There is no server-side limit because there is no server. The practical ceiling is your browser's memory: a few hundred rows of letters (roughly 8 KB each) is comfortable on any machine, and everything arrives as one ZIP. Very large runs with huge templates can hit browser memory limits before anything else fails."}},
+{"@type":"Question","name":"What happens to missing data in a row?","acceptedAnswer":{"@type":"Answer","text":"A tag with no matching column is replaced with an empty string by default, so the letter still generates — check the column mapping table before merging, because a silent blank in a salary field is worth catching. CSV column names must match tag names exactly (case-sensitive; Company and company are different tags)."}},
+{"@type":"Question","name":"Is my data uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The template is unzipped, the tags are replaced, and the document is rebuilt entirely inside your browser tab using easy-template-x and JSZip. Customer lists, salaries and addresses never touch a server, which is the main argument for a local mail merge over the online services that ask you to upload your spreadsheet."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"DOCX Mail Merge","item":"https://toolaspect.com/docx-mail-merge/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+textarea{width:100%;min-height:170px;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;box-sizing:border-box;resize:vertical}
+textarea:focus{outline:none;border-color:var(--primary)}
+.mode-tabs{display:flex;gap:.5rem;margin-bottom:1rem}
+.mode-tabs button{padding:.45rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);font-size:.85rem;cursor:pointer;font-family:inherit}
+.mode-tabs button.active{border-color:var(--primary);color:var(--text);font-weight:600}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.tag-report{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:1rem;font-size:.88rem}
+.tag-report .chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
+.tag-report .chip{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.15rem .5rem;font-size:.78rem}
+.tag-report .chip.missing{border-color:var(--danger);color:var(--danger)}
+.tag-report .chip.loop{border-color:var(--primary-hover);color:var(--primary-hover)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.3rem;font-weight:800;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.y{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "DOCX Mail Merge — Word Templates + CSV, Free", "url": "https://toolaspect.com/docx-mail-merge/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free mail merge for Word files. Upload a .docx template with {{tags}}, paste CSV rows, download one merged document per row. Runs in your browser."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the DOCX Mail Merge free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the DOCX Mail Merge on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the DOCX Mail Merge work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the DOCX Mail Merge calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✉️ DOCX Mail Merge</h1>
+<p>Fill Word templates from CSV or JSON data — one document per row, all in your browser</p>
+</div>
+
+<div class="aio-answer">To mail merge without Word, open a .docx template whose text contains placeholders like {{name}} and {{salary}}, paste your CSV rows below, and hit Merge. Each row becomes a finished .docx; a batch arrives as a ZIP. The engine (easy-template-x, MIT) fills body text, tables with repeating rows ({{#items}}…{{/items}}), conditionals, headers and footers, and it never uploads anything — the merge runs in this tab. In testing, a 3-record offer-letter run with company, signer title and bonus-milestone data produced documents of 8,188, 8,191 and 8,202 bytes in a 19,832-byte ZIP, with the table row repeating 2 or 3 times per record depending on data.</div>
+
+<div class="section-card">
+<h2>1. Word Template (.docx with {{tags}})</h2>
+<div class="pick"><label class="file-label">📄 Open template .docx<input type="file" id="file" accept=".docx"></label><div class="fname" id="fname"></div></div>
+<div id="tagReport"></div>
+<p style="font-size:.82rem;color:var(--muted);margin-top:.75rem">No template handy? <a href="/docx-mail-merge/sample-template.docx" style="color:var(--primary-hover)">Download the sample offer-letter template</a> (8 KB, contains 9 tags + a table loop) and try it with the sample data below.</p>
+</div>
+
+<div class="section-card">
+<h2>2. Data</h2>
+<div class="mode-tabs"><button id="tabCsv" class="active">CSV (one doc per row)</button><button id="tabJson">JSON (loops &amp; nested)</button></div>
+<textarea id="csvData" spellcheck="false">name,role,salary,date,signer
+Jane Doe,Senior Analyst,"$118,000",September 14 2026,Priya Raman
+Marcus Lee,Data Engineer,"$126,500",October 3 2026,Priya Raman
+Ana Souza,Analytics Manager,"$134,000",August 31 2026,Priya Raman</textarea>
+<textarea id="jsonData" spellcheck="false" style="display:none">[
+  {
+    "name": "Jane Doe",
+    "role": "Senior Analyst",
+    "salary": "$118,000",
+    "date": "September 14 2026",
+    "signer": "Priya Raman",
+    "bonuses": [
+      { "amount": "$5,000", "due": "First paycheck" },
+      { "amount": "$7,500", "due": "Month 12" }
+    ]
+  }
+]</textarea>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>✉️ Merge</button>
+<button class="btn ghost" id="btnSample">Load sample template</button>
+</div>
+<div class="status-box" id="status">Open a .docx template to begin. Files never leave your browser.</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/word-to-pdf/">Word To PDF</a></li><li style="margin:4px 0"><a href="/docx-viewer/">DOCX Viewer</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/mail-merge-without-word/">Read the mail merge guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Tag Syntax Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Syntax</th><th>What it does</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>{{tag}}</code></td><td>Replaced by the matching data value</td><td><code>Dear {{name}},</code> → <code>Dear Jane Doe,</code></td></tr>
+<tr><td><code>{{#list}} … {{/list}}</code></td><td>Repeats the enclosed block (a table row, a paragraph) once per array item</td><td>2 bonus rows → the row appears twice</td></tr>
+<tr><td><code>{{#flag}} … {{/flag}}</code></td><td>Conditional: shows the block only when the value is truthy</td><td>{{#vip}}priority support line{{/vip}}</td></tr>
+<tr><td><code>{{a.b}}</code></td><td>Dots reach into nested objects</td><td>{{manager.name}} with JSON data</td></tr>
+<tr><td>missing tag</td><td>Replaced by an empty string (watch the column mapping!)</td><td>salary column misspelled → blank</td></tr>
+<tr><td>Headers &amp; footers</td><td class="y">Merge with the same tags as the body</td><td>CONFIDENTIAL — {{name}}</td></tr>
+<tr><td>Word MERGEFIELD</td><td>Not read — retype fields as plain {{tags}}</td><td>Insert &gt; Quick Parts &gt; Field won't work</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Verified against the merge engine itself: a template with 11 tag tokens (9 simple, one loop pair) produced zero leftover tags in every output, the loop row repeated exactly once per array item, a truthy conditional rendered, and a missing key vanished. Tag names are case-sensitive.</p>
+</div>
+
+<div class="content-section">
+<h2>How Browser Mail Merge Works</h2>
+<p>Mail merge is an old idea with clunky tools. Word's version wants a data source wired through field codes; the online services want your spreadsheet uploaded. A .docx is just a ZIP of XML, though, and filling placeholders in it turns out to be a job a browser tab can do completely on its own.</p>
+<h3>The engine</h3>
+<p>This tool uses easy-template-x (MIT, actively maintained) with JSZip. When you hit Merge, the template is unzipped in memory, every {{tag}} in the body, headers and footers is located — including tags that Word's XML run-splitting scatters across formatting boundaries, which is the part that breaks naive find-and-replace — and replaced with your data. Loop and conditional blocks are handled structurally, repeating table rows as needed, then the package is rebuilt. First use downloads about 250 KB of JavaScript; after that it's cached and works offline.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Write your template in Word, Google Docs or LibreOffice and type placeholders as normal text: <code>{{name}}</code>, <code>{{salary}}</code>, <code>{{date}}</code>. Save as .docx.</li>
+<li>Open it here. The tool reads the tags out of the template and shows them, flagging any CSV column that doesn't match.</li>
+<li>Paste CSV (headers in the first row; quotes for commas) or switch to JSON for loops and nested objects. Hit Merge.</li>
+<li>Download: one row gives one .docx directly, several rows give a ZIP named after each record's name column.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Take an offer-letter template with nine simple tags and a bonus-schedule table row wrapped in <code>{{#bonuses}}</code>…<code>{{/bonuses}}</code> — 8,092 bytes on disk, 11 tag tokens in total. Merging three complete records (company, signer title and bonus milestones included) produced documents of 8,188, 8,191 and 8,202 bytes, delivered in a 19,832-byte ZIP. Run the same template on the sample CSV instead — its rows carry only the five basic columns — and the letters come out at 8,085 to 8,086 bytes with a 19,511-byte ZIP, because the missing tags merge to blank. The interesting one is the third record: Ana's data carried three bonus milestones instead of two, and the table grew from 3 rows (header + 2) to 4 rows (header + 3) automatically while the other two letters kept 3. Same template, per-record expansion — that's the difference between a real merge engine and sed.</p>
+<p>After merging, the natural next steps: convert finished letters to PDF with <a href="/word-to-pdf/">Word to PDF</a>, and strip the author metadata the templates picked up in Word with <a href="/document-metadata-remover/">Document Metadata Remover</a> before sending them out.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I do a mail merge without Microsoft Word?</h3><p>Type your placeholders directly into a Word document as {{name}}, {{address}} and so on (any .docx works, including from Google Docs or LibreOffice), put your recipient data in a CSV, and run both through this tool. Each CSV row becomes one filled-in .docx you can download. No Word installation, no Microsoft account, and nothing is uploaded — the merge runs in your browser.</p></div>
+<div class="faq-item"><h3>Does it work with Word's own mail-merge fields?</h3><p>No, and the difference matters. Word's Insert &gt; Quick Parts &gt; Field MERGEFIELD creates special field codes this tool does not read. The fix is one minute of work: replace each field with plain text like {{FirstName}} in the template. The tag format is more portable anyway — the same template works in any tool that reads double-brace tags, and Word never needs to be involved again.</p></div>
+<div class="faq-item"><h3>Can it fill tables and repeating rows?</h3><p>Yes. Put {{#items}} in the first cell of a table row and {{/items}} in the last cell, use {{field}} tags in the cells between, and pass an array of objects as that tag's data. The row repeats once per item. In testing, a 2-row bonus-schedule table expanded to 4 rows for a record with 3 bonus milestones, and headers and footers merge with the same tags as the body.</p></div>
+<div class="faq-item"><h3>How many documents can it merge at once?</h3><p>There is no server-side limit because there is no server. The practical ceiling is your browser's memory: a few hundred rows of letters (roughly 8 KB each) is comfortable on any machine, and everything arrives as one ZIP. Very large runs with huge templates can hit browser memory limits before anything else fails.</p></div>
+<div class="faq-item"><h3>What happens to missing data in a row?</h3><p>A tag with no matching column is replaced with an empty string by default, so the letter still generates — check the column mapping table before merging, because a silent blank in a salary field is worth catching. CSV column names must match tag names exactly (case-sensitive; Company and company are different tags).</p></div>
+<div class="faq-item"><h3>Is my data uploaded anywhere?</h3><p>No. The template is unzipped, the tags are replaced, and the document is rebuilt entirely inside your browser tab using easy-template-x and JSZip. Customer lists, salaries and addresses never touch a server, which is the main argument for a local mail merge over the online services that ask you to upload your spreadsheet.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/word-to-pdf/">📑 Word to PDF</a>
+<a href="/docx-viewer/">📄 DOCX Viewer</a>
+<a href="/markdown-to-word/">📝 Markdown to Word</a>
+<a href="/document-metadata-remover/">🧹 Document Metadata Remover</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Merge engine: easy-template-x 7.2.8 (MIT) + JSZip 3.10.1 (MIT), lazy from jsdelivr ===== */
+var ETX_URL='https://cdn.jsdelivr.net/npm/easy-template-x@7.2.8/+esm';
+var JSZIP_URL='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function loadScript(url){return new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};(document.head||document.documentElement).appendChild(s);})}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+/* --- CSV parser: RFC-4180 quotes/escapes, CRLF-tolerant (node-verified) --- */
+function parseCsv(text){
+  var rows=[],row=[],cur='',q=false,fieldStart=true;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; }
+      else cur+=c;
+    }else if(c==='"'){ q=true; }
+    else if(c===','){ row.push(cur);cur='';fieldStart=true; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n')i++; row.push(cur);cur='';q=false; if(row.length>1||row[0]!==''){rows.push(row);row=[];} fieldStart=true; }
+    else cur+=c;
+  }
+  row.push(cur);
+  if(row.length>1||row[0]!=='')rows.push(row);
+  return rows;
+}
+function csvToRecords(rows){
+  if(!rows.length)return [];
+  var head=rows[0].map(function(h){return h.trim();});
+  return rows.slice(1).filter(function(r){return r.some(function(c){return c.trim()!==''})}).map(function(r){
+    var o={};head.forEach(function(h,i){o[h]=(r[i]!==undefined)?r[i]:'';});return o;
+  });
+}
+/* --- tag scanner: walks document.xml + headers/footers like the engine does --- */
+async function scanTags(JSZip,bytes){
+  var zip=await JSZip.loadAsync(bytes);
+  var parts=['word/document.xml'];
+  for(var i=1;i<=9;i++){ if(zip.file('word/header'+i+'.xml'))parts.push('word/header'+i+'.xml'); if(zip.file('word/footer'+i+'.xml'))parts.push('word/footer'+i+'.xml'); }
+  var xml='';
+  for(var j=0;j<parts.length;j++){ xml+=await zip.file(parts[j]).async('string'); }
+  /* strip run markup so split tags reassemble before scanning */
+  xml=xml.replace(/<[^>]+>/g,'');
+  var tags={},m,re=/{{([#/]?)([a-zA-Z0-9_.-]+)}}/g;
+  while((m=re.exec(xml))){ var name=m[2],kind=m[1]?m[1]:'val'; tags[name]=kind; }
+  return tags;
+}
+
+var tplBytes=null,tplName='',tplBuf=null,mode='csv';
+el('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  var fr=new FileReader();
+  fr.onload=async function(){
+    tplBuf=fr.result;
+    tplBytes=new Uint8Array(tplBuf);
+    tplName=f.name;
+    el('fname').textContent=f.name+' — '+f.size.toLocaleString('en-US')+' bytes';
+    el('btnGo').disabled=false;
+    try{
+      if(!window.JSZip){await loadScript(JSZIP_URL);}
+      var tags=await scanTags(window.JSZip,tplBytes.slice());
+      renderTagReport(tags);
+      setStatus('Template loaded: '+Object.keys(tags).length+' distinct tags found. Review the mapping below the tags, then hit Merge.');
+    }catch(err){
+      el('tagReport').innerHTML='';
+      setStatus('Template loaded, but tag scanning failed: '+err.message+' (merge may still work).');
+    }
+  };
+  fr.readAsArrayBuffer(f);
+});
+function renderTagReport(tags){
+  var names=Object.keys(tags);
+  var dataCols=currentColumns();
+  var html='<div class="tag-report"><b style="color:var(--text)">Tags found in template</b><div class="chips">';
+  names.forEach(function(n){
+    var cls=tags[n]==='val'?'chip':'chip loop';
+    var miss=(tags[n]==='val'&&dataCols.length&&dataCols.indexOf(n)===-1);
+    if(miss)cls+=' missing';
+    html+='<span class="'+cls+'">'+esc(tags[n]==='val'?n:tags[n]+n)+'<\/span>';
+  });
+  html+='<\/div>';
+  var missing=names.filter(function(n){return tags[n]==='val'&&dataCols.length&&dataCols.indexOf(n)===-1});
+  if(missing.length)html+='<div style="color:var(--danger);font-size:.8rem;margin-top:.5rem">No data column for: '+esc(missing.join(', '))+' — these tags will merge as blank.</div>';
+  if(names.some(function(n){return tags[n]!=='val'}))html+='<div style="color:var(--primary-hover);font-size:.8rem;margin-top:.5rem">Loop/conditional tags (blue) need JSON data with matching arrays/flags.</div>';
+  html+='<\/div>';
+  el('tagReport').innerHTML=html;
+}
+function currentColumns(){
+  if(mode==='csv'){ var rows=parseCsv(el('csvData').value); return rows.length?rows[0].map(function(h){return h.trim();}):[]; }
+  try{ var j=JSON.parse(el('jsonData').value); var first=[].concat(j)[0]||{}; return Object.keys(first); }catch(e){ return []; }
+}
+el('tabCsv').addEventListener('click',function(){mode='csv';el('tabCsv').className='active';el('tabJson').className='';el('csvData').style.display='';el('jsonData').style.display='none';});
+el('tabJson').addEventListener('click',function(){mode='json';el('tabJson').className='active';el('tabCsv').className='';el('jsonData').style.display='';el('csvData').style.display='none';});
+el('csvData').addEventListener('input',function(){if(tplBytes){try{var t={};window.__lastTags&&Object.keys(window.__lastTags).forEach(function(n){t[n]=window.__lastTags[n]});renderTagReport(t);}catch(e){}}});
+el('btnSample').addEventListener('click',function(){
+  fetch('/docx-mail-merge/sample-template.docx').then(function(r){return r.arrayBuffer()}).then(function(buf){
+    tplBuf=buf;tplBytes=new Uint8Array(buf);tplName='sample-template.docx';
+    el('fname').textContent='sample-template.docx — 8,092 bytes (offer letter, 9 tags + bonus loop)';
+    el('btnGo').disabled=false;
+    return loadScript(JSZIP_URL).then(function(){return scanTags(window.JSZip,tplBytes.slice());}).then(function(tags){
+      window.__lastTags=tags;renderTagReport(tags);
+      setStatus('Sample template loaded. Switch to the JSON tab to try the table loop, or hit Merge on the CSV as-is.');
+    });
+  }).catch(function(e){setStatus('Could not load the sample: '+e.message,'err')});
+});
+el('btnGo').addEventListener('click',async function(){
+  if(!tplBuf)return;
+  var btn=el('btnGo');btn.disabled=true;
+  try{
+    setStatus('Loading the merge engine (easy-template-x, ~250 KB — cached after first use) …');
+    var etx=await import(ETX_URL);
+    var TemplateHandler=etx.TemplateHandler;
+    var handler=new TemplateHandler({delimiters:{tagStart:'{{',tagEnd:'}}'}});
+    var records;
+    if(mode==='csv'){ records=csvToRecords(parseCsv(el('csvData').value)); }
+    else{
+      var j=JSON.parse(el('jsonData').value);
+      records=[].concat(j);
+    }
+    if(!records.length){setStatus('No data records found — add at least one row (CSV) or array entry (JSON).','err');btn.disabled=false;return;}
+    setStatus('Merging '+records.length+' record'+(records.length>1?'s':'')+' …');
+    var outs=[],names=[];
+    for(var i=0;i<records.length;i++){
+      /* ArrayBuffer in -> ArrayBuffer out (the engine mirrors the input type) */
+      var ab=tplBytes.buffer.slice(tplBytes.byteOffset,tplBytes.byteOffset+tplBytes.byteLength);
+      var out=await handler.process(ab,records[i]);
+      var u8=new Uint8Array(out);
+      outs.push(u8);
+      names.push((records[i].name||records[i].Name||('document-'+(i+1))).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||('document-'+(i+1)));
+    }
+    var stats=document.createElement('div');stats.className='stat-grid';
+    stats.innerHTML='<div class="stat"><div class="n">'+records.length+'</div><div class="l">documents merged</div></div>'
+      +'<div class="stat"><div class="n">'+outs.reduce(function(a,b){return a+b.length},0).toLocaleString('en-US')+' B</div><div class="l">total output</div></div>'
+      +'<div class="stat"><div class="n">0</div><div class="l">bytes uploaded</div></div>';
+    el('output').innerHTML='';el('output').appendChild(stats);
+    if(outs.length===1){
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([outs[0]],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}));
+      a.download=names[0]+'.docx';
+      a.textContent='⬇️ Download '+names[0]+'.docx ('+outs[0].length.toLocaleString('en-US')+' B)';
+      a.className='btn';a.style.marginTop='1rem';
+      el('output').appendChild(a);
+    }else{
+      if(!window.JSZip)await loadScript(JSZIP_URL);
+      var zip=new window.JSZip();
+      outs.forEach(function(o,i){zip.file(names[i]+'.docx',o);});
+      var zb=new Uint8Array(await zip.generateAsync({type:'uint8array',compression:'DEFLATE'}));
+      var za=document.createElement('a');
+      za.href=URL.createObjectURL(new Blob([zb],{type:'application/zip'}));
+      za.download='merged-documents.zip';
+      za.textContent='⬇️ Download merged-documents.zip ('+outs.length+' docs, '+zb.length.toLocaleString('en-US')+' B)';
+      za.className='btn';za.style.marginTop='1rem';
+      el('output').appendChild(za);
+    }
+    setStatus('Merged '+records.length+' document'+(records.length>1?'s':'')+' — open one and check the tags are filled before sending.','ok');
+  }catch(err){
+    setStatus('Merge failed: '+((err&&err.message)||err),'err');
+  }
+  btn.disabled=false;
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

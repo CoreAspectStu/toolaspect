@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IBAN Validation Explained: Mod-97, Lengths &amp; Error Codes | ToolAspect</title>
+<meta name="description" content="How IBAN validation works: the mod-97 checksum step by step (GB82 worked example), per-country length rules, what validators can and can't tell you.">
+<link rel="canonical" href="https://toolaspect.com/guides/iban-validation-explained/">
+<meta property="og:title" content="IBAN Validation Explained: Mod-97, Lengths &amp; Error Codes">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/iban-validation-explained/">
+<meta property="og:description" content="How IBAN validation works: the mod-97 checksum step by step (GB82 worked example), per-country length rules, what validators can and can't tell you.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"IBAN Validation Explained: Mod-97, Lengths & Error Codes","description":"A practical walk through IBAN validation: the four checks every validator runs, the mod-97 checksum computed by hand on a real IBAN, why lengths differ by country, and why a valid IBAN still isn't proof an account exists. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"IBAN Validation Explained","item":"https://toolaspect.com/guides/iban-validation-explained/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I check if an IBAN is valid?","acceptedAnswer":{"@type":"Answer","text":"Check the country code against the 97-country IBAN registry, the length against that country's rule, the BBAN against the country's letter/digit structure, and compute the mod-97 checksum — it must leave remainder 1. A free in-browser validator such as ToolAspect's runs all four checks locally and handles batches, one IBAN per line, without uploading anything."}},
+{"@type":"Question","name":"Does a valid IBAN mean the account exists?","acceptedAnswer":{"@type":"Answer","text":"No. Valid means well-formed: right country, right length, right structure, checksum passes. It catches typos before money moves, but only the receiving bank can confirm an account is open — usually when the payment is attempted. Your bank may also run an IBAN-name check (the EU's Verification of Payee service arrives in 2025-2027) which a format validator cannot replace."}},
+{"@type":"Question","name":"Why does the US not use IBANs?","acceptedAnswer":{"@type":"Answer","text":"The US chose not to join the IBAN registry, along with Canada, Australia, Japan, China, India, and Mexico. American accounts keep their domestic form — a 9-digit routing number plus an account number — and cross-border wires to them are routed by SWIFT/BIC code instead. Any 'US IBAN' you see is not a real IBAN and will fail country validation."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:.85rem;line-height:1.7}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "IBAN Validation Explained: Mod-97, Lengths & Error Codes", "url": "https://toolaspect.com/guides/iban-validation-explained/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "How IBAN validation works: the mod-97 checksum step by step (GB82 worked example), per-country length rules, what validators can and can't tell you."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the IBAN Validation Explained: Mod-97, Lengths & Error Codes free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the IBAN Validation Explained: Mod-97, Lengths & Error Codes on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the IBAN Validation Explained: Mod-97, Lengths & Error Codes work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the IBAN Validation Explained: Mod-97, Lengths & Error Codes calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>IBAN Validation Explained: Mod-97, Lengths &amp; Error Codes</h1>
+<div class="meta"><span>🏦 Payments</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<div class="intro">An IBAN looks like a random string of letters and digits, but it's engineered so a computer — or a patient human — can catch any typo before money leaves your account. This guide walks the four checks every real validator runs, computes a checksum by hand, and draws the line between "well-formed" and "the account exists," which is where most expensive misunderstandings live.</div>
+
+<h2>What is an IBAN, and how is it built?</h2>
+<p>An International Bank Account Number wraps a country's domestic account number in a standard envelope. The first two letters are an ISO country code, the next two digits are check digits, and everything after is the domestic account number, called the BBAN (Basic Bank Account Number). The UK's GB82 WEST 1234 5698 7654 32 is a country (GB), a checksum (82), then a sort code and account number squeezed into 18 characters.</p>
+<p>Countries joined at different times and with different domestic numbering systems, so IBAN length varies: 15 characters in Norway, 18 in the Netherlands, 22 in the UK and Germany, 27 in France and Italy, and 29 in Brazil. The registry currently covers 97 countries, of which 37 are in SEPA. That's why "is it 22 characters?" is only a meaningful check once you know the country.</p>
+
+<h2>How does the mod-97 checksum actually work?</h2>
+<p>The check digits exist to make typos detectable, using ISO 7064 MOD 97-10 arithmetic. The recipe, on our GB example:</p>
+<ol>
+<li>Take the IBAN without spaces: <code>GB82WEST12345698765432</code>.</li>
+<li>Move the first four characters (country + check digits) to the end: <code>WEST12345698765432GB82</code>.</li>
+<li>Replace each letter with its alphabet position plus 9 — A=10, B=11, …, Z=35. W=32, E=14, S=28, T=29, G=16, B=11:</li>
+</ol>
+<pre>321428 2912345698765432 1611 82
+= 3214282912345698765432161182</pre>
+<ol start="4">
+<li>Treat that as one huge integer and divide by 97. The remainder is exactly <strong>1</strong> — valid. Any other remainder fails.</li>
+</ol>
+<p>Now the payoff: change the final 2 to a 1, the way a finger slips on the keyboard. The number becomes 3214282912345698765431161182, and the remainder jumps to 71. One digit, one arithmetic step, and the error is caught. The scheme detects every single-digit substitution and nearly all transpositions, which is why it was chosen for exactly this job.</p>
+
+<h2>What are the four checks a validator runs?</h2>
+<p>Format, in increasing order of effort:</p>
+<ul>
+<li><strong>Country:</strong> the two-letter code must be in the IBAN registry. US, CA, AU, JP, CN, IN, and MX aren't — their account numbers have no IBAN form at all.</li>
+<li><strong>Length:</strong> the total character count must match the country's rule. A 21-character "GB" IBAN is dead on arrival.</li>
+<li><strong>Structure:</strong> the BBAN must put letters and digits where that country's format says. The Netherlands is 4 letters + 10 digits; Germany is 18 digits.</li>
+<li><strong>Checksum:</strong> mod-97 must equal 1. This is the check that catches real-world typos, because it validates the whole number at once.</li>
+</ul>
+<p>Good validators report which check failed, not just a red X. "Unknown country" means you're probably validating a routing number. "Checksum failed" means one digit somewhere is wrong — and some tools, ours included, will tell you which check digits <em>would</em> fit the rest of the number, which solves the case where the check digits themselves were the typo.</p>
+
+<h2>What can an IBAN validator tell you — and what can't it?</h2>
+<p>A validator confirms structure. It cannot confirm the account is open, belongs to the person who gave it to you, or accepts the currency you're sending. That confirmation only happens inside the banking system, when your payment is attempted — or, increasingly, through name-checking services: the EU's Verification of Payee regulation phases in from 2025 to 2027, letting payment providers match the beneficiary name against the account before funds move.</p>
+<p>The practical division of labor: run the validator to kill typos cheaply, then let the bank's own checks (or a Verification of Payee service where available) confirm the account. A green validator result is "safe to hand to your bank," never "guaranteed to arrive."</p>
+
+<h2>How do you validate a batch of IBANs privately?</h2>
+<p>Invoice runs and payroll files mean dozens or hundreds of IBANs, and pasting a customer list into a random upload-based checker is a data-protection problem dressed as a convenience. The clean options: an in-browser validator where the JavaScript does the math on your machine (watch the network tab — zero requests after load), a spreadsheet formula for the length check, or a script against an offline library like ibantools. Our <a href="/iban-validator/">IBAN validator</a> takes one IBAN per line, runs all four checks per line, and nothing you paste ever leaves the page.</p>
+
+<h2>Which countries don't use IBANs — and what do you use instead?</h2>
+<p>The United States, Canada, Australia, Japan, China, India, and Mexico all stayed out. To pay a US account internationally you use the bank's SWIFT/BIC code plus the domestic account details — routing number and account number — and your bank maps it into whatever the receiving corridor needs. A "US IBAN" you see printed on a US bank statement page is really just those domestic numbers bundled for display; feeding it to a validator correctly returns an unknown-country error.</p>
+
+<div class="cta-box"><h3>Validate an IBAN right now — nothing uploaded</h3><p style="color:#fff;opacity:.9">Paste one IBAN or a hundred. Checksum, country, length, and structure checks, all local.</p><a href="/iban-validator/">Open the IBAN Validator →</a></div>
+
+<h2>The bottom line</h2>
+<p>Four checks — country, length, structure, mod-97 — catch essentially every typo before money moves. Lengths are per-country (15 to 29 characters across the 97-country registry), the checksum is one division with a target remainder of 1, and no format check can prove an account exists. For the neighboring problems: card numbers carry the same idea in the <a href="/credit-card-validator/">Luhn check on our card validator</a>, and phone numbers get their own country-rule treatment on the <a href="/phone-number-validator/">phone number validator</a>.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I check if an IBAN is valid?</h3><p>Check the country code against the 97-country IBAN registry, the length against that country's rule, the BBAN against the country's letter/digit structure, and compute the mod-97 checksum — it must leave remainder 1. A free in-browser validator such as ToolAspect's runs all four checks locally and handles batches, one IBAN per line, without uploading anything.</p></div>
+<div class="faq-item"><h3>Does a valid IBAN mean the account exists?</h3><p>No. Valid means well-formed: right country, right length, right structure, checksum passes. It catches typos before money moves, but only the receiving bank can confirm an account is open — usually when the payment is attempted. Your bank may also run an IBAN-name check (the EU's Verification of Payee service arrives in 2025-2027) which a format validator cannot replace.</p></div>
+<div class="faq-item"><h3>Why does the US not use IBANs?</h3><p>The US chose not to join the IBAN registry, along with Canada, Australia, Japan, China, India, and Mexico. American accounts keep their domestic form — a 9-digit routing number plus an account number — and cross-border wires to them are routed by SWIFT/BIC code instead. Any "US IBAN" you see is not a real IBAN and will fail country validation.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/iban-validator/">IBAN Validator</a>
+<a href="/credit-card-validator/">Credit Card Validator</a>
+<a href="/phone-number-validator/">Phone Number Validator</a>
+<a href="/currency-converter/">Currency Converter</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

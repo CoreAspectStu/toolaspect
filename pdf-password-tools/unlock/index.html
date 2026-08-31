@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remove PDF Password — Unlock a PDF Free | ToolAspect</title>
+<meta name="description" content="Remove a password from a PDF you can open, free in your browser. Works on restrictions-only files too. No upload, keeps every page, works offline.">
+<link rel="canonical" href="https://toolaspect.com/pdf-password-tools/unlock/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Remove PDF Password — Unlock a PDF Free, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Decrypt a PDF you have the password for, entirely in your browser. Restrictions-only files strip instantly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-password-tools/unlock/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Remove PDF Password | Free Online Tool">
+<meta name="twitter:description" content="Unlock a PDF in your browser. No upload, no signup, pages untouched.">
+<meta name="keywords" content="remove password from pdf, unlock pdf, pdf password remover, decrypt pdf, remove pdf restrictions, pdf no password">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Remove PDF Password","description":"Free browser-based PDF decryption. Removes the open password and all usage restrictions from a PDF you have the password for, and strips restrictions-only encryption instantly. Powered by qpdf compiled to WebAssembly; the file is decrypted locally and never uploaded.","url":"https://toolaspect.com/pdf-password-tools/unlock/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I remove a password from a PDF?","acceptedAnswer":{"@type":"Answer","text":"Open the file below, type the password you use to open it, and hit Remove Password. The tool decrypts the document locally and hands back a copy with no password and no restrictions. If the PDF opens without asking for a password but blocks printing or copying, leave the password field empty — restrictions-only encryption strips the same way."}},
+{"@type":"Question","name":"Can I remove a PDF password if I forgot it?","acceptedAnswer":{"@type":"Answer","text":"No, and any site promising otherwise is selling something. Modern PDF encryption is AES with a key derived from the password; there is no master key, and 'remover' services only work on files whose password you effectively have. What recovery actually looks like: try the usual suspects (old passwords, the document's subject, a vendor's default), check whether the file came from a bank or employer that also sent an unprotected copy, or ask the sender for a fresh unprotected version."}},
+{"@type":"Question","name":"My PDF opens fine but won't let me print or copy. Why?","acceptedAnswer":{"@type":"Answer","text":"That's restrictions-only encryption: the file was encrypted with an owner password but an empty user password, so it opens freely while carrying no-print or no-copy flags. It's also the file type most online 'PDF password removers' quietly work on, which is why they look magical. This tool handles it directly — leave the password empty, hit Remove Password, and the flags are gone. Verified behavior: such a file reports encrypted-but-opens-without-password, and after decryption prints and copies freely."}},
+{"@type":"Question","name":"Is removing a PDF password legal?","acceptedAnswer":{"@type":"Answer","text":"For documents you own or are authorized to modify, yes — that's the ordinary case: your own tax forms, a report you bought, files your employer gave you rights to. Removing protection on material you don't have rights to (someone else's copyrighted document, exam files, licensed courseware) can violate law or contract depending on jurisdiction. This tool simply does the math; the responsibility for having the right to unlock sits with you."}},
+{"@type":"Question","name":"Does removing the password lose quality or metadata?","acceptedAnswer":{"@type":"Answer","text":"No loss at all. Decryption is the exact inverse of encryption: in a verified test, a 3-page encrypted file decrypted back to readable pages with title and author metadata intact, and the byte size landed within a few hundred bytes of the original (1,993 vs 1,852 bytes — the difference is structural packaging, not content). Text stays selectable text, images stay images, forms stay fillable."}},
+{"@type":"Question","name":"Is my PDF uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The decryption engine is qpdf compiled to WebAssembly running in this page — the PDF and the password you type are processed on your machine and never transmitted. The engine caches after first load, so the tool keeps working offline, which is the tell for a genuinely local tool."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Remove PDF Password","item":"https://toolaspect.com/pdf-password-tools/unlock/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.ta-pw-pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.ta-pw-filelabel{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.ta-pw-filelabel input{display:none}
+.ta-pw-fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.ta-pw-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.ta-pw-grid{grid-template-columns:1fr}}
+.ta-pw-group{display:flex;flex-direction:column;gap:.35rem}
+.ta-pw-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.ta-pw-group input{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;font-family:inherit}
+.ta-pw-group input:focus{outline:none;border-color:var(--primary)}
+.ta-pw-note{font-size:.78rem;color:var(--muted);line-height:1.6;padding-top:.35rem}
+.ta-pw-btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.ta-pw-go{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.ta-pw-go:hover{background:var(--primary-hover)}
+.ta-pw-go:disabled{opacity:.5;cursor:not-allowed}
+.ta-pw-clear{padding:.65rem 1.3rem;border-radius:var(--radius);background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:.92rem;cursor:pointer;font-family:inherit}
+.ta-pw-status{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.ta-pw-status.err{border-color:var(--danger);color:var(--danger)}
+.ta-pw-status.ok{border-color:var(--success);color:var(--success)}
+.ta-pw-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.ta-pw-stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.ta-pw-stat .n{font-size:1.15rem;font-weight:800;color:var(--primary)}
+.ta-pw-stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.ta-pw-dl{display:inline-block;margin-top:1rem;padding:.65rem 1.3rem;border-radius:var(--radius);background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;text-decoration:none}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.y{color:var(--success)}
+.data-table td.n{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Remove PDF Password — Unlock a PDF Free", "url": "https://toolaspect.com/pdf-password-tools/unlock/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Remove a password from a PDF you can open, free in your browser. Works on restrictions-only files too. No upload, keeps every page, works offline."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Remove PDF Password free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Remove PDF Password on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Remove PDF Password work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Remove PDF Password calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔓 Remove PDF Password</h1>
+<p>Decrypt a PDF you can open — in your browser, nothing uploaded</p>
+</div>
+
+<div class="aio-answer">To remove a password from a PDF, open it below, type the password you use to open it, and hit Remove Password. The tool decrypts the file locally (qpdf compiled to WebAssembly) and verifies the result before you download: no encryption, all pages present. If your PDF opens without a password but blocks printing or copying, leave the field empty — that's restrictions-only encryption and it strips the same way. A verified round trip: a 3-page AES-256 file decrypted to 1,993 bytes with title and author intact and zero quality loss. A password you don't have cannot be recovered — AES has no back door — so this works on files you can open, which is also why it's nobody's cracking tool. Going the other way? <a href="/pdf-password-tools/">Password protect a PDF here</a>.</div>
+
+<div id="pwShell" class="section-card">
+<h2>Unlock a PDF</h2>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-password-tools/">Password Protect PDF</a></li><li style="margin:4px 0"><a href="/pdf-repair/">Repair Corrupt PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/password-protect-a-pdf/">Read the PDF password guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Which Situation Are You In?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Your file</th><th>What's really happening</th><th>Outcome here</th></tr></thead>
+<tbody>
+<tr><td>Asks for a password to open; you know it</td><td>User-password (AES) encryption</td><td class="y">Removed — type the password, done</td></tr>
+<tr><td>Opens freely, but Print or Copy is greyed out</td><td>Owner password only, empty user password</td><td class="y">Removed — leave the password empty</td></tr>
+<tr><td>Asks for a password; you don't know it</td><td>AES encryption doing its job</td><td class="n">Not possible — no back door exists</td></tr>
+<tr><td>Unknown password, but you also have an unprotected copy</td><td>Same document from the source</td><td class="y">Use the unprotected copy; re-request if lost</td></tr>
+<tr><td>Prints with a watermark saying "secured"</td><td>Restrictions flags, not encryption of content</td><td class="y">Restrictions stripped with the rest</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The second row is the quiet majority: files from banks, insurers, and government sites are often restrictions-only, which is why some "password removers" appear to work without ever asking for a password. This tool tells you which case you have before you click anything — it inspects the file on load.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Password Removal Works</h2>
+<p>Decrypting a PDF you can open isn't hacking — it's the format working as designed. The reader derives a key from your password, deciphers the streams, and writes them back out plainly. What this tool adds is doing that without an upload and verifying the result before handing it over.</p>
+<h3>The engine</h3>
+<p>Same engine as the protect page: qpdf compiled to WebAssembly, running in this tab. On file load it inspects the encryption (asks: encrypted? does it require a password to open?) and tells you which of the table's rows you're in. On Remove, it decrypts with your password, then re-checks the output — unencrypted, page count unchanged — and offers the download. First use loads ~2.2 MB of WebAssembly, cached afterwards; works offline from then on.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the file. The status line tells you whether it needs a password, opens with restrictions only, or isn't encrypted at all.</li>
+<li>Type the password you use to open it (or leave empty for restrictions-only files), and hit Remove Password.</li>
+<li>Download the unlocked copy and check it: opens without prompting, prints, copies.</li>
+<li>Wrong password? The engine fails closed with "invalid password" — there's no partial success to mislead you.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Start from the protect page's example: a 3-page policy manual, 1,852 bytes plain, 2,665 bytes after AES-256 encryption. Removing the password here returns a 1,993-byte file — 141 bytes over the original, the residue of structural packaging, none of it content — verified unencrypted with all 3 pages present, title ("Policy Manual") and author intact, text still selectable. The same session tested the failure path: a deliberately wrong password produced a clean rejection, and a restrictions-only file (owner password, empty user password) — the kind that opens freely but blocks printing, copying, and editing — stripped in one pass with no password typed at all.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I remove a password from a PDF?</h3><p>Open the file below, type the password you use to open it, and hit Remove Password. The tool decrypts the document locally and hands back a copy with no password and no restrictions. If the PDF opens without asking for a password but blocks printing or copying, leave the password field empty — restrictions-only encryption strips the same way.</p></div>
+<div class="faq-item"><h3>Can I remove a PDF password if I forgot it?</h3><p>No, and any site promising otherwise is selling something. Modern PDF encryption is AES with a key derived from the password; there is no master key, and 'remover' services only work on files whose password you effectively have. What recovery actually looks like: try the usual suspects (old passwords, the document's subject, a vendor's default), check whether the file came from a bank or employer that also sent an unprotected copy, or ask the sender for a fresh unprotected version.</p></div>
+<div class="faq-item"><h3>My PDF opens fine but won't let me print or copy. Why?</h3><p>That's restrictions-only encryption: the file was encrypted with an owner password but an empty user password, so it opens freely while carrying no-print or no-copy flags. It's also the file type most online 'PDF password removers' quietly work on, which is why they look magical. This tool handles it directly — leave the password empty, hit Remove Password, and the flags are gone. Verified behavior: such a file reports encrypted-but-opens-without-password, and after decryption prints and copies freely.</p></div>
+<div class="faq-item"><h3>Is removing a PDF password legal?</h3><p>For documents you own or are authorized to modify, yes — that's the ordinary case: your own tax forms, a report you bought, files your employer gave you rights to. Removing protection on material you don't have rights to (someone else's copyrighted document, exam files, licensed courseware) can violate law or contract depending on jurisdiction. This tool simply does the math; the responsibility for having the right to unlock sits with you.</p></div>
+<div class="faq-item"><h3>Does removing the password lose quality or metadata?</h3><p>No loss at all. Decryption is the exact inverse of encryption: in a verified test, a 3-page encrypted file decrypted back to readable pages with title and author metadata intact, and the byte size landed within a few hundred bytes of the original (1,993 vs 1,852 bytes — the difference is structural packaging, not content). Text stays selectable text, images stay images, forms stay fillable.</p></div>
+<div class="faq-item"><h3>Is my PDF uploaded anywhere?</h3><p>No. The decryption engine is qpdf compiled to WebAssembly running in this page — the PDF and the password you type are processed on your machine and never transmitted. The engine caches after first load, so the tool keeps working offline, which is the tell for a genuinely local tool.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-password-tools/">🔒 Password Protect a PDF</a>
+<a href="/pdf-repair/">🩹 Repair Corrupt PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/pdf-merge/">🗂️ Merge PDF</a>
+<a href="/watermark-pdf/">💧 Watermark PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/pdf-password-tools/shell.js"></script>
+<script>TA.pdfPassword.mount(document.getElementById('pwShell'),{mode:'unlock'});</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -5,7 +5,7 @@ import os, re, json, html as H
 
 os.chdir(os.path.expanduser('~/projects/utility-sites'))
 SKIP = {'node_modules', '.git', 'packages', 'playwright-report', 'docs', 'scripts', 'roadmap', 'embed',
-        'convert', 'conversion-tables'}  # converters: handled separately later if wanted
+        'conversion-tables'}
 SITE = 'https://toolaspect.com'
 MARK = 'data-ta-schema="v2"'
 

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robots.txt Validator — Is This URL Blocked? | ToolAspect</title>
+<meta name="description" content="Paste a robots.txt and check any URL against it: blocked or allowed, which rule matched, wildcards resolved. Plus AI-crawler tokens. All local.">
+<link rel="canonical" href="https://toolaspect.com/robots-txt-validator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Robots.txt Validator — Is This URL Blocked?">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Validate a robots.txt, test URLs against it for Googlebot or any AI crawler, and catch the mistakes that quietly deindex pages. Runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/robots-txt-validator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Robots.txt Validator | Free Online Tool">
+<meta name="twitter:description" content="Check if robots.txt blocks a URL, which rule matched, and what the AI crawlers see.">
+<meta name="keywords" content="robots.txt validator, robots.txt checker, is my url blocked, robots txt tester, robots.txt simulator, ai crawler robots.txt, gptbot robots.txt, check robots.txt online, robots exclusion protocol">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Robots.txt Validator","description":"Free browser-based robots.txt validator. Paste a robots.txt file, test any URL against it for any user-agent (Googlebot, Bingbot, GPTBot, ClaudeBot, or *), see the exact rule and line number that matched, get lint warnings for common mistakes, and look up the robots.txt tokens used by AI crawlers. Nothing is uploaded.","url":"https://toolaspect.com/robots-txt-validator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I check if robots.txt is blocking a URL?","acceptedAnswer":{"@type":"Answer","text":"Paste your robots.txt into the validator, enter the URL and the user-agent you care about (Googlebot, GPTBot, or * for the general rules), and read the verdict. The tool reports allowed or blocked plus the exact line that decided it, with wildcards (* and $) resolved the way real crawlers resolve them. Manually, you'd find the most specific matching rule for that user-agent; the validator automates exactly that, including the rule that a group for a specific bot replaces the * group entirely."}},
+{"@type":"Question","name":"Does robots.txt affect AI crawlers like GPTBot and ClaudeBot?","acceptedAnswer":{"@type":"Answer","text":"Yes. AI companies run their own crawlers that honor robots.txt under their own user-agent tokens: GPTBot and OAI-SearchBot for OpenAI, ClaudeBot and Claude-SearchBot for Anthropic, PerplexityBot for Perplexity, Google-Extended for Google's AI training (separate from Googlebot), Applebot-Extended for Apple, and CCBot for Common Crawl. Blocking a training crawler does not block search crawlers, and vice versa: Google-Extended can be blocked while Google Search keeps indexing you. Each token needs its own rule, or a Disallow: / under User-agent: GPTBot style group."}},
+{"@type":"Question","name":"How long does it take for a robots.txt change to take effect?","acceptedAnswer":{"@type":"Answer","text":"Google typically re-fetches robots.txt about once every 24 hours and caches it for the lifetime of that fetch, so a change usually lands within a day. Bing behaves similarly with its own refresh cycle. If you fix a rule that was accidentally blocking pages, expect re-crawling to ramp over the following days, not instantly — and pages that were blocked long enough can drop out of the index and need time to return."}},
+{"@type":"Question","name":"What is the difference between Disallow and noindex?","acceptedAnswer":{"@type":"Answer","text":"robots.txt blocks crawling; the noindex meta tag blocks indexing. A page Disallowed in robots.txt can still appear in results if other pages link to it (Google can index without crawling, showing a bare URL), while a crawled page with a noindex tag is removed from results but its content is still readable by the crawler. Blocking crawling also blocks the crawler from ever seeing a noindex tag, which is why robots.txt is the wrong tool for deindexing existing pages."}},
+{"@type":"Question","name":"Why is my Disallow rule being ignored?","acceptedAnswer":{"@type":"Answer","text":"The four classics: rules placed before the first User-agent line apply to nothing; a more specific Allow rule wins over a shorter Disallow (longest path wins); a group written for a specific bot replaces the * group for that bot rather than adding to it; and Google ignores Crawl-delay entirely. The validator flags all four patterns — check the warnings list before assuming a crawler is misbehaving."}},
+{"@type":"Question","name":"Where does robots.txt have to live, and what's the size limit?","acceptedAnswer":{"@type":"Answer","text":"At the root of the host, on port 80 or 443, and only one per host: https://example.com/robots.txt. Subdomains each get their own file. Google stops reading after 500 KiB and treats an over-limit file as if it were fully open, so oversized files silently allow everything. HTTP 401-403 responses are treated as a full disallow for Google; 404 and 5xx errors are treated as allowing everything."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Robots.txt Validator","item":"https://toolaspect.com/robots-txt-validator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#eab308;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;font-family:inherit}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+textarea#rt{width:100%;min-height:13rem;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.88rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;box-sizing:border-box;line-height:1.6}
+textarea#rt:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.verdict{border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:1rem;line-height:1.6}
+.verdict.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.45)}
+.verdict.bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.45)}
+.verdict b{font-size:1.05rem}
+.verdict .rule{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;color:var(--muted);display:block;margin-top:.35rem;word-break:break-all}
+.warn-item{display:flex;gap:.55rem;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.87rem;line-height:1.6}
+.warn-item:last-child{border-bottom:none}
+.warn-item .wtag{flex-shrink:0;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.18rem .5rem;border-radius:6px;height:fit-content;margin-top:.1rem}
+.wtag.error{background:rgba(239,68,68,.15);color:var(--danger)}
+.wtag.warn{background:rgba(234,179,8,.13);color:var(--warn)}
+.wtag.info{background:rgba(99,102,241,.15);color:var(--primary-hover)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.15rem;font-weight:700;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.yes{color:var(--success)}
+.data-table td.no{color:var(--danger)}
+.data-table td.part{color:var(--warn)}
+.data-table code{background:var(--bg);padding:1px 5px;border-radius:5px;font-size:.85em}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Robots.txt Validator — Is This URL Blocked?", "url": "https://toolaspect.com/robots-txt-validator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Paste a robots.txt and check any URL against it: blocked or allowed, which rule matched, wildcards resolved. Plus AI-crawler tokens. All local."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Robots.txt Validator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Robots.txt Validator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Robots.txt Validator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Robots.txt Validator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🤖 Robots.txt Validator</h1>
+<p>Parse the file, test any URL, see the rule and line that decided it — in your browser</p>
+</div>
+
+<div class="aio-answer">To check if robots.txt is blocking a URL, paste the file's contents below, enter the URL and the user-agent (Googlebot, GPTBot, or *), and read the verdict: allowed or blocked, plus the exact rule and line number that matched, with * and $ wildcards resolved the way crawlers resolve them. In the sample loaded below, /admin/settings is blocked by line 2 (Disallow: /admin), /docs/report.pdf is blocked by line 5 (Disallow: /*.pdf$), and GPTBot is blocked everywhere by line 9 — while /search/about escapes /search via its Allow rule on line 4, because the most specific path always wins. The tool also lints for the mistakes that silently deindex sites: rules before the first User-agent, whole-site Disallow blocks, and Crawl-delay lines Google ignores. Nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Robots.txt</h2>
+<textarea id="rt" spellcheck="false">User-agent: *
+Disallow: /admin
+Disallow: /search
+Allow: /search/about
+Disallow: /*.pdf$
+Crawl-delay: 10
+
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://example.com/sitemap.xml</textarea>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label for="siteUrl">Site URL (used to resolve relative paths)</label><input id="siteUrl" value="https://example.com"></div>
+<div class="input-group"><label for="testUrl">URL to test</label><input id="testUrl" value="https://example.com/admin/settings"></div>
+<div class="input-group"><label for="ua">User-agent</label>
+<select id="ua">
+<option value="Googlebot">Googlebot (Google Search)</option>
+<option value="Bingbot">Bingbot (Bing Search)</option>
+<option value="GPTBot">GPTBot (OpenAI training)</option>
+<option value="OAI-SearchBot">OAI-SearchBot (ChatGPT search)</option>
+<option value="ClaudeBot">ClaudeBot (Anthropic training)</option>
+<option value="PerplexityBot">PerplexityBot (Perplexity)</option>
+<option value="Google-Extended">Google-Extended (Gemini training)</option>
+<option value="*">* (rules for everyone)</option>
+</select></div>
+<div class="input-group"><label>&nbsp;</label><button class="btn" id="btnGo" style="width:100%">🔎 Check URL + Validate File</button></div>
+</div>
+<div id="verdict"></div>
+<div class="stat-grid" id="stats" style="display:none"></div>
+<div id="warnings"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/robots-txt-generator/">Robots.Txt Generator</a></li><li style="margin:4px 0"><a href="/meta-tag-generator/">Meta Tag Generator</a></li><li style="margin:4px 0"><a href="/url-parser/">Url Parser</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/robots-txt-validation/">Read the robots.txt validation guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>AI Crawler Tokens You Can Use in Robots.txt</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>User-agent token</th><th>Operated by</th><th>Used for</th><th>If you block it</th></tr></thead>
+<tbody>
+<tr><td><code>GPTBot</code></td><td>OpenAI</td><td>Training data for models</td><td>ChatGPT search still crawls separately</td></tr>
+<tr><td><code>OAI-SearchBot</code></td><td>OpenAI</td><td>ChatGPT search results</td><td>Pages stop appearing in ChatGPT search</td></tr>
+<tr><td><code>ChatGPT-User</code></td><td>OpenAI</td><td>Fetches triggered by user actions</td><td>Only user-initiated fetches stop</td></tr>
+<tr><td><code>ClaudeBot</code></td><td>Anthropic</td><td>Training data for Claude</td><td>Claude search crawls separately</td></tr>
+<tr><td><code>Claude-SearchBot</code></td><td>Anthropic</td><td>Claude search results</td><td>Pages stop appearing in Claude answers</td></tr>
+<tr><td><code>Google-Extended</code></td><td>Google</td><td>Gemini training &amp; grounding</td><td>Google Search is unaffected</td></tr>
+<tr><td><code>PerplexityBot</code></td><td>Perplexity</td><td>Perplexity search &amp; answers</td><td>Pages drop from Perplexity results</td></tr>
+<tr><td><code>Applebot-Extended</code></td><td>Apple</td><td>Apple Intelligence training</td><td>Siri/Spotlight search unaffected</td></tr>
+<tr><td><code>CCBot</code></td><td>Common Crawl</td><td>Open dataset many models train on</td><td>Pages leave future crawls</td></tr>
+<tr><td><code>Meta-ExternalAgent</code></td><td>Meta</td><td>Meta AI agent fetching</td><td>Meta AI can't fetch your pages</td></tr>
+<tr><td><code>Amazonbot</code></td><td>Amazon</td><td>Alexa &amp; AI assistants</td><td>Amazon AI features lose access</td></tr>
+<tr><td><code>Bytespider</code></td><td>ByteDance</td><td>Training data (TikTok family)</td><td>Blocks well-behaved fetches only</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Each token is a separate robots.txt group: a rule under <code>User-agent: GPTBot</code> doesn't affect <code>OAI-SearchBot</code>, and blocking <code>Google-Extended</code> never touches Google Search's Googlebot. Check the operator's crawler documentation before relying on a block for anything legally sensitive — enforcement is voluntary and varies.</p>
+</div>
+
+<div class="section-card">
+<h2>Directive Support Across Crawlers</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Directive</th><th>Googlebot</th><th>Bingbot</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>User-agent</code> / <code>Disallow</code> / <code>Allow</code></td><td class="yes">Yes</td><td class="yes">Yes</td><td>The core of RFC 9309 — universally supported</td></tr>
+<tr><td><code>*</code> and <code>$</code> wildcards in paths</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Longest matching path wins; $ anchors to the end</td></tr>
+<tr><td><code>Sitemap:</code> (absolute URL, anywhere in file)</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Multiple lines allowed, each must be absolute</td></tr>
+<tr><td><code>Crawl-delay:</code> seconds</td><td class="no">Ignored</td><td class="yes">Yes</td><td>Yandex also honors it; use Search Console rate settings for Google</td></tr>
+<tr><td>Rules before the first <code>User-agent</code></td><td class="no">No effect</td><td class="no">No effect</td><td>A record starts at User-agent — stray rules apply to nothing</td></tr>
+<tr><td>File over 500 KiB</td><td class="part">Truncated</td><td class="part">Varies</td><td>Google treats over-limit files as fully allowing everything</td></tr>
+<tr><td>HTTP 410/401/403 on robots.txt</td><td class="part">Full block</td><td class="part">Varies</td><td>404/5xx errors read as "allow all" instead</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Validator Works</h2>
+<p>This page parses your robots.txt with robots-parser 3.0.1, a spec-compliant implementation of the Robots Exclusion Protocol (RFC 9309) that supports the * and $ wildcards Google and Bing use. Parsing happens in your browser; the file you paste never goes anywhere.</p>
+<h3>How matching is decided</h3>
+<p>A crawler reads only the group whose User-agent matches its own token — or, if none matches its full name, the <code>*</code> group. Within that group, the single most specific matching rule decides the outcome: an <code>Allow: /search/about</code> beats <code>Disallow: /search</code> for /search/about, because its path is longer. A dedicated group for a bot replaces the * group for that bot entirely; it doesn't merge with it. Those three facts explain almost every "why is this URL blocked" mystery.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Paste the live file (view it at <code>yoursite.com/robots.txt</code>) and set the site URL so relative paths resolve.</li>
+<li>Enter any path or full URL and pick the crawler — the verdict names the rule and its line number, or says no rule matched.</li>
+<li>Read the lint list before shipping changes: it flags rules that apply to nothing, whole-site blocks, non-absolute sitemaps, Crawl-delay lines, and duplicate groups.</li>
+<li>Testing an AI crawler? Pick its token from the dropdown — remember each token needs its own group in the file.</li>
+</ul>
+<h3>A worked example</h3>
+<p>The sample loaded above is 11 lines. Check /admin/settings as Googlebot: line 2's <code>Disallow: /admin</code> matches by prefix, so it's blocked. Check /docs/report.pdf: line 5's <code>Disallow: /*.pdf$</code> matches because the * swallows "/docs/report" and the $ pins ".pdf" to the end — but /docs/report.pdfx escapes, since its tail isn't .pdf. And /search/about beats line 3's block via line 4's longer Allow path, the specificity rule in action. Switch the user-agent to GPTBot and everything flips: line 9's <code>Disallow: /</code> blocks the whole site, and the * group's rules stop mattering because GPTBot has its own group. Crawl-delay 10 applies to * only — the GPTBot group declares none.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I check if robots.txt is blocking a URL?</h3><p>Paste your robots.txt into the validator, enter the URL and the user-agent you care about (Googlebot, GPTBot, or * for the general rules), and read the verdict. The tool reports allowed or blocked plus the exact line that decided it, with wildcards (* and $) resolved the way real crawlers resolve them. Manually, you'd find the most specific matching rule for that user-agent; the validator automates exactly that, including the rule that a group for a specific bot replaces the * group entirely.</p></div>
+<div class="faq-item"><h3>Does robots.txt affect AI crawlers like GPTBot and ClaudeBot?</h3><p>Yes. AI companies run their own crawlers that honor robots.txt under their own user-agent tokens: GPTBot and OAI-SearchBot for OpenAI, ClaudeBot and Claude-SearchBot for Anthropic, PerplexityBot for Perplexity, Google-Extended for Google's AI training (separate from Googlebot), Applebot-Extended for Apple, and CCBot for Common Crawl. Blocking a training crawler does not block search crawlers, and vice versa: Google-Extended can be blocked while Google Search keeps indexing you. Each token needs its own rule, or a Disallow: / under User-agent: GPTBot style group.</p></div>
+<div class="faq-item"><h3>How long does it take for a robots.txt change to take effect?</h3><p>Google typically re-fetches robots.txt about once every 24 hours and caches it for the lifetime of that fetch, so a change usually lands within a day. Bing behaves similarly with its own refresh cycle. If you fix a rule that was accidentally blocking pages, expect re-crawling to ramp over the following days, not instantly — and pages that were blocked long enough can drop out of the index and need time to return.</p></div>
+<div class="faq-item"><h3>What is the difference between Disallow and noindex?</h3><p>robots.txt blocks crawling; the noindex meta tag blocks indexing. A page Disallowed in robots.txt can still appear in results if other pages link to it (Google can index without crawling, showing a bare URL), while a crawled page with a noindex tag is removed from results but its content is still readable by the crawler. Blocking crawling also blocks the crawler from ever seeing a noindex tag, which is why robots.txt is the wrong tool for deindexing existing pages.</p></div>
+<div class="faq-item"><h3>Why is my Disallow rule being ignored?</h3><p>The four classics: rules placed before the first User-agent line apply to nothing; a more specific Allow rule wins over a shorter Disallow (longest path wins); a group written for a specific bot replaces the * group for that bot rather than adding to it; and Google ignores Crawl-delay entirely. The validator flags all four patterns — check the warnings list before assuming a crawler is misbehaving.</p></div>
+<div class="faq-item"><h3>Where does robots.txt have to live, and what's the size limit?</h3><p>At the root of the host, on port 80 or 443, and only one per host: https://example.com/robots.txt. Subdomains each get their own file. Google stops reading after 500 KiB and treats an over-limit file as if it were fully open, so oversized files silently allow everything. HTTP 401-403 responses are treated as a full disallow for Google; 404 and 5xx errors are treated as allowing everything.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/robots-txt-generator/">⚙️ Robots.txt Generator</a>
+<a href="/meta-tag-generator/">🏷️ Meta Tag Generator</a>
+<a href="/schema-generator/">🧩 Schema Generator</a>
+<a href="/url-parser/">🔗 URL Parser</a>
+<a href="/user-agent-parser/">🕵️ User-Agent Parser</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/robots-txt-validator/vendor/robots-parser.iife.js"></script>
+<script>
+/* ===== Matcher engine: robots-parser 3.0.1 (MIT), vendored at /robots-txt-validator/vendor/ ===== */
+var el=function(id){return document.getElementById(id)};
+/* ---RTV-ENGINE-START--- (pure helpers, node-verified) */
+function lintRobots(text){
+  var out=[];
+  var lines=text.split(/\r?\n/);
+  var seenUA=false,seenNames={},lastWasUA=false;
+  lines.forEach(function(raw,i){
+    var t=raw.replace(/#.*$/,'').trim();
+    if(!t){lastWasUA=false;return}
+    if(/^user-agent\s*:/i.test(t)){
+      seenUA=true;
+      var name=t.replace(/^user-agent\s*:/i,'').trim().toLowerCase();
+      if(seenNames[name]&&!(lastWasUA&&seenNames[name]===1)){
+        out.push({level:'warn',line:i+1,msg:'User-agent: '+name+' shows up in more than one group — crawlers merge or take the last group; keep one group per bot.'});
+        seenNames[name]=(seenNames[name]||1)+1;
+      }else{
+        seenNames[name]=(seenNames[name]||0)+1;
+      }
+      lastWasUA=true;
+      return;
+    }
+    lastWasUA=false;
+    if(!seenUA&&/^[a-z-]+\s*:/i.test(t)){
+      out.push({level:'error',line:i+1,msg:'Rule appears before any User-agent line — it applies to nothing. Move it below a User-agent.'});
+      return;
+    }
+    if(/^disallow\s*:\s*\/\s*$/i.test(t)){
+      out.push({level:'error',line:i+1,msg:'Disallow: / blocks the ENTIRE site for the preceding user-agent. Confirm this is intended.'});
+    }else if(/^disallow\s*:\s*$/i.test(t)){
+      out.push({level:'info',line:i+1,msg:'An empty Disallow: allows everything for this user-agent.'});
+    }else if(/^sitemap\s*:/i.test(t)){
+      var sm=t.replace(/^sitemap\s*:/i,'').trim();
+      if(!/^https?:\/\//i.test(sm))out.push({level:'warn',line:i+1,msg:'Sitemap URL is not absolute — it must be a full URL starting with http(s)://'});
+    }else if(/^crawl-delay\s*:/i.test(t)){
+      out.push({level:'info',line:i+1,msg:'Crawl-delay is honored by Bing and Yandex but ignored by Google. Use Search Console settings to slow Googlebot.'});
+    }
+  });
+  if(text.length>500*1024)out.push({level:'error',line:0,msg:'File exceeds 500 KiB — Google truncates robots.txt at 500 KiB and then treats the site as fully allowed.'});
+  return out;
+}
+function absolutize(site,path){
+  path=String(path||'').trim();
+  if(!path)return site+'/';
+  if(/^https?:\/\//i.test(path))return path;
+  var base=String(site||'https://example.com').trim().replace(/\/+$/,'');
+  return base+(path.charAt(0)==='/'?path:'/'+path);
+}
+/* ---RTV-ENGINE-END--- */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function run(){
+  var text=el('rt').value;
+  var site=el('siteUrl').value.trim()||'https://example.com';
+  var ua=el('ua').value;
+  var path=el('testUrl').value.trim();
+  var R;
+  try{R=robotsParser(site.replace(/\/+$/,'')+'/robots.txt',text);}
+  catch(e){el('verdict').innerHTML='<div class="verdict bad">Could not parse this file: '+esc(e.message)+'</div>';return}
+  var url=absolutize(site,path);
+  var allowed=R.isAllowed(url,ua);
+  var line=R.getMatchingLineNumber(url,ua);
+  var rule=null;
+  if(line>0)rule=(text.split(/\r?\n/)[line-1]||'').trim();
+  var v=el('verdict');
+  if(allowed===undefined){
+    v.innerHTML='<div class="verdict bad"><b>Blocked or unavailable</b> — the parser could not decide (check that the URL and site belong to the same host).<span class="rule">'+esc(url)+'</span></div>';
+  }else if(allowed){
+    v.innerHTML='<div class="verdict ok"><b>✅ Allowed</b> for '+esc(ua)+' — '+(line>0?'allowed by the matching rule on line '+line:(ua!=='*'&&!hasUAGroup(text,ua)?'no group names this bot, so no rule matched':'no blocking rule matched'))+'<span class="rule">'+esc(url)+(rule?' · matched: '+esc(rule):'')+'</span></div>';
+  }else{
+    v.innerHTML='<div class="verdict bad"><b>⛔ Blocked</b> for '+esc(ua)+' by line '+line+'<span class="rule">'+esc(url)+' · rule: '+esc(rule||'')+'</span></div>';
+  }
+  // stats
+  var groups=(text.match(/^user-agent\s*:/gim)||[]).length;
+  var disallows=(text.match(/^disallow\s*:\s*\S/gim)||[]).length;
+  var allows=(text.match(/^allow\s*:\s*\S/gim)||[]).length;
+  var sitemaps=R.getSitemaps()||[];
+  var delay=R.getCrawlDelay(ua);
+  el('stats').style.display='grid';
+  el('stats').innerHTML='<div class="stat"><div class="n">'+groups+'</div><div class="l">user-agent groups</div></div>'
+    +'<div class="stat"><div class="n">'+disallows+'</div><div class="l">disallow rules</div></div>'
+    +'<div class="stat"><div class="n">'+allows+'</div><div class="l">allow rules</div></div>'
+    +'<div class="stat"><div class="n">'+sitemaps.length+'</div><div class="l">sitemaps listed</div></div>'
+    +'<div class="stat"><div class="n">'+(delay==null?'—':delay+'s')+'</div><div class="l">crawl-delay for '+esc(ua)+'</div></div>';
+  // lint
+  var warns=lintRobots(text);
+  var w=el('warnings');
+  if(!warns.length){w.innerHTML='<div class="status-box" style="margin-top:1rem">No lint findings — structure looks clean.</div>';return}
+  w.innerHTML='<div class="status-box" style="margin-top:1rem"><b>'+warns.length+' finding'+(warns.length>1?'s':'')+':</b>'
+    +warns.map(function(x){return '<div class="warn-item"><span class="wtag '+x.level+'">'+x.level+'</span><span>'+(x.line?'<b>line '+x.line+'</b> — ':'')+esc(x.msg)+'</span></div>'}).join('')+'</div>';
+}
+function hasUAGroup(text,ua){
+  var re=new RegExp('^user-agent:\\s*'+ua.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*$','im');
+  return re.test(text);
+}
+el('btnGo').addEventListener('click',run);
+run();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

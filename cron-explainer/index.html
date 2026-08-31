@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cron Explainer — Translate Cron to English | ToolAspect</title>
+<meta name="description" content="Paste any cron expression and get plain English plus its next 5 run times. */15 9-17 * * 1-5 means every 15 min, 9 to 5, weekdays. Free.">
+<link rel="canonical" href="https://toolaspect.com/cron-explainer/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Cron Explainer — Translate Cron to English">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn any crontab or Quartz expression into a plain-English sentence and see the next five run times in your timezone.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/cron-explainer/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cron Explainer | Free Cron Translator">
+<meta name="twitter:description" content="Explain cron expressions in English and preview their next runs. 5-field, Quartz 6/7-field, and @daily shortcuts.">
+<meta name="keywords" content="cron explainer, cron expression explainer, cron parser, explain cron, cron to english, cron next run, crontab generator, what does this cron mean">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Cron Explainer","description":"Free cron expression explainer. Paste any crontab or Quartz expression and get an accurate plain-English translation, a field-by-field breakdown, and the next five run times in your timezone. Runs entirely in your browser.","url":"https://toolaspect.com/cron-explainer/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does */15 9-17 * * 1-5 mean in cron?","acceptedAnswer":{"@type":"Answer","text":"It means every 15 minutes, between 9:00 AM and 5:59 PM, Monday through Friday: a classic business-hours health check. Each field narrows the schedule — */15 on minutes, 9-17 on hours, * on day-of-month and month, 1-5 on day-of-week — and a job fires when every field matches at once."}},
+{"@type":"Question","name":"How do I read a cron expression?","acceptedAnswer":{"@type":"Answer","text":"Split it into fields separated by spaces. The standard five are minute (0-59), hour (0-23), day of month (1-31), month (1-12), and day of week (0-6, where 0 and 7 are Sunday). Quartz adds seconds in front and optionally a year at the end, making six or seven fields. Within a field, * means any value, */n means every nth value, a-b is a range, and commas make a list. A job runs at every moment where all five fields match."}},
+{"@type":"Question","name":"What is the difference between 5-field cron and Quartz cron?","acceptedAnswer":{"@type":"Answer","text":"Standard crontab has five fields. Quartz (used by Java schedulers and many cloud cron services) prefixes a seconds field and can append a year field, so expressions have six or seven parts — 0 0 12 ? * SAT,SUN runs at noon on weekends, with the seconds field pinned at 0. Quartz also adds the ? no-specific-value marker, L for last, W for nearest weekday, and # for the nth weekday of the month. This explainer accepts both formats and detects which one you pasted."}},
+{"@type":"Question","name":"What does L mean in a cron expression?","acceptedAnswer":{"@type":"Answer","text":"L stands for last. In the day-of-month field, L is the last day of the month — 31 for July, 30 for September, 28 or 29 for February. In Quartz's day-of-week field, 6L is the last Friday of the month and FRIL means the last Friday. It's the reliable way to say month-end without hard-coding 28, 29, 30, or 31."}},
+{"@type":"Question","name":"Why does my cron use ? instead of *?","acceptedAnswer":{"@type":"Answer","text":"Quartz forbids setting both day-of-month and day-of-week to real values, so one of them must be ? — no specific value — whenever the other is set. 0 0 12 ? * SAT,SUN means noon on Saturday and Sunday with day-of-month left open. Standard five-field cron doesn't have this rule and treats ? the same as * where it appears."}},
+{"@type":"Question","name":"Are @daily and @midnight the same?","acceptedAnswer":{"@type":"Answer","text":"Yes — both expand to 0 0 * * *, midnight every day. The @ shorthand family: @hourly is 0 * * * *, @daily and @midnight are 0 0 * * *, @weekly is 0 0 * * 0 (Sunday midnight), @monthly is 0 0 1 * *, and @yearly and @annually are 0 0 1 1 *. They're conveniences in crontab files, and this explainer translates them directly."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Cron Explainer","item":"https://toolaspect.com/cron-explainer/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.cron-input{width:100%;padding:.8rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.15rem;font-family:ui-monospace,Menlo,Consolas,monospace;box-sizing:border-box}
+.cron-input:focus{outline:none;border-color:var(--primary)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.chip{padding:.35rem .75rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.78rem;font-family:ui-monospace,Menlo,Consolas,monospace;cursor:pointer}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.english-out{font-size:1.15rem;line-height:1.6;color:var(--text);padding:1rem 1.25rem;background:var(--bg);border:1px solid var(--primary);border-radius:var(--radius);margin-top:1rem}
+.err-out{font-size:.9rem;color:var(--danger);padding:1rem 1.25rem;background:var(--bg);border:1px solid var(--danger);border-radius:var(--radius);margin-top:1rem}
+.field-table{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.field-cell{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem .9rem}
+.field-cell .fv{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;color:var(--primary-hover);word-break:break-all}
+.field-cell .fl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+.field-cell .fr{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;cursor:pointer;width:100%;box-sizing:border-box}
+.runs-list{margin-top:.5rem}
+.run-row{display:flex;justify-content:space-between;gap:1rem;padding:.6rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-top:.5rem;font-size:.9rem}
+.run-row .dt{color:var(--text)}
+.run-row .rel{color:var(--muted);white-space:nowrap}
+.tz-row{display:flex;gap:1rem;align-items:end;margin-top:1rem;flex-wrap:wrap}
+.tz-row .input-group{min-width:220px}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/cronstrue@3.24.0/dist/cronstrue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/croner@10.0.1/dist/croner.umd.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Cron Explainer — Translate Cron to English", "url": "https://toolaspect.com/cron-explainer/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Paste any cron expression and get plain English plus its next 5 run times. */15 9-17 * * 1-5 means every 15 min, 9 to 5, weekdays. Free."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Cron Explainer free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Cron Explainer on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Cron Explainer work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Cron Explainer calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⏰ Cron Explainer</h1>
+<p>Translate any cron expression into plain English — and see when it next runs</p>
+</div>
+
+<div class="aio-answer">To read a cron expression, split it into space-separated fields: minute, hour, day of month, month, day of week (Quartz adds seconds in front and a year at the end). Paste yours below and you get the exact English meaning plus its next five run times. For example, <strong>*/15 9-17 * * 1-5</strong> means "every 15 minutes, between 09:00 AM and 05:59 PM, Monday through Friday," and <strong>0 0 * * *</strong> (also written <strong>@daily</strong>) means midnight every day.</div>
+
+<div class="section-card">
+<h2>Your expression</h2>
+<input type="text" class="cron-input" id="cronInput" value="*/15 9-17 * * 1-5" spellcheck="false" placeholder="e.g. 30 4 * * MON-FRI" aria-label="Cron expression">
+<div class="chip-row" id="chips">
+<button class="chip" data-expr="@hourly">@hourly</button>
+<button class="chip" data-expr="@daily">@daily</button>
+<button class="chip" data-expr="@weekly">@weekly</button>
+<button class="chip" data-expr="@monthly">@monthly</button>
+<button class="chip" data-expr="0 9 * * MON-FRI">0 9 * * MON-FRI</button>
+<button class="chip" data-expr="30 4 1,15 * *">30 4 1,15 * *</button>
+<button class="chip" data-expr="0 0 12 ? * SAT,SUN">quartz: 0 0 12 ? * SAT,SUN</button>
+<button class="chip" data-expr="0 15 10 ? * 6L 2026">quartz: 0 15 10 ? * 6L 2026</button>
+<button class="chip" data-expr="*/30 * * * * *">every 30s: */30 * * * * *</button>
+</div>
+</div>
+
+<div class="section-card" id="outCard" style="display:none">
+<h2>What it means</h2>
+<div class="english-out" id="englishOut"></div>
+<div id="errOut" class="err-out" style="display:none"></div>
+<div class="field-table" id="fieldTable"></div>
+</div>
+
+<div class="section-card" id="runsCard" style="display:none">
+<h2>Next runs</h2>
+<div class="runs-list" id="runsList"></div>
+<div class="tz-row">
+<div class="input-group"><label for="tzSel">Timezone for run times</label>
+<select id="tzSel">
+<option value="">Your local time (browser)</option>
+<option value="UTC">UTC</option>
+<option value="America/New_York">America/New_York</option>
+<option value="America/Chicago">America/Chicago</option>
+<option value="America/Denver">America/Denver</option>
+<option value="America/Los_Angeles">America/Los_Angeles</option>
+<option value="Europe/London">Europe/London</option>
+<option value="Europe/Berlin">Europe/Berlin</option>
+<option value="Europe/Moscow">Europe/Moscow</option>
+<option value="Asia/Dubai">Asia/Dubai</option>
+<option value="Asia/Kolkata">Asia/Kolkata</option>
+<option value="Asia/Shanghai">Asia/Shanghai</option>
+<option value="Asia/Tokyo">Asia/Tokyo</option>
+<option value="Australia/Sydney">Australia/Sydney</option>
+<option value="Pacific/Auckland">Pacific/Auckland</option>
+</select></div>
+<div style="color:var(--muted);font-size:.82rem;line-height:1.5;padding-bottom:.6rem">Run times assume the schedule's times are set in the selected timezone. DST transitions can shift a run by an hour — crontab itself has the same quirk.</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/cron-generator/">Cron generator</a></li><li style="margin:4px 0"><a href="/epoch-converter/">Epoch converter</a></li><li style="margin:4px 0"><a href="/time-zone-converter/">Time zone converter</a></li><li style="margin:4px 0"><a href="/regex-tester/">Regex tester</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/cron-expressions-explained/">Read the cron expressions guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>The Cron Fields</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>#</th><th>Standard 5-field</th><th>Allowed values</th><th>Quartz position</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Minute</td><td>0–59</td><td>2nd field (Quartz puts Seconds 0–59 first)</td></tr>
+<tr><td>2</td><td>Hour</td><td>0–23</td><td>3rd field</td></tr>
+<tr><td>3</td><td>Day of month</td><td>1–31</td><td>4th field</td></tr>
+<tr><td>4</td><td>Month</td><td>1–12 or JAN–DEC</td><td>5th field</td></tr>
+<tr><td>5</td><td>Day of week</td><td>0–6 or SUN–SAT (0 and 7 = Sunday)</td><td>6th field</td></tr>
+<tr><td>6</td><td>—</td><td>—</td><td>Year (optional, 1970–2099)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A job fires at every minute where all fields match simultaneously. Day names and month names (MON-FRI, JAN) work in the day-of-week and month fields; casing doesn't matter.</p>
+</div>
+
+<div class="section-card">
+<h2>Special Characters, Decoded</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Syntax</th><th>Name</th><th>Reads as</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>*</code></td><td>Wildcard</td><td>every value in this field</td><td><code>* * * * *</code> — every minute</td></tr>
+<tr><td><code>*/n</code></td><td>Step</td><td>every n values, starting at the field's minimum</td><td><code>*/15</code> — 0, 15, 30, 45</td></tr>
+<tr><td><code>a-b</code></td><td>Range</td><td>from a through b, inclusive</td><td><code>9-17</code> — 9am to 5:59pm</td></tr>
+<tr><td><code>a,b,c</code></td><td>List</td><td>each value listed</td><td><code>MON,WED,FRI</code></td></tr>
+<tr><td><code>a-b/n</code></td><td>Ranged step</td><td>every n values inside the range</td><td><code>0-20/2</code> — every 2 hours up to 8pm</td></tr>
+<tr><td><code>L</code></td><td>Last (Quartz)</td><td>last day of month, or last given weekday</td><td><code>L</code> / <code>6L</code> — last day / last Friday</td></tr>
+<tr><td><code>W</code></td><td>Weekday (Quartz)</td><td>weekday nearest the given day</td><td><code>15W</code> — weekday closest to the 15th</td></tr>
+<tr><td><code>n#m</code></td><td>Nth day (Quartz)</td><td>the m-th weekday n of the month</td><td><code>2#1</code> — first Tuesday</td></tr>
+<tr><td><code>?</code></td><td>No value (Quartz)</td><td>leave this field open (day fields only)</td><td><code>0 0 12 ? * SAT</code></td></tr>
+<tr><td><code>@name</code></td><td>Nickname</td><td>common schedules, pre-written</td><td><code>@daily</code> = <code>0 0 * * *</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Common Expressions in English</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Expression</th><th>Exact meaning</th></tr></thead>
+<tbody>
+<tr><td><code>*/15 * * * *</code></td><td>Every 15 minutes</td></tr>
+<tr><td><code>0 0 * * *</code> / <code>@daily</code></td><td>At 12:00 AM, every day</td></tr>
+<tr><td><code>0 9 * * MON-FRI</code></td><td>At 09:00 AM, Monday through Friday</td></tr>
+<tr><td><code>0 22 * * 1-5</code></td><td>At 10:00 PM, Monday through Friday</td></tr>
+<tr><td><code>*/5 8-18 * * 1-5</code></td><td>Every 5 minutes, between 08:00 AM and 06:59 PM, Monday through Friday</td></tr>
+<tr><td><code>30 4 1,15 * *</code></td><td>At 04:30 AM, on day 1 and 15 of the month</td></tr>
+<tr><td><code>0 12 1 */2 *</code></td><td>At 12:00 PM, on day 1 of the month, every 2 months</td></tr>
+<tr><td><code>0 4 8-14 * *</code></td><td>At 04:00 AM, between day 8 and 14 of the month</td></tr>
+<tr><td><code>23 0-20/2 * * *</code></td><td>At 23 minutes past the hour, every 2 hours, between 12:00 AM and 08:59 PM</td></tr>
+<tr><td><code>0 0 12 ? * SAT,SUN</code></td><td>At 12:00 PM, only on Saturday and Sunday (Quartz)</td></tr>
+<tr><td><code>0 15 10 ? * 6L 2026</code></td><td>At 10:15 AM, on the last Saturday of the month, only in 2026 (Quartz)</td></tr>
+<tr><td><code>*/30 * * * * *</code></td><td>Every 30 seconds (Quartz seconds field)</td></tr>
+<tr><td><code>@weekly</code> / <code>@monthly</code> / <code>@yearly</code></td><td>Sunday midnight / 1st of the month / January 1st</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every sentence in this table is produced by the same open-source engine (cRonstrue) that translates your expression above, so what you see here is what the tool outputs, verbatim.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Cron Explainer Works</h2>
+<p>Cron has a reputation for being unreadable because it packs five filters into one line and lets you mix wildcards, ranges, steps, and names per field. This tool runs two small open-source engines in your browser: cRonstrue (MIT) translates the expression into English, and croner (MIT) computes the actual next fire times by walking the calendar — the same way a scheduler would.</p>
+<h3>How the translation works</h3>
+<p>The parser splits your input on whitespace and counts fields: five means standard crontab, six or seven means Quartz (seconds first, optional year last). Nicknames like <code>@daily</code> expand to their canonical five-field form — <code>@daily</code> and <code>@midnight</code> become <code>0 0 * * *</code>, <code>@weekly</code> becomes <code>0 0 * * 0</code>. Each field is then described in context: a step becomes "every 15 minutes," a range becomes "between 09:00 AM and 05:59 PM" (inclusive ends, so 9-17 runs through the 5 PM hour), and day names stay names rather than becoming numbers.</p>
+<h3>A worked example: reading <code>0 9 * * MON-FRI</code>, with next runs</h3>
+<p>Take the weekday-9am job. Field by field: minute 0 (top of the hour), hour 9, day-of-month * (any), month * (any), day-of-week MON-FRI — "At 09:00 AM, Monday through Friday."</p>
+<p>Now the calendar. Counting from Monday, August 31, 2026 at 10:00 UTC, the next five runs in UTC are Tue Sep 1 09:00, Wed Sep 2 09:00, Thu Sep 3 09:00, Fri Sep 4 09:00, and — after the weekend is skipped — Mon Sep 7 09:00. That weekend skip is the proof the day-of-week filter is doing real work: a scheduler that just ran "daily at 9" would have produced Sep 5 and Sep 6 too.</p>
+<p>One more, month-end this time: <code>0 12 L * *</code> fires at noon on the last day of the month. From the same Monday, the next three runs are Aug 31 (that day, at noon), Sep 30, and Oct 31 — July has 31 days, September 30, and the engine knows which is which without anyone hard-coding a calendar table.</p>
+<h3>Building vs. reading</h3>
+<p>This tool reads expressions you've found — in a config file, a Stack Overflow answer, a colleague's crontab. If you're writing a schedule from scratch and want to compose it field by field, use the <a href="/cron-generator/">cron generator</a>; paste its output here whenever you want to double-check what you built.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does */15 9-17 * * 1-5 mean in cron?</h3><p>It means every 15 minutes, between 9:00 AM and 5:59 PM, Monday through Friday: a classic business-hours health check. Each field narrows the schedule — */15 on minutes, 9-17 on hours, * on day-of-month and month, 1-5 on day-of-week — and a job fires when every field matches at once.</p></div>
+<div class="faq-item"><h3>How do I read a cron expression?</h3><p>Split it into fields separated by spaces. The standard five are minute (0-59), hour (0-23), day of month (1-31), month (1-12), and day of week (0-6, where 0 and 7 are Sunday). Quartz adds seconds in front and optionally a year at the end, making six or seven fields. Within a field, * means any value, */n means every nth value, a-b is a range, and commas make a list. A job runs at every moment where all five fields match.</p></div>
+<div class="faq-item"><h3>What is the difference between 5-field cron and Quartz cron?</h3><p>Standard crontab has five fields. Quartz (used by Java schedulers and many cloud cron services) prefixes a seconds field and can append a year field, so expressions have six or seven parts — 0 0 12 ? * SAT,SUN runs at noon on weekends, with the seconds field pinned at 0. Quartz also adds the ? no-specific-value marker, L for last, W for nearest weekday, and # for the nth weekday of the month. This explainer accepts both formats and detects which one you pasted.</p></div>
+<div class="faq-item"><h3>What does L mean in a cron expression?</h3><p>L stands for last. In the day-of-month field, L is the last day of the month — 31 for July, 30 for September, 28 or 29 for February. In Quartz's day-of-week field, 6L is the last Friday of the month and FRIL means the last Friday. It's the reliable way to say month-end without hard-coding 28, 29, 30, or 31.</p></div>
+<div class="faq-item"><h3>Why does my cron use ? instead of *?</h3><p>Quartz forbids setting both day-of-month and day-of-week to real values, so one of them must be ? — no specific value — whenever the other is set. 0 0 12 ? * SAT,SUN means noon on Saturday and Sunday with day-of-month left open. Standard five-field cron doesn't have this rule and treats ? the same as * where it appears.</p></div>
+<div class="faq-item"><h3>Are @daily and @midnight the same?</h3><p>Yes — both expand to 0 0 * * *, midnight every day. The @ shorthand family: @hourly is 0 * * * *, @daily and @midnight are 0 0 * * *, @weekly is 0 0 * * 0 (Sunday midnight), @monthly is 0 0 1 * *, and @yearly and @annually are 0 0 1 1 *. They're conveniences in crontab files, and this explainer translates them directly.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/cron-generator/">⚙️ Cron Generator</a>
+<a href="/epoch-converter/">🕰️ Epoch Converter</a>
+<a href="/time-zone-converter/">🌍 Time Zone Converter</a>
+<a href="/regex-tester/">🔍 Regex Tester</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---CR-ENGINE-START---
+// Cron explainer engine: cronstrue@3.24.0 (MIT, bradymholt/cRonstrue) for the
+// English translation, croner@10.0.1 (MIT, Hexagon/croner) for next-run dates.
+// Pure helpers below (field parsing + nickname expansion matching croner):
+var CR_NICKNAMES={
+  '@yearly':'0 0 1 1 *','@annually':'0 0 1 1 *','@monthly':'0 0 1 * *',
+  '@weekly':'0 0 * * 0','@daily':'0 0 * * *','@midnight':'0 0 * * *','@hourly':'0 * * * *'
+};
+function crExpand(expr){
+  var t=String(expr).trim().toLowerCase();
+  return CR_NICKNAMES[t]||String(expr).trim();
+}
+function crFieldInfo(expr){
+  var expanded=crExpand(expr);
+  var parts=expanded.match(/\S+/g)||[];
+  var isNick=Object.prototype.hasOwnProperty.call(CR_NICKNAMES,String(expr).trim().toLowerCase());
+  var names;
+  if(parts.length===5)names=['Minute','Hour','Day of month','Month','Day of week'];
+  else if(parts.length===6)names=['Seconds','Minute','Hour','Day of month','Month','Day of week'];
+  else if(parts.length===7)names=['Seconds','Minute','Hour','Day of month','Month','Day of week','Year'];
+  else names=null;
+  return {parts:parts,count:parts.length,names:names,nickname:isNick,expanded:expanded};
+}
+function crNextN(Cron,expr,fromDateISO,tz,n){
+  var o={};
+  if(tz)o.timezone=tz;
+  // Quartz '?' (no specific value) only appears as a whole day-of-month or
+  // day-of-week token, and Quartz forbids restricting both day fields at once.
+  // croner@10 loses the DOW constraint when DOM is '?', so normalize to '*'
+  // (identical semantics for a lone day-field restriction) before scheduling.
+  var c=new Cron(String(expr).replace(/\?/g,'*'),o);
+  var out=[];
+  var d=new Date(fromDateISO);
+  for(var i=0;i<n;i++){
+    d=c.nextRun(d);
+    if(!d)break;
+    out.push(new Date(d.getTime()));
+  }
+  return out;
+}
+// ---- browser wiring ----
+var input=document.getElementById('cronInput');
+var outCard=document.getElementById('outCard');
+var runsCard=document.getElementById('runsCard');
+function crRender(){
+  var expr=input.value.trim();
+  outCard.style.display='none';runsCard.style.display='none';
+  if(!expr)return;
+  var english=document.getElementById('englishOut');
+  var err=document.getElementById('errOut');
+  var info=crFieldInfo(expr);
+  outCard.style.display='';
+  if(!info.names){
+    english.style.display='none';
+    err.style.display='';
+    err.textContent='That does not look like a cron expression — it needs exactly 5, 6, or 7 space-separated fields (got '+info.count+').';
+    return;
+  }
+  english.style.display='';err.style.display='none';
+  var sentence;
+  try{
+    sentence=window.cronstrue.toString(expr,{verbose:false});
+  }catch(e){
+    sentence=null;
+  }
+  if(!sentence){
+    try{ sentence=window.cronstrue.toString(info.expanded,{verbose:false}); }catch(e2){ sentence=null; }
+  }
+  english.textContent=sentence?('“'+sentence+'”'):'The translator could not parse this expression.';
+  var ft=document.getElementById('fieldTable');
+  ft.innerHTML='';
+  info.names.forEach(function(name,i){
+    var cell=document.createElement('div');
+    cell.className='field-cell';
+    var range='';
+    if(name==='Minute')range='0–59';
+    else if(name==='Hour')range='0–23';
+    else if(name==='Day of month')range='1–31';
+    else if(name==='Month')range='1–12 / JAN–DEC';
+    else if(name==='Day of week')range='0–6 / SUN–SAT';
+    else if(name==='Seconds')range='0–59';
+    else if(name==='Year')range='1970–2099';
+    cell.innerHTML='<div class="fl">'+name+(info.nickname?' (from '+expr.trim().toLowerCase()+')':'')+'</div><div class="fv">'+crEsc(info.parts[i])+'</div><div class="fr">'+(info.parts[i]==='*'?'every '+name.toLowerCase():range)+'</div>';
+    ft.appendChild(cell);
+  });
+  crRenderRuns();
+}
+function crRenderRuns(){
+  var expr=input.value.trim();
+  if(!expr)return;
+  var list=document.getElementById('runsList');
+  list.innerHTML='';
+  runsCard.style.display='';
+  try{
+    var tz=document.getElementById('tzSel').value||undefined;
+    var runs=crNextN(window.Cron,crExpand(expr),new Date().toISOString(),tz,5);
+    if(!runs.length){
+      list.innerHTML='<div class="run-row"><span class="dt">No upcoming runs — the schedule may never match again (check the year field).</span></div>';
+      return;
+    }
+    var fmt=new Intl.DateTimeFormat(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:tz||undefined});
+    var now=Date.now();
+    runs.forEach(function(d){
+      var row=document.createElement('div');
+      row.className='run-row';
+      var rel=crRel(d.getTime()-now);
+      row.innerHTML='<span class="dt">'+fmt.format(d)+'</span><span class="rel">in '+rel+'</span>';
+      list.appendChild(row);
+    });
+  }catch(e){
+    list.innerHTML='<div class="run-row"><span class="dt">Run preview unavailable for this expression ('+crEsc(String(e&&e.message||e)).slice(0,120)+') — the English translation above still applies.</span></div>';
+  }
+}
+function crRel(ms){
+  if(ms<0)return 'the past';
+  var s=Math.round(ms/1000);
+  if(s<60)return s+'s';
+  var m=Math.round(s/60);
+  if(m<60)return m+' min';
+  var h=Math.floor(m/60);
+  if(h<48)return h+'h '+(m%60)+'m';
+  return Math.round(h/24)+' days';
+}
+function crEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+document.getElementById('chips').addEventListener('click',function(e){
+  var chip=e.target.closest('.chip');
+  if(!chip)return;
+  input.value=chip.getAttribute('data-expr');
+  crRender();
+});
+document.getElementById('tzSel').addEventListener('change',crRenderRuns);
+input.addEventListener('input',crRender);
+crRender();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Page Numbers — Add Numbers Free, Offline | ToolAspect</title>
+<meta name="description" content="Add page numbers to a PDF free in your browser: 9 positions, formats like Page 1 of 24, margins, roman numerals, skip-first-page. No upload, no watermark.">
+<link rel="canonical" href="https://toolaspect.com/pdf-page-numbers/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF Page Numbers — Add Numbers Free, Offline">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Stamp page numbers on any PDF, entirely in your browser. Nine positions, Page X of Y formats, roman numerals, custom margins. Files never leave your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-page-numbers/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Page Numbers | Free Online Tool">
+<meta name="twitter:description" content="Number PDF pages in-browser. No upload, no watermark, works offline after load.">
+<meta name="keywords" content="pdf page numbers, add page numbers to pdf, page numbering pdf online free, insert page numbers pdf without adobe, pdf folio numbers, number pdf pages offline">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Page Numbers","description":"Free PDF page numbering tool that runs entirely in your browser. Choose from nine positions, formats like Page 1 of 24, roman numerals, start number, margins, and skip-first-page, then download a numbered copy. Nothing is uploaded.","url":"https://toolaspect.com/pdf-page-numbers/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I add page numbers to a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Drop the PDF into the tool above, pick a position and a format (such as Page 1 of 24), and click Add numbers. The numbers are drawn as real text on an in-memory copy and you download it — no Adobe subscription, no upload, no watermark. On a phone or laptop it works the same, because the numbering engine (pdf-lib) runs inside your browser."}},
+{"@type":"Question","name":"What is the standard position for page numbers?","acceptedAnswer":{"@type":"Answer","text":"Bottom center is the classic book and report position; bottom right is the most common on business documents because it clears left-aligned footers. The working convention is half an inch (36 points) from the edge in 9-10pt type. What actually matters is consistency: pick one of the nine slots and use it on every page."}},
+{"@type":"Question","name":"What does Page X of Y mean in a PDF?","acceptedAnswer":{"@type":"Answer","text":"It is the folio format that shows both the current page and the total, like Page 12 of 24, so a reader always knows how much is left. In this tool the total N counts the pages that receive a number: with skip-first-page enabled on a 24-page file, page 2 is numbered Page 1 of 23 and the title page stays clean."}},
+{"@type":"Question","name":"Can I use roman numerals for front matter?","acceptedAnswer":{"@type":"Answer","text":"Yes. Reports and theses often number the front matter (title page, abstract, table of contents) in lowercase roman — i, ii, iii — and restart the main body at Arabic 1. Set the numbering style to i, ii, iii here for the front-matter file, then run the body file separately with Arabic numerals starting at 1, and merge the two."}},
+{"@type":"Question","name":"Does adding page numbers change my original PDF?","acceptedAnswer":{"@type":"Answer","text":"No. The tool reads your file, draws the numbers on a copy held in memory, and hands you that copy as a download. The original on disk is never touched, and the numbers are added as new text objects — existing text, images, and form fields are not re-flowed or altered."}},
+{"@type":"Question","name":"Why did my numbered PDF get bigger?","acceptedAnswer":{"@type":"Answer","text":"Numbering adds a font reference and one small text object per page, so a size bump of a few kilobytes is normal. If the file grows a lot, the copy lost some compression the original had — re-compressing afterwards with a PDF compression tool brings it back down."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"PDF Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF Page Numbers","item":"https://toolaspect.com/pdf-page-numbers/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-group{display:flex;align-items:center;gap:.5rem;padding:.7rem 0;font-size:.9rem;color:var(--text);cursor:pointer;user-select:none}
+.check-group input{width:16px;height:16px;accent-color:var(--primary);cursor:pointer}
+.preview-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.file-info{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem 1rem;margin-top:1rem;font-size:.88rem;color:var(--muted)}
+.file-info .ok{color:var(--success)}
+.file-info a{color:var(--success);font-weight:600}
+.pos-grid{display:grid;grid-template-columns:repeat(3,44px);gap:6px;margin:.5rem auto 0;width:max-content}
+.pos-cell{height:36px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--muted);font-size:.75rem;cursor:pointer;font-family:inherit}
+.pos-cell:hover{border-color:var(--primary)}
+.pos-cell.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+#status{margin-top:.5rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "PDF Page Numbers — Add Numbers Free, Offline", "url": "https://toolaspect.com/pdf-page-numbers/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Add page numbers to a PDF free in your browser: 9 positions, formats like Page 1 of 24, margins, roman numerals, skip-first-page. No upload, no watermark."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the PDF Page Numbers free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the PDF Page Numbers on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the PDF Page Numbers work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the PDF Page Numbers calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📄 PDF Page Numbers</h1>
+<p>Add page numbers to any PDF, entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To add page numbers to a PDF without uploading it: drop the file below, choose one of nine positions and a format — plain <strong>1</strong>, <strong>1 of 24</strong>, or <strong>Page 1 of 24</strong> — set the margin, and click <strong>Add numbers</strong>. A 24-page report numbers as <em>Page 1 of 24</em> through <em>Page 24 of 24</em>, bottom right, half an inch from the edge, in about a second. You download a numbered copy; the original on disk is untouched, and nothing is sent to any server.</div>
+
+<div class="section-card">
+<h2>Number a PDF</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">📄</div>
+<p>Click or drag a PDF here</p>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" style="display:none">
+</div>
+<div class="file-info" id="fileInfo" style="display:none"></div>
+</div>
+
+<div class="section-card">
+<h2>Position</h2>
+<div class="pos-grid" id="posGrid">
+<button type="button" class="pos-cell" data-pos="tl" title="Top left">TL</button>
+<button type="button" class="pos-cell" data-pos="tc" title="Top center">TC</button>
+<button type="button" class="pos-cell" data-pos="tr" title="Top right">TR</button>
+<button type="button" class="pos-cell" data-pos="ml" title="Middle left">ML</button>
+<button type="button" class="pos-cell" data-pos="mc" title="Middle center">MC</button>
+<button type="button" class="pos-cell" data-pos="mr" title="Middle right">MR</button>
+<button type="button" class="pos-cell active" data-pos="br" title="Bottom right">BR</button>
+<button type="button" class="pos-cell" data-pos="bc" title="Bottom center">BC</button>
+<button type="button" class="pos-cell" data-pos="bl" title="Bottom left">BL</button>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Font Size (pt)</label><input type="number" id="size" value="10" min="6" max="24" step="0.5"></div>
+<div class="input-group"><label>Margin from Edge (pt)</label><input type="number" id="margin" value="36" min="12" max="144" step="6"></div>
+<div class="input-group"><label>Font</label><select id="font"><option value="regular">Helvetica</option><option value="bold">Helvetica Bold</option></select></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Numbering</h2>
+<div class="input-grid">
+<div class="input-group"><label>Format</label><select id="format"><option value="plain">1</option><option value="slash">1/24</option><option value="of">1 of 24</option><option value="page">Page 1</option><option value="pageOf" selected>Page 1 of 24</option></select></div>
+<div class="input-group"><label>Style</label><select id="style"><option value="arabic">Arabic (1, 2, 3)</option><option value="roman-lower">Roman (i, ii, iii)</option><option value="roman-upper">Roman (I, II, III)</option></select></div>
+<div class="input-group"><label>Start Numbering At</label><input type="number" id="start" value="1" min="1" max="9999" step="1"></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Prefix (optional)</label><input type="text" id="prefix" value="" placeholder="e.g. Appendix A — "></div>
+<div class="input-group"><label>Suffix (optional)</label><input type="text" id="suffix" value="" placeholder="e.g.  · v2"></div>
+<div class="input-group"><label>&nbsp;</label><label class="check-group" style="padding:.35rem 0"><input type="checkbox" id="skipFirst"> Skip first page (no number)</label></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>Add numbers</button>
+<button class="btn" id="btnReset" disabled style="background:var(--bg);border:1px solid var(--border);color:var(--text)">Clear</button>
+</div>
+<div class="preview-box" id="preview">Load a PDF to see the numbering preview</div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/bates-numbering/">Bates numbering</a></li><li style="margin:4px 0"><a href="/pdf-add-text/">Add text to a PDF</a></li><li style="margin:4px 0"><a href="/pdf-merge/">Merge PDFs</a></li><li style="margin:4px 0"><a href="/watermark-pdf/">Watermark a PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-add-page-numbers-to-pdf/">Read the page numbering guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Numbering Formats and Front-Matter Styles</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Format</th><th>Page 3 of a 24-page file</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td><code>1</code></td><td><code>3</code></td><td>Books, theses, minimal layouts</td></tr>
+<tr><td><code>1/24</code></td><td><code>3/24</code></td><td>Compact contracts and specs</td></tr>
+<tr><td><code>1 of 24</code></td><td><code>3 of 24</code></td><td>Reports, slide-deck exports</td></tr>
+<tr><td><code>Page 1</code></td><td><code>Page 3</code></td><td>Formal documents, filings</td></tr>
+<tr><td><code>Page 1 of 24</code></td><td><code>Page 3 of 24</code></td><td>The business default</td></tr>
+<tr><td>Roman front matter</td><td><code>Page iii</code></td><td>Title page to TOC, then body restarts at Arabic 1</td></tr>
+<tr><td>Prefix / suffix</td><td><code>A-3 · v2</code></td><td>Appendixes, versioned drafts</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">With skip-first-page on, the title page stays clean and numbering begins on page 2 — the total in "of N" counts only numbered pages, so a 24-page file becomes <em>Page 1 of 23</em> on its second page. That matches how word processors handle "different first page".</p>
+</div>
+
+<div class="section-card">
+<h2>Standard Page Sizes (for Margin Planning)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Page size</th><th>Points</th><th>Inches</th><th>36 pt margin equals</th></tr></thead>
+<tbody>
+<tr><td>US Letter</td><td>612 × 792</td><td>8.5 × 11</td><td>0.5 in from every edge</td></tr>
+<tr><td>US Legal</td><td>612 × 1008</td><td>8.5 × 14</td><td>0.5 in from every edge</td></tr>
+<tr><td>A4</td><td>595.28 × 841.89</td><td>8.27 × 11.69</td><td>0.5 in (12.7 mm)</td></tr>
+<tr><td>A5</td><td>419.53 × 595.28</td><td>5.83 × 8.27</td><td>0.5 in (12.7 mm)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The tool reads each page's own dimensions, so mixed-size files (Letter appendices behind an A4 report) number consistently on both. Increase the margin if an existing footer collides with the number — 54 or 72 pt (0.75 or 1 in) gives the number its own line of margin.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Page Numbering Works</h2>
+<p>Page numbering is the same operation a print shop does with a numbering stamp, applied digitally: walk every page in order, compute a label for it, and draw that label as real text at a fixed spot. This tool loads your file with the open-source pdf-lib engine (maintained as @cantoo/pdf-lib), embeds Helvetica once, and draws one text object per page at your chosen position.</p>
+<h3>The numbering math</h3>
+<p>With start number <em>s</em> and skip-first-page off, page <em>p</em> of the document gets number <em>s + p − 1</em>; the count N in "of N" formats is the page count (or one less when the first page is skipped). Roman style converts that number the classical way: 4 is iv, 9 is ix, 40 is xl, 90 is xc — the subtractive pairs — so page 14 becomes xiv and page 19 xix.</p>
+<p>Position is computed per page from that page's own width and height. Bottom and top rows sit the baseline at the margin (and the margin plus the cap height down from the top edge); the middle row centers vertically. Right-aligned slots measure the label first with the embedded font's metrics, then subtract: <em>x = pageWidth − margin − textWidth</em>.</p>
+<h3>A worked example</h3>
+<p>A 24-page report, US Letter (612 × 792 pt), defaults: bottom right, 36 pt margin, 10 pt Helvetica, format <em>Page 1 of 24</em>. The label on page one measures 56.31 pt wide, so its left edge sits at 612 − 36 − 56.31 = 519.69 pt, baseline 36 pt up from the bottom. Page 12's label is <em>Page 12 of 24</em> — the extra digit widens it to 61.87 pt, so its left edge shifts to 514.13 pt; the right edges stay perfectly aligned. Centered instead, page one's number starts at (612 − 56.31) ÷ 2 = 277.85 pt. On A4 (595.28 pt wide), the same bottom-right label starts at 502.97 pt.</p>
+<p>Now the front-matter variant: the same report with a title page gets numbered twice — pages 2-5 in roman (ii, iii, iv, v, continuing the convention that the title page counts silently as i), then the body restarts at Arabic 1 and runs <em>Page 1 of 19</em> through <em>Page 19 of 19</em> on the remaining 19 pages. Two quick passes in this tool, then merge the files.</p>
+<h3>What happens to your file</h3>
+<ul>
+<li><strong>Originals untouched:</strong> numbering is drawn on an in-memory copy; you download that copy.</li>
+<li><strong>Real text, not an image:</strong> numbers are selectable, searchable, and stay sharp at any zoom.</li>
+<li><strong>Encrypted PDFs:</strong> a password-locked file can't be edited while locked — unlock it, number it, re-protect if needed.</li>
+<li><strong>Scans:</strong> work fine; the number overlays the page image like a stamp would.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I add page numbers to a PDF for free?</h3><p>Drop the PDF into the tool above, pick a position and a format (such as Page 1 of 24), and click Add numbers. The numbers are drawn as real text on an in-memory copy and you download it — no Adobe subscription, no upload, no watermark. On a phone or laptop it works the same, because the numbering engine (pdf-lib) runs inside your browser.</p></div>
+<div class="faq-item"><h3>What is the standard position for page numbers?</h3><p>Bottom center is the classic book and report position; bottom right is the most common on business documents because it clears left-aligned footers. The working convention is half an inch (36 points) from the edge in 9-10pt type. What actually matters is consistency: pick one of the nine slots and use it on every page.</p></div>
+<div class="faq-item"><h3>What does Page X of Y mean in a PDF?</h3><p>It is the folio format that shows both the current page and the total, like Page 12 of 24, so a reader always knows how much is left. In this tool the total N counts the pages that receive a number: with skip-first-page enabled on a 24-page file, page 2 is numbered Page 1 of 23 and the title page stays clean.</p></div>
+<div class="faq-item"><h3>Can I use roman numerals for front matter?</h3><p>Yes. Reports and theses often number the front matter (title page, abstract, table of contents) in lowercase roman — i, ii, iii — and restart the main body at Arabic 1. Set the numbering style to i, ii, iii here for the front-matter file, then run the body file separately with Arabic numerals starting at 1, and merge the two.</p></div>
+<div class="faq-item"><h3>Does adding page numbers change my original PDF?</h3><p>No. The tool reads your file, draws the numbers on a copy held in memory, and hands you that copy as a download. The original on disk is never touched, and the numbers are added as new text objects — existing text, images, and form fields are not re-flowed or altered.</p></div>
+<div class="faq-item"><h3>Why did my numbered PDF get bigger?</h3><p>Numbering adds a font reference and one small text object per page, so a size bump of a few kilobytes is normal. If the file grows a lot, the copy lost some compression the original had — re-compressing afterwards with a PDF compression tool brings it back down.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/bates-numbering/">🔢 Bates Numbering</a>
+<a href="/pdf-add-text/">📝 Add Text to PDF</a>
+<a href="/pdf-merge/">📎 PDF Merge</a>
+<a href="/watermark-pdf/">💧 Watermark PDF</a>
+<a href="/pdf-split/">✂️ PDF Split</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PP-ENGINE-START---
+// Page-number engine: @cantoo/pdf-lib (MIT, active fork of pdf-lib), pinned
+// v2.9.1 via jsdelivr. One drawText per page; label = prefix + styled number
+// (formatted against N = count of numbered pages) + suffix.
+var PP = { bytes:null, name:'', pages:0, position:'br' };
+function ppReadFile(f){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){res(new Uint8Array(fr.result));};
+    fr.onerror=function(){rej(new Error('could not read that file'));};
+    fr.readAsArrayBuffer(f);
+  });
+}
+function ppRoman(n){
+  var pairs=[[1000,'m'],[900,'cm'],[500,'d'],[400,'cd'],[100,'c'],[90,'xc'],[50,'l'],[40,'xl'],[10,'x'],[9,'ix'],[5,'v'],[4,'iv'],[1,'i']];
+  var out='';
+  for(var i=0;i<pairs.length;i++){
+    while(n>=pairs[i][0]){out+=pairs[i][1];n-=pairs[i][0];}
+  }
+  return out;
+}
+function ppNumber(p,o){
+  var n=o.start+p-1;
+  if(o.style==='roman-lower')return ppRoman(n);
+  if(o.style==='roman-upper')return ppRoman(n).toUpperCase();
+  return String(n);
+}
+function ppLabel(p,N,o){
+  var num=ppNumber(p,o);
+  if(o.format==='plain')return num;
+  if(o.format==='slash')return num+'/'+N;
+  if(o.format==='of')return num+' of '+N;
+  if(o.format==='page')return 'Page '+num;
+  return 'Page '+num+' of '+N;
+}
+function ppOpts(){
+  return {
+    format: document.getElementById('format').value,
+    style: document.getElementById('style').value,
+    start: Math.max(1,parseInt(document.getElementById('start').value,10)||1),
+    prefix: document.getElementById('prefix').value,
+    suffix: document.getElementById('suffix').value,
+    skipFirst: document.getElementById('skipFirst').checked,
+    bold: document.getElementById('font').value==='bold',
+    size: parseFloat(document.getElementById('size').value)||10,
+    margin: parseFloat(document.getElementById('margin').value)||36,
+    position: PP.position
+  };
+}
+function ppCounts(){
+  var o=ppOpts();
+  var numbered=PP.pages-(o.skipFirst?1:0);
+  return {N:numbered,o:o};
+}
+function ppSlotXY(pos,w,h,tw,size,margin){
+  var x,y;
+  if(pos[1]==='r'){ x=w-margin-tw; }
+  else if(pos[1]==='l'){ x=margin; }
+  else { x=(w-tw)/2; }
+  if(pos[0]==='b'){ y=margin; }
+  else if(pos[0]==='t'){ y=h-margin-size; }
+  else { y=(h-size)/2; }
+  return [x,y];
+}
+// ---- browser wiring ----
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+var info=document.getElementById('fileInfo');
+function ppStatus(msg,cls){
+  var s=document.getElementById('status');
+  s.innerHTML=cls==='err'?'<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">'+msg+'</div>'
+    :'<div style="background:var(--bg);border:1px solid '+(cls==='ok'?'var(--success)':'var(--border)')+';border-radius:10px;padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">'+msg+'</div>';
+}
+function ppUpdatePreview(){
+  var box=document.getElementById('preview');
+  if(!PP.pages){box.textContent='Load a PDF to see the numbering preview';return;}
+  var c=ppCounts(),o=c.o;
+  var first=ppLabel(1,c.N,o), last=ppLabel(c.N,c.N,o);
+  var skipped=o.skipFirst&&PP.pages>0?' · page 1 skipped':'';
+  box.innerHTML='Page 2 of the file prints as <strong>'+ppEsc(ppLabel(2,c.N,o))+'</strong> · last numbered page: <strong>'+ppEsc(last)+'</strong> ('+c.N+' of '+PP.pages+' pages numbered'+skipped+')';
+  document.getElementById('btnGo').disabled=!PP.pages;
+  document.getElementById('btnReset').disabled=!PP.pages;
+}
+function ppEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+async function ppLoad(file){
+  ppStatus('');
+  try{
+    if(typeof PDFLib==='undefined')throw new Error('engine failed to load (offline?)');
+    PP.bytes=await ppReadFile(file);
+    PP.name=file.name;
+    var doc=await PDFLib.PDFDocument.load(PP.bytes);
+    PP.pages=doc.getPageCount();
+    info.style.display='block';
+    info.innerHTML=ppEsc(file.name)+' — <span class="ok">'+PP.pages+' pages</span> · ready to number';
+    ppUpdatePreview();
+  }catch(e){
+    var msg=String(e&&e.message||e);
+    ppStatus(ppEsc(/encrypt/i.test(msg)?'That PDF is password-protected — unlock it first, then number it.':'Could not open that PDF: '+msg),'err');
+  }
+}
+async function ppGo(){
+  if(!PP.pages||typeof PDFLib==='undefined')return;
+  var o=ppOpts();
+  try{
+    var doc=await PDFLib.PDFDocument.load(PP.bytes);
+    var font=await doc.embedFont(o.bold?PDFLib.StandardFonts.HelveticaBold:PDFLib.StandardFonts.Helvetica);
+    var pages=doc.getPages();
+    var N=pages.length-(o.skipFirst?1:0);
+    var p=0;
+    for(var i=0;i<pages.length;i++){
+      if(o.skipFirst&&i===0)continue;
+      p++;
+      var label=o.prefix+ppLabel(p,N,o)+o.suffix;
+      var page=pages[i];
+      var tw=font.widthOfTextAtSize(label,o.size);
+      var xy=ppSlotXY(o.position,page.getWidth(),page.getHeight(),tw,o.size,o.margin);
+      page.drawText(label,{x:xy[0],y:xy[1],size:o.size,font:font,color:PDFLib.rgb(0.2,0.2,0.2)});
+    }
+    var bytes=await doc.save();
+    var url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+    var dl=' <a href="'+url+'" download="'+ppEsc(PP.name.replace(/\.pdf$/i,''))+'-numbered.pdf">⬇ '+ppEsc(PP.name.replace(/\.pdf$/i,''))+'-numbered.pdf</a>';
+    info.innerHTML=ppEsc(PP.name)+' — <span class="ok">'+PP.pages+' pages</span>'+dl;
+    ppStatus('✅ Numbered <strong>'+p+'</strong> pages ('+ppEsc(o.prefix+ppLabel(1,N,o)+o.suffix)+' → '+ppEsc(o.prefix+ppLabel(N,N,o)+o.suffix)+') — use the ⬇ link above to save the numbered copy.','ok');
+  }catch(e){
+    ppStatus('Numbering failed: '+ppEsc(String(e&&e.message||e)),'err');
+  }
+}
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)ppLoad(e.dataTransfer.files[0]);});
+fi.addEventListener('change',function(e){if(e.target.files.length)ppLoad(e.target.files[0]);fi.value='';});
+document.getElementById('btnGo').addEventListener('click',ppGo);
+document.getElementById('btnReset').addEventListener('click',function(){
+  PP={bytes:null,name:'',pages:0,position:PP.position};
+  info.style.display='none';ppStatus('');ppUpdatePreview();
+  document.getElementById('btnGo').disabled=true;document.getElementById('btnReset').disabled=true;
+});
+document.getElementById('posGrid').addEventListener('click',function(e){
+  var cell=e.target.closest('.pos-cell');
+  if(!cell)return;
+  PP.position=cell.getAttribute('data-pos');
+  [].forEach.call(document.querySelectorAll('.pos-cell'),function(c){c.classList.toggle('active',c===cell);});
+});
+['format','style','start','prefix','suffix','skipFirst','font','size','margin'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',ppUpdatePreview);
+  document.getElementById(id).addEventListener('change',ppUpdatePreview);
+});
+ppUpdatePreview();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

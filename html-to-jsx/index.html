@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML to JSX Converter — Free React Tool | ToolAspect</title>
+<meta name="description" content="Convert HTML to JSX free in your browser: class becomes className, styles become objects, SVG attributes fixed, wrapped as a component. No upload.">
+<link rel="canonical" href="https://toolaspect.com/html-to-jsx/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="HTML to JSX Converter — Free React Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste HTML or SVG, get valid JSX: attribute renames, style objects, component wrappers, TypeScript. Runs locally in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/html-to-jsx/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML to JSX | Free Online Converter">
+<meta name="twitter:description" content="Convert HTML or SVG to JSX locally. Attribute fixes, component wrappers, TypeScript output.">
+<meta name="keywords" content="html to jsx, html to jsx converter, convert html to jsx, svg to jsx, svg to react component, html to react, jsx converter online free">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to JSX Converter","description":"Free HTML-to-JSX converter that runs entirely in your browser. Paste HTML or SVG and get valid React JSX: class to className, style strings to objects, SVG attributes renamed to React's camelCase, with optional function-component wrappers and TypeScript output. Nothing is uploaded.","url":"https://toolaspect.com/html-to-jsx/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does class become className in JSX?","acceptedAnswer":{"@type":"Answer","text":"Because className is a property of the DOM API, not an HTML attribute name. React sets real DOM properties (element.className), and it does this at runtime, so JSX attribute names follow the property names: className, htmlFor, tabIndex. The converter renames all of them automatically."}},
+{"@type":"Question","name":"What happens to inline styles?","acceptedAnswer":{"@type":"Answer","text":"HTML style strings become JavaScript objects. style=\"color:red\" turns into style={{color: 'red'}}, and hyphenated CSS properties camel-case themselves: font-size becomes fontSize. The converter produces the object literal for you, quoted values included."}},
+{"@type":"Question","name":"Why does React warn about stroke-width in SVG?","acceptedAnswer":{"@type":"Answer","text":"The message reads 'Invalid DOM property stroke-width. Did you mean strokeWidth?' React's SVG attributes are camelCase like its HTML ones, so stroke-width, stroke-linecap, clip-path, and fill-rule must become strokeWidth, strokeLinecap, clipPath, and fillRule. The SVG tab here renames them after converting — aria-* and data-* keep their hyphens, since React expects those verbatim."}},
+{"@type":"Question","name":"Can this convert SVG into a React component?","acceptedAnswer":{"@type":"Answer","text":"Yes — the SVG tab does the conversion plus the wrapping that icon workflows expect: name the component, spread props onto the root element (svgr-style, so callers can set size and color), and export it as a default function component, optionally in TypeScript. That reproduces the output of the svgr toolchain without a build step."}},
+{"@type":"Question","name":"Is my HTML sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The converter runs on the open-source htmltojsx engine (BSD-licensed, from React's react-magic project) directly in your browser tab. Paste in proprietary markup if you like — the network tab shows no requests after the engine loads."}},
+{"@type":"Question","name":"What can't HTML to JSX conversion handle?","acceptedAnswer":{"@type":"Answer","text":"JavaScript and CSS in <script> and <style> tags doesn't translate — JSX treats their contents as text, and React wants real event handlers (onclick becomes onClick as a function prop, which no static converter can invent). Web components, server-side includes, and template syntax ({{mustaches}}, %erb%) come through literally. Convert markup, then wire behavior by hand."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"HTML to JSX","item":"https://toolaspect.com/html-to-jsx/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.tab-row{display:flex;gap:.5rem;margin-bottom:1rem}
+.tab{padding:.5rem 1.1rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
+.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+textarea.code{width:100%;min-height:180px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;resize:vertical}
+textarea.code:focus{outline:none;border-color:var(--primary)}
+pre.code-out{width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;white-space:pre-wrap;word-break:break-word;margin:0;max-height:420px;overflow-y:auto}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:720px){.io-grid{grid-template-columns:1fr}}
+.io-label{font-size:.8rem;color:var(--muted);margin-bottom:.4rem;font-weight:600}
+.opts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{padding:.65rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box;width:100%}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.check-group{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;font-size:.88rem;color:var(--text);cursor:pointer;user-select:none}
+.check-group input{width:15px;height:15px;accent-color:var(--primary);cursor:pointer}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem 1rem;font-size:.85rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);padding:1px 6px;border-radius:6px;font-size:.85em;color:var(--primary-hover)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/htmltojsx@0.3.0/.publish/htmltojsx.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "HTML to JSX Converter — Free React Tool", "url": "https://toolaspect.com/html-to-jsx/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Convert HTML to JSX free in your browser: class becomes className, styles become objects, SVG attributes fixed, wrapped as a component. No upload."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the HTML to JSX Converter free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the HTML to JSX Converter on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the HTML to JSX Converter work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the HTML to JSX Converter calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⚙️ HTML to JSX Converter</h1>
+<p>Paste HTML or SVG, get JSX React can actually render — in your browser</p>
+</div>
+
+<div class="aio-answer">To convert HTML to JSX, paste it below and the converter does the three jobs a copy-paste into React always needs: renames the forbidden attributes (<strong>class</strong>→<strong>className</strong>, <strong>for</strong>→<strong>htmlFor</strong>, <strong>tabindex</strong>→<strong>tabIndex</strong>), turns style strings into objects (<code>style="color:red"</code> → <code>style={{color: 'red'}}</code>), and self-closes void tags. In the SVG tab it also renames hyphenated attributes to React's camelCase (<strong>stroke-width</strong>→<strong>strokeWidth</strong>) and can wrap the result as a named component with a props spread — svgr-style output, no build step. Everything runs locally with the open-source react-magic engine.</div>
+
+<div class="section-card">
+<h2>Converter</h2>
+<div class="tab-row">
+<button class="tab active" id="tabHtml" type="button">HTML → JSX</button>
+<button class="tab" id="tabSvg" type="button">SVG → JSX</button>
+</div>
+<div class="io-grid">
+<div>
+<div class="io-label" id="inLabel">HTML input</div>
+<textarea class="code" id="input" spellcheck="false" aria-label="Input markup"></textarea>
+</div>
+<div>
+<div class="io-label">JSX output</div>
+<pre class="code-out" id="output"></pre>
+</div>
+</div>
+<div class="opts-grid">
+<div class="input-group"><label for="mode">Output</label>
+<select id="mode">
+<option value="jsx">JSX only</option>
+<option value="function" selected>Function component</option>
+<option value="arrow">Arrow component + export</option>
+</select></div>
+<div class="input-group"><label for="compName">Component name</label><input type="text" id="compName" value="Component" placeholder="e.g. Hero"></div>
+<div class="input-group"><label>TypeScript</label>
+<label class="check-group"><input type="checkbox" id="ts"> TypeScript props</label></div>
+<div class="input-group"><label>Props</label>
+<label class="check-group"><input type="checkbox" id="spread"> Spread {...props} on root</label></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo" type="button">Convert</button>
+<button class="btn ghost" id="btnExample" type="button">Load example</button>
+<button class="btn ghost" id="btnSwap" type="button">Use output as input</button>
+<button class="btn save" id="btnCopy" type="button">Copy JSX</button>
+</div>
+<div class="status-box" id="status">Converted live as you type. The SVG tab applies React's attribute renames after conversion.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/html-to-markdown/">HTML to Markdown</a></li><li style="margin:4px 0"><a href="/svg-editor/">SVG editor</a></li><li style="margin:4px 0"><a href="/svg-to-png-converter/">SVG to PNG</a></li><li style="margin:4px 0"><a href="/html-entity-converter/">HTML entity converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/html-to-jsx-conversion/">Read the HTML→JSX guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Attributes JSX Renames (Converter Handles All)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>HTML / SVG</th><th>JSX</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>class</code></td><td><code>className</code></td><td>DOM property name, not attribute</td></tr>
+<tr><td><code>for</code></td><td><code>htmlFor</code></td><td><code>for</code> is a JS reserved word</td></tr>
+<tr><td><code>tabindex</code></td><td><code>tabIndex</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>readonly</code></td><td><code>readOnly</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>maxlength</code></td><td><code>maxLength</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>autocomplete</code></td><td><code>autoComplete</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>colspan</code> / <code>rowspan</code></td><td><code>colSpan</code> / <code>rowSpan</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>srcset</code></td><td><code>srcSet</code></td><td>camelCase DOM property</td></tr>
+<tr><td><code>value</code> (input)</td><td><code>defaultValue</code></td><td>uncontrolled input default</td></tr>
+<tr><td><code>stroke-width</code></td><td><code>strokeWidth</code></td><td>React SVG attributes are camelCase</td></tr>
+<tr><td><code>stroke-linecap</code></td><td><code>strokeLinecap</code></td><td>same</td></tr>
+<tr><td><code>stroke-dasharray</code></td><td><code>strokeDasharray</code></td><td>same</td></tr>
+<tr><td><code>fill-rule</code> / <code>clip-path</code></td><td><code>fillRule</code> / <code>clipPath</code></td><td>same</td></tr>
+<tr><td><code>font-size</code> / <code>text-anchor</code></td><td><code>fontSize</code> / <code>textAnchor</code></td><td>same</td></tr>
+<tr><td><code>xlink:href</code></td><td><code>xlinkHref</code></td><td>namespaced attrs camelCase in React</td></tr>
+<tr><td><code>xmlns:xlink</code></td><td><code>xmlnsXlink</code></td><td>same</td></tr>
+<tr><td><code>aria-*</code>, <code>data-*</code></td><td>unchanged</td><td>React expects the hyphens</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Boolean attributes come through bare (<code>disabled</code>), numeric strings become expressions (<code>width={24}</code>), and <code>viewBox</code> stays exactly as it is — already valid camelCase.</p>
+</div>
+
+<div class="content-section">
+<h2>How the HTML to JSX Converter Works</h2>
+<p>This page runs htmltojsx — the BSD-licensed converter from React's react-magic project, the engine behind React's own HTML→JSX playground — directly in your browser. It parses your markup into a real DOM tree, walks it, and re-serializes each node as JSX: attributes renamed to React's names, style strings converted to object literals, void elements self-closed, and text escaped where JSX needs it. The SVG tab layers a normalizer on top that renames hyphenated SVG attributes to React's camelCase forms (the same mapping the svgr toolchain applies) and can wrap the output as a named, exported component with a props spread on the root element.</p>
+<h3>A worked example: HTML</h3>
+<p>Input:</p>
+<p><code>&lt;div class="hero" id="top"&gt;&lt;h1 style="color:red"&gt;Hello&lt;/h1&gt;&lt;p&gt;Text &amp;amp; more &lt;br/&gt;&lt;/p&gt;&lt;input type="text" value="a" disabled&gt;&lt;img src="x.png" alt="pic"&gt;&lt;/div&gt;</code></p>
+<p>Output (JSX mode):</p>
+<p><code>&lt;div className="hero" id="top"&gt;&lt;h1 style={{color: 'red'}}&gt;Hello&lt;/h1&gt;&lt;p&gt;Text &amp;amp; more &lt;br /&gt;&lt;/p&gt;&lt;input type="text" defaultValue="a" disabled /&gt;&lt;img src="x.png" alt="pic" /&gt;&lt;/div&gt;</code></p>
+<p>Four conversions happened: <code>class</code> became <code>className</code>, the style string became a style object, the input's <code>value</code> became <code>defaultValue</code> (the uncontrolled-input form React expects in plain markup), and <code>&lt;br&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;img&gt;</code> self-closed — JSX requires it.</p>
+<h3>A worked example: SVG</h3>
+<p>Input (a typical icon, with the attributes icon sets actually use):</p>
+<p><code>&lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"&gt;&lt;polyline points="3 17 9 11 13 15 21 7"&gt;&lt;/polyline&gt;&lt;/svg&gt;</code></p>
+<p>Output (component mode, named ActivityIcon, props spread on):</p>
+<p><code>export default function ActivityIcon(props) { return ( &lt;svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="icon" {...props}&gt; &lt;polyline points="3 17 9 11 13 15 21 7" /&gt; &lt;/svg&gt; ); }</code></p>
+<p>Paste the same SVG into React without conversion and the console fills with "Invalid DOM property" warnings while the stroke silently disappears — which is how most people find this tool.</p>
+<h3>What conversion can't do</h3>
+<ul>
+<li><strong>Event handlers:</strong> <code>onclick="doThing()"</code> needs to become <code>onClick={doThing}</code> with a real function — no static converter can invent your handler.</li>
+<li><strong>Scripts and stylesheets:</strong> <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> don't belong in JSX at all; move them out.</li>
+<li><strong>Template syntax:</strong> <code>{{mustache}}</code>, <code>&lt;% erb %&gt;</code>, and PHP tags pass through as literal text — strip them before converting.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why does class become className in JSX?</h3><p>Because className is a property of the DOM API, not an HTML attribute name. React sets real DOM properties (element.className), and it does this at runtime, so JSX attribute names follow the property names: className, htmlFor, tabIndex. The converter renames all of them automatically.</p></div>
+<div class="faq-item"><h3>What happens to inline styles?</h3><p>HTML style strings become JavaScript objects. style="color:red" turns into style={{color: 'red'}}, and hyphenated CSS properties camel-case themselves: font-size becomes fontSize. The converter produces the object literal for you, quoted values included.</p></div>
+<div class="faq-item"><h3>Why does React warn about stroke-width in SVG?</h3><p>The message reads 'Invalid DOM property stroke-width. Did you mean strokeWidth?' React's SVG attributes are camelCase like its HTML ones, so stroke-width, stroke-linecap, clip-path, and fill-rule must become strokeWidth, strokeLinecap, clipPath, and fillRule. The SVG tab here renames them after converting — aria-* and data-* keep their hyphens, since React expects those verbatim.</p></div>
+<div class="faq-item"><h3>Can this convert SVG into a React component?</h3><p>Yes — the SVG tab does the conversion plus the wrapping that icon workflows expect: name the component, spread props onto the root element (svgr-style, so callers can set size and color), and export it as a default function component, optionally in TypeScript. That reproduces the output of the svgr toolchain without a build step.</p></div>
+<div class="faq-item"><h3>Is my HTML sent to a server?</h3><p>No. The converter runs on the open-source htmltojsx engine (BSD-licensed, from React's react-magic project) directly in your browser tab. Paste in proprietary markup if you like — the network tab shows no requests after the engine loads.</p></div>
+<div class="faq-item"><h3>What can't HTML to JSX conversion handle?</h3><p>JavaScript and CSS in script and style tags doesn't translate — JSX treats their contents as text, and React wants real event handlers (onclick becomes onClick as a function prop, which no static converter can invent). Web components, server-side includes, and template syntax (mustaches, ERB) come through literally. Convert markup, then wire behavior by hand.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/html-to-markdown/">📝 HTML to Markdown</a>
+<a href="/svg-editor/">✏️ SVG Editor</a>
+<a href="/svg-to-png-converter/">🖼️ SVG to PNG</a>
+<a href="/html-entity-converter/">🔐 HTML Entity Converter</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---HJ-ENGINE-START---
+// HTMLtoJSX engine: htmltojsx@0.3.0 UMD (BSD-3-Clause, reactjs/react-magic)
+// via jsdelivr — the converter behind React's own HTML→JSX playground.
+var HJ_SVG_ATTRS = {
+  'xlink:href':'xlinkHref','xlink:title':'xlinkTitle','xlink:show':'xlinkShow','xlink:role':'xlinkRole','xmlns:xlink':'xmlnsXlink',
+  'xml:space':'xmlSpace','xml:lang':'xmlLang','xml:base':'xmlBase',
+  'stroke-width':'strokeWidth','stroke-linecap':'strokeLinecap','stroke-linejoin':'strokeLinejoin',
+  'stroke-dasharray':'strokeDasharray','stroke-dashoffset':'strokeDashoffset','stroke-miterlimit':'strokeMiterlimit','stroke-opacity':'strokeOpacity',
+  'fill-opacity':'fillOpacity','fill-rule':'fillRule','clip-rule':'clipRule','clip-path':'clipPath',
+  'font-family':'fontFamily','font-size':'fontSize','font-weight':'fontWeight','font-stretch':'fontStretch','font-variant':'fontVariant',
+  'text-anchor':'textAnchor','text-rendering':'textRendering','dominant-baseline':'dominantBaseline','alignment-baseline':'alignmentBaseline','baseline-shift':'baselineShift',
+  'stop-color':'stopColor','stop-opacity':'stopOpacity',
+  'marker-start':'markerStart','marker-mid':'markerMid','marker-end':'markerEnd',
+  'paint-order':'paintOrder','pointer-events':'pointerEvents','shape-rendering':'shapeRendering','vector-effect':'vectorEffect',
+  'letter-spacing':'letterSpacing','word-spacing':'wordSpacing','writing-mode':'writingMode','unicode-bidi':'unicodeBidi',
+  'vertical-align':'verticalAlign','enable-background':'enableBackground'
+};
+// React requires camelCase for these SVG/presentation attributes (the same
+// rename svgr applies). aria-* and data-* keep their hyphens — React wants
+// those verbatim — and attributes that are already camelCase pass through.
+function hjNormalizeSvg(jsx){
+  return String(jsx).replace(/(^|\s)([a-zA-Z][a-zA-Z0-9]*(?:(?:-[a-zA-Z][a-zA-Z0-9]*)+|:[a-zA-Z][a-zA-Z0-9:-]*))=/g,function(m,pre,key){
+    return HJ_SVG_ATTRS.hasOwnProperty(key)?pre+HJ_SVG_ATTRS[key]+'=':m;
+  });
+}
+function hjSanitizeName(name,fallback){
+  var parts=String(name||'').split(/[^A-Za-z0-9]+/).filter(Boolean);
+  if(!parts.length)parts=[fallback];
+  var n=parts.map(function(p){return p.charAt(0).toUpperCase()+p.slice(1);}).join('');
+  if(/^[0-9]/.test(n))n='C'+n;
+  return n;
+}
+function hjDedent(text){
+  var lines=String(text).replace(/^\s*\n/,'').replace(/\s+$/,'').split('\n');
+  var min=Infinity;
+  lines.forEach(function(l){
+    if(!l.trim())return;
+    var w=l.match(/^\s*/)[0].length;
+    if(w<min)min=w;
+  });
+  if(!isFinite(min))min=0;
+  return lines.map(function(l){return l.slice(min);}).join('\n');
+}
+function hjInsertProps(body){
+  var firstGt=body.indexOf('>');
+  if(firstGt<0)return body;
+  var selfClose=body.charAt(firstGt-1)==='/';
+  var at=selfClose?firstGt-1:firstGt;
+  return body.slice(0,at)+' {...props}'+body.slice(at);
+}
+function hjComponent(jsx,o){
+  var body=hjDedent(jsx);
+  if(o.spread)body=hjInsertProps(body);
+  var name=hjSanitizeName(o.name,o.svg?'Icon':'Component');
+  var tsType=o.svg?'React.SVGProps<SVGSVGElement>':'React.HTMLAttributes<HTMLElement>';
+  var lines=body.split('\n');
+  if(o.mode==='jsx')return body;
+  if(o.mode==='arrow'){
+    var out='const '+name+' = ('+(o.ts?'props: '+tsType:'')+') => (\n'+lines.map(function(l){return '  '+l;}).join('\n')+'\n);\n\nexport default '+name+';';
+    return out;
+  }
+  var inner=lines.map(function(l){return '    '+l;}).join('\n');
+  return 'export default function '+name+'('+(o.spread?'props'+(o.ts?': '+tsType:''):'')+') {\n  return (\n'+inner+'\n  );\n}';
+}
+// ---- browser wiring ----
+var HJ={tab:'html'};
+var hjExamples={
+  html:'<div class="hero" id="top">\n  <h1 style="color:red">Hello</h1>\n  <p>Text &amp; more <br/></p>\n  <input type="text" value="a" disabled>\n  <img src="x.png" alt="pic">\n</div>',
+  svg:'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">\n  <polyline points="3 17 9 11 13 15 21 7"></polyline>\n</svg>'
+};
+function hjOpts(){
+  return {
+    mode: document.getElementById('mode').value,
+    name: document.getElementById('compName').value,
+    ts: document.getElementById('ts').checked,
+    spread: document.getElementById('spread').checked,
+    svg: HJ.tab==='svg'
+  };
+}
+function hjConvert(){
+  var src=document.getElementById('input').value;
+  var out=document.getElementById('output');
+  var status=document.getElementById('status');
+  if(!src.trim()){out.textContent='';status.textContent='Paste '+(HJ.tab==='svg'?'SVG':'HTML')+' on the left, or press Load example.';status.className='status-box';return;}
+  if(typeof HTMLtoJSX==='undefined'){status.textContent='The converter engine did not load (offline or blocked).';status.className='status-box err';return;}
+  try{
+    var conv=new HTMLtoJSX({createClass:false,indent:'  '});
+    var jsx=conv.convert(src);
+    if(HJ.tab==='svg')jsx=hjNormalizeSvg(jsx);
+    var final=hjComponent(jsx,hjOpts());
+    out.textContent=final;
+    status.textContent=(HJ.tab==='svg'?'SVG':'HTML')+' converted'+(HJ.tab==='svg'?' (React SVG attribute renames applied)':'')+'.';
+    status.className='status-box';
+  }catch(e){
+    out.textContent='';
+    status.textContent='Could not parse that markup: '+(e&&e.message||e);
+    status.className='status-box err';
+  }
+}
+document.getElementById('tabHtml').addEventListener('click',function(){hjSetTab('html');});
+document.getElementById('tabSvg').addEventListener('click',function(){hjSetTab('svg');});
+function hjSetTab(tab){
+  HJ.tab=tab;
+  document.getElementById('tabHtml').classList.toggle('active',tab==='html');
+  document.getElementById('tabSvg').classList.toggle('active',tab==='svg');
+  document.getElementById('inLabel').textContent=tab==='svg'?'SVG input':'HTML input';
+  document.getElementById('compName').value=tab==='svg'?'ActivityIcon':'Component';
+  document.getElementById('input').value=hjExamples[tab];
+  hjConvert();
+}
+document.getElementById('btnExample').addEventListener('click',function(){document.getElementById('input').value=hjExamples[HJ.tab];hjConvert();});
+document.getElementById('btnSwap').addEventListener('click',function(){document.getElementById('input').value=document.getElementById('output').textContent;hjConvert();});
+document.getElementById('btnGo').addEventListener('click',hjConvert);
+document.getElementById('btnCopy').addEventListener('click',function(){
+  var t=document.getElementById('output').textContent;
+  if(!t)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t);document.getElementById('status').textContent='Copied to clipboard.';}
+  else{document.getElementById('status').textContent='Select the output and copy manually.';}
+});
+['mode','compName','ts','spread'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',hjConvert);
+  document.getElementById(id).addEventListener('change',hjConvert);
+});
+document.getElementById('input').addEventListener('input',hjConvert);
+document.getElementById('input').value=hjExamples.html;
+hjConvert();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

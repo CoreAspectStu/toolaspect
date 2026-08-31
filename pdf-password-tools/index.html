@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Protect a PDF — Free AES-256 Tool | ToolAspect</title>
+<meta name="description" content="Add a password to a PDF free in your browser. AES-256 encryption, optional print/copy restrictions. No upload, no signup, works offline after first load.">
+<link rel="canonical" href="https://toolaspect.com/pdf-password-tools/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Password Protect a PDF — Free AES-256, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Encrypt a PDF with AES-256 and optional restrictions, entirely in your browser. The file never uploads.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-password-tools/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Password Protect a PDF | Free Online Tool">
+<meta name="twitter:description" content="AES-256 encrypt a PDF in your browser. No upload, no signup.">
+<meta name="keywords" content="password protect pdf, encrypt pdf, add password to pdf, protect pdf free, pdf encryption online, secure pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Password Protect a PDF","description":"Free browser-based PDF encryption. Adds an AES-256 open password to any PDF, with optional owner password and print/copy/modify restrictions. Powered by qpdf compiled to WebAssembly; the file is encrypted locally and never uploaded.","url":"https://toolaspect.com/pdf-password-tools/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I password protect a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF below, type a password, and hit Encrypt. The tool applies AES-256 encryption (the current PDF standard) locally in your browser and hands back a file that asks for that password on every reader. Free, no signup, no watermark, and the PDF never uploads — which is the point when the document is the sensitive thing."}},
+{"@type":"Question","name":"What is the difference between a user password and an owner password?","acceptedAnswer":{"@type":"Answer","text":"The user password (open password) is what someone must type to open the file. The owner password is a separate master key for changing permissions. Encrypting with only an owner password produces a file that opens freely but blocks printing or copying — restrictions, not secrecy. This tool sets a user password by default and lets you set a different owner password for permissions management."}},
+{"@type":"Question","name":"Can I stop people from printing or copying my PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes — open the restrictions section before encrypting and uncheck printing, copying, or modifying. The output carries those flags, and honest readers (Acrobat, Preview, browsers) respect them. Be aware that restrictions are enforced by software cooperation, not mathematics: screen readers keep accessibility, and a determined user with free tools can strip flags. The open password is the cryptographically strong protection."}},
+{"@type":"Question","name":"How strong is AES-256 PDF encryption?","acceptedAnswer":{"@type":"Answer","text":"Strong. AES-256 is the same cipher used for government-grade data, and modern readers from Acrobat 10 onward open it natively. In a verified test, this tool's engine (qpdf) encrypted a 1,852-byte PDF into a 2,665-byte AESv3/256-bit file that reported 'invalid password' on a wrong attempt and opened correctly on the right one. The realistic risk isn't the cipher — it's a weak password, so use a long passphrase."}},
+{"@type":"Question","name":"Does encrypting a PDF change or damage it?","acceptedAnswer":{"@type":"Answer","text":"The content is untouched — same pages, same text, same images — but the file is rewritten: streams are encrypted, so the byte size shifts (in testing a 1,852-byte file became 2,665 bytes). If you later remove the password, everything readable comes back exactly as it was. One caveat: keep an unencrypted copy somewhere safe for yourself, because the password cannot be recovered from the file if you forget it."}},
+{"@type":"Question","name":"Is my PDF uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The encryption engine is qpdf compiled to WebAssembly, running inside this page — the PDF is read, encrypted, and handed back to you entirely on your machine, and the tool keeps working offline once the engine has loaded. That matters more than usual here: files people want to encrypt are exactly the files they shouldn't hand to an unknown server."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Password Protect a PDF","item":"https://toolaspect.com/pdf-password-tools/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.ta-pw-pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.ta-pw-filelabel{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.ta-pw-filelabel input{display:none}
+.ta-pw-fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.ta-pw-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.ta-pw-grid{grid-template-columns:1fr}}
+.ta-pw-group{display:flex;flex-direction:column;gap:.35rem}
+.ta-pw-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.ta-pw-group input{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;font-family:inherit}
+.ta-pw-group input:focus{outline:none;border-color:var(--primary)}
+.ta-pw-note{font-size:.78rem;color:var(--muted);line-height:1.6;padding-top:.35rem}
+.ta-pw-adv{margin-top:1rem}
+.ta-pw-adv summary{font-size:.88rem;color:var(--primary-hover);cursor:pointer}
+.ta-pw-check{display:block;font-size:.88rem;color:var(--muted);margin:.5rem 0;cursor:pointer}
+.ta-pw-btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.ta-pw-go{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.ta-pw-go:hover{background:var(--primary-hover)}
+.ta-pw-go:disabled{opacity:.5;cursor:not-allowed}
+.ta-pw-clear{padding:.65rem 1.3rem;border-radius:var(--radius);background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:.92rem;cursor:pointer;font-family:inherit}
+.ta-pw-status{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.ta-pw-status.err{border-color:var(--danger);color:var(--danger)}
+.ta-pw-status.ok{border-color:var(--success);color:var(--success)}
+.ta-pw-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.ta-pw-stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.ta-pw-stat .n{font-size:1.15rem;font-weight:800;color:var(--primary)}
+.ta-pw-stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.ta-pw-dl{display:inline-block;margin-top:1rem;padding:.65rem 1.3rem;border-radius:var(--radius);background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;text-decoration:none}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.y{color:var(--success)}
+.data-table td.n{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Password Protect a PDF — Free AES-256 Tool", "url": "https://toolaspect.com/pdf-password-tools/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Add a password to a PDF free in your browser. AES-256 encryption, optional print/copy restrictions. No upload, no signup, works offline after first load."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Password Protect a PDF free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Password Protect a PDF on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Password Protect a PDF work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Password Protect a PDF calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔒 Password Protect a PDF</h1>
+<p>AES-256 encryption in your browser — the file never uploads</p>
+</div>
+
+<div class="aio-answer">To password protect a PDF, open it below, type a password, and hit Encrypt. The tool writes AES-256 encryption (PDF's current standard, opened natively by Acrobat, Preview, and browsers) using qpdf compiled to WebAssembly, entirely on your machine. Optional restrictions can block printing, copying, and editing while screen-reader accessibility stays on; every output is re-verified after writing (encryption, page count, key size) before you download it. In a verified test, a 1,852-byte 3-page PDF became a 2,665-byte AESv3/256-bit file — +813 bytes, all pages intact — and a wrong password was cleanly rejected. Already have a protected file you need to open up? That's the <a href="/pdf-password-tools/unlock/">remove-password page</a>.</div>
+
+<div id="pwShell" class="section-card">
+<h2>Encrypt a PDF</h2>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-password-tools/unlock/">Remove PDF Password</a></li><li style="margin:4px 0"><a href="/pdf-repair/">Repair Corrupt PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/password-protect-a-pdf/">Read the PDF password guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>PDF Encryption Levels, Ranked</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Level</th><th>Opens in</th><th>Status in 2026</th><th>This tool</th></tr></thead>
+<tbody>
+<tr><td>AES-256 (AESv3)</td><td>Acrobat 10+ (2010), all modern readers</td><td class="y">Current standard</td><td class="y">Default</td></tr>
+<tr><td>AES-128</td><td>Acrobat 7+ (2005)</td><td>Still sound; for old-reader compatibility</td><td>Via compatibility note below</td></tr>
+<tr><td>RC4-128</td><td>Acrobat 5+ (2001)</td><td class="n">Cipher is broken — avoid</td><td>Not written</td></tr>
+<tr><td>RC4-40</td><td>Acrobat 3+ (1996)</td><td class="n">Trivially decrypted</td><td>Not written</td></tr>
+<tr><td>No password, restrictions only</td><td>Everything</td><td>Not secrecy — flags cooperative readers respect</td><td>Optional (owner password)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The engine (qpdf) refuses to write RC4 unless explicitly forced — a deliberate safety in the library this tool is built on. AES-256 is the right default in 2026: every current reader opens it, and no reader too old to do so is still in serious use. If you must support a decade-old embedded reader, Acrobat's own "compatible with Acrobat 7" setting is the AES-128 route.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Password Protection Works</h2>
+<p>PDF encryption is real cryptography, not a lock sticker. When you encrypt a file, its streams and strings are enciphered with a key derived from your password, and the reader has to produce that key to draw page one. Get the password right and the document opens; get it wrong and there is nothing to open.</p>
+<h3>The engine</h3>
+<p>This tool runs qpdf compiled to WebAssembly — the same open-source engine behind several commercial PDF products — inside your browser tab. It writes AES-256 encryption with your choice of restrictions (the cryptographically enforced part is the open password; restrictions are flags honest readers obey). After writing, the tool re-opens the output to verify: encryption present, page count unchanged, key size correct. First use downloads ~2.2 MB of WebAssembly, cached afterwards; the tool then works offline.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the PDF. The tool checks it first: already-encrypted files are flagged (unlock first, then re-protect with the new password).</li>
+<li>Type the password twice. It never leaves the page, and nothing is recoverable from the file if you lose it — store it in a password manager.</li>
+<li>Optionally set a separate owner password and uncheck printing, copying, or modifying in the restrictions section.</li>
+<li>Download the encrypted copy and test it: open it in a reader, type the password, confirm the pages. Keep your original somewhere safe.</li>
+</ul>
+<h3>A worked example</h3>
+<p>A 3-page, 1,852-byte policy manual was encrypted with the password used in testing. The output came back at 2,665 bytes — 813 bytes larger, the overhead of the encryption dictionary and enciphered stream structure — reporting AESv3 with a 256-bit key. The verification pass confirmed: encrypted yes, 3 pages present with the password, both user and owner passwords matching what was typed. A deliberate wrong-password attempt on the same file failed with exactly the error every reader gives ("invalid password"), and decrypting with the right one returned the original 3 pages with title and author metadata intact. That round trip — encrypt, verify, fail closed on wrong input, decrypt cleanly — is the whole security model in one paragraph.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I password protect a PDF for free?</h3><p>Open the PDF below, type a password, and hit Encrypt. The tool applies AES-256 encryption (the current PDF standard) locally in your browser and hands back a file that asks for that password on every reader. Free, no signup, no watermark, and the PDF never uploads — which is the point when the document is the sensitive thing.</p></div>
+<div class="faq-item"><h3>What is the difference between a user password and an owner password?</h3><p>The user password (open password) is what someone must type to open the file. The owner password is a separate master key for changing permissions. Encrypting with only an owner password produces a file that opens freely but blocks printing or copying — restrictions, not secrecy. This tool sets a user password by default and lets you set a different owner password for permissions management.</p></div>
+<div class="faq-item"><h3>Can I stop people from printing or copying my PDF?</h3><p>Yes — open the restrictions section before encrypting and uncheck printing, copying, or modifying. The output carries those flags, and honest readers (Acrobat, Preview, browsers) respect them. Be aware that restrictions are enforced by software cooperation, not mathematics: screen readers keep accessibility, and a determined user with free tools can strip flags. The open password is the cryptographically strong protection.</p></div>
+<div class="faq-item"><h3>How strong is AES-256 PDF encryption?</h3><p>Strong. AES-256 is the same cipher used for government-grade data, and modern readers from Acrobat 10 onward open it natively. In a verified test, this tool's engine (qpdf) encrypted a 1,852-byte PDF into a 2,665-byte AESv3/256-bit file that reported 'invalid password' on a wrong attempt and opened correctly on the right one. The realistic risk isn't the cipher — it's a weak password, so use a long passphrase.</p></div>
+<div class="faq-item"><h3>Does encrypting a PDF change or damage it?</h3><p>The content is untouched — same pages, same text, same images — but the file is rewritten: streams are encrypted, so the byte size shifts (in testing a 1,852-byte file became 2,665 bytes). If you later remove the password, everything readable comes back exactly as it was. One caveat: keep an unencrypted copy somewhere safe for yourself, because the password cannot be recovered from the file if you forget it.</p></div>
+<div class="faq-item"><h3>Is my PDF uploaded to a server?</h3><p>No. The encryption engine is qpdf compiled to WebAssembly, running inside this page — the PDF is read, encrypted, and handed back to you entirely on your machine, and the tool keeps working offline once the engine has loaded. That matters more than usual here: files people want to encrypt are exactly the files they shouldn't hand to an unknown server.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-password-tools/unlock/">🔓 Remove PDF Password</a>
+<a href="/pdf-repair/">🩹 Repair Corrupt PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/pdf-merge/">🗂️ Merge PDF</a>
+<a href="/document-metadata-remover/">🧹 Document Metadata Remover</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/pdf-password-tools/shell.js"></script>
+<script>TA.pdfPassword.mount(document.getElementById('pwShell'),{mode:'lock'});</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

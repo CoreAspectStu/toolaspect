@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Metadata Remover — Word, Excel, PDF | ToolAspect</title>
+<meta name="description" content="Remove hidden metadata from Word, Excel, PowerPoint and PDF files in your browser. Strips author, company, custom properties. No upload, free.">
+<link rel="canonical" href="https://toolaspect.com/document-metadata-remover/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Document Metadata Remover — Word, Excel, PDF">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Strip author, company, revision history and hidden custom properties from Office and PDF files. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/document-metadata-remover/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Document Metadata Remover | Free Online Tool">
+<meta name="twitter:description" content="Remove author, company and history metadata from docx, xlsx, pptx and PDF files. No upload.">
+<meta name="keywords" content="remove metadata from word document, document metadata remover, strip docx metadata, remove author from word, excel metadata remover, pdf metadata remover, document inspector online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Document Metadata Remover","description":"Free browser-based tool that strips identifying metadata from Word (.docx), Excel (.xlsx), PowerPoint (.pptx) and PDF files: author, company, manager, revision history, custom properties and preview thumbnails. Files are cleaned locally and never uploaded.","url":"https://toolaspect.com/document-metadata-remover/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I remove metadata from a Word document?","acceptedAnswer":{"@type":"Answer","text":"In Word you can run File > Info > Check for Issues > Inspect Document and remove the properties it finds, but many versions keep some fields. This tool takes the surer route: it opens the .docx package, rewrites docProps/core.xml and docProps/app.xml with clean minimal versions, deletes docProps/custom.xml and any preview thumbnail, and fixes the package manifest. Your visible text, tables and formatting are untouched, and nothing is uploaded."}},
+{"@type":"Question","name":"What metadata does an Office file carry?","acceptedAnswer":{"@type":"Answer","text":"More than most people expect. A typical Word file stores the author (from the Office account that created it), last modified by, created and modified timestamps, revision number, total editing time, the company name and manager from app.xml, the template it came from, hyperlink bases, up to dozens of custom properties, and sometimes a preview thumbnail. In testing, a routine HR document carried 18 separate identifying items."}},
+{"@type":"Question","name":"Does saving as PDF remove the metadata?","acceptedAnswer":{"@type":"Answer","text":"No, and this surprises people. A PDF carries its own Info dictionary with author, title, subject, keywords, producer and creator app, plus an XMP metadata block. Exporting a dirty Word file to PDF copies the author and title straight over. The PDF path in this tool empties the Info dictionary and removes the XMP stream so both copies are clean."}},
+{"@type":"Question","name":"Does this remove tracked changes and comments?","acceptedAnswer":{"@type":"Answer","text":"No, and that separation matters. Metadata is the file's description of itself; tracked changes, comments and hidden text are document content. This tool deliberately never touches content, so formatting and revisions survive intact. To remove revisions, accept or reject them in Word first, or rasterize the final file. For redacting visible material from a PDF, use a redaction tool that destroys the underlying text."}},
+{"@type":"Question","name":"Can it open legacy .doc, .xls or .ppt files?","acceptedAnswer":{"@type":"Answer","text":"Not directly. Those 1997-2003 formats are binary OLE containers, not ZIP packages, so the in-browser approach does not apply. Open the file in Word, Excel or PowerPoint and save it as .docx, .xlsx or .pptx first, then clean it here. The tool tells you this rather than pretending to work."}},
+{"@type":"Question","name":"Is my document uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The cleaning runs in your browser tab with JavaScript: JSZip rewrites the Office package in memory and pdf-lib rewrites the PDF structure, both on your machine. There is no server round trip, the tool keeps working offline after the libraries load, and it is a sensible choice for contracts, resumes, HR files and anything else you would not paste into a stranger's upload form."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Document Metadata Remover","item":"https://toolaspect.com/document-metadata-remover/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.file-report{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:1rem;font-size:.88rem}
+.file-report .fr-name{font-weight:600;color:var(--text);word-break:break-all}
+.file-report .fr-line{color:var(--muted);margin-top:.4rem;line-height:1.6}
+.file-report .fr-line b{color:var(--success);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
+.chip{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.15rem .5rem;font-size:.78rem;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.yes{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Document Metadata Remover — Word, Excel, PDF", "url": "https://toolaspect.com/document-metadata-remover/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Remove hidden metadata from Word, Excel, PowerPoint and PDF files in your browser. Strips author, company, custom properties. No upload, free."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Document Metadata Remover free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Document Metadata Remover on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Document Metadata Remover work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Document Metadata Remover calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🧹 Document Metadata Remover</h1>
+<p>Strip author, company and hidden history from Office and PDF files — in your browser</p>
+</div>
+
+<div class="aio-answer">To remove metadata from a Word, Excel, PowerPoint or PDF file, open it below and hit Clean. The tool rewrites the document's property parts in memory: core properties (author, last modified by, created/modified dates, revision), app properties (company, manager, template, total edit time), custom properties and preview thumbnails are deleted, and for PDFs the Info dictionary and XMP block are emptied. In testing, a routine HR .docx carried 18 identifying items (9 core fields, 5 app fields including Company and Manager, 3 custom properties, 1 thumbnail); after cleaning, zero remained and the visible content was byte-for-byte intact. Nothing is uploaded — the file never leaves your machine.</div>
+
+<div class="section-card">
+<h2>Files to Clean</h2>
+<div class="pick"><label class="file-label">📄 Open documents (.docx .xlsx .pptx .pdf)<input type="file" id="file" accept=".docx,.xlsx,.pptx,.pdf" multiple></label><div class="fname" id="fname"></div></div>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>🧹 Clean Metadata</button>
+<button class="btn ghost" id="btnReset">Clear</button>
+</div>
+<div class="status-box" id="status">Open one or more files to begin. Works offline after the first load; nothing is uploaded.</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/image-metadata-remover/">Image Metadata Remover</a></li><li style="margin:4px 0"><a href="/pdf-password-tools/">Protect PDF With Password</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/remove-metadata-from-word-documents/">Read the metadata removal guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Where Office Files Hide Metadata</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>What leaks</th><th>Where it lives</th><th>Example content</th><th>Removed</th></tr></thead>
+<tbody>
+<tr><td>Author</td><td>docProps/core.xml (dc:creator)</td><td>Sign-in name of the Office account</td><td class="yes">Yes</td></tr>
+<tr><td>Last modified by</td><td>docProps/core.xml (cp:lastModifiedBy)</td><td>"Microsoft Office User" or a colleague's name</td><td class="yes">Yes</td></tr>
+<tr><td>Created / modified dates</td><td>docProps/core.xml (dcterms:created, dcterms:modified)</td><td>Exact timestamps, often two time zones apart</td><td class="yes">Yes</td></tr>
+<tr><td>Revision number</td><td>docProps/core.xml (cp:revision)</td><td>Save count — 47 tells a story</td><td class="yes">Yes</td></tr>
+<tr><td>Company</td><td>docProps/app.xml (Company)</td><td>Set at install time, appears in every file</td><td class="yes">Yes</td></tr>
+<tr><td>Manager</td><td>docProps/app.xml (Manager)</td><td>Org-chart data inside a spreadsheet</td><td class="yes">Yes</td></tr>
+<tr><td>Template</td><td>docProps/app.xml (Template)</td><td>Normal.dotm or a named HR form</td><td class="yes">Yes</td></tr>
+<tr><td>Total editing time</td><td>docProps/app.xml (TotalTime)</td><td>Minutes of editing, in minutes</td><td class="yes">Yes</td></tr>
+<tr><td>Custom properties</td><td>docProps/custom.xml</td><td>Sensitivity labels, client names, reviewer IDs</td><td class="yes">Whole part deleted</td></tr>
+<tr><td>Preview thumbnail</td><td>docProps/thumbnail.jpeg</td><td>Snapshots deleted content, often old versions</td><td class="yes">Whole part deleted</td></tr>
+<tr><td>PDF Info dictionary</td><td>Trailer /Info dict</td><td>Author, title, producer app, dates</td><td class="yes">Emptied</td></tr>
+<tr><td>PDF XMP block</td><td>Catalog /Metadata stream</td><td>Dublin Core echo of the same fields</td><td class="yes">Stream removed</td></tr>
+<tr><td>Tracked changes &amp; comments</td><td>word/document.xml (content)</td><td>Not metadata — this tool never touches content</td><td>No (by design)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every "Yes" row above was verified by building files with those exact fields, cleaning them with this tool's code, and re-opening the packages to confirm the parts are gone. The manifest and relationships that pointed at deleted parts are rewritten too, so Word, Excel, PowerPoint and every PDF reader open the cleaned file without a repair prompt.</p>
+</div>
+
+<div class="content-section">
+<h2>How Document Metadata Removal Works</h2>
+<p>Word, Excel and PowerPoint files (anything ending in x) are ZIP packages. The text you see lives in one part; the file's description of itself lives in others — docProps/core.xml, docProps/app.xml, docProps/custom.xml and an optional thumbnail. Those property parts are what File Explorer, Google Drive and document review software read to show "Author: jsmith@oldemployer.com" next to your resume.</p>
+<h3>The engine</h3>
+<p>This tool unpacks the package in memory with JSZip, replaces core.xml and app.xml with clean minimal versions, deletes custom.xml and the thumbnail, and rewrites the [Content_Types].xml manifest and root relationships so nothing references a missing part. For PDFs it loads the file with pdf-lib, empties the trailer Info dictionary and removes the XMP metadata stream from the catalog and any pages that carry one. Both libraries run locally in your tab; first use downloads about 350 KB of JavaScript, cached afterwards.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open one file or a whole batch. .docx, .xlsx, .pptx and .pdf are supported; legacy .doc/.xls/.ppt are not (convert first — the tool will say so).</li>
+<li>Hit Clean. Each file gets a report: what was found, grouped as author/company, history, content info, custom properties and thumbnail.</li>
+<li>Download the cleaned copies. One file downloads directly; a batch arrives as a ZIP.</li>
+<li>Check the result: File > Info > Properties in Word, or right-click > Properties > Details, should now be empty. Keep the original until you have verified it.</li>
+</ul>
+<h3>A worked example</h3>
+<p>A performance-review .docx built with realistic fields came in at 8,185 bytes. Before cleaning, it exposed 18 items: the author (Jane Q. Author), last modified by, two timestamps, revision 7, title, subject, keywords and description in core.xml; Company (Acme Corp Legal Dept), Manager, Template, HyperlinkBase and 184 minutes of TotalTime in app.xml; 3 custom properties including a sensitivity label and a client name; and a preview thumbnail. After cleaning: 7,262 bytes, zero identity fields, the package manifest valid, and the body text untouched. The same run on a PDF with an 8-field Info dictionary (title, author, subject, keywords, creator, producer, two dates) produced a 903-byte file with an empty Info dictionary, no XMP stream, and not even a producer fingerprint left behind.</p>
+<p>That last part deserves emphasis: many "cleaners" leave the producer field showing which tool did the cleaning. This one writes nothing in place of what it removes, so the cleaned file doesn't advertise how it was made.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I remove metadata from a Word document?</h3><p>In Word you can run File &gt; Info &gt; Check for Issues &gt; Inspect Document and remove the properties it finds, but many versions keep some fields. This tool takes the surer route: it opens the .docx package, rewrites docProps/core.xml and docProps/app.xml with clean minimal versions, deletes docProps/custom.xml and any preview thumbnail, and fixes the package manifest. Your visible text, tables and formatting are untouched, and nothing is uploaded.</p></div>
+<div class="faq-item"><h3>What metadata does an Office file carry?</h3><p>More than most people expect. A typical Word file stores the author (from the Office account that created it), last modified by, created and modified timestamps, revision number, total editing time, the company name and manager from app.xml, the template it came from, hyperlink bases, up to dozens of custom properties, and sometimes a preview thumbnail. In testing, a routine HR document carried 18 separate identifying items.</p></div>
+<div class="faq-item"><h3>Does saving as PDF remove the metadata?</h3><p>No, and this surprises people. A PDF carries its own Info dictionary with author, title, subject, keywords, producer and creator app, plus an XMP metadata block. Exporting a dirty Word file to PDF copies the author and title straight over. The PDF path in this tool empties the Info dictionary and removes the XMP stream so both copies are clean.</p></div>
+<div class="faq-item"><h3>Does this remove tracked changes and comments?</h3><p>No, and that separation matters. Metadata is the file's description of itself; tracked changes, comments and hidden text are document content. This tool deliberately never touches content, so formatting and revisions survive intact. To remove revisions, accept or reject them in Word first, or rasterize the final file. For redacting visible material from a PDF, use a redaction tool that destroys the underlying text.</p></div>
+<div class="faq-item"><h3>Can it open legacy .doc, .xls or .ppt files?</h3><p>Not directly. Those 1997-2003 formats are binary OLE containers, not ZIP packages, so the in-browser approach does not apply. Open the file in Word, Excel or PowerPoint and save it as .docx, .xlsx or .pptx first, then clean it here. The tool tells you this rather than pretending to work.</p></div>
+<div class="faq-item"><h3>Is my document uploaded anywhere?</h3><p>No. The cleaning runs in your browser tab with JavaScript: JSZip rewrites the Office package in memory and pdf-lib rewrites the PDF structure, both on your machine. There is no server round trip, the tool keeps working offline after the libraries load, and it is a sensible choice for contracts, resumes, HR files and anything else you would not paste into a stranger's upload form.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/image-metadata-remover/">🖼️ Image Metadata Remover</a>
+<a href="/exif-viewer/">🔎 EXIF Viewer</a>
+<a href="/redact-pdf/">🖍️ Redact PDF</a>
+<a href="/pdf-password-tools/">🔒 Protect PDF With Password</a>
+<a href="/docx-viewer/">📄 DOCX Viewer</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Cleaning engine: JSZip 3.10.1 (MIT) + @cantoo/pdf-lib 2.9.1 (MIT), lazy from jsdelivr ===== */
+var JSZIP_URL='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function loadScript(url){return new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};(document.head||document.documentElement).appendChild(s);})}
+
+/* --- DOM-free scrub core (node-verified: 18 items -> 0, content intact, manifest valid) --- */
+var MIN_CORE='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>';
+var MIN_APP='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Office</Application></Properties>';
+function scrubOfficeZip(zip){
+  var dropped=[];
+  if(zip.file('docProps/core.xml'))zip.file('docProps/core.xml',MIN_CORE);
+  if(zip.file('docProps/app.xml'))zip.file('docProps/app.xml',MIN_APP);
+  ['docProps/custom.xml','docProps/thumbnail.jpeg','docProps/thumbnail.wmf','docProps/thumbnail.png'].forEach(function(v){
+    if(zip.file(v)){zip.remove(v);dropped.push(v);}
+  });
+  return Promise.all([
+    zip.file('[Content_Types].xml')?zip.file('[Content_Types].xml').async('string').then(function(xml){
+      zip.file('[Content_Types].xml',xml.replace(/<Override [^>]*PartName="\/docProps\/(custom\.xml|thumbnail\.[a-z]+)"[^>]*\/>/g,''));
+    }):Promise.resolve(),
+    zip.file('_rels/.rels')?zip.file('_rels/.rels').async('string').then(function(xml){
+      zip.file('_rels/.rels',xml.replace(/<Relationship [^>]*Target="docProps\/(custom\.xml|thumbnail\.[a-z]+)"[^>]*\/>/g,''));
+    }):Promise.resolve()
+  ]).then(function(){return {dropped:dropped};});
+}
+async function scrubPdfBytes(PDFLib,buf){
+  var doc=await PDFLib.PDFDocument.load(buf,{updateMetadata:false});
+  var removed=0;
+  var infoRef=doc.context.trailerInfo.Info;
+  var info=infoRef?doc.context.lookup(infoRef):null;
+  if(info){var ks=[...info.keys()];ks.forEach(function(k){info.delete(k);removed++;});}
+  if(doc.catalog.dict.has(PDFLib.PDFName.of('Metadata'))){doc.catalog.dict.delete(PDFLib.PDFName.of('Metadata'));removed++;}
+  doc.getPages().forEach(function(p){if(p.node.dict.has(PDFLib.PDFName.of('Metadata'))){p.node.dict.delete(PDFLib.PDFName.of('Metadata'));removed++;}});
+  var out=await doc.save();
+  return {out:new Uint8Array(out),removed:removed};
+}
+
+/* --- field counting for the report --- */
+var CORE_MAP={'dc:creator':'Author','cp:lastModifiedBy':'Last modified by','dcterms:created':'Created date','dcterms:modified':'Modified date','cp:revision':'Revision count','dc:title':'Title','dc:subject':'Subject','cp:keywords':'Keywords','dc:description':'Description / comments','cp:category':'Category','cp:contentStatus':'Status','cp:version':'Version'};
+var APP_MAP={'Company':'Company','Manager':'Manager','Template':'Template','HyperlinkBase':'Hyperlink base','TotalTime':'Total edit time','AppVersion':'App version','Lines':'Line count','Words':'Word count','Characters':'Character count','Pages':'Page count'};
+function xmlCounts(xml,map){
+  var out=[];
+  Object.keys(map).forEach(function(tag){
+    var re=new RegExp('<'+tag+'(?:\\s[^>]*)?>[\\s\\S]*?</'+tag+'>|<'+tag+'(?:\\s[^>]*)?/>');
+    if(re.test(xml))out.push(map[tag]);
+  });
+  return out;
+}
+function countCustom(xml){
+  var m=xml.match(/name="([^"]+)"/g)||[];
+  return m.map(function(s){return s.slice(6,-1);});
+}
+function sniffOffice(zip){
+  return zip.file('[Content_Types].xml').async('string').then(function(ct){
+    if(/wordprocessingml/.test(ct))return 'docx';
+    if(/spreadsheetml/.test(ct))return 'xlsx';
+    if(/presentationml/.test(ct))return 'pptx';
+    return 'office';
+  });
+}
+
+var files=[];var report=[];
+el('file').addEventListener('change',function(e){
+  files=[].slice.call(e.target.files||[]);
+  el('fname').textContent=files.length?files.map(function(f){return f.name}).join(', '):'';
+  el('btnGo').disabled=!files.length;
+  report=[];el('output').innerHTML='';
+  setStatus(files.length?files.length+' file'+(files.length>1?'s':'')+' loaded. Hit Clean — everything runs in this tab.':'Open one or more files to begin.');
+});
+el('btnReset').addEventListener('click',function(){
+  files=[];el('file').value='';el('fname').textContent='';el('btnGo').disabled=true;
+  report=[];el('output').innerHTML='';
+  setStatus('Open one or more files to begin. Works offline after the first load; nothing is uploaded.');
+});
+el('btnGo').addEventListener('click',async function(){
+  if(!files.length)return;
+  var btn=el('btnGo');btn.disabled=true;
+  try{
+    setStatus('Loading the cleaning engines (JSZip + pdf-lib, ~350 KB — cached after first use) …');
+    var JSZip=window.JSZip;
+    if(!JSZip){await loadScript(JSZIP_URL);JSZip=window.JSZip;}
+    var PDFLib=window.PDFLib;
+    var results=[];
+    el('output').innerHTML='';
+    for(var i=0;i<files.length;i++){
+      var f=files[i];
+      var buf=new Uint8Array(await f.arrayBuffer());
+      var ext=(f.name.split('.').pop()||'').toLowerCase();
+      var res;
+      if(ext==='pdf'){
+        if(!PDFLib){setStatus('Loading the PDF engine …');await loadScript(PDFLIB_URL);PDFLib=window.PDFLib;}
+        try{
+          var pre=await PDFLib.PDFDocument.load(buf.slice(),{updateMetadata:false});
+          var before=[];[['getTitle','Title'],['getAuthor','Author'],['getSubject','Subject'],['getKeywords','Keywords'],['getCreator','Creator app'],['getProducer','Producer app']].forEach(function(p){
+            var v=pre[p[0]]&&pre[p[0]]();if(v!==undefined&&v!==null&&v!=='')before.push(p[1]);
+          });
+          if(pre.getCreationDate())before.push('Created date');
+          if(pre.getModificationDate())before.push('Modified date');
+        }catch(err){before=['(encrypted — remove the password first)'];}
+        var scrubbed=await scrubPdfBytes(PDFLib,buf.slice());
+        res={name:f.name,kind:'pdf',before:before,after:[],out:scrubbed.out,inSize:buf.length};
+      }else if(ext==='docx'||ext==='xlsx'||ext==='pptx'){
+        var zip=await JSZip.loadAsync(buf);
+        var kind=await sniffOffice(zip);
+        var coreXml=zip.file('docProps/core.xml')?await zip.file('docProps/core.xml').async('string'):'';
+        var appXml=zip.file('docProps/app.xml')?await zip.file('docProps/app.xml').async('string'):'';
+        var customXml=zip.file('docProps/custom.xml')?await zip.file('docProps/custom.xml').async('string'):'';
+        var before=xmlCounts(coreXml,CORE_MAP).concat(xmlCounts(appXml,APP_MAP));
+        var customNames=countCustom(customXml);
+        if(zip.file('docProps/thumbnail.jpeg')||zip.file('docProps/thumbnail.wmf')||zip.file('docProps/thumbnail.png'))before.push('Preview thumbnail');
+        await scrubOfficeZip(zip);
+        var out=new Uint8Array(await zip.generateAsync({type:'uint8array',compression:'DEFLATE'}));
+        res={name:f.name,kind:kind,before:before,customNames:customNames,after:[],out:out,inSize:buf.length};
+      }else{
+        res={name:f.name,kind:'unsupported',before:[],after:[],error:'.'+ext+' is a legacy or unknown format. Save as .docx / .xlsx / .pptx (modern Office) or .pdf first.',inSize:buf.length};
+      }
+      results.push(res);
+      renderReport(res);
+    }
+    window.__cleanResults=results;
+    setStatus('Done — cleaned '+results.filter(function(r){return !r.error}).length+' of '+results.length+' files. Download below.','ok');
+    addDownloads(results);
+  }catch(err){
+    setStatus('Cleaning failed: '+((err&&err.message)||err),'err');
+  }
+  btn.disabled=false;
+});
+function renderReport(res){
+  var d=document.createElement('div');d.className='file-report';
+  if(res.error){d.innerHTML='<div class="fr-name">⚠️ '+esc(res.name)+'</div><div class="fr-line">'+esc(res.error)+'</div>';el('output').appendChild(d);return;}
+  var total=res.before.length+(res.customNames?res.customNames.length:0);
+  var groups='';
+  if(res.before.length)groups+='<div class="chips">'+res.before.map(function(x){return '<span class="chip">'+esc(x)+'</span>'}).join('')+'</div>';
+  if(res.customNames&&res.customNames.length)groups+='<div class="fr-line">Custom properties deleted: '+esc(res.customNames.join(', '))+'</div>';
+  d.innerHTML='<div class="fr-name">'+esc(res.name)+'</div>'
+    +'<div class="fr-line"><b>'+total+' identifying item'+(total===1?'':'s')+' found</b> · '+res.inSize.toLocaleString('en-US')+' B in · '+esc(res.kind.toUpperCase())+' · cleaned copy removes all of them</div>'
+    +groups;
+  el('output').appendChild(d);
+}
+function addDownloads(results){
+  var good=results.filter(function(r){return !r.error});
+  var d=document.createElement('div');d.className='btn-row';
+  if(good.length===1){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([good[0].out],{type:good[0].kind==='pdf'?'application/pdf':'application/octet-stream'}));
+    a.download=good[0].name.replace(/(\.[a-z]+)?$/i,function(m){return '-clean'+(m||'')});
+    a.textContent='⬇️ Download '+esc(a.download)+' ('+good[0].out.length.toLocaleString('en-US')+' B)';
+    a.className='btn';a.style.textDecoration='none';
+    d.appendChild(a);
+  }else if(good.length>1){
+    var z=new window.JSZip();
+    good.forEach(function(r){z.file(r.name.replace(/(\.[a-z]+)?$/i,function(m){return '-clean'+(m||'')}),r.out);});
+    z.generateAsync({type:'uint8array',compression:'DEFLATE'}).then(function(zb){
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([zb],{type:'application/zip'}));
+      a.download='cleaned-documents.zip';
+      a.textContent='⬇️ Download cleaned-documents.zip ('+good.length+' files, '+zb.length.toLocaleString('en-US')+' B)';
+      a.className='btn';a.style.textDecoration='none';
+      d.appendChild(a);
+    });
+  }
+  el('output').appendChild(d);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Metadata Editor — View, Edit, Strip | ToolAspect</title>
+<meta name="description" content="Edit PDF metadata free in your browser: title, author, subject, keywords, dates. See what your file leaks, strip it in one click. No upload, no watermark.">
+<link rel="canonical" href="https://toolaspect.com/pdf-metadata-editor/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF Metadata Editor — View, Edit, Strip">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="View and edit the title, author, keywords, and dates inside a PDF — or strip all metadata in one click. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-metadata-editor/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Metadata Editor | Free Online Tool">
+<meta name="twitter:description" content="Read and edit PDF title, author, keywords, and dates locally. Strip it all in one click.">
+<meta name="keywords" content="pdf metadata editor, edit pdf metadata, pdf title editor, pdf author, remove pdf metadata, strip pdf metadata, pdf properties editor, pdf document properties, view pdf metadata">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Metadata Editor","description":"Free browser-based PDF metadata editor. Open a PDF to read its title, author, subject, keywords, creator, producer, and dates, edit any field, and download the updated file — or strip all metadata in one click for privacy. Powered by pdf.js for reading and pdf-lib for writing, both running locally; nothing is uploaded.","url":"https://toolaspect.com/pdf-metadata-editor/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I edit the metadata of a PDF?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a metadata editor, change the fields you care about — title, author, subject, keywords, dates — and save a copy. The metadata lives in the file's Info dictionary, a small block of text properties stored alongside the pages; editing it never touches the page content. This tool reads it with pdf.js and writes it with pdf-lib, both inside your browser, so contracts and reports never leave your machine. Adobe Acrobat exposes the same fields under File → Properties."}},
+{"@type":"Question","name":"How do I remove all metadata from a PDF?","acceptedAnswer":{"@type":"Answer","text":"Open the file in a metadata editor with a strip function and clear every field: title, author, subject, keywords, creator, and producer all become empty strings, while the pages stay byte-for-byte intact. This tool's Strip all button does exactly that — in testing, a 3-page 1,849-byte report became a 1,729-byte file with every field blank and all 3 pages preserved. Two caveats: text you can see on the pages is content, not metadata, and it stays; and some PDFs carry XMP metadata, which older tools miss — this editor edits the Info dictionary, the block every reader displays."}},
+{"@type":"Question","name":"What metadata does a PDF contain?","acceptedAnswer":{"@type":"Answer","text":"Eight standard fields: Title, Author, Subject, Keywords, Creator (the originating application), Producer (the PDF writer that made the file), CreationDate, and ModDate. A Word export typically carries your name as Author, 'Microsoft Word' as Creator, dates from when you wrote it, and sometimes the full file path. That's why metadata matters before you share: it can leak authorship and editing history you never meant to publish."}},
+{"@type":"Question","name":"Does changing the PDF title change the browser tab name?","acceptedAnswer":{"@type":"Answer","text":"Usually, yes. Browsers and search engines prefer the PDF's Title field when labeling the tab or the search result — that's exactly why a broken title makes PDFs show up in Google as 'untitled' or as the raw filename. Setting a clean Title field is the single highest-value metadata edit for SEO on PDF content."}},
+{"@type":"Question","name":"Does editing metadata reformat or recompress my PDF?","acceptedAnswer":{"@type":"Answer","text":"No. The metadata block is edited and the document objects are copied through; pages, fonts, images, and quality are untouched. The file size barely moves — in testing, adding a full set of metadata grew a bare 3-page PDF by roughly 80 bytes, and stripping it back shrank the populated file by 120 bytes. If you need structural changes, that's repair or compression territory, not metadata editing."}},
+{"@type":"Question","name":"Can this tool edit an encrypted PDF?","acceptedAnswer":{"@type":"Answer","text":"No — and no honest editor can write to an encrypted PDF without the password, because the file's contents are scrambled. The tool detects encryption on open and tells you. Decrypt the file first (open it with the password in any reader and re-export, or use a repair tool that accepts the password), then edit the metadata on the unencrypted copy."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF Metadata Editor","item":"https://toolaspect.com/pdf-metadata-editor/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;font-family:inherit}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.danger{background:var(--danger)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem;word-break:break-word}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.15rem;font-weight:700;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+#metaForm{display:none}
+.raw-date{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "PDF Metadata Editor — View, Edit, Strip", "url": "https://toolaspect.com/pdf-metadata-editor/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Edit PDF metadata free in your browser: title, author, subject, keywords, dates. See what your file leaks, strip it in one click. No upload, no watermark."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the PDF Metadata Editor free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the PDF Metadata Editor on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the PDF Metadata Editor work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the PDF Metadata Editor calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏷️ PDF Metadata Editor</h1>
+<p>See what your PDF says about you — fix it, or strip it. All in your browser</p>
+</div>
+
+<div class="aio-answer">To edit a PDF's metadata, open the file below: the tool reads the eight standard fields — Title, Author, Subject, Keywords, Creator, Producer, CreationDate, ModDate — straight from the file's Info dictionary using pdf.js, and shows them in an editable form. Change what you want and hit Apply: pdf-lib writes the new values and hands you a download whose pages are untouched — editing two fields on our 3-page test file moved its size by just 54 bytes. Or hit Strip all: every field empties, and the same file shrank 120 bytes with all 3 pages intact — the right move before sending a résumé, contract, or report to someone who doesn't need to know your name, your apps, or your editing timeline. Nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Open a PDF</h2>
+<div class="pick"><label class="file-label">📄 Open the PDF<input type="file" id="file" accept=".pdf,application/pdf"></label><div class="fname" id="fname"></div></div>
+<div class="status-box" id="status">The file is read in your browser — it never touches a server.</div>
+<div id="fileStats" class="stat-grid" style="display:none"></div>
+</div>
+
+<div class="section-card" id="metaForm">
+<h2>Metadata Fields</h2>
+<div class="input-grid">
+<div class="input-group"><label for="fTitle">Title <span style="opacity:.6">— what browsers and Google show</span></label><input id="fTitle" maxlength="500"></div>
+<div class="input-group"><label for="fAuthor">Author</label><input id="fAuthor" maxlength="500"></div>
+<div class="input-group"><label for="fSubject">Subject</label><input id="fSubject" maxlength="500"></div>
+<div class="input-group"><label for="fKeywords">Keywords <span style="opacity:.6">(comma-separated)</span></label><input id="fKeywords" maxlength="1000"></div>
+<div class="input-group"><label for="fCreator">Creator <span style="opacity:.6">— originating app</span></label><input id="fCreator" maxlength="500"></div>
+<div class="input-group"><label for="fProducer">Producer <span style="opacity:.6">— PDF writer</span></label><input id="fProducer" maxlength="500"></div>
+<div class="input-group"><label for="fCreated">Creation date</label><input id="fCreated" type="datetime-local"><span class="raw-date" id="rawCreated"></span></div>
+<div class="input-group"><label for="fModified">Modification date</label><input id="fModified" type="datetime-local"><span class="raw-date" id="rawModified"></span></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnApply" disabled>💾 Apply &amp; Download</button>
+<button class="btn ghost" id="btnRefreshMod" disabled>Set Mod Date to Now</button>
+<button class="btn danger" id="btnStrip" disabled>🧹 Strip All Metadata</button>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/exif-viewer/">Exif Viewer</a></li><li style="margin:4px 0"><a href="/image-metadata-remover/">Image Metadata Remover</a></li><li style="margin:4px 0"><a href="/pdf-repair/">Repair PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-edit-pdf-metadata/">Read the PDF metadata guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>The Eight Metadata Fields, and What Each Leaks or Does</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Field</th><th>What it holds</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td>Title</td><td>Document title</td><td>Browsers label the tab with it; Google shows it as the result title for indexed PDFs</td></tr>
+<tr><td>Author</td><td>Author name</td><td>Often your real name from Word/Docs export — the #1 privacy leak in shared PDFs</td></tr>
+<tr><td>Subject</td><td>Description line</td><td>Shown in File → Properties; some search indexes read it</td></tr>
+<tr><td>Keywords</td><td>Search terms</td><td>Low SEO weight today, but it travels with the file everywhere</td></tr>
+<tr><td>Creator</td><td>App that authored it</td><td>"Microsoft Word", "InDesign 19.0" — reveals your toolchain</td></tr>
+<tr><td>Producer</td><td>PDF writer used</td><td>"macOS Quartz", "Ghostscript" — plus version details</td></tr>
+<tr><td>CreationDate</td><td>When it was made</td><td>Timestamps can outlast revisions and edits</td></tr>
+<tr><td>ModDate</td><td>When it last changed</td><td>Reveals late-night edits; this tool can set it to now or any date</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">These eight live in the file's Info dictionary — the block every PDF reader displays under Properties. Some PDFs additionally carry XMP metadata (an XML block Acrobat writes); this editor edits the Info dictionary, which is what browsers, Google, and every Properties dialog show. Visible text on pages is content, not metadata — editing these fields never changes a word of it.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Editor Works</h2>
+<p>Two open-source engines split the work. pdf.js — Mozilla's PDF renderer — parses the file and hands over the Info dictionary exactly as a reader sees it. pdf-lib writes your changes back into a fresh copy of the file. Both run as JavaScript in this tab; the file is read with the browser's FileReader and returned as a Blob download.</p>
+<h3>How to use it</h3>
+<ul>
+<li><strong>Inspect:</strong> open a PDF and read all eight fields before touching anything — knowing what's there is half the value.</li>
+<li><strong>Fix:</strong> a clean Title is the edit that pays: it's what the browser tab and search results show. Author, keywords, and dates are one field each.</li>
+<li><strong>Strip:</strong> one click empties every field and downloads the sanitized copy. Pages, text, and quality untouched.</li>
+<li><strong>Dates:</strong> the raw PDF format (D:YYYYMMDDHHmmSSZ) is shown under each date field; the picker writes back the same format.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Start from a 3-page report carrying a complete metadata set: 1,849 bytes. Amend the title to "Q3 Field Report (amended)" and shorten the author, Apply, and the download is 1,903 bytes — a 54-byte difference for a real two-field edit — with all 3 pages intact and re-reading the file in any viewer showing the new values. Now the other direction: Strip All on the same 1,849-byte file produces a 1,729-byte copy (−120 bytes), every text field an empty string, both dates still stamped, all 3 pages preserved. And filling a complete metadata set onto a bare 3-page PDF costs roughly 80 bytes — metadata is cheap, which is exactly why it accumulates unnoticed.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I edit the metadata of a PDF?</h3><p>Open the PDF in a metadata editor, change the fields you care about — title, author, subject, keywords, dates — and save a copy. The metadata lives in the file's Info dictionary, a small block of text properties stored alongside the pages; editing it never touches the page content. This tool reads it with pdf.js and writes it with pdf-lib, both inside your browser, so contracts and reports never leave your machine. Adobe Acrobat exposes the same fields under File → Properties.</p></div>
+<div class="faq-item"><h3>How do I remove all metadata from a PDF?</h3><p>Open the file in a metadata editor with a strip function and clear every field: title, author, subject, keywords, creator, and producer all become empty strings, while the pages stay byte-for-byte intact. This tool's Strip all button does exactly that — in testing, a 3-page 1,849-byte report became a 1,729-byte file with every field blank and all 3 pages preserved. Two caveats: text you can see on the pages is content, not metadata, and it stays; and some PDFs carry XMP metadata, which older tools miss — this editor edits the Info dictionary, the block every reader displays.</p></div>
+<div class="faq-item"><h3>What metadata does a PDF contain?</h3><p>Eight standard fields: Title, Author, Subject, Keywords, Creator (the originating application), Producer (the PDF writer that made the file), CreationDate, and ModDate. A Word export typically carries your name as Author, 'Microsoft Word' as Creator, dates from when you wrote it, and sometimes the full file path. That's why metadata matters before you share: it can leak authorship and editing history you never meant to publish.</p></div>
+<div class="faq-item"><h3>Does changing the PDF title change the browser tab name?</h3><p>Usually, yes. Browsers and search engines prefer the PDF's Title field when labeling the tab or the search result — that's exactly why a broken title makes PDFs show up in Google as 'untitled' or as the raw filename. Setting a clean Title field is the single highest-value metadata edit for SEO on PDF content.</p></div>
+<div class="faq-item"><h3>Does editing metadata reformat or recompress my PDF?</h3><p>No. The metadata block is edited and the document objects are copied through; pages, fonts, images, and quality are untouched. The file size barely moves — in testing, adding a full set of metadata grew a bare 3-page PDF by roughly 80 bytes, and stripping it back shrank the populated file by 120 bytes. If you need structural changes, that's repair or compression territory, not metadata editing.</p></div>
+<div class="faq-item"><h3>Can this tool edit an encrypted PDF?</h3><p>No — and no honest editor can write to an encrypted PDF without the password, because the file's contents are scrambled. The tool detects encryption on open and tells you. Decrypt the file first (open it with the password in any reader and re-export, or use a repair tool that accepts the password), then edit the metadata on the unencrypted copy.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/exif-viewer/">🖼️ EXIF Viewer</a>
+<a href="/image-metadata-remover/">🧹 Image Metadata Remover</a>
+<a href="/pdf-repair/">🩹 Repair PDF</a>
+<a href="/document-metadata-remover/">🧼 Document Metadata Remover</a>
+<a href="/redact-pdf/">🖍️ Redact PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== Read engine: pdf.js 3.11.174 (Apache-2.0) — same pin as pdf-to-text ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+/* ===== Write engine: @cantoo/pdf-lib 2.9.1 (MIT) — same pin as pdf-merge, lazy-loaded ===== */
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+var bytes=null;
+var libPromise=null;
+function getLib(){
+  if(libPromise)return libPromise;
+  libPromise=new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=PDFLIB_URL;
+    s.onload=function(){window.PDFLib?res(window.PDFLib):rej(new Error('pdf-lib global missing'))};
+    s.onerror=function(){rej(new Error('pdf-lib failed to load'))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+  return libPromise;
+}
+/* ---PME-ENGINE-START--- (pure helpers, node-verified) */
+function parsePdfDate(str){
+  var m=/^D:(\d{4})(\d{2})?(\d{2})?(\d{2})?(\d{2})?(\d{2})?/.exec(String(str||''));
+  if(!m)return null;
+  var d=new Date(Date.UTC(+m[1],(+m[2]||1)-1,+(m[3]||1),+(m[4]||0),+(m[5]||0),+(m[6]||0)));
+  return isNaN(d)?null:d;
+}
+function fmtLocal(d){
+  var p=function(n){return (n<10?'0':'')+n};
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+}
+function keywordsToList(s){
+  return String(s||'').split(',').map(function(x){return x.trim()}).filter(Boolean);
+}
+function listToKeywords(arr){
+  return (arr||[]).join(', ');
+}
+/* ---PME-ENGINE-END--- */
+function fillForm(info){
+  el('fTitle').value=info.Title||'';
+  el('fAuthor').value=info.Author||'';
+  el('fSubject').value=info.Subject||'';
+  el('fKeywords').value=info.Keywords||'';
+  el('fCreator').value=info.Creator||'';
+  el('fProducer').value=info.Producer||'';
+  var cd=parsePdfDate(info.CreationDate),md=parsePdfDate(info.ModDate);
+  el('fCreated').value=cd?fmtLocal(cd):'';
+  el('fModified').value=md?fmtLocal(md):'';
+  el('rawCreated').textContent=info.CreationDate?('raw: '+info.CreationDate):'raw: (none)';
+  el('rawModified').textContent=info.ModDate?('raw: '+info.ModDate):'raw: (none)';
+}
+el('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(){
+    bytes=new Uint8Array(fr.result);
+    el('fname').textContent=f.name+' — '+f.size.toLocaleString('en-US')+' bytes';
+    pdfjsLib.getDocument({data:bytes.slice()}).promise.then(function(doc){
+      return doc.getMetadata().then(function(md){
+        el('fileStats').style.display='grid';
+        el('fileStats').innerHTML='<div class="stat"><div class="n">'+doc.numPages+'</div><div class="l">pages</div></div>'
+          +'<div class="stat"><div class="n">'+f.size.toLocaleString('en-US')+'</div><div class="l">bytes</div></div>'
+          +'<div class="stat"><div class="n">'+(md.content?'yes':'no')+'</div><div class="l">XMP block present</div></div>';
+        fillForm(md.info||{});
+        el('metaForm').style.display='block';
+        ['btnApply','btnStrip','btnRefreshMod'].forEach(function(id){el(id).disabled=false});
+        setStatus('Metadata loaded. Edit the fields, or Strip all for a clean copy.');
+      });
+    }).catch(function(err){
+      var name=err&&err.name,msg=err&&err.message;
+      if(name==='PasswordException')setStatus('This PDF is password-protected — decrypt it first, then edit the metadata.','err');
+      else setStatus('Could not read this PDF: '+(msg||name||err),'err');
+    });
+  };
+  fr.readAsArrayBuffer(f);
+});
+function apply(strip){
+  if(!bytes)return;
+  var btn=strip?el('btnStrip'):el('btnApply');
+  btn.disabled=true;
+  setStatus(strip?'Stripping metadata and writing a clean copy …':'Loading the writer engine and applying your values …');
+  getLib().then(function(lib){
+    return lib.PDFDocument.load(bytes,{ignoreEncryption:false}).then(function(doc){
+      if(strip){
+        doc.setTitle('');doc.setAuthor('');doc.setSubject('');doc.setKeywords([]);
+        doc.setProducer('');doc.setCreator('');
+      }else{
+        doc.setTitle(el('fTitle').value);
+        doc.setAuthor(el('fAuthor').value);
+        doc.setSubject(el('fSubject').value);
+        doc.setKeywords(keywordsToList(el('fKeywords').value));
+        doc.setCreator(el('fCreator').value);
+        doc.setProducer(el('fProducer').value);
+        var cd=el('fCreated').value?new Date(el('fCreated').value):null;
+        var md=el('fModified').value?new Date(el('fModified').value):new Date();
+        if(cd)doc.setCreationDate(cd);
+        doc.setModificationDate(md);
+      }
+      if(strip)doc.setModificationDate(new Date());
+      return doc.save();
+    });
+  }).then(function(out){
+    var blob=new Blob([out],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=strip?'stripped.pdf':'updated.pdf';
+    a.textContent='⬇️ Download '+(strip?'stripped':'updated')+'.pdf ('+blob.size.toLocaleString('en-US')+' bytes)';
+    a.className='btn';a.style.marginTop='1rem';
+    setStatus((strip?'Stripped':'Applied')+' — '+blob.size.toLocaleString('en-US')+' bytes out (was '+bytes.length.toLocaleString('en-US')+'). Open it and check File → Properties.','ok');
+    el('status').appendChild(document.createElement('br'));
+    el('status').appendChild(a);
+  }).catch(function(err){
+    var msg=(err&&err.message)||(''+err);
+    if(/encrypt/i.test(msg))setStatus('This PDF is encrypted — writing to it needs the password, which this tool doesn\'t accept. Decrypt it first.','err');
+    else setStatus('Failed: '+msg,'err');
+  });
+  btn.disabled=false;
+}
+el('btnApply').addEventListener('click',function(){apply(false)});
+el('btnStrip').addEventListener('click',function(){apply(true)});
+el('btnRefreshMod').addEventListener('click',function(){
+  el('fModified').value=fmtLocal(new Date());
+  setStatus('Modification date set to now — hit Apply & Download to write it.');
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

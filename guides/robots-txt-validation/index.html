@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Check If Robots.txt Is Blocking a URL | ToolAspect</title>
+<meta name="description" content="How to test robots.txt against a URL: which rule wins, wildcards, AI crawler tokens, the 24-hour cache, and the mistakes that quietly deindex pages.">
+<link rel="canonical" href="https://toolaspect.com/guides/robots-txt-validation/">
+<meta property="og:title" content="How to Check If Robots.txt Is Blocking a URL">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/robots-txt-validation/">
+<meta property="og:description" content="How to test robots.txt against a URL: which rule wins, wildcards, AI crawler tokens, the 24-hour cache, and the mistakes that quietly deindex pages.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Check If Robots.txt Is Blocking a URL","description":"A practical guide to validating robots.txt: how rule precedence works, what the wildcards really match, the user-agent tokens AI crawlers use, how fast changes propagate, and the four classic mistakes that block more than intended. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Check If Robots.txt Is Blocking a URL","item":"https://toolaspect.com/guides/robots-txt-validation/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How long does it take for robots.txt changes to take effect?","acceptedAnswer":{"@type":"Answer","text":"Google re-fetches robots.txt roughly once every 24 hours and caches that copy until the next fetch, so most changes land within a day. Bing runs its own similar refresh cycle. Recovery is slower than the change: pages blocked long enough to fall out of the index need to be re-crawled and re-processed over the following days to weeks."}},
+{"@type":"Question","name":"Does robots.txt block AI crawlers like GPTBot?","acceptedAnswer":{"@type":"Answer","text":"Only the crawlers that honor it, and each under its own token: GPTBot and OAI-SearchBot for OpenAI, ClaudeBot and Claude-SearchBot for Anthropic, PerplexityBot, Google-Extended for Google's AI training, Applebot-Extended, and CCBot. Add a group per token with the rules you want. Blocking training crawlers doesn't block search crawlers, and compliance is voluntary on the crawler's side."}},
+{"@type":"Question","name":"Can a page blocked by robots.txt still show up in Google?","acceptedAnswer":{"@type":"Answer","text":"Yes — as a bare URL. Google can index a page it has never crawled if other pages link to it strongly enough; without crawling it has no title or snippet, so the listing shows the URL alone. To remove a page from results, let it be crawled and use a noindex tag or header instead — a robots.txt block actually prevents Google from ever seeing the noindex."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:.85rem;line-height:1.7}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "How to Check If Robots.txt Is Blocking a URL", "url": "https://toolaspect.com/guides/robots-txt-validation/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "How to test robots.txt against a URL: which rule wins, wildcards, AI crawler tokens, the 24-hour cache, and the mistakes that quietly deindex pages."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the How to Check If Robots.txt Is Blocking a URL free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the How to Check If Robots.txt Is Blocking a URL on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the How to Check If Robots.txt Is Blocking a URL work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the How to Check If Robots.txt Is Blocking a URL calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Check If Robots.txt Is Blocking a URL</h1>
+<div class="meta"><span>🔍 Technical SEO</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<div class="intro">A one-line mistake in robots.txt can quietly unlist an entire site section, and the worst part is the silence: no errors, no warnings, just traffic that stops arriving. This guide covers how a crawler actually decides to fetch or skip a URL, how to test yours in seconds, which tokens the AI crawlers answer to, and the four mistakes that cause almost every accidental block.</div>
+
+<h2>How does a crawler decide to fetch a URL?</h2>
+<p>Before fetching any URL, a well-behaved crawler asks the host's robots.txt a yes/no question: may this user-agent fetch this path? The answer comes from a short sequence of rules most people never fully learn:</p>
+<ol>
+<li>Find the group whose <code>User-agent</code> line names the crawler. If none matches, fall back to the <code>*</code> group. If a named group exists, the <code>*</code> group is ignored for that bot — the groups don't merge.</li>
+<li>Within that group, collect every Allow and Disallow rule whose path matches the URL. Paths match as prefixes: <code>Disallow: /admin</code> blocks /admin, /admin/login, and /admin-2024 alike.</li>
+<li>Sort the matching rules by path length. The most specific — longest — rule wins. A tie goes to Allow.</li>
+</ol>
+<p>That third step is the one that surprises people: <code>Disallow: /search</code> with <code>Allow: /search/about</code> lets /search/about through, because its rule is longer. Wildcards extend this — <code>/*.pdf$</code> blocks every URL ending in .pdf (the <code>*</code> matches anything, <code>$</code> pins the end), but not /report.pdfx.</p>
+
+<h2>How do I test a URL against my robots.txt?</h2>
+<p>The fastest path is a validator that runs the same matching logic crawlers do. Google Search Console has a robots report with a URL checker, but it only knows Googlebot. For everything else — Bing, the AI crawlers, or a file you haven't deployed yet — an in-browser validator like our <a href="/robots-txt-validator/">robots.txt validator</a> parses the file locally, tests any URL for any user-agent, names the exact rule and line that decided the outcome, and flags structural mistakes (rules before the first User-agent, non-absolute sitemap URLs, duplicate groups). Since it runs in your browser, you can test drafts before they ship.</p>
+<p>Manually, the same steps work on paper for small files: pick the group, list matching rules, longest path wins. The manual route fails precisely where it matters, though — files with 50+ rules, wildcards, and multiple groups — which is how accidental blocks survive for months.</p>
+
+<h2>Which AI crawlers obey robots.txt, and under what names?</h2>
+<p>Each major AI company documents its own crawler tokens, and each token needs its own group in your file:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Token</th><th>Operator</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>GPTBot</code></td><td>OpenAI</td><td>Model training</td></tr>
+<tr><td><code>OAI-SearchBot</code></td><td>OpenAI</td><td>ChatGPT search</td></tr>
+<tr><td><code>ClaudeBot</code></td><td>Anthropic</td><td>Model training</td></tr>
+<tr><td><code>Claude-SearchBot</code></td><td>Anthropic</td><td>Claude search</td></tr>
+<tr><td><code>Google-Extended</code></td><td>Google</td><td>Gemini training &amp; grounding</td></tr>
+<tr><td><code>PerplexityBot</code></td><td>Perplexity</td><td>Answer engine</td></tr>
+<tr><td><code>Applebot-Extended</code></td><td>Apple</td><td>Apple Intelligence training</td></tr>
+<tr><td><code>CCBot</code></td><td>Common Crawl</td><td>Open training dataset</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two consequences worth internalizing. Blocking a training crawler doesn't block the same company's search crawler — GPTBot and OAI-SearchBot are independent tokens, and blocking Google-Extended leaves Google Search untouched. And robots.txt compliance is voluntary; a crawler that ignores the protocol won't be stopped by any rule you write. The validator's dropdown includes the common AI tokens so you can test each group you write.</p>
+
+<h2>How fast do robots.txt changes take effect?</h2>
+<p>Google re-fetches robots.txt about once a day and uses its cached copy until the next successful fetch, so a fixed rule usually takes effect within 24 hours. Bing follows a similar rhythm. The asymmetry is recovery: if a bad rule blocked pages long enough for them to drop out of the index, re-inclusion requires re-crawling and re-processing, which ramps over days to weeks after the rule is fixed. That's the argument for validating <em>before</em> deploying — the cost of a mistake is paid at recovery speed, not at fix speed.</p>
+
+<h2>What are the four mistakes that block more than intended?</h2>
+<ul>
+<li><strong>Rules before the first User-agent line.</strong> A record starts at User-agent; anything above it applies to nothing, so the block you think you wrote doesn't exist — or worse, a moved line silently stops working.</li>
+<li><strong>Prefix surprises.</strong> <code>Disallow: /admin</code> also blocks /admin-guide. Add a trailing slash (<code>/admin/</code>) when you mean the directory, or an <code>Allow:</code> exception for the escapes.</li>
+<li><strong>Group replacement.</strong> A new group for a specific bot replaces the <code>*</code> group for that bot. Write <code>User-agent: GPTBot</code> with one permissive line and GPTBot inherits nothing from <code>*</code> — it gets exactly what its own group says.</li>
+<li><strong>Crawl-delay theater.</strong> Google ignores Crawl-delay entirely; Bing and Yandex honor it. Slowing Googlebot happens in Search Console's crawl-rate settings, not robots.txt.</li>
+</ul>
+
+<h2>Robots.txt or noindex — which one do I need?</h2>
+<p>robots.txt controls crawling; noindex controls indexing. They fail in opposite directions when confused. A robots-blocked page can still appear in results as a bare URL if enough links point at it, because Google can index what it can't crawl. And a page you want deindexed must be crawlable <em>and</em> carry the noindex tag — block it in robots.txt and Google never sees the tag. Rule of thumb: robots.txt for crawl budget and private folders, noindex for pages that exist publicly but shouldn't list in search.</p>
+
+<div class="cta-box"><h3>Test your robots.txt right now</h3><p style="color:#fff;opacity:.9">Paste the file, pick a URL and a crawler — Googlebot, GPTBot, or any token — and see the exact rule that decides.</p><a href="/robots-txt-validator/">Open the Robots.txt Validator →</a></div>
+
+<h2>The bottom line</h2>
+<p>Matching is mechanical: one group per bot, longest matching path wins, wildcards do what they look like they do. Validate before deploying, remember the ~24-hour cache, and keep an <a href="/robots-txt-generator/">up-to-date generator</a> on hand when starting fresh rather than editing a file you don't fully trust. For the neighboring plumbing — making sure pages carry the right tags once crawlers arrive — the <a href="/meta-tag-generator/">meta tag generator</a> and <a href="/schema-generator/">schema generator</a> cover the next steps.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How long does it take for robots.txt changes to take effect?</h3><p>Google re-fetches robots.txt roughly once every 24 hours and caches that copy until the next fetch, so most changes land within a day. Bing runs its own similar refresh cycle. Recovery is slower than the change: pages blocked long enough to fall out of the index need to be re-crawled and re-processed over the following days to weeks.</p></div>
+<div class="faq-item"><h3>Does robots.txt block AI crawlers like GPTBot?</h3><p>Only the crawlers that honor it, and each under its own token: GPTBot and OAI-SearchBot for OpenAI, ClaudeBot and Claude-SearchBot for Anthropic, PerplexityBot, Google-Extended for Google's AI training, Applebot-Extended, and CCBot. Add a group per token with the rules you want. Blocking training crawlers doesn't block search crawlers, and compliance is voluntary on the crawler's side.</p></div>
+<div class="faq-item"><h3>Can a page blocked by robots.txt still show up in Google?</h3><p>Yes — as a bare URL. Google can index a page it has never crawled if other pages link to it strongly enough; without crawling it has no title or snippet, so the listing shows the URL alone. To remove a page from results, let it be crawled and use a noindex tag or header instead — a robots.txt block actually prevents Google from ever seeing the noindex.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/robots-txt-validator/">Robots.txt Validator</a>
+<a href="/robots-txt-generator/">Robots.txt Generator</a>
+<a href="/meta-tag-generator/">Meta Tag Generator</a>
+<a href="/schema-generator/">Schema Generator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>
