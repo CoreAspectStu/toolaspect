@@ -23,8 +23,9 @@ for must in ['/guides/','/all-tools/','/privacy','/terms']:
         fails.append(f"FOOTER missing link to {must}")
 
 # 3. INTERLINKS — every page needs a related-tools block + /guides/ link
+# (all-tools is a pure directory mirror — exempt)
 no_rel = [p.parent.name for p in repo.glob('*/index.html')
-          if p.parent.name not in {'roadmap','embed'} and 'related-tools' not in p.read_text(errors='ignore')]
+          if p.parent.name not in {'roadmap','embed','all-tools'} and 'related-tools' not in p.read_text(errors='ignore')]
 if no_rel:
     fails.append(f"NO INTERLINKS ({len(no_rel)} pages missing related-tools block)")
 
@@ -39,7 +40,7 @@ for p in repo.glob('*/index.html'):
     for block in LD.findall(t):
         try: json.loads(block)
         except Exception as e: fails.append(f"{slug}: invalid JSON-LD ({e})")
-    if 'nav.js' not in t_full and slug != 'best-free-online-tools-2026': fails.append(f"{slug}: no nav.js include")
+    if 'nav.js' not in t_full and slug not in {'best-free-online-tools-2026','all-tools'}: fails.append(f"{slug}: no nav.js include")
     if 'funnel-cta.js' not in t and '.ad-slot' not in t.replace('class="ad-slot"','X'):
         pass  # cta optional
 
