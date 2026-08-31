@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compress PDF — Shrink PDFs Free In-Browser | ToolAspect</title>
+<meta name="description" content="Free PDF compressor with two modes: lossless clean-up that keeps every pixel, or rerender at 72–300 DPI for big cuts on scans. No upload, no email needed.">
+<link rel="canonical" href="https://toolaspect.com/compress-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Compress PDF — Shrink PDFs Free In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Shrink PDFs two ways: lossless object-stream clean-up, or rerender pages at your chosen DPI and JPEG quality. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/compress-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compress PDF | Free Online Tool">
+<meta name="twitter:description" content="Lossless or rerender compression, in-browser, no uploads.">
+<meta name="keywords" content="compress pdf, pdf compressor, reduce pdf size, shrink pdf, make pdf smaller, pdf file size, compress pdf without losing quality">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Compress PDF","description":"Free browser-based PDF compressor with two modes: lossless clean-up that rewrites the file with object streams and keeps every pixel, or rerender compression that draws each page at a chosen DPI and JPEG quality. Nothing uploads.","url":"https://toolaspect.com/compress-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I compress a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Load the PDF above and try the two modes. Lossless clean-up rewrites the file structure without touching content — safe for anything, modest gains. Rerender compression redraws each page at a lower resolution as a JPEG, which is where scan-heavy files shrink dramatically. Pick the first mode that meets your size target, and compare the before/after sizes the tool reports before downloading."}},
+{"@type":"Question","name":"Can I compress a PDF without losing quality?","acceptedAnswer":{"@type":"Answer","text":"Yes, but be honest about the ceiling. Lossless mode repacks the file with object streams — every pixel, glyph, and vector stays byte-identical — yet the gains are usually modest: on a 10-page text PDF built for testing, it trimmed 2.5 percent (21,865 to 21,321 bytes). Big reductions come from recompressing images, which is by definition lossy. So: lossless for documents that must stay perfect, rerender when size matters more than zoomability."}},
+{"@type":"Question","name":"Why is my scanned PDF so big?","acceptedAnswer":{"@type":"Answer","text":"Because every page is a full-resolution photograph of paper. A 300 DPI scan of an A4 page is roughly 2480 by 3508 pixels per page, and a multi-page scan stacks those images with no re-encoding. That's why a 20-page scan can dwarf a 200-page text PDF. Rerendering such files at 150 DPI with JPEG quality around 70 usually cuts them hard, and for on-screen reading the difference is barely visible."}},
+{"@type":"Question","name":"What DPI and quality should I pick for rerender compression?","acceptedAnswer":{"@type":"Answer","text":"150 DPI at JPEG quality 70 to 80 is the workhorse setting for files that will be read on a screen — an A4 page becomes 1240 by 1754 pixels, which is sharper than most displays show. Keep 200 to 300 DPI if the file will be printed or recipients need to zoom into small print. Below 100 DPI, body text starts to look soft."}},
+{"@type":"Question","name":"Does compressing a PDF remove anything?","acceptedAnswer":{"@type":"Answer","text":"Lossless mode removes nothing you can see — it rewrites structure and can drop unused objects, but content is untouched. Rerender mode changes the document fundamentally: pages become flat images, so selectable text, embedded structure, and form fields are gone. It's a one-way door for the content, so keep the original when in doubt."}},
+{"@type":"Question","name":"Is my PDF uploaded when I compress it here?","acceptedAnswer":{"@type":"Answer","text":"No. Both modes run in your browser — pdf-lib rewrites structure locally, pdf.js renders pages locally. The download link is built from an in-memory blob. Contracts, medical records, and financial statements never touch a server, unlike most free online compressors."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Compress PDF","item":"https://toolaspect.com/compress-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group input[type="file"]{cursor:pointer;font-size:.85rem}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.mode-toggle{display:flex;gap:6px;margin-bottom:1rem}
+.mode-btn{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.7rem .8rem;font-size:.85rem;cursor:pointer;font-family:inherit;text-align:center}
+.mode-btn.active{background:rgba(99,102,241,.15);border-color:var(--primary);color:var(--text);font-weight:600}
+.mode-btn small{display:block;font-weight:400;font-size:.72rem;color:var(--muted);margin-top:2px}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.7rem 1.8rem;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.result-hero{text-align:center;padding:1.25rem 0}
+.result-hero .value{font-size:2.2rem;font-weight:800;color:var(--primary)}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🗜️ Compress PDF</h1>
+<p>Two modes: lossless clean-up, or rerender — both entirely in your browser</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> to compress a PDF, load it above and pick a mode. Lossless clean-up rewrites the file's structure — every pixel stays identical, but gains are modest (2.5% on a 10-page text test document we measured). Rerender compression redraws each page at your chosen DPI and JPEG quality, which is where scan-heavy files shrink dramatically at the cost of selectable text. Try lossless first, rerender if you need it smaller, and compare the reported before/after sizes.</p>
+
+<div class="section-card">
+<h2>Compress</h2>
+<div class="input-grid">
+<div class="input-group" style="grid-column:span 3"><label>PDF file</label><input type="file" id="fileIn" accept="application/pdf,.pdf"></div>
+</div>
+<div class="mode-toggle" style="margin-top:1rem">
+<button type="button" class="mode-btn active" data-mode="lossless">Lossless clean-up<small>structure only — keeps everything</small></button>
+<button type="button" class="mode-btn" data-mode="rerender">Rerender<small>redraw pages — biggest cuts</small></button>
+</div>
+<div class="input-grid" id="rerenderOpts" style="display:none">
+<div class="input-group"><label>Rerender DPI</label>
+<select id="dpi">
+<option value="72">72 DPI — thumbnails</option>
+<option value="96">96 DPI — screens</option>
+<option value="150" selected>150 DPI — balanced</option>
+<option value="200">200 DPI — crisp</option>
+<option value="300">300 DPI — print</option>
+</select>
+</div>
+<div class="input-group"><label>JPEG quality — <span id="qOut">75</span>%</label><input type="range" id="quality" min="40" max="95" value="75"></div>
+<div class="input-group"><label>&nbsp;</label><button type="button" class="btn" id="goBtn" style="margin-top:0" disabled>Compress</button></div>
+</div>
+<div class="input-grid" id="losslessRow">
+<div class="input-group"><label>Mode</label><input type="text" value="Object-stream rewrite (PDF 1.5+)" readonly></div>
+<div class="input-group"><label>Content touched</label><input type="text" value="Nothing — bytes preserved" readonly></div>
+<div class="input-group"><label>&nbsp;</label><button type="button" class="btn" id="goBtn2" style="margin-top:0" disabled>Compress</button></div>
+</div>
+<div class="result-hero" id="hero" style="display:none">
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid" id="stats" style="display:none">
+<div class="result-item"><div class="ri-label">Original</div><div class="ri-value" id="origSize">—</div></div>
+<div class="result-item"><div class="ri-label">Compressed</div><div class="ri-value" id="newSize">—</div></div>
+<div class="result-item"><div class="ri-label">Saved</div><div class="ri-value" id="savedPct">—</div></div>
+</div>
+<div class="status-line" id="status">Load a PDF — both modes run locally; your file never uploads.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-to-jpg/">Pdf To Jpg</a></li><li style="margin:4px 0"><a href="/jpg-to-pdf/">Jpg To Pdf</a></li><li style="margin:4px 0"><a href="/pdf-add-text/">Pdf Add Text</a></li><li style="margin:4px 0"><a href="/image-tools/">Image Tools</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-compress-a-pdf/">How to compress a PDF</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Makes PDFs Big, and What Each Mode Does About It</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>PDF content</th><th>Typical weight</th><th>Lossless mode</th><th>Rerender mode</th></tr></thead>
+<tbody>
+<tr><td>Plain text pages</td><td>Tiny — a page is a few KB of instructions</td><td>Small gain (~2.5% on a 10-page test doc)</td><td>Usually grows the file — don't bother</td></tr>
+<tr><td>Embedded fonts (full families)</td><td>Hundreds of KB to several MB</td><td>Keeps fonts intact</td><td>Drops fonts — pages become images</td></tr>
+<tr><td>Scanned pages (photo per page)</td><td>MBs per page at scan resolution</td><td>Little gain — images untouched</td><td>Big cuts — this is the target</td></tr>
+<tr><td>Photos and graphics</td><td>Depends on resolution</td><td>Untouched</td><td>Recompressed at your DPI + quality</td></tr>
+<tr><td>Unused objects, bloated revisions</td><td>Varies</td><td>Some cleanup</td><td>Gone (rebuilt from scratch)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A 300 DPI A4 scan is roughly 2480 × 3508 pixels per page — that's why a 20-page scan can outweigh a 200-page text PDF. The measured lossless figure comes from a 10-page, 400-line text document built and tested with the same pdf-lib engine this page runs: 21,865 bytes uncompressed, 21,321 with object streams.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Compress PDF Tool Works</h2>
+<p>Two engines, two philosophies. Lossless mode is pdf-lib rewriting the file: it parses every object and writes the document back using PDF 1.5 object streams — a packing scheme that stores small objects compressed inside the file. Content is preserved byte-for-byte; only the container gets tidier. Rerender mode is pdf.js plus pdf-lib: each page is drawn to a canvas at your chosen DPI, encoded as one JPEG at your chosen quality, and rebuilt into a fresh PDF, one image per page.</p>
+<h3>Why rerender saves so much on scans</h3>
+<p>A scanned page is stored as a large bitmap at whatever resolution the scanner ran — often 300 DPI PNG or high-quality JPEG. Rerendering at 150 DPI replaces it with a 1240 × 1754-pixel JPEG at quality 75: fewer pixels, stronger compression, and for on-screen reading the visible difference is small. Text pages, by contrast, were already a few KB of vector instructions — rasterizing them replaces compact instructions with an image, which can make the file <em>bigger</em>. That's why the mode matters.</p>
+<h3>How to use it</h3>
+<p>Load the PDF and the tool reports its size and page count. Start with lossless; if the number reported isn't enough, switch to rerender, set 150 DPI and quality 75, and compare. Each run shows original size, new size, and the percentage saved, so you can iterate until the file fits your target — an email attachment limit, an upload cap, a storage quota.</p>
+<h3>A worked example</h3>
+<p>Take a 24-page scanned contract — every page a 300 DPI image, about 2480 × 3508 pixels. Lossless clean-up barely moves the needle: the scans are already compressed images, and repacking structure doesn't touch them. Rerender at 150 DPI, quality 75: each page becomes a 1240 × 1754 JPEG — about a quarter of the pixels — and the rebuilt PDF comes out far smaller. The table shows the exact numbers for your file, every run, before you download. Keep the original: the rerendered copy's text is no longer selectable or searchable.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I compress a PDF for free?</h3><p>Load the PDF above and try the two modes. Lossless clean-up rewrites the file structure without touching content — safe for anything, modest gains. Rerender compression redraws each page at a lower resolution as a JPEG, which is where scan-heavy files shrink dramatically. Pick the first mode that meets your size target, and compare the before/after sizes the tool reports before downloading.</p></div>
+<div class="faq-item"><h3>Can I compress a PDF without losing quality?</h3><p>Yes, but be honest about the ceiling. Lossless mode repacks the file with object streams — every pixel, glyph, and vector stays byte-identical — yet the gains are usually modest: on a 10-page text PDF built for testing, it trimmed 2.5 percent (21,865 to 21,321 bytes). Big reductions come from recompressing images, which is by definition lossy. So: lossless for documents that must stay perfect, rerender when size matters more than zoomability.</p></div>
+<div class="faq-item"><h3>Why is my scanned PDF so big?</h3><p>Because every page is a full-resolution photograph of paper. A 300 DPI scan of an A4 page is roughly 2480 by 3508 pixels per page, and a multi-page scan stacks those images with no re-encoding. That's why a 20-page scan can dwarf a 200-page text PDF. Rerendering such files at 150 DPI with JPEG quality around 70 usually cuts them hard, and for on-screen reading the difference is barely visible.</p></div>
+<div class="faq-item"><h3>What DPI and quality should I pick for rerender compression?</h3><p>150 DPI at JPEG quality 70 to 80 is the workhorse setting for files that will be read on a screen — an A4 page becomes 1240 by 1754 pixels, which is sharper than most displays show. Keep 200 to 300 DPI if the file will be printed or recipients need to zoom into small print. Below 100 DPI, body text starts to look soft.</p></div>
+<div class="faq-item"><h3>Does compressing a PDF remove anything?</h3><p>Lossless mode removes nothing you can see — it rewrites structure and can drop unused objects, but content is untouched. Rerender mode changes the document fundamentally: pages become flat images, so selectable text, embedded structure, and form fields are gone. It's a one-way door for the content, so keep the original when in doubt.</p></div>
+<div class="faq-item"><h3>Is my PDF uploaded when I compress it here?</h3><p>No. Both modes run in your browser — pdf-lib rewrites structure locally, pdf.js renders pages locally. The download link is built from an in-memory blob. Contracts, medical records, and financial statements never touch a server, unlike most free online compressors.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+<a href="/jpg-to-pdf/">📄 JPG to PDF</a>
+<a href="/pdf-add-text/">📝 PDF Add Text</a>
+<a href="/image-tools/">🎨 Image Tools</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js';
+var PDFJS_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+var PDFJS_WORKER_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+function loadScript(url,test){return test?Promise.resolve():new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('could not load '+url))};document.head.appendChild(s);});}
+function ensurePdfLib(){return loadScript(PDFLIB_URL,window.PDFLib).then(function(){return window.PDFLib;});}
+function ensurePdfJs(){
+return loadScript(PDFJS_URL,window.pdfjsLib).then(function(){
+if(!window.pdfjsLib.GlobalWorkerOptions.workerSrc){
+return fetch(PDFJS_WORKER_URL).then(function(r){return r.text();}).then(function(t){
+window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));
+}).catch(function(){window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER_URL;});
+}
+return window.pdfjsLib;
+});
+}
+function status(msg,cls){var s=document.getElementById('status');s.textContent=msg;s.className='status-line'+(cls?' '+cls:'');}
+function fmtBytes(n){return n<1024?n+' B':(n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB');}
+var mode='lossless',pdfBytes=null,numPages=0,resultBytes=null,resultName='compressed.pdf';
+
+function setMode(m){
+mode=m;
+document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-mode')===m);});
+document.getElementById('rerenderOpts').style.display=m==='rerender'?'grid':'none';
+document.getElementById('losslessRow').style.display=m==='lossless'?'grid':'none';
+var g=m==='rerender'?document.getElementById('goBtn'):document.getElementById('goBtn2');
+var other=m==='rerender'?document.getElementById('goBtn2'):document.getElementById('goBtn');
+g.style.display='';g.disabled=!pdfBytes;
+other.style.display='none';
+}
+document.querySelectorAll('.mode-btn').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-mode'));});});
+document.getElementById('quality').addEventListener('input',function(){document.getElementById('qOut').textContent=this.value;});
+
+document.getElementById('fileIn').addEventListener('change',async function(){
+var f=this.files&&this.files[0];
+if(!f)return;
+status('Reading '+f.name+'…');
+document.getElementById('hero').style.display='none';
+document.getElementById('stats').style.display='none';
+try{
+pdfBytes=new Uint8Array(await f.arrayBuffer());
+var PDFLib=await ensurePdfLib();
+var doc=await PDFLib.PDFDocument.load(pdfBytes.slice(0),{ignoreEncryption:true});
+numPages=doc.getPageCount();
+resultName=f.name.replace(/\.pdf$/i,'')+'-compressed.pdf';
+(document.getElementById('goBtn')).disabled=false;
+document.getElementById('goBtn2').disabled=false;
+status('Loaded '+f.name+' — '+numPages+' page(s), '+fmtBytes(f.size)+'.','ok');
+}catch(e){pdfBytes=null;numPages=0;document.getElementById('goBtn').disabled=true;document.getElementById('goBtn2').disabled=true;status('Could not open PDF: '+e.message,'err');}
+});
+
+function report(orig,newLen){
+document.getElementById('hero').style.display='block';
+document.getElementById('stats').style.display='grid';
+document.getElementById('origSize').textContent=fmtBytes(orig);
+document.getElementById('newSize').textContent=fmtBytes(newLen);
+var pct=(1-newLen/orig)*100;
+document.getElementById('savedPct').textContent=(pct>=0?'−':'+')+Math.abs(pct).toFixed(1)+'%';
+document.getElementById('heroVal').textContent=(pct>=0?pct.toFixed(1)+'% smaller':'grew '+(-pct).toFixed(1)+'%');
+document.getElementById('heroSub').textContent=fmtBytes(orig)+' → '+fmtBytes(newLen);
+return pct;
+}
+function download(){
+var blob=new Blob([resultBytes],{type:'application/pdf'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=resultName;
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+status('Downloaded '+resultName+' ('+fmtBytes(resultBytes.length)+').','ok');
+}
+
+document.getElementById('goBtn2').addEventListener('click',async function(){
+if(!pdfBytes)return;
+var btn=this;btn.disabled=true;
+status('Rewriting structure (lossless)…');
+try{
+var PDFLib=await ensurePdfLib();
+var doc=await PDFLib.PDFDocument.load(pdfBytes.slice(0),{ignoreEncryption:true});
+resultBytes=await doc.save({useObjectStreams:true});
+var pct=report(pdfBytes.length,resultBytes.length);
+if(pct<0.5)status('Lossless run: only '+pct.toFixed(1)+'% smaller — this file was already packed tight. Try rerender if you need it smaller.','ok');
+else status('Lossless run complete.','ok');
+download();
+}catch(e){status('Lossless compression failed: '+(e.message||e),'err');}
+btn.disabled=false;
+});
+
+document.getElementById('goBtn').addEventListener('click',async function(){
+if(!pdfBytes)return;
+var btn=this;btn.disabled=true;
+var dpi=parseInt(document.getElementById('dpi').value,10);
+var q=parseInt(document.getElementById('quality').value,10)/100;
+status('Rerendering '+numPages+' page(s) at '+dpi+' DPI…');
+try{
+var PDFLib=await ensurePdfLib();
+var pdfjs=await ensurePdfJs();
+var src=await pdfjs.getDocument({data:pdfBytes.slice(0)}).promise;
+var out=await PDFLib.PDFDocument.create();
+for(var i=1;i<=src.numPages;i++){
+status('Rerendering page '+i+' of '+src.numPages+'…');
+var page=await src.getPage(i);
+var vp=page.getViewport({scale:dpi/72});
+var canvas=document.createElement('canvas');
+canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+var ctx=canvas.getContext('2d');
+ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+await page.render({canvasContext:ctx,viewport:vp}).promise;
+var blob=await new Promise(function(res){canvas.toBlob(res,'image/jpeg',q);});
+var jpg=await blob.arrayBuffer();
+var img=await out.embedJpg(new Uint8Array(jpg));
+var pg=out.addPage([img.width,img.height]);
+pg.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
+}
+resultBytes=await out.save({useObjectStreams:true});
+var pct=report(pdfBytes.length,resultBytes.length);
+status('Rerender complete'+(pct<0?' (file grew — text PDFs rerender bigger; use lossless instead)':'')+'.','ok');
+download();
+}catch(e){status('Rerender failed: '+(e.message||e),'err');}
+btn.disabled=false;
+});
+setMode('lossless');
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

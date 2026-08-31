@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML Formatter, Validator &amp; Minifier — Free | ToolAspect</title>
+<meta name="description" content="Format, validate, and minify XML free in your browser. Pretty-print with 2 or 4 spaces, minify a typical doc 15% smaller, validate with line numbers.">
+<link rel="canonical" href="https://toolaspect.com/xml-formatter/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="XML Formatter, Validator &amp; Minifier">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Pretty-print, minify, and validate XML locally. Indentation control, document stats, and error positions with line and column.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/xml-formatter/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XML Formatter &amp; Validator | Free Online Tool">
+<meta name="twitter:description" content="Format, minify, and validate XML in your browser. No upload.">
+<meta name="keywords" content="xml formatter, xml validator, format xml, minify xml, pretty print xml, xml beautifier, xml syntax check, xml lint">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"XML Formatter","description":"Pretty-print, minify, and validate XML in the browser. Indentation options, document statistics, and validation errors with line and column numbers.","url":"https://toolaspect.com/xml-formatter/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I format XML?","acceptedAnswer":{"@type":"Answer","text":"Paste the XML and pick an indentation — 2 or 4 spaces, or tabs. The formatter parses the document and re-emits it with one element per line, children indented one level under their parents, and text content kept inline when collapse-content is on. It's a re-serialization of the parsed tree, so the structure is guaranteed identical."}},
+{"@type":"Question","name":"What's the difference between well-formed and valid XML?","acceptedAnswer":{"@type":"Answer","text":"Well-formed means the syntax parses: one root element, every tag closed, proper nesting, attributes quoted, entities escaped. Valid goes further — the document also obeys a schema (DTD, XSD, or RelaxNG) that defines which elements and attributes are allowed where. This tool checks well-formedness; schema validation needs your XSD, which usually lives next to your build pipeline."}},
+{"@type":"Question","name":"How much does minifying XML actually save?","acceptedAnswer":{"@type":"Answer","text":"It depends on how much indentation and whitespace the document carries. A realistic 20-line feed document drops from 563 bytes to 477 bytes — a 15.3% reduction. Machine-generated XML with deep indentation can shrink 40% or more; already-dense XML barely moves. Minified XML is functionally identical to the pretty version."}},
+{"@type":"Question","name":"Which characters must be escaped in XML?","acceptedAnswer":{"@type":"Answer","text":"Five characters have predefined entities: < becomes &lt;, > becomes &gt;, & becomes &amp;, \" becomes &quot;, and ' becomes &apos;. Strictly, < and & must be escaped everywhere; > \" and ' only need escaping in certain positions, but escaping all five is always safe. CDATA sections are the alternative for blocks of raw text like embedded code."}},
+{"@type":"Question","name":"Is XML smaller or larger than JSON for the same data?","acceptedAnswer":{"@type":"Answer","text":"Neither, universally. XML's closing tags add bytes that JSON doesn't have, but JSON repeats key names for every record while XML can hang repeated data on attributes. On a sample feed document, minified XML runs 477 bytes while the equivalent compact JSON runs 755 — the XML is 37% smaller because short attribute names beat repeated JSON keys. Measure both on your actual payload."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"XML Formatter","item":"https://toolaspect.com/xml-formatter/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.btn{padding:.6rem 1.2rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.9rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.input-inline{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem;font-size:.85rem;color:var(--muted)}
+.input-inline select{padding:.45rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)}
+textarea{width:100%;min-height:260px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.5;box-sizing:border-box;resize:vertical}
+textarea:focus{outline:none;border-color:var(--primary)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem}
+@media(max-width:640px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.7rem;text-align:center}
+.stat .s-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stat .s-value{font-size:1.05rem;font-weight:700;margin-top:2px}
+.msg{font-size:.85rem;margin-top:.7rem;padding:.6rem .8rem;border-radius:8px}
+.msg.ok{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.msg.err{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;font-size:.8rem;line-height:1.6;overflow-x:auto;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🧾 XML Formatter</h1>
+<p>Format, minify, and validate XML — locally, in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste XML, then pick a mode. <strong>Format</strong> pretty-prints with your choice of 2-space, 4-space, or tab indentation; <strong>Minify</strong> strips it to one line (a typical feed document shrinks 15%, deeply-indented machine XML can drop 40%+); <strong>Validate</strong> parses strictly and reports the exact line and column of the first syntax error. Formatting is a re-serialization of the parsed tree, so structure can't drift, and nothing you paste is uploaded anywhere.
+</div>
+
+<div class="section-card">
+<h2>XML In / Out</h2>
+<div class="btn-row">
+<button class="btn" id="btnFormat">Format</button>
+<button class="btn ghost" id="btnMinify">Minify</button>
+<button class="btn ghost" id="btnValidate">Validate</button>
+<button class="btn ghost" id="btnCopy">Copy Output</button>
+<button class="btn ghost" id="btnSample">Load Sample</button>
+</div>
+<div class="input-inline">
+<label>Indentation
+<select id="indent"><option value="  ">2 spaces</option><option value="    ">4 spaces</option><option value="\t">Tab</option></select>
+</label>
+<label><input type="checkbox" id="collapse" checked> Keep text inline (collapse content)</label>
+<span id="bytes" style="margin-left:auto"></span>
+</div>
+<textarea id="input" spellcheck="false" placeholder="Paste XML here…"></textarea>
+<div class="stat-grid">
+<div class="stat"><div class="s-label">Elements</div><div class="s-value" id="stEls">—</div></div>
+<div class="stat"><div class="s-label">Attributes</div><div class="s-value" id="stAttrs">—</div></div>
+<div class="stat"><div class="s-label">Max depth</div><div class="s-value" id="stDepth">—</div></div>
+<div class="stat"><div class="s-label">Input size</div><div class="s-value" id="stIn">—</div></div>
+<div class="stat"><div class="s-label">Output size</div><div class="s-value" id="stOut">—</div></div>
+<div class="stat"><div class="s-label">Lines</div><div class="s-value" id="stLines">—</div></div>
+</div>
+<div id="msg"></div>
+<textarea id="output" spellcheck="false" readonly placeholder="Result appears here…" style="margin-top:1rem"></textarea>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li><li style="margin:4px 0"><a href="/yaml-validator/">YAML Validator</a></li><li style="margin:4px 0"><a href="/sql-formatter/">SQL Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-format-xml/">Read the XML formatting guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>XML Syntax Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Rule</th><th>Requirement</th><th>Example of a violation</th></tr></thead>
+<tbody>
+<tr><td>One root element</td><td>The document has exactly one top-level element (after the optional declaration and comments)</td><td><code>&lt;a/&gt;&lt;b/&gt;</code></td></tr>
+<tr><td>Every tag closed</td><td>Each open tag has a matching close tag, or is self-closing</td><td><code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;</code></td></tr>
+<tr><td>Proper nesting</td><td>Elements close in reverse order of opening</td><td><code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</code></td></tr>
+<tr><td>Case-sensitive names</td><td><code>&lt;Item&gt;</code> and <code>&lt;item&gt;</code> are different elements</td><td><code>&lt;item&gt;&lt;/Item&gt;</code></td></tr>
+<tr><td>Quoted attributes</td><td>Attribute values use single or double quotes</td><td><code>&lt;a id=1&gt;</code></td></tr>
+<tr><td>Escaped entities</td><td><code>&amp;</code> <code>&lt;</code> in content use entities; the other three are situational but always-safe</td><td><code>&lt;name&gt;A &amp; B&lt;/name&gt;</code></td></tr>
+<tr><td>Declaration first</td><td><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code> if present, must lead the file with no leading whitespace</td><td>blank line before the declaration</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The five predefined entities: <code>&amp;lt;</code> <code>&amp;gt;</code> <code>&amp;amp;</code> <code>&amp;quot;</code> <code>&amp;apos;</code>. Common MIME types: <code>application/xml</code> (preferred), <code>text/xml</code>. UTF-8 is the default encoding when the declaration omits it.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Formatter Works</h2>
+<p>Formatting isn't find-and-replace. The tool parses your XML into a tree, then re-serializes that tree with a consistent layout: one element per line, each level of children indented one stop, attributes untouched, and text nodes kept on the same line as their parent when the collapse-content option is on. Because the output comes from the parsed tree — not string surgery — the structure of the document is guaranteed unchanged.</p>
+<h3>A worked example, with real byte counts</h3>
+<p>Take a small two-entry feed document. Pretty-printed at 2-space indentation it runs <strong>563 bytes across 20 lines</strong>. Minified, the same document runs <strong>477 bytes</strong> — a <strong>15.3% reduction</strong> for deleting nothing but whitespace. Round-tripping proves the structure survived: formatting the minified version reproduces the original pretty document line-for-line — 563 bytes in, 562 out, the only casualty being the trailing newline. Parsing it also yields the stats: <strong>14 elements, 9 attributes, and a maximum nesting depth of 4</strong> (feed → entry → categories → category).</p>
+<p>How much minification saves depends entirely on how much indentation the document starts with. The feed above carries one indent level per nesting depth; a machine-generated file with 8-space depth-8 indentation can shrink by half. Already-dense XML barely moves.</p>
+<h3>The same data as JSON — bigger or smaller?</h3>
+<p>The surprise for most people: it depends on the data shape. The 477-byte minified feed converts to 755 bytes of compact JSON — <strong>37% larger</strong> — because JSON repeats every key name for every record (<code>"title"</code> appears twice verbatim), while the XML hangs short facts on attributes. JSON wins on documents where elements are mostly containers; XML wins when attributes carry the payload. Never assume — measure both.</p>
+<h3>What "validate" means here</h3>
+<p>This tool checks <em>well-formedness</em>: the syntax rules in the table above. When parsing fails, you get the parser's position — line and column — for the first problem, which is usually a mistyped close tag or an unescaped ampersand. Full <em>validity</em> (against an XSD or DTD schema) is a different check that needs your schema file; CI pipelines and IDEs with the schema on disk handle that stage.</p>
+<h3>Open-source note</h3>
+<p>Formatting and minification use <a href="https://github.com/chrisbottin/xml-formatter" rel="noopener">xml-formatter</a> 3.7.0 (with xml-parser-xo); strict validation uses <a href="https://github.com/nashwaan/xml-js" rel="noopener">xml-js</a> 1.6.11 — all MIT/BlueOak licensed, bundled into two files under <a href="/xml-formatter/vendor/LICENSES.txt">/vendor with their license texts</a>. Everything runs client-side.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I format XML?</h3><p>Paste the XML and pick an indentation — 2 or 4 spaces, or tabs. The formatter parses the document and re-emits it with one element per line, children indented one level under their parents, and text content kept inline when collapse-content is on. It's a re-serialization of the parsed tree, so the structure is guaranteed identical.</p></div>
+<div class="faq-item"><h3>What's the difference between well-formed and valid XML?</h3><p>Well-formed means the syntax parses: one root element, every tag closed, proper nesting, attributes quoted, entities escaped. Valid goes further — the document also obeys a schema (DTD, XSD, or RelaxNG) that defines which elements and attributes are allowed where. This tool checks well-formedness; schema validation needs your XSD, which usually lives next to your build pipeline.</p></div>
+<div class="faq-item"><h3>How much does minifying XML actually save?</h3><p>It depends on how much indentation and whitespace the document carries. A realistic 20-line feed document drops from 563 bytes to 477 bytes — a 15.3% reduction. Machine-generated XML with deep indentation can shrink 40% or more; already-dense XML barely moves. Minified XML is functionally identical to the pretty version.</p></div>
+<div class="faq-item"><h3>Which characters must be escaped in XML?</h3><p>Five characters have predefined entities: &lt; becomes &amp;lt;, &gt; becomes &amp;gt;, &amp; becomes &amp;amp;, " becomes &amp;quot;, and ' becomes &amp;apos;. Strictly, &lt; and &amp; must be escaped everywhere; &gt; " and ' only need escaping in certain positions, but escaping all five is always safe. CDATA sections are the alternative for blocks of raw text like embedded code.</p></div>
+<div class="faq-item"><h3>Is XML smaller or larger than JSON for the same data?</h3><p>Neither, universally. XML's closing tags add bytes that JSON doesn't have, but JSON repeats key names for every record while XML can hang repeated data on attributes. On a sample feed document, minified XML runs 477 bytes while the equivalent compact JSON runs 755 — the XML is 37% smaller because short attribute names beat repeated JSON keys. Measure both on your actual payload.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">{} JSON Formatter</a>
+<a href="/yaml-validator/">📄 YAML Validator</a>
+<a href="/sql-formatter/">🗄️ SQL Formatter</a>
+<a href="/json-diff/">🔀 JSON Diff</a>
+<a href="/csv-to-sql/">↔️ CSV to SQL</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/xml-formatter/vendor/xml-formatter.iife.js"></script>
+<script src="/xml-formatter/vendor/xml-js.iife.js"></script>
+<script>
+(function(){
+  var input = document.getElementById('input');
+  var output = document.getElementById('output');
+  var msg = document.getElementById('msg');
+  var XF = window.__taXmlFormatter, XJ = window.__taXmlJs;
+  var byteCount = function(s){ return new TextEncoder().encode(s).length; };
+  var fmtBytes = function(b){ return b >= 1024 ? (b/1024).toFixed(2) + ' KB' : b + ' B'; };
+  function esc(s){ var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function setMsg(kind, html){ msg.innerHTML = kind ? '<div class="msg ' + kind + '">' + html + '</div>' : ''; }
+
+  function stats(obj){
+    var els = 0, attrs = 0, depth = 0;
+    (function walk(n, d){
+      if (Array.isArray(n)) { n.forEach(function(c){ walk(c, d); }); return; }
+      if (!n || typeof n !== 'object') return;
+      if (n.type === 'element') { els++; attrs += n.attributes ? Object.keys(n.attributes).length : 0; depth = Math.max(depth, d); }
+      (n.elements || n.children || []).forEach(function(c){ walk(c, d + 1); });
+    })(obj.elements, 1);
+    return { els: els, attrs: attrs, depth: depth };
+  }
+  function run(mode){
+    var xml = input.value;
+    if (!xml.trim()) { setMsg('err', 'Paste some XML first.'); return; }
+    var inB = byteCount(xml);
+    var parsed;
+    try {
+      parsed = XJ.xml2js(xml, { compact: false });
+    } catch (e) {
+      setMsg('err', '<strong>Not well-formed:</strong> ' + esc(String(e.message).split('\n').slice(0,4).join(' — ')));
+      ['stEls','stAttrs','stDepth','stOut','stLines'].forEach(function(id){ document.getElementById(id).textContent = '—'; });
+      document.getElementById('stIn').textContent = fmtBytes(inB);
+      output.value = '';
+      return;
+    }
+    var s = stats(parsed);
+    document.getElementById('stEls').textContent = s.els;
+    document.getElementById('stAttrs').textContent = s.attrs;
+    document.getElementById('stDepth').textContent = s.depth;
+    document.getElementById('stIn').textContent = fmtBytes(inB);
+    document.getElementById('stLines').textContent = xml.trim().split('\n').length;
+    if (mode === 'minify') {
+      var min = XF.minify(xml);
+      output.value = min;
+      document.getElementById('stOut').textContent = fmtBytes(byteCount(min));
+      setMsg('ok', 'Well-formed. Minified ' + fmtBytes(inB) + ' → ' + fmtBytes(byteCount(min)) + ' <strong>(' + ((1 - byteCount(min)/inB)*100).toFixed(1) + '% smaller)</strong>');
+    } else if (mode === 'validate') {
+      output.value = '';
+      document.getElementById('stOut').textContent = '—';
+      setMsg('ok', '<strong>Well-formed XML.</strong> ' + s.els + ' elements, ' + s.attrs + ' attributes, max depth ' + s.depth + '. (Schema validity is not checked.)');
+    } else {
+      var indentSel = document.getElementById('indent');
+      var indentation = indentSel.value === '\\t' ? '\t' : indentSel.value;
+      var pretty = XF.format(xml, { indentation: indentation, collapseContent: document.getElementById('collapse').checked, lineSeparator: '\n' });
+      output.value = pretty;
+      var outB = byteCount(pretty);
+      document.getElementById('stOut').textContent = fmtBytes(outB);
+      document.getElementById('stLines').textContent = pretty.trim().split('\n').length;
+      setMsg('ok', 'Well-formed. Formatted ' + fmtBytes(inB) + ' → ' + fmtBytes(outB) + ' (' + pretty.trim().split('\n').length + ' lines)');
+    }
+  }
+  document.getElementById('btnFormat').addEventListener('click', function(){ run('format'); });
+  document.getElementById('btnMinify').addEventListener('click', function(){ run('minify'); });
+  document.getElementById('btnValidate').addEventListener('click', function(){ run('validate'); });
+  document.getElementById('btnCopy').addEventListener('click', function(){
+    output.select();
+    try { document.execCommand('copy'); this.textContent = 'Copied!'; var b = this; setTimeout(function(){ b.textContent = 'Copy Output'; }, 1200); } catch (e) {}
+  });
+  document.getElementById('btnSample').addEventListener('click', function(){
+    input.value = '<?xml version="1.0" encoding="UTF-8"?>\n<feed version="1.0" xml:lang="en">\n  <entry id="1001">\n    <title>XML Formatter ships</title>\n    <updated>2026-08-31</updated>\n    <author email="editor@example.com">S. Alvarez</author>\n    <categories>\n      <category term="dev"/>\n      <category term="xml"/>\n    </categories>\n  </entry>\n  <entry id="1002">\n    <title>Minify mode added</title>\n    <updated>2026-08-30</updated>\n    <author email="editor@example.com">S. Alvarez</author>\n    <categories>\n      <category term="dev"/>\n    </categories>\n  </entry>\n</feed>\n';
+    run('format');
+  });
+  input.addEventListener('input', function(){
+    document.getElementById('bytes').textContent = input.value ? fmtBytes(byteCount(input.value)) : '';
+  });
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

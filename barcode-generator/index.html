@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barcode Generator — Code 128, UPC, EAN Free | ToolAspect</title>
+<meta name="description" content="Free barcode generator: Code 128, EAN-13/8, UPC-A/E, Code 39, ITF-14. Live SVG + PNG download, automatic check-digit math, no upload.">
+<link rel="canonical" href="https://toolaspect.com/barcode-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Barcode Generator — Code 128, UPC, EAN">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Generate Code 128, EAN-13, EAN-8, UPC-A, UPC-E, Code 39, and ITF-14 barcodes as SVG or PNG. Check digits computed automatically.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/barcode-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Barcode Generator | Free Online Tool">
+<meta name="twitter:description" content="Code 128, UPC, EAN, Code 39 barcodes as SVG or PNG, computed in your browser.">
+<meta name="keywords" content="barcode generator, code 128 generator, ean 13 barcode, upc barcode generator, free barcode svg, barcode png, check digit calculator">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Barcode Generator","description":"Free browser-based barcode generator for Code 128, EAN-13, EAN-8, UPC-A, UPC-E, Code 39, ITF-14, GS1-128, Codabar, and MSI. Renders SVG live with computed check digits and downloads print-ready SVG or PNG. Nothing uploads.","url":"https://toolaspect.com/barcode-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I create a barcode for free?","acceptedAnswer":{"@type":"Answer","text":"Type your data above, pick a symbology such as Code 128 or EAN-13, and the barcode renders instantly as SVG. Download the SVG for print or the PNG for documents. Both come out of your browser with no signup, no watermark, and no server round-trip, which matters if the data is internal product or patient information."}},
+{"@type":"Question","name":"What is the difference between Code 128 and EAN-13?","acceptedAnswer":{"@type":"Answer","text":"Code 128 encodes any of the 128 ASCII characters at variable length, so it's used for serial numbers, license plates, and internal IDs. EAN-13 encodes exactly 12 digits plus a computed check digit, and it's the retail point-of-sale standard in most of the world. If a store will scan it at checkout, you need EAN-13 (or UPC-A in North America), and you need a real number from GS1, not an invented one."}},
+{"@type":"Question","name":"How is the EAN-13 check digit calculated?","acceptedAnswer":{"@type":"Answer","text":"Take the 12-digit payload, multiply the digits by 1 and 3 alternately starting from the left (1,3,1,3...), add them up, and subtract from the next multiple of 10. For 400638133393 the weighted sum is 89, so the check digit is 90 minus 89, which is 1, giving 4006381333931. UPC-A and EAN-8 use the same algorithm with 11-digit and 7-digit payloads."}},
+{"@type":"Question","name":"What's the difference between UPC-A and UPC-E?","acceptedAnswer":{"@type":"Answer","text":"UPC-A is the full 12-digit North American retail code: 11 digits plus a check digit. UPC-E is its zero-suppressed form for small packages, carrying 6 digits plus the number system (always 0) and a check digit. A UPC-E code expands back to exactly one UPC-A: for example 0123456 with number system 0 expands to 01234500006, whose check digit is 5, so the full UPC-A is 012345000065."}},
+{"@type":"Question","name":"Can I invent my own EAN or UPC number?","acceptedAnswer":{"@type":"Answer","text":"You can generate the barcode image, but you cannot sell with it. Retail EAN and UPC numbers come from GS1, the global standards body, and major retailers reject codes whose company prefix isn't registered. Inventing one is fine for internal labeling, prototypes, and shelf tests, not for products that will pass through a store's checkout scanner."}},
+{"@type":"Question","name":"Should I download SVG or PNG?","acceptedAnswer":{"@type":"Answer","text":"SVG for anything headed to print — labels, packaging, PDFs — because it's vector and scales to any size with crisp edges. PNG works for screens, office documents, and email. Either way keep the quiet zone (the blank margin on each side) intact: GS1 calls for at least 10 times the narrow bar width, and scanners misread barcodes whose quiet zones get cropped."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Barcode Generator","item":"https://toolaspect.com/barcode-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.input-grid.half{grid-template-columns:1fr 1fr}
+@media(max-width:640px){.input-grid,.input-grid.half{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+input[type="color"]{padding:.2rem;height:2.6rem;cursor:pointer}
+.check-group{display:flex;align-items:center;gap:.5rem;font-size:.88rem;color:var(--text);padding:.4rem 0}
+.check-group input{accent-color:var(--primary);width:16px;height:16px}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.bc-stage{background:#fff;border-radius:var(--radius);padding:1.25rem;margin-top:1.25rem;display:flex;justify-content:center;overflow-x:auto}
+.bc-stage svg{max-width:100%;height:auto}
+.bc-info{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.bc-info{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-all}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏷️ Barcode Generator</h1>
+<p>Code 128, EAN-13/8, UPC-A/E, Code 39, ITF-14 — live SVG, check digits computed</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> to make a barcode, type your data above, choose the symbology, and download the SVG or PNG. Code 128 handles any text (IDs, serials, URLs); EAN-13/UPC-A are the fixed-length retail codes; check digits are computed automatically — an EAN-13 needs exactly 12 digits, and the tool fills in the 13th using the standard 1-3 weighting (payload 400638133393 sums to 89, so the check digit is 1). Everything renders in your browser from vector data.</p>
+
+<div class="section-card">
+<h2>Barcode</h2>
+<div class="input-grid">
+<div class="input-group"><label>Symbology</label>
+<select id="type">
+<option value="code128" selected>Code 128 (any text)</option>
+<option value="ean13">EAN-13 (retail, 12+1 digits)</option>
+<option value="ean8">EAN-8 (small retail, 7+1)</option>
+<option value="upca">UPC-A (US retail, 11+1)</option>
+<option value="upce">UPC-E (compressed UPC, 6 digits)</option>
+<option value="code39">Code 39 (uppercase IDs)</option>
+<option value="itf14">ITF-14 (cartons, 13+1)</option>
+<option value="gs1-128">GS1-128 (AI syntax)</option>
+<option value="codabar">Codabar (digits + $-:/+)</option>
+<option value="msi">MSI (digits, inventory)</option>
+</select>
+</div>
+<div class="input-group" style="grid-column:span 2"><label>Data</label><input type="text" id="data" value="ToolAspect-2026" spellcheck="false"></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Bar height (px)</label><input type="number" id="height" value="80" min="20" max="300" step="5"></div>
+<div class="input-group"><label>Narrow bar width (px)</label><input type="number" id="barWidth" value="2" min="1" max="5" step="0.5"></div>
+<div class="input-group"><label>Bar color</label><input type="color" id="color" value="#000000"></div>
+</div>
+<label class="check-group"><input type="checkbox" id="showText" checked> Print the human-readable text under the bars</label>
+<div class="bc-stage" id="stage">Loading engine…</div>
+<div class="bc-info">
+<div class="result-item"><div class="ri-label">Symbology check</div><div class="ri-value" id="validOut">—</div></div>
+<div class="result-item"><div class="ri-label">Check digit / notes</div><div class="ri-value" id="checkOut">—</div></div>
+</div>
+<div class="btn-row">
+<button type="button" class="btn" id="dlSvg">Download SVG</button>
+<button type="button" class="btn" id="dlPng">Download PNG</button>
+<button type="button" class="btn ghost" id="copySvg">Copy SVG</button>
+</div>
+<div class="status-line" id="status">Rendering locally with etiket (MIT, zero dependencies). Nothing uploads.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-to-jpg/">Pdf To Jpg</a></li><li style="margin:4px 0"><a href="/jpg-to-pdf/">Jpg To Pdf</a></li><li style="margin:4px 0"><a href="/compress-pdf/">Compress Pdf</a></li><li style="margin:4px 0"><a href="/asset-tag-generator/">Asset Tag Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/barcode-types-explained/">Barcode types explained</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Which Barcode Symbology Do You Need?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Symbology</th><th>Character set</th><th>Data length</th><th>Check digit</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td>Code 128</td><td>Full ASCII (128 chars)</td><td>Variable</td><td>Auto (mod 103, not printed)</td><td>IDs, serials, logistics, healthcare</td></tr>
+<tr><td>GS1-128</td><td>ASCII + AI markers</td><td>Variable</td><td>Auto + per-AI</td><td>Shipment/pallet labels with dates, lots</td></tr>
+<tr><td>Code 39</td><td>43 chars: 0-9 A-Z space - . $ / + %</td><td>Variable</td><td>Optional mod 43</td><td>Defense, automotive, legacy systems</td></tr>
+<tr><td>EAN-13</td><td>Digits</td><td>12 + 1 check</td><td>Mod 10 (1-3 weights)</td><td>Retail POS worldwide</td></tr>
+<tr><td>UPC-A</td><td>Digits</td><td>11 + 1 check</td><td>Mod 10 (3-1 weights)</td><td>Retail POS, US and Canada</td></tr>
+<tr><td>UPC-E</td><td>Digits</td><td>6 + NS 0 + check</td><td>Mod 10 on expanded form</td><td>Small packages, US retail</td></tr>
+<tr><td>EAN-8</td><td>Digits</td><td>7 + 1 check</td><td>Mod 10</td><td>Tiny packages (candy, cigarettes)</td></tr>
+<tr><td>ITF-14</td><td>Digits</td><td>13 + 1 check</td><td>Mod 10</td><td>Shipping cartons / outer cases</td></tr>
+<tr><td>Codabar</td><td>Digits + $ - : / . </td><td>Variable</td><td>None</td><td>Libraries, blood banks (legacy)</td></tr>
+<tr><td>MSI</td><td>Digits</td><td>Variable</td><td>Optional mod 10</td><td>Warehouse shelf and inventory labels</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Module counts at the defaults (2 px narrow bar): EAN-13 and UPC-A are 95 modules wide, EAN-8 is 67, UPC-E is 51 — so their SVGs come out 210, 154, and 122 px wide including a 10 px margin on each side. GS1 quiet-zone rules call for clear space of at least 10× the narrow bar on both sides (UPC-A: 9×; EAN-13: 11× left, 7× right). Keep it when you place the barcode on a label.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Barcode Generator Works</h2>
+<p>The page runs etiket, an MIT-licensed, zero-dependency barcode engine, entirely in your browser. You type data, it encodes the bars and spaces as vector rectangles, and the SVG it draws is what you download — there's no rasterizer in the middle, so a 2-inch label and a shipping-carton print stay equally sharp.</p>
+<h3>Check digits, computed live</h3>
+<p>EAN and UPC codes carry a final digit that guards against misreads. The engine computes it as it encodes, and the panel under the barcode shows the math. The algorithm: weight the payload digits 1,3,1,3… from the left, sum, and take the distance to the next multiple of 10.</p>
+<h3>How to use it</h3>
+<p>Pick the symbology first, because each one constrains what the data field accepts — Code 128 takes any text, EAN-13 wants 12 or 13 digits, UPC-E wants 6, 7, or 8. Invalid input gets a specific error (wrong length, bad character, bad check digit) rather than a silent blank. Set bar height and module width for your label size, toggle the human-readable text, and download. SVG for print, PNG for screens.</p>
+<h3>A worked example</h3>
+<p>Take the EAN-13 payload 400638133393. Weighted: 4×1 + 0×3 + 0×1 + 6×3 + 3×1 + 8×3 + 1×1 + 3×3 + 3×1 + 3×3 + 9×1 + 3×3 = 89. The next multiple of 10 is 90, so the check digit is 1 and the full code is 4006381333931. Type that in, and the tool renders a 95-module barcode (210 px at 2 px modules plus margins). Flip the last digit to 2 and the symbology check flags "Invalid EAN-13 check digit" — the sum would need to be 88, and it isn't.</p>
+<p>Same idea, shorter codes: UPC-A payload 03600029145 gets check digit 2 (036000291452 on the package), EAN-8 payload 9638507 gets 4, and UPC-E 01234565 expands to the UPC-A 012345000065 — zero-suppressed codes always un-collapse to one specific 12-digit UPC.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I create a barcode for free?</h3><p>Type your data above, pick a symbology such as Code 128 or EAN-13, and the barcode renders instantly as SVG. Download the SVG for print or the PNG for documents. Both come out of your browser with no signup, no watermark, and no server round-trip, which matters if the data is internal product or patient information.</p></div>
+<div class="faq-item"><h3>What is the difference between Code 128 and EAN-13?</h3><p>Code 128 encodes any of the 128 ASCII characters at variable length, so it's used for serial numbers, license plates, and internal IDs. EAN-13 encodes exactly 12 digits plus a computed check digit, and it's the retail point-of-sale standard in most of the world. If a store will scan it at checkout, you need EAN-13 (or UPC-A in North America), and you need a real number from GS1, not an invented one.</p></div>
+<div class="faq-item"><h3>How is the EAN-13 check digit calculated?</h3><p>Take the 12-digit payload, multiply the digits by 1 and 3 alternately starting from the left (1,3,1,3...), add them up, and subtract from the next multiple of 10. For 400638133393 the weighted sum is 89, so the check digit is 90 minus 89, which is 1, giving 4006381333931. UPC-A and EAN-8 use the same algorithm with 11-digit and 7-digit payloads.</p></div>
+<div class="faq-item"><h3>What's the difference between UPC-A and UPC-E?</h3><p>UPC-A is the full 12-digit North American retail code: 11 digits plus a check digit. UPC-E is its zero-suppressed form for small packages, carrying 6 digits plus the number system (always 0) and a check digit. A UPC-E code expands back to exactly one UPC-A: for example 0123456 with number system 0 expands to 01234500006, whose check digit is 5, so the full UPC-A is 012345000065.</p></div>
+<div class="faq-item"><h3>Can I invent my own EAN or UPC number?</h3><p>You can generate the barcode image, but you cannot sell with it. Retail EAN and UPC numbers come from GS1, the global standards body, and major retailers reject codes whose company prefix isn't registered. Inventing one is fine for internal labeling, prototypes, and shelf tests, not for products that will pass through a store's checkout scanner.</p></div>
+<div class="faq-item"><h3>Should I download SVG or PNG?</h3><p>SVG for anything headed to print — labels, packaging, PDFs — because it's vector and scales to any size with crisp edges. PNG works for screens, office documents, and email. Either way keep the quiet zone (the blank margin on each side) intact: GS1 calls for at least 10 times the narrow bar width, and scanners misread barcodes whose quiet zones get cropped.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/asset-tag-generator/">🏷️ Asset Tag Generator</a>
+<a href="/qr-code-generator/">🔳 QR Code Generator</a>
+<a href="/business-card-qr-generator/">💳 Business Card QR</a>
+<a href="/pdf-add-text/">📝 PDF Add Text</a>
+<a href="/csv-to-excel/">📊 CSV to Excel</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var ETIKET_URLS=['https://cdn.jsdelivr.net/npm/etiket@0.12.0/dist/index.mjs','https://unpkg.com/etiket@0.12.0/dist/index.mjs'];
+var etiket=null,currentSVG='';
+function status(msg,cls){var s=document.getElementById('status');s.textContent=msg;s.className='status-line'+(cls?' '+cls:'');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function loadEtiket(){
+if(etiket)return Promise.resolve(etiket);
+var p=Promise.reject();
+for(var i=0;i<ETIKET_URLS.length;i++)(function(url){
+p=p.catch(function(){return import(url);});
+})(ETIKET_URLS[i]);
+return p.then(function(mod){etiket=mod;return mod;}).catch(function(e){throw new Error('could not load barcode engine from CDN');});
+}
+
+var TYPE_INFO={
+'code128':{digits:false,note:'Full ASCII, variable length'},
+'ean13':{digits:true,payload:12,note:'12 digits → tool appends check'},
+'ean8':{digits:true,payload:7,note:'7 digits → tool appends check'},
+'upca':{digits:true,payload:11,note:'11 digits → tool appends check'},
+'upce':{digits:true,payload:null,note:'6 digits (NS 0 assumed), 7 or 8 also OK'},
+'code39':{digits:false,note:'0-9 A-Z space - . $ / + %'},
+'itf14':{digits:true,payload:13,note:'13 digits → tool appends check'},
+'gs1-128':{digits:false,note:'(AI) syntax, e.g. (01)123...(17)260101'},
+'codabar':{digits:false,note:'digits + $-:/+, optional A-D start/stop'},
+'msi':{digits:true,payload:null,note:'digits only'}
+};
+
+function upceToUpca(ns,m){
+var last=m[5],body;
+if(last==='0'||last==='1'||last==='2')body=m.slice(0,2)+last+'0000'+m.slice(2,5);
+else if(last==='3')body=m.slice(0,3)+'00000'+m.slice(3,5);
+else if(last==='4')body=m.slice(0,4)+'00000'+m[4];
+else body=m.slice(0,5)+'0000'+last;
+return ns+body;
+}
+function gs1CheckDigit(payload){
+var d=String(payload).split('').map(Number),sum=0;
+for(var i=0;i<d.length;i++){var fromRight=d.length-i;sum+=d[i]*(fromRight%2===1?3:1);}
+return (10-(sum%10))%10;
+}
+
+function render(){
+if(!etiket)return;
+var type=document.getElementById('type').value;
+var data=document.getElementById('data').value;
+var stage=document.getElementById('stage');
+var validOut=document.getElementById('validOut');
+var checkOut=document.getElementById('checkOut');
+if(!data.trim()){stage.innerHTML='<span style="color:#94a3b8;font-size:.85rem">Type data to render a barcode</span>';validOut.textContent='—';checkOut.textContent='—';currentSVG='';return;}
+var info=TYPE_INFO[type];
+var extra='';
+try{
+var v=etiket.validateBarcode(data,type);
+if(v&&v.valid===false){
+validOut.textContent='✗ Invalid';validOut.style.color='var(--danger)';
+checkOut.textContent=v.error||'invalid for '+type;
+stage.innerHTML='<div style="color:#b91c1c;font-size:.85rem;padding:8px">'+esc(v.error||'Invalid input for '+type)+'</div>';
+currentSVG='';return;
+}
+validOut.textContent='✓ Valid';validOut.style.color='var(--success)';
+// computed check digit helpers
+if(type==='ean13'&&/^\d{12}$/.test(data)){var c=etiket.calculateEANCheckDigit(data);checkOut.textContent='check '+c+' → '+data+c;extra=' (check digit '+c+' appended)';}
+else if(type==='upca'&&/^\d{11}$/.test(data)){var c2=etiket.calculateEANCheckDigit(data);checkOut.textContent='check '+c2+' → '+data+c2;extra=' (check digit '+c2+' appended)';}
+else if(type==='ean8'&&/^\d{7}$/.test(data)){var c3=etiket.calculateEANCheckDigit(data);checkOut.textContent='check '+c3+' → '+data+c3;extra=' (check digit '+c3+' appended)';}
+else if(type==='itf14'&&/^\d{13}$/.test(data)){var c4=etiket.calculateEANCheckDigit(data);checkOut.textContent='check '+c4+' → '+data+c4;extra=' (check digit '+c4+' appended)';}
+else if(type==='upce'&&/^\d{6,8}$/.test(data)){
+var m6=data.length>=7?data.slice(1,7):data;
+var upcaBody=upceToUpca('0',m6);
+var cd=gs1CheckDigit(upcaBody);
+checkOut.textContent='expands to UPC-A '+upcaBody+cd;
+extra=' (NS 0, check '+cd+')';
+}else checkOut.textContent=info.note;
+
+currentSVG=etiket.barcode(data,{
+type:type,
+height:parseFloat(document.getElementById('height').value)||80,
+barWidth:parseFloat(document.getElementById('barWidth').value)||2,
+color:document.getElementById('color').value,
+showText:document.getElementById('showText').checked
+});
+stage.innerHTML=currentSVG;
+status('Rendered '+type+extra+'.','ok');
+}catch(e){
+validOut.textContent='✗ Error';validOut.style.color='var(--danger)';
+checkOut.textContent=String(e.message||e).slice(0,80);
+stage.innerHTML='<div style="color:#b91c1c;font-size:.85rem;padding:8px">'+esc(String(e.message||e))+'</div>';
+currentSVG='';
+}
+}
+function download(name,blob){
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+}
+document.getElementById('dlSvg').addEventListener('click',function(){
+if(!currentSVG){status('Nothing rendered yet.',true);return;}
+download('barcode.svg',new Blob([currentSVG],{type:'image/svg+xml'}));
+status('Downloaded barcode.svg.','ok');
+});
+document.getElementById('dlPng').addEventListener('click',function(){
+if(!etiket){status('Engine not loaded.',true);return;}
+if(!currentSVG){status('Nothing rendered yet.',true);return;}
+var data=document.getElementById('data').value;
+try{
+var uri=etiket.barcodePNGDataURI(data,{
+type:document.getElementById('type').value,
+height:parseFloat(document.getElementById('height').value)||80,
+barWidth:Math.max(2,parseFloat(document.getElementById('barWidth').value)||2),
+color:document.getElementById('color').value,
+showText:document.getElementById('showText').checked
+});
+var b=atob(uri.split(',')[1]),u=new Uint8Array(b.length);
+for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
+download('barcode.png',new Blob([u],{type:'image/png'}));
+status('Downloaded barcode.png.','ok');
+}catch(e){status('PNG failed: '+e.message,'err');}
+});
+document.getElementById('copySvg').addEventListener('click',function(){
+if(!currentSVG){status('Nothing rendered yet.',true);return;}
+(navigator.clipboard?navigator.clipboard.writeText(currentSVG):Promise.reject()).then(function(){
+status('SVG markup copied to clipboard.','ok');
+},function(){status('Clipboard blocked by the browser — use Download SVG instead.','err');});
+});
+['type','data','height','barWidth','color','showText'].forEach(function(id){
+document.getElementById(id).addEventListener('input',render);
+document.getElementById(id).addEventListener('change',render);
+});
+document.getElementById('type').addEventListener('change',function(){
+var t=this.value,preset={'code128':'ToolAspect-2026','ean13':'400638133393','ean8':'9638507','upca':'03600029145','upce':'01234565','code39':'TOOLASPECT-1','itf14':'0001234567890','gs1-128':'(01)12345678901234(17)260101','codabar':'A40156B','msi':'1234567'}[t];
+if(preset)document.getElementById('data').value=preset;
+render();
+});
+loadEtiket().then(render).catch(function(e){status(e.message,'err');document.getElementById('stage').innerHTML='<div style="color:#b91c1c;font-size:.85rem">'+esc(e.message)+'</div>';});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

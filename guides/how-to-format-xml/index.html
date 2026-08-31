@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Format and Validate XML (Rules, Entities, Tools) | ToolAspect</title>
+<meta name="description" content="XML formatting explained: the 7 well-formedness rules, the 5 escape entities, when to minify, and a real 563→477 byte example. Plus how XML stacks up vs JSON.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-format-xml/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Format and Validate XML","description":"Formatting XML is re-serializing a parsed tree, not string surgery. This guide walks the seven well-formedness rules every XML document must obey, the five predefined entities, how minification interacts with parsers, and a worked byte-count example — plus when XML beats JSON on size and where formatting belongs in a pipeline.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Format and Validate XML","item":"https://toolaspect.com/guides/how-to-format-xml/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What's the difference between formatting and parsing XML?","acceptedAnswer":{"@type":"Answer","text":"Parsing reads the text and builds a tree, failing if the syntax is broken. Formatting re-serializes that tree with consistent layout — one element per line, children indented. A real formatter always parses first, which is why formatting a broken document should report an error instead of producing garbage."}},
+{"@type":"Question","name":"Should XML files in production be minified?","acceptedAnswer":{"@type":"Answer","text":"Rarely worth it. XML compresses extremely well with gzip or brotch — the transport layer usually handles size — and minified files are miserable to debug by hand. Minification pays off for very large documents shipped uncompressed, or for machine-to-machine payloads where a 15-40% byte reduction matters to bandwidth bills. Keep pretty files in the repo either way."}},
+{"@type":"Question","name":"What characters are illegal in XML?","acceptedAnswer":{"@type":"Answer","text":"Unescaped < and & in content, and most control characters below 0x20 (only tab, newline, and carriage return are allowed). Escape the five entity characters — < > & \" ' — and reject or wrap control characters in CDATA where legal. Invalid Unicode bytes fail at parse time regardless of formatting."}},
+{"@type":"Question","name":"Do XML declaration and comments matter for formatting?","acceptedAnswer":{"@type":"Answer","text":"The declaration, if present, must be the very first thing in the file with no leading whitespace or blank line, or the parser rejects it. Comments can live anywhere after it and survive formatting untouched. A formatter that indents or moves the declaration is broken."}},
+{"@type":"Question","name":"How do I pretty-print XML from the command line?","acceptedAnswer":{"@type":"Answer","text":"xmllint --format file.xml is the classic one-liner on macOS and Linux. Python: python -c \"import xml.dom.minidom,sys; print(xml.dom.minidom.parse(sys.argv[1]).toprettyxml(indent='  '))\" file.xml. For quick one-off files, the browser-based ToolAspect XML formatter does the same with nothing to install."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text-secondary)}code{font-size:.9em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Format and Validate XML</h1>
+<div class="meta"><span>💡 50K+ searches/mo</span><span>⏱️ 7 min read</span></div>
+<p class="intro">You pasted XML into a file that one tool reads fine and another rejects, or you inherited a 4-megagram one-liner someone's build spat out. Formatting fixes the readability; validation tells you whether the readability is even deserved. Here are the seven rules a document must obey, the five entities everyone Googles, and a real byte-for-byte example of what minification actually buys.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does "formatting" an XML file actually mean?</h2>
+<p>Real formatting is <strong>parse, then re-serialize</strong> — not search-and-replace on angle brackets. The formatter reads your document into a tree, checks it against XML's syntax rules, and writes the tree back out with a consistent layout: one element per line, each nesting level indented one stop, text kept inline with its parent. Because the output comes from the parsed tree, the structure can't drift; a formatter that hasn't parsed the document can corrupt it.</p>
+<p>That's also why a good formatter doubles as a validator: if parsing fails, you learn immediately — ideally with a line and column — instead of after the document has been through three more systems.</p>
+<h2>The seven well-formedness rules</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>#</th><th>Rule</th><th>Breaks like this</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Exactly one root element</td><td><code>&lt;a/&gt;&lt;b/&gt;</code> at the top level</td></tr>
+<tr><td>2</td><td>Every tag closed</td><td><code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;</code></td></tr>
+<tr><td>3</td><td>Nesting closes in reverse order</td><td><code>&lt;a&gt;&lt;b&gt;&lt;/a&gt;&lt;/b&gt;</code></td></tr>
+<tr><td>4</td><td>Names are case-sensitive</td><td><code>&lt;item&gt;&lt;/Item&gt;</code> doesn't match</td></tr>
+<tr><td>5</td><td>Attribute values quoted</td><td><code>&lt;a id=1&gt;</code></td></tr>
+<tr><td>6</td><td><code>&lt;</code> and <code>&amp;</code> escaped in content</td><td><code>&lt;name&gt;A &amp; B&lt;/name&gt;</code></td></tr>
+<tr><td>7</td><td>Declaration first, if present</td><td>any byte before <code>&lt;?xml …?&gt;</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>A document that passes all seven is <em>well-formed</em>. A document that additionally obeys a DTD or XSD schema is <em>valid</em> — a stronger claim, and one that needs the schema itself. When a tool says "XML validator," check which of the two it means; most online ones, including ours, check well-formedness.</p>
+<h2>The five entities, once and for all</h2>
+<p>Five characters have predefined escapes: <code>&amp;lt;</code> for &lt;, <code>&amp;gt;</code> for &gt;, <code>&amp;amp;</code> for &amp;, <code>&amp;quot;</code> for ", and <code>&amp;apos;</code> for '. Strictly only <code>&lt;</code> and <code>&amp;</code> must be escaped in character content — the other three matter inside attribute values delimited by the same quote — but escaping all five everywhere is always safe, which is what most serializers do. For blocks of raw code or math, a CDATA section (<code>&lt;![CDATA[ 1 &lt; 2 ]]&gt;</code>) skips escaping entirely; note the one thing CDATA still can't contain is the sequence <code>]]&gt;</code>.</p>
+<h2>A worked example, in bytes</h2>
+<p>Take a two-entry feed document, pretty-printed at 2-space indentation: <strong>563 bytes over 20 lines</strong>. Minified — every newline and indent removed — the same document runs <strong>477 bytes</strong>. That's a <strong>15.3% reduction</strong> for deleting nothing but whitespace, and round-tripping proves it: formatting the minified version reproduces the original line-for-line, 563 bytes in, 562 out, with only the trailing newline lost.</p>
+<p>The parse also yields structure stats that matter more than size when you're auditing a document: this feed has <strong>14 elements, 9 attributes, and a maximum nesting depth of 4</strong>. Depth is the one to watch — deeply nested XML is where humans miscount close tags, and depth above 6 or 7 usually means the format wants refactoring, not reformatting.</p>
+<p>How much minification saves scales with how padded the source was: this feed carries modest 2-space indents; machine-generated XML indented to 8 spaces at depth 8 can halve. Already-dense XML barely moves.</p>
+<h2>Should you minify XML in production?</h2>
+<p>Usually, no. XML gzips exceptionally well — closing tags are repetitive, exactly what DEFLATE eats — so the transport layer generally shrinks documents better than minification does, and minified payloads are miserable to debug. Minification earns its keep for very large documents served without compression, or high-volume machine-to-machine feeds where every byte bills twice. Whatever ships, keep the pretty version in source control; the <a href="/xml-formatter/">XML formatter</a> converts either direction in one click.</p>
+<h2>How does XML compare to JSON?</h2>
+<p>People repeat "JSON is smaller," and it's not that simple. JSON repeats every key for every record; XML can carry the same facts as attributes with short names. On the feed example above, minified XML is <strong>477 bytes</strong> while the equivalent compact JSON is <strong>755 bytes — 37% larger</strong>. Flip to a document of nested containers with few attributes and JSON wins. The honest rule: measure on your payload, and remember JSON has no attributes, namespaces, mixed content, or a standard schema system — which is usually the actual reason to pick one over the other, not bytes.</p>
+<h2>Formatting in pipelines</h2>
+<ul>
+<li><strong>Editor:</strong> VS Code formats XML natively; JetBrains IDEs reformat with ⌥⌘L / Ctrl+Alt+L.</li>
+<li><strong>Command line:</strong> <code>xmllint --format file.xml</code> everywhere; Python's <code>xml.dom.minidom</code> one-liner when you need it scripted.</li>
+<li><strong>Build output:</strong> whatever your serializer emits is fine for machines — format at read time, not ship time (see the gzip point above).</li>
+<li><strong>One-off files:</strong> the <a href="/xml-formatter/">browser-based formatter</a> — nothing installs, nothing uploads, and validation errors come with line numbers.</li>
+</ul>
+<p>For sibling formats, the <a href="/json-formatter/">JSON formatter</a> and <a href="/yaml-validator/">YAML validator</a> do the same parse-and-reprint job for their grammars, and the <a href="/sql-formatter/">SQL formatter</a> handles the query side of configs.</p>
+<div class="cta-box"><h3>Format, minify, validate — locally</h3><p style="color:#fff;opacity:.9">Paste XML, pick 2-space or 4-space indentation, and get structure stats plus exact error positions. Runs entirely in your browser.</p><a href="/xml-formatter/">XML Formatter →</a></div>
+<h2>The bottom line</h2>
+<p>Formatting is re-serialization: parse the document, print the tree consistently, and any parse failure is a syntax bug with an address — line and column. Obey the seven rules, escape the five entities, minify only when bandwidth genuinely bills you for it, and keep the pretty version under version control. The <a href="/xml-formatter/">XML formatter</a> does all three modes in one paste, the <a href="/json-formatter/">JSON formatter</a> covers the other half of config work, and the <a href="/yaml-validator/">YAML validator</a> tames the third format your pipeline secretly contains.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What's the difference between formatting and parsing XML?</h3><p>Parsing reads the text and builds a tree, failing if the syntax is broken. Formatting re-serializes that tree with consistent layout — one element per line, children indented. A real formatter always parses first, which is why formatting a broken document should report an error instead of producing garbage.</p></div>
+<div class="faq-item"><h3>Should XML files in production be minified?</h3><p>Rarely worth it. XML compresses extremely well with gzip or brotli — the transport layer usually handles size — and minified files are miserable to debug by hand. Minification pays off for very large documents shipped uncompressed, or for machine-to-machine payloads where a 15-40% byte reduction matters to bandwidth bills. Keep pretty files in the repo either way.</p></div>
+<div class="faq-item"><h3>What characters are illegal in XML?</h3><p>Unescaped &lt; and &amp; in content, and most control characters below 0x20 (only tab, newline, and carriage return are allowed). Escape the five entity characters — &lt; &gt; &amp; " ' — and reject or wrap control characters in CDATA where legal. Invalid Unicode bytes fail at parse time regardless of formatting.</p></div>
+<div class="faq-item"><h3>Do XML declaration and comments matter for formatting?</h3><p>The declaration, if present, must be the very first thing in the file with no leading whitespace or blank line, or the parser rejects it. Comments can live anywhere after it and survive formatting untouched. A formatter that indents or moves the declaration is broken.</p></div>
+<div class="faq-item"><h3>How do I pretty-print XML from the command line?</h3><p>xmllint --format file.xml is the classic one-liner on macOS and Linux. Python's xml.dom.minidom parses and reprints in a one-liner too. For quick one-off files, the browser-based ToolAspect XML formatter does the same with nothing to install.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/xml-formatter/">XML Formatter</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/yaml-validator/">YAML Validator</a>
+<a href="/sql-formatter/">SQL Formatter</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

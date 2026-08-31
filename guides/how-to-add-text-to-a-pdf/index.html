@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add Text to a PDF: Free, No Upload | ToolAspect</title>
+<meta name="description" content="Add text to any PDF free: click the spot, pick a size, download. How PDF coordinates work (origin bottom-left, points = 1/72 in) and what size to use.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-add-text-to-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Add Text to a PDF: Free, No Upload, Exact Placement","description":"Adding text to a PDF means drawing a string at a coordinate in page space, where the origin sits at the bottom-left corner and units are points (1/72 inch). This guide walks the free no-upload workflow, explains the coordinate system with real numbers on a US Letter page (612 by 792 points), shows how big common stamps measure in Helvetica (APPROVED 2026-08-31 is 153.1 pt wide at 14pt, 262.4 pt at 24pt), and covers scanned PDFs, saving vs flattening, and when a real PDF editor is worth it. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Add Text to a PDF","item":"https://toolaspect.com/guides/how-to-add-text-to-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How can I add text to a PDF without paying?","acceptedAnswer":{"@type":"Answer","text":"Use a browser-based tool that runs locally, such as our PDF Add Text page: open the PDF, click the exact spot, type the text, and download. Because the editing happens in your browser with pdf-lib, there is no account, no watermark, and no file upload. For heavy editing (reflowing paragraphs, editing existing text), a desktop editor is still the better tool."}},
+{"@type":"Question","name":"Why does my text land in the wrong place when I compute coordinates myself?","acceptedAnswer":{"@type":"Answer","text":"Almost always the Y axis. PDF coordinates start at the bottom-left with Y increasing upward, while screen pixels start at the top-left with Y increasing downward. On a Letter page (612 by 792 points), a spot 100 points from the top edge is Y=692, not Y=100. Also remember the Y you pass is the text baseline: glyphs draw above it, roughly 75 to 90 percent of the font size for capital letters."}},
+{"@type":"Question","name":"Can I add text to a scanned PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes. A scanned PDF is just an image wrapped in a page, and stamping draws on top of that image. Date stamps and initials work perfectly. The caveat is OCR: adding text does not make the scan's existing content searchable, and your stamp is a drawn string, not editable text that a search will find."}},
+{"@type":"Question","name":"What font size should a PDF stamp be?","acceptedAnswer":{"@type":"Answer","text":"Match the page's own body text, usually 10 to 12 points. Stamps that should stand out work at 18 to 36 points. For scale: APPROVED 2026-08-31 in Helvetica Bold is 153.1 points wide at 14pt, about 25 percent of a Letter page's 612-point width, and 262.4 points wide at 24pt, about 43 percent."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Add Text to a PDF: Free, No Upload, Exact Placement</h1>
+<div class="meta"><span>📝 PDF editing</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">You don't need a subscription to write on a PDF. The whole job is drawing a string at one coordinate, and a browser tab can do it without your file ever leaving your machine. Here's the workflow, the coordinate math that trips everyone up exactly once, and how to pick a size that looks like it belongs on the page.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does "adding text to a PDF" actually mean?</h2>
+<p>A PDF page is a list of drawing instructions: put this glyph here, that image there. Adding text means appending one more instruction — <em>draw this string at this point, in this font, at this size, in this color</em>. Nothing about the existing content changes. That's why a stamped PDF usually grows by well under a kilobyte per addition, and why the operation is fast even on hundred-page files.</p>
+<p>This is different from two things people often confuse it with. Annotations (comments, form fields) float in a layer above the page and can be moved or deleted by anyone with a reader — bad for approval stamps you want permanent. Editing existing text means re-typesetting the page's content stream, which is a genuinely harder problem and where desktop editors earn their price.</p>
+<h2>The free workflow, step by step</h2>
+<ol>
+<li><strong>Open the tool with your file.</strong> Our <a href="/pdf-add-text/">PDF Add Text</a> page renders the document locally with pdf.js, the same engine Firefox's built-in viewer uses.</li>
+<li><strong>Click the exact spot.</strong> The click becomes a PDF coordinate automatically — zoom, page rotation, and crop boxes are all accounted for.</li>
+<li><strong>Type and style.</strong> Font, size, color; multi-line works with Enter. Choose the current page or every page at once (handy for date-stamping a whole contract).</li>
+<li><strong>Add, check, download.</strong> The preview re-renders from the actual edited bytes, so what you see is the real output, not a mock-up.</li>
+</ol>
+<h2>Why is the origin at the bottom-left?</h2>
+<p>PDF inherited its coordinate system from PostScript, which came from printers: paper feeds from the bottom, so (0,0) sits at the bottom-left corner, X runs right, and Y runs <em>up</em>. Screens do the opposite — pixel (0,0) is the top-left, Y grows downward. Any tool that lets you type coordinates by hand has to convert between the two, and so do you if you're scripting.</p>
+<p>The formula for an unrotated page: <code>pdfX = pixelX ÷ scale</code> and <code>pdfY = pageHeight − pixelY ÷ scale</code>, where scale is preview pixels per point. Say you click at canvas pixel (367, 214) on a Letter page (612 × 792 points) shown at 1.2× scale: X = 367 ÷ 1.2 = 305.8, Y = 792 − 214 ÷ 1.2 = 613.7. Same click on A4 (595.28 × 841.89 points) would give Y = 841.89 − 178.3 = 663.6.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Page</th><th>Points (W × H)</th><th>Inches</th><th>Y of a point 1 in from the top</th></tr></thead>
+<tbody>
+<tr><td>US Letter</td><td>612 × 792</td><td>8.5 × 11</td><td>792 − 72 = 720</td></tr>
+<tr><td>US Legal</td><td>612 × 1008</td><td>8.5 × 14</td><td>1008 − 72 = 936</td></tr>
+<tr><td>A4</td><td>595.28 × 841.89</td><td>8.27 × 11.69</td><td>841.89 − 72 = 769.89</td></tr>
+</tbody>
+</table>
+</div>
+<p>One more quirk: the Y you supply is the text's <em>baseline</em>, the invisible line the letters sit on. Descenders (g, j, p, q, y) dip below it. So if you want a stamp's box to start 1 inch from the top on Letter, place the baseline a bit lower than Y=720.</p>
+<h2>What size should the text be?</h2>
+<p>Points are absolute in PDFs — 1 point = 1/72 inch — so a 12pt stamp is 12/72 = 1/6 inch tall when printed, regardless of the page. Body text in most documents is 10 to 12 points. For visible stamps, 18 to 36 points is the useful range. Width is what actually gets people: a string that fits "one line" mentally can be wider than the margin you're aiming at.</p>
+<ul>
+<li><strong>"APPROVED 2026-08-31"</strong> in Helvetica Bold: 153.1 pt wide at 14pt (25% of a Letter page), 262.4 pt at 24pt (43%).</li>
+<li>A page number at 9pt Helvetica: roughly 20–30 pt wide — invisible until you look for it, which is the point.</li>
+<li>A full-width "VOID" or "DRAFT" that should cross the page: start at 72pt and adjust down.</li>
+</ul>
+<h2>Can I add text to a scanned PDF?</h2>
+<p>Yes — scans are the classic use case, because a scan is an image with no text layer to edit anyway. Stamping draws on top of the image, so initials, dates, and signatures land fine. Two honest limits: your stamp is a drawn string, so searching the PDF won't find it unless the search tool OCRs; and if the scan is crooked, your horizontal text will sit slightly ascew against it. Straighten expectations, not the text.</p>
+<h2>When do you need a real PDF editor?</h2>
+<p>Browser stamping covers adding; it doesn't cover rewriting. You'll want a desktop editor when you need to change words inside existing paragraphs, reflow a whole page, or fill interactive forms field by field. For everything else — dates, names, page marks, approval stamps, Bates-style numbering — drawing text at a coordinate is the complete answer, and it's free.</p>
+<div class="cta-box"><h3>Add text to a PDF right now</h3><p style="color:#fff;opacity:.9">Click the exact spot, pick size and color, download. Runs entirely in your browser — contracts and records never upload.</p><a href="/pdf-add-text/">Open PDF Add Text →</a></div>
+<p>Working with a batch of files instead? <a href="/compress-pdf/">Compress PDF</a> shrinks results before you email them, <a href="/pdf-to-jpg/">PDF to JPG</a> turns pages into images for slides, and <a href="/jpg-to-pdf/">JPG to PDF</a> wraps photos or scans back into a document. The <a href="/certificate-decoder/">certificate decoder</a> handles the other PEM-flavored files developers juggle.</p>
+<h2>The bottom line</h2>
+<p>Click, type, size, download. PDF text placement is a solved problem with bottom-left coordinates and points you can count on — 612 × 792 for Letter, 595.28 × 841.89 for A4, and a baseline that sits above the Y you pick. Once you've stamped one file in a browser tab, the fifteen-step export wizard stops being worth opening.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How can I add text to a PDF without paying?</h3><p>Use a browser-based tool that runs locally, such as our PDF Add Text page: open the PDF, click the exact spot, type the text, and download. Because the editing happens in your browser with pdf-lib, there is no account, no watermark, and no file upload. For heavy editing (reflowing paragraphs, editing existing text), a desktop editor is still the better tool.</p></div>
+<div class="faq-item"><h3>Why does my text land in the wrong place when I compute coordinates myself?</h3><p>Almost always the Y axis. PDF coordinates start at the bottom-left with Y increasing upward, while screen pixels start at the top-left with Y increasing downward. On a Letter page (612 by 792 points), a spot 100 points from the top edge is Y=692, not Y=100. Also remember the Y you pass is the text baseline: glyphs draw above it, roughly 75 to 90 percent of the font size for capital letters.</p></div>
+<div class="faq-item"><h3>Can I add text to a scanned PDF?</h3><p>Yes. A scanned PDF is just an image wrapped in a page, and stamping draws on top of that image. Date stamps and initials work perfectly. The caveat is OCR: adding text does not make the scan's existing content searchable, and your stamp is a drawn string, not editable text that a search will find.</p></div>
+<div class="faq-item"><h3>What font size should a PDF stamp be?</h3><p>Match the page's own body text, usually 10 to 12 points. Stamps that should stand out work at 18 to 36 points. For scale: APPROVED 2026-08-31 in Helvetica Bold is 153.1 points wide at 14pt, about 25 percent of a Letter page's 612-point width, and 262.4 points wide at 24pt, about 43 percent.</p></div>
+<div class="related-tools"><a href="/pdf-add-text/">📝 PDF Add Text</a><a href="/compress-pdf/">🗜️ Compress PDF</a><a href="/pdf-to-jpg/">🖼️ PDF to JPG</a><a href="/jpg-to-pdf/">📄 JPG to PDF</a></div>
+</div>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

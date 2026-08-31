@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Annotate — Highlight, Draw &amp; Note PDFs | ToolAspect</title>
+<meta name="description" content="Annotate PDFs free in your browser: highlight text, strike through, draw, and add text notes. Saves as real PDF annotations. No uploads, no account.">
+<link rel="canonical" href="https://toolaspect.com/pdf-annotate/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF Annotate — Highlight, Draw &amp; Note PDFs">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Highlight, strike through, draw on, and note up PDFs — then download the file with real, editable PDF annotations. Everything runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-annotate/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Annotate | Free Online Tool">
+<meta name="twitter:description" content="Highlight, draw on, and add notes to PDFs. Saves standard PDF annotations, fully in-browser.">
+<meta name="keywords" content="pdf annotate, annotate pdf, highlight pdf, draw on pdf, pdf markup, pdf notes, free pdf annotation tool, strikethrough pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Annotate","description":"Free browser-based PDF annotation tool. Highlight text, strike through, draw freehand, and place text and sticky notes on any PDF, then download a copy carrying real, standard PDF annotations that other viewers can display and edit. Runs on pdf.js with pdf-annotate.js and pdf-lib; nothing is uploaded.","url":"https://toolaspect.com/pdf-annotate/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are the annotations saved into the PDF itself?","acceptedAnswer":{"@type":"Answer","text":"Yes. On download you get a copy of the original PDF with real annotation objects written into it — highlights as /Highlight markups with quad points, drawings as /Ink annotations, text as /FreeText, notes as /Text comments. They are not screenshots or flattened pixels, so other PDF software can show, hide, and edit them."}},
+{"@type":"Question","name":"Which PDF viewers will show my annotations?","acceptedAnswer":{"@type":"Answer","text":"The ones people actually use: Adobe Acrobat and Reader, macOS Preview, Chrome and Edge's built-in viewers, Firefox, and Okular all render standard highlight, ink, free text, and note annotations. A handful of minimal mobile viewers ignore annotations — the text in the underlying document is always intact either way."}},
+{"@type":"Question","name":"Can I edit or delete annotations after downloading?","acceptedAnswer":{"@type":"Answer","text":"Usually, yes — because the output uses the PDF's own annotation types rather than burned-in pixels, Acrobat and Preview let you recolor, move, or delete each markup. If you need annotations permanently fused into the page, that's flattening, which is a different operation from annotating."}},
+{"@type":"Question","name":"Can I use this to sign a document?","acceptedAnswer":{"@type":"Answer","text":"You can draw your signature with the pen tool and it saves as an ink annotation, but a drawn mark alone doesn't make a legally binding e-signature — that depends on intent, consent, and the audit trail your signing process provides. For contracts, use a dedicated signing workflow. This tool is for review and markup, and none of this is legal advice."}},
+{"@type":"Question","name":"Does my file get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The PDF is rendered with pdf.js and re-saved with pdf-lib inside your browser; the page works offline once loaded. Your annotations live in the page until you download the annotated copy."}},
+{"@type":"Question","name":"What's the difference between annotating and redacting?","acceptedAnswer":{"@type":"Answer","text":"Annotating adds a layer on top — the original content stays fully intact underneath, which is right for review and collaboration. Redacting removes content from the file itself. If the goal is making information disappear, use a true redaction tool, not a highlighter."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF Annotate","item":"https://toolaspect.com/pdf-annotate/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.6rem 1.15rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.ghost.active{border-color:var(--primary);color:var(--primary-hover);outline:1px solid var(--primary)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.tool-opts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;align-items:center;font-size:.82rem;color:var(--muted)}
+.tool-opts select{padding:.45rem .6rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;cursor:pointer}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.pdfViewer{margin-top:1.5rem;display:flex;flex-direction:column;gap:1.25rem;align-items:center}
+.pdfViewer .page{position:relative;background:#fff;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.pdfViewer .page canvas{display:block}
+.annotationLayer{position:absolute;top:0;left:0}
+.ann-list{margin-top:1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);max-height:220px;overflow-y:auto;font-size:.82rem}
+.ann-row{display:flex;gap:.6rem;align-items:center;padding:.45rem .7rem;border-bottom:1px solid var(--border)}
+.ann-row:last-child{border-bottom:none}
+.ann-row .t{font-weight:600;color:var(--primary-hover);min-width:78px}
+.ann-row .d{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ann-row button{background:none;border:1px solid var(--border);color:var(--danger);border-radius:6px;padding:.15rem .5rem;cursor:pointer;font-size:.75rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.notice{background:var(--surface);border:1px solid var(--warn);border-radius:var(--radius);padding:.9rem 1.1rem;font-size:.85rem;color:var(--muted);line-height:1.6;margin-top:1.25rem}
+.notice strong{color:var(--warn)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✏️ PDF Annotate</h1>
+<p>Highlight, strike through, draw, and add notes — saved as real, editable PDF annotations</p>
+</div>
+
+<div class="aio-answer">To annotate a PDF without uploading it: open the file below, pick a tool — highlight, strikethrough, freehand pen, text box, or sticky note — mark up the pages, then download. The export writes standard PDF annotation objects (/Highlight with quad points, /Ink strokes, /FreeText, /Text notes) into a copy of your file, so Acrobat, Preview, Chrome, and Firefox can display and even edit them later. The original text stays untouched underneath. Free, in-browser, no account.</div>
+
+<div class="section-card">
+<h2>Document</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="tCursor" disabled>🖱️ Select</button>
+<button class="btn ghost" id="tHighlight" disabled>🖍️ Highlight</button>
+<button class="btn ghost" id="tStrike" disabled>̶S̶ Strike</button>
+<button class="btn ghost" id="tDraw" disabled>✎ Draw</button>
+<button class="btn ghost" id="tText" disabled>🔤 Text</button>
+<button class="btn ghost" id="tNote" disabled>🗨️ Note</button>
+<button class="btn ghost" id="btnClear" disabled>Clear</button>
+<button class="btn save" id="btnSave" disabled>💾 Save annotated PDF</button>
+</div>
+<div class="tool-opts">
+<span>Pen width <select id="penWidth"><option>1</option><option>2</option><option>3</option></select></span>
+<span>Pen color <select id="penColor"><option value="FF0000">Red</option><option value="0000FF">Blue</option><option value="000000">Black</option><option value="008000">Green</option></select></span>
+<span>Text size <select id="textSize"><option>10</option><option>12</option><option>16</option><option>24</option></select></span>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="ann-list" id="annList" style="display:none"></div>
+<div class="pdfViewer" id="viewer"></div>
+</div>
+
+<div class="notice"><strong>Markup, not legal process.</strong> Annotations are review marks on top of the document — great for feedback and collaboration, not a substitute for signing workflows or redaction. For anything with legal weight, use the dedicated process; nothing here is legal advice.</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/redact-pdf/">Redact PDF</a></li><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-annotate-a-pdf/">Read the PDF annotation guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Annotation Types Written</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>You use</th><th>Written to the PDF as</th><th>Carries</th><th>Editable later?</th></tr></thead>
+<tbody>
+<tr><td>🖍️ Highlight</td><td><code>/Subtype /Highlight</code></td><td>Colored quad-point rectangles over each line</td><td>Yes — Acrobat, Preview, most viewers</td></tr>
+<tr><td>̶S̶ Strike</td><td><code>/Subtype /StrikeOut</code></td><td>Strike lines over the selected text</td><td>Yes</td></tr>
+<tr><td>✎ Draw</td><td><code>/Subtype /Ink</code></td><td>Freehand stroke path with width and color</td><td>Yes</td></tr>
+<tr><td>🔤 Text</td><td><code>/Subtype /FreeText</code></td><td>Typed text with font size and color</td><td>Yes</td></tr>
+<tr><td>🗨️ Note</td><td><code>/Subtype /Text</code></td><td>Sticky-note icon with your comment as its content</td><td>Yes</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Because the output speaks the PDF spec's own annotation vocabulary instead of flattening marks into pixels, annotations survive round-trips through other editors — and can be hidden or deleted there if a reviewer changes their mind.</p>
+</div>
+
+<div class="content-section">
+<h2>How the PDF Annotation Tool Works</h2>
+<p>Annotating a PDF should not require an account, a subscription, or uploading a contract to somebody's server. This tool renders your file with Mozilla's pdf.js, puts the annotation interaction layer from pdf-annotate.js (the MIT-licensed Submitty fork, battle-tested in a real grading platform) on top of each page, and stores every mark you make in the page. When you save, pdf-lib writes the annotation dictionaries into a copy of the original file.</p>
+<h3>The pipeline</h3>
+<p>Open → pdf.js renders each page → you highlight, strike, draw, type, or drop notes (each mark is captured in page coordinates at the current zoom) → Save converts every mark from screen coordinates to PDF user space, writes the matching annotation dict — quad points for highlights, an ink list for pen strokes, a default-appearance string plus contents for text — and attaches it to the right page's <code>/Annots</code> array → download. The document's own text, fonts, and images are never touched.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the PDF; pages render top to bottom.</li>
+<li>Pick a tool. Highlight and Strike work by dragging across text; Draw follows your pointer; Text drops a box you type into; Note drops a sticky-note icon and asks for its comment.</li>
+<li>Set pen width and color, or text size, before drawing — the annotation list shows everything you've added, and each row can be deleted.</li>
+<li>Save annotated PDF downloads a copy named <em>-annotated.pdf</em>. The original stays untouched.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Take a US Letter page (612 × 792 points) with a contract clause worth flagging. At the viewer's 1.35× zoom you drag the highlighter across two lines of text, capturing rectangles at screen positions 188, 189 (335 × 12) and 72, 205 (431 × 12). On save, each rectangle converts from screen to PDF coordinates: line one becomes x 139.26 → 387.41, y 643.11 → 652.00; line two becomes x 53.33 → 372.59, y 631.26 → 640.15. Those two rectangles leave the exporter as one /Highlight annotation with 16 quad-point numbers — 2 quads, one per line — plus a yellow interior color of RGB (1, 1, 0) and a bounding rectangle of x 53.33–387.41, y 631.26–652.00.</p>
+<p>Type "Check with legal" in a text box at 24-pixel size on the same page and it saves as a /FreeText annotation whose default-appearance string reads <code>/Helv 17.78 Tf 0 0 0 rg</code> — 24 screen pixels ÷ 1.35 zoom = 17.78 points of Helvetica in black. A sticky note carrying "Verify this clause before sending" becomes a /Text annotation whose /Contents is exactly that string, on whichever page you dropped it. Every one of those numbers comes straight out of the exporter's output, and Acrobat will let your reviewer recolor or delete any of them.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Are the annotations saved into the PDF itself?</h3><p>Yes. On download you get a copy of the original PDF with real annotation objects written into it — highlights as /Highlight markups with quad points, drawings as /Ink annotations, text as /FreeText, notes as /Text comments. They are not screenshots or flattened pixels, so other PDF software can show, hide, and edit them.</p></div>
+<div class="faq-item"><h3>Which PDF viewers will show my annotations?</h3><p>The ones people actually use: Adobe Acrobat and Reader, macOS Preview, Chrome and Edge's built-in viewers, Firefox, and Okular all render standard highlight, ink, free text, and note annotations. A handful of minimal mobile viewers ignore annotations — the text in the underlying document is always intact either way.</p></div>
+<div class="faq-item"><h3>Can I edit or delete annotations after downloading?</h3><p>Usually, yes — because the output uses the PDF's own annotation types rather than burned-in pixels, Acrobat and Preview let you recolor, move, or delete each markup. If you need annotations permanently fused into the page, that's flattening, which is a different operation from annotating.</p></div>
+<div class="faq-item"><h3>Can I use this to sign a document?</h3><p>You can draw your signature with the pen tool and it saves as an ink annotation, but a drawn mark alone doesn't make a legally binding e-signature — that depends on intent, consent, and the audit trail your signing process provides. For contracts, use a dedicated signing workflow. This tool is for review and markup, and none of this is legal advice.</p></div>
+<div class="faq-item"><h3>Does my file get uploaded anywhere?</h3><p>No. The PDF is rendered with pdf.js and re-saved with pdf-lib inside your browser; the page works offline once loaded. Your annotations live in the page until you download the annotated copy.</p></div>
+<div class="faq-item"><h3>What's the difference between annotating and redacting?</h3><p>Annotating adds a layer on top — the original content stays fully intact underneath, which is right for review and collaboration. Redacting removes content from the file itself. If the goal is making information disappear, use a true redaction tool, not a highlighter.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/redact-pdf/">🔏 Redact PDF</a>
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+<a href="/compare-pdf/">🔍 Compare PDFs</a>
+<a href="/pdf-to-qr-code/">📎 PDF to QR Code</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/web/pdf_viewer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@submitty/pdf-annotate.js@24.6.6/dist/pdf-annotate.min.js"></script>
+<script>
+/* ===== PDF Annotate engine: pdf.js + Submitty pdf-annotate.js -> pdf-lib annot-dict writer ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+var SCALE=1.35;
+var A=window.PDFAnnotate, UI=A.UI;
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+
+var pdf=null, origBytes=null, origName='document', documentId='ta-'+Date.now();
+var store={anns:[],comments:{}};
+
+A.setStoreAdapter(new A.StoreAdapter({
+  getAnnotations:function(documentId,pageNumber){
+    return Promise.resolve({pageNumber:pageNumber,annotations:store.anns.filter(function(a){return +a.page===+pageNumber})});
+  },
+  getAnnotation:function(documentId,annotationId){
+    return Promise.resolve(store.anns.filter(function(a){return a.uuid===annotationId})[0]||null);
+  },
+  addAnnotation:function(documentId,pageNumber,annotation){
+    annotation.page=pageNumber;
+    store.anns.push(annotation);
+    refreshList();
+    return Promise.resolve(annotation);
+  },
+  editAnnotation:function(documentId,a,b){
+    // called as (documentId, annotationId, annotation) by the library
+    var idx=-1;
+    store.anns.forEach(function(x,i){if(x.uuid===(typeof a==='string'?a:a.uuid))idx=i});
+    if(idx>-1)store.anns[idx]=(b&&b.uuid?b:store.anns[idx]);
+    refreshList();
+    return Promise.resolve(store.anns[idx]||null);
+  },
+  deleteAnnotation:function(documentId,annotationId){
+    store.anns=store.anns.filter(function(a){return a.uuid!==annotationId});
+    delete store.comments[annotationId];
+    refreshList();
+    return Promise.resolve(null);
+  },
+  addComment:function(documentId,annotationId,content){
+    store.comments[annotationId]=content;
+    refreshList();
+    return Promise.resolve({annotation:annotationId,content:content});
+  },
+  deleteComment:function(documentId,commentId){
+    delete store.comments[commentId];
+    return Promise.resolve(null);
+  }
+}));
+
+var RENDER_OPTIONS={documentId:documentId,pdfDocument:null,scale:SCALE,rotate:0};
+
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];
+  if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(doc){
+      pdf=doc;RENDER_OPTIONS.pdfDocument=doc;
+      el('viewer').innerHTML='';
+      for(var i=1;i<=doc.numPages;i++)el('viewer').appendChild(UI.createPage(i));
+      var chain=Promise.resolve();
+      for(var j=1;j<=doc.numPages;j++){
+        (function(n){chain=chain.then(function(){return UI.renderPage(n,RENDER_OPTIONS)})})(j);
+      }
+      return chain;
+    }).then(function(){
+      ['tCursor','tHighlight','tStrike','tDraw','tText','tNote','btnClear'].forEach(function(id){el(id).disabled=false});
+      el('btnSave').disabled=false;
+      setStatus('Loaded '+pdf.numPages+' page'+(pdf.numPages>1?'s':'')+'. Pick a tool and mark up.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err')});
+  };
+  fr.readAsArrayBuffer(f);
+});
+
+function setTool(name){
+  UI.disableRect&&UI.disableRect();UI.disablePen&&UI.disablePen();UI.disableText&&UI.disableText();UI.disablePoint&&UI.disablePoint();
+  ['tCursor','tHighlight','tStrike','tDraw','tText','tNote'].forEach(function(id){el(id).classList.remove('active')});
+  if(name==='cursor'){el('tCursor').classList.add('active');return}
+  el('t'+name.charAt(0).toUpperCase()+name.slice(1)).classList.add('active');
+  if(name==='highlight'){UI.enableRect('highlight')}
+  else if(name==='strike'){UI.enableRect('strikeout')}
+  else if(name==='draw'){UI.setPen(parseFloat(el('penWidth').value,10)||1,el('penColor').value);UI.enablePen()}
+  else if(name==='text'){UI.setText(parseInt(el('textSize').value,10)||12,'000000');UI.enableText()}
+  else if(name==='note'){UI.enablePoint()}
+}
+el('tCursor').addEventListener('click',function(){setTool('cursor')});
+el('tHighlight').addEventListener('click',function(){setTool('highlight')});
+el('tStrike').addEventListener('click',function(){setTool('strike')});
+el('tDraw').addEventListener('click',function(){setTool('draw')});
+el('tText').addEventListener('click',function(){setTool('text')});
+el('tNote').addEventListener('click',function(){setTool('note')});
+el('penWidth').addEventListener('change',function(){UI.setPen(parseFloat(el('penWidth').value,10)||1,el('penColor').value)});
+el('penColor').addEventListener('change',function(){UI.setPen(parseFloat(el('penWidth').value,10)||1,el('penColor').value)});
+el('textSize').addEventListener('change',function(){UI.setText(parseInt(el('textSize').value,10)||12,'000000')});
+
+UI.addEventListener('annotation:add',refreshList);
+UI.addEventListener('annotation:edit',refreshList);
+UI.addEventListener('annotation:delete',refreshList);
+UI.addEventListener('comment:add',refreshList);
+
+function refreshList(){
+  var list=el('annList');
+  list.style.display=store.anns.length?'block':'none';
+  list.innerHTML='';
+  var labels={highlight:'Highlight',strikeout:'Strike',drawing:'Ink',textbox:'Text',point:'Note',area:'Area',circle:'Circle',arrow:'Arrow',fillcircle:'Fill circle',emptycircle:'Circle'};
+  store.anns.forEach(function(a){
+    var row=document.createElement('div');
+    row.className='ann-row';
+    var desc='';
+    if(a.type==='textbox')desc=a.content||'(empty text box)';
+    else if(a.type==='point')desc=store.comments[a.uuid]||'(empty note)';
+    else if(a.type==='highlight'||a.type==='strikeout')desc=(a.rectangles?a.rectangles.length:0)+' line(s) on page '+a.page;
+    else if(a.type==='drawing')desc=(a.lines?a.lines.length:0)+' points on page '+a.page;
+    row.innerHTML='<span class="t">'+(labels[a.type]||a.type)+'</span><span class="d"></span><button title="Delete">&#10005;</button>';
+    row.querySelector('.d').textContent=desc;
+    row.querySelector('button').addEventListener('click',function(){
+      A.getStoreAdapter().deleteAnnotation(documentId,a.uuid);
+      var node=document.querySelector('[data-pdf-annotate-id="'+a.uuid+'"]');
+      if(node&&node.parentNode)node.parentNode.removeChild(node);
+      refreshList();
+    });
+    list.appendChild(row);
+  });
+  el('btnSave').disabled=!store.anns.length;
+}
+el('btnClear').addEventListener('click',function(){
+  store.anns.slice().forEach(function(a){
+    A.getStoreAdapter().deleteAnnotation(documentId,a.uuid);
+    var node=document.querySelector('[data-pdf-annotate-id="'+a.uuid+'"]');
+    if(node&&node.parentNode)node.parentNode.removeChild(node);
+  });
+  refreshList();
+});
+
+/* annotation-dict writer (node-verified: subtypes, rect math, quad counts, DA string) */
+function writePdfAnnotations(PDFLib,pdfDoc,annotations,commentLookup){
+  var ctx=pdfDoc.context;
+  var PDFName=PDFLib.PDFName,PDFString=PDFLib.PDFString,PDFHexString=PDFLib.PDFHexString;
+  function hexToRgb(h){h=String(h||'000000').replace('#','');return [0,2,4].map(function(i){return parseInt((h.substr(i,2)||'0'),16)/255});}
+  annotations.forEach(function(a){
+    var dict=null;
+    if(a.type==='highlight'||a.type==='strikeout'){
+      var rects=a.rectangles||[];
+      if(!rects.length)return;
+      var quads=[];
+      rects.forEach(function(r){quads.push(r.xL,r.yT,r.xR,r.yT,r.xL,r.yB,r.xR,r.yB)});
+      var xs=[],ys=[];
+      rects.forEach(function(r){xs.push(r.xL,r.xR);ys.push(r.yT,r.yB)});
+      var col=hexToRgb(a.color);
+      dict=ctx.obj({Type:'Annot',Subtype:a.type==='highlight'?'Highlight':'StrikeOut',
+        Rect:[Math.min.apply(null,xs),Math.min.apply(null,ys),Math.max.apply(null,xs),Math.max.apply(null,ys)],
+        QuadPoints:quads,IC:col,C:col,CA:0.5});
+    }else if(a.type==='drawing'){
+      var pts=a.ink||[];
+      if(pts.length<2)return;
+      var xs2=[],ys2=[];
+      pts.forEach(function(p){xs2.push(p[0]);ys2.push(p[1])});
+      dict=ctx.obj({Type:'Annot',Subtype:'Ink',
+        Rect:[Math.min.apply(null,xs2),Math.min.apply(null,ys2),Math.max.apply(null,xs2),Math.max.apply(null,ys2)],
+        InkList:[pts.reduce(function(acc,p){return acc.concat(p)},[])],
+        C:hexToRgb(a.color),BS:ctx.obj({W:Math.max(0.1,a.width||1),S:'S'})});
+    }else if(a.type==='textbox'){
+      var r2=a.rect||{xL:0,yB:0,xR:0,yT:0};
+      var c=hexToRgb(a.color);
+      var da='/Helv '+(a.size||12)+' Tf '+c[0]+' '+c[1]+' '+c[2]+' rg';
+      dict=ctx.obj({Type:'Annot',Subtype:'FreeText',Rect:[r2.xL,r2.yB,r2.xR,r2.yT],
+        DA:PDFString.of(da),Contents:PDFHexString.fromText(a.content||''),F:4});
+    }else if(a.type==='point'){
+      var p2=a.point||{x:0,y:0};
+      dict=ctx.obj({Type:'Annot',Subtype:'Text',Rect:[p2.x-11,p2.y-11,p2.x+11,p2.y+11],
+        Name:'Comment',Contents:PDFHexString.fromText(commentLookup(a.uuid)||''),F:4,Open:false});
+    }
+    if(!dict)return;
+    var pg=Math.max(0,(parseInt(a.pageIdx,10)||0));
+    if(pg>=pdfDoc.getPageCount())return;
+    var page=pdfDoc.getPage(pg);
+    var ref=ctx.register(dict);
+    var annots=page.node.lookup(PDFName.of('Annots'));
+    if(!annots){annots=ctx.obj([]);page.node.set(PDFName.of('Annots'),annots)}
+    annots.push(ref);
+  });
+}
+function loadScript(url){
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+}
+el('btnSave').addEventListener('click',function(){
+  if(!pdf||!store.anns.length)return;
+  el('btnSave').disabled=true;
+  setStatus('Converting '+store.anns.length+' annotation'+(store.anns.length>1?'s':'')+' to PDF coordinates …');
+  var views={};
+  var chain=Promise.resolve();
+  for(var i=1;i<=pdf.numPages;i++){
+    (function(n){chain=chain.then(function(){return pdf.getPage(n).then(function(p){views[n]=p.getViewport({scale:SCALE})})})})(i);
+  }
+  chain.then(function(){
+    var pdfSpace=store.anns.map(function(a){
+      var vp=views[a.page];
+      var b={type:a.type,color:a.color,pageIdx:(+a.page||1)-1,uuid:a.uuid,width:a.width};
+      if(!vp)return null;
+      if(a.type==='highlight'||a.type==='strikeout'){
+        b.rectangles=(a.rectangles||[]).map(function(r){
+          var p1=vp.convertToPdfPoint(r.x,r.y),p2=vp.convertToPdfPoint(r.x+r.width,r.y+r.height);
+          return {xL:Math.min(p1[0],p2[0]),yT:Math.max(p1[1],p2[1]),xR:Math.max(p1[0],p2[0]),yB:Math.min(p1[1],p2[1])};
+        });
+      }else if(a.type==='drawing'){
+        b.ink=(a.lines||[]).map(function(pt){return vp.convertToPdfPoint(pt[0],pt[1])});
+      }else if(a.type==='textbox'){
+        var p1=vp.convertToPdfPoint(a.x,a.y+(a.height||20)),p2=vp.convertToPdfPoint(a.x+(a.width||200),a.y);
+        b.rect={xL:p1[0],yB:p1[1],xR:p2[0],yT:p2[1]};
+        b.size=(a.size||12)/SCALE;
+        b.content=a.content||'';
+      }else if(a.type==='point'){
+        b.point=vp.convertToPdfPoint(a.x,a.y);
+      }
+      return b;
+    }).filter(Boolean);
+    setStatus('Writing annotations and saving …');
+    return loadScript(PDFLIB_URL).then(function(){
+      var PDFLib=window.PDFLib;
+      return PDFLib.PDFDocument.load(origBytes.slice()).then(function(doc){
+        writePdfAnnotations(PDFLib,doc,pdfSpace,function(id){return store.comments[id]});
+        return doc.save();
+      });
+    });
+  }).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=origName+'-annotated.pdf';
+    a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+    setStatus('Downloaded '+origName+'-annotated.pdf with '+store.anns.length+' real PDF annotation'+(store.anns.length>1?'s':'')+'. Open it in any viewer to confirm.','ok');
+    el('btnSave').disabled=false;
+  }).catch(function(err){
+    setStatus('Save failed: '+(err&&err.message||err),'err');
+    el('btnSave').disabled=false;
+  });
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

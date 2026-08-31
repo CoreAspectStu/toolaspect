@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML to PDF Converter — Free, In-Browser | ToolAspect</title>
+<meta name="description" content="Paste HTML, get a clean PDF in your browser. Articles, tables and invoices typeset to 612×792 pt Letter with no server print dialog. Free, no upload.">
+<link rel="canonical" href="https://toolaspect.com/html-to-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="HTML to PDF Converter — Free, In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert HTML to a clean-print PDF entirely in your browser. Tables, links, images, and headings carry over. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/html-to-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HTML to PDF | Free Converter">
+<meta name="twitter:description" content="Paste HTML, download a typeset PDF — no server, no print dialog, no signup.">
+<meta name="keywords" content="html to pdf, convert html to pdf, html to pdf converter, free html to pdf, html pdf generator, paste html to pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"HTML to PDF Converter","description":"Free browser-based HTML to PDF converter. Paste HTML and get a typeset PDF via html-to-pdfmake and pdfmake. Headings, tables, links, and images carry over; runs entirely on your device.","url":"https://toolaspect.com/html-to-pdf/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can this tool convert any web page to PDF?","acceptedAnswer":{"@type":"Answer","text":"It converts HTML content, not live web pages. Paste the markup (or an email template, a documentation snippet, a generated report) and it typesets it. It doesn't fetch remote pages by URL, load external stylesheets, or run JavaScript — which is exactly why it's safe to point at untrusted markup. For archiving a whole page as it appears, your browser's own Print → Save as PDF does that job better."}},
+{"@type":"Question","name":"Is my HTML rendered exactly as in the browser?","acceptedAnswer":{"@type":"Answer","text":"No, and any tool that claims otherwise from pasted HTML is lying to you. This is a clean-print converter: it maps HTML structure — headings, paragraphs, lists, tables, links, images, bold and italic — into PDF typography. It does not implement the CSS layout engine, so flexbox grids, absolute positioning, web fonts, and animations don't carry over. For articles, tables, and invoices that structure is what matters."}},
+{"@type":"Question","name":"Do links and images survive the conversion?","acceptedAnswer":{"@type":"Answer","text":"Links stay clickable — an <a href> becomes a real PDF link annotation. Images need to be embedded as data URIs (base64), because pdfmake builds the file in memory and does not fetch remote URLs; a <img src=\"https://…\"> will fail, so convert remote images to data URIs first (any base64 encoder, or drag the image into a new tab and read it with a snippet). Relative paths like /img/logo.png have nothing to resolve against and won't work either."}},
+{"@type":"Question","name":"What does the tool do with CSS?","acceptedAnswer":{"@type":"Answer","text":"It reads a practical subset of inline styles — color, background color, bold, font size, text alignment — and ignores the rest. External stylesheets and <style> blocks are not applied, because implementing CSS cascade is a browser's job. Design in the HTML's structure and let the PDF typography settings (page size, margins, base font size) handle the presentation."}},
+{"@type":"Question","name":"Why would I use this instead of the browser's Print dialog?","acceptedAnswer":{"@type":"Answer","text":"Control and repeatability. Print → Save as PDF bakes in whatever the page happened to look like, including ads, cookie banners, and responsive mobile layout. This converter typesets the content itself at the page size and margins you choose, the same way every time — which is what you want for invoices, receipts, reports, and templated documents that get regenerated."}},
+{"@type":"Question","name":"How big can the HTML be?","acceptedAnswer":{"@type":"Answer","text":"The parser and layout engine run in your tab, so the ceiling is memory — comfortably tens of thousands of words and hundreds of table rows, which covers any document you'd actually paste. Since nothing uploads, there's no server-side size cap or rate limit at all."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"HTML to PDF Converter","item":"https://toolaspect.com/html-to-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+textarea.code-input{width:100%;min-height:260px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.5;padding:.9rem;box-sizing:border-box;resize:vertical}
+textarea.code-input:focus{outline:none;border-color:var(--primary)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.8rem 1.75rem;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.status-line{margin-top:.9rem;font-size:.88rem;color:var(--muted);text-align:center;min-height:1.3em}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1.25rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.85rem;text-align:center}
+.stat .s-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stat .s-value{font-size:1.15rem;font-weight:700;margin-top:.2rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.section-card p{color:var(--muted);font-size:.9rem;line-height:1.7}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🖨️ HTML to PDF Converter</h1>
+<p>Paste HTML, download a clean-print PDF — no upload, no print dialog</p>
+</div>
+<div class="aio-answer">Paste HTML below and this converter typesets it into a real PDF entirely in your browser: <strong>html-to-pdfmake</strong> (MIT) translates your markup into pdfmake's layout model, and <strong>pdfmake</strong> (MIT) writes the file — US Letter is 612 × 792 points with a 532 pt text column at default margins. Headings, lists, tables, links, and images carry over; it's a clean-print converter, not a browser clone, so CSS layout doesn't apply. Nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Convert HTML to PDF</h2>
+<textarea class="code-input" id="htmlInput" spellcheck="false" placeholder="Paste your HTML here — e.g.
+
+<h1>Invoice #1042</h1>
+<table>
+  <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+  <tr><td>Design hours</td><td>6</td><td>$450</td></tr>
+</table>
+<p>Due in 30 days. Thank you!</p>">&lt;h1&gt;Monthly Report&lt;/h1&gt;
+&lt;p&gt;Revenue grew &lt;strong&gt;12%&lt;/strong&gt; quarter over quarter. Details in the table below.&lt;/p&gt;
+&lt;table&gt;
+  &lt;tr&gt;&lt;th&gt;Month&lt;/th&gt;&lt;th&gt;Revenue&lt;/th&gt;&lt;th&gt;Growth&lt;/th&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;June&lt;/td&gt;&lt;td&gt;$41,200&lt;/td&gt;&lt;td&gt;+8%&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;July&lt;/td&gt;&lt;td&gt;$44,900&lt;/td&gt;&lt;td&gt;+9%&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;August&lt;/td&gt;&lt;td&gt;$50,300&lt;/td&gt;&lt;td&gt;+12%&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;em&gt;Prepared by the analytics team.&lt;/em&gt;&lt;/p&gt;</textarea>
+<div class="input-grid">
+<div class="input-group"><label>Page size</label>
+<select id="pageSize">
+<option value="LETTER">US Letter — 8.5×11 in</option>
+<option value="A4">A4 — 210×297 mm</option>
+<option value="LEGAL">US Legal — 8.5×14 in</option>
+</select>
+</div>
+<div class="input-group"><label>Orientation</label>
+<select id="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select>
+</div>
+<div class="input-group"><label>Base font size</label>
+<select id="fontSize"><option value="10">10 pt</option><option value="11" selected>11 pt</option><option value="12">12 pt</option></select>
+</div>
+</div>
+<div style="text-align:center;margin-top:1.25rem">
+<button class="btn" id="convertBtn">Convert to PDF</button>
+</div>
+<div class="status-line" id="status"></div>
+<div class="result-stats" id="stats" style="display:none">
+<div class="stat"><div class="s-label">Text</div><div class="s-value" id="stWords">—</div></div>
+<div class="stat"><div class="s-label">Tables</div><div class="s-value" id="stTables">—</div></div>
+<div class="stat"><div class="s-label">Links</div><div class="s-value" id="stLinks">—</div></div>
+<div class="stat"><div class="s-label">PDF pages</div><div class="s-value" id="stPages">—</div></div>
+<div class="stat"><div class="s-label">PDF size</div><div class="s-value" id="stSize">—</div></div>
+</div>
+<div style="text-align:center;margin-top:1rem">
+<button class="btn" id="downloadBtn" style="display:none">⬇️ Download PDF</button>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/word-to-pdf/">Word To Pdf</a></li><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown To Html</a></li><li style="margin:4px 0"><a href="/invoice-generator/">Invoice Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Converts, Tag by Tag</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>HTML</th><th>Becomes in the PDF</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>&lt;h1&gt;–&lt;h6&gt;</td><td>Styled headings</td><td>Sized and bolded from the style map</td></tr>
+<tr><td>&lt;p&gt;</td><td>Paragraph</td><td>Wrapped and justified to the column</td></tr>
+<tr><td>&lt;strong&gt;, &lt;b&gt;, &lt;em&gt;, &lt;i&gt;</td><td>Bold / italic</td><td>Nested inline styles combine</td></tr>
+<tr><td>&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</td><td>Bulleted / numbered lists</td><td>Nesting indents</td></tr>
+<tr><td>&lt;table&gt;, &lt;tr&gt;, &lt;td&gt;, &lt;th&gt;</td><td>PDF table</td><td>colspan/rowspan respected; borders drawn</td></tr>
+<tr><td>&lt;a href&gt;</td><td>Clickable link</td><td>Real PDF link annotation</td></tr>
+<tr><td>&lt;img src="data:…"&gt;</td><td>Embedded image</td><td>Data URIs only — remote URLs aren't fetched</td></tr>
+<tr><td>&lt;blockquote&gt;</td><td>Indented quote</td><td>Left margin block</td></tr>
+<tr><td>&lt;hr&gt;</td><td>Horizontal rule</td><td>Full column width</td></tr>
+<tr><td>&lt;div&gt;, &lt;span&gt;</td><td>Transparent containers</td><td>Structure only — no CSS box model</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A small set of inline styles (color, background, bold, text alignment, font size) is honored. Stylesheets, class definitions, positioning, and fonts from CSS are not — that's a layout engine, not a converter.</p>
+</div>
+
+<div class="content-section">
+<h2>How It Works</h2>
+<p>Browsers render HTML through millions of lines of layout engine code. A PDF converter that isn't a browser has to choose which slice of that to reimplement. This one converts structure into pdfmake's declarative layout — the same "content flows into a column" model Word uses — and lets pdfmake handle pagination, tables, and typography.</p>
+<h3>The chain</h3>
+<p>Your pasted markup is parsed with the browser's own DOM parser. <strong>html-to-pdfmake</strong> (MIT, by Aymeric) walks the resulting tree and emits pdfmake content objects: headings become styled text, tables become table layouts with auto-sized columns, links become PDF annotations. <strong>pdfmake</strong> (MIT) then measures every line, breaks pages where the column overflows, and writes the PDF byte by byte in your tab.</p>
+<h3>How to use it</h3>
+<p>Paste HTML — a full document or a fragment, both work — pick a page size and base font, and convert. The stats row shows what the parser found and the page count of the finished PDF, read from the PDF's own page tree. If a table is cramped, switch to landscape or drop the base font a point; those two knobs fix most layout complaints.</p>
+<h3>A worked example with real numbers</h3>
+<p>Take the sample report preloaded above: a heading, a paragraph, a 4-row table, and a closing line. On US Letter — 612 × 792 pt — with the default 40 pt margins, the text column is 612 − 80 = 532 pt wide and 792 − 80 = 712 pt tall. At the 11 pt base size with 1.25 line spacing, each line is 13.75 pt, so a page holds about 712 ÷ 13.75 ≈ 51 lines. The sample needs fewer than 15, so it fits on one page with room to spare; the three-column table auto-sizes to roughly 177 pt per column. Multiply that to a 40-row invoice and you're at ~44 rows plus headers — call it 2 pages, with the row splitting across the break handled by pdfmake.</p>
+<p>Unit translation, since it comes up constantly: PDFs think in points (1 pt = 1/72 in), browsers in pixels (96 per inch). One CSS pixel is 0.75 pt — a 16 px web font is 12 pt in PDF terms, which is why screen-size text often looks small on paper and why the base-size selector matters.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can this tool convert any web page to PDF?</h3><p>It converts HTML content, not live web pages. Paste the markup (or an email template, a documentation snippet, a generated report) and it typesets it. It doesn't fetch remote pages by URL, load external stylesheets, or run JavaScript — which is exactly why it's safe to point at untrusted markup. For archiving a whole page as it appears, your browser's own Print → Save as PDF does that job better.</p></div>
+<div class="faq-item"><h3>Is my HTML rendered exactly as in the browser?</h3><p>No, and any tool that claims otherwise from pasted HTML is lying to you. This is a clean-print converter: it maps HTML structure — headings, paragraphs, lists, tables, links, images, bold and italic — into PDF typography. It does not implement the CSS layout engine, so flexbox grids, absolute positioning, web fonts, and animations don't carry over. For articles, tables, and invoices that structure is what matters.</p></div>
+<div class="faq-item"><h3>Do links and images survive the conversion?</h3><p>Links stay clickable — an &lt;a href&gt; becomes a real PDF link annotation. Images need to be embedded as data URIs (base64), because pdfmake builds the file in memory and does not fetch remote URLs; a &lt;img src="https://…"&gt; will fail, so convert remote images to data URIs first. Relative paths like /img/logo.png have nothing to resolve against and won't work either.</p></div>
+<div class="faq-item"><h3>What does the tool do with CSS?</h3><p>It reads a practical subset of inline styles — color, background color, bold, font size, text alignment — and ignores the rest. External stylesheets and &lt;style&gt; blocks are not applied, because implementing CSS cascade is a browser's job. Design in the HTML's structure and let the PDF typography settings (page size, margins, base font size) handle the presentation.</p></div>
+<div class="faq-item"><h3>Why would I use this instead of the browser's Print dialog?</h3><p>Control and repeatability. Print → Save as PDF bakes in whatever the page happened to look like, including ads, cookie banners, and responsive mobile layout. This converter typesets the content itself at the page size and margins you choose, the same way every time — which is what you want for invoices, receipts, reports, and templated documents that get regenerated.</p></div>
+<div class="faq-item"><h3>How big can the HTML be?</h3><p>The parser and layout engine run in your tab, so the ceiling is memory — comfortably tens of thousands of words and hundreds of table rows, which covers any document you'd actually paste. Since nothing uploads, there's no server-side size cap or rate limit at all.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/word-to-pdf/">📄 Word to PDF</a>
+<a href="/sign-pdf/">✍️ Sign PDF</a>
+<a href="/markdown-to-html/">📝 Markdown to HTML</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+<a href="/schema-generator/">🏷️ Schema Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/pdfmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.20/build/vfs_fonts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-pdfmake@2.5.34/browser.js"></script>
+<script>
+(function(){
+  const htmlInput = document.getElementById('htmlInput');
+  const convertBtn = document.getElementById('convertBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const statusEl = document.getElementById('status');
+  const stats = document.getElementById('stats');
+  let currentBlob = null;
+
+  convertBtn.addEventListener('click', () => {
+    const html = htmlInput.value.trim();
+    if (!html) { setStatus('Paste some HTML first.'); return; }
+    convertBtn.disabled = true;
+    downloadBtn.style.display = 'none';
+    setStatus('Converting…');
+    try {
+      const words = (html.replace(/<[^>]+>/g, ' ').match(/\S+/g) || []).length;
+      const tables = (html.match(/<table[\s>]/gi) || []).length;
+      const links = (html.match(/<a\s+href/gi) || []).length;
+
+      const size = document.getElementById('pageSize').value;
+      const landscape = document.getElementById('orientation').value === 'landscape';
+      const fs = parseInt(document.getElementById('fontSize').value, 10);
+
+      const content = window.htmlToPdfmake(html, { tableAutoSize: true });
+      const dd = {
+        content: content,
+        pageSize: size,
+        pageOrientation: landscape ? 'landscape' : undefined,
+        pageMargins: [40, 40, 40, 40],
+        defaultStyle: { fontSize: fs, lineHeight: 1.25 },
+        styles: {
+          h1: { fontSize: fs * 1.8, bold: true, margin: [0, 12, 0, 6] },
+          h2: { fontSize: fs * 1.45, bold: true, margin: [0, 10, 0, 5] },
+          h3: { fontSize: fs * 1.2, bold: true, margin: [0, 8, 0, 4] },
+          th: { bold: true, fillColor: '#eeeeee' }
+        }
+      };
+      window.pdfMake.createPdf(dd).getBlob(async blob => {
+        currentBlob = blob;
+        try {
+          const buf = await blob.arrayBuffer();
+          const bytes = new Uint8Array(buf);
+          let bin = '';
+          for (let i = 0; i < bytes.length; i += 65536) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 65536));
+          const pc = bin.match(/\/Type\s*\/Pages[\s\S]{0,200}?\/Count\s+(\d+)/);
+          document.getElementById('stWords').textContent = words.toLocaleString();
+          document.getElementById('stTables').textContent = tables;
+          document.getElementById('stLinks').textContent = links;
+          document.getElementById('stPages').textContent = pc ? pc[1] : '—';
+          document.getElementById('stSize').textContent = (blob.size / 1024).toFixed(0) + ' KB';
+          stats.style.display = 'grid';
+          downloadBtn.style.display = 'inline-block';
+          setStatus('Done — PDF built in your browser, never uploaded.');
+        } catch {
+          downloadBtn.style.display = 'inline-block';
+          setStatus('Done.');
+        }
+        convertBtn.disabled = false;
+      });
+    } catch (err) {
+      setStatus('Conversion failed: ' + (err && err.message ? err.message : err));
+      convertBtn.disabled = false;
+    }
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!currentBlob) return;
+    const a = document.createElement('a');
+    a.download = 'document.pdf';
+    a.href = URL.createObjectURL(currentBlob);
+    a.click();
+  });
+
+  function setStatus(m){ statusEl.textContent = m; }
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

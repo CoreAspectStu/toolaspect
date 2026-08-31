@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Cropper — Crop to Any Social Size | ToolAspect</title>
+<meta name="description" content="Free online image cropper with social presets: YouTube 1280×720, Instagram 1080×1080, LinkedIn banner 1584×396, X header 1500×500. Runs in your browser.">
+<link rel="canonical" href="https://toolaspect.com/image-cropper/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Image Cropper — Crop to Any Social Size">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Crop images to exact platform dimensions with one-click presets for YouTube, Instagram, LinkedIn, X, Facebook, and Pinterest.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-cropper/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Cropper | Free Online Tool">
+<meta name="twitter:description" content="Crop to YouTube, Instagram, LinkedIn, and X sizes in your browser. No upload.">
+<meta name="keywords" content="image cropper, crop image online, youtube thumbnail size, instagram crop, photo cropper, crop to 16:9, resize crop, aspect ratio cropper">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Cropper","description":"Crop images to exact pixel dimensions with presets for YouTube thumbnails, Instagram posts and stories, LinkedIn banners, X headers, Facebook covers, Pinterest pins, and Open Graph cards. Powered by Cropper.js, entirely in the browser.","url":"https://toolaspect.com/image-cropper/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What size is a YouTube thumbnail?","acceptedAnswer":{"@type":"Answer","text":"1280 by 720 pixels (16:9), at least 640 pixels wide, saved as JPG, PNG, GIF, or WebP under 2MB per YouTube's upload rules. Upload anything wider or taller and YouTube letterboxes or squashes it, which is why cropping to the exact frame first matters."}},
+{"@type":"Question","name":"Why does Instagram crop my photos?","acceptedAnswer":{"@type":"Answer","text":"Instagram displays feed photos at aspect ratios between 1.91:1 (landscape) and 4:5 (portrait), so anything outside that band gets cropped to fit. Crop to 1080×1080 (square) or 1080×1350 (4:5 portrait) before uploading and you decide what gets cut off, not the algorithm."}},
+{"@type":"Question","name":"Does cropping an image reduce its quality?","acceptedAnswer":{"@type":"Answer","text":"Cropping itself is lossless geometry — you keep 100% of the original pixels in the region you select. Quality only changes at the export step: PNG and WebP-lossless keep every pixel, while JPG re-encodes once (invisible at quality 0.9). Downscaling to a smaller output, like 4000px to 1080px, actually increases sharpness per pixel."}},
+{"@type":"Question","name":"What's the difference between cropping and resizing?","acceptedAnswer":{"@type":"Answer","text":"Cropping cuts pixels away — a 4000×3000 photo cropped to a square is 3000×3000 pixels of the same scene. Resizing stretches or squeezes the whole image to new dimensions, changing every pixel. This tool does both in one step: crop to the aspect ratio, then resize the crop to the exact output size."}},
+{"@type":"Question","name":"Is 72 DPI or 300 DPI important for web images?","acceptedAnswer":{"@type":"Answer","text":"No. Screens display pixels, not inches, so DPI metadata is ignored by browsers and social platforms. DPI only matters when a file goes to a printer: 1280 pixels at 300 DPI prints 4.27 inches wide; the same file at 72 DPI prints 17.8 inches. The pixel count is the only real quantity."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Image Cropper","item":"https://toolaspect.com/image-cropper/"}]}
+</script>
+<link rel="stylesheet" href="/image-cropper/vendor/cropper.min.css">
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2.2rem 1rem;text-align:center;color:var(--muted);cursor:pointer;transition:border-color .2s,background .2s}
+.dropzone:hover,.dropzone.drag{border-color:var(--primary);background:rgba(99,102,241,.06)}
+.dropzone .big{font-size:2rem}
+.cropper-wrap{max-width:100%;height:420px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-top:1rem;overflow:hidden}
+.cropper-wrap img{display:block;max-width:100%}
+.btn{display:inline-block;padding:.7rem 1.4rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none;margin-top:1rem}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.result-line{font-size:.88rem;color:var(--muted);margin-top:.75rem}
+.result-line img{max-width:100%;border-radius:8px;border:1px solid var(--border);margin-top:.5rem;display:block}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✂️ Image Cropper</h1>
+<p>Crop to the exact dimensions every platform expects — no upload, no watermark</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> every platform wants a different frame — YouTube thumbnails 1280×720 (16:9), Instagram posts 1080×1080 or 1080×1350, LinkedIn banners 1584×396 (4:1), X headers 1500×500 (3:1). Pick a preset below, drag the crop box, and download at the exact pixel size. Cropping itself is lossless: you keep every original pixel in the region you select, and the final re-encode is invisible at quality 0.9. Everything runs locally on <a href="https://github.com/fengyuanchen/cropperjs" rel="noopener">Cropper.js</a> — your image never uploads.
+</div>
+
+<div class="section-card">
+<h2>Crop Your Image</h2>
+<div class="dropzone" id="dz" style="display:none">
+<div class="big">🖼️</div>
+<p><strong>Click or drop an image here</strong></p>
+<p style="font-size:.8rem">JPG · PNG · WebP · GIF first frame — runs locally</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+</div>
+<div class="input-grid" id="opts" style="display:none">
+<div class="input-group"><label>Preset</label><select id="preset">
+<option value="1280,720">YouTube Thumbnail — 1280×720 (16:9)</option>
+<option value="2560,1440">YouTube Banner — 2560×1440 (16:9)</option>
+<option value="1080,1080">Instagram Post — 1080×1080 (1:1)</option>
+<option value="1080,1350">Instagram Portrait — 1080×1350 (4:5)</option>
+<option value="1080,1920">Story / Reel — 1080×1920 (9:16)</option>
+<option value="820,312">Facebook Cover — 820×312</option>
+<option value="1584,396">LinkedIn Banner — 1584×396 (4:1)</option>
+<option value="400,400">Profile Photo — 400×400 (1:1)</option>
+<option value="1500,500">X Header — 1500×500 (3:1)</option>
+<option value="1000,1500">Pinterest Pin — 1000×1500 (2:3)</option>
+<option value="1200,630">Open Graph — 1200×630 (1.91:1)</option>
+<option value="custom">Custom size…</option>
+</select></div>
+<div class="input-group" id="wGroup"><label>Width (px)</label><input type="number" id="outW" value="1280" min="16" max="8192"></div>
+<div class="input-group" id="hGroup"><label>Height (px)</label><input type="number" id="outH" value="720" min="16" max="8192"></div>
+</div>
+<div class="input-grid" id="opts2" style="display:none">
+<div class="input-group"><label>Format</label><select id="outFormat"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div>
+<div class="input-group"><label>Quality: <span id="qVal">0.9</span></label><input type="range" id="quality" min="0.5" max="1" step="0.05" value="0.9"></div>
+<div class="input-group"><label>Rotation / Flip</label><select id="rotSel"><option value="0">None</option><option value="90">Rotate 90°</option><option value="180">Rotate 180°</option><option value="270">Rotate 270°</option><option value="-90">Rotate −90°</option></select></div>
+</div>
+<div class="cropper-wrap" id="cropperWrap" style="display:none"><img id="cropImg" alt="image to crop"></div>
+<div class="result-line" id="cropInfo"></div>
+<p><button class="btn" id="downloadBtn" style="display:none">⬇ Download Crop</button></p>
+<div class="result-line" id="result"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/youtube-thumbnail-size/">YouTube Thumbnail Size</a></li><li style="margin:4px 0"><a href="/video-aspect-ratio-calculator/">Video Dimensions</a></li><li style="margin:4px 0"><a href="/image-compressor/">Image Compressor</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/social-media-image-sizes/">See all platform sizes</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Social Media Image Sizes (2026)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Placement</th><th>Exact Pixels</th><th>Aspect</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>YouTube thumbnail</td><td>1280×720</td><td>16:9</td><td>Min 640px wide; JPG/PNG/GIF/WebP; 2MB max</td></tr>
+<tr><td>YouTube channel banner</td><td>2560×1440</td><td>16:9</td><td>Safe area for all devices: 1546×423 centered</td></tr>
+<tr><td>Instagram feed (square)</td><td>1080×1080</td><td>1:1</td><td>Feed displays between 1.91:1 and 4:5</td></tr>
+<tr><td>Instagram feed (portrait)</td><td>1080×1350</td><td>4:5</td><td>Tallest the feed shows; best for reach</td></tr>
+<tr><td>Story / Reel</td><td>1080×1920</td><td>9:16</td><td>Keep text out of top 250px and bottom 310px (UI)</td></tr>
+<tr><td>Facebook cover</td><td>820×312</td><td>2.63:1</td><td>Desktop display size; mobile crops sides to ~640×360</td></tr>
+<tr><td>LinkedIn personal banner</td><td>1584×396</td><td>4:1</td><td>Very wide — put content center-left</td></tr>
+<tr><td>LinkedIn / X profile photo</td><td>400×400</td><td>1:1</td><td>Displayed circular; keep margins</td></tr>
+<tr><td>X (Twitter) header</td><td>1500×500</td><td>3:1</td><td>Safe area ~1260×420 centered</td></tr>
+<tr><td>Pinterest pin</td><td>1000×1500</td><td>2:3</td><td>Standard pin ratio</td></tr>
+<tr><td>Open Graph (og:image)</td><td>1200×630</td><td>1.91:1</td><td>Link previews on Facebook, LinkedIn, Slack</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Dimensions per each platform's own help pages, checked August 2026. Platforms tweak display crops more often than they change upload specs, so the pixel counts above are the stable part.</p>
+</div>
+
+<div class="content-section">
+<h2>How Cropping and Resizing Work Together</h2>
+<p>This tool does two jobs in one export. First it <strong>crops</strong>: you choose a region of the source image, and every pixel inside it is kept exactly as-is — cropping is pure geometry, no quality loss. Then it <strong>resizes</strong> the crop to your target dimensions on a high-quality canvas, and re-encodes once into JPG, PNG, or WebP.</p>
+<h3>A worked example: camera photo to Instagram square</h3>
+<p>Take a 4000×3000 photo (a standard 12MP 4:3 frame). The largest square inside it is 3000×3000 — cropping to 1:1 throws away the left/right 1000 pixels total. Scaling that 3000×3000 crop down to 1080×1080 keeps 1080 ÷ 3000 = 36% of the linear resolution, which is 12.96% of the pixels — and since Instagram displays the image at 1080 wide anyway, the downscale costs nothing visible.</p>
+<p>A LinkedIn banner from the same photo: the 4:1 ratio means a 3000-pixel-wide crop is only 3000 ÷ 4 = 750 pixels tall. Scaled to the 1584×396 target, that's 27.9% of the crop's pixels. Rule of thumb: the wider the ratio, the more vertical context you lose, so choose photos with a strong horizontal band before committing them to banners.</p>
+<h3>What about print?</h3>
+<p>DPI doesn't exist for screens, but when a crop is headed to paper the pixel count sets the print size. At 300 DPI (photo-print standard), a 1280×720 YouTube thumbnail prints 4.27 × 2.4 inches; a 1080×1080 Instagram square prints 3.6 inches square; an X header at 1500 pixels wide prints 5 inches. Need bigger paper? Start from a larger source image, because upscaling cannot add detail that was cropped away.</p>
+<h3>Open-source note</h3>
+<p>The crop engine is <a href="https://github.com/fengyuanchen/cropperjs" rel="noopener">Cropper.js v1.6.2</a> by Chen Fengyuan (MIT), vendored unmodified at <a href="/image-cropper/vendor/cropper.min.js">/vendor/cropper.min.js</a> with its <a href="/image-cropper/vendor/LICENSE-cropperjs.txt">license</a>. No server is involved at any step.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What size is a YouTube thumbnail?</h3><p>1280 by 720 pixels (16:9), at least 640 pixels wide, saved as JPG, PNG, GIF, or WebP under 2MB per YouTube's upload rules. Upload anything wider or taller and YouTube letterboxes or squashes it, which is why cropping to the exact frame first matters.</p></div>
+<div class="faq-item"><h3>Why does Instagram crop my photos?</h3><p>Instagram displays feed photos at aspect ratios between 1.91:1 (landscape) and 4:5 (portrait), so anything outside that band gets cropped to fit. Crop to 1080×1080 (square) or 1080×1350 (4:5 portrait) before uploading and you decide what gets cut off, not the algorithm.</p></div>
+<div class="faq-item"><h3>Does cropping an image reduce its quality?</h3><p>Cropping itself is lossless geometry — you keep 100% of the original pixels in the region you select. Quality only changes at the export step: PNG and WebP-lossless keep every pixel, while JPG re-encodes once (invisible at quality 0.9). Downscaling to a smaller output, like 4000px to 1080px, actually increases sharpness per pixel.</p></div>
+<div class="faq-item"><h3>What's the difference between cropping and resizing?</h3><p>Cropping cuts pixels away — a 4000×3000 photo cropped to a square is 3000×3000 pixels of the same scene. Resizing stretches or squeezes the whole image to new dimensions, changing every pixel. This tool does both in one step: crop to the aspect ratio, then resize the crop to the exact output size.</p></div>
+<div class="faq-item"><h3>Is 72 DPI or 300 DPI important for web images?</h3><p>No. Screens display pixels, not inches, so DPI metadata is ignored by browsers and social platforms. DPI only matters when a file goes to a printer: 1280 pixels at 300 DPI prints 4.27 inches wide; the same file at 72 DPI prints 17.8 inches. The pixel count is the only real quantity.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/youtube-thumbnail-size/">📐 YouTube Thumbnail Size</a>
+<a href="/video-aspect-ratio-calculator/">🎥 Video Dimensions</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/heic-to-jpg-converter/">📱 HEIC to JPG</a>
+<a href="/placeholder-image/">🖼️ Placeholder Images</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/image-cropper/vendor/cropper.min.js"></script>
+<script>
+(function(){
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+  var img = document.getElementById('cropImg');
+  var cropper = null;
+  var objectUrl = null;
+  var fmtBytes = function(b){ return b >= 1048576 ? (b/1048576).toFixed(2)+' MB' : (b/1024).toFixed(1)+' KB'; };
+  var currentFile = null;
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', function(){ dz.classList.remove('drag'); });
+  dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag'); if (e.dataTransfer.files[0]) load(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) load(fileInput.files[0]); });
+
+  function dims(){
+    var preset = document.getElementById('preset').value;
+    var w, h;
+    if (preset === 'custom') {
+      w = parseInt(document.getElementById('outW').value, 10) || 1080;
+      h = parseInt(document.getElementById('outH').value, 10) || 1080;
+    } else {
+      var p = preset.split(',');
+      w = +p[0]; h = +p[1];
+      document.getElementById('outW').value = w;
+      document.getElementById('outH').value = h;
+    }
+    return { w: Math.min(8192, Math.max(16, w)), h: Math.min(8192, Math.max(16, h)) };
+  }
+  function applyCrop(){
+    if (!cropper) return;
+    var d = dims();
+    cropper.setAspectRatio(d.w / d.h);
+    updateInfo();
+  }
+  function updateInfo(){
+    if (!cropper) return;
+    var d = dims();
+    var data = cropper.getData(true);
+    document.getElementById('cropInfo').textContent =
+      'Source region: ' + Math.round(data.width) + '×' + Math.round(data.height) + ' px at (' +
+      Math.round(data.x) + ', ' + Math.round(data.y) + ') → export ' + d.w + '×' + d.h +
+      ' (' + (data.width ? (d.w / Math.round(data.width) * 100).toFixed(0) : '—') + '% scale)';
+  }
+
+  function load(file){
+    currentFile = file;
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    dz.style.display = 'none';
+    document.getElementById('opts').style.display = '';
+    document.getElementById('opts2').style.display = '';
+    document.getElementById('cropperWrap').style.display = '';
+    document.getElementById('downloadBtn').style.display = '';
+    if (cropper) { cropper.destroy(); cropper = null; }
+    img.src = objectUrl;
+    img.onload = function(){
+      cropper = new Cropper(img, {
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 1,
+        background: false,
+        responsive: true,
+        ready: applyCrop,
+        cropmove: updateInfo,
+        cropresize: updateInfo
+      });
+    };
+  }
+
+  document.getElementById('preset').addEventListener('change', applyCrop);
+  ['outW','outH'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', function(){
+      document.getElementById('preset').value = 'custom';
+      applyCrop();
+    });
+  });
+  document.getElementById('rotSel').addEventListener('change', function(){
+    if (!cropper) return;
+    var v = this.value;
+    cropper.rotateTo(0);
+    if (v !== '0') cropper.rotate(+v);
+  });
+  document.getElementById('quality').addEventListener('input', function(){
+    document.getElementById('qVal').textContent = this.value;
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if (!cropper) return;
+    var d = dims();
+    var type = document.getElementById('outFormat').value;
+    var opts = { width: d.w, height: d.h, imageSmoothingEnabled: true, imageSmoothingQuality: 'high' };
+    var canvas = cropper.getCroppedCanvas(opts);
+    if (!canvas) { document.getElementById('result').textContent = 'Crop region is empty — drag the box over the image first.'; return; }
+    var q = parseFloat(document.getElementById('quality').value);
+    var done = function(blob){
+      var url = URL.createObjectURL(blob);
+      var ext = type === 'image/png' ? 'png' : (type === 'image/webp' ? 'webp' : 'jpg');
+      var name = (currentFile.name.replace(/\.[^.]+$/, '') + '-' + d.w + 'x' + d.h + '.' + ext);
+      var a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      document.getElementById('result').innerHTML = 'Exported <strong>' + name + '</strong> — ' + canvas.width + '×' + canvas.height + ', ' + fmtBytes(blob.size) +
+        ' (source ' + fmtBytes(currentFile.size) + ').';
+    };
+    if (type === 'image/png') canvas.toBlob(done, type);
+    else canvas.toBlob(done, type, q);
+  });
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

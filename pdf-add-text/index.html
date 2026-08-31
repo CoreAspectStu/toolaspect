@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Add Text — Free In-Browser PDF Editor | ToolAspect</title>
+<meta name="description" content="Add text to a PDF in your browser. Click exactly where the words go, pick size and color, download. No upload, no watermark, no signup.">
+<link rel="canonical" href="https://toolaspect.com/pdf-add-text/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF Add Text — Free In-Browser Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Click a spot on the page preview, type your text, choose font size and color, and download the edited PDF. Entirely client-side.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-add-text/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Add Text | Free Online Tool">
+<meta name="twitter:description" content="Stamp text anywhere on a PDF by clicking the spot. Runs in your browser, nothing uploads.">
+<meta name="keywords" content="pdf add text, add text to pdf, write on pdf, pdf text stamp, pdf editor free no watermark, pdf annotation tool">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Add Text","description":"Free browser-based PDF text tool. Click a spot on the rendered page, set font, size, and color, and write text at that exact position. Editing runs client-side with pdf-lib; no file is uploaded.","url":"https://toolaspect.com/pdf-add-text/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How can I add text to a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Load the PDF above, click the spot on the page where the text should start, type the words, pick a font size and color, and press Add text. The download that comes out is a standard PDF with your text stamped at the exact point you clicked. Everything runs in your browser, so there is no account, no watermark, and no upload."}},
+{"@type":"Question","name":"Why does the Y coordinate go up instead of down in a PDF?","acceptedAnswer":{"@type":"Answer","text":"PDF coordinates put the origin (0,0) at the bottom-left corner of the page, with Y increasing upward. A US Letter page is 612 by 792 points, so a click near the top of the page translates to a Y around 600-780, not 20. Screen pixels work the opposite way, which is why the tool converts for you: PDF Y equals page height minus pixel position, divided by the preview scale."}},
+{"@type":"Question","name":"What font size should I use to stamp a PDF?","acceptedAnswer":{"@type":"Answer","text":"Match the document. Body text in most PDFs is 10 to 12 points, so a date or approval stamp that should read as a heading works at 18 to 36 points. For reference, APPROVED 2026-08-31 in Helvetica Bold measures 153.1 points wide at 14pt and 262.4 points wide at 24pt, which is about 43 percent of a Letter page's 612-point width."}},
+{"@type":"Question","name":"Does adding text change the rest of my PDF?","acceptedAnswer":{"@type":"Answer","text":"No. The text is drawn as new content on top of what is already there. Existing text, images, and form fields keep their bytes, which is why the file size usually grows by only a kilobyte or two per addition. The trade-off: your stamp becomes a permanent part of the page, not a movable annotation or comment."}},
+{"@type":"Question","name":"Can I add text to a scanned PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it is one of the most common uses. A scanned PDF is an image of a page, and stamping draws on top of that image, so date stamps or initials land fine. What this does not do is OCR: the scan's existing text stays unsearchable, and your added text is a drawn string, not editable page text."}},
+{"@type":"Question","name":"Is my PDF uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The page renders your file with pdf.js and edits it with pdf-lib, both running locally in your browser tab. The download link is generated from an in-memory blob. Contracts, medical records, and financial documents never leave your device, which is safer than most free online PDF editors."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF Add Text","item":"https://toolaspect.com/pdf-add-text/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.input-grid.four{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:640px){.input-grid,.input-grid.four{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select,.input-group textarea{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group input[type="file"]{cursor:pointer;font-size:.85rem}
+.input-group input:focus,.input-group select:focus,.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.input-group input[type="color"]{padding:.2rem;height:2.6rem;cursor:pointer}
+textarea{font-family:inherit;resize:vertical;min-height:44px}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.7rem 1.5rem;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.canvas-shell{position:relative;margin-top:1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:auto;max-height:78vh}
+.canvas-shell canvas{display:block;width:100%;height:auto;cursor:crosshair}
+.crosshair{position:absolute;width:15px;height:15px;pointer-events:none;transform:translate(-50%,-50%)}
+.crosshair::before,.crosshair::after{content:"";position:absolute;background:var(--danger)}
+.crosshair::before{left:7px;top:0;width:1px;height:15px}
+.crosshair::after{top:7px;left:0;height:1px;width:15px}
+.ghost-text{position:absolute;white-space:pre;pointer-events:none;transform:translateY(-100%);text-shadow:0 0 3px rgba(0,0,0,.5)}
+.page-nav{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.page-nav button{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:.4rem .9rem;cursor:pointer;font-size:.9rem}
+.page-nav button:disabled{opacity:.35;cursor:not-allowed}
+.page-nav span{color:var(--muted);font-size:.9rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr 1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.1rem;font-weight:700}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📝 PDF Add Text</h1>
+<p>Click exactly where the text goes — size, color, font — all in your browser</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> to add text to a PDF, load the file above, click the spot on the page preview where the text should start, type what you want, and pick a size and color. The tool converts your click into PDF page coordinates (origin at the bottom-left, units in points) and stamps the text there with pdf-lib. Nothing uploads, and the download keeps every byte of the original file plus your additions.</p>
+
+<div class="section-card">
+<h2>1. Load a PDF</h2>
+<div class="input-grid">
+<div class="input-group"><label>PDF file</label><input type="file" id="fileIn" accept="application/pdf,.pdf"></div>
+<div class="input-group"><label>Try a sample (1-page Letter)</label><button type="button" class="btn ghost" id="sampleBtn" style="margin-top:0">Generate sample</button></div>
+</div>
+<div id="docMeta" class="result-grid" style="display:none">
+<div class="result-item"><div class="ri-label">Pages</div><div class="ri-value" id="mPages">—</div></div>
+<div class="result-item"><div class="ri-label">Page Size</div><div class="ri-value" id="mSize">—</div></div>
+<div class="result-item"><div class="ri-label">Additions</div><div class="ri-value" id="mAdds">0</div></div>
+<div class="result-item"><div class="ri-label">File Size</div><div class="ri-value" id="mBytes">—</div></div>
+</div>
+</div>
+
+<div class="section-card" id="editorCard" style="display:none">
+<h2>2. Click the page, then add text</h2>
+<div class="canvas-shell" id="canvasShell">
+<canvas id="pgCanvas"></canvas>
+<div class="crosshair" id="cross" style="display:none"></div>
+<div class="ghost-text" id="ghost" style="display:none"></div>
+</div>
+<div class="page-nav">
+<button type="button" id="prevBtn">← Prev</button>
+<span id="pgLabel">Page 1 of 1</span>
+<button type="button" id="nextBtn">Next →</button>
+<span id="coordLabel"></span>
+</div>
+<div class="input-grid four" style="margin-top:1rem">
+<div class="input-group" style="grid-column:span 2"><label>Text (Enter makes a new line)</label><textarea id="txt" rows="2">APPROVED 2026-08-31</textarea></div>
+<div class="input-group"><label>Font</label>
+<select id="font">
+<option value="Helvetica">Helvetica</option>
+<option value="Helvetica-Bold" selected>Helvetica Bold</option>
+<option value="Times-Roman">Times</option>
+<option value="Courier">Courier</option>
+</select>
+</div>
+<div class="input-group"><label>Size (pt) — <span id="sizeOut">14</span></label><input type="range" id="size" min="6" max="72" step="1" value="14"></div>
+</div>
+<div class="input-grid four" style="margin-top:1rem">
+<div class="input-group"><label>Color</label><input type="color" id="color" value="#d93025"></div>
+<div class="input-group"><label>Apply to</label>
+<select id="scope">
+<option value="page" selected>This page only</option>
+<option value="all">Every page</option>
+</select>
+</div>
+<div class="input-group"><label>Placement</label><input type="text" id="placeOut" value="Click the preview…" readonly></div>
+<div class="input-group"><label>&nbsp;</label><button type="button" class="btn" id="addBtn" style="margin-top:0" disabled>Add text</button></div>
+</div>
+<div class="btn-row" style="margin-top:.8rem">
+<button type="button" class="btn ghost" id="undoBtn" disabled>Undo last</button>
+<button type="button" class="btn ghost" id="resetBtn" disabled>Clear all</button>
+<button type="button" class="btn" id="dlBtn" disabled>Download PDF</button>
+</div>
+<div class="status-line" id="status">Waiting for a file. Everything runs locally — your PDF never uploads.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/compress-pdf/">Compress Pdf</a></li><li style="margin:4px 0"><a href="/pdf-to-jpg/">Pdf To Jpg</a></li><li style="margin:4px 0"><a href="/jpg-to-pdf/">Jpg To Pdf</a></li><li style="margin:4px 0"><a href="/certificate-decoder/">Certificate Decoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-add-text-to-a-pdf/">How to add text to a PDF</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>PDF Page Sizes and Coordinate Facts</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Page</th><th>Points (W × H)</th><th>Millimeters</th><th>Pixels @ 150 DPI</th></tr></thead>
+<tbody>
+<tr><td>US Letter</td><td>612 × 792</td><td>216 × 279</td><td>1275 × 1650</td></tr>
+<tr><td>US Legal</td><td>612 × 1008</td><td>216 × 356</td><td>1275 × 2100</td></tr>
+<tr><td>A4</td><td>595.28 × 841.89</td><td>210 × 297</td><td>1240 × 1754</td></tr>
+<tr><td>A5</td><td>419.53 × 595.28</td><td>148 × 210</td><td>874 × 1240</td></tr>
+<tr><td>A3</td><td>841.89 × 1190.55</td><td>297 × 420</td><td>1754 × 2480</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A PDF point is 1/72 of an inch, so Letter is exactly 8.5 × 11 in. Coordinates start at (0,0) in the bottom-left corner and Y grows upward — the opposite of screen pixels, where Y grows downward from the top-left. The <code>drawText</code> Y value is the text's baseline, so glyphs sit above the point you pick.</p>
+</div>
+
+<div class="content-section">
+<h2>How the PDF Add Text Tool Works</h2>
+<p>Two open-source engines split the job. pdf.js (the renderer behind Firefox's viewer) draws each page onto a canvas so you can see exactly what you're editing. When you click, the tool asks the viewport for the matching PDF coordinate — the conversion accounts for the preview's zoom level and the page's rotation, so a click lands where you saw it even on rotated or cropped pages. Then pdf-lib writes the text into the document at that coordinate and hands you the download.</p>
+<h3>From click to coordinate</h3>
+<p>On an unrotated page the math is short: PDF X = pixel X ÷ preview scale, and PDF Y = page height − pixel Y ÷ preview scale. Divide because the preview renders several screen pixels per point; subtract because the PDF's Y axis points up while the screen's points down. A click at canvas pixel (367, 214) on a Letter page rendered at 1.2× — meaning 1.2 screen pixels per point — becomes X = 367 ÷ 1.2 = 305.8 and Y = 792 − 214 ÷ 1.2 = 613.7, so the text baseline lands at (305.8, 613.7).</p>
+<h3>Choosing a size that fits</h3>
+<p>Font size in points is honest in PDFs: 14pt text on a 612-point-wide Letter page occupies the same share of the page printed or on screen. For scale, "APPROVED 2026-08-31" in Helvetica Bold measures 153.1 points wide at 14pt — about a quarter of a Letter page — and 262.4 points at 24pt, roughly 43 percent of the width. If your stamp runs off the edge, halve the size.</p>
+<h3>How to use it</h3>
+<p>Load a PDF or generate the sample, flip to the page you need, and click the exact spot where the text should begin — the red crosshair marks the baseline point. Type the text, set font, size, and color, and choose whether the stamp applies to the current page or every page. Each addition is journaled, so Undo removes the last one and Clear all rewinds to the pristine file; the preview re-renders after every change so you're always looking at the real output. Download when it looks right.</p>
+<h3>A worked example</h3>
+<p>Start with the one-page sample (a Letter page, 612 × 792 points). Click just below the heading, say at canvas pixel (183, 250) with the preview at 1.37× scale: X = 183 ÷ 1.37 = 133.6, Y = 792 − 250 ÷ 1.37 = 609.5. Leave the default text "APPROVED 2026-08-31", Helvetica Bold, 14pt, red. Add text, and the file grows by well under a kilobyte — the stamp is one text object with a font reference, drawn at (133.6, 609.5). Set the scope to Every page on a 30-page file and the same click stamps all 30 pages in one pass.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How can I add text to a PDF for free?</h3><p>Load the PDF above, click the spot on the page where the text should start, type the words, pick a font size and color, and press Add text. The download that comes out is a standard PDF with your text stamped at the exact point you clicked. Everything runs in your browser, so there is no account, no watermark, and no upload.</p></div>
+<div class="faq-item"><h3>Why does the Y coordinate go up instead of down in a PDF?</h3><p>PDF coordinates put the origin (0,0) at the bottom-left corner of the page, with Y increasing upward. A US Letter page is 612 by 792 points, so a click near the top of the page translates to a Y around 600-780, not 20. Screen pixels work the opposite way, which is why the tool converts for you: PDF Y equals page height minus pixel position, divided by the preview scale.</p></div>
+<div class="faq-item"><h3>What font size should I use to stamp a PDF?</h3><p>Match the document. Body text in most PDFs is 10 to 12 points, so a date or approval stamp that should read as a heading works at 18 to 36 points. For reference, APPROVED 2026-08-31 in Helvetica Bold measures 153.1 points wide at 14pt and 262.4 points wide at 24pt, which is about 43 percent of a Letter page's 612-point width.</p></div>
+<div class="faq-item"><h3>Does adding text change the rest of my PDF?</h3><p>No. The text is drawn as new content on top of what is already there. Existing text, images, and form fields keep their bytes, which is why the file size usually grows by only a kilobyte or two per addition. The trade-off: your stamp becomes a permanent part of the page, not a movable annotation or comment.</p></div>
+<div class="faq-item"><h3>Can I add text to a scanned PDF?</h3><p>Yes, and it is one of the most common uses. A scanned PDF is an image of a page, and stamping draws on top of that image, so date stamps or initials land fine. What this does not do is OCR: the scan's existing text stays unsearchable, and your added text is a drawn string, not editable page text.</p></div>
+<div class="faq-item"><h3>Is my PDF uploaded to a server?</h3><p>No. The page renders your file with pdf.js and edits it with pdf-lib, both running locally in your browser tab. The download link is generated from an in-memory blob. Contracts, medical records, and financial documents never leave your device, which is safer than most free online PDF editors.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+<a href="/jpg-to-pdf/">📄 JPG to PDF</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+<a href="/certificate-decoder/">🔓 Certificate Decoder</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js';
+var PDFJS_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+var PDFJS_WORKER_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+function loadScript(url,test){return test?Promise.resolve():new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('could not load '+url))};document.head.appendChild(s);});}
+function ensurePdfLib(){return loadScript(PDFLIB_URL,window.PDFLib).then(function(){return window.PDFLib;});}
+function ensurePdfJs(){
+return loadScript(PDFJS_URL,window.pdfjsLib).then(function(){
+if(!window.pdfjsLib.GlobalWorkerOptions.workerSrc){
+return fetch(PDFJS_WORKER_URL).then(function(r){return r.text();}).then(function(t){
+window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));
+}).catch(function(){window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER_URL;});
+}
+return window.pdfjsLib;
+});
+}
+function status(msg,cls){var s=document.getElementById('status');s.textContent=msg;s.className='status-line'+(cls?' '+cls:'');}
+function fmtBytes(n){return n<1024?n+' B':(n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB');}
+
+// ---- state ----
+var originalBytes=null, pdfDoc=null, ops=[], curPage=0, curViewport=null, clickPt=null, savedBytes=null;
+
+function hexToRgb01(hex){return {r:parseInt(hex.slice(1,3),16)/255,g:parseInt(hex.slice(3,5),16)/255,b:parseInt(hex.slice(5,7),16)/255};}
+
+function setBusy(b){['addBtn','undoBtn','resetBtn','dlBtn','prevBtn','nextBtn'].forEach(function(id){var el=document.getElementById(id);if(el.dataset.forceDisabled!=='1')el.disabled=b||el.dataset.forceDisabled==='1';});}
+
+function showDoc(){
+document.getElementById('docMeta').style.display='grid';
+document.getElementById('editorCard').style.display='block';
+document.getElementById('mPages').textContent=pdfDoc.getPageCount();
+var s=pdfDoc.getPage(0).getSize();
+document.getElementById('mSize').textContent=Math.round(s.width*100)/100+' × '+Math.round(s.height*100)/100+' pt';
+refreshMeta();
+}
+function refreshMeta(){
+document.getElementById('mAdds').textContent=ops.length;
+document.getElementById('mBytes').textContent=savedBytes?fmtBytes(savedBytes.length):fmtBytes(originalBytes.length);
+document.getElementById('undoBtn').disabled=ops.length===0;
+document.getElementById('resetBtn').disabled=ops.length===0;
+document.getElementById('dlBtn').disabled=!savedBytes;
+}
+
+// NOTE: preview always renders the EDITED bytes when any op exists, else original
+function currentPreviewBytes(){return ops.length&&savedBytes?savedBytes:originalBytes;}
+
+
+async function renderEdited(){
+var use=currentPreviewBytes();
+var pdfjs=await ensurePdfJs();
+var canvas=document.getElementById('pgCanvas');
+try{
+var doc=await pdfjs.getDocument({data:use.slice(0)}).promise;
+var page=await doc.getPage(curPage+1);
+var shell=document.getElementById('canvasShell');
+var avail=Math.min(shell.clientWidth||820,820);
+var base=page.getViewport({scale:1});
+var scale=Math.max(0.5,Math.min(2,avail/base.width));
+curViewport=page.getViewport({scale:scale});
+var ctx=canvas.getContext('2d');
+canvas.width=curViewport.width;canvas.height=curViewport.height;
+await page.render({canvasContext:ctx,viewport:curViewport}).promise;
+document.getElementById('pgLabel').textContent='Page '+(curPage+1)+' of '+pdfDoc.getPageCount();
+document.getElementById('prevBtn').disabled=curPage===0;
+document.getElementById('nextBtn').disabled=curPage>=pdfDoc.getPageCount()-1;
+}catch(e){status('Preview error: '+e.message,'err');}
+}
+
+function placeClick(px,py){
+if(!curViewport)return;
+var pt=curViewport.convertToPdfPoint(px,py);
+clickPt={x:pt[0],y:pt[1],ghostPx:px,ghostPy:py};
+var rect=document.getElementById('pgCanvas').getBoundingClientRect();
+var c=document.getElementById('cross');
+c.style.display='block';
+c.style.left=(px*rect.width/curViewport.width)+'px';
+c.style.top=(py*rect.height/curViewport.height)+'px';
+document.getElementById('placeOut').value='x='+pt[0].toFixed(1)+' pt, y='+pt[1].toFixed(1)+' pt';
+document.getElementById('coordLabel').textContent='baseline at ('+pt[0].toFixed(1)+', '+pt[1].toFixed(1)+') pt';
+document.getElementById('addBtn').dataset.forceDisabled='0';
+document.getElementById('addBtn').disabled=false;
+ghostAt(px,py);
+}
+function ghostAt(px,py){
+var rect=document.getElementById('pgCanvas').getBoundingClientRect();
+var gh=document.getElementById('ghost');
+var scaleVis=parseFloat(document.getElementById('size').value)*rect.width/curViewport.width;
+gh.style.display='block';
+gh.style.left=(px*rect.width/curViewport.width)+'px';
+gh.style.top=(py*rect.height/curViewport.height)+'px';
+gh.style.fontSize=scaleVis+'px';
+gh.style.color=document.getElementById('color').value;
+gh.style.fontFamily=document.getElementById('font').value.indexOf('Times')>=0?'Times':(document.getElementById('font').value.indexOf('Courier')>=0?'Courier':'Helvetica');
+gh.style.fontWeight=document.getElementById('font').value.indexOf('Bold')>=0?'700':'400';
+gh.textContent=document.getElementById('txt').value.split('\n')[0];
+}
+document.getElementById('pgCanvas').addEventListener('click',function(e){
+var rect=this.getBoundingClientRect();
+placeClick((e.clientX-rect.left)*this.width/rect.width,(e.clientY-rect.top)*this.height/rect.height);
+});
+document.getElementById('txt').addEventListener('input',function(){if(clickPt&&curViewport)ghostAt(clickPt.ghostPx,clickPt.ghostPy);});
+document.getElementById('size').addEventListener('input',function(){document.getElementById('sizeOut').textContent=this.value;if(clickPt&&curViewport)ghostAt(clickPt.ghostPx,clickPt.ghostPy);});
+document.getElementById('color').addEventListener('input',function(){if(clickPt&&curViewport)ghostAt(clickPt.ghostPx,clickPt.ghostPy);});
+
+async function rebuild(replay){
+var PDFLib=await ensurePdfLib();
+var doc=await PDFLib.PDFDocument.load(originalBytes.slice(0));
+var fonts={};
+async function fontFor(name){if(!fonts[name])fonts[name]=await doc.embedFont(PDFLib.StandardFonts[name]);return fonts[name];}
+for(var i=0;i<replay.length;i++){
+var op=replay[i];
+var targets=op.scope==='all'?doc.getPages():[doc.getPage(op.page)];
+var font=await fontFor(op.font);
+var rgb=PDFLib.rgb(op.r,op.g,op.b);
+for(var p=0;p<targets.length;p++){
+targets[p].drawText(op.text,{x:op.x,y:op.y,size:op.size,font:font,color:rgb,lineHeight:op.size*1.35});
+}
+}
+savedBytes=await doc.save({useObjectStreams:true});
+pdfDoc=doc;
+refreshMeta();
+}
+
+document.getElementById('fileIn').addEventListener('change',async function(){
+var f=this.files&&this.files[0];
+if(!f)return;
+status('Reading '+f.name+' ('+fmtBytes(f.size)+')…');
+var buf=new Uint8Array(await f.arrayBuffer());
+var PDFLib=await ensurePdfLib();
+try{
+var doc=await PDFLib.PDFDocument.load(buf,{ignoreEncryption:true});
+if(doc.getPageCount()===0)throw new Error('no pages');
+originalBytes=buf.slice(0);pdfDoc=doc;ops=[];savedBytes=null;curPage=0;
+showDoc();await renderEdited();
+status('Loaded '+f.name+' — '+doc.getPageCount()+' page(s). Click where the text goes.','ok');
+}catch(e){status('Could not open PDF: '+e.message,'err');}
+});
+
+document.getElementById('sampleBtn').addEventListener('click',async function(){
+var PDFLib=await ensurePdfLib();
+var doc=await PDFLib.PDFDocument.create();
+var font=await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+var b=await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+var p=doc.addPage([612,792]);
+p.drawText('Sample Report',{x:72,y:708,size:22,font:b,color:PDFLib.rgb(0.1,0.1,0.12)});
+for(var i=0;i<16;i++)p.drawText('Section 2.'+(i+1)+' — the quick brown fox jumps over the lazy dog. Line '+(i+1)+' of sample body text at 11pt.',{x:72,y:664-i*28,size:11,font:font,color:PDFLib.rgb(0.25,0.25,0.3)});
+p.drawText('Page 1 of 1',{x:72,y:56,size:9,font:font,color:PDFLib.rgb(0.45,0.45,0.5)});
+var bytes=await doc.save();
+originalBytes=bytes.slice(0);pdfDoc=doc;ops=[];savedBytes=null;curPage=0;
+showDoc();await renderEdited();
+status('Sample Letter page generated. Click a spot below the heading.','ok');
+});
+
+document.getElementById('addBtn').addEventListener('click',async function(){
+var text=document.getElementById('txt').value;
+if(!text.trim()){status('Type some text first.',true);return;}
+if(!clickPt){status('Click the preview to place the text first.',true);return;}
+var c=hexToRgb01(document.getElementById('color').value);
+ops.push({page:curPage,scope:document.getElementById('scope').value,text:text,
+x:clickPt.x,y:clickPt.y,size:parseFloat(document.getElementById('size').value),
+font:document.getElementById('font').value,r:c.r,g:c.g,b:c.b});
+setBusy(true);
+try{
+await rebuild(ops);
+await renderEdited();
+status('Added to '+(document.getElementById('scope').value==='all'?'every page':'page '+(curPage+1))+'.','ok');
+clickPt=null;document.getElementById('cross').style.display='none';document.getElementById('ghost').style.display='none';
+document.getElementById('placeOut').value='Click the preview…';
+document.getElementById('addBtn').dataset.forceDisabled='1';document.getElementById('addBtn').disabled=true;
+}catch(e){ops.pop();status('Add failed: '+(e.message||e),'err');}
+setBusy(false);
+});
+document.getElementById('undoBtn').addEventListener('click',async function(){
+ops.pop();setBusy(true);
+try{await rebuild(ops);await renderEdited();status('Removed last addition.','ok');}catch(e){status('Undo failed: '+e.message,'err');}
+setBusy(false);
+});
+document.getElementById('resetBtn').addEventListener('click',async function(){
+ops=[];savedBytes=null;refreshMeta();await renderEdited();status('Cleared all additions — back to the original file.','ok');
+});
+document.getElementById('dlBtn').addEventListener('click',function(){
+if(!savedBytes)return;
+var blob=new Blob([savedBytes],{type:'application/pdf'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+a.download='edited.pdf';document.body.appendChild(a);a.click();document.body.removeChild(a);
+setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+});
+document.getElementById('prevBtn').addEventListener('click',async function(){if(curPage>0){curPage--;await renderEdited();}});
+document.getElementById('nextBtn').addEventListener('click',async function(){if(curPage<pdfDoc.getPageCount()-1){curPage++;await renderEdited();}});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

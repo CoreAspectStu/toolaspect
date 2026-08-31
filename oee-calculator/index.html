@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OEE Calculator — Free Manufacturing Metric Tool | ToolAspect</title>
+<meta name="description" content="Free OEE calculator. Availability × performance × quality from real shift data. A 480-min shift, 47 min down, 248 of 260 good parts scores 77.5% OEE.">
+<link rel="canonical" href="https://toolaspect.com/oee-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="OEE Calculator — Free Manufacturing Metric Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Compute Overall Equipment Effectiveness from planned time, downtime, counts, and defects, with the three factors broken out.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/oee-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OEE Calculator | Free Online Tool">
+<meta name="twitter:description" content="Availability × performance × quality, computed from one shift of real production data.">
+<meta name="keywords" content="oee calculator, overall equipment effectiveness, oee formula, availability performance quality, oee benchmark, manufacturing kpi, tEEP">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OEE Calculator","description":"Free OEE calculator. Compute Overall Equipment Effectiveness and its availability, performance, and quality factors from planned production time, downtime, ideal cycle time, and part counts.","url":"https://toolaspect.com/oee-calculator/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a good OEE score?","acceptedAnswer":{"@type":"Answer","text":"The long-standing benchmark set popularized by OEE.com calls 85% world class, built from roughly 90% availability, 95% performance, and 99.9% quality. Most plants that start measuring honestly land near 60%, and sites with unreliable data or unmeasured changeovers often show 40%. Chasing 85% everywhere is the wrong move; a bottleneck line justifies aggressive targets, while a low-utilization backup line may not justify the effort."}},
+{"@type":"Question","name":"Why is OEE the product of three factors instead of an average?","acceptedAnswer":{"@type":"Answer","text":"Because losses compound. Three factors at 90% each multiply to 72.9% overall, not 90%. A 10% loss in availability, another in performance, and another in quality leaves you with 27% of perfect production gone. That multiplicative structure is exactly why OEE is useful: it makes small compounding losses visible in a single number."}},
+{"@type":"Question","name":"What is the difference between OEE and TEEP?","acceptedAnswer":{"@type":"Answer","text":"Both measure the same three factors, but against different denominators. OEE divides by planned production time, so scheduled downtime, holidays, and shifts you never planned to run don't count against it. TEEP (total effective equipment performance) divides by all calendar time, exposing the capacity you're choosing not to schedule. A line can run 85% OEE on two shifts and still show a modest TEEP because 16 hours a day are unplanned."}},
+{"@type":"Question","name":"Should changeovers count as downtime in OEE?","acceptedAnswer":{"@type":"Answer","text":"If the shift was planned as production time, yes: a changeover during a planned run reduces availability, which is the point of tracking SMED improvements. Only time formally removed from the planned schedule, like a plant-wide shutdown week, belongs outside the denominator. Fudging changeovers out of the calculation is one of the fastest ways to make OEE lie."}},
+{"@type":"Question","name":"Can I calculate OEE from part counts alone?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it's the cleanest method: OEE = (good parts × ideal cycle time) ÷ planned production time. The three-factor breakdown is diagnostic, but the shortcut collapses it correctly, because performance and quality losses both show up as missing good parts. The shortcut only needs an honest ideal cycle time, real counts, and real planned time."}},
+{"@type":"Question","name":"Why does our OEE drop when we start measuring it?","acceptedAnswer":{"@type":"Answer","text":"Because the first weeks of data replace assumptions with measurements. Unlogged minor stops, slow cycles the schedule absorbed, and startup scrap that never hit the yield report all show up at once. The drop isn't the plant getting worse; it's the plant becoming visible. Baseline after about a month of clean data, then trend from there."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"OEE Calculator","item":"https://toolaspect.com/oee-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.5rem;font-size:1rem;line-height:1.6}
+.aio-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏭 OEE Calculator</h1>
+<p>Overall equipment effectiveness: availability × performance × quality</p>
+</div>
+
+<div class="aio-answer" id="aioAnswer"><strong>Quick answer:</strong> OEE = Availability × Performance × Quality, or the shortcut (good parts × ideal cycle time) ÷ planned time. A <strong>480-minute</strong> shift with <strong>47 minutes</strong> of downtime, <strong>260</strong> parts at a <strong>1.5-min</strong> ideal cycle, and <strong>248 good</strong> = <strong>77.5% OEE</strong>. The commonly cited world-class bar is <strong>85%</strong>.</div>
+
+<div class="section-card">
+<h2>Shift Data</h2>
+<div class="input-grid">
+<div class="input-group"><label>Planned production time (min)</label><input type="number" id="plan" value="480" min="0" step="5"></div>
+<div class="input-group"><label>Downtime (min)</label><input type="number" id="down" value="47" min="0" step="1"></div>
+<div class="input-group"><label>Ideal cycle time (min/part)</label><input type="number" id="cycle" value="1.5" min="0" step="0.1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Counts</h2>
+<div class="input-grid">
+<div class="input-group"><label>Total parts produced</label><input type="number" id="total" value="260" min="0" step="1"></div>
+<div class="input-group"><label>Good parts</label><input type="number" id="good" value="248" min="0" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">OEE</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Availability</div><div class="ri-value" id="avail">—</div></div>
+<div class="result-item"><div class="ri-label">Performance</div><div class="ri-value" id="perf">—</div></div>
+<div class="result-item"><div class="ri-label">Quality</div><div class="ri-value" id="qual">—</div></div>
+<div class="result-item"><div class="ri-label">Good parts at 100% OEE</div><div class="ri-value" id="max">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/mtbf-calculator/">Mtbf Calculator</a></li><li style="margin:4px 0"><a href="/equipment-downtime-cost-calculator/">Downtime Cost</a></li><li style="margin:4px 0"><a href="/equipment-depreciation-calculator/">Equipment Depreciation</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>OEE Benchmark Bands</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>OEE</th><th>Reading</th><th>Typical factor mix</th></tr></thead>
+<tbody>
+<tr><td>100%</td><td>Perfect production</td><td>Theoretical: only reachable on paper</td></tr>
+<tr><td>85%+</td><td>World class (OEE.com convention)</td><td>≈ 90% availability × 95% performance × 99.9% quality</td></tr>
+<tr><td>~60%</td><td>Typical first honest measurement</td><td>Realistic baseline for most plants</td></tr>
+<tr><td>~40%</td><td>Low / data problems</td><td>Unmeasured changeovers or minor stops</td></tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Availability</th><th>Performance</th><th>Quality</th><th>OEE</th></tr></thead>
+<tbody>
+<tr><td>90%</td><td>90%</td><td>90%</td><td>72.9%</td></tr>
+<tr><td>95%</td><td>85%</td><td>95%</td><td>76.7%</td></tr>
+<tr><td>85%</td><td>95%</td><td>90%</td><td>72.7%</td></tr>
+<tr><td>90%</td><td>95%</td><td>99.9%</td><td>85.4%</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The second table is the multiplication lesson: three 90s average to 90 but multiply to 72.9%. The benchmark bands are the widely used conventions popularized by OEE.com (Nakajima's framework), not regulatory standards.</p>
+</div>
+
+<div class="content-section">
+<h2>How the OEE Calculator Works</h2>
+<p>OEE compresses the three ways a machine loses output into one number: it wasn't running (availability), it ran slow (performance), or it made bad parts (quality). Seiichi Nakajima developed the metric at JIPM in the 1970s, and it remains the standard yardstick for equipment effectiveness in discrete manufacturing.</p>
+<h3>The formulas</h3>
+<p>Availability = run time ÷ planned production time, where run time = planned time − downtime. Performance = (ideal cycle time × total count) ÷ run time. Quality = good count ÷ total count. OEE = A × P × Q. The count shortcut gives the same answer: OEE = (good count × ideal cycle time) ÷ planned time.</p>
+<h3>How to use it</h3>
+<p>Take one shift. Planned production time is what the schedule says the line should run, not the shift length; breaks and meetings you planned out of the schedule don't count. Downtime is everything that stopped the line inside that planned window. The ideal cycle time is the machine's nameplate or best-demonstrated rate, not today's average, and the counts are total and good parts including startup scrap.</p>
+<h3>A worked example</h3>
+<p>One 8-hour shift schedules 480 minutes of production and loses 47 minutes to a jam and a changeover, leaving 433 minutes of run time: availability is 433 ÷ 480 = 90.2%. The line produces 260 parts at a 1.5-minute ideal cycle, needing 390 minutes of perfect running, so performance is 390 ÷ 433 = 90.1%. Of the 260 parts, 248 pass first-pass inspection: quality is 248 ÷ 260 = 95.4%. Multiply: 0.902 × 0.901 × 0.954 = 77.5% OEE.</p>
+<p>The shortcut confirms it: 248 good parts × 1.5 minutes = 372 minutes of effective production ÷ 480 planned minutes = 77.5%. At 100% OEE the same shift would have made 320 good parts (480 ÷ 1.5), so the three loss buckets cost 72 parts. Getting from 77.5% to 85% is worth roughly 9.7% more good output (85 ÷ 77.5), often the cheapest capacity a plant can buy.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is a good OEE score?</h3><p>The long-standing benchmark set popularized by OEE.com calls 85% world class, built from roughly 90% availability, 95% performance, and 99.9% quality. Most plants that start measuring honestly land near 60%, and sites with unreliable data or unmeasured changeovers often show 40%. Chasing 85% everywhere is the wrong move; a bottleneck line justifies aggressive targets, while a low-utilization backup line may not justify the effort.</p></div>
+<div class="faq-item"><h3>Why is OEE the product of three factors instead of an average?</h3><p>Because losses compound. Three factors at 90% each multiply to 72.9% overall, not 90%. A 10% loss in availability, another in performance, and another in quality leaves you with 27% of perfect production gone. That multiplicative structure is exactly why OEE is useful: it makes small compounding losses visible in a single number.</p></div>
+<div class="faq-item"><h3>What is the difference between OEE and TEEP?</h3><p>Both measure the same three factors, but against different denominators. OEE divides by planned production time, so scheduled downtime, holidays, and shifts you never planned to run don't count against it. TEEP (total effective equipment performance) divides by all calendar time, exposing the capacity you're choosing not to schedule. A line can run 85% OEE on two shifts and still show a modest TEEP because 16 hours a day are unplanned.</p></div>
+<div class="faq-item"><h3>Should changeovers count as downtime in OEE?</h3><p>If the shift was planned as production time, yes: a changeover during a planned run reduces availability, which is the point of tracking SMED improvements. Only time formally removed from the planned schedule, like a plant-wide shutdown week, belongs outside the denominator. Fudging changeovers out of the calculation is one of the fastest ways to make OEE lie.</p></div>
+<div class="faq-item"><h3>Can I calculate OEE from part counts alone?</h3><p>Yes, and it's the cleanest method: OEE = (good parts × ideal cycle time) ÷ planned production time. The three-factor breakdown is diagnostic, but the shortcut collapses it correctly, because performance and quality losses both show up as missing good parts. The shortcut only needs an honest ideal cycle time, real counts, and real planned time.</p></div>
+<div class="faq-item"><h3>Why does our OEE drop when we start measuring it?</h3><p>Because the first weeks of data replace assumptions with measurements. Unlogged minor stops, slow cycles the schedule absorbed, and startup scrap that never hit the yield report all show up at once. The drop isn't the plant getting worse; it's the plant becoming visible. Baseline after about a month of clean data, then trend from there.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/mtbf-calculator/">🔧 MTBF Calculator</a>
+<a href="/equipment-downtime-cost-calculator/">💸 Downtime Cost Calculator</a>
+<a href="/equipment-depreciation-calculator/">📦 Equipment Depreciation</a>
+<a href="/churn-rate-calculator/">📉 Churn Rate Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var plan=parseFloat(document.getElementById('plan').value)||0;
+  var down=parseFloat(document.getElementById('down').value)||0;
+  var cyc=parseFloat(document.getElementById('cycle').value)||0;
+  var total=parseFloat(document.getElementById('total').value)||0;
+  var good=parseFloat(document.getElementById('good').value)||0;
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+  if(plan<=0||cyc<=0||total<=0){
+    animateValue(hero,'—');
+    sub.textContent='Enter planned time, cycle time, and part counts';
+    ['avail','perf','qual','max'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+  var run=plan-down;
+  var A=run>0?run/plan:0;
+  var P=run>0?(cyc*total)/run:0;
+  var Q=total>0?Math.min(good,total)/total:0;
+  if(P>1)P=1;
+  if(A>1)A=1;
+  var oee=A*P*Q;
+  animateValue(hero,(oee*100).toFixed(1)+'%');
+  sub.textContent='(good × ideal cycle) ÷ planned time = '+((good*cyc/plan)*100).toFixed(1)+'%';
+  animateValue(document.getElementById('avail'),(A*100).toFixed(1)+'%');
+  animateValue(document.getElementById('perf'),(P*100).toFixed(1)+'%');
+  animateValue(document.getElementById('qual'),(Q*100).toFixed(1)+'%');
+  animateValue(document.getElementById('max'),Math.floor(plan/cyc).toLocaleString('en-US'));
+}
+['plan','down','cycle','total','good'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

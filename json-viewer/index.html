@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Viewer — Tree &amp; Table JSON Editor | ToolAspect</title>
+<meta name="description" content="View JSON as a tree or table: paste, upload, or load a sample, get node counts, depth, and size stats, and fix errors with position info. Free, in-browser.">
+<link rel="canonical" href="https://toolaspect.com/json-viewer/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="JSON Viewer — Tree & Table JSON Editor">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste JSON and explore it as a tree or table: expandable nodes, node/depth/size stats, error positions, and format/minify export — all in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/json-viewer/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON Viewer | Free Tree & Table Tool">
+<meta name="twitter:description" content="Explore JSON in a tree or table with stats and error positions. No upload, free.">
+<meta name="keywords" content="json viewer, json tree viewer, view json online, json explorer, json editor online, json table view, parse json">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsoneditor@10.4.3/dist/jsoneditor.min.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JSON Viewer","description":"Free JSON viewer. Paste or upload JSON and explore it as an expandable tree, an editable table, or raw text — with node counts, nesting depth, type breakdown, and byte-size stats, precise error positions when parsing fails, and pretty/minified download. Powered by the open-source jsoneditor (Apache-2.0) and runs entirely in your browser.","url":"https://toolaspect.com/json-viewer/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I view a JSON file online?","acceptedAnswer":{"@type":"Answer","text":"Paste the JSON into the box and click View — it renders as an expandable tree you can collapse and drill into, with a table mode for arrays of similar objects and a text mode for the raw document. You can also open a .json file directly from disk. Nothing is uploaded; the parsing and rendering happen locally, so API responses with tokens or personal data stay on your machine."}},
+{"@type":"Question","name":"Why is my JSON invalid?","acceptedAnswer":{"@type":"Answer","text":"The five classics: a trailing comma before a closing bracket, single quotes instead of double, unquoted keys, // or /* */ comments (JSON has none), and NaN/undefined (not valid JSON numbers — use null). The viewer reports the exact character position of the parse failure so you can jump to the offending spot instead of diffing by eye."}},
+{"@type":"Question","name":"What's the difference between a JSON viewer and a JSON formatter?","acceptedAnswer":{"@type":"Answer","text":"A formatter rewrites the text — consistent indentation, one property per line — for reading raw. A viewer parses the document into an interactive tree: collapsible branches, navigation, search over large arrays, per-node editing, and structure stats (node counts, depth). They compose: format for diffing and reading, view for exploring. This site has both, cross-linked."}},
+{"@type":"Question","name":"Does this viewer support JSON Lines or JSON5?","acceptedAnswer":{"@type":"Answer","text":"No — it parses strict JSON per RFC 8259. JSON Lines (one JSON value per line) and JSON5 (unquoted keys, comments, trailing commas) require a different parser; most tools that claim to 'view' them silently coerce them first. Convert to standard JSON, or split NDJSON into separate documents, then view."}},
+{"@type":"Question","name":"How big a JSON file can it handle?","acceptedAnswer":{"@type":"Answer","text":"The practical limit is browser memory and DOM size rather than a hard cap — files of a few megabytes view comfortably, and multi-hundred-MB files will be slow in tree mode because every node is interactive. The stats bar shows node count and nesting depth so you can see why; for huge documents, text mode is lighter than tree mode."}},
+{"@type":"Question","name":"Can I edit JSON and download the result?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tree mode edits values, keys, and structure with insert/duplicate/remove actions on every node; text mode edits raw JSON with live validation. The download buttons export the current state pretty-printed (2 spaces) or minified, and Copy puts it on your clipboard."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON Viewer","item":"https://toolaspect.com/json-viewer/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+textarea{width:100%;min-height:170px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;resize:vertical}
+textarea:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.6rem 1.2rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;margin-top:1rem}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .7rem}
+.stat .n{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;color:var(--primary-hover);font-weight:700}
+.stat .l{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.je-wrap{background:#fff;border-radius:var(--radius);overflow:hidden;margin-top:1rem;min-height:320px;color:#1a1a1a}
+.je-wrap .jsoneditor{border:none}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/jsoneditor@10.4.3/dist/jsoneditor.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🌳 JSON Viewer</h1>
+<p>Paste JSON, explore it as a tree or table, with structure stats and precise error positions</p>
+</div>
+
+<div class="aio-answer">Paste JSON into the box and hit <strong>View</strong> — the document parses into an expandable tree (switchable to table or raw text) built with the open-source jsoneditor engine, entirely in your browser. A worked example: the sample order below is <strong>345 bytes minified and 520 bytes pretty-printed (2-space)</strong>, containing <strong>25 values across 22 keys at a maximum depth of 4</strong> — 6 objects, 1 array, 10 strings, 6 numbers, 1 boolean, 1 null. When JSON fails to parse, the viewer reports the exact character position of the error instead of leaving you to eyeball it.</div>
+
+<div class="section-card">
+<h2>View your JSON</h2>
+<textarea id="jsonInput" spellcheck="false" placeholder='{"paste": "any JSON here"}'></textarea>
+<div class="btn-row">
+<button class="btn" id="btnView">🔍 View JSON</button>
+<button class="btn ghost" id="btnSample">Load sample</button>
+<button class="btn ghost" id="btnFile">📂 Open .json file</button>
+<input type="file" id="fileInput" accept=".json,application/json,.txt" style="display:none">
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+<div id="stats"></div>
+<div class="btn-row" id="exportRow" style="display:none">
+<button class="btn ghost" id="btnPretty">⬇ Download pretty (2-space)</button>
+<button class="btn ghost" id="btnMinify">⬇ Download minified</button>
+<button class="btn ghost" id="btnCopy">Copy current</button>
+</div>
+<div class="je-wrap" id="editorHost"></div>
+<div id="errOut"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li><li style="margin:4px 0"><a href="/json-diff/">JSON Diff</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-view-json/">Read the JSON viewing guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Common JSON Errors and How to Fix Them</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Error You See</th><th>You Probably Wrote</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>Unexpected token <code>}</code> / <code>]</code></td><td><code>["a", "b",]</code></td><td>Remove the trailing comma — JSON (RFC 8259) doesn't allow one before a closing bracket</td></tr>
+<tr><td>Unexpected token <code>'</code></td><td><code>{'key': 1}</code></td><td>Strings and keys use double quotes only: <code>{"key": 1}</code></td></tr>
+<tr><td>Unexpected identifier</td><td><code>{key: 1}</code></td><td>Quote the key: <code>{"key": 1}</code> (that's JSON5/JS object syntax, not JSON)</td></tr>
+<tr><td>Unexpected token <code>/</code></td><td><code>// note</code> or <code>/* note */</code></td><td>JSON has no comments — move notes to a <code>"_comment"</code> field or strip them</td></tr>
+<tr><td>Unexpected token <code>N</code></td><td><code>NaN</code> / <code>undefined</code> / <code>Infinity</code></td><td>Not valid JSON numbers — serialize as <code>null</code> or a string like <code>"NaN"</code></td></tr>
+<tr><td>Unexpected number</td><td><code>01</code> or <code>+5</code></td><td>Leading zeros and plus signs aren't allowed — <code>1</code>, <code>5</code>, <code>-5</code>, <code>0.5</code>, <code>1e3</code> are</td></tr>
+<tr><td>Bad control character</td><td>literal Tab/newline inside a string</td><td>Escape as <code>\t</code> / <code>\n</code>; unescaped control characters are invalid in strings</td></tr>
+<tr><td>Unexpected token <code>ï»¿</code></td><td>UTF-8 BOM before <code>{</code></td><td>Save the file without a BOM, or the viewer strips it for you when opening files</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the JSON Viewer Works</h2>
+<p>The viewer parses your text with the browser's native JSON parser (strict RFC 8259 — the same rules every conformant API speaks), then hands the resulting structure to jsoneditor, an Apache-2.0 library that renders each object and array as collapsible nodes. Tree mode shows the full hierarchy with per-node actions (insert, duplicate, remove, drag); table mode flattens arrays of similar objects into a spreadsheet-style grid — the shape API results and product feeds come in; text mode is the raw document with live validation.</p>
+<h3>The stats bar</h3>
+<p>Every parse also computes structural stats: total values, keys, objects, arrays, strings, numbers, booleans, nulls, maximum nesting depth, and byte size minified vs. pretty-printed with 2-space indentation. These numbers answer practical questions — is this payload bloated with nesting? Is it worth minifying for transport? — at a glance.</p>
+<h3>A worked example</h3>
+<p>The "Load sample" button inserts a small order-tracking document. Run the numbers on it: the JSON contains a customer object, an items array of two products, and a shipping object with a nested address — 22 keys in total, 25 values including the root, maximum depth 4 (root → shipping → address → values). Serialized compactly it's 345 bytes; pretty-printed at 2 spaces it grows to 520 bytes, about 51% more — the classic transport-vs-debugging trade-off. The arithmetic inside checks out too: one keyboard at $89.99, two cables at $9.50, plus $12.75 express shipping totals $121.74, which is exactly what the <code>total</code> field carries.</p>
+<h3>Why strict parsing matters</h3>
+<p>JSON is deliberately rigid: double quotes, no trailing commas, no comments, no NaN. The rigidity is why a JSON parser in any language can read any other's output. Viewers that quietly accept sloppy JSON are hiding an interoperability bug — the API you're testing will reject it even if the viewer doesn't. This viewer parses the way your production parser does and tells you exactly where it disagreed.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I view a JSON file online?</h3><p>Paste the JSON into the box and click View — it renders as an expandable tree you can collapse and drill into, with a table mode for arrays of similar objects and a text mode for the raw document. You can also open a .json file directly from disk. Nothing is uploaded; the parsing and rendering happen locally, so API responses with tokens or personal data stay on your machine.</p></div>
+<div class="faq-item"><h3>Why is my JSON invalid?</h3><p>The five classics: a trailing comma before a closing bracket, single quotes instead of double, unquoted keys, // or /* */ comments (JSON has none), and NaN/undefined (not valid JSON numbers — use null). The viewer reports the exact character position of the parse failure so you can jump to the offending spot instead of diffing by eye.</p></div>
+<div class="faq-item"><h3>What's the difference between a JSON viewer and a JSON formatter?</h3><p>A formatter rewrites the text — consistent indentation, one property per line — for reading raw. A viewer parses the document into an interactive tree: collapsible branches, navigation, search over large arrays, per-node editing, and structure stats (node counts, depth). They compose: format for diffing and reading, view for exploring. This site has both, cross-linked.</p></div>
+<div class="faq-item"><h3>Does this viewer support JSON Lines or JSON5?</h3><p>No — it parses strict JSON per RFC 8259. JSON Lines (one JSON value per line) and JSON5 (unquoted keys, comments, trailing commas) require a different parser; most tools that claim to 'view' them silently coerce them first. Convert to standard JSON, or split NDJSON into separate documents, then view.</p></div>
+<div class="faq-item"><h3>How big a JSON file can it handle?</h3><p>The practical limit is browser memory and DOM size rather than a hard cap — files of a few megabytes view comfortably, and multi-hundred-MB files will be slow in tree mode because every node is interactive. The stats bar shows node count and nesting depth so you can see why; for huge documents, text mode is lighter than tree mode.</p></div>
+<div class="faq-item"><h3>Can I edit JSON and download the result?</h3><p>Yes. Tree mode edits values, keys, and structure with insert/duplicate/remove actions on every node; text mode edits raw JSON with live validation. The download buttons export the current state pretty-printed (2 spaces) or minified, and Copy puts it on your clipboard.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/json-diff/">🔀 JSON Diff</a>
+<a href="/json-schema-validator/">✅ JSON Schema Validator</a>
+<a href="/csv-to-json/">🔁 CSV to JSON</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---JV-ENGINE-START---
+// Viewer: jsoneditor (Apache-2.0, josdejong) v10.4.3 via jsdelivr; parsing is native JSON.
+var JV={editor:null,value:null};
+var JV_SAMPLE='{"order_id":"A-1482","customer":{"name":"Dana Reyes","email":"dana@example.com","premium":true},"items":[{"sku":"KB-01","name":"Mechanical keyboard","qty":1,"price":89.99},{"sku":"CB-22","name":"USB-C cable","qty":2,"price":9.5}],"shipping":{"method":"express","cost":12.75,"address":{"city":"Austin","zip":"78701"}},"total":121.74,"notes":null}';
+function jvStats(obj){
+  var s={values:0,keys:0,objects:0,arrays:0,strings:0,numbers:0,booleans:0,nulls:0,depth:0};
+  (function walk(v,d){
+    s.values++;if(d>s.depth)s.depth=d;
+    if(Array.isArray(v)){s.arrays++;for(var i=0;i<v.length;i++)walk(v[i],d+1);}
+    else if(v!==null&&typeof v==='object'){s.objects++;var ks=Object.keys(v);s.keys+=ks.length;for(var k=0;k<ks.length;k++)walk(v[ks[k]],d+1);}
+    else if(typeof v==='string')s.strings++;
+    else if(typeof v==='number')s.numbers++;
+    else if(typeof v==='boolean')s.booleans++;
+    else s.nulls++;
+  })(obj,1);
+  s.minBytes=new TextEncoder().encode(JSON.stringify(obj)).length;
+  s.prettyBytes=new TextEncoder().encode(JSON.stringify(obj,null,2)).length;
+  return s;
+}
+function jvBomStrip(text){return text.replace(/^﻿/,'');}
+function jvFmtBytes(b){return b.toLocaleString('en-US')+' B';}
+// ---- browser wiring ----
+function jvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function jvStat(n,l){return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';}
+function jvView(){
+  var errOut=document.getElementById('errOut');
+  var stats=document.getElementById('stats');
+  errOut.innerHTML='';stats.innerHTML='';
+  var text=jvBomStrip(document.getElementById('jsonInput').value);
+  var value;
+  try{value=JSON.parse(text);}
+  catch(e){
+    errOut.innerHTML='<div class="errbox">✗ '+jvEsc(String(e&&e.message||e))+'</div>';
+    if(JV.editor){JV.editor.destroy();JV.editor=null;}
+    document.getElementById('exportRow').style.display='none';
+    return;
+  }
+  JV.value=value;
+  if(typeof JSONEditor==='undefined'){
+    errOut.innerHTML='<div class="errbox">The jsoneditor engine did not load (offline or blocked) — stats still computed, rendering unavailable.</div>';
+  }else{
+    if(JV.editor){JV.editor.destroy();JV.editor=null;}
+    JV.editor=new JSONEditor(document.getElementById('editorHost'),{
+      modes:['tree','table','text'],
+      mode:'tree',
+      onError:function(err){errOut.innerHTML='<div class="errbox">✗ '+jvEsc(String(err))+'</div>';}
+    });
+    JV.editor.set(value);
+  }
+  var s=jvStats(value);
+  stats.innerHTML='<div class="stats-bar">'
+    +jvStat('✓ valid','status')
+    +jvStat(s.values.toLocaleString('en-US'),'values')
+    +jvStat(s.keys.toLocaleString('en-US'),'keys')
+    +jvStat(s.depth,'max depth')
+    +jvStat(s.objects+' / '+s.arrays,'obj / arr')
+    +jvStat(s.strings+' / '+s.numbers,'str / num')
+    +jvStat(s.booleans+' / '+s.nulls,'bool / null')
+    +jvStat(jvFmtBytes(s.minBytes),'minified')
+    +jvStat(jvFmtBytes(s.prettyBytes),'pretty (2sp)')
+    +'</div>';
+  document.getElementById('exportRow').style.display='';
+}
+function jvCurrent(){
+  if(JV.editor){
+    try{return JV.editor.get();}catch(e){/* fall through to last parsed */}
+  }
+  return JV.value;
+}
+function jvDownload(name,text){
+  var blob=new Blob([text],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+document.getElementById('btnView').addEventListener('click',jvView);
+document.getElementById('btnSample').addEventListener('click',function(){document.getElementById('jsonInput').value=JV_SAMPLE;jvView();});
+document.getElementById('btnClear').addEventListener('click',function(){
+  document.getElementById('jsonInput').value='';
+  document.getElementById('stats').innerHTML='';
+  document.getElementById('errOut').innerHTML='';
+  document.getElementById('exportRow').style.display='none';
+  if(JV.editor){JV.editor.destroy();JV.editor=null;}
+});
+document.getElementById('btnFile').addEventListener('click',function(){document.getElementById('fileInput').click();});
+document.getElementById('fileInput').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(){document.getElementById('jsonInput').value=fr.result;jvView();};
+  fr.readAsText(f);
+  e.target.value='';
+});
+document.getElementById('btnPretty').addEventListener('click',function(){
+  var v=jvCurrent();if(v===undefined)return;
+  jvDownload('data.json',JSON.stringify(v,null,2));
+});
+document.getElementById('btnMinify').addEventListener('click',function(){
+  var v=jvCurrent();if(v===undefined)return;
+  jvDownload('data.min.json',JSON.stringify(v));
+});
+document.getElementById('btnCopy').addEventListener('click',function(){
+  var v=jvCurrent();if(v===undefined)return;
+  var t=JSON.stringify(v,null,2);
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t);
+});
+document.getElementById('jsonInput').value=JV_SAMPLE;
+jvView();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

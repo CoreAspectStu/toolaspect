@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to JPG Converter — Free Batch Image Export | ToolAspect</title>
+<meta name="description" content="Free PDF to JPG converter. Render pages at 72–300 DPI, pick JPEG or PNG, export one page or the whole file as a ZIP. All in your browser, no upload.">
+<link rel="canonical" href="https://toolaspect.com/pdf-to-jpg/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF to JPG Converter — Free Batch Image Export">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert PDF pages to JPG or PNG images at your chosen DPI, in bulk, with a single ZIP download. Entirely client-side.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-to-jpg/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF to JPG Converter | Free Online Tool">
+<meta name="twitter:description" content="Render PDF pages to images at 72-300 DPI, batch-export as ZIP, no uploads.">
+<meta name="keywords" content="pdf to jpg, convert pdf to jpg, pdf to png, pdf to image, pdf to jpeg free, extract pages as images, pdf to jpg high resolution">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF to JPG Converter","description":"Free browser-based PDF to JPG converter. Renders each PDF page at 72 to 300 DPI with pdf.js, exports JPEG or PNG, and bundles multi-page exports into a single ZIP. Nothing uploads.","url":"https://toolaspect.com/pdf-to-jpg/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a PDF to JPG for free?","acceptedAnswer":{"@type":"Answer","text":"Load the PDF above, pick a resolution (150 DPI is the balanced default), choose JPEG or PNG, and press Convert. One page downloads directly; multiple pages arrive as a ZIP with one image per page, named page-1, page-2, and so on. The rendering happens in your browser, so contracts and IDs never upload to anyone's server."}},
+{"@type":"Question","name":"What DPI should I use when converting PDF to JPG?","acceptedAnswer":{"@type":"Answer","text":"Match the destination. 96 DPI is enough for screens, email, and chat (an A4 page becomes 794 by 1123 pixels). 150 DPI (1240 by 1754 on A4) suits documents you'll view closely or print casually. 300 DPI (2480 by 3508 on A4) is print-shop quality. Above 300 you're mostly inflating file size, because the source PDF's text and images only carry so much detail."}},
+{"@type":"Question","name":"Should I export JPEG or PNG?","acceptedAnswer":{"@type":"Answer","text":"JPEG for pages with photos, scans, or gradients - it compresses that content to a fraction of PNG's size with no visible loss at quality 85 or higher. PNG for pages that are mostly flat graphics: screenshots, charts, logos, text on solid backgrounds. PNG keeps edges pixel-crisp and supports transparency; JPEG makes photos smaller."}},
+{"@type":"Question","name":"Can I convert only certain pages of a PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes. The page range field takes a list like 1-3,7 — pages 1 through 3 and page 7. Leave it empty for the whole document. Anything out of range is ignored with a note rather than failing the whole export."}},
+{"@type":"Question","name":"Does converting PDF to JPG lose quality?","acceptedAnswer":{"@type":"Answer","text":"It rasterizes: the page's vector text and line art become pixels, so quality depends entirely on the DPI you choose. At 300 DPI the result is print-sharp for normal text; at 72 DPI small type goes soft. Photos inside the PDF keep roughly their native resolution as long as your chosen DPI doesn't shrink them. Text in the image is no longer selectable or searchable - that's the format change, not a flaw."}},
+{"@type":"Question","name":"Why did my 300 DPI JPEG come out so large?","acceptedAnswer":{"@type":"Answer","text":"Pixel count quadruples from 150 to 300 DPI (an A4 page goes from 1240 by 1754 to 2480 by 3508 pixels, about 2.2 million to 8.7 million pixels), so files grow accordingly. If quality is 85 or lower and the page is photo-heavy, JPEG usually lands between a few hundred KB and a few MB per page. Drop to 150 DPI or use JPEG instead of PNG if size matters more than zoomability."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF to JPG Converter","item":"https://toolaspect.com/pdf-to-jpg/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group input[type="file"]{cursor:pointer;font-size:.85rem}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.7rem 1.8rem;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:1rem}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.result-hero{text-align:center;padding:1.25rem 0}
+.result-hero .value{font-size:2rem;font-weight:800;color:var(--primary)}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.table-wrap{overflow-x:auto;margin-top:1rem}
+.data-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.data-table th,.data-table td{padding:.45rem .6rem;border:1px solid var(--border);text-align:left;white-space:nowrap}
+.data-table th{background:var(--bg)}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🖼️ PDF to JPG Converter</h1>
+<p>Render any PDF's pages as JPG or PNG images — pick the DPI, batch-export as ZIP</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> to convert PDF to JPG, load the file above, choose a resolution and JPEG or PNG, and press Convert. Each page renders at exactly your chosen DPI — an A4 page is 595×842 px at 72 DPI, 1240×1754 at 150, and 2480×3508 at 300 — then downloads as one image or a single ZIP for multi-page files. Nothing uploads.</p>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="input-grid">
+<div class="input-group"><label>PDF file</label><input type="file" id="fileIn" accept="application/pdf,.pdf"></div>
+<div class="input-group"><label>Resolution (DPI)</label>
+<select id="dpi">
+<option value="72">72 DPI — web thumbnails</option>
+<option value="96">96 DPI — screens, email</option>
+<option value="150" selected>150 DPI — balanced (default)</option>
+<option value="200">200 DPI — crisp documents</option>
+<option value="300">300 DPI — print quality</option>
+</select>
+</div>
+<div class="input-group"><label>Format</label>
+<select id="fmt">
+<option value="jpeg" selected>JPEG (smaller, photos)</option>
+<option value="png">PNG (lossless, sharp text)</option>
+</select>
+</div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>JPEG quality — <span id="qOut">85</span>%</label><input type="range" id="quality" min="50" max="100" value="85"></div>
+<div class="input-group"><label>Page range (e.g. 1-3,7 — empty = all)</label><input type="text" id="range" placeholder="all pages"></div>
+<div class="input-group"><label>&nbsp;</label><button type="button" class="btn" id="goBtn" style="margin-top:0" disabled>Convert</button></div>
+</div>
+<div class="result-hero" id="hero" style="display:none">
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="table-wrap" id="tblWrap" style="display:none">
+<table class="data-table" id="tbl">
+<thead><tr><th>Page</th><th>Size (pt)</th><th>Output pixels</th><th>Format</th><th>Bytes</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="status-line" id="status">Load a PDF — rendering runs locally with pdf.js; your file never uploads.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/jpg-to-pdf/">Jpg To Pdf</a></li><li style="margin:4px 0"><a href="/compress-pdf/">Compress Pdf</a></li><li style="margin:4px 0"><a href="/pdf-add-text/">Pdf Add Text</a></li><li style="margin:4px 0"><a href="/image-tools/">Image Tools</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-convert-pdf-to-jpg/">How to convert PDF to JPG</a> · <a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each DPI Produces</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>DPI</th><th>A4 page (595.28×841.89 pt)</th><th>Letter page (612×792 pt)</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>72</td><td>595 × 842 px</td><td>612 × 792 px</td><td>Thumbnails, quick previews</td></tr>
+<tr><td>96</td><td>794 × 1123 px</td><td>816 × 1056 px</td><td>Screens, email, chat</td></tr>
+<tr><td>150</td><td>1240 × 1754 px</td><td>1275 × 1650 px</td><td>Everyday viewing and sharing</td></tr>
+<tr><td>200</td><td>1654 × 2339 px</td><td>1700 × 2200 px</td><td>Crisp reading of small type</td></tr>
+<tr><td>300</td><td>2480 × 3508 px</td><td>2550 × 3300 px</td><td>Printing, zooming, archiving</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A PDF point is 1/72 inch, so render scale = DPI ÷ 72. Pixel counts are the page size in points multiplied by that scale and rounded — 595.28 × (150 ÷ 72) = 1240.2 → 1240 px wide.</p>
+</div>
+
+<div class="content-section">
+<h2>How the PDF to JPG Converter Works</h2>
+<p>Two engines do the work in your browser: pdf.js (the renderer behind Firefox's PDF viewer) draws each page onto a canvas at exactly the pixel density you asked for, and the page's canvas encoder turns that drawing into a real JPEG or PNG file. Multi-page exports get bundled with JSZip so you receive one download instead of thirty.</p>
+<h3>How DPI becomes pixels</h3>
+<p>The renderer scales the page by DPI ÷ 72, because PDF units are points (1/72 inch). An A4 page at 150 DPI scales by 2.083, from 595.28 × 841.89 points to 1240.2 × 1753.9 pixels, rounded to a 1240 × 1754 canvas. Double the DPI and both dimensions double — which quadruples pixel count, since 2480 × 3508 is four times the pixels of 1240 × 1754. That's why 300 DPI files are roughly four times heavier, not two.</p>
+<h3>How to use it</h3>
+<p>Load the PDF, and the tool reports its page count and page size. Pick DPI and format; if you chose JPEG, the quality slider (default 85) trades size against fidelity. Restrict the export with a range like <code>1-3,7</code> or leave it empty for everything. Convert, and the table lists each page's pixel dimensions and actual byte size before the image or ZIP downloads.</p>
+<h3>A worked example</h3>
+<p>A 5-page A4 contract at 150 DPI, JPEG at 85. Page 1 renders to a 1240 × 1754 canvas — 2.18 million pixels — and encodes in a few hundred milliseconds. A mostly-text page typically lands in the low hundreds of KB at this setting, a page with a scanned photo somewhere higher; the table shows the true number per page. All five pages zip into one file named <code>pages-150dpi.zip</code> containing <code>page-1.jpg</code> through <code>page-5.jpg</code>. Need one page for a slide deck? Set the range to that page number, and it downloads directly.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a PDF to JPG for free?</h3><p>Load the PDF above, pick a resolution (150 DPI is the balanced default), choose JPEG or PNG, and press Convert. One page downloads directly; multiple pages arrive as a ZIP with one image per page, named page-1, page-2, and so on. The rendering happens in your browser, so contracts and IDs never upload to anyone's server.</p></div>
+<div class="faq-item"><h3>What DPI should I use when converting PDF to JPG?</h3><p>Match the destination. 96 DPI is enough for screens, email, and chat (an A4 page becomes 794 by 1123 pixels). 150 DPI (1240 by 1754 on A4) suits documents you'll view closely or print casually. 300 DPI (2480 by 3508 on A4) is print-shop quality. Above 300 you're mostly inflating file size, because the source PDF's text and images only carry so much detail.</p></div>
+<div class="faq-item"><h3>Should I export JPEG or PNG?</h3><p>JPEG for pages with photos, scans, or gradients - it compresses that content to a fraction of PNG's size with no visible loss at quality 85 or higher. PNG for pages that are mostly flat graphics: screenshots, charts, logos, text on solid backgrounds. PNG keeps edges pixel-crisp and supports transparency; JPEG makes photos smaller.</p></div>
+<div class="faq-item"><h3>Can I convert only certain pages of a PDF?</h3><p>Yes. The page range field takes a list like 1-3,7 — pages 1 through 3 and page 7. Leave it empty for the whole document. Anything out of range is ignored with a note rather than failing the whole export.</p></div>
+<div class="faq-item"><h3>Does converting PDF to JPG lose quality?</h3><p>It rasterizes: the page's vector text and line art become pixels, so quality depends entirely on the DPI you choose. At 300 DPI the result is print-sharp for normal text; at 72 DPI small type goes soft. Photos inside the PDF keep roughly their native resolution as long as your chosen DPI doesn't shrink them. Text in the image is no longer selectable or searchable - that's the format change, not a flaw.</p></div>
+<div class="faq-item"><h3>Why did my 300 DPI JPEG come out so large?</h3><p>Pixel count quadruples from 150 to 300 DPI (an A4 page goes from 1240 by 1754 to 2480 by 3508 pixels, about 2.2 million to 8.7 million pixels), so files grow accordingly. If quality is 85 or lower and the page is photo-heavy, JPEG usually lands between a few hundred KB and a few MB per page. Drop to 150 DPI or use JPEG instead of PNG if size matters more than zoomability.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/jpg-to-pdf/">🔄 JPG to PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/pdf-add-text/">📝 PDF Add Text</a>
+<a href="/image-tools/">🎨 Image Tools</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PDFJS_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+var PDFJS_WORKER_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var JSZIP_URL='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+function loadScript(url,test){return test?Promise.resolve():new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('could not load '+url))};document.head.appendChild(s);});}
+function ensurePdfJs(){
+return loadScript(PDFJS_URL,window.pdfjsLib).then(function(){
+if(!window.pdfjsLib.GlobalWorkerOptions.workerSrc){
+return fetch(PDFJS_WORKER_URL).then(function(r){return r.text();}).then(function(t){
+window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([t],{type:'text/javascript'}));
+}).catch(function(){window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER_URL;});
+}
+return window.pdfjsLib;
+});
+}
+function ensureJSZip(){return loadScript(JSZIP_URL,window.JSZip).then(function(){return window.JSZip;});}
+function status(msg,cls){var s=document.getElementById('status');s.textContent=msg;s.className='status-line'+(cls?' '+cls:'');}
+function fmtBytes(n){return n<1024?n+' B':(n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB');}
+function parseRange(str,max){
+if(!str||!str.trim())return null;
+var set={},bad=false;
+str.split(',').forEach(function(part){
+var m=part.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+if(!m){bad=true;return;}
+var a=parseInt(m[1],10),b=m[2]?parseInt(m[2],10):a;
+if(a>b){var t=a;a=b;b=t;}
+for(var i=a;i<=b;i++)if(i>=1&&i<=max)set[i]=1;
+});
+if(bad)throw new Error('range must look like "1-3,7"');
+return Object.keys(set).map(Number).sort(function(a,b){return a-b;});
+}
+var pdfBytes=null,numPages=0;
+
+document.getElementById('fileIn').addEventListener('change',async function(){
+var f=this.files&&this.files[0];
+if(!f)return;
+status('Reading '+f.name+'…');
+try{
+pdfBytes=new Uint8Array(await f.arrayBuffer());
+var pdfjs=await ensurePdfJs();
+var doc=await pdfjs.getDocument({data:pdfBytes.slice(0)}).promise;
+numPages=doc.numPages;
+var p1=await doc.getPage(1);
+var vp=p1.getViewport({scale:1});
+document.getElementById('goBtn').disabled=false;
+status('Loaded '+f.name+' — '+numPages+' page(s), first page '+Math.round(vp.width*100)/100+' × '+Math.round(vp.height*100)/100+' pt.','ok');
+}catch(e){pdfBytes=null;numPages=0;document.getElementById('goBtn').disabled=true;status('Could not open PDF: '+e.message,'err');}
+});
+document.getElementById('quality').addEventListener('input',function(){document.getElementById('qOut').textContent=this.value;});
+
+document.getElementById('goBtn').addEventListener('click',async function(){
+if(!pdfBytes)return;
+var btn=this;btn.disabled=true;
+var dpi=parseInt(document.getElementById('dpi').value,10);
+var fmt=document.getElementById('fmt').value;
+var q=parseInt(document.getElementById('quality').value,10)/100;
+var pages;
+try{pages=parseRange(document.getElementById('range').value,numPages);}
+catch(e){status(e.message,'err');btn.disabled=false;return;}
+if(pages&&pages.length===0){status('No pages in range 1-'+numPages+'.','err');btn.disabled=false;return;}
+var mime=fmt==='png'?'image/png':'image/jpeg';
+var ext=fmt==='png'?'png':'jpg';
+try{
+status('Loading renderer…');
+var pdfjs=await ensurePdfJs();
+var doc=await pdfjs.getDocument({data:pdfBytes.slice(0)}).promise;
+var targets=pages||[];
+if(!targets.length)for(var i=1;i<=doc.numPages;i++)targets.push(i);
+var results=[],tbody=document.querySelector('#tbl tbody');
+tbody.innerHTML='';
+document.getElementById('tblWrap').style.display='block';
+for(var k=0;k<targets.length;k++){
+var n=targets[k];
+status('Rendering page '+n+' of '+targets.length+'…');
+var page=await doc.getPage(n);
+var vp=page.getViewport({scale:dpi/72});
+var canvas=document.createElement('canvas');
+canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+var ctx=canvas.getContext('2d');
+ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+await page.render({canvasContext:ctx,viewport:vp}).promise;
+var blob=await new Promise(function(res){canvas.toBlob(res,mime,fmt==='jpeg'?q:undefined);});
+results.push({n:n,w:canvas.width,h:canvas.height,blob:blob});
+var tr=document.createElement('tr');
+tr.innerHTML='<td>'+n+'</td><td>'+Math.round(vp.width/(dpi/72))+' × '+Math.round(vp.height/(dpi/72))+'</td><td>'+canvas.width+' × '+canvas.height+'</td><td>'+ext.toUpperCase()+'</td><td>'+fmtBytes(blob.size)+'</td>';
+tbody.appendChild(tr);
+}
+var total=results.reduce(function(a,r){return a+r.blob.size;},0);
+document.getElementById('hero').style.display='block';
+document.getElementById('heroVal').textContent=results.length+(results.length===1?' image':' images')+' ready';
+document.getElementById('heroSub').textContent=results[0].w+'×'+results[0].h+' px · '+dpi+' DPI · '+fmtBytes(total)+' total';
+if(results.length===1){
+var a=document.createElement('a');a.href=URL.createObjectURL(results[0].blob);
+a.download='page-'+results[0].n+'.'+ext;
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+status('Downloaded page-'+results[0].n+'.'+ext+' ('+fmtBytes(results[0].blob.size)+').','ok');
+}else{
+status('Zipping '+results.length+' images…');
+var JSZip=await ensureJSZip();
+var zip=new JSZip();
+results.forEach(function(r){zip.file('page-'+r.n+'.'+ext,r.blob);});
+var zbuf=await zip.generateAsync({type:'blob',compression:'STORE'});
+var a2=document.createElement('a');a2.href=URL.createObjectURL(zbuf);
+a2.download='pages-'+dpi+'dpi.zip';
+document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
+setTimeout(function(){URL.revokeObjectURL(a2.href);},4000);
+status('Downloaded pages-'+dpi+'dpi.zip — '+results.length+' images, '+fmtBytes(zbuf.size)+'.','ok');
+}
+}catch(e){status('Conversion failed: '+(e.message||e),'err');}
+btn.disabled=false;
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

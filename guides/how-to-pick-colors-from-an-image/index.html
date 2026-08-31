@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pick Colors From an Image: HEX &amp; Palettes | ToolAspect</title>
+<meta name="description" content="Pull exact HEX codes from any photo with an eyedropper, build a palette from dominant colors, and check text contrast (WCAG math included).">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-pick-colors-from-an-image/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Pick Colors From an Image: HEX Codes and Palettes Explained","description":"Every pixel in a digital image is three bytes — red, green, blue — which is why an eyedropper can hand you the exact HEX code of anything you can see. This guide covers how to sample colors correctly (avoiding antialiasing, JPEG drift, and color-profile traps), how dominant-color palettes are built by clustering an image's colors, and how to check whether text on your picked color passes WCAG contrast, with the arithmetic for a standard UI blue (#2563EB: rgb 37,99,235, hsl 221,83%,53%, 5.17 contrast with white). Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Pick Colors From an Image","item":"https://toolaspect.com/guides/how-to-pick-colors-from-an-image/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I find the HEX code of a color in a picture?","acceptedAnswer":{"@type":"Answer","text":"Open the image in a color picker that samples real pixels, hover to the spot you want, and click. The tool reads that pixel's red, green, and blue bytes and prints them as HEX (#RRGGBB), rgb(), and hsl(). Sample the middle of flat, solid areas — edges are antialiased blends that don't exist in the original design — and if the source is a JPEG, cross-check two or three pixels, which should agree within 1-2 per channel."}},
+{"@type":"Question","name":"How do I make a color palette from an image?","acceptedAnswer":{"@type":"Answer","text":"Run the image through a palette extractor: it samples the pixels, clusters similar colors together, and returns the cluster centers ordered by size — the first is the dominant color, the rest form a palette that genuinely appears in the image. That's how designers pull a brand scheme from a product photo or a mood board: dominant tone for backgrounds, smaller clusters for accents."}},
+{"@type":"Question","name":"Why doesn't my picked color match the original design exactly?","acceptedAnswer":{"@type":"Answer","text":"Usually one of three things: you sampled an edge, where antialiasing has blended two colors; the file went through JPEG compression, which perturbs pixel values slightly; or the image uses a wider color profile (Display P3) than your target (sRGB HEX codes). Sample large flat areas, prefer PNG sources for brand matching, and expect tiny JPEG-era deviations."}},
+{"@type":"Question","name":"How do I know if text will be readable on my picked color?","acceptedAnswer":{"@type":"Answer","text":"Compute the WCAG contrast ratio: convert the color to relative luminance, then (L1 + 0.05) / (L2 + 0.05) where L1 is the lighter of the text and background. White text on #2563EB gives 5.17 — passing AA's 4.5 bar for normal text but not AAA's 7.0. Thresholds: 3.0 for large text and UI elements, 4.5 for normal text, 7.0 for AAA. The image color picker shows these chips for every color you pick."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Pick Colors From an Image: HEX Codes &amp; Palettes</h1>
+<div class="meta"><span>🎯 Color</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">The color you see on screen is a number you can have. Every pixel stores exactly three bytes — red, green, blue — and an eyedropper just reads them out. The craft is in sampling the <em>right</em> pixel, turning one pixel into a whole palette, and knowing whether anyone can actually read text on the color you picked. Here's the full workflow, including the traps that make picked colors come out "almost right".</p>
+<div class="ad-slot">Advertisement</div>
+<h2>How does an eyedropper read a color?</h2>
+<p>Digital images are grids of pixels, and each pixel's color is a triple of 8-bit intensities: 0–255 for red, green, and blue. The hex codes designers trade around are just those bytes in base-16 — <code>#2563EB</code> says 25 (37 decimal) red, 63 (99) green, EB (235) blue. When you click an eyedropper on an image, the tool maps your click to image coordinates, reads that one pixel's bytes, and prints them in whichever notation you want. Nothing is estimated; it's a lookup. The <a href="/image-color-picker/">image color picker</a> shows the hex, rgb, and hsl side by side for every click, with a hover preview so you can see what you're about to get.</p>
+<h2>Where should you sample?</h2>
+<ul>
+<li><strong>Flat interiors, not edges.</strong> Edges are antialiased — the renderer blended neighboring colors into intermediate values that exist nowhere in the design. A "black border on white" sampled at its edge gives you gray.</li>
+<li><strong>Multiple spots for verification.</strong> In a lossless PNG, two samples of the same flat area agree exactly. If they differ, you're on a gradient, a texture, or a compressed region.</li>
+<li><strong>Away from JPEG block boundaries.</strong> JPEG compresses in 8×8 blocks and shifts values slightly; flat regions survive best, sharp transitions worst.</li>
+<li><strong>Mind the color profile.</strong> Screenshots from wide-gamut displays may be Display P3; the HEX ecosystem (CSS, brand guides) is sRGB. The shift is a few degrees of hue — enough to fail a strict brand match, invisible to the eye.</li>
+</ul>
+<h2>How do you turn one image into a palette?</h2>
+<p>One pixel can't represent a photo, so palette extraction runs the other direction: sample many pixels, group the similar ones, and take each group's center. The <a href="/image-color-picker/">picker's palette panel</a> does this with the ColorThief quantizer — the first swatch is the dominant color (the largest cluster), and the next five are the supporting tones, all guaranteed to actually appear in the image. That's what makes image-derived palettes feel coherent where hand-picked ones don't: the relationships come from a real scene's lighting and materials.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Format</th><th>#2563EB as…</th><th>Reads as</th></tr></thead>
+<tbody>
+<tr><td>HEX</td><td><code>#2563EB</code></td><td>25 red, 63 green, EB blue (base-16)</td></tr>
+<tr><td>RGB</td><td><code>rgb(37, 99, 235)</code></td><td>the same bytes in decimal, 0–255 each</td></tr>
+<tr><td>HSL</td><td><code>hsl(221, 83%, 53%)</code></td><td>hue 221° (blue family), 83% saturated, 53% light</td></tr>
+</tbody>
+</table>
+</div>
+<p>HSL is the one worth internalizing: keep hue fixed and lower lightness for a shade, lower saturation for a muted variant — that's how you build the 50–900 ramps in design systems, and why tint/shade generation happens in HSL rather than RGB.</p>
+<h2>Can people read text on your picked color?</h2>
+<p>Picking the color is half the job; the other half is putting type on it. WCAG 2 defines the standard test: convert the color to relative luminance L (gamma-corrected, channel-weighted), then compute <code>(L1 + 0.05) / (L2 + 0.05)</code> with the lighter of text/background on top. For the running example: #2563EB has luminance 0.1532, so white text gives (1.05)/(0.2032) = <strong>5.17</strong> and black text gives (0.2032)/(0.05) = <strong>4.06</strong>. Against the AA thresholds, that's white-on-blue passing normal text, black-on-blue failing it — an actual design decision resolved by arithmetic. Flip to a bright amber like #F59E0B (luminance 0.4389) and the verdicts invert: white text collapses to 2.15, black text soars to 9.78.</p>
+<ul>
+<li><strong>4.5:1</strong> — AA, normal text</li>
+<li><strong>3.0:1</strong> — AA, large text (≥ 24px, or ≥ 18.7px bold) and UI components</li>
+<li><strong>7.0:1</strong> — AAA, normal text</li>
+</ul>
+<p>The picker prints these verdicts as chips under every color so you don't have to run the formula by hand.</p>
+<h2>What about matching colors across formats?</h2>
+<p>Once the hex is in hand, it converts losslessly everywhere: CSS understands hex, rgb(), hsl(); design tools all take hex; print work needs a CMYK conversion, which is <em>not</em> lossless (different gamut — saturated blues and greens shift). For pairing picked colors with gradients and shadows, the <a href="/color-converter/">color converter</a> handles the notation round-trips, and the <a href="/gradient-generator/">gradient generator</a> builds the transitions between two picked endpoints.</p>
+<div class="cta-box"><h3>Pick a color right now</h3><p style="color:#fff;opacity:.9">Drop in any image, click any pixel for exact HEX/RGB/HSL, and walk away with a dominant palette. No upload.</p><a href="/image-color-picker/">Image Color Picker →</a></div>
+<h2>The bottom line</h2>
+<p>Sample flat areas of lossless sources for exact matches; build palettes from the whole image, not one pixel; and run the contrast math before shipping text on any picked color. The eyedropper gives you the number — the workflow above makes it the right number.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I find the HEX code of a color in a picture?</h3><p>Open the image in a color picker that samples real pixels, hover to the spot you want, and click. The tool reads that pixel's red, green, and blue bytes and prints them as HEX (#RRGGBB), rgb(), and hsl(). Sample the middle of flat, solid areas — edges are antialiased blends that don't exist in the original design — and if the source is a JPEG, cross-check two or three pixels, which should agree within 1-2 per channel.</p></div>
+<div class="faq-item"><h3>How do I make a color palette from an image?</h3><p>Run the image through a palette extractor: it samples the pixels, clusters similar colors together, and returns the cluster centers ordered by size — the first is the dominant color, the rest form a palette that genuinely appears in the image. That's how designers pull a brand scheme from a product photo or a mood board: dominant tone for backgrounds, smaller clusters for accents.</p></div>
+<div class="faq-item"><h3>Why doesn't my picked color match the original design exactly?</h3><p>Usually one of three things: you sampled an edge, where antialiasing has blended two colors; the file went through JPEG compression, which perturbs pixel values slightly; or the image uses a wider color profile (Display P3) than your target (sRGB HEX codes). Sample large flat areas, prefer PNG sources for brand matching, and expect tiny JPEG-era deviations.</p></div>
+<div class="faq-item"><h3>How do I know if text will be readable on my picked color?</h3><p>Compute the WCAG contrast ratio: convert the color to relative luminance, then (L1 + 0.05) / (L2 + 0.05) where L1 is the lighter of the text and background. White text on #2563EB gives 5.17 — passing AA's 4.5 bar for normal text but not AAA's 7.0. Thresholds: 3.0 for large text and UI elements, 4.5 for normal text, 7.0 for AAA. The image color picker shows these chips for every color you pick.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/image-color-picker/">Image Color Picker</a>
+<a href="/color-converter/">Color Converter</a>
+<a href="/gradient-generator/">Gradient Generator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

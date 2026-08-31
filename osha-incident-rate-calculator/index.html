@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSHA Incident Rate Calculator — TRIR &amp; DART | ToolAspect</title>
+<meta name="description" content="Free TRIR calculator. Compute OSHA TRIR, DART, and LTIR from hours worked. 5 recordables over 250,000 hours = TRIR 4.0 vs the 2.3 private-industry average.">
+<link rel="canonical" href="https://toolaspect.com/osha-incident-rate-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="OSHA Incident Rate Calculator — TRIR &amp; DART">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Calculate TRIR, DART, and LTIR from your OSHA 300 log, benchmarked against BLS industry averages.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/osha-incident-rate-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OSHA Incident Rate Calculator | Free Tool">
+<meta name="twitter:description" content="TRIR, DART, and LTIR from your hours worked and OSHA 300 log counts.">
+<meta name="keywords" content="trir calculator, osha incident rate calculator, dart rate calculator, ltir, total recordable incident rate, osha 300 log, 200000 hours">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OSHA Incident Rate Calculator","description":"Free TRIR, DART, and LTIR calculator. Enter hours worked and case counts from the OSHA 300 log to compute recordable, DART, and lost-time incidence rates per 100 full-time workers.","url":"https://toolaspect.com/osha-incident-rate-calculator/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a good TRIR score?","acceptedAnswer":{"@type":"Answer","text":"Below your industry's BLS average is the baseline goal; the private-industry average was 2.3 recordable cases per 100 full-time-equivalent workers in 2024. Anything at 1.0 or lower is strong, and 0 signals only that the denominator was small or cases were genuinely rare. Compare against your own NAICS sector, because a 2.5 in construction (2024 average 2.2) reads very differently than a 2.5 in a semiconductor fab."}},
+{"@type":"Question","name":"What is the difference between TRIR, DART, and LTIR?","acceptedAnswer":{"@type":"Answer","text":"All three scale cases per 200,000 hours worked, but they count different cases. TRIR counts every OSHA-recordable case. DART counts the more severe subset: days away from work, restricted duty, or job transfer. LTIR (sometimes called the lost-time or DAFW rate) counts only cases with at least one day away from work. A site can have a middling TRIR and a good DART if most recordables needed nothing more than medical treatment beyond first aid."}},
+{"@type":"Question","name":"Why is the rate based on 200,000 hours?","acceptedAnswer":{"@type":"Answer","text":"Two hundred thousand hours is what 100 full-time workers put in during a year at 40 hours a week for 50 weeks. The formula (cases ÷ hours worked) × 200,000 therefore expresses cases per 100 FTE workers per year, which makes a 40-person shop comparable to a 4,000-person plant."}},
+{"@type":"Question","name":"What counts as an OSHA-recordable case?","acceptedAnswer":{"@type":"Answer","text":"Under 29 CFR 1904.7, a work-related injury or illness is recordable if it results in death, days away, restricted work or job transfer, medical treatment beyond first aid, loss of consciousness, or a significant injury or illness diagnosed by a physician or other licensed health professional. First aid alone, as defined by OSHA's specific first-aid list, is not recordable. Every recordable case goes on the OSHA 300 log."}},
+{"@type":"Question","name":"When does the 300A summary have to be posted and submitted?","acceptedAnswer":{"@type":"Answer","text":"The Form 300A annual summary must be certified by a company executive and physically posted at each establishment from February 1 through April 30. Separately, covered establishments must submit data electronically through OSHA's Injury Tracking Application by March 2: establishments with 250+ employees, and those with 20-249 in designated industries, submit the 300A; establishments with 100+ employees in designated high-hazard industries also submit Forms 300 and 301."}},
+{"@type":"Question","name":"Does OSHA use TRIR to target inspections?","acceptedAnswer":{"@type":"Answer","text":"Yes. OSHA's Site-Specific Targeting program draws inspection lists from electronically submitted injury data, and high TRIR or DART rates relative to your industry can put an establishment on the list. Submitted rates are also searchable by the public through OSHA's establishment search, which is why many customers and general contractors ask contractors for their TRIR before awarding work."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"OSHA Incident Rate Calculator","item":"https://toolaspect.com/osha-incident-rate-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1.5rem;font-size:1rem;line-height:1.6}
+.aio-answer strong{color:var(--primary-hover)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🦺 OSHA Incident Rate Calculator</h1>
+<p>TRIR, DART, and LTIR from your hours worked and OSHA 300 log</p>
+</div>
+
+<div class="aio-answer" id="aioAnswer"><strong>Quick answer:</strong> TRIR = (recordable cases × 200,000) ÷ total hours worked. <strong>5 recordables</strong> over <strong>250,000 hours</strong> = TRIR <strong>4.0</strong>, versus the <strong>2.3</strong> private-industry average (BLS 2024). The 200,000 hours equals 100 full-time workers for a year, so every rate reads as cases per 100 FTE.</div>
+
+<div class="section-card">
+<h2>Hours &amp; Cases (from your OSHA 300 log)</h2>
+<div class="input-grid">
+<div class="input-group"><label>Total hours worked (all employees, year)</label><input type="number" id="hours" value="250000" min="0" step="1000"></div>
+<div class="input-group"><label>Recordable cases (300 log column G)</label><input type="number" id="rec" value="5" min="0" step="1"></div>
+<div class="input-group"><label>DART cases (days away / restricted / transfer)</label><input type="number" id="dart" value="2" min="0" step="1"></div>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Lost-Time Cases</h2>
+<div class="input-grid">
+<div class="input-group"><label>Cases with ≥1 day away from work</label><input type="number" id="lost" value="1" min="0" step="1"></div>
+<div class="input-group"><label>Industry benchmark</label>
+<select id="bench">
+<option value="2.3" selected>Private industry avg (2.3)</option>
+<option value="2.7">Manufacturing (2.7)</option>
+<option value="2.2">Construction (2.2)</option>
+<option value="4.4">Transportation &amp; warehousing (4.4)</option>
+<option value="4.8">Warehousing &amp; storage (4.8)</option>
+<option value="3.0">Retail trade (3.0)</option>
+<option value="3.4">Health care &amp; social assistance (3.4)</option>
+<option value="2.2">Wholesale trade (2.2)</option>
+<option value="2.6">Accommodation &amp; food services (2.6)</option>
+</select></div>
+</div>
+</div>
+
+<div class="section-card">
+<div class="result-hero">
+<div class="label">TRIR (Total Recordable Incident Rate)</div>
+<div class="value" id="heroVal">—</div>
+<div class="sub" id="heroSub"></div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">DART Rate</div><div class="ri-value" id="dartVal">—</div></div>
+<div class="result-item"><div class="ri-label">LTIR (Lost-Time / DAFW Rate)</div><div class="ri-value" id="ltirVal">—</div></div>
+<div class="result-item"><div class="ri-label">Cases allowed at benchmark</div><div class="ri-value" id="allowed">—</div></div>
+<div class="result-item"><div class="ri-label">≈ FTE workers represented</div><div class="ri-value" id="fte">—</div></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/workers-comp-calculator/">Workers Comp</a></li><li style="margin:4px 0"><a href="/equipment-downtime-cost-calculator/">Downtime Cost</a></li><li style="margin:4px 0"><a href="/mtbf-calculator/">Mtbf Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>BLS Industry Averages, 2024 (cases per 100 FTE workers)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Industry sector</th><th>TRC rate (TRIR)</th><th>DART rate</th><th>Days-away rate</th></tr></thead>
+<tbody>
+<tr><td>All private industry</td><td>2.3</td><td>1.4</td><td>0.8</td></tr>
+<tr><td>Manufacturing</td><td>2.7</td><td>1.7</td><td>0.8</td></tr>
+<tr><td>Construction</td><td>2.2</td><td>1.3</td><td>0.9</td></tr>
+<tr><td>Transportation &amp; warehousing</td><td>4.4</td><td>3.5</td><td>2.1</td></tr>
+<tr><td>Warehousing &amp; storage</td><td>4.8</td><td>4.1</td><td>1.5</td></tr>
+<tr><td>Retail trade</td><td>3.0</td><td>1.8</td><td>1.0</td></tr>
+<tr><td>Health care &amp; social assistance</td><td>3.4</td><td>1.7</td><td>1.1</td></tr>
+<tr><td>Wholesale trade</td><td>2.2</td><td>1.6</td><td>0.9</td></tr>
+<tr><td>Accommodation &amp; food services</td><td>2.6</td><td>1.2</td><td>0.8</td></tr>
+<tr><td>All industries incl. state &amp; local govt</td><td>2.6</td><td>1.5</td><td>0.9</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Source: BLS Survey of Occupational Injuries and Illnesses, 2024 rates (released January 2026), computed as (N ÷ hours worked) × 200,000. Private industry's 2.3 was the lowest rate in the series since 2003.</p>
+</div>
+
+<div class="content-section">
+<h2>How the OSHA Incident Rate Calculator Works</h2>
+<p>OSHA recordkeeping rates exist so a 40-person shop and a 4,000-person plant can be compared on the same scale. Each rate takes a case count from your OSHA 300 log, divides by the total hours all employees actually worked during the year, and multiplies by 200,000, the hours 100 full-timers clock in a year (100 × 40 × 50).</p>
+<h3>The formulas</h3>
+<p>TRIR = recordable cases × 200,000 ÷ hours worked. DART rate = DART cases × 200,000 ÷ hours worked. LTIR = lost-time cases × 200,000 ÷ hours worked. Use actual hours from payroll, including overtime; don't substitute headcount × 2,000 unless you have no choice, because overtime-heavy sites will read better than they are.</p>
+<h3>How to use it</h3>
+<p>Pull three numbers off your 300 log: total recordable cases, the DART subset (days away, restricted activity, or job transfer), and the days-away subset. Enter the year's total hours worked and pick your sector for the benchmark. The "cases allowed" tile shows how many recordables your hours can absorb before you cross the benchmark, which is the number safety committees actually plan around.</p>
+<h3>A worked example</h3>
+<p>A 125-worker manufacturing plant (250,000 hours) records 5 recordable cases, of which 2 involved days away or restriction and 1 kept someone off work entirely. TRIR = 5 × 200,000 ÷ 250,000 = 4.0. DART = 2 × 200,000 ÷ 250,000 = 1.6. LTIR = 1 × 200,000 ÷ 250,000 = 0.8. Against manufacturing's 2024 average of 2.7, the TRIR sits 48% high, while the DART of 1.6 is close to the sector's 1.7, telling you the recordables skew toward less severe cases.</p>
+<p>Small sites need to read their rates with care. A 30-employee shop (60,000 hours) that logs 2 recordables lands at 6.67, and a single case lands at 3.33, even though nothing about the safety program changed. One case moves a small site's rate in whole points; that's arithmetic, not a trend.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is a good TRIR score?</h3><p>Below your industry's BLS average is the baseline goal; the private-industry average was 2.3 recordable cases per 100 full-time-equivalent workers in 2024. Anything at 1.0 or lower is strong, and 0 signals only that the denominator was small or cases were genuinely rare. Compare against your own NAICS sector, because a 2.5 in construction (2024 average 2.2) reads very differently than a 2.5 in a semiconductor fab.</p></div>
+<div class="faq-item"><h3>What is the difference between TRIR, DART, and LTIR?</h3><p>All three scale cases per 200,000 hours worked, but they count different cases. TRIR counts every OSHA-recordable case. DART counts the more severe subset: days away from work, restricted duty, or job transfer. LTIR (sometimes called the lost-time or DAFW rate) counts only cases with at least one day away from work. A site can have a middling TRIR and a good DART if most recordables needed nothing more than medical treatment beyond first aid.</p></div>
+<div class="faq-item"><h3>Why is the rate based on 200,000 hours?</h3><p>Two hundred thousand hours is what 100 full-time workers put in during a year at 40 hours a week for 50 weeks. The formula (cases ÷ hours worked) × 200,000 therefore expresses cases per 100 FTE workers per year, which makes a 40-person shop comparable to a 4,000-person plant.</p></div>
+<div class="faq-item"><h3>What counts as an OSHA-recordable case?</h3><p>Under 29 CFR 1904.7, a work-related injury or illness is recordable if it results in death, days away, restricted work or job transfer, medical treatment beyond first aid, loss of consciousness, or a significant injury or illness diagnosed by a physician or other licensed health professional. First aid alone, as defined by OSHA's specific first-aid list, is not recordable. Every recordable case goes on the OSHA 300 log.</p></div>
+<div class="faq-item"><h3>When does the 300A summary have to be posted and submitted?</h3><p>The Form 300A annual summary must be certified by a company executive and physically posted at each establishment from February 1 through April 30. Separately, covered establishments must submit data electronically through OSHA's Injury Tracking Application by March 2: establishments with 250+ employees, and those with 20-249 in designated industries, submit the 300A; establishments with 100+ employees in designated high-hazard industries also submit Forms 300 and 301.</p></div>
+<div class="faq-item"><h3>Does OSHA use TRIR to target inspections?</h3><p>Yes. OSHA's Site-Specific Targeting program draws inspection lists from electronically submitted injury data, and high TRIR or DART rates relative to your industry can put an establishment on the list. Submitted rates are also searchable by the public through OSHA's establishment search, which is why many customers and general contractors ask contractors for their TRIR before awarding work.</p></div>
+</div>
+
+<div class="content-section">
+<h2>Related Calculators</h2>
+<div class="related-links">
+<a href="/workers-comp-calculator/">🦺 Workers Comp Calculator</a>
+<a href="/workers-comp-settlement-calculator/">📋 Workers Comp Settlement</a>
+<a href="/equipment-downtime-cost-calculator/">💸 Downtime Cost Calculator</a>
+<a href="/mtbf-calculator/">🔧 MTBF Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+<p style="color:var(--muted);font-size:.8rem;line-height:1.6">This calculator is an educational tool, not legal or compliance advice. Recordkeeping obligations depend on your establishment's size, industry, and state plan; the controlling rules are 29 CFR Part 1904 and OSHA's own guidance at osha.gov/recordkeeping, and state-plan states may impose stricter requirements.</p>
+</div>
+<script>
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+function calc(){
+  var hrs=parseFloat(document.getElementById('hours').value)||0;
+  var rec=parseFloat(document.getElementById('rec').value)||0;
+  var dart=parseFloat(document.getElementById('dart').value)||0;
+  var lost=parseFloat(document.getElementById('lost').value)||0;
+  var bench=parseFloat(document.getElementById('bench').value)||0;
+  var hero=document.getElementById('heroVal');
+  var sub=document.getElementById('heroSub');
+  if(hrs<=0){
+    animateValue(hero,'—');
+    sub.textContent='Enter total hours worked for the year';
+    ['dartVal','ltirVal','allowed','fte'].forEach(function(id){document.getElementById(id).textContent='—';});
+    return;
+  }
+  var trir=rec*200000/hrs;
+  var dr=dart*200000/hrs;
+  var lt=lost*200000/hrs;
+  var allowedCases=hrs*bench/200000;
+  animateValue(hero,trir.toFixed(2));
+  sub.textContent=trir.toFixed(2)+' recordable cases per 100 FTE workers';
+  animateValue(document.getElementById('dartVal'),dr.toFixed(2));
+  animateValue(document.getElementById('ltirVal'),lt.toFixed(2));
+  animateValue(document.getElementById('allowed'),allowedCases.toFixed(1)+' cases');
+  animateValue(document.getElementById('fte'),Math.round(hrs/2000).toLocaleString('en-US'));
+}
+['hours','rec','dart','lost'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calc);
+});
+document.getElementById('bench').addEventListener('change',calc);
+calc();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

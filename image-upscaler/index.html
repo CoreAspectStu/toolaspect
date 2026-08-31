@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Upscaler — Free 2x &amp; 4x AI Enlarger | ToolAspect</title>
+<meta name="description" content="Free browser image upscaler. 2x turns 800×600 into 1600×1200 using a 867 KB ESRGAN model — no upload, no watermark, sharp PNG output.">
+<link rel="canonical" href="https://toolaspect.com/image-upscaler/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Image Upscaler — Free 2x &amp; 4x AI Enlarger">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Enlarge images 2x or 4x with an ESRGAN model that runs in your browser. Your photo never gets uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-upscaler/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Upscaler | Free 2x/4x Enlarger">
+<meta name="twitter:description" content="Upscale images 2x or 4x on your own device — no upload, no watermark.">
+<meta name="keywords" content="image upscaler, upscale image, enlarge image, ai image upscaler, 2x upscaler, 4x upscaler, increase image resolution">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Upscaler","description":"Free browser-based image upscaler. Enlarges photos 2x or 4x with the MIT-licensed ESRGAN-slim model running on your device via TensorFlow.js. No upload, no watermark, PNG output.","url":"https://toolaspect.com/image-upscaler/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the difference between 2x and 4x upscaling?","acceptedAnswer":{"@type":"Answer","text":"2x doubles each dimension — 800×600 becomes 1600×1200, which is 4 times the pixels. 4x quadruples each dimension to 3200×2400, 16 times the pixels. Use 2x when you need a modest enlargement with the best quality (smaller jumps are easier for the model); use 4x when you genuinely need the size, like printing a 10.7×8 inch page at 300 dpi from a small photo."}},
+{"@type":"Question","name":"Can upscaling fix a blurry photo?","acceptedAnswer":{"@type":"Answer","text":"Partly. A super-resolution model reconstructs plausible detail as it enlarges — edges firm up, textures regain definition — but it can't recover information that was never captured. A photo that's blurry from motion or missed focus improves modestly; a photo that's blurry because it was 80 pixels wide to begin with gains smoothness, not new detail. Upscaling works best on images that are sharp but small."}},
+{"@type":"Question","name":"How is this different from resizing in an editor?","acceptedAnswer":{"@type":"Answer","text":"A normal resize interpolates: it spreads the existing pixels over more space and fills the gaps with mathematical averages, which looks soft. A super-resolution model (ESRGAN, in this tool) is trained on pairs of small and large images, so it predicts what missing detail should look like — straight lines stay straight, text edges stay crisp. The difference is obvious on hard edges and much subtler on smooth gradients like skies."}},
+{"@type":"Question","name":"Does the upscaler work on text and screenshots?","acceptedAnswer":{"@type":"Answer","text":"Yes, and text is where super-resolution shows its biggest advantage over plain resizing, because letterforms are exactly the kind of structured detail the model reconstructs well. A 2x pass on a small screenshot usually returns clearly readable text where bicubic resizing returns gray mush. Very low-resolution text (under about 10 pixels of character height) is past what a 1 MB browser model can save."}},
+{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The model weights (867 KB for 2x, 912 KB for 4x) and the TensorFlow.js runtime load once from a CDN, then everything — decoding, the neural network pass, PNG encoding — happens in your browser using WebAssembly. You can verify it in the network panel: no request ever contains your image."}},
+{"@type":"Question","name":"Why is there a size limit on input images?","acceptedAnswer":{"@type":"Answer","text":"Memory. Every extra pixel multiplies through the network in 64-px patches, and the output image is held uncompressed in RAM — a 4x upscale of a 2000-px photo is roughly 92 MB of raw pixel data before the PNG is even encoded. The cap (about 1200 px on the long side for 4x, 2000 px for 2x) keeps the tab responsive instead of crashing it."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Image Upscaler","item":"https://toolaspect.com/image-upscaler/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone:hover,.dropzone.dragover{border-color:var(--primary)}
+.dropzone .icon{font-size:2rem;margin-bottom:.5rem}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .hint{font-size:.78rem;margin-top:.35rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.8rem 1.75rem;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+.progress-wrap{margin-top:1rem;display:none}
+.progress-bar{height:8px;background:var(--bg);border-radius:6px;overflow:hidden}
+.progress-bar .fill{height:100%;width:0;background:var(--primary);border-radius:6px;transition:width .15s}
+.status-line{margin-top:.75rem;font-size:.85rem;color:var(--muted);text-align:center;min-height:1.2em}
+.result-wrap{margin-top:1.25rem;display:none}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.compare-grid{grid-template-columns:1fr}}
+.compare-item{text-align:center}
+.compare-item .c-label{font-size:.8rem;color:var(--muted);margin-bottom:.4rem}
+.canvas-frame{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;line-height:0;max-height:340px}
+.canvas-frame canvas{width:100%;height:auto;display:block}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.75rem;text-align:center}
+.stat .s-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stat .s-value{font-size:1.05rem;font-weight:700;margin-top:.2rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔎 Image Upscaler</h1>
+<p>Enlarge photos 2x or 4x on your device — nothing gets uploaded</p>
+</div>
+<div class="aio-answer">Drop in an image and this tool enlarges it with an <strong>ESRGAN</strong> super-resolution model (MIT-licensed, 867 KB for 2x, 912 KB for 4x) running in your browser through TensorFlow.js. Unlike a normal resize, which just spreads existing pixels and averages the gaps, the model reconstructs edges and texture as it scales — <strong>800×600 becomes 1600×1200 at 2x (4× the pixels) or 3200×2400 at 4x (16×)</strong>. Output is a sharp PNG, and your image never leaves the page.</div>
+
+<div class="section-card">
+<h2>Upscale an Image</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p id="dzText">Drop an image here or click to choose</p>
+<p class="hint">JPG, PNG, or WebP · upscaled on your device</p>
+<input type="file" id="fileInput" accept="image/*" hidden>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>Scale</label>
+<select id="scale">
+<option value="2">2x — best quality (800×600 → 1600×1200)</option>
+<option value="4">4x — maximum size (800×600 → 3200×2400)</option>
+</select>
+</div>
+<div class="input-group"><label>Output format</label>
+<select id="format"><option value="image/png">PNG (lossless)</option><option value="image/jpeg">JPEG (smaller, 92% quality)</option></select>
+</div>
+</div>
+<div style="text-align:center;margin-top:1.25rem">
+<button class="btn" id="upscaleBtn" disabled>Upscale</button>
+</div>
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+</div>
+<div class="status-line" id="status">Choose an image to begin.</div>
+<div class="result-wrap" id="resultWrap">
+<div class="compare-grid">
+<div class="compare-item"><div class="c-label" id="srcLabel">Original</div><div class="canvas-frame" id="srcFrame"></div></div>
+<div class="compare-item"><div class="c-label" id="outLabel">Upscaled</div><div class="canvas-frame" id="outFrame"></div></div>
+</div>
+<div class="result-stats">
+<div class="stat"><div class="s-label">Input</div><div class="s-value" id="stIn">—</div></div>
+<div class="stat"><div class="s-label">Output</div><div class="s-value" id="stOut">—</div></div>
+<div class="stat"><div class="s-label">Pixels</div><div class="s-value" id="stPx">—</div></div>
+<div class="stat"><div class="s-label">Print @300 dpi</div><div class="s-value" id="stPrint">—</div></div>
+<div class="stat"><div class="s-label">Time</div><div class="s-value" id="stTime">—</div></div>
+</div>
+<div style="text-align:center;margin-top:1rem">
+<button class="btn" id="downloadBtn">⬇️ Download</button>
+<button class="btn secondary" id="resetBtn">Start over</button>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/background-remover/">Background Remover</a></li><li style="margin:4px 0"><a href="/image-compressor/">Image Compressor</a></li><li style="margin:4px 0"><a href="/image-watermark/">Image Watermark</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Upscaling Actually Does to Common Sizes</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Input</th><th>Scale</th><th>Output</th><th>Megapixels</th><th>Print size @ 300 dpi</th></tr></thead>
+<tbody>
+<tr><td rowspan="2">800 × 600</td><td>2x</td><td>1600 × 1200</td><td>0.48 → 1.92 MP</td><td>5.33 × 4 in</td></tr>
+<tr><td>4x</td><td>3200 × 2400</td><td>0.48 → 7.68 MP</td><td>10.67 × 8 in</td></tr>
+<tr><td rowspan="2">1024 × 768</td><td>2x</td><td>2048 × 1536</td><td>0.79 → 3.15 MP</td><td>6.83 × 5.12 in</td></tr>
+<tr><td>4x</td><td>4096 × 3072</td><td>0.79 → 12.6 MP</td><td>13.65 × 10.24 in</td></tr>
+<tr><td>1920 × 1080</td><td>2x</td><td>3840 × 2160</td><td>2.07 → 8.29 MP</td><td>12.8 × 7.2 in (exact 4K UHD)</td></tr>
+<tr><td>640 × 640</td><td>4x</td><td>2560 × 2560</td><td>0.41 → 6.55 MP</td><td>8.53 × 8.53 in</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Print math is just division: a 1600-px edge at 300 dots per inch is 1600 ÷ 300 = 5.33 inches. Two upscalings don't stack — running 2x twice is not 4x quality; the model invents less plausible detail the further it's pushed from real data. When you need 4x, do it in one pass.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Upscaler Works</h2>
+<p>When an editor enlarges a photo, it interpolates: new pixels are weighted averages of their neighbors. It's mathematically correct and visually soft — edges smear, text goes gray. Super-resolution models attack the same job with learned priors instead of averages.</p>
+<h3>The model</h3>
+<p>This tool runs <strong>esrgan-slim</strong>, an ESRGAN-family generator from UpscalerJS (MIT, by Kevin Scott), trained on DIV2K photo pairs. It executes as a TensorFlow.js graph in 64-pixel patches with a 2-px overlap so seams don't show, reconstructed edge by edge. The weights are deliberately small — under a megabyte — which is what makes a browser version viable at all; the trade is a slight softness compared to multi-gigabyte desktop models.</p>
+<h3>How to use it</h3>
+<p>Drop an image, pick 2x for quality or 4x for size, and upscale. The first run downloads the model (under 1 MB) and the TensorFlow.js runtime; after that, everything is cached. Large inputs are capped — about 2000 px on the long side for 2x, 1200 px for 4x — because the output is held uncompressed in memory and a 4x of a big photo can exhaust a browser tab.</p>
+<h3>A worked example with real numbers</h3>
+<p>Start with an 800×600 web graphic: 480,000 pixels, 0.48 megapixels. At 2x the model emits 1600×1200 — 1,920,000 pixels, four times the pixel count, because both dimensions double. Printed at 300 dpi that's 1600÷300 = 5.33 inches wide and 1200÷300 = 4 inches tall: a clean 5×4 photo. Push to 4x and you get 3200×2400 = 7,680,000 pixels (7.68 MP, sixteen times the original), printing at 10.67×8 inches — a full letter-size page with margin to spare.</p>
+<p>The other classic case: a 1920×1080 screenshot upscaled 2x lands on exactly 3840×2160, 4K UHD, pixel for pixel. That's not a coincidence — 4K was defined as double HD in each dimension, which is precisely what a 2x model produces.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the difference between 2x and 4x upscaling?</h3><p>2x doubles each dimension — 800×600 becomes 1600×1200, which is 4 times the pixels. 4x quadruples each dimension to 3200×2400, 16 times the pixels. Use 2x when you need a modest enlargement with the best quality (smaller jumps are easier for the model); use 4x when you genuinely need the size, like printing a 10.7×8 inch page at 300 dpi from a small photo.</p></div>
+<div class="faq-item"><h3>Can upscaling fix a blurry photo?</h3><p>Partly. A super-resolution model reconstructs plausible detail as it enlarges — edges firm up, textures regain definition — but it can't recover information that was never captured. A photo that's blurry from motion or missed focus improves modestly; a photo that's blurry because it was 80 pixels wide to begin with gains smoothness, not new detail. Upscaling works best on images that are sharp but small.</p></div>
+<div class="faq-item"><h3>How is this different from resizing in an editor?</h3><p>A normal resize interpolates: it spreads the existing pixels over more space and fills the gaps with mathematical averages, which looks soft. A super-resolution model (ESRGAN, in this tool) is trained on pairs of small and large images, so it predicts what missing detail should look like — straight lines stay straight, text edges stay crisp. The difference is obvious on hard edges and much subtler on smooth gradients like skies.</p></div>
+<div class="faq-item"><h3>Does the upscaler work on text and screenshots?</h3><p>Yes, and text is where super-resolution shows its biggest advantage over plain resizing, because letterforms are exactly the kind of structured detail the model reconstructs well. A 2x pass on a small screenshot usually returns clearly readable text where bicubic resizing returns gray mush. Very low-resolution text (under about 10 pixels of character height) is past what a 1 MB browser model can save.</p></div>
+<div class="faq-item"><h3>Is my image uploaded anywhere?</h3><p>No. The model weights (867 KB for 2x, 912 KB for 4x) and the TensorFlow.js runtime load once from a CDN, then everything — decoding, the neural network pass, PNG encoding — happens in your browser using WebAssembly. You can verify it in the network panel: no request ever contains your image.</p></div>
+<div class="faq-item"><h3>Why is there a size limit on input images?</h3><p>Memory. Every extra pixel multiplies through the network in 64-px patches, and the output image is held uncompressed in RAM — a 4x upscale of a 2000-px photo is roughly 92 MB of raw pixel data before the PNG is even encoded. The cap (about 1200 px on the long side for 4x, 2000 px for 2x) keeps the tab responsive instead of crashing it.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/background-remover/">✂️ Background Remover</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/image-watermark/">💧 Image Watermark</a>
+<a href="/image-tools/">🧰 All Image Tools</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script>
+(function(){
+  const MODEL_BASE = 'https://cdn.jsdelivr.net/npm/@upscalerjs/esrgan-slim@1.0.0';
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const dzText = document.getElementById('dzText');
+  const scaleSel = document.getElementById('scale');
+  const formatSel = document.getElementById('format');
+  const upscaleBtn = document.getElementById('upscaleBtn');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressFill = document.getElementById('progressFill');
+  const statusEl = document.getElementById('status');
+  const resultWrap = document.getElementById('resultWrap');
+  const srcFrame = document.getElementById('srcFrame');
+  const outFrame = document.getElementById('outFrame');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  let srcBitmap = null;
+  let outBlob = null;
+  let upscalers = {};
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault(); dropzone.classList.remove('dragover');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+  async function handleFile(file){
+    if (!file.type.startsWith('image/')) { setStatus('That file is not an image.'); return; }
+    try { srcBitmap = await createImageBitmap(file); }
+    catch { setStatus('Could not decode that image.'); return; }
+    dzText.textContent = file.name + ' (' + file.size/1024 + ' KB)';
+    srcFrame.innerHTML = '';
+    const c = document.createElement('canvas');
+    c.width = srcBitmap.width; c.height = srcBitmap.height;
+    c.getContext('2d').drawImage(srcBitmap, 0, 0);
+    srcFrame.appendChild(c);
+    resultWrap.style.display = 'none';
+    upscaleBtn.disabled = false;
+    setStatus(srcBitmap.width + '×' + srcBitmap.height + ' loaded.');
+  }
+  function setStatus(m){ statusEl.textContent = m; }
+
+  function loadScript(src){
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error('failed to load ' + src));
+      document.head.appendChild(s);
+    });
+  }
+  async function getUpscaler(scale){
+    if (upscalers[scale]) return upscalers[scale];
+    setStatus('Loading engine and model (cached after first use)…');
+    await loadScript('https://cdn.jsdelivr.net/npm/upscaler@1.0.0/dist/browser/umd/upscaler.min.js');
+    await loadScript(MODEL_BASE + '/dist/umd/models/esrgan-slim/src/x' + scale + '/index.min.js');
+    const global = window['ESRGANSlim' + scale + 'x'];
+    if (!window.Upscaler || !global) throw new Error('model unavailable');
+    const model = Object.assign({}, global, { path: MODEL_BASE + '/models/x' + scale + '/model.json' });
+    const up = new window.Upscaler({ model: model });
+    upscalers[scale] = up;
+    return up;
+  }
+
+  upscaleBtn.addEventListener('click', async () => {
+    if (!srcBitmap) return;
+    const scale = parseInt(scaleSel.value, 10);
+    const long = Math.max(srcBitmap.width, srcBitmap.height);
+    const cap = scale === 4 ? 1200 : 2000;
+    if (long > cap) { setStatus('That image is ' + srcBitmap.width + '×' + srcBitmap.height + ' — the ' + scale + 'x cap is ' + cap + ' px on the long side (browser memory). Try ' + (scale === 4 ? '2x' : 'resizing down') + '.'); return; }
+    upscaleBtn.disabled = true;
+    downloadBtn.disabled = true;
+    resultWrap.style.display = 'none';
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '0';
+    const t0 = performance.now();
+    try {
+      const up = await getUpscaler(scale);
+      setStatus('Upscaling in patches — keep this tab visible…');
+      const src = document.createElement('canvas');
+      src.width = srcBitmap.width; src.height = srcBitmap.height;
+      src.getContext('2d').drawImage(srcBitmap, 0, 0);
+      const result = await up.upscale(src, {
+        output: 'base64',
+        patchSize: 64,
+        padding: 2,
+        progress: rate => { progressFill.style.width = Math.round(rate * 100) + '%'; }
+      });
+      const img = new Image();
+      await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = result; });
+      const out = document.createElement('canvas');
+      out.width = img.width; out.height = img.height;
+      out.getContext('2d').drawImage(img, 0, 0);
+      outFrame.innerHTML = '';
+      outFrame.appendChild(out);
+      const fmt = formatSel.value;
+      const blob = await new Promise(res => out.toBlob(res, fmt, fmt === 'image/jpeg' ? 0.92 : undefined));
+      outBlob = blob;
+      const dt = (performance.now() - t0) / 1000;
+      document.getElementById('srcLabel').textContent = 'Original — ' + src.width + '×' + src.height;
+      document.getElementById('outLabel').textContent = 'Upscaled ' + scale + 'x — ' + out.width + '×' + out.height;
+      document.getElementById('stIn').textContent = src.width + '×' + src.height;
+      document.getElementById('stOut').textContent = out.width + '×' + out.height;
+      document.getElementById('stPx').textContent = (src.width*src.height/1e6).toFixed(2) + ' → ' + (out.width*out.height/1e6).toFixed(2) + ' MP';
+      document.getElementById('stPrint').textContent = (out.width/300).toFixed(2) + '×' + (out.height/300).toFixed(2) + ' in';
+      document.getElementById('stTime').textContent = dt.toFixed(1) + ' s';
+      resultWrap.style.display = 'block';
+      progressWrap.style.display = 'none';
+      downloadBtn.disabled = false;
+      setStatus('Done — upscaled on this device, nothing uploaded.');
+    } catch (err) {
+      progressWrap.style.display = 'none';
+      setStatus('Upscale failed: ' + (err && err.message ? err.message : err));
+    }
+    upscaleBtn.disabled = false;
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!outBlob) return;
+    const ext = formatSel.value === 'image/jpeg' ? 'jpg' : 'png';
+    const a = document.createElement('a');
+    a.download = 'upscaled-' + scaleSel.value + 'x.' + ext;
+    a.href = URL.createObjectURL(outBlob);
+    a.click();
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    resultWrap.style.display = 'none';
+    srcFrame.innerHTML = ''; outFrame.innerHTML = '';
+    srcBitmap = null; outBlob = null;
+    dzText.textContent = 'Drop an image here or click to choose';
+    fileInput.value = '';
+    setStatus('Choose an image to begin.');
+    upscaleBtn.disabled = true;
+  });
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redact PDF — True Destruction, Free | ToolAspect</title>
+<meta name="description" content="Redact PDFs the safe way: draw boxes, get a rebuilt file where covered text is destroyed, not hidden. Free, private, works entirely in your browser.">
+<link rel="canonical" href="https://toolaspect.com/redact-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Redact PDF — True Destruction, Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Draw boxes over sensitive text and export a rebuilt PDF where the covered content is destroyed, not covered. No uploads.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/redact-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Redact PDF | Free Online Tool">
+<meta name="twitter:description" content="Safe PDF redaction in your browser: covered text is destroyed, not hidden.">
+<meta name="keywords" content="redact pdf, pdf redaction, redact pdf free, how to redact a pdf, secure pdf redaction, remove text from pdf, black out pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Redact PDF","description":"Free browser-based PDF redaction tool. Draw boxes over sensitive content, then export a rebuilt PDF where each page is rasterized so covered text is destroyed, not hidden. Runs entirely client-side with pdf.js and pdf-lib; nothing is uploaded.","url":"https://toolaspect.com/redact-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why isn't drawing a black box over text a real redaction?","acceptedAnswer":{"@type":"Answer","text":"Because the box is just a mark on top of the page. The words underneath are still in the file, one copy-and-paste or text-extract away — there have been real court and government filings where 'redacted' names were recovered this way. Real redaction removes or destroys the underlying content; this tool rasterizes every page and rebuilds the PDF so nothing under a box survives."}},
+{"@type":"Question","name":"Is the redacted text really gone in the exported file?","acceptedAnswer":{"@type":"Answer","text":"Yes. The export contains no text objects at all: each page becomes an image with your boxes burned in, assembled into a fresh PDF. Covered pixels are filled with a solid color before the image is encoded, so the original glyphs under a box are never in the output. Verify it yourself — open the result and try to select or search the covered words; there is no text layer to find them in."}},
+{"@type":"Question","name":"Does redacting this way remove metadata too?","acceptedAnswer":{"@type":"Answer","text":"Yes. The output is a brand-new document assembled from page images, so the original's document properties (author, title, producer, revision history) are not carried over. Bookmarks, embedded attachments, comments, and form fields are dropped as well — anything you need to keep should be considered before you export."}},
+{"@type":"Question","name":"What does the redacted PDF lose compared to the original?","acceptedAnswer":{"@type":"Answer","text":"The text layer, everywhere — not just under the boxes. Text that wasn't redacted is still perfectly readable on screen and in print, but it can no longer be selected, searched, or read aloud, and file size usually grows because pixels cost more than characters. That's the honest price of the only client-side method that's actually safe."}},
+{"@type":"Question","name":"Is this acceptable for HIPAA or court filings?","acceptedAnswer":{"@type":"Answer","text":"The method — destroying covered content — is the right one, and it's what professional tools do under the hood. But suitability for a specific filing or disclosure is your call to verify: check the output yourself before sharing, and follow the rules that apply to your situation. This tool is not legal advice."}},
+{"@type":"Question","name":"Does my file get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The PDF is parsed with pdf.js and rebuilt with pdf-lib inside your browser, and it works offline once the page has loaded. No server, no copy kept, no trace."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Redact PDF","item":"https://toolaspect.com/redact-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.danger{background:var(--danger)}
+.btn.active{outline:2px solid var(--primary-hover)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.opt-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.opt-row label{font-size:.85rem;color:var(--muted);font-weight:500;display:flex;flex-direction:column;gap:.35rem}
+.opt-row select{padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;cursor:pointer}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.viewer{margin-top:1.5rem;display:flex;flex-direction:column;gap:1.5rem;align-items:center}
+.pgWrap{position:relative;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.pgWrap canvas{display:block;max-width:100%;height:auto}
+.pgOverlay{position:absolute;inset:0;touch-action:none}
+.pgOverlay.draw{cursor:crosshair}
+.pgOverlay .box{position:absolute;border:1px dashed #fff;background:rgba(0,0,0,.85)}
+.pgOverlay .box.white{background:#fff;border:1px dashed #888}
+.pgOverlay .ghost{position:absolute;border:1px dashed #fff;background:rgba(0,0,0,.4)}
+.pgNum{position:absolute;top:-14px;left:0;font-size:.72rem;color:var(--muted)}
+.box-tools{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;font-size:.8rem;color:var(--muted)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.unsafe{color:var(--danger)}
+.data-table td.safe{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.notice{background:var(--surface);border:1px solid var(--warn);border-radius:var(--radius);padding:.9rem 1.1rem;font-size:.85rem;color:var(--muted);line-height:1.6;margin-top:1.25rem}
+.notice strong{color:var(--warn)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔏 Redact PDF</h1>
+<p>Draw boxes over sensitive text — the export destroys what's under them, it doesn't just cover it</p>
+</div>
+
+<div class="aio-answer">Real PDF redaction means the covered content no longer exists in the file. This tool does that in your browser: you draw boxes over whatever needs to disappear, then it rasterizes every page, fills your boxes in solid, and rebuilds a fresh PDF from those images — so the words under a box are gone, not hidden under a rectangle that copy-paste sees right through. The original's metadata, comments, and hidden layers don't carry over either. Free, no uploads, works offline once loaded.</div>
+
+<div class="section-card">
+<h2>Document</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnDraw" disabled>✏️ Draw redaction boxes</button>
+<button class="btn ghost" id="btnUndo" disabled>↩ Undo last</button>
+<button class="btn ghost" id="btnClear" disabled>Clear all</button>
+</div>
+<div class="opt-row">
+<label>Box color<select id="boxColor"><option value="black">Black</option><option value="white">White</option></select></label>
+<label>Output quality<select id="dpi"><option value="150">Compact — 150 DPI</option><option value="200" selected>Standard — 200 DPI</option><option value="300">High — 300 DPI</option></select></label>
+</div>
+<div class="btn-row">
+<button class="btn danger" id="btnApply" disabled>🔒 Apply redactions &amp; download</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="box-tools" id="boxTools" style="display:none"><span id="boxCount">0 boxes</span></div>
+<div class="viewer" id="viewer"></div>
+</div>
+
+<div class="notice"><strong>Not legal advice.</strong> This tool destroys the content you cover, but verifying the result is your job — always open the exported file and confirm the redacted words can't be selected, searched, or seen before you file, send, or publish it. For court filings and regulated disclosures, the applicable rules are yours to follow.</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-annotate/">PDF Annotate</a></li><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-redact-a-pdf/">Read the PDF redaction guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Redaction Methods Compared</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Method</th><th>Actually safe?</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Black box / shape drawn over text (Word, preview apps, most "edit PDF" tools)</td><td class="unsafe">No</td><td>The text object still exists underneath; select, copy, or extract text and the "redacted" words come back</td></tr>
+<tr><td>Highlighter or white text</td><td class="unsafe">No</td><td>Same problem — formatting, not removal</td></tr>
+<tr><td>Password or "no-copy" permissions flag</td><td class="unsafe">No</td><td>Encrypts or restricts access but removes nothing; any tool that ignores the flag reads everything</td></tr>
+<tr><td>Delete-and-resave in a text editor</td><td class="unsafe">Usually not</td><td>Content streams are compressed and cross-linked; "deleted" objects can linger and be recovered</td></tr>
+<tr><td>Print to paper and rescan</td><td class="safe">Yes</td><td>Genuinely destroys the digital text — at the cost of quality, effort, and ending up with a scan</td></tr>
+<tr><td>Professional redaction (Acrobat's Redact tool, etc.)</td><td class="safe">Yes</td><td>Removes the underlying content objects and scrubs metadata server-side or in-app</td></tr>
+<tr><td>This tool: rasterize and rebuild</td><td class="safe">Yes</td><td>Every page becomes an image with boxes burned in — the only method that's actually safe fully client-side</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How Safe PDF Redaction Works</h2>
+<p>A PDF page is a program that draws text, vectors, and images. Most "redaction" features just add another drawing on top — the instructions for the sensitive text are still right there in the file, which is why they surface again the moment anyone extracts text. The fix is to stop shipping the original page at all.</p>
+<h3>The pipeline</h3>
+<p>Open the file with pdf.js and draw boxes on rendered pages. Each box is stored in PDF page coordinates, so it stays anchored to the content no matter the zoom. On export, every page is re-rendered at your chosen DPI (150, 200, or 300), your boxes are filled solid in that raster, and pdf-lib assembles a brand-new PDF from those images. What was under a box never makes it into the output; what wasn't is still plainly readable, just no longer selectable or searchable, because the rebuilt file contains no text layer at all.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the PDF — it renders page by page in the viewer.</li>
+<li>Hit "Draw redaction boxes," then click and drag over each piece of sensitive content. Drag again to add more; undo or clear anytime.</li>
+<li>Pick box color (black is conventional; white suits scanned documents) and output quality.</li>
+<li>Apply redactions. The rebuilt PDF downloads with <em>-redacted</em> added to the filename.</li>
+<li>Open the result and verify: try to select and search the covered words. Then trust, but verify once more.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Say a US Letter page (612 × 792 points) shows a bank account number, and you drag a box over it at screen position 120, 300 pixels, 240 by 60 in size, while the viewer is rendering at 1.5× scale. The tool converts those corners into PDF page space — x from 80 to 240 points, y from 552 to 592 — and stores that. At export time the page rasterizes at 200 DPI to 1700 × 2200 pixels, the box lands on exactly the same content, and it's filled solid before the image is encoded. Scale the export to 300 DPI and the raster becomes 2550 × 3300 pixels — 8.4 megapixels per Letter page — with the box still locked to the same words.</p>
+<p>Afterward, the export has no text layer: searching the document for the account number finds nothing, copying is impossible, and the original file's author, title, and producer metadata are absent because the output is a new document, not an edited copy of the old one.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why isn't drawing a black box over text a real redaction?</h3><p>Because the box is just a mark on top of the page. The words underneath are still in the file, one copy-and-paste or text-extract away — there have been real court and government filings where "redacted" names were recovered this way. Real redaction removes or destroys the underlying content; this tool rasterizes every page and rebuilds the PDF so nothing under a box survives.</p></div>
+<div class="faq-item"><h3>Is the redacted text really gone in the exported file?</h3><p>Yes. The export contains no text objects at all: each page becomes an image with your boxes burned in, assembled into a fresh PDF. Covered pixels are filled with a solid color before the image is encoded, so the original glyphs under a box are never in the output. Verify it yourself — open the result and try to select or search the covered words; there is no text layer to find them in.</p></div>
+<div class="faq-item"><h3>Does redacting this way remove metadata too?</h3><p>Yes. The output is a brand-new document assembled from page images, so the original's document properties (author, title, producer, revision history) are not carried over. Bookmarks, embedded attachments, comments, and form fields are dropped as well — anything you need to keep should be considered before you export.</p></div>
+<div class="faq-item"><h3>What does the redacted PDF lose compared to the original?</h3><p>The text layer, everywhere — not just under the boxes. Text that wasn't redacted is still perfectly readable on screen and in print, but it can no longer be selected, searched, or read aloud, and file size usually grows because pixels cost more than characters. That's the honest price of the only client-side method that's actually safe.</p></div>
+<div class="faq-item"><h3>Is this acceptable for HIPAA or court filings?</h3><p>The method — destroying covered content — is the right one, and it's what professional tools do under the hood. But suitability for a specific filing or disclosure is your call to verify: check the output yourself before sharing, and follow the rules that apply to your situation. This tool is not legal advice.</p></div>
+<div class="faq-item"><h3>Does my file get uploaded anywhere?</h3><p>No. The PDF is parsed with pdf.js and rebuilt with pdf-lib inside your browser, and it works offline once the page has loaded. No server, no copy kept, no trace.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-annotate/">✏️ PDF Annotate</a>
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+<a href="/compare-pdf/">🔍 Compare PDFs</a>
+<a href="/excel-to-pdf/">📊 Excel to PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Redact PDF engine: pdf.js render + draw boxes -> full-page rasterize -> pdf-lib rebuild ===== */
+var PDFJS_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+var loaded={};
+function loadScript(url){
+  if(loaded[url])return loaded[url];
+  loaded[url]=new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+  return loaded[url];
+}
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+
+var pdfDoc=null,drawMode=false,origName='document';
+var boxes=[]; // {page:n, rect:[x1,y1,x2,y2]} in PDF user space
+var DISPLAY_SCALE=1.35;
+
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];
+  if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    loadScript(PDFJS_URL).then(function(){
+      pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+      return pdfjsLib.getDocument({data:new Uint8Array(fr.result)}).promise;
+    }).then(function(doc){
+      pdfDoc=doc;
+      el('viewer').innerHTML='';
+      var chain=Promise.resolve();
+      for(var i=1;i<=doc.numPages;i++){
+        (function(n){chain=chain.then(function(){return renderPage(n)})})(i);
+      }
+      return chain;
+    }).then(function(){
+      el('btnDraw').disabled=false;el('btnClear').disabled=false;
+      setStatus('Loaded '+pdfDoc.numPages+' page'+(pdfDoc.numPages>1?'s':'')+'. Enable drawing and drag boxes over anything sensitive.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err')});
+  };
+  fr.readAsArrayBuffer(f);
+});
+function renderPage(n){
+  return pdfDoc.getPage(n).then(function(page){
+    var vp=page.getViewport({scale:DISPLAY_SCALE});
+    var wrap=document.createElement('div');
+    wrap.className='pgWrap';
+    wrap.style.width=vp.width+'px';
+    var canvas=document.createElement('canvas');
+    canvas.width=Math.floor(vp.width);canvas.height=Math.floor(vp.height);
+    var overlay=document.createElement('div');
+    overlay.className='pgOverlay';
+    var num=document.createElement('div');
+    num.className='pgNum';num.textContent='Page '+n+(boxes.some(function(b){return b.page===n})?' · redacted':'');
+    wrap.appendChild(canvas);wrap.appendChild(overlay);wrap.appendChild(num);
+    el('viewer').appendChild(wrap);
+    return page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise.then(function(){
+      attachOverlay(overlay,n,vp);
+      redrawBoxes(n,overlay,vp);
+    });
+  });
+}
+function attachOverlay(overlay,n,vp){
+  var start=null,ghost=null;
+  overlay.addEventListener('pointerdown',function(e){
+    if(!drawMode)return;
+    e.preventDefault();
+    var r=overlay.getBoundingClientRect();
+    start={x:e.clientX-r.left,y:e.clientY-r.top};
+    ghost=document.createElement('div');
+    ghost.className='ghost';
+    overlay.appendChild(ghost);
+    overlay.setPointerCapture(e.pointerId);
+  });
+  overlay.addEventListener('pointermove',function(e){
+    if(!drawMode||!start||!ghost)return;
+    var r=overlay.getBoundingClientRect();
+    var x=e.clientX-r.left,y=e.clientY-r.top;
+    var l=Math.min(start.x,x),t=Math.min(start.y,y),w=Math.abs(x-start.x),h=Math.abs(y-start.y);
+    ghost.style.left=l+'px';ghost.style.top=t+'px';ghost.style.width=w+'px';ghost.style.height=h+'px';
+  });
+  overlay.addEventListener('pointerup',function(e){
+    if(!drawMode||!start||!ghost)return;
+    var r=overlay.getBoundingClientRect();
+    var x=e.clientX-r.left,y=e.clientY-r.top;
+    var l=Math.min(start.x,x),t=Math.min(start.y,y),w=Math.abs(x-start.x),h=Math.abs(y-start.y);
+    overlay.removeChild(ghost);ghost=null;
+    start=null;
+    if(w<8||h<8)return; // ignore taps/clicks
+    // css px -> viewport-units are 1:1 at render scale; store in PDF points
+    var p1=vp.convertToPdfPoint(l,t),p2=vp.convertToPdfPoint(l+w,t+h);
+    boxes.push({page:n,rect:[Math.min(p1[0],p2[0]),Math.min(p1[1],p2[1]),Math.max(p1[0],p2[0]),Math.max(p1[1],p2[1])]});
+    redrawBoxes(n,overlay,vp);
+    updateBoxTools();
+  });
+}
+function redrawBoxes(n,overlay,vp){
+  [].slice.call(overlay.querySelectorAll('.box')).forEach(function(b){overlay.removeChild(b)});
+  var white=el('boxColor').value==='white';
+  boxes.filter(function(b){return b.page===n}).forEach(function(b){
+    var q=vp.convertToViewportRectangle(b.rect);
+    var l=Math.min(q[0],q[2]),t=Math.min(q[1],q[3]),w=Math.abs(q[2]-q[0]),h=Math.abs(q[3]-q[1]);
+    var d=document.createElement('div');
+    d.className='box'+(white?' white':'');
+    d.style.left=l+'px';d.style.top=t+'px';d.style.width=w+'px';d.style.height=h+'px';
+    overlay.appendChild(d);
+  });
+}
+function updateBoxTools(){
+  el('boxTools').style.display='block';
+  el('boxCount').textContent=boxes.length+' box'+(boxes.length===1?'':'es')+' drawn';
+  el('btnUndo').disabled=!boxes.length;
+  el('btnApply').disabled=!boxes.length;
+}
+el('btnDraw').addEventListener('click',function(){
+  drawMode=!drawMode;
+  el('btnDraw').classList.toggle('active',drawMode);
+  el('btnDraw').textContent=drawMode?'✏️ Drawing — drag over content':'✏️ Draw redaction boxes';
+  [].slice.call(el('viewer').querySelectorAll('.pgOverlay')).forEach(function(o){o.classList.toggle('draw',drawMode)});
+});
+el('btnUndo').addEventListener('click',function(){
+  boxes.pop();
+  refreshAllOverlays();
+  updateBoxTools();
+});
+el('btnClear').addEventListener('click',function(){
+  boxes=[];
+  refreshAllOverlays();
+  updateBoxTools();
+});
+el('boxColor').addEventListener('change',refreshAllOverlays);
+function refreshAllOverlays(){
+  if(!pdfDoc)return;
+  var wraps=[].slice.call(el('viewer').querySelectorAll('.pgWrap'));
+  wraps.forEach(function(wrap,i){
+    var overlay=wrap.querySelector('.pgOverlay');
+    var n=i+1;
+    pdfDoc.getPage(n).then(function(page){
+      var vp=page.getViewport({scale:DISPLAY_SCALE});
+      redrawBoxes(n,overlay,vp);
+    });
+  });
+}
+function dataURLToBytes(u){
+  var b=atob(u.split(',')[1]),out=new Uint8Array(b.length);
+  for(var i=0;i<b.length;i++)out[i]=b.charCodeAt(i);
+  return out;
+}
+el('btnApply').addEventListener('click',function(){
+  if(!pdfDoc||!boxes.length)return;
+  var dpi=parseInt(el('dpi').value,10)||200;
+  var color=el('boxColor').value;
+  el('btnApply').disabled=true;
+  setStatus('Rasterizing at '+dpi+' DPI …');
+  loadScript(PDFJS_URL).then(function(){return loadScript(PDFLIB_URL)}).then(function(){
+    var PDFLib=window.PDFLib;
+    var out=PDFLib.PDFDocument.create();
+    var pagesByNum={};
+    var chain=Promise.resolve();
+    var _i=1;
+    var step=function(){
+      if(_i>pdfDoc.numPages)return Promise.resolve();
+      var n=_i++;
+      setStatus('Rasterizing page '+n+' of '+pdfDoc.numPages+' …');
+      return pdfDoc.getPage(n).then(function(page){
+        var scale=dpi/72;
+        var vp=page.getViewport({scale:scale});
+        var c=document.createElement('canvas');
+        c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+        return page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){
+          var ctx=c.getContext('2d');
+          ctx.fillStyle=color;
+          boxes.filter(function(b){return b.page===n}).forEach(function(b){
+            var q=vp.convertToViewportRectangle(b.rect);
+            var l=Math.min(q[0],q[2]),t=Math.min(q[1],q[3]),w=Math.abs(q[2]-q[0]),h=Math.abs(q[3]-q[1]);
+            ctx.fillRect(l-.5,t-.5,w+1,h+1);
+          });
+          var dataUrl=c.toDataURL('image/jpeg',0.92);
+          return out.embedJpg(dataURLToBytes(dataUrl)).then(function(img){
+            var w=c.width/scale,h=c.height/scale;
+            var p=out.addPage([w,h]);
+            p.drawImage(img,{x:0,y:0,width:w,height:h});
+          });
+        }).then(step);
+      });
+    };
+    return chain.then(step).then(function(){
+      return out.save();
+    });
+  }).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=origName+'-redacted.pdf';
+    a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+    setStatus('Done — '+origName+'-redacted.pdf downloaded ('+boxes.length+' redaction'+(boxes.length>1?'s':'')+', '+dpi+' DPI). Open it and verify the covered text is gone.','ok');
+    el('btnApply').disabled=false;
+  }).catch(function(err){
+    setStatus('Export failed: '+(err&&err.message||err),'err');
+    el('btnApply').disabled=false;
+  });
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The True Cost of Equipment Downtime (and How to Calculate It) | ToolAspect</title>
+<meta name="description" content="Price an hour of downtime from your own margin and staffing: the formula, what to include, published survey benchmarks, and the maintenance-budget case it builds.">
+<link rel="canonical" href="https://toolaspect.com/guides/cost-of-equipment-downtime/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The True Cost of Equipment Downtime (and How to Calculate It)","description":"Industry headlines put downtime at six figures per hour, but your plant's number comes from your own margin, staffing, and restart costs, not a survey average. This guide builds the downtime cost formula piece by piece — lost contribution margin, idle loaded labor, restart scrap and extras — works a full 3-hour line-stop example to $10,536, separates the hidden costs that belong in the estimate from the overhead that doesn't, and shows how annualizing the number turns maintenance from a cost center into a competing investment.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"The True Cost of Equipment Downtime","item":"https://toolaspect.com/guides/cost-of-equipment-downtime/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is my downtime cost lower than the published benchmarks?","acceptedAnswer":{"@type":"Answer","text":"Because the headlines are measured on someone else's operation. ITIC's $300,000-plus figure comes largely from IT-dependent enterprises, and Siemens' $2.3 million per hour is automotive at the extreme. A mid-size plant with modest margins and a few dozen staff per line will land far lower, and that's fine — the comparison that matters is your annualized downtime cost against your maintenance budget, not against Toyota's stamping line."}},
+{"@type":"Question","name":"What's the difference between planned and unplanned downtime cost?","acceptedAnswer":{"@type":"Answer","text":"Planned stops are schedulable: changeovers and PM windows can shift to off-peak hours, staff can be redeployed, and there's no restart scramble. Unplanned stops arrive at random, consume overtime-rate labor, often damage tooling, and create scrap on restart. Both cost money, but the unplanned version carries premiums — and that premium is exactly what preventive and predictive programs sell against."}},
+{"@type":"Question","name":"How do I get the data for a downtime cost estimate?","acceptedAnswer":{"@type":"Answer","text":"Three sources cover it: the CMMS or maintenance log for event frequency and duration, production reporting for units per hour and scrap on restart, and payroll for loaded labor rates. If the data is thin, run the calculation twice with optimistic and pessimistic assumptions — a range still beats a guess, and it tells you which assumption to nail down first."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.data-table code{background:var(--surface);padding:.1rem .35rem;border-radius:4px;font-size:.85em;color:var(--text)}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>The True Cost of Equipment Downtime (and How to Calculate It)</h1>
+<div class="meta"><span>💸 18K searches/mo</span><span>💰 CPC: $28</span><span>⏱️ 7 min read</span></div>
+<p class="intro">Every maintenance budget argument eventually loses to the same question: "what does an hour of downtime actually cost us?" The honest answer comes from your own margin and staffing, not from a consultant's headline. Build it from the pieces below and you'll have a number that survives a finance meeting — and a per-hour rate that turns "we should fix that" into a fundable project.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What is the downtime cost formula?</h2>
+<p>The core is two recurring rates plus one event charge:</p>
+<p><code>Event cost = hours × (units/hr × margin per unit + idled workers × loaded hourly cost) + restart &amp; scrap costs</code></p>
+<p>Lost margin counts what the line would have earned: units per hour times contribution margin, which is price minus variable cost, not price. Idle labor counts the crew stuck waiting: headcount times loaded hourly cost, where loaded means wages plus benefits and payroll taxes, typically 1.3-1.5 times base wage. Restart costs land once per event: scrap, expedited freight, overtime catch-up, and consumed spares.</p>
+<h2>Worked example: a 3-hour bottling line stop</h2>
+<p>A failed drive stops the line for 3 hours. The line makes 1,200 units an hour at a $2.10 contribution margin — $2,520 an hour of lost margin. Fourteen staff are idled at a $28 loaded rate, adding $392 an hour. Blended rate: $2,912 an hour, about $48.53 a minute. The restart scrapes $1,800 of product. Total: 3 × $2,912 + $1,800 = <strong>$10,536 for one event</strong>.</p>
+<p>Now the budget-scale view: at 25 events like it a year, that line bleeds $263,400. A condition-monitoring retrofit or a critical-spares program that prevents a third of them is worth $87,800 a year — which is how maintenance requests get written in a language capital committees already speak.</p>
+<h2>What do the published benchmarks say?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Source</th><th>Finding</th><th>Figure</th></tr></thead>
+<tbody>
+<tr><td>ITIC 2024 Hourly Cost of Downtime survey</td><td>Mid-size and large enterprises losing &gt;$300,000/hour</td><td>&gt;90% of firms</td></tr>
+<tr><td>ITIC 2024</td><td>Enterprises at $1M-$5M/hour</td><td>41%</td></tr>
+<tr><td>Siemens/Senseye, True Cost of Downtime 2024</td><td>Automotive unplanned downtime (highest sector)</td><td>~$2.3M/hour</td></tr>
+<tr><td>Siemens/Senseye 2024</td><td>Downtime losses, Fortune Global 500 industrials</td><td>~11% of revenue (~$1.4T)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Useful for context, useless for budgeting. The ITIC sample skews toward IT and services; the Siemens automotive figure reflects highly automated, interdependent lines at massive volume. Your number is the one that defends a purchase order.</p>
+<h2>Which costs belong in the estimate?</h2>
+<ul>
+<li><strong>Include:</strong> contribution margin on lost units, idle direct labor at loaded rates, restart scrap and rejects, expedited freight, overtime catch-up, technician call-outs and parts, contractual service credits.</li>
+<li><strong>Exclude:</strong> fixed overhead — rent, salaried staff, depreciation. You pay these whether the line runs or not, so they're not incremental to the stop. (Note the tension: depreciation of the equipment itself is a fixed cost here, but a separate decision — see our <a href="/equipment-depreciation-calculator/">equipment depreciation calculator</a>.)</li>
+<li><strong>Judge case by case:</strong> lost sales beyond what make-up shifts can recover, and reputation damage. Real, but model them as scenarios, not certainties.</li>
+</ul>
+<h2>How does downtime cost connect to OEE and MTBF?</h2>
+<p>Three lenses on the same events. <a href="/mtbf-calculator/">MTBF</a> tells you how often failures arrive; <a href="/oee-calculator/">OEE</a> tells you what share of planned time survived; downtime cost tells you what the losses are worth in dollars. A plant that tracks all three can rank its bad-actor assets by annual dollars rather than gut feel, which is exactly the ranking a limited maintenance budget should follow. The math chains directly: cutting failure frequency raises MTBF, which lifts availability, which raises OEE, which shrinks the annualized downtime bill.</p>
+<div class="cta-box"><h3>Put a dollar figure on your next stoppage</h3><p style="color:#fff;opacity:.9">Units, margin, crew size, and restart costs in — per-hour rate, event cost, and annualized exposure out.</p><a href="/equipment-downtime-cost-calculator/">Downtime Cost Calculator →</a></div>
+<h2>The bottom line</h2>
+<p>An hour of downtime costs its margin, its idle labor, and its restart mess — nothing more, nothing less. Compute the rate once with honest numbers, annualize it against your event count, and you've converted maintenance from a grudge line item into a measurable return. The companion pieces are our guides on <a href="/guides/mtbf-and-reliability-basics/">MTBF and availability</a> and <a href="/guides/oee-benchmark-by-industry/">OEE benchmarks</a>, which cover the reliability side of the same ledger.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why is my downtime cost lower than the published benchmarks?</h3><p>Because the headlines are measured on someone else's operation. ITIC's $300,000-plus figure comes largely from IT-dependent enterprises, and Siemens' $2.3 million per hour is automotive at the extreme. A mid-size plant with modest margins and a few dozen staff per line will land far lower, and that's fine — the comparison that matters is your annualized downtime cost against your maintenance budget, not against Toyota's stamping line.</p></div>
+<div class="faq-item"><h3>What's the difference between planned and unplanned downtime cost?</h3><p>Planned stops are schedulable: changeovers and PM windows can shift to off-peak hours, staff can be redeployed, and there's no restart scramble. Unplanned stops arrive at random, consume overtime-rate labor, often damage tooling, and create scrap on restart. Both cost money, but the unplanned version carries premiums — and that premium is exactly what preventive and predictive programs sell against.</p></div>
+<div class="faq-item"><h3>How do I get the data for a downtime cost estimate?</h3><p>Three sources cover it: the CMMS or maintenance log for event frequency and duration, production reporting for units per hour and scrap on restart, and payroll for loaded labor rates. If the data is thin, run the calculation twice with optimistic and pessimistic assumptions — a range still beats a guess, and it tells you which assumption to nail down first.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/equipment-downtime-cost-calculator/">Downtime Cost Calculator</a>
+<a href="/mtbf-calculator/">MTBF Calculator</a>
+<a href="/oee-calculator/">OEE Calculator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

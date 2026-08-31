@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to View JSON: Trees, Tables &amp; Errors | ToolAspect</title>
+<meta name="description" content="How to read JSON without drowning: tree views vs raw text vs tables, what node counts and depth tell you, and the errors strict parsing catches.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-view-json/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to View JSON: Trees, Tables and Error-Hunting Explained","description":"Raw JSON is unreadable past a few dozen lines, and minified API payloads are unreadable full stop — but the fix is structural, not typographic. This guide explains tree views (collapsible structure that answers 'where is this value'), table mode for arrays of similar objects, the stats worth reading (values, keys, depth, minified vs pretty byte size — 345 B becomes 520 B pretty-printed, about 51% more), and the five errors strict RFC 8259 parsing catches that lenient viewers hide. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to View JSON","item":"https://toolaspect.com/guides/how-to-view-json/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I read a large JSON file?","acceptedAnswer":{"@type":"Answer","text":"In a tree viewer. Paste the JSON and it parses into collapsible nodes, so you navigate structure instead of scrolling text: close the branches you don't care about and open the path you do. For arrays of similar objects — API results, product feeds — switch to table mode, which renders them as a grid. A stats bar showing values, keys, and maximum depth tells you upfront how much digging is ahead."}},
+{"@type":"Question","name":"What's better for JSON: tree view or formatted text?","acceptedAnswer":{"@type":"Answer","text":"Different jobs. Tree view is for exploring: navigating unknown structure, finding where a value lives, editing nodes. Formatted (pretty-printed) text is for reading a known shape end-to-end, pasting into issues and reviews, and diffing two versions side by side. Most debugging sessions use both: tree to locate, formatted text to share. A tool like ToolAspect's JSON Viewer offers tree, table, and text modes in one place."}},
+{"@type":"Question","name":"Why does my JSON fail to parse?","acceptedAnswer":{"@type":"Answer","text":"Almost always one of five things: a trailing comma before } or ], single quotes instead of double, an unquoted key, a // or /* */ comment, or NaN/undefined where a number or null belongs. JSON per RFC 8259 allows none of these. A good viewer prints the parser's error with the exact character position — 'Unexpected token } at position 142' is a 10-second fix once you can jump to column 142."}},
+{"@type":"Question","name":"Should I minify JSON?","acceptedAnswer":{"@type":"Answer","text":"For transport, yes; for debugging, no. Minified JSON strips every byte of whitespace — a sample order that's 520 bytes pretty-printed with 2-space indentation is 345 bytes minified, roughly a third smaller, and the gap widens with document size. APIs minify because clients re-parse anyway. But when a human has to read it, pretty-print first; that's what view and format tools are for."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to View JSON: Trees, Tables &amp; Error-Hunting</h1>
+<div class="meta"><span>🌳 Data</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">A 3-kilobyte API response is fine to scroll. A 3-megabyte one isn't, and a minified one isn't even scrollable — it's one line. The trick to reading JSON isn't better eyes; it's letting a parser turn the text into structure you can navigate. Here's what tree views actually buy you, when a table beats both, and how strict parsing turns "something's wrong in here somewhere" into a character position.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why is raw JSON hard to read?</h2>
+<p>JSON nests. An object contains arrays containing objects containing more objects, and in flat text the only signal of depth is a column of whitespace that your eye loses track of three levels in. Pretty-printing (one property per line, consistent indentation) fixes readability but inflates size — a sample order document that's 345 bytes minified grows to 520 bytes at 2-space indentation, about 51% more — which is exactly why production APIs ship minified and humans need a viewer at all. The viewer re-adds the structure interactively: collapse what you don't need, expand the path you're hunting.</p>
+<h2>What does a tree view give you?</h2>
+<p>A tree view parses the JSON and renders every object and array as a collapsible node with its keys visible. Practical consequences:</p>
+<ul>
+<li><strong>You navigate, not scroll.</strong> "Where's the shipping address?" becomes opening <code>shipping → address</code>, not page-searching through 2,000 lines.</li>
+<li><strong>Values are typed on sight.</strong> Strings, numbers, booleans, and null get distinct rendering, so a <code>"5"</code> masquerading as a number stands out immediately — a classic API bug.</li>
+<li><strong>You can edit structurally.</strong> Add, duplicate, remove, and reorder nodes without hand-balancing commas and brackets.</li>
+<li><strong>Stats come free.</strong> Counting values, keys, and maximum depth tells you whether a payload is a wide flat feed or a needle-filled haystack.</li>
+</ul>
+<p>The <a href="/json-viewer/">JSON Viewer</a> implements this with the open-source jsoneditor library (Apache-2.0), all in-browser — relevant when the document you're inspecting carries auth tokens or personal data.</p>
+<h2>When is a table the right view?</h2>
+<p>When the top level is an array of similar objects — search results, log entries, product feeds, any REST collection. Table mode renders each element as a row and each shared key as a column, turning "compare these 40 records" into something you can actually scan. It's the view your spreadsheet brain wants, without the import step. Structure that <em>isn't</em> tabular (deeply mixed nesting) still belongs in the tree.</p>
+<h2>How do you hunt down a JSON syntax error?</h2>
+<p>Strict parsing is your friend. JSON per RFC 8259 rejects a specific set of common mistakes, and the parser tells you where:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Mistake</th><th>Example</th><th>Why it fails</th></tr></thead>
+<tbody>
+<tr><td>Trailing comma</td><td><code>["a","b",]</code></td><td>Nothing may follow the last element before <code>]</code> or <code>}</code></td></tr>
+<tr><td>Single quotes</td><td><code>{'k':1}</code></td><td>Strings are double-quoted, no exceptions</td></tr>
+<tr><td>Unquoted key</td><td><code>{k:1}</code></td><td>Keys are strings; bare identifiers are JS object syntax</td></tr>
+<tr><td>Comment</td><td><code>// note</code></td><td>JSON has no comment syntax at all</td></tr>
+<tr><td>NaN / undefined</td><td><code>{"x":NaN}</code></td><td>Only decimal numbers, <code>null</code>, <code>true</code>, <code>false</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The error message includes a character position — <em>Unexpected token } at position 142</em> — and position 142 is where your trailing comma's damage surfaces. Note that "helpful" viewers which silently accept this input are lying to you: your API, your <code>jq</code> pipeline, and your language's parser will all reject it. Better to catch it where it's cheap.</p>
+<h2>How do viewing and formatting fit together?</h2>
+<p>They're complementary habits. <strong>View</strong> (tree/table) when the structure is unfamiliar and you're locating something. <strong>Format</strong> when you've found it and need to read it, quote it, or compare two payloads — the <a href="/json-formatter/">JSON Formatter</a> is built for that pass, and <a href="/json-diff/">JSON Diff</a> for the comparing-two-versions job that formatting enables. The viewer on this site can also export its current state either pretty or minified, so the round trip view → fix → ship never leaves the tab.</p>
+<h2>How much JSON is too much?</h2>
+<p>Watch the stats bar. A few megabytes parse instantly; rendering a million tree nodes does not, because every node is an interactive DOM element. Deep nesting (depth in the dozens) usually signals a design smell — the data wanted a table but got an object graph — and minified-vs-pretty byte counts tell you whether transport compression is worth it. For genuinely huge documents, text mode is lighter than tree mode, and slicing the file down first (per-line NDJSON split into chunks) beats heroic rendering.</p>
+<div class="cta-box"><h3>View some JSON right now</h3><p style="color:#fff;opacity:.9">Paste, upload, or load the sample — tree, table, and text modes, structure stats, and precise error positions. No upload.</p><a href="/json-viewer/">JSON Viewer →</a></div>
+<h2>The bottom line</h2>
+<p>Let the parser hold the structure: trees for navigating, tables for collections of records, formatted text for reading and sharing. Trust strict errors over lenient acceptance, check the stats before diving, and keep viewing (explore) and formatting (share) as two deliberate steps in your debugging routine.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I read a large JSON file?</h3><p>In a tree viewer. Paste the JSON and it parses into collapsible nodes, so you navigate structure instead of scrolling text: close the branches you don't care about and open the path you do. For arrays of similar objects — API results, product feeds — switch to table mode, which renders them as a grid. A stats bar showing values, keys, and maximum depth tells you upfront how much digging is ahead.</p></div>
+<div class="faq-item"><h3>What's better for JSON: tree view or formatted text?</h3><p>Different jobs. Tree view is for exploring: navigating unknown structure, finding where a value lives, editing nodes. Formatted (pretty-printed) text is for reading a known shape end-to-end, pasting into issues and reviews, and diffing two versions side by side. Most debugging sessions use both: tree to locate, formatted text to share. A tool like ToolAspect's JSON Viewer offers tree, table, and text modes in one place.</p></div>
+<div class="faq-item"><h3>Why does my JSON fail to parse?</h3><p>Almost always one of five things: a trailing comma before } or ], single quotes instead of double, an unquoted key, a // or /* */ comment, or NaN/undefined where a number or null belongs. JSON per RFC 8259 allows none of these. A good viewer prints the parser's error with the exact character position — 'Unexpected token } at position 142' is a 10-second fix once you can jump to column 142.</p></div>
+<div class="faq-item"><h3>Should I minify JSON?</h3><p>For transport, yes; for debugging, no. Minified JSON strips every byte of whitespace — a sample order that's 520 bytes pretty-printed with 2-space indentation is 345 bytes minified, roughly a third smaller, and the gap widens with document size. APIs minify because clients re-parse anyway. But when a human has to read it, pretty-print first; that's what view and format tools are for.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/json-viewer/">JSON Viewer</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/json-diff/">JSON Diff</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

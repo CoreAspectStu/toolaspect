@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate Decoder — PEM, CSR &amp; Key Viewer | ToolAspect</title>
+<meta name="description" content="Decode PEM certificates, CSRs and keys into an ASN.1 tree with readable fields: validity, SANs, key size, signature. Free, 100% in-browser.">
+<link rel="canonical" href="https://toolaspect.com/certificate-decoder/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Certificate Decoder — PEM, CSR & Key Viewer">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste a PEM certificate, CSR, or key and get the full ASN.1 tree plus plain-English fields: subject, issuer, validity, SANs, key size, signature.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/certificate-decoder/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Certificate Decoder | Free PEM & CSR Viewer">
+<meta name="twitter:description" content="Decode certs, CSRs and keys into ASN.1 plus readable fields, entirely in your browser.">
+<meta name="keywords" content="certificate decoder, pem decoder, csr decoder, asn.1 decoder, ssl certificate decoder, x509 viewer, decode pem, certificate expiration checker">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Certificate Decoder","description":"Free certificate decoder. Paste a PEM certificate, CSR, or key and see the full ASN.1 tree plus readable fields: subject, issuer, serial, validity window, SANs, public key type and size, and signature algorithm. Runs entirely in your browser.","url":"https://toolaspect.com/certificate-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I decode a PEM certificate?","acceptedAnswer":{"@type":"Answer","text":"Paste the block starting with -----BEGIN CERTIFICATE----- into the decoder. A PEM file is just base64-encoded DER bytes, so the decoder reconstitutes the DER and walks it as an ASN.1 tree — sequence, integers, OIDs, times — while pulling out the fields people actually want: subject and issuer, serial number, validity dates, SANs, key type and size, and the signature algorithm. Nothing is uploaded; the parsing happens in your browser."}},
+{"@type":"Question","name":"What is the difference between PEM, DER, and ASN.1?","acceptedAnswer":{"@type":"Answer","text":"ASN.1 is the notation X.509 is written in: tagged values (integers, OID-named algorithms, sequences) that nest. DER is a strict set of encoding rules for ASN.1 — every value gets a tag byte, a length, and the content bytes. PEM takes those DER bytes, base64-encodes them, and wraps them in BEGIN/END lines so they survive email and copy-paste. Same data, three layers of clothing."}},
+{"@type":"Question","name":"How can I tell when a certificate expires?","acceptedAnswer":{"@type":"Answer","text":"Decode it and read the notAfter field in the Validity section — every certificate carries both notBefore and notAfter as explicit dates in UTC. The decoder also computes days remaining against today's date. Industry practice is to renew at about two-thirds of the lifetime; for a 90-day Let's Encrypt certificate that means kicking off renewal around day 60, which is exactly what auto-renewing clients like certbot schedule."}},
+{"@type":"Question","name":"What key size should an RSA certificate have?","acceptedAnswer":{"@type":"Answer","text":"2048 bits is the accepted minimum everywhere and what most certificates issued today use; 3072 is common for longer-lived or higher-assurance certs, and 4096 is fine but slower to handshake with no security benefit most sites need. Anything at 1024 bits or below is deprecated and rejected by modern browsers and CAs. ECDSA keys (P-256, P-384) are the modern default — equivalent security at a fraction of the size."}},
+{"@type":"Question","name":"Can this decoder read private keys?","acceptedAnswer":{"@type":"Answer","text":"It parses the structure of any PEM block — RSA PRIVATE KEY (PKCS#1), EC PRIVATE KEY (SEC1), PRIVATE KEY (PKCS#8), and ENCRYPTED PRIVATE KEY — showing the ASN.1 tree and public components like the RSA modulus and exponent. It never displays the private exponent in a copyable form and nothing leaves the page. If the key is encrypted, it says so and stops; it does not attempt decryption."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Certificate Decoder","item":"https://toolaspect.com/certificate-decoder/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+textarea{width:100%;min-height:180px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box;resize:vertical}
+textarea:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-top:1.5rem}
+.summary-card h3{font-size:1rem;font-weight:600;margin-bottom:.75rem}
+.kv{display:grid;grid-template-columns:180px 1fr;gap:.3rem .9rem;font-size:.88rem}
+@media(max-width:640px){.kv{grid-template-columns:1fr}}
+.kv .k{color:var(--muted)}
+.kv .v{color:var(--text);word-break:break-all}
+.kv .v.ok{color:var(--success)}
+.kv .v.bad{color:var(--danger)}
+.kv .v.warn{color:var(--warn)}
+.tree-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem}
+.tree-card h3{font-size:1rem;font-weight:600;margin-bottom:.75rem}
+pre.asn1{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;line-height:1.55;overflow-x:auto;color:var(--text);margin:0;white-space:pre}
+pre.asn1 .off{color:var(--muted)}
+pre.asn1 .hdr{color:#7dd3fc}
+pre.asn1 .meta{color:var(--muted)}
+pre.asn1 .val{color:#a5b4fc}
+pre.asn1 .err{color:var(--danger)}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1.5rem;font-size:.9rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔓 Certificate Decoder</h1>
+<p>PEM certificates, CSRs, and keys → ASN.1 tree + readable fields, all in your browser</p>
+</div>
+
+<div class="aio-answer">A PEM block (-----BEGIN CERTIFICATE-----, CSR, or key) is base64-encoded DER — a strict binary serialization of an ASN.1 structure. Paste one below and the decoder walks the DER bytes into the full tag/length/value tree while pulling out the fields you came for: subject and issuer, serial number, validity dates and days remaining, SANs, public key type and size, and the signature algorithm. A typical Let's Encrypt certificate, for instance, decodes to a 90-day validity window, a list of SANs, and an RSA 2048-bit or ECDSA P-256 key signed with sha256WithRSAEncryption or ecdsa-with-SHA256. Nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Paste PEM</h2>
+<textarea id="pemInput" spellcheck="false" placeholder="-----BEGIN CERTIFICATE-----
+MIIDdzCCAl+gAwIBAgIEAX... (or CERTIFICATE REQUEST / PRIVATE KEY / RSA PRIVATE KEY / EC PRIVATE KEY / PUBLIC KEY / ENCRYPTED PRIVATE KEY)"></textarea>
+<div class="btn-row">
+<button class="btn" id="btnDecode">🔍 Decode</button>
+<label class="file-label">📂 Open file<input type="file" id="fileInput" accept=".pem,.cer,.crt,.csr,.key,.txt"></label>
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/jwt-decoder/">JWT Decoder</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-decode-a-certificate/">Read the certificate decoding guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each PEM Header Contains</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>PEM Header</th><th>ASN.1 Type</th><th>What the Decoder Extracts</th></tr></thead>
+<tbody>
+<tr><td><code>CERTIFICATE</code> / <code>X509 CERTIFICATE</code></td><td>Certificate (X.509)</td><td>Subject, issuer, serial, validity window + days left, SANs, key size/type, signature algorithm, CA flag, key usages</td></tr>
+<tr><td><code>CERTIFICATE REQUEST</code></td><td>PKCS#10 CSR</td><td>Requested subject, public key, SAN extension (if requested), signature algorithm, challenge password (if present)</td></tr>
+<tr><td><code>RSA PRIVATE KEY</code></td><td>PKCS#1</td><td>Key size from the modulus, public exponent; structure of the components (no copyable private material shown)</td></tr>
+<tr><td><code>EC PRIVATE KEY</code></td><td>SEC 1</td><td>Curve, private key length, embedded public point</td></tr>
+<tr><td><code>PRIVATE KEY</code></td><td>PKCS#8</td><td>Algorithm OID (RSA/EC/Ed25519), underlying key structure</td></tr>
+<tr><td><code>ENCRYPTED PRIVATE KEY</code></td><td>PKCS#8 (encrypted)</td><td>Cipher OID (e.g. aes-256-cbc) and the fact it's encrypted — no decryption attempted</td></tr>
+<tr><td><code>PUBLIC KEY</code></td><td>SubjectPublicKeyInfo</td><td>Algorithm, key size or curve, exponent / public point</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Paste several blocks in one file — a cert chain — and each is decoded separately, in order.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Certificate Decoder Works</h2>
+<p>PEM is armor: base64 wrapped in BEGIN/END markers. Stripped of the armor, the bytes are DER, where every value is a tag byte (what type it is), a length, and content. Content of constructed types (sequences, sets, context wrappers) is more tag-length-values, recursively — that recursion is the ASN.1 tree you see. The decoder parses every byte, computes each node's offset and length, names the universal tags, and decodes the leaves it recognizes: integers to hex, object identifiers to dotted notation with their well-known names, UTCTime and GeneralizedTime to real dates, strings to text.</p>
+<h3>Reading the summary</h3>
+<p>For certificates, the summary walks TBSCertificate: version (v3 shows as [0] wrapper), serial, signature algorithm, issuer and subject names (each RDN in order), validity dates with days remaining computed against your clock, the SubjectPublicKeyInfo (RSA modulus bit length and exponent, or the named EC curve), and the extensions that matter day-to-day — SANs, basicConstraints CA flag, key usage, extended key usage, SKI/AKI. For CSRs it reads the certification request info; for keys it identifies the format and reads the public components.</p>
+<h3>A worked example</h3>
+<p>Decoding a self-signed RSA test certificate issued for 90 days over api.example.com: the serial decodes to a 20-byte integer (shown in hex, e.g. 154E…C9), the subject and issuer both read C=US, ST=California, L=San Francisco, O=Example Corp, CN=api.example.com, and the validity section shows notBefore and notAfter exactly 90 days apart. The SAN extension decodes to two dNSNames (api.example.com, www.example.com), one IP address (192.168.1.10), and one rfc822 name. The public key is an RSA 2048-bit modulus (bit length read from the INTEGER after stripping DER's leading zero byte) with exponent 65537, and both signature algorithm OIDs decode to sha256WithRSAEncryption (1.2.840.113549.1.1.11). The tree view underneath is the same certificate at the byte level — every node with its offset, header hex, tag, and length.</p>
+</div>
+
+<div class="section-card">
+<h2>Common ASN.1 Object Identifiers</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>OID</th><th>Name</th><th>Where You See It</th></tr></thead>
+<tbody>
+<tr><td><code>1.2.840.113549.1.1.1</code></td><td>rsaEncryption</td><td>Public key algorithm for RSA certs and keys</td></tr>
+<tr><td><code>1.2.840.113549.1.1.11</code></td><td>sha256WithRSAEncryption</td><td>Signature algorithm on most TLS certs today</td></tr>
+<tr><td><code>1.2.840.113549.1.1.12</code> / <code>.13</code></td><td>sha384/sha512WithRSAEncryption</td><td>Stronger RSA signatures</td></tr>
+<tr><td><code>1.2.840.10045.2.1</code></td><td>id-ecPublicKey</td><td>ECDSA public keys</td></tr>
+<tr><td><code>1.2.840.10045.4.3.2</code> / <code>.3</code> / <code>.4</code></td><td>ecdsa-with-SHA256/384/512</td><td>ECDSA signature algorithms</td></tr>
+<tr><td><code>1.3.101.112</code></td><td>Ed25519</td><td>Ed25519 signatures and keys</td></tr>
+<tr><td><code>1.2.840.10045.3.1.7</code></td><td>prime256v1 (P-256)</td><td>The default EC curve</td></tr>
+<tr><td><code>1.3.132.0.34</code> / <code>1.3.132.0.35</code></td><td>P-384 / P-521</td><td>Larger NIST curves</td></tr>
+<tr><td><code>2.5.4.3</code> / <code>2.5.4.10</code> / <code>2.5.4.6</code></td><td>commonName / organization / country</td><td>Subject and issuer name components</td></tr>
+<tr><td><code>2.5.29.17</code></td><td>subjectAltName</td><td>The SANs browsers actually validate</td></tr>
+<tr><td><code>2.5.29.19</code></td><td>basicConstraints</td><td>CA:TRUE/FALSE and path length</td></tr>
+<tr><td><code>2.5.29.15</code> / <code>2.5.29.37</code></td><td>keyUsage / extKeyUsage</td><td>What the key may be used for</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I decode a PEM certificate?</h3><p>Paste the block starting with -----BEGIN CERTIFICATE----- into the decoder. A PEM file is just base64-encoded DER bytes, so the decoder reconstitutes the DER and walks it as an ASN.1 tree — sequence, integers, OIDs, times — while pulling out the fields people actually want: subject and issuer, serial number, validity dates, SANs, key type and size, and the signature algorithm. Nothing is uploaded; the parsing happens in your browser.</p></div>
+<div class="faq-item"><h3>What is the difference between PEM, DER, and ASN.1?</h3><p>ASN.1 is the notation X.509 is written in: tagged values (integers, OID-named algorithms, sequences) that nest. DER is a strict set of encoding rules for ASN.1 — every value gets a tag byte, a length, and the content bytes. PEM takes those DER bytes, base64-encodes them, and wraps them in BEGIN/END lines so they survive email and copy-paste. Same data, three layers of clothing.</p></div>
+<div class="faq-item"><h3>How can I tell when a certificate expires?</h3><p>Decode it and read the notAfter field in the Validity section — every certificate carries both notBefore and notAfter as explicit dates in UTC. The decoder also computes days remaining against today's date. Industry practice is to renew at about two-thirds of the lifetime; for a 90-day Let's Encrypt certificate that means kicking off renewal around day 60, which is exactly what auto-renewing clients like certbot schedule.</p></div>
+<div class="faq-item"><h3>What key size should an RSA certificate have?</h3><p>2048 bits is the accepted minimum everywhere and what most certificates issued today use; 3072 is common for longer-lived or higher-assurance certs, and 4096 is fine but slower to handshake with no security benefit most sites need. Anything at 1024 bits or below is deprecated and rejected by modern browsers and CAs. ECDSA keys (P-256, P-384) are the modern default — equivalent security at a fraction of the size.</p></div>
+<div class="faq-item"><h3>Can this decoder read private keys?</h3><p>It parses the structure of any PEM block — RSA PRIVATE KEY (PKCS#1), EC PRIVATE KEY (SEC1), PRIVATE KEY (PKCS#8), and ENCRYPTED PRIVATE KEY — showing the ASN.1 tree and public components like the RSA modulus and exponent. It never displays the private exponent in a copyable form and nothing leaves the page. If the key is encrypted, it says so and stops; it does not attempt decryption.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/base64-encoder/">🔤 Base64 Encoder</a>
+<a href="/epoch-converter/">⏰ Epoch Converter</a>
+<a href="/hash-generator/">#️⃣ Hash Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---CD-ENGINE-START---
+var OID_NAMES={
+'1.2.840.113549.1.1.1':'rsaEncryption','1.2.840.113549.1.1.4':'md5WithRSAEncryption','1.2.840.113549.1.1.5':'sha1WithRSAEncryption',
+'1.2.840.113549.1.1.10':'rsassaPss','1.2.840.113549.1.1.11':'sha256WithRSAEncryption','1.2.840.113549.1.1.12':'sha384WithRSAEncryption','1.2.840.113549.1.1.13':'sha512WithRSAEncryption',
+'1.2.840.10045.2.1':'id-ecPublicKey','1.2.840.10045.4.1':'ecdsa-with-SHA1','1.2.840.10045.4.3.2':'ecdsa-with-SHA256','1.2.840.10045.4.3.3':'ecdsa-with-SHA384','1.2.840.10045.4.3.4':'ecdsa-with-SHA512',
+'1.2.840.10045.3.1.7':'prime256v1 (P-256)','1.3.132.0.34':'P-384','1.3.132.0.35':'P-521','1.3.132.0.10':'secp256k1',
+'1.3.101.112':'Ed25519','1.3.101.113':'Ed448','1.2.840.113549.1.1.7':'rsaOAEP',
+'2.5.4.3':'CN','2.5.4.6':'C','2.5.4.7':'L','2.5.4.8':'ST','2.5.4.10':'O','2.5.4.11':'OU','2.5.4.5':'serialNumber','2.5.4.9':'street','1.2.840.113549.1.9.1':'emailAddress',
+'2.5.29.17':'subjectAltName','2.5.29.19':'basicConstraints','2.5.29.15':'keyUsage','2.5.29.37':'extKeyUsage','2.5.29.14':'subjectKeyIdentifier','2.5.29.35':'authorityKeyIdentifier','2.5.29.31':'cRLDistributionPoints','2.5.29.32':'certificatePolicies','1.3.6.1.5.5.7.1.1':'authorityInfoAccess','2.5.29.9':'subjectDirectoryAttributes','2.5.29.20':'cRLNumber','2.5.29.28':'issuingDistributionPoint',
+'1.3.6.1.5.5.7.3.1':'serverAuth','1.3.6.1.5.5.7.3.2':'clientAuth','1.3.6.1.5.5.7.3.3':'codeSigning','1.3.6.1.5.5.7.3.4':'emailProtection','1.3.6.1.5.5.7.3.8':'timeStamping',
+'1.2.840.113549.1.5.13':'PBES2','1.2.840.113549.1.5.12':'PBKDF2','2.16.840.1.101.3.4.1.42':'aes-256-cbc','2.16.840.1.101.3.4.1.22':'aes-192-cbc','2.16.840.1.101.3.4.1.2':'aes-128-cbc','1.2.840.113549.2.9':'hmacWithSHA256',
+'1.2.840.113549.1.9.7':'challengePassword','2.5.29.21':'cRLReason'
+};
+var ATTR_NAMES={'2.5.4.3':'CN','2.5.4.6':'C','2.5.4.7':'L','2.5.4.8':'ST','2.5.4.10':'O','2.5.4.11':'OU','2.5.4.5':'serialNumber','2.5.4.9':'street','1.2.840.113549.1.9.1':'emailAddress','2.5.4.46':'dnQualifier','2.5.4.4':'SN','2.5.4.42':'GN','0.9.2342.19200300.100.1.25':'DC','0.9.2342.19200300.100.1.1':'UID'};
+function b64decode(s){
+  var alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',lookup={};
+  for(var i=0;i<alphabet.length;i++)lookup[alphabet[i]]=i;
+  s=s.replace(/[^A-Za-z0-9+/=]/g,'');
+  var out=[],bits=0,acc=0;
+  for(var j=0;j<s.length;j++){
+    var c=s[j];
+    if(c==='=')break;
+    var v=lookup[c];
+    if(v===undefined)continue;
+    acc=(acc<<6)|v;bits+=6;
+    if(bits>=8){bits-=8;out.push((acc>>bits)&0xff);}
+  }
+  return out;
+}
+function hex(bytes){var s='';for(var i=0;i<bytes.length;i++)s+=(bytes[i]<16?'0':'')+bytes[i].toString(16).toUpperCase();return s;}
+function parseTLV(bytes,off,depth,out){
+  var len=bytes.length;
+  if(off>=len)throw new Error('truncated at offset '+off);
+  var start=off,b0=bytes[off++];
+  var cls=b0>>6,constructed=((b0>>5)&1)===1,num=b0&0x1f,tagBytes=[b0];
+  if(num===0x1f){ // high tag number form
+    num=0;
+    while(true){
+      if(off>=len)throw new Error('truncated tag');
+      var tb=bytes[off++];tagBytes.push(tb);
+      num=(num<<7)|(tb&0x7f);
+      if(!(tb&0x80))break;
+    }
+  }
+  if(off>=len)throw new Error('truncated length');
+  var lb=bytes[off++];
+  var contentLen;
+  if(lb<0x80)contentLen=lb;
+  else if(lb===0x80)throw new Error('indefinite lengths not allowed in DER (offset '+start+')');
+  else{
+    var n=lb&0x7f;
+    if(n>4)throw new Error('length too large at offset '+start);
+    contentLen=0;
+    for(var k=0;k<n;k++){
+      if(off>=len)throw new Error('truncated length');
+      contentLen=(contentLen<<8)|bytes[off++];
+    }
+  }
+  var contentOff=off;
+  if(contentOff+contentLen>len)throw new Error('content overruns buffer at offset '+start+' (len '+contentLen+', have '+(len-contentOff)+')');
+  var node={off:start,headerLen:contentOff-start,len:contentLen,cls:cls,constructed:constructed,num:num,tagBytes:tagBytes,contentOff:contentOff,depth:depth};
+  out.push(node);
+  if(constructed&&(cls===0||cls===2)){
+    var p=contentOff,end=contentOff+contentLen;
+    var guard=0;
+    while(p<end){
+      if(guard++>4096)throw new Error('too many children at offset '+start);
+      parseTLV(bytes,p,depth+1,out);
+      var child=out[out.length-1];
+      p=child.off+child.headerLen+child.len;
+    }
+  }
+  return node;
+}
+function parseDer(bytes){
+  var nodes=[];
+  var root=parseTLV(bytes,0,0,nodes);
+  if(root.off+root.headerLen+root.len!==bytes.length)throw new Error('trailing bytes after DER structure ('+(bytes.length-(root.off+root.headerLen+root.len))+' extra)');
+  return {root:root,nodes:nodes};
+}
+function nodeBytes(bytes,node){return bytes.slice(node.contentOff,node.contentOff+node.len);}
+function childrenOf(bytes,node,nodes){
+  return nodes.filter(function(n){return n.depth===node.depth+1&&n.off>=node.contentOff&&n.off+n.headerLen+n.len<=node.contentOff+node.len;});
+}
+function decodeOID(b){
+  if(!b.length)return '';
+  var vals=[],first=b[0];
+  vals.push(first<40?0:(first<80?1:2),first<40?first:(first<80?first-40:first-80));
+  var acc=0;
+  for(var i=1;i<b.length;i++){
+    acc=(acc<<7)|(b[i]&0x7f);
+    if(!(b[i]&0x80)){vals.push(acc);acc=0;}
+  }
+  return vals.join('.');
+}
+function oidName(o){return OID_NAMES[o]?OID_NAMES[o]+' ('+o+')':o;}
+function bitLen(b){
+  var i=0;
+  while(i<b.length&&b[i]===0)i++;
+  if(i===b.length)return 0;
+  var bits=(b.length-i-1)*8;
+  var v=b[i];while(v){bits++;v>>=1;}
+  return bits;
+}
+function toIntStr(b){
+  if(b.length>8)return null;
+  var v=0;
+  for(var i=0;i<b.length;i++)v=v*256+b[i];
+  return String(v);
+}
+function decodeTime(str){
+  var m=str.match(/^(\d{2}|\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?Z?$/);
+  if(!m)return null;
+  var y=parseInt(m[1],10);
+  if(m[1].length===2)y+=y<50?2000:1900;
+  return new Date(Date.UTC(y,parseInt(m[2],10)-1,parseInt(m[3],10),parseInt(m[4],10),parseInt(m[5],10),m[6]?parseInt(m[6],10):0));
+}
+function decodeUtf8(b){
+  var s='';
+  for(var i=0;i<b.length;i++){
+    if(b[i]<0x80)s+=String.fromCharCode(b[i]);
+    else{
+      var need=b[i]>=0xf0?4:(b[i]>=0xe0?3:2),cp=b[i]&(need===2?0x1f:(need===3?0x0f:0x07));
+      for(var k=1;k<need&&i+k<b.length;k++)cp=(cp<<6)|(b[i+k]&0x3f);
+      i+=need-1;
+      s+=String.fromCharCode(cp);
+    }
+  }
+  return s;
+}
+function decodeStr(b,type){
+  try{
+    if(type===12||type===18||type===22||type===19)return decodeUtf8(b);
+    if(type===20){var s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return s;}
+    if(type===30){var u='';for(var j=0;j+1<b.length;j+=2)u+=String.fromCharCode((b[j]<<8)|b[j+1]);return u;}
+  }catch(e){}
+  return null;
+}
+function clsName(cls){return ['UNIVERSAL','APPLICATION','CONTEXT','PRIVATE'][cls];}
+var TAGS={1:'BOOLEAN',2:'INTEGER',3:'BIT STRING',4:'OCTET STRING',5:'NULL',6:'OBJECT IDENTIFIER',10:'ENUMERATED',12:'UTF8String',16:'SEQUENCE',17:'SET',19:'PrintableString',20:'T61String',21:'VideotexString',22:'IA5String',23:'UTCTime',24:'GeneralizedTime',28:'CharacterString',30:'BMPString'};
+function tagName(node){
+  if(node.cls===0&&TAGS[node.num])return TAGS[node.num];
+  if(node.cls===2)return '['+node.num+']';
+  if(node.cls===3)return '['+node.num+'] (private)';
+  return 'TAG-0x'+node.num.toString(16);
+}
+function decodeNode(bytes,node){
+  var b=nodeBytes(bytes,node);
+  if(node.cls===0){
+    switch(node.num){
+      case 1:return b.length?String(b[0]!==0):'';
+      case 2:
+        var hx=hex(b).replace(/^0+/,'')||'00';
+        return '0x'+hx+(b.length<=8?' (= '+toIntStr(b)+')':'');
+      case 3:
+        var ub=b.length?b[0]:0;
+        return 'unused bits '+ub+', '+Math.max(0,(b.length-1)*8-ub)+' bits, 0x'+hex(b.slice(1,9))+(b.length>10?'…':'');
+      case 4:return b.length<=16?hex(b):hex(b.slice(0,16))+'… ('+b.length+' bytes)';
+      case 5:return '';
+      case 6:return oidName(decodeOID(b));
+      case 10:return '0x'+hex(b);
+      case 23:case 24:
+        var t='';
+        for(var q=0;q<b.length;q++)t+=String.fromCharCode(b[q]);
+        var d=decodeTime(t);
+        return t+(d?' → '+d.toISOString().replace(/\.\d+Z$/,'Z'):'');
+      case 12:case 18:case 19:case 22:case 20:case 30:
+        var s2=decodeStr(b,node.num);
+        return s2!==null?'"'+s2+'"':hex(b).slice(0,32);
+    }
+  }
+  return b.length&&b.length<=12?hex(b):'';
+}
+// ---- high-level extractors ----
+function readName(bytes,nameNode,nodes){
+  var parts=[];
+  childrenOf(bytes,nameNode,nodes).forEach(function(rdn){
+    var ATV=childrenOf(bytes,rdn,nodes).map(function(tav){
+      var kids=childrenOf(bytes,tav,nodes);
+      if(kids.length>=2){
+        var oid=decodeOID(nodeBytes(bytes,kids[0]));
+        var vn=ATTR_NAMES[oid]||oid;
+        var val=decodeNode(bytes,kids[1]);
+        return vn+'='+(val||'').replace(/^"|"$/g,'');
+      }
+      return '';
+    }).filter(Boolean);
+    if(ATV.length)parts.push(ATV.join('+'));
+  });
+  return parts.join(', ');
+}
+function readAlgId(bytes,algNode,nodes){
+  var kids=childrenOf(bytes,algNode,nodes);
+  if(!kids.length)return null;
+  return decodeOID(nodeBytes(bytes,kids[0]));
+}
+function readSpki(bytes,spkiNode,nodes){
+  var kids=childrenOf(bytes,spkiNode,nodes);
+  if(kids.length<2)return null;
+  var alg=childrenOf(bytes,kids[0],nodes);
+  var algOid=alg.length?decodeOID(nodeBytes(bytes,alg[0])):'';
+  var bitNode=kids[1];
+  var bitBytes=nodeBytes(bytes,bitNode);
+  var keyBytes=bitBytes.slice(1); // strip unused-bits byte
+  if(algOid==='1.2.840.113549.1.1.1'){
+    var inner=parseDer(keyBytes);
+    var comps=childrenOf(keyBytes,inner.root,inner.nodes);
+    if(comps.length>=2){
+      var n=nodeBytes(keyBytes,comps[0]);
+      return {type:'RSA',bits:bitLen(n),exponent:toIntStr(nodeBytes(keyBytes,comps[1]))};
+    }
+  }
+  if(algOid==='1.2.840.10045.2.1'){
+    var curve='';
+    if(alg.length>1)curve=oidName(decodeOID(nodeBytes(bytes,alg[1])));
+    return {type:'ECDSA',bits:curve.indexOf('P-256')>=0?256:(curve.indexOf('P-384')>=0?384:(curve.indexOf('P-521')>=0?521:0)),curve:curve};
+  }
+  if(algOid==='1.3.101.112')return {type:'Ed25519',bits:256};
+  return {type:oidName(algOid),bits:0};
+}
+function readExtensions(bytes,extsNode,nodes){
+  var out=[];
+  childrenOf(bytes,extsNode,nodes).forEach(function(seq){
+    var kids=childrenOf(bytes,seq,nodes);
+    if(!kids.length)return;
+    var oid=decodeOID(nodeBytes(bytes,kids[0]));
+    var critical=kids.length>1&&kids[1].cls===0&&kids[1].num===1&&nodeBytes(bytes,kids[1])[0]!==0;
+    var valIdx=kids.length-1;
+    var raw=kids[valIdx].cls===0&&kids[valIdx].num===4?nodeBytes(bytes,kids[valIdx]):nodeBytes(bytes,kids[valIdx]);
+    var decoded=null;
+    try{
+      if(oid==='2.5.29.17'){ // SAN
+        var p=parseDer(raw);
+        var sans=[];
+        childrenOf(raw,p.root,p.nodes).forEach(function(g){
+          var ctx=g.cls===2?g.num:null;
+          var vb=nodeBytes(raw,g);
+          if(ctx===2)sans.push('DNS:'+decodeUtf8(vb));
+          else if(ctx===1)sans.push('email:'+decodeUtf8(vb));
+          else if(ctx===7)sans.push('IP:'+(vb[0]+'.'+vb[1]+'.'+vb[2]+'.'+vb[3]));
+          else if(ctx===8)sans.push('URI:'+decodeUtf8(vb));
+          else sans.push('['+ctx+']:'+hex(vb).slice(0,24));
+        });
+        decoded=sans.join(', ');
+      }else if(oid==='2.5.29.19'){
+        var p2=parseDer(raw);
+        var ck=childrenOf(raw,p2.root,p2.nodes);
+        var ca=false,pathLen='';
+        ck.forEach(function(c2){if(c2.cls===0&&c2.num===1)ca=nodeBytes(raw,c2)[0]!==0;if(c2.cls===0&&c2.num===2)pathLen=toIntStr(nodeBytes(raw,c2));});
+        decoded='CA:'+String(ca).toUpperCase()+(pathLen?', pathLen '+pathLen:'');
+      }else if(oid==='2.5.29.15'){
+        var bits=nodeBytes(raw,parseDer(raw).root); // root = BIT STRING wrapper? keyUsage ext value = BIT STRING directly
+        var ub=bits.length?bits[0]:0;
+        var names=['digitalSignature','nonRepudiation','keyEncipherment','dataEncipherment','keyAgreement','keyCertSign','cRLSign','encipherOnly','decipherOnly'];
+        var setBits=[];
+        for(var i=0;i<names.length&&i<(bits.length-1)*8-ub;i++){
+          var byteIdx=1+Math.floor(i/8),bit=7-(i%8)-(bits.length-2>0?0:ub%8);
+          if((bits[byteIdx]>>(7-(i%8)))&1)setBits.push(names[i]);
+        }
+        decoded=setBits.join(', ');
+      }else if(oid==='2.5.29.37'){
+        var p3=parseDer(raw);
+        var ekus=[];
+        childrenOf(raw,p3.root,p3.nodes).forEach(function(o){ekus.push(oidName(decodeOID(nodeBytes(raw,o))));});
+        decoded=ekus.join(', ');
+      }else if(oid==='2.5.29.14'){
+        decoded=hex(raw);
+      }
+    }catch(e){}
+    out.push({oid:oid,name:OID_NAMES[oid]||oid,critical:critical,decoded:decoded,rawLen:raw.length});
+  });
+  return out;
+}
+function summarizeCertificate(bytes,root,nodes){
+  var top=childrenOf(bytes,root,nodes);
+  if(!top.length)return null;
+  var tbs=top[0];
+  var kids=childrenOf(bytes,tbs,nodes);
+  var i=0,version=1;
+  if(kids.length&&kids[0].cls===2&&kids[0].num===0){
+    var vk=childrenOf(bytes,kids[0],nodes);
+    if(vk.length)version=toIntStr(nodeBytes(bytes,vk[0]))*1+1;
+    i=1;
+  }
+  var serialNode=kids[i],sigNode=kids[i+1],issuerNode=kids[i+2],validityNode=kids[i+3],subjectNode=kids[i+4],spkiNode=kids[i+5],extsNode=null;
+  kids.forEach(function(k){if(k.cls===2&&k.num===3)extsNode=k;});
+  var sb=nodeBytes(bytes,serialNode);
+  var v=childrenOf(bytes,validityNode,nodes);
+  var nb=decodeTime(decodeNode(bytes,v[0]).split(' →')[0]),na=decodeTime(decodeNode(bytes,v[1]).split(' →')[0]);
+  var spki=readSpki(bytes,spkiNode,nodes);
+  var exts=extsNode?readExtensions(bytes,childrenOf(bytes,extsNode,nodes)[0],nodes):[];
+  return {
+    type:'Certificate',version:version,
+    serial:'0x'+hex(sb).replace(/^0+/,''),
+    serialBytes:sb.length,
+    sigAlg:oidName(readAlgId(bytes,sigNode,nodes)||''),
+    issuer:readName(bytes,issuerNode,nodes),
+    subject:readName(bytes,subjectNode,nodes),
+    notBefore:nb,notAfter:na,
+    spki:spki,extensions:exts,
+    outerSigAlg:oidName(readAlgId(bytes,top[1],nodes)||'')
+  };
+}
+function summarizeCsr(bytes,root,nodes){
+  var top=childrenOf(bytes,root,nodes);
+  if(!top.length)return null;
+  var info=top[0];
+  var kids=childrenOf(bytes,info,nodes);
+  var subject=kids[1],spki=kids[2];
+  var res={type:'Certificate Request',subject:readName(bytes,subject,nodes),spki:readSpki(bytes,spki,nodes),sigAlg:oidName(readAlgId(bytes,top[1],nodes)||''),challenge:''};
+  kids.forEach(function(k){
+    if(k.cls===2&&k.num===0){
+      var attrs=childrenOf(bytes,k,nodes);
+      attrs.forEach(function(a){
+        var ak=childrenOf(bytes,a,nodes);
+        if(ak.length===2){
+          var oid=decodeOID(nodeBytes(bytes,ak[0]));
+          if(oid==='1.2.840.113549.1.9.7')res.challenge=decodeUtf8(nodeBytes(bytes,ak[1]));
+          if(oid==='1.2.840.113549.1.9.14'){
+            // extensionRequest: SET { SEQUENCE of Extension } — nodeBytes strips the SET, parseDer reads the inner SEQ
+            var extSeq=nodeBytes(bytes,ak[1]);
+            var px=parseDer(extSeq);
+            res.requestedSans=readExtensions(extSeq,px.root,px.nodes);
+          }
+        }
+      });
+    }
+  });
+  return res;
+}
+function summarizeKey(bytes,root,nodes,label){
+  var kids=childrenOf(bytes,root,nodes);
+  if(label==='RSA PRIVATE KEY'){
+    var n=nodeBytes(bytes,kids[1]);
+    return {type:'RSA Private Key (PKCS#1)',bits:bitLen(n),exponent:toIntStr(nodeBytes(bytes,kids[2]))};
+  }
+  if(label==='EC PRIVATE KEY'){
+    var curve='';
+    kids.forEach(function(k){if(k.cls===2&&k.num===0){var ck=childrenOf(bytes,k,nodes);if(ck.length)curve=oidName(decodeOID(nodeBytes(bytes,ck[0])));}});
+    return {type:'EC Private Key (SEC 1)',curve:curve,bits:curve.indexOf('P-256')>=0?256:(curve.indexOf('P-384')>=0?384:(curve.indexOf('P-521')>=0?521:256))};
+  }
+  if(label==='ENCRYPTED PRIVATE KEY'){
+    // EncryptedPrivateKeyInfo ::= SEQUENCE { encryptionAlgorithm AlgID, encryptedData OCTET }
+    var alg=childrenOf(bytes,kids[0],nodes);
+    var cipher=alg.length?oidName(decodeOID(nodeBytes(bytes,alg[0]))):'';
+    if(alg.length>1&&decodeOID(nodeBytes(bytes,alg[0]))==='1.2.840.113549.1.5.13'){
+      // PBES2: params = SEQ{ kdf SEQ, cipher SEQ } — show the real encryption scheme
+      var pnodes=childrenOf(bytes,alg[1],nodes);
+      if(pnodes.length>=2){
+        var cs=childrenOf(bytes,pnodes[1],nodes);
+        if(cs.length)cipher='PBES2 → '+oidName(decodeOID(nodeBytes(bytes,cs[0])));
+      }
+    }
+    return {type:'Encrypted Private Key (PKCS#8)',encrypted:true,cipher:cipher};
+  }
+  if(label==='PRIVATE KEY'){
+    var alg2=childrenOf(bytes,kids[1],nodes);
+    var algOid2=alg2.length?decodeOID(nodeBytes(bytes,alg2[0])):'';
+    var inner=nodeBytes(bytes,kids[2]);
+    var px=parseDer(inner);
+    if(algOid2==='1.2.840.113549.1.1.1'){
+      var comps=childrenOf(inner,px.root,px.nodes);
+      return {type:'RSA Private Key (PKCS#8)',bits:bitLen(nodeBytes(inner,comps[1])),exponent:toIntStr(nodeBytes(inner,comps[2]))};
+    }
+    if(algOid2==='1.2.840.10045.2.1'){
+      var curve2='';
+      if(alg2.length>1)curve2=oidName(decodeOID(nodeBytes(bytes,alg2[1])));
+      return {type:'EC Private Key (PKCS#8)',curve:curve2,bits:256};
+    }
+    return {type:'Private Key (PKCS#8)',alg:oidName(algOid2)};
+  }
+  if(label==='PUBLIC KEY')return {type:'Public Key (SPKI)',spki:readSpki(bytes,root,nodes)};
+  return {type:label};
+}
+function findBlocks(text){
+  var re=/-----BEGIN ([A-Z0-9 ]+)-----([\s\S]*?)-----END \1-----/g,blocks=[],m;
+  while((m=re.exec(text))!==null)blocks.push({label:m[1],b64:m[2]});
+  return blocks;
+}
+function decodeAll(text){
+  var blocks=findBlocks(text);
+  var results=[];
+  blocks.forEach(function(b){
+    var bytes=b64decode(b.b64);
+    if(!bytes.length)throw new Error('empty base64 payload in '+b.label+' block');
+    var parsed=parseDer(bytes);
+    var sum=null;
+    try{
+      if(/CERTIFICATE$/.test(b.label)&&b.label!=='CERTIFICATE REQUEST')sum=summarizeCertificate(bytes,parsed.root,parsed.nodes);
+      else if(b.label==='CERTIFICATE REQUEST')sum=summarizeCsr(bytes,parsed.root,parsed.nodes);
+      else sum=summarizeKey(bytes,parsed.root,parsed.nodes,b.label);
+    }catch(e){sum={type:b.label,partial:true,err:String(e&&e.message||e)};}
+    results.push({label:b.label,bytes:bytes,parsed:parsed,summary:sum});
+  });
+  return results;
+}
+function fmtDate(d){return d?d.toISOString().replace(/\.\d+Z$/,' UTC'):'—';}
+function daysBetween(a,b){return Math.round((b-a)/86400000);}
+function renderSummary(sum,now){
+  var kv=[];
+  if(!sum)return kv;
+  if(sum.type==='Certificate'){
+    kv.push(['Type','X.509 Certificate (v'+sum.version+')']);
+    kv.push(['Subject',sum.subject]);
+    kv.push(['Issuer',sum.issuer]);
+    kv.push(['Serial',sum.serial+' ('+sum.serialBytes+' bytes)']);
+    kv.push(['Signature Algorithm',sum.sigAlg+(sum.outerSigAlg&&sum.outerSigAlg!==sum.sigAlg?' / outer '+sum.outerSigAlg:'')]);
+    kv.push(['Valid From',fmtDate(sum.notBefore)]);
+    var days=daysBetween(sum.notBefore,sum.notAfter);
+    var left=sum.notAfter?daysBetween(now,sum.notAfter):0;
+    kv.push(['Valid Until',fmtDate(sum.notAfter)+' — '+days+'-day lifetime']);
+    kv.push(['Days Remaining',left>0?left+' days':(left===0?'expires today':'EXPIRED '+(-left)+' days ago'),left>30?'ok':(left>0?'warn':'bad')]);
+    if(sum.spki)kv.push(['Public Key',sum.spki.type+(sum.spki.bits?' '+sum.spki.bits+'-bit':'')+(sum.spki.exponent?', exponent '+sum.spki.exponent:'')+(sum.spki.curve?', '+sum.spki.curve:'')]);
+    sum.extensions.forEach(function(e){
+      kv.push(['Extension: '+e.name+(e.critical?' (critical)':''),e.decoded||e.rawLen+' bytes']);
+    });
+  }else if(sum.type==='Certificate Request'){
+    kv.push(['Type','PKCS#10 Certificate Request']);
+    kv.push(['Subject',sum.subject]);
+    if(sum.spki)kv.push(['Public Key',sum.spki.type+(sum.spki.bits?' '+sum.spki.bits+'-bit':'')+(sum.spki.curve?', '+sum.spki.curve:'')]);
+    kv.push(['Signature Algorithm',sum.sigAlg]);
+    if(sum.challenge)kv.push(['Challenge Password',sum.challenge]);
+    if(sum.requestedSans)sum.requestedSans.forEach(function(e){kv.push(['Requested: '+e.name,e.decoded||e.rawLen+' bytes']);});
+  }else{
+    kv.push(['Type',sum.type]);
+    if(sum.encrypted){kv.push(['Encrypted','Yes — structure shown, no decryption attempted','warn']);if(sum.cipher)kv.push(['Cipher',sum.cipher]);}
+    if(sum.bits)kv.push(['Key Size',sum.bits+' bits']);
+    if(sum.exponent)kv.push(['Exponent',sum.exponent]);
+    if(sum.curve)kv.push(['Curve',sum.curve]);
+    if(sum.spki)kv.push(['Public Key',sum.spki.type+(sum.spki.bits?' '+sum.spki.bits+'-bit':'')+(sum.spki.curve?', '+sum.spki.curve:'')]);
+  }
+  return kv;
+}
+function renderTreeText(bytes,nodes){
+  var lines=[];
+  nodes.forEach(function(node){
+    var indent='';
+    for(var i=0;i<node.depth;i++)indent+='  ';
+    var off=('      '+node.off).slice(-6);
+    var hdr=hex(bytes.slice(node.off,node.contentOff));
+    var val=decodeNode(bytes,node);
+    var cons=node.constructed?'cons':'';
+    lines.push(off+'  '+indent+hdr+' '+tagName(node)+' l='+node.len+(node.constructed?' ['+cons+']':'')+(val?'  '+val:''));
+  });
+  return lines.join('\n');
+}
+// ---CD-ENGINE-END---
+// ---- browser wiring ----
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function render(){
+  var out=document.getElementById('output');
+  var text=document.getElementById('pemInput').value;
+  out.innerHTML='';
+  if(!text.trim())return;
+  var results;
+  try{results=decodeAll(text);}
+  catch(e){
+    out.innerHTML='<div class="errbox">Could not decode: '+esc(String(e&&e.message||e))+'</div>';
+    return;
+  }
+  if(!results.length){
+    out.innerHTML='<div class="errbox">No PEM blocks found. Paste text containing -----BEGIN CERTIFICATE----- (or REQUEST / PRIVATE KEY / PUBLIC KEY).</div>';
+    return;
+  }
+  var now=new Date();
+  results.forEach(function(r){
+    var sc=document.createElement('div');sc.className='summary-card';
+    var h='<h3>'+esc(r.label)+' — '+esc((r.summary&&r.summary.type)||'')+'</h3>';
+    if(r.summary&&r.summary.partial)h+='<div class="kv"><div class="k v bad" style="grid-column:1/-1">Structure parsed, but field extraction stopped: '+esc(r.summary.err)+'</div></div>';
+    h+='<div class="kv">';
+    renderSummary(r.summary,now).forEach(function(pair){
+      h+='<div class="k">'+esc(pair[0])+'</div><div class="v'+(pair[2]?' '+pair[2]:'')+'">'+esc(pair[1])+'</div>';
+    });
+    h+='</div>';
+    sc.innerHTML=h;
+    out.appendChild(sc);
+    var tc=document.createElement('div');tc.className='tree-card';
+    tc.innerHTML='<h3>ASN.1 Tree — '+esc(r.label)+' ('+r.bytes.length+' DER bytes)</h3><pre class="asn1">'+esc(renderTreeText(r.bytes,r.parsed.nodes))+'</pre>';
+    out.appendChild(tc);
+  });
+}
+document.getElementById('btnDecode').addEventListener('click',render);
+document.getElementById('btnClear').addEventListener('click',function(){document.getElementById('pemInput').value='';render();});
+document.getElementById('pemInput').addEventListener('input',render);
+document.getElementById('fileInput').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(){document.getElementById('pemInput').value=fr.result;render();};
+  fr.readAsText(f);
+});
+render();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

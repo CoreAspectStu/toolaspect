@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge PDF Files — Combine PDFs Offline | ToolAspect</title>
+<meta name="description" content="Combine PDF files free in your browser: drag to reorder, no upload, no watermark, no sign-up. Your files never leave your device. Instant download.">
+<link rel="canonical" href="https://toolaspect.com/pdf-merge/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Merge PDF Files — Combine PDFs Offline">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Merge PDFs entirely in your browser. Drag to reorder files, click merge, download the combined PDF. No uploads, no watermarks, no limits.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-merge/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Merge PDF Files Free | ToolAspect">
+<meta name="twitter:description" content="Combine PDFs in your browser — no upload, no watermark, drag to reorder.">
+<meta name="keywords" content="merge pdf, combine pdf, pdf merger, merge pdf offline, merge pdf without uploading, combine pdf files free, pdf joiner">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Merge","description":"Free PDF merger that runs entirely in your browser. Add any number of PDFs, drag them into the order you want, and download one combined file. Nothing is uploaded — the merge happens locally, with no watermarks, page limits, or sign-up.","url":"https://toolaspect.com/pdf-merge/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is merging PDFs here private?","acceptedAnswer":{"@type":"Answer","text":"Yes. The merge runs 100% in your browser using a local copy of the open-source pdf-lib engine. Your files are read from disk into memory, combined, and handed back as a download — they are never uploaded to any server, so there is nothing to leak, store, or expire. You can even disconnect from the internet after the page loads and it still works."}},
+{"@type":"Question","name":"How do I control the order of pages in the merged PDF?","acceptedAnswer":{"@type":"Answer","text":"Each file appears as a row in the list; drag rows to reorder them (or use the up/down buttons on touch screens). The merged PDF contains all pages of the first file, then all pages of the second, and so on. If you need pages 1-3 of one file only, split or extract first, then merge the pieces."}},
+{"@type":"Question","name":"Does merging compress or reduce the quality of my PDFs?","acceptedAnswer":{"@type":"Answer","text":"No. Pages are copied byte-for-byte into the new document — text stays selectable vector text, images keep their original resolution, and fonts are embedded as they were. The output size is roughly the sum of the inputs; small differences come from the new cross-reference tables and shared objects being deduplicated, not from recompression."}},
+{"@type":"Question","name":"Can I merge password-protected or encrypted PDFs?","acceptedAnswer":{"@type":"Answer","text":"Not while they are encrypted. An owner-password-protected file must be decrypted first — open it in a viewer that has the password and re-save or print-to-PDF an unlocked copy, then merge that. The tool reports any file it cannot read instead of silently skipping it."}},
+{"@type":"Question","name":"Are digital signatures preserved when merging?","acceptedAnswer":{"@type":"Answer","text":"No. A digital signature covers the exact bytes of the signed document, so any merge — by any tool, including Acrobat — breaks the signature's integrity over the combined file. Signed pages still display their visual signature panels, but the cryptographic verification no longer passes. Get signatures after merging, not before."}},
+{"@type":"Question","name":"Is there a file size or page limit?","acceptedAnswer":{"@type":"Answer","text":"No artificial limit. Because the merge happens in your browser's memory, the practical ceiling is your device's RAM — a typical laptop handles hundreds of megabytes comfortably. Upload-based services impose free-tier caps of roughly 25-100 MB per file; local merging has no such tier because there is no upload at all."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Merge PDF","item":"https://toolaspect.com/pdf-merge/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.file-list{margin-top:1rem}
+.file-row{display:flex;align-items:center;gap:.6rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .8rem;margin-top:.5rem;cursor:grab}
+.file-row.dragging{opacity:.5}
+.file-row .num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted);font-size:.8rem;min-width:1.4rem}
+.file-row .name{flex:1;font-size:.85rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-row .meta{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.file-row .meta .ok{color:var(--success)}
+.file-row .meta .bad{color:var(--danger)}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);width:26px;height:26px;cursor:pointer;font-size:.75rem;line-height:1}
+.icon-btn:hover{border-color:var(--primary);color:var(--text)}
+.out-name{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.88rem;padding:.55rem .8rem;width:220px;font-family:inherit}
+.result-box{background:var(--bg);border:1px solid var(--success);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.notebox{background:var(--surface);border:1px solid var(--warn);border-radius:var(--radius);color:var(--warn);padding:.8rem 1.25rem;margin-top:1rem;font-size:.85rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📎 Merge PDF Files</h1>
+<p>Combine any number of PDFs into one, in order, entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To merge PDF files without uploading them anywhere: drop the files into the box below, drag the rows into the order you want (first file's pages come first), and hit Merge. The combined PDF downloads instantly — for example, three documents of 12, 8, and 5 pages become one 25-page PDF with the page order 1–12, 13–20, 21–25. Merging concatenates pages byte-for-byte: no recompression, no quality loss, no watermark. The whole operation runs on your machine with the open-source pdf-lib engine, so sensitive contracts, medical records, or financial statements never touch a server.</div>
+
+<div class="section-card">
+<h2>Combine PDFs</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">📄</div>
+<p>Click or drag PDF files here (multiple at once)</p>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" multiple style="display:none">
+</div>
+<div class="file-list" id="fileList"></div>
+<div class="btn-row">
+<input class="out-name" id="outName" value="merged.pdf" aria-label="Output file name">
+<button class="btn" id="btnMerge">Merge PDFs</button>
+<button class="btn ghost" id="btnClear">Clear all</button>
+</div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-split/">Split a PDF</a></li><li style="margin:4px 0"><a href="/pdf-to-qr-code/">PDF to QR Code</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-merge-pdfs/">Read the how-to-merge guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Ways to Merge PDFs — What Actually Fits Your Situation</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Method</th><th>Files Leave Your Device?</th><th>Cost</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td><strong>This tool</strong> (in-browser)</td><td>No</td><td>Free</td><td>Quick merges of any size; confidential documents</td></tr>
+<tr><td>Adobe Acrobat (desktop)</td><td>No</td><td>Paid subscription</td><td>Frequent professional use, bookmarks, portfolios</td></tr>
+<tr><td>macOS Preview</td><td>No</td><td>Free (built-in)</td><td>Mac users — drag thumbnails in the sidebar</td></tr>
+<tr><td>qpdf (command line)</td><td>No</td><td>Free, open source</td><td>Scripted/repeated merges: <code>qpdf --empty --pages a.pdf b.pdf -- out.pdf</code></td></tr>
+<tr><td>pdftk (command line)</td><td>No</td><td>Free</td><td>Linux/Windows scripting: <code>pdftk a.pdf b.pdf cat output out.pdf</code></td></tr>
+<tr><td>Online upload sites</td><td><strong>Yes</strong> — files go to their servers</td><td>Freemium</td><td>Only when nothing local is available; check their retention policy</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Windows has no built-in PDF merger (Print to PDF can't combine), which is why the upload sites dominate the search results. A browser tool gives you the same one-click convenience with the privacy of a desktop app.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Merging Works</h2>
+<p>A PDF file is a container of page objects, fonts, and images referenced through a cross-reference table. Merging builds a fresh document and copies each input's page tree into it, in order. Because pages are copied rather than re-rendered, nothing is recompressed: text stays selectable, vector graphics stay vector, embedded fonts stay embedded, and a scanned page remains the same scan. The output file is roughly the sum of the input sizes — not exactly, because the new document writes its own cross-reference structures and can deduplicate objects the inputs shared.</p>
+<h3>A worked example</h3>
+<p>Merging three files — a 12-page scanned contract (4.2 MB), an 8-page report (1.1 MB), and a 5-page appendix (300 KB) — produces one 25-page PDF: contract pages 1–12, report pages 13–20, appendix pages 21–25. Reordering the list before merging changes that page map: putting the report first gives 1–8, contract 9–20, appendix 21–25. Total output lands around 5.6 MB, slightly under the 5.6 MB sum of inputs once the new file's tables and any duplicate font objects are accounted for. The equivalent shell command is <code>qpdf --empty --pages contract.pdf report.pdf appendix.pdf -- merged.pdf</code>.</p>
+<h3>What merging will and won't do</h3>
+<ul>
+<li><strong>Keeps:</strong> page content, page sizes (mixed sizes are fine — each page keeps its own dimensions), orientation, embedded fonts</li>
+<li><strong>Won't create:</strong> a clickable table of contents, bookmarks from the source files, or continuous page renumbering — page footers are baked-in content and don't renumber</li>
+<li><strong>Breaks:</strong> digital signatures (they cover the original bytes), fillable form fields copied across documents, and some intra-document links</li>
+<li><strong>Requires decrypted files:</strong> password-protected PDFs must be unlocked first</li>
+</ul>
+<h3>Privacy, concretely</h3>
+<p>This page loads the pdf-lib engine (MIT-licensed, maintained as @cantoo/pdf-lib) from a CDN and then does all work locally through the browser's FileReader and Blob APIs. Open your browser's network tab while merging: you'll see the page assets load once, then zero requests as you merge. That's the difference between this and an upload-based service, where your M&amp;A deck or medical record sits on someone else's disk for some retention period.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is merging PDFs here private?</h3><p>Yes. The merge runs 100% in your browser using a local copy of the open-source pdf-lib engine. Your files are read from disk into memory, combined, and handed back as a download — they are never uploaded to any server, so there is nothing to leak, store, or expire. You can even disconnect from the internet after the page loads and it still works.</p></div>
+<div class="faq-item"><h3>How do I control the order of pages in the merged PDF?</h3><p>Each file appears as a row in the list; drag rows to reorder them (or use the up/down buttons on touch screens). The merged PDF contains all pages of the first file, then all pages of the second, and so on. If you need pages 1-3 of one file only, split or extract first, then merge the pieces.</p></div>
+<div class="faq-item"><h3>Does merging compress or reduce the quality of my PDFs?</h3><p>No. Pages are copied byte-for-byte into the new document — text stays selectable vector text, images keep their original resolution, and fonts are embedded as they were. The output size is roughly the sum of the inputs; small differences come from the new cross-reference tables and shared objects being deduplicated, not from recompression.</p></div>
+<div class="faq-item"><h3>Can I merge password-protected or encrypted PDFs?</h3><p>Not while they are encrypted. An owner-password-protected file must be decrypted first — open it in a viewer that has the password and re-save or print-to-PDF an unlocked copy, then merge that. The tool reports any file it cannot read instead of silently skipping it.</p></div>
+<div class="faq-item"><h3>Are digital signatures preserved when merging?</h3><p>No. A digital signature covers the exact bytes of the signed document, so any merge — by any tool, including Acrobat — breaks the signature's integrity over the combined file. Signed pages still display their visual signature panels, but the cryptographic verification no longer passes. Get signatures after merging, not before.</p></div>
+<div class="faq-item"><h3>Is there a file size or page limit?</h3><p>No artificial limit. Because the merge happens in your browser's memory, the practical ceiling is your device's RAM — a typical laptop handles hundreds of megabytes comfortably. Upload-based services impose free-tier caps of roughly 25-100 MB per file; local merging has no such tier because there is no upload at all.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-split/">✂️ PDF Split</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PM-ENGINE-START---
+// Merge engine: @cantoo/pdf-lib (MIT, active fork of pdf-lib), pinned v2.9.1 via jsdelivr.
+var PM={files:[],dragRow:null};
+function pmEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function pmFmtSize(b){if(b>=1048576)return (b/1048576).toFixed(1)+' MB';if(b>=1024)return (b/1024).toFixed(0)+' KB';return b+' B';}
+function pmReadFile(f){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){res(new Uint8Array(fr.result));};
+    fr.onerror=function(){rej(new Error('could not read '+f.name));};
+    fr.readAsArrayBuffer(f);
+  });
+}
+async function pmAddFiles(fileList){
+  var arr=Array.prototype.slice.call(fileList).filter(function(f){return /pdf$/i.test(f.name)||f.type==='application/pdf';});
+  for(var i=0;i<arr.length;i++){
+    var entry={file:arr[i],name:arr[i].name,bytes:null,pages:null,err:null,doc:null};
+    PM.files.push(entry);
+    pmRenderList();
+    try{
+      if(typeof PDFLib==='undefined')throw new Error('engine failed to load (offline?)');
+      entry.bytes=await pmReadFile(arr[i]);
+      entry.doc=await PDFLib.PDFDocument.load(entry.bytes);
+      entry.pages=entry.doc.getPageCount();
+    }catch(e){
+      var msg=String(e&&e.message||e);
+      entry.err=/encrypt/i.test(msg)?'encrypted — unlock it first':(msg||'unreadable');
+    }
+    pmRenderList();
+  }
+}
+function pmMove(idx,dir){
+  var j=idx+dir;
+  if(j<0||j>=PM.files.length)return;
+  var t=PM.files[idx];PM.files[idx]=PM.files[j];PM.files[j]=t;
+  pmRenderList();
+}
+function pmRemove(idx){PM.files.splice(idx,1);pmRenderList();}
+function pmRenderList(){
+  var el=document.getElementById('fileList');
+  el.innerHTML='';
+  PM.files.forEach(function(f,i){
+    var row=document.createElement('div');
+    row.className='file-row';
+    row.draggable=true;
+    var status=f.err?'<span class="bad">'+pmEsc(f.err)+'</span>':(f.pages!==null?'<span class="ok">'+f.pages+' pages</span>':'reading…');
+    row.innerHTML='<span class="num">'+(i+1)+'.</span><span class="name">'+pmEsc(f.name)+'</span><span class="meta">'+pmFmtSize(f.file.size)+' · '+status+'</span>'
+      +'<button class="icon-btn" data-act="up" title="Move up">↑</button>'
+      +'<button class="icon-btn" data-act="down" title="Move down">↓</button>'
+      +'<button class="icon-btn" data-act="rm" title="Remove">✕</button>';
+    row.addEventListener('dragstart',function(){PM.dragRow=i;row.classList.add('dragging');});
+    row.addEventListener('dragend',function(){row.classList.remove('dragging');});
+    row.addEventListener('dragover',function(e){e.preventDefault();});
+    row.addEventListener('drop',function(e){
+      e.preventDefault();
+      var from=PM.dragRow;if(from===null||from===i)return;
+      var mv=PM.files.splice(from,1)[0];
+      PM.files.splice(i,0,mv);
+      PM.dragRow=null;pmRenderList();
+    });
+    row.addEventListener('click',function(e){
+      var act=e.target.getAttribute&&e.target.getAttribute('data-act');
+      if(act==='up')pmMove(i,-1);
+      else if(act==='down')pmMove(i,1);
+      else if(act==='rm')pmRemove(i);
+    });
+    el.appendChild(row);
+  });
+  var total=PM.files.reduce(function(a,f){return a+(f.pages||0);},0);
+  var btn=document.getElementById('btnMerge');
+  var ok=PM.files.length>1&&PM.files.every(function(f){return !f.err&&f.doc;});
+  btn.disabled=!ok;
+  btn.textContent=ok?'Merge PDFs ('+PM.files.length+' files · '+total+' pages)':'Merge PDFs';
+}
+async function pmMerge(){
+  var status=document.getElementById('status');
+  status.innerHTML='';
+  if(typeof PDFLib==='undefined'){status.innerHTML='<div class="errbox">The pdf-lib engine did not load (check your connection or content blocker) and merging is unavailable.</div>';return;}
+  var bad=PM.files.filter(function(f){return f.err;});
+  if(bad.length){status.innerHTML='<div class="errbox">Fix or remove the flagged files first: '+pmEsc(bad.map(function(b){return b.name;}).join(', '))+'</div>';return;}
+  if(PM.files.length<2){status.innerHTML='<div class="errbox">Add at least two PDFs to merge.</div>';return;}
+  try{
+    var out=await PDFLib.PDFDocument.create();
+    for(var i=0;i<PM.files.length;i++){
+      var src=PM.files[i].doc;
+      var idxs=src.getPageIndices();
+      var copied=await out.copyPages(src,idxs);
+      copied.forEach(function(p){out.addPage(p);});
+    }
+    var bytes=await out.save();
+    var name=document.getElementById('outName').value.trim()||'merged.pdf';
+    if(!/\.pdf$/i.test(name))name+='.pdf';
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var url=URL.createObjectURL(blob);
+    status.innerHTML='<div class="result-box">✅ Merged <strong>'+PM.files.length+' files</strong> into <strong>'+out.getPageCount()+' pages</strong> ('+pmFmtSize(blob.size)+') — <a href="'+url+'" download="'+pmEsc(name)+'" style="color:var(--success);font-weight:600">Download '+pmEsc(name)+'</a></div>';
+  }catch(e){
+    status.innerHTML='<div class="errbox">Merge failed: '+pmEsc(String(e&&e.message||e))+'</div>';
+  }
+}
+// ---- browser wiring ----
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)pmAddFiles(e.dataTransfer.files);});
+fi.addEventListener('change',function(e){pmAddFiles(e.target.files);fi.value='';});
+document.getElementById('btnMerge').addEventListener('click',pmMerge);
+document.getElementById('btnClear').addEventListener('click',function(){PM.files=[];document.getElementById('status').innerHTML='';pmRenderList();});
+pmRenderList();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

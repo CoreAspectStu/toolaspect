@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split PDF — Extract Page Ranges Free | ToolAspect</title>
+<meta name="description" content="Split a PDF in your browser: custom ranges (1-3, 5, 8-10), fixed chunks of N pages, or burst to one file per page. No upload, no watermark, free.">
+<link rel="canonical" href="https://toolaspect.com/pdf-split/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Split PDF — Extract Page Ranges Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Split any PDF into ranges, fixed-size chunks, or single pages — entirely in your browser. No uploads, no watermarks, instant download.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-split/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Split PDF Free | ToolAspect">
+<meta name="twitter:description" content="Split PDFs by page ranges, chunks, or burst — in-browser, private, free.">
+<meta name="keywords" content="split pdf, pdf splitter, extract pdf pages, pdf page ranges, burst pdf, separate pdf pages, split pdf offline">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF Split","description":"Free PDF splitter that runs entirely in your browser. Split by custom page ranges (1-3, 5, 8-10), fixed chunks of N pages, or burst mode with one file per page. Nothing is uploaded — the split happens locally with no watermarks or sign-up.","url":"https://toolaspect.com/pdf-split/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I split a PDF into separate files by page ranges?","acceptedAnswer":{"@type":"Answer","text":"Load the PDF, choose Ranges mode, and type comma-separated ranges like 1-3, 5, 8-10. Each range becomes its own PDF, so a 10-page document with 1-3, 5, 8-10 produces three files with 3, 1, and 3 pages. Open-ended ranges work too: 9- means page 9 to the end."}},
+{"@type":"Question","name":"How do I split a PDF every N pages?","acceptedAnswer":{"@type":"Answer","text":"Choose 'Every N pages' and set the chunk size. The tool cuts at fixed boundaries: a 12-page PDF split every 5 pages yields files containing pages 1-5, 6-10, and 11-12 — three files of 5, 5, and 2 pages. The last file holds whatever remains. This is the mode for print batches, chapter-sized chunks, and upload limits."}},
+{"@type":"Question","name":"How do I get each page as its own PDF?","acceptedAnswer":{"@type":"Answer","text":"Burst mode. One page in, one file out: a 6-page document becomes 6 single-page PDFs, named page-1.pdf through page-6.pdf by default. The command-line equivalent is pdftk in.pdf burst or qpdf --split-pages in.pdf."}},
+{"@type":"Question","name":"Does splitting a PDF reduce quality?","acceptedAnswer":{"@type":"Answer","text":"No. Pages are copied into new documents byte-for-byte, so text, images, fonts, and page dimensions are untouched. Each output file carries its own copy of the shared resources (fonts, images) that its pages use, so splitting one large file into many small ones can use slightly more total disk space than the original — but nothing is recompressed or degraded."}},
+{"@type":"Question","name":"Can I split an encrypted or password-protected PDF?","acceptedAnswer":{"@type":"Answer","text":"Not while it is encrypted. Open the file with its password in a viewer and re-save an unlocked copy (print-to-PDF also works), then split that. The tool tells you when a file cannot be read rather than failing silently."}},
+{"@type":"Question","name":"What's the difference between splitting and extracting pages?","acceptedAnswer":{"@type":"Answer","text":"Splitting turns ranges into multiple output files; extracting pulls selected pages into a single new document. This tool does the first. For the second, split off the pages you want, then combine them — the PDF Merge tool on this site reassembles pieces in any order. The CLI equivalent is qpdf in.pdf --pages . 2,5-7 -- extracted.pdf."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF Split","item":"https://toolaspect.com/pdf-split/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.mode-toggle{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.mode-btn{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1rem;font-size:.85rem;cursor:pointer;font-family:inherit}
+.mode-btn.active{border-color:var(--primary);color:var(--text);font-weight:600;background:rgba(99,102,241,.12)}
+.txt-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:.7rem .9rem;box-sizing:border-box}
+.txt-input:focus{outline:none;border-color:var(--primary)}
+.num-input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;padding:.55rem .8rem;width:90px;font-family:inherit}
+.hint{color:var(--muted);font-size:.8rem;margin-top:.4rem}
+.file-head{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;background:var(--bg);border:1px solid var(--success);border-radius:var(--radius);padding:.8rem 1rem;margin-top:1rem;font-size:.88rem}
+.plan-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.75rem}
+.plan-table th,.plan-table td{border:1px solid var(--border);padding:.45rem .7rem;text-align:left}
+.plan-table th{background:var(--bg);color:var(--muted);font-size:.72rem;text-transform:uppercase}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.result-box{background:var(--bg);border:1px solid var(--success);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.result-box a{color:var(--success);font-weight:600;margin-right:.75rem;display:inline-block;margin-top:.4rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✂️ Split PDF</h1>
+<p>Page ranges, fixed chunks, or one file per page — entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To split a PDF, load it below and pick a mode: <strong>Ranges</strong> (type <code>1-3, 5, 8-10</code> — each range becomes its own PDF), <strong>Every N pages</strong> (fixed chunks: a 12-page file every 5 pages gives 3 files of pages 1–5, 6–10, 11–12), or <strong>Burst</strong> (one PDF per page). Pages are copied byte-for-byte, so nothing is recompressed or watermarked, and the file never leaves your device — the split runs locally with the same pdf-lib engine as our merger. Range rules: comma-separated, <code>N-M</code> inclusive, a bare number is a single page, and <code>9-</code> means page 9 through the end.</div>
+
+<div class="section-card">
+<h2>Split a PDF</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">📄</div>
+<p>Click or drag a PDF here</p>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" style="display:none">
+</div>
+<div id="fileHead"></div>
+<div id="controls" style="display:none">
+<div class="mode-toggle">
+<button class="mode-btn active" data-mode="ranges">Ranges</button>
+<button class="mode-btn" data-mode="chunk">Every N pages</button>
+<button class="mode-btn" data-mode="burst">Burst (1 file/page)</button>
+</div>
+<div id="rangeBox">
+<input class="txt-input" id="rangeInput" value="1-3, 5, 8-10" spellcheck="false" aria-label="Page ranges">
+<p class="hint">Example: <code>1-3, 5, 8-10</code> · open-ended <code>9-</code> · single pages <code>4</code></p>
+</div>
+<div id="chunkBox" style="display:none">
+<label class="hint" for="chunkSize">Pages per file:</label>
+<input class="num-input" type="number" id="chunkSize" value="5" min="1" step="1">
+</div>
+<div id="plan"></div>
+<div class="btn-row">
+<input class="txt-input" id="namePrefix" style="width:220px" value="part" aria-label="Output file name prefix">
+<button class="btn" id="btnSplit">Split PDF</button>
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+</div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-merge/">Merge PDFs</a></li><li style="margin:4px 0"><a href="/pdf-to-qr-code/">PDF to QR Code</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-split-a-pdf/">Read the how-to-split guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Page Range Syntax — What You Type vs. What You Get</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>You type</th><th>On a 12-page PDF</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td><code>1-3</code></td><td>Pages 1, 2, 3</td><td>1 file, 3 pages</td></tr>
+<tr><td><code>1-3, 5</code></td><td>Pages 1–3, then page 5</td><td>2 files (3 + 1 pages)</td></tr>
+<tr><td><code>1-3, 5, 8-10</code></td><td>Three selections</td><td>3 files (3 + 1 + 3 pages)</td></tr>
+<tr><td><code>9-</code></td><td>Page 9 through the end</td><td>1 file, 4 pages (9–12)</td></tr>
+<tr><td><code>-4</code> (start at 1)</td><td>Pages 1 through 4</td><td>1 file, 4 pages</td></tr>
+<tr><td>Every 5 pages</td><td>Fixed chunks</td><td>3 files (1–5, 6–10, 11–12)</td></tr>
+<tr><td>Burst</td><td>Every page alone</td><td>12 files, 1 page each</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Ranges are inclusive on both ends and may not exceed the document's page count. Command-line equivalents: <code>pdftk in.pdf cat 1-3 output part1.pdf</code>, <code>qpdf in.pdf --pages . 1-3 -- part1.pdf</code>, burst via <code>pdftk in.pdf burst</code>.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Splitting Works</h2>
+<p>Splitting is the mirror of merging: instead of copying many documents' pages into one file, the splitter copies one document's pages into several new ones. Each output file is a valid, standalone PDF carrying its own copy of the fonts, images, and resources its pages reference — which is why splitting one big file into many small ones can total slightly more disk space than the original even though no content is recompressed. Page dimensions, orientation, selectable text, and image resolution all pass through untouched.</p>
+<h3>A worked example</h3>
+<p>Take a 12-page quarterly report that needs to go out as three attachments. Loading it shows <strong>12 pages</strong>; in Every-5-pages mode the plan table lists three outputs: pages 1–5 (5 pages), 6–10 (5 pages), and 11–12 (2 pages) — 5 + 5 + 2 = 12, every page accounted for exactly once. The files download as <code>part-1.pdf</code>, <code>part-2.pdf</code>, <code>part-3.pdf</code> (rename the prefix to <code>q1-report</code> first and you get <code>q1-report-1.pdf</code> and so on). Doing the same job in a terminal: <code>qpdf --empty --pages report.pdf 1-5 -- part-1.pdf</code> repeated per range, or <code>pdftk report.pdf burst output page_%02d.pdf</code> for the one-per-page variant.</p>
+<h3>Choosing a mode</h3>
+<ul>
+<li><strong>Ranges</strong> — chapter boundaries, section cuts, "send only pages 2–4": any selection you can write down</li>
+<li><strong>Every N pages</strong> — upload size limits, print batches, chunking for review: equal cuts, remainder in the last file</li>
+<li><strong>Burst</strong> — one page per file: fax-style workflows, per-page processing, thumbnail-style comparisons</li>
+</ul>
+<h3>Recombining</h3>
+<p>Splitting and merging are a pair: cut out what matters with ranges, then reassemble in any order — including interleaving pages from different documents — with the <a href="/pdf-merge/">PDF Merge tool</a>. That two-step (split → merge) also solves "reorder pages inside one document": split it into ranges in the new order, merge them back.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I split a PDF into separate files by page ranges?</h3><p>Load the PDF, choose Ranges mode, and type comma-separated ranges like 1-3, 5, 8-10. Each range becomes its own PDF, so a 10-page document with 1-3, 5, 8-10 produces three files with 3, 1, and 3 pages. Open-ended ranges work too: 9- means page 9 to the end.</p></div>
+<div class="faq-item"><h3>How do I split a PDF every N pages?</h3><p>Choose 'Every N pages' and set the chunk size. The tool cuts at fixed boundaries: a 12-page PDF split every 5 pages yields files containing pages 1-5, 6-10, and 11-12 — three files of 5, 5, and 2 pages. The last file holds whatever remains. This is the mode for print batches, chapter-sized chunks, and upload limits.</p></div>
+<div class="faq-item"><h3>How do I get each page as its own PDF?</h3><p>Burst mode. One page in, one file out: a 6-page document becomes 6 single-page PDFs, named page-1.pdf through page-6.pdf by default. The command-line equivalent is pdftk in.pdf burst or qpdf --split-pages in.pdf.</p></div>
+<div class="faq-item"><h3>Does splitting a PDF reduce quality?</h3><p>No. Pages are copied into new documents byte-for-byte, so text, images, fonts, and page dimensions are untouched. Each output file carries its own copy of the shared resources (fonts, images) that its pages use, so splitting one large file into many small ones can use slightly more total disk space than the original — but nothing is recompressed or degraded.</p></div>
+<div class="faq-item"><h3>Can I split an encrypted or password-protected PDF?</h3><p>Not while it is encrypted. Open the file with its password in a viewer and re-save an unlocked copy (print-to-PDF also works), then split that. The tool tells you when a file cannot be read rather than failing silently.</p></div>
+<div class="faq-item"><h3>What's the difference between splitting and extracting pages?</h3><p>Splitting turns ranges into multiple output files; extracting pulls selected pages into a single new document. This tool does the first. For the second, split off the pages you want, then combine them — the PDF Merge tool on this site reassembles pieces in any order. The CLI equivalent is qpdf in.pdf --pages . 2,5-7 -- extracted.pdf.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-merge/">📎 PDF Merge</a>
+<a href="/pdf-to-qr-code/">🔗 PDF to QR Code</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PS-ENGINE-START---
+// Split engine: @cantoo/pdf-lib (MIT, active fork), pinned v2.9.1 via jsdelivr.
+var PS={doc:null,name:'',pages:0,mode:'ranges'};
+function psEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+// Parse "1-3, 5, 8-10" / "9-" / "-4" against a page count. Returns [[start,end],...]
+function psParseRanges(str,max){
+  var parts=String(str).split(',').map(function(s){return s.trim();}).filter(Boolean);
+  if(!parts.length)throw new Error('type at least one page or range');
+  var out=[];
+  for(var i=0;i<parts.length;i++){
+    var p=parts[i];
+    var m=p.match(/^(\d+)?\s*-\s*(\d+)?$/);
+    if(m){
+      var s=m[1]?parseInt(m[1],10):1;   // "-4" starts at 1
+      var e=m[2]?parseInt(m[2],10):max; // "9-" runs to the end
+      if(s<1||e<1||s>max||e>max)throw new Error('"'+p+'" is outside 1-'+max);
+      if(e<s)throw new Error('"'+p+'" ends before it starts');
+      out.push([s,e]);
+    }else if(/^\d+$/.test(p)){
+      var n=parseInt(p,10);
+      if(n<1||n>max)throw new Error('"'+p+'" is outside 1-'+max);
+      out.push([n,n]);
+    }else{
+      throw new Error('"'+p+'" is not a page or range');
+    }
+  }
+  return out;
+}
+// Fixed chunks: every n pages. 12/5 -> [[1,5],[6,10],[11,12]]
+function psChunks(total,n){
+  if(n<1)throw new Error('pages per file must be at least 1');
+  var out=[];
+  for(var s=1;s<=total;s+=n)out.push([s,Math.min(s+n-1,total)]);
+  return out;
+}
+function psPlan(){
+  if(PS.mode==='ranges')return psParseRanges(document.getElementById('rangeInput').value,PS.pages);
+  if(PS.mode==='chunk')return psChunks(PS.pages,parseInt(document.getElementById('chunkSize').value,10)||1);
+  var burst=[];
+  for(var i=1;i<=PS.pages;i++)burst.push([i,i]);
+  return burst;
+}
+function psRenderPlan(){
+  var el=document.getElementById('plan');
+  el.innerHTML='';
+  var plan,btn=document.getElementById('btnSplit');
+  try{plan=psPlan();}
+  catch(e){el.innerHTML='<div class="errbox">'+psEsc(e.message)+'</div>';btn.disabled=true;return;}
+  var rows='';
+  plan.forEach(function(r,i){
+    var cnt=r[1]-r[0]+1;
+    rows+='<tr><td>'+(i+1)+'</td><td>'+r[0]+(r[1]!==r[0]?'–'+r[1]:'')+'</td><td>'+cnt+' page'+(cnt>1?'s':'')+'</td></tr>';
+  });
+  var covered=plan.reduce(function(a,r){return a+(r[1]-r[0]+1);},0);
+  el.innerHTML='<table class="plan-table"><thead><tr><th>File</th><th>Pages</th><th>Count</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<p class="hint">'+plan.length+' file'+(plan.length>1?'s':'')+' · '+covered+' of '+PS.pages+' pages selected'+(covered===PS.pages?' · complete coverage':' · '+(PS.pages-covered)+' page(s) not included')+'</p>';
+  btn.disabled=false;
+  btn.textContent='Split PDF ('+plan.length+' file'+(plan.length>1?'s':'')+')';
+}
+async function psLoad(file){
+  document.getElementById('status').innerHTML='';
+  PS.name='';
+  try{
+    if(typeof PDFLib==='undefined')throw new Error('engine failed to load (offline?)');
+    var fr=new FileReader();
+    var bytes=await new Promise(function(res,rej){fr.onload=function(){res(new Uint8Array(fr.result));};fr.onerror=function(){rej(new Error('unreadable'));};fr.readAsArrayBuffer(file);});
+    PS.doc=await PDFLib.PDFDocument.load(bytes);
+    PS.pages=PS.doc.getPageCount();
+    PS.name=file.name.replace(/\.pdf$/i,'');
+    document.getElementById('fileHead').innerHTML='<div class="file-head">📄 <strong>'+psEsc(file.name)+'</strong> — '+PS.pages+' pages loaded</div>';
+    document.getElementById('controls').style.display='';
+    document.getElementById('namePrefix').value=(PS.name||'part');
+    psRenderPlan();
+  }catch(e){
+    var msg=String(e&&e.message||e);
+    document.getElementById('fileHead').innerHTML='<div class="errbox">'+(/encrypt/i.test(msg)?'This PDF is encrypted — unlock it first, then split.':'Could not read this file: '+psEsc(msg))+'</div>';
+    document.getElementById('controls').style.display='none';
+    PS.doc=null;PS.pages=0;
+  }
+}
+async function psSplit(){
+  var status=document.getElementById('status');
+  status.innerHTML='';
+  if(!PS.doc){status.innerHTML='<div class="errbox">Load a PDF first.</div>';return;}
+  var plan;
+  try{plan=psPlan();}
+  catch(e){status.innerHTML='<div class="errbox">'+psEsc(e.message)+'</div>';return;}
+  try{
+    var prefix=(document.getElementById('namePrefix').value.trim()||'part').replace(/[\\/:*?"<>|]/g,'-');
+    var urls=[];
+    for(var i=0;i<plan.length;i++){
+      var out=await PDFLib.PDFDocument.create();
+      var idxs=[];
+      for(var p=plan[i][0];p<=plan[i][1];p++)idxs.push(p-1);
+      var copied=await out.copyPages(PS.doc,idxs);
+      copied.forEach(function(pg){out.addPage(pg);});
+      var bytes=await out.save();
+      urls.push({name:prefix+'-'+(i+1)+'.pdf',url:URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),size:bytes.length,pages:idxs.length});
+    }
+    var links=urls.map(function(u){return '<a href="'+u.url+'" download="'+psEsc(u.name)+'">⬇ '+psEsc(u.name)+' ('+u.pages+'p, '+(u.size/1024).toFixed(0)+' KB)</a>';}).join('');
+    status.innerHTML='<div class="result-box">✅ Split <strong>'+psEsc(PS.name)+'.pdf</strong> into <strong>'+urls.length+' file'+(urls.length>1?'s':'')+'</strong>. Click each to download (browsers may ask once for permission to save multiple files):<br>'+links+'</div>';
+  }catch(e){
+    status.innerHTML='<div class="errbox">Split failed: '+psEsc(String(e&&e.message||e))+'</div>';
+  }
+}
+// ---- browser wiring ----
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)psLoad(e.dataTransfer.files[0]);});
+fi.addEventListener('change',function(e){if(e.target.files.length)psLoad(e.target.files[0]);fi.value='';});
+Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'),function(b){
+  b.addEventListener('click',function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'),function(x){x.classList.remove('active');});
+    b.classList.add('active');
+    PS.mode=b.getAttribute('data-mode');
+    document.getElementById('rangeBox').style.display=PS.mode==='ranges'?'':'none';
+    document.getElementById('chunkBox').style.display=PS.mode==='chunk'?'':'none';
+    if(PS.doc)psRenderPlan();
+  });
+});
+['rangeInput','chunkSize'].forEach(function(id){document.getElementById(id).addEventListener('input',function(){if(PS.doc)psRenderPlan();});});
+document.getElementById('btnSplit').addEventListener('click',psSplit);
+document.getElementById('btnClear').addEventListener('click',function(){
+  PS.doc=null;PS.pages=0;
+  document.getElementById('fileHead').innerHTML='';
+  document.getElementById('controls').style.display='none';
+  document.getElementById('status').innerHTML='';
+  fi.value='';
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

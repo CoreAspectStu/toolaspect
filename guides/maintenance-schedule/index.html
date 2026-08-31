@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Build a Maintenance Schedule | ToolAspect</title>
+<meta name="description" content="Every service has two clocks — run-hours and calendar — and you service whichever comes due first. The interval math and a printable 12-month plan.">
+<link rel="canonical" href="https://toolaspect.com/guides/maintenance-schedule/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Build a Maintenance Schedule","description":"The interval math behind a working maintenance schedule: usage vs calendar clocks, the whichever-comes-first rule, a worked forklift example, and how to level a year of services across the calendar.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Maintenance Schedule","item":"https://toolaspect.com/guides/maintenance-schedule/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a maintenance schedule?","acceptedAnswer":{"@type":"Answer","text":"A calendar of every recurring service for every asset, with the interval, the last-completed date, and the computed next-due date per line. The schedule is working when anyone can answer two questions in a glance: what's due this month, and what was last done to this machine."}},
+{"@type":"Question","name":"How do you calculate next maintenance due?","acceptedAnswer":{"@type":"Answer","text":"Days until the usage limit = interval divided by average usage per day (250 hours at 6 hr/day = 41.7 days). Days until the calendar limit = the OEM time cap. Service at whichever date comes first: last completed + the smaller of the two. For calendar-only intervals, months x 30.44 days."}},
+{"@type":"Question","name":"Which comes first, hours or calendar?","acceptedAnswer":{"@type":"Answer","text":"Whichever due date is earlier. Hard-running assets (multi-shift forklifts, delivery vans) almost always bind on hours or miles; low-duty assets (backup generators, fire equipment, standby pumps) bind on the calendar because fluids, seals, and batteries age with time even at zero use."}},
+{"@type":"Question","name":"How far ahead should a maintenance schedule go?","acceptedAnswer":{"@type":"Answer","text":"Twelve months, recomputed at every completion. A year is far enough to see stacking (the month where five services land together) and short enough that the far months stay honest, since each completed service re-flows everything after it."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.disclaimer-note{color:var(--muted);font-size:.8rem;line-height:1.6;margin-top:12px}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Build a Maintenance Schedule That Doesn't Lie to You</h1>
+<div class="meta"><span>📅 Maintenance ICP</span><span>💰 CPC: $7-12</span><span>⏱️ 8 min read</span></div>
+<p class="intro">Every maintenance service has <strong>two clocks</strong>: one counting usage (run-hours, miles) and one counting time (days, months). Schedules go wrong when they track only one. A 250-hour forklift service at 6 hr/day comes due in <strong>41.7 days</strong> — hours win. A backup generator at 1.5 hr/day takes 133 days to reach 200 hours, but its oil still ages out at a year — calendar wins. Build the schedule around <strong>whichever comes due first</strong>, and the surprises stop. Below: the interval math, the overdue flags that matter, and the 12-month plan that turns a parts list into a staffing plan.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Start with the interval data, not the calendar</h2>
+<p>For each asset, pull the OEM service table: the service, its usage limit, its time limit. Typical planning ranges (your manual governs):</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Asset / service</th><th>Usage interval</th><th>Calendar interval</th><th>Usually binds</th></tr></thead>
+<tbody>
+<tr><td>Forklift — oil &amp; filter</td><td>250 run-hr</td><td>~6 months</td><td>Usage</td></tr>
+<tr><td>Compressor — oil change</td><td>2,000-4,000 run-hr</td><td>12 months</td><td>Either (8 hr/day ≈ both)</td></tr>
+<tr><td>Generator — oil &amp; filter</td><td>200-250 run-hr</td><td>12 months</td><td>Calendar</td></tr>
+<tr><td>Fleet vehicle — synthetic oil</td><td>5,000-7,500 mi</td><td>12 months</td><td>Miles</td></tr>
+<tr><td>Rooftop HVAC — filters</td><td>—</td><td>30-90 days</td><td>Calendar</td></tr>
+<tr><td>Fire extinguishers (NFPA 10)</td><td>—</td><td>Monthly visual · annual service · 6-yr · 12-yr</td><td>Calendar, mandated</td></tr>
+<tr><td>Overhead crane (OSHA 1910.179)</td><td>—</td><td>Annual periodic + frequent inspections</td><td>Calendar, mandated</td></tr>
+</tbody>
+</table>
+</div>
+<p>Note the two mandated rows — fire protection and crane inspections run on required cycles that don't care about your workload. They anchor the calendar; everything else schedules around them.</p>
+<h2>The interval math, once per asset</h2>
+<p>Three lines of arithmetic:</p>
+<ol>
+<li><strong>Usage clock:</strong> interval ÷ average usage per day. 250 hr ÷ 6 hr/day = <strong>41.7 days</strong>. Use a rolling average — log actual run-hours for a month rather than guessing; a forklift "we think runs 4 hours" that actually runs 7 blows every date on the sheet.</li>
+<li><strong>Calendar clock:</strong> the OEM time cap in days (months × 30.44 if it's quoted in months).</li>
+<li><strong>Binding:</strong> next due = last completed + the <strong>smaller</strong> of the two. Services per year = 365 ÷ binding days.</li>
+</ol>
+<p>Worked example, forklift FL-3: 250-hour service, 6 hr/day, 180-day cap, last done August 1, 2026. Usage says 41.7 days → September 12. Calendar says 180 days → January 28, 2027. Usage wins: <strong>September 12</strong>, and at 365 ÷ 41.7 this asset generates <strong>8.8 services a year</strong> by itself.</p>
+<p>The same math catches the classic miss: generator GEN-2, 200-hour oil service, 1.5 hr/day average, last serviced March 10. Usage says 133 days → July 21. Calendar says March 2027. Usage wins again — and if today is late August, that row reads <strong>40 days overdue</strong>. A calendar-only spreadsheet showed a generator that "barely runs" as fine for another six months. The two-clock sheet flags it red.</p>
+<div class="cta-box"><h3>Run both clocks automatically</h3><p style="color:#fff;opacity:.9">Enter interval, usage per day, and last completed — the template computes which clock binds, flags overdue and due-soon work, and prints the 12-month plan.</p><a href="/maintenance-schedule-template/">Open the Maintenance Schedule Template &rarr;</a></div>
+<h2>From dates to a real plan: level the year</h2>
+<p>List every asset's next-due date and you'll find the failure of naive scheduling instantly: <strong>stacking</strong>. Preventive services seeded from the same project date pile into the same month — five services in March, none in April — and the crew either skips March or breaks April. Two fixes: stagger the seed dates (a quarterly task started in January runs Jan/Apr/Jul/Oct; started in February it runs Feb/May/Aug/Nov — both are compliant, one fits your labor), and re-check the 30-day window weekly, where the due-soon flags live.</p>
+<p>The 30-day window is the operative unit of a schedule. It's long enough to receive parts and book a tech, short enough that nothing hides. Sum services-per-year across the fleet and you get the annual load — the five-asset example above totals <strong>19.9 services a year</strong>, which converts directly to staffing: at 45 minutes average per PM visit that's about 15 hours a month of scheduled wrench time before a single repair.</p>
+<h2>Close the loop: completion re-flows everything</h2>
+<p>A schedule is a living document with exactly one update event: a completed service. Tech finishes, last-done date changes, every downstream date recomputes. This is where paper calendars rot — the sheet on the wall shows the date the plan was made, not the date the work happened. Keep the source of truth digital (the QR on the printed schedule links straight back to the live calculator), update at completion, re-print monthly.</p>
+<p>Each completed service should generate its record — that's the <a href="/work-order-template-generator/">work order generator</a>'s job — and each PM visit runs off a <a href="/preventive-maintenance-checklist-builder/">checklist specific to the asset</a>. Schedule, work order, checklist: plan the job, authorize it, execute it. For the consumer version of the same discipline, our <a href="/guides/car-maintenance-schedule/">car maintenance schedule guide</a> applies the identical two-clock logic to a single vehicle.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is a maintenance schedule?</h3><p>A calendar of every recurring service for every asset, with the interval, the last-completed date, and the computed next-due date per line. The schedule is working when anyone can answer two questions in a glance: what's due this month, and what was last done to this machine.</p></div>
+<div class="faq-item"><h3>How do you calculate next maintenance due?</h3><p>Days until the usage limit = interval divided by average usage per day (250 hours at 6 hr/day = 41.7 days). Days until the calendar limit = the OEM time cap. Service at whichever date comes first: last completed + the smaller of the two. For calendar-only intervals, months x 30.44 days.</p></div>
+<div class="faq-item"><h3>Which comes first, hours or calendar?</h3><p>Whichever due date is earlier. Hard-running assets (multi-shift forklifts, delivery vans) almost always bind on hours or miles; low-duty assets (backup generators, fire equipment, standby pumps) bind on the calendar because fluids, seals, and batteries age with time even at zero use.</p></div>
+<div class="faq-item"><h3>How far ahead should a maintenance schedule go?</h3><p>Twelve months, recomputed at every completion. A year is far enough to see stacking (the month where five services land together) and short enough that the far months stay honest, since each completed service re-flows everything after it.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/maintenance-schedule-template/">Maintenance Schedule Template</a>
+<a href="/preventive-maintenance-checklist-builder/">PM Checklist Builder</a>
+<a href="/work-order-template-generator/">Work Order Template Generator</a>
+<a href="/car-maintenance-cost-calculator/">Car Maintenance Cost Calculator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

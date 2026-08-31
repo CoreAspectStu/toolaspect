@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign PDF — Free E-Signature Online Tool | ToolAspect</title>
+<meta name="description" content="Sign PDFs in your browser: draw or type a signature, drag it into place, download. Nothing is uploaded — the PDF never leaves your device. Free, no signup.">
+<link rel="canonical" href="https://toolaspect.com/sign-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Sign PDF — Free E-Signature Online Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Draw or type a signature, drag it onto any page, and download the signed PDF. Everything runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sign-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sign PDF | Free E-Signature Tool">
+<meta name="twitter:description" content="Sign a PDF without uploading it — draw, type, place, download.">
+<meta name="keywords" content="sign pdf, e signature online, sign pdf online free, electronic signature, fill and sign pdf, draw signature, esign">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Sign PDF","description":"Free browser-based PDF signer. Draw, type, or upload a signature, drag it onto any page of your PDF, and download the signed file. Runs entirely on your device with signature_pad, pdf.js, and pdf-lib — no upload, ever.","url":"https://toolaspect.com/sign-pdf/","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are electronic signatures legally binding?","acceptedAnswer":{"@type":"Answer","text":"In the United States, yes, in general: the federal ESIGN Act (2000) makes electronic signatures valid nationwide, and 49 states have adopted the Uniform Electronic Transactions Act — New York has its own Electronic Signatures and Records Act instead. The EU recognizes them under eIDAS. The signature is usually the easy part; what gets contested is identity and intent, which is why high-stakes transactions use platforms with audit trails. This is general information, not legal advice — for a specific contract, check the governing law or ask a lawyer."}},
+{"@type":"Question","name":"Is my signed PDF uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. This tool runs signature capture, PDF rendering, and the signing itself inside your browser tab. The PDF is read from your disk with JavaScript, the signature image is stamped into the file in memory, and the result is saved straight back. There is no account, no email gate, and no copy of your contract anywhere but your machine — verifiable in the network panel."}},
+{"@type":"Question","name":"How is this different from DocuSign or Dropbox Sign?","acceptedAnswer":{"@type":"Answer","text":"Those are platforms: they verify signers by email, route documents between parties, timestamp every action, and produce a certificate of completion. That audit trail is what you pay for and what courts care about in a dispute. This tool does the signing itself — placing your signature on the document — locally and free. For a lease between people who know each other, that's plenty. For a multi-party business contract, use a platform."}},
+{"@type":"Question","name":"Can I sign every page of the PDF?","acceptedAnswer":{"@type":"Answer","text":"You place the signature on one page per pass. If you need the signature on several pages — initialing every page of a contract is the classic case — place and download once, then re-upload the signed file and repeat. Each pass adds the image to whatever pages you sign; nothing is lost between passes."}},
+{"@type":"Question","name":"Does the tool fill in PDF form fields?","acceptedAnswer":{"@type":"Answer","text":"No — it stamps a signature image and an optional date line at the position you drag it to, which is exactly right for flat documents and scanned contracts that have no fields. If your PDF has fillable AcroForm text fields, a form-filling tool will type into them directly; check our document tools."}},
+{"@type":"Question","name":"What file do I get out?","acceptedAnswer":{"@type":"Answer","text":"A new PDF with your signature image embedded on the page you chose, at the size and position you set, plus a date stamp under it if you enabled one. The rest of the document — text, form fields, other pages — passes through unchanged. Nothing is flattened, compressed, or watermarked."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Sign PDF","item":"https://toolaspect.com/sign-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.tabs{display:flex;gap:4px;margin-bottom:1rem;flex-wrap:wrap}
+.tab{background:var(--bg);border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:.5rem 1.1rem;font-size:.85rem;cursor:pointer;font-family:inherit}
+.tab.active{border-color:var(--primary);color:var(--text);background:rgba(99,102,241,.12)}
+.sig-canvas-wrap{background:#fff;border-radius:var(--radius);border:1px solid var(--border);position:relative;touch-action:none}
+.sig-canvas-wrap canvas{width:100%;height:200px;display:block;border-radius:var(--radius);cursor:crosshair}
+.control-row{display:flex;gap:.75rem;margin-top:.9rem;flex-wrap:wrap;align-items:center}
+.control-row label{font-size:.85rem;color:var(--muted)}
+.control-row select,.control-row input[type=text]{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:var(--radius);padding:.55rem .8rem;font-size:.9rem;font-family:inherit}
+.control-row select:focus,.control-row input[type=text]:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.7rem 1.5rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.success{background:var(--success)}
+.status-line{margin-top:.9rem;font-size:.88rem;color:var(--muted);text-align:center;min-height:1.3em}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:1.75rem 1.5rem;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone:hover,.dropzone.dragover{border-color:var(--primary)}
+.dropzone .icon{font-size:1.6rem;margin-bottom:.4rem}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.thumb{border:2px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;line-height:0;opacity:.65}
+.thumb.active{border-color:var(--primary);opacity:1}
+.thumb canvas{width:76px;height:auto;display:block}
+.preview-wrap{position:relative;display:inline-block;max-width:100%;margin-top:1rem;line-height:0}
+.preview-wrap canvas{max-width:100%;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.sig-overlay{position:absolute;border:1px dashed rgba(99,102,241,.8);cursor:move;touch-action:none;line-height:0}
+.sig-overlay img{width:100%;height:auto;display:block;pointer-events:none}
+.sig-overlay .resize{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:var(--primary);border-radius:50%;cursor:nwse-resize}
+.range-row{display:flex;gap:1rem;margin-top:1rem;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+input[type=range]{accent-color:var(--primary);width:180px}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.section-card p{color:var(--muted);font-size:.9rem;line-height:1.7}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.legal-note{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25);border-radius:var(--radius);padding:.85rem 1rem;font-size:.85rem;color:var(--muted);line-height:1.6;margin-top:1rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✍️ Sign PDF</h1>
+<p>Draw or type a signature, place it on the page, download — no upload</p>
+</div>
+<div class="aio-answer">Three steps, all inside your browser: <strong>draw</strong> a signature with your mouse, trackpad, or finger (or type it, or upload an image), <strong>drag</strong> it onto a live preview of any page in your PDF, then <strong>download</strong> the signed file. The signature is captured on canvas by signature_pad (MIT), pages are rendered by pdf.js, and the signing itself is done by pdf-lib (MIT) writing the image into the PDF in memory. Your contract never touches a server. An optional date stamp records when you signed.</div>
+
+<div class="section-card">
+<h2>1 · Create Your Signature</h2>
+<div class="tabs">
+<button class="tab active" data-mode="draw">✏️ Draw</button>
+<button class="tab" data-mode="type">⌨️ Type</button>
+<button class="tab" data-mode="upload">🖼️ Upload image</button>
+</div>
+<div id="drawPane">
+<div class="sig-canvas-wrap"><canvas id="sigCanvas"></canvas></div>
+<div class="control-row">
+<label>Ink</label>
+<select id="penColor"><option value="#000000">Black</option><option value="#1d4ed8">Blue</option></select>
+<button class="btn secondary" id="clearPad">Clear</button>
+</div>
+</div>
+<div id="typePane" style="display:none">
+<div class="sig-canvas-wrap"><canvas id="typeCanvas"></canvas></div>
+<div class="control-row">
+<input type="text" id="typeName" placeholder="Type your name" maxlength="40" style="flex:1;min-width:180px">
+<select id="typeStyle">
+<option value="script">Script</option>
+<option value="italic-serif">Italic serif</option>
+<option value="clean">Clean print</option>
+</select>
+</div>
+</div>
+<div id="uploadPane" style="display:none">
+<div class="sig-canvas-wrap"><canvas id="uploadCanvas"></canvas></div>
+<div class="control-row">
+<input type="file" id="sigFile" accept="image/*" style="color:var(--muted);font-size:.85rem">
+</div>
+</div>
+<div class="status-line" id="sigStatus">Draw your signature above, then load a PDF below.</div>
+</div>
+
+<div class="section-card">
+<h2>2 · Place It on Your PDF</h2>
+<div class="dropzone" id="pdfZone">
+<div class="icon">📄</div>
+<p id="pdfZoneText">Drop a PDF here or click to choose</p>
+<p style="font-size:.78rem">rendered and signed on your device</p>
+<input type="file" id="pdfInput" accept="application/pdf,.pdf" hidden>
+</div>
+<div class="thumbs" id="thumbs"></div>
+<div id="pdfStage" style="display:none">
+<div class="preview-wrap" id="previewWrap">
+<canvas id="pageCanvas"></canvas>
+<div class="sig-overlay" id="sigOverlay" style="display:none"><img id="sigImg" alt="Signature"><div class="resize"></div></div>
+</div>
+<div class="range-row">
+<label>Size <input type="range" id="sigWidth" min="80" max="360" value="180"></label>
+<label><input type="checkbox" id="addDate" checked> date stamp</label>
+<span id="placeHint">Drag the signature where you want it; corner dot resizes.</span>
+</div>
+<div style="margin-top:1rem;text-align:center">
+<button class="btn success" id="signBtn" disabled>✍️ Sign &amp; Download PDF</button>
+</div>
+</div>
+<div class="status-line" id="pdfStatus"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/word-to-pdf/">Word To Pdf</a></li><li style="margin:4px 0"><a href="/bill-of-sale-generator/">Bill Of Sale Generator</a></li><li style="margin:4px 0"><a href="/invoice-generator/">Invoice Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>U.S. E-Signature Law at a Glance</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Law</th><th>Scope</th><th>What it says</th></tr></thead>
+<tbody>
+<tr><td>ESIGN Act (2000)</td><td>Federal, all 50 states</td><td>A signature can't be denied legal effect just because it's electronic</td></tr>
+<tr><td>UETA (1999)</td><td>Adopted by 49 states + DC</td><td>Same principle at state level; governs most private transactions</td></tr>
+<tr><td>New York ESRA</td><td>New York</td><td>NY's own statute — the one state that never adopted UETA</td></tr>
+<tr><td>eIDAS (2016)</td><td>European Union</td><td>Three assurance levels: simple, advanced, and qualified e-signatures</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">In practice, the signature image is rarely what's disputed — identity and intent are. Serious transactions add audit trails: who signed, from where, when, and what exactly they saw. That's the paid-platform layer, not the signature itself.</p>
+<div class="legal-note"><strong>Not legal advice.</strong> This page is general information about how e-signature laws treat electronic signatures. Whether a specific signature on a specific contract is enforceable depends on the governing law and facts — consult a lawyer for anything consequential.</div>
+</div>
+
+<div class="content-section">
+<h2>How It Works</h2>
+<p>Signing a PDF sounds exotic; mechanically it's the same as printing a page, signing it, and scanning it back — minus the printer and the quality loss. The tool draws your signature on a high-resolution canvas, renders the destination page, and then writes the signature image into the PDF's content stream at exact page coordinates.</p>
+<h3>The engine</h3>
+<p>Signature capture is <strong>signature_pad</strong> (MIT, by Szymon Nowak), which does variable-width stroke smoothing so mouse drawings look like pen strokes instead of jagged polylines. Page rendering uses Mozilla's <strong>pdf.js</strong> (Apache-2.0). The signing itself uses <strong>pdf-lib</strong> (MIT, maintained fork) to embed your signature as a PNG and optionally stamp the date under it, then rebuild the file. All three run in your tab; the network panel stays silent after the libraries load.</p>
+<h3>How to use it</h3>
+<p>Create the signature first — draw it, type it in one of three styles, or upload a scan (a phone photo of your signature on white paper works; the white becomes transparent automatically). Then load the PDF, pick the page from the thumbnails, drag the signature into place, and resize with the slider or corner handle. Toggle the date stamp on if you want a record of when. Sign &amp; download produces the new PDF; sign multiple pages by re-uploading the output and repeating.</p>
+<h3>A worked example with real numbers</h3>
+<p>Take a standard Letter contract page. In the PDF, it measures 612 × 792 points, and pdf.js renders it to a preview canvas at scale 1.5 — 612 × 1.5 = 918 px wide by 792 × 1.5 = 1188 px tall. Your signature was captured at 1800 × 600 px (a 600 × 200 pad at 3× resolution for crisp edges); on the page you size it to 180 px wide. Converting back to PDF units: 180 ÷ 1.5 = 120 pt wide and 60 px tall ÷ 1.5 = 40 pt — 120 pt is 1.67 inches, right around a typical signature-line length. Drag it so its top-left sits at preview (300, 900) and the math lands at PDF coordinates x = 300 ÷ 1.5 = 200 pt, y = 792 − (900 + 60) ÷ 1.5 = 152 pt from the bottom edge — pdf-lib's coordinate origin is bottom-left, which is why the flip is part of every placement. The date stamp, 8 pt Helvetica, lands 12 pt below the signature's bottom at y = 140.</p>
+<p>The signature PNG itself stays at full capture resolution no matter how small you scale it on the page — zooming the signed PDF to 400% shows smooth curves, not pixels, because the image was embedded at 1800 px wide and displayed at 120 pt.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Are electronic signatures legally binding?</h3><p>In the United States, yes, in general: the federal ESIGN Act (2000) makes electronic signatures valid nationwide, and 49 states have adopted the Uniform Electronic Transactions Act — New York has its own Electronic Signatures and Records Act instead. The EU recognizes them under eIDAS. The signature is usually the easy part; what gets contested is identity and intent, which is why high-stakes transactions use platforms with audit trails. This is general information, not legal advice — for a specific contract, check the governing law or ask a lawyer.</p></div>
+<div class="faq-item"><h3>Is my signed PDF uploaded to a server?</h3><p>No. This tool runs signature capture, PDF rendering, and the signing itself inside your browser tab. The PDF is read from your disk with JavaScript, the signature image is stamped into the file in memory, and the result is saved straight back. There is no account, no email gate, and no copy of your contract anywhere but your machine — verifiable in the network panel.</p></div>
+<div class="faq-item"><h3>How is this different from DocuSign or Dropbox Sign?</h3><p>Those are platforms: they verify signers by email, route documents between parties, timestamp every action, and produce a certificate of completion. That audit trail is what you pay for and what courts care about in a dispute. This tool does the signing itself — placing your signature on the document — locally and free. For a lease between people who know each other, that's plenty. For a multi-party business contract, use a platform.</p></div>
+<div class="faq-item"><h3>Can I sign every page of the PDF?</h3><p>You place the signature on one page per pass. If you need the signature on several pages — initialing every page of a contract is the classic case — place and download once, then re-upload the signed file and repeat. Each pass adds the image to whatever pages you sign; nothing is lost between passes.</p></div>
+<div class="faq-item"><h3>Does the tool fill in PDF form fields?</h3><p>No — it stamps a signature image and an optional date line at the position you drag it to, which is exactly right for flat documents and scanned contracts that have no fields. If your PDF has fillable AcroForm text fields, a form-filling tool will type into them directly; check our document tools.</p></div>
+<div class="faq-item"><h3>What file do I get out?</h3><p>A new PDF with your signature image embedded on the page you chose, at the size and position you set, plus a date stamp under it if you enabled one. The rest of the document — text, form fields, other pages — passes through unchanged. Nothing is flattened, compressed, or watermarked.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/word-to-pdf/">📄 Word to PDF</a>
+<a href="/html-to-pdf/">🖨️ HTML to PDF</a>
+<a href="/bill-of-sale-generator/">🚗 Bill of Sale Generator</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+<a href="/cover-letter-generator/">✉️ Cover Letter Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@5.1.4/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js"></script>
+<script type="module">
+const PDFJS_CDN = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.min.mjs';
+const WORKER_CDN = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs';
+const CAP_W = 1800, CAP_H = 600; // 600x200 CSS pad at 3x
+
+// ---------- signature creation ----------
+const sigCanvas = document.getElementById('sigCanvas');
+const typeCanvas = document.getElementById('typeCanvas');
+const uploadCanvas = document.getElementById('uploadCanvas');
+[sigCanvas, typeCanvas, uploadCanvas].forEach(c => { c.width = CAP_W; c.height = CAP_H; });
+const sigStatus = document.getElementById('sigStatus');
+
+const pad = new SignaturePad(sigCanvas, {
+  penColor: '#000000',
+  minWidth: 1.2,
+  maxWidth: 3.4,
+  backgroundColor: 'rgba(255,255,255,0)'
+});
+document.getElementById('penColor').addEventListener('change', e => pad.penColor = e.target.value);
+document.getElementById('clearPad').addEventListener('click', () => { pad.clear(); updateSigReady(); });
+pad.addEventListener('endStroke', updateSigReady);
+
+function whiteToTransparent(ctx, w, h){
+  const img = ctx.getImageData(0, 0, w, h), d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] > 235 && d[i+1] > 235 && d[i+2] > 235) d[i+3] = 0;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+function renderTypeSig(){
+  const ctx = typeCanvas.getContext('2d');
+  ctx.clearRect(0, 0, CAP_W, CAP_H);
+  const name = document.getElementById('typeName').value.trim();
+  if (!name) return;
+  const style = document.getElementById('typeStyle').value;
+  const fonts = {
+    'script': 'italic 120px "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive',
+    'italic-serif': 'italic 600 110px Georgia, "Times New Roman", serif',
+    'clean': '500 100px "Helvetica Neue", Helvetica, Arial, sans-serif'
+  };
+  ctx.font = fonts[style];
+  ctx.fillStyle = '#000';
+  ctx.textBaseline = 'middle';
+  let size = parseInt(ctx.font.match(/\d+/)[0], 10);
+  while (ctx.measureText(name).width > CAP_W - 120 && size > 30) {
+    size -= 6;
+    ctx.font = fonts[style].replace(/\d+px/, size + 'px');
+  }
+  ctx.fillText(name, 60, CAP_H / 2);
+}
+document.getElementById('typeName').addEventListener('input', () => { renderTypeSig(); updateSigReady(); });
+document.getElementById('typeStyle').addEventListener('change', () => { renderTypeSig(); updateSigReady(); });
+
+document.getElementById('sigFile').addEventListener('change', async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const bmp = await createImageBitmap(f);
+    const ctx = uploadCanvas.getContext('2d');
+    ctx.clearRect(0, 0, CAP_W, CAP_H);
+    const r = Math.min(CAP_W / bmp.width, CAP_H / bmp.height);
+    const w = bmp.width * r, h = bmp.height * r;
+    ctx.drawImage(bmp, (CAP_W - w) / 2, (CAP_H - h) / 2, w, h);
+    whiteToTransparent(ctx, CAP_W, CAP_H);
+    updateSigReady();
+  } catch {
+    sigStatus.textContent = 'Could not read that image.';
+  }
+});
+
+let sigMode = 'draw';
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  sigMode = t.dataset.mode;
+  document.getElementById('drawPane').style.display = sigMode === 'draw' ? 'block' : 'none';
+  document.getElementById('typePane').style.display = sigMode === 'type' ? 'block' : 'none';
+  document.getElementById('uploadPane').style.display = sigMode === 'upload' ? 'block' : 'none';
+  updateSigReady();
+}));
+function activeCanvas(){
+  if (sigMode === 'draw') return sigCanvas;
+  if (sigMode === 'type') return typeCanvas;
+  return uploadCanvas;
+}
+function signatureReady(){
+  if (sigMode === 'draw') return !pad.isEmpty();
+  const ctx = activeCanvas().getContext('2d');
+  const d = ctx.getImageData(0, 0, CAP_W, CAP_H).data;
+  for (let i = 3; i < d.length; i += 4) if (d[i] > 0) return true;
+  return false;
+}
+function updateSigReady(){
+  const ok = signatureReady();
+  sigStatus.textContent = ok ? 'Signature captured — load a PDF below to place it.' : 'Create a signature above first.';
+  refreshSignBtn();
+}
+
+// ---------- pdf loading + rendering ----------
+const pdfZone = document.getElementById('pdfZone');
+const pdfInput = document.getElementById('pdfInput');
+const pdfZoneText = document.getElementById('pdfZoneText');
+const thumbs = document.getElementById('thumbs');
+const pdfStage = document.getElementById('pdfStage');
+const pageCanvas = document.getElementById('pageCanvas');
+const previewWrap = document.getElementById('previewWrap');
+const sigOverlay = document.getElementById('sigOverlay');
+const sigImg = document.getElementById('sigImg');
+const sigWidth = document.getElementById('sigWidth');
+const addDate = document.getElementById('addDate');
+const pdfStatus = document.getElementById('pdfStatus');
+const signBtn = document.getElementById('signBtn');
+
+let pdfjsLib = null;
+let pdfDoc = null;
+let pdfBytes = null;
+let pageIndex = 0;      // 0-based
+let renderScale = 1.5;
+let overlayPos = { x: 60, y: 900 };
+
+pdfZone.addEventListener('click', () => pdfInput.click());
+pdfZone.addEventListener('dragover', e => { e.preventDefault(); pdfZone.classList.add('dragover'); });
+pdfZone.addEventListener('dragleave', () => pdfZone.classList.remove('dragover'));
+pdfZone.addEventListener('drop', e => {
+  e.preventDefault(); pdfZone.classList.remove('dragover');
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) loadPdf(f);
+});
+pdfInput.addEventListener('change', () => { if (pdfInput.files[0]) loadPdf(pdfInput.files[0]); });
+
+async function loadPdf(file){
+  if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { setPdfStatus('That is not a PDF.'); return; }
+  try {
+    pdfBytes = new Uint8Array(await file.arrayBuffer());
+    if (!pdfjsLib) {
+      pdfjsLib = await import(PDFJS_CDN);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = WORKER_CDN;
+    }
+    pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes.slice(0) }).promise;
+    pdfZoneText.textContent = file.name + ' — ' + pdfDoc.numPages + ' page' + (pdfDoc.numPages > 1 ? 's' : '');
+    pageIndex = 0;
+    buildThumbs();
+    pdfStage.style.display = 'block';
+    await renderPage();
+    setPdfStatus('Drag the signature, then sign & download.');
+  } catch (err) {
+    const m = String(err && err.message || err);
+    setPdfStatus(m.includes('EncryptError') || m.includes('password')
+      ? 'This PDF is password-protected — remove the password first.'
+      : 'Could not open that PDF: ' + m);
+  }
+}
+function buildThumbs(){
+  thumbs.innerHTML = '';
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
+    const t = document.createElement('div');
+    t.className = 'thumb' + (i - 1 === pageIndex ? ' active' : '');
+    const c = document.createElement('canvas');
+    t.appendChild(c);
+    t.title = 'Page ' + i;
+    t.addEventListener('click', async () => {
+      pageIndex = i - 1;
+      document.querySelectorAll('.thumb').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      await renderPage();
+    });
+    thumbs.appendChild(t);
+    pdfDoc.getPage(i).then(p => {
+      const vp = p.getViewport({ scale: 76 / p.getViewport({ scale: 1 }).width });
+      c.width = vp.width; c.height = vp.height;
+      p.render({ canvasContext: c.getContext('2d'), viewport: vp });
+    });
+  }
+}
+async function renderPage(){
+  const page = await pdfDoc.getPage(pageIndex + 1);
+  const base = page.getViewport({ scale: 1 });
+  const maxW = Math.min(previewWrap.parentElement.clientWidth - 4, 860);
+  renderScale = Math.min(2, maxW / base.width);
+  const vp = page.getViewport({ scale: renderScale });
+  pageCanvas.width = vp.width; pageCanvas.height = vp.height;
+  await page.render({ canvasContext: pageCanvas.getContext('2d'), viewport: vp }).promise;
+  placeOverlay();
+}
+function placeOverlay(){
+  if (!signatureReady()) { sigOverlay.style.display = 'none'; return; }
+  sigOverlay.style.display = 'block';
+  sigImg.src = activeCanvas().toDataURL('image/png');
+  const w = parseInt(sigWidth.value, 10);
+  const h = Math.round(w * CAP_H / CAP_W);
+  overlayPos.x = Math.min(overlayPos.x, pageCanvas.width - w - 4);
+  overlayPos.y = Math.min(overlayPos.y, pageCanvas.height - h - 4);
+  sigOverlay.style.left = overlayPos.x + 'px';
+  sigOverlay.style.top = overlayPos.y + 'px';
+  sigOverlay.style.width = w + 'px';
+  sigOverlay.style.height = h + 'px';
+  refreshSignBtn();
+}
+sigWidth.addEventListener('input', placeOverlay);
+
+// drag + resize
+(function(){
+  let drag = null;
+  sigOverlay.addEventListener('pointerdown', e => {
+    if (e.target.classList.contains('resize')) {
+      drag = { mode: 'resize', startX: e.clientX, startW: sigOverlay.offsetWidth };
+    } else {
+      drag = { mode: 'move', startX: e.clientX, startY: e.clientY, origX: overlayPos.x, origY: overlayPos.y };
+    }
+    sigOverlay.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  sigOverlay.addEventListener('pointermove', e => {
+    if (!drag) return;
+    if (drag.mode === 'move') {
+      overlayPos.x = Math.max(0, Math.min(drag.origX + e.clientX - drag.startX, pageCanvas.width - sigOverlay.offsetWidth));
+      overlayPos.y = Math.max(0, Math.min(drag.origY + e.clientY - drag.startY, pageCanvas.height - sigOverlay.offsetHeight));
+      sigOverlay.style.left = overlayPos.x + 'px';
+      sigOverlay.style.top = overlayPos.y + 'px';
+    } else {
+      let w = Math.max(80, Math.min(360, drag.startW + e.clientX - drag.startX));
+      sigWidth.value = w;
+      sigOverlay.style.width = w + 'px';
+      sigOverlay.style.height = Math.round(w * CAP_H / CAP_W) + 'px';
+    }
+  });
+  sigOverlay.addEventListener('pointerup', () => { drag = null; });
+})();
+
+function refreshSignBtn(){
+  signBtn.disabled = !(signatureReady() && pdfDoc);
+  if (!signBtn.disabled) sigOverlay.style.display = 'block';
+}
+function setPdfStatus(m){ pdfStatus.textContent = m; }
+
+// ---------- signing ----------
+signBtn.addEventListener('click', async () => {
+  if (signBtn.disabled) return;
+  signBtn.disabled = true;
+  setPdfStatus('Signing…');
+  try {
+    const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+    const out = await PDFDocument.load(pdfBytes.slice(0), { ignoreEncryption: true });
+    const page = out.getPage(pageIndex);
+    const pngBytes = await (await fetch(activeCanvas().toDataURL('image/png'))).arrayBuffer();
+    const img = await out.embedPng(pngBytes);
+    const s = renderScale;
+    const w = sigOverlay.offsetWidth / s;
+    const h = sigOverlay.offsetHeight / s;
+    const x = overlayPos.x / s;
+    const yFromBottom = page.getHeight() - (overlayPos.y / s) - h;
+    page.drawImage(img, { x, y: yFromBottom, width: w, height: h });
+    if (addDate.checked) {
+      const font = await out.embedFont(StandardFonts.Helvetica);
+      const stamped = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      page.drawText('Signed ' + stamped, { x, y: yFromBottom - 12, size: 8, font, color: rgb(0.25, 0.25, 0.25) });
+    }
+    const bytes = await out.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const a = document.createElement('a');
+    a.download = 'signed.pdf';
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    setPdfStatus('Saved — signed on this device; the original never left it.');
+  } catch (err) {
+    setPdfStatus('Signing failed: ' + (err && err.message ? err.message : err));
+  }
+  signBtn.disabled = false;
+});
+
+updateSigReady();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

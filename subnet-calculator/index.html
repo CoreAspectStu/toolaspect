@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subnet Calculator — CIDR, Mask &amp; Range | ToolAspect</title>
+<meta name="description" content="Enter any IPv4 address and mask: get network address, broadcast, first and last usable host, wildcard, and host count for every CIDR from /0 to /32.">
+<link rel="canonical" href="https://toolaspect.com/subnet-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Subnet Calculator — CIDR, Mask & Range">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="IPv4 subnet calculator: CIDR to dotted mask, network and broadcast address, usable host range, host count, and equal subnet splits — all computed in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/subnet-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Subnet Calculator | Free CIDR & Mask Tool">
+<meta name="twitter:description" content="Subnet any IPv4 block: network, broadcast, host range, wildcard mask, host count, split table.">
+<meta name="keywords" content="subnet calculator, cidr calculator, ip subnet calculator, subnet mask calculator, network broadcast address, ipv4 subnetting, cidr cheat sheet, host count">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Subnet Calculator","description":"Free IPv4 subnet calculator. Enter an address in CIDR or dotted-mask notation and get the network address, broadcast address, subnet mask in dotted and binary form, wildcard mask, first and last usable host, total and usable host count, and an equal-split subnet table. Runs entirely in your browser.","url":"https://toolaspect.com/subnet-calculator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How many usable hosts are in a /26 subnet?","acceptedAnswer":{"@type":"Answer","text":"A /26 has 26 mask bits, so 32-26 = 6 host bits and 2^6 = 64 total addresses. The network address and broadcast address are reserved, leaving 62 usable hosts spanning x.x.x.1 through x.x.x.62 in a 255.255.255.192 block. For example, 192.168.10.0/26 runs from 192.168.10.1 to 192.168.10.62, with 192.168.10.63 as broadcast."}},
+{"@type":"Question","name":"How do you calculate the subnet mask from CIDR notation?","acceptedAnswer":{"@type":"Answer","text":"The CIDR number counts the leading 1-bits in the 32-bit mask. Write that many 1s, pad the rest with 0s, and read each octet. /26 is 26 ones followed by 6 zeros: 11111111.11111111.11111111.11000000, which is 255.255.255.192. The wildcard (inverse) mask is the complement: 0.0.0.63."}},
+{"@type":"Question","name":"How many /26 subnets fit in a /24?","acceptedAnswer":{"@type":"Answer","text":"Four. A /24 has 256 addresses and a /26 has 64, and 256 / 64 = 4. The four subnets are 192.168.10.0/26, 192.168.10.64/26, 192.168.10.128/26, and 192.168.10.192/26, each holding 62 usable hosts — 248 usable addresses across the four combined."}},
+{"@type":"Question","name":"Why does 172.16.5.9/12 belong to the network 172.16.0.0?","acceptedAnswer":{"@type":"Answer","text":"A /12 mask is 255.240.0.0 — the second octet is masked to its top 4 bits. ANDing 16 with 240 keeps it, but the address 172.16.5.9 with mask 255.240.0.0 gives network 172.16.0.0 because the entire 172.16.0.0/12 private block (RFC 1918) spans 172.16.0.0 through 172.31.255.255: 1,048,576 addresses total, 1,048,574 usable. Any address in that range lands in the same network."}},
+{"@type":"Question","name":"What is the broadcast address used for?","acceptedAnswer":{"@type":"Answer","text":"It is the last address in a subnet, with every host bit set to 1 (192.168.10.63 for 192.168.10.0/26). Traffic sent to it reaches all hosts on that subnet, which is how ARP requests and DHCP discovery broadcasts work on IPv4 networks. It cannot be assigned to a device, which is one of the two reserved addresses per subnet."}},
+{"@type":"Question","name":"What is the smallest subnet that fits 300 hosts?","acceptedAnswer":{"@type":"Answer","text":"A /23. You need at least 302 addresses (300 hosts plus network and broadcast), and 2^(32-23) = 512 total addresses, leaving 510 usable. A /24's 254 usable hosts would be too small. The rule: find the smallest n where 2^n - 2 is at least your host count, then the prefix is 32 - n."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Subnet Calculator","item":"https://toolaspect.com/subnet-calculator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.cidr-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.05rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.8rem;box-sizing:border-box}
+.cidr-input:focus{outline:none;border-color:var(--primary)}
+.hint{color:var(--muted);font-size:.8rem;margin-top:.4rem}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:1rem}
+.res-cell{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem .9rem}
+.res-cell .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.res-cell .val{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95rem;color:var(--text);word-break:break-all}
+.res-cell .val.big{color:var(--primary-hover);font-weight:700}
+.res-cell .val small{color:var(--muted);font-weight:400;font-size:.75rem}
+.mini-row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:1.2rem}
+.mini-row label{color:var(--muted);font-size:.85rem}
+.mini-input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;padding:.5rem .7rem;width:130px;font-family:inherit}
+select.mini-input{width:auto}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1.5rem;font-size:.9rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🧮 Subnet Calculator</h1>
+<p>IPv4 CIDR ⇄ subnet mask ⇄ network, broadcast, host range — computed in your browser</p>
+</div>
+
+<div class="aio-answer">A /26 subnet has mask 255.255.255.192 (26 one-bits + 6 zero-bits), giving 64 total addresses and 62 usable hosts. For 192.168.10.0/26: network 192.168.10.0, broadcast 192.168.10.63, usable hosts 192.168.10.1 – 192.168.10.62, wildcard mask 0.0.0.63. The general rule: with n host bits you get 2<sup>n</sup> total addresses and 2<sup>n</sup> − 2 usable, since network and broadcast are always reserved (/31 point-to-point and /32 single-host links are the exceptions). Type any address below to subnet it.</div>
+
+<div class="section-card">
+<h2>Subnet an address</h2>
+<input class="cidr-input" id="cidrInput" spellcheck="false" value="192.168.10.0/26" aria-label="IP address with CIDR or mask">
+<p class="hint">Accepts CIDR (192.168.10.0/26), dotted mask (192.168.10.0/255.255.255.192), or a host address with either (192.168.10.35/26 → its network is computed). Prefix /0 to /32.</p>
+<div id="result"></div>
+<div class="mini-row">
+<label>Divide into</label>
+<select class="mini-input" id="splitCount"><option>2</option><option selected>4</option><option>8</option><option>16</option></select>
+<label>equal subnets</label>
+</div>
+<div id="splitTable"></div>
+<div class="mini-row">
+<label>Need usable hosts:</label>
+<input class="mini-input" type="number" id="hostsNeeded" value="300" min="1" max="16777214">
+<span id="hostsAnswer" style="color:var(--text);font-size:.9rem"></span>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/binary-converter/">Binary Converter</a></li><li style="margin:4px 0"><a href="/chmod-calculator/">Chmod Calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/cidr-subnet-cheat-sheet/">Read the CIDR cheat sheet guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>IPv4 CIDR Cheat Sheet — /8 to /32</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>CIDR</th><th>Subnet Mask</th><th>Wildcard</th><th>Total Addresses</th><th>Usable Hosts</th></tr></thead>
+<tbody>
+<tr><td><code>/8</code></td><td>255.0.0.0</td><td>0.255.255.255</td><td>16,777,216</td><td>16,777,214</td></tr>
+<tr><td><code>/9</code></td><td>255.128.0.0</td><td>0.127.255.255</td><td>8,388,608</td><td>8,388,606</td></tr>
+<tr><td><code>/10</code></td><td>255.192.0.0</td><td>0.63.255.255</td><td>4,194,304</td><td>4,194,302</td></tr>
+<tr><td><code>/11</code></td><td>255.224.0.0</td><td>0.31.255.255</td><td>2,097,152</td><td>2,097,150</td></tr>
+<tr><td><code>/12</code></td><td>255.240.0.0</td><td>0.15.255.255</td><td>1,048,576</td><td>1,048,574</td></tr>
+<tr><td><code>/13</code></td><td>255.248.0.0</td><td>0.7.255.255</td><td>524,288</td><td>524,286</td></tr>
+<tr><td><code>/14</code></td><td>255.252.0.0</td><td>0.3.255.255</td><td>262,144</td><td>262,142</td></tr>
+<tr><td><code>/15</code></td><td>255.254.0.0</td><td>0.1.255.255</td><td>131,072</td><td>131,070</td></tr>
+<tr><td><code>/16</code></td><td>255.255.0.0</td><td>0.0.255.255</td><td>65,536</td><td>65,534</td></tr>
+<tr><td><code>/17</code></td><td>255.255.128.0</td><td>0.0.127.255</td><td>32,768</td><td>32,766</td></tr>
+<tr><td><code>/18</code></td><td>255.255.192.0</td><td>0.0.63.255</td><td>16,384</td><td>16,382</td></tr>
+<tr><td><code>/19</code></td><td>255.255.224.0</td><td>0.0.31.255</td><td>8,192</td><td>8,190</td></tr>
+<tr><td><code>/20</code></td><td>255.255.240.0</td><td>0.0.15.255</td><td>4,096</td><td>4,094</td></tr>
+<tr><td><code>/21</code></td><td>255.255.248.0</td><td>0.0.7.255</td><td>2,048</td><td>2,046</td></tr>
+<tr><td><code>/22</code></td><td>255.255.252.0</td><td>0.0.3.255</td><td>1,024</td><td>1,022</td></tr>
+<tr><td><code>/23</code></td><td>255.255.254.0</td><td>0.0.1.255</td><td>512</td><td>510</td></tr>
+<tr><td><code>/24</code></td><td>255.255.255.0</td><td>0.0.0.255</td><td>256</td><td>254</td></tr>
+<tr><td><code>/25</code></td><td>255.255.255.128</td><td>0.0.0.127</td><td>128</td><td>126</td></tr>
+<tr><td><code>/26</code></td><td>255.255.255.192</td><td>0.0.0.63</td><td>64</td><td>62</td></tr>
+<tr><td><code>/27</code></td><td>255.255.255.224</td><td>0.0.0.31</td><td>32</td><td>30</td></tr>
+<tr><td><code>/28</code></td><td>255.255.255.240</td><td>0.0.0.15</td><td>16</td><td>14</td></tr>
+<tr><td><code>/29</code></td><td>255.255.255.248</td><td>0.0.0.7</td><td>8</td><td>6</td></tr>
+<tr><td><code>/30</code></td><td>255.255.255.252</td><td>0.0.0.3</td><td>4</td><td>2</td></tr>
+<tr><td><code>/31</code></td><td>255.255.255.254</td><td>0.0.0.1</td><td>2</td><td>2 (RFC 3021)</td></tr>
+<tr><td><code>/32</code></td><td>255.255.255.255</td><td>0.0.0.0</td><td>1</td><td>1</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Usable hosts = total − 2 (network + broadcast) for /0 through /30. A /31 keeps both addresses usable for point-to-point links under RFC 3021, and a /32 is a single host route.</p>
+</div>
+
+<div class="section-card">
+<h2>Private &amp; Reserved IPv4 Ranges</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Block</th><th>Range</th><th>Usable Hosts</th><th>Defined By / Use</th></tr></thead>
+<tbody>
+<tr><td><code>10.0.0.0/8</code></td><td>10.0.0.0 – 10.255.255.255</td><td>16,777,214</td><td>RFC 1918 — private LANs</td></tr>
+<tr><td><code>172.16.0.0/12</code></td><td>172.16.0.0 – 172.31.255.255</td><td>1,048,574</td><td>RFC 1918 — private LANs</td></tr>
+<tr><td><code>192.168.0.0/16</code></td><td>192.168.0.0 – 192.168.255.255</td><td>65,534</td><td>RFC 1918 — home routers</td></tr>
+<tr><td><code>127.0.0.0/8</code></td><td>127.0.0.0 – 127.255.255.255</td><td>—</td><td>RFC 1122 — loopback</td></tr>
+<tr><td><code>169.254.0.0/16</code></td><td>169.254.0.0 – 169.254.255.255</td><td>—</td><td>RFC 3927 — link-local (DHCP failure)</td></tr>
+<tr><td><code>100.64.0.0/10</code></td><td>100.64.0.0 – 100.127.255.255</td><td>—</td><td>RFC 6598 — carrier-grade NAT</td></tr>
+<tr><td><code>224.0.0.0/4</code></td><td>224.0.0.0 – 239.255.255.255</td><td>—</td><td>RFC 1112 — multicast</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How IPv4 Subnetting Works</h2>
+<p>An IPv4 address is 32 bits, split between network bits and host bits. The subnet mask is a wall of 1s (network part) followed by 0s (host part), and CIDR notation just counts the 1s: /26 means 26 network bits, 6 host bits. Three AND operations against the mask give you everything:</p>
+<ul>
+<li><strong>Network address</strong> = IP AND mask, with every host bit zeroed (192.168.10.35 &amp; 255.255.255.192 → 192.168.10.0)</li>
+<li><strong>Broadcast address</strong> = network with every host bit set to 1 (192.168.10.63)</li>
+<li><strong>Usable range</strong> = everything between them (192.168.10.1 – 192.168.10.62)</li>
+</ul>
+<p>Host count follows from the 6 remaining bits: 2<sup>6</sup> = 64 total addresses, minus the two reserved ones = 62 hosts. The wildcard mask is the inverse of the subnet mask (0.0.0.63 for a /26) — that's what ACLs in Cisco-style syntax match against.</p>
+<h3>Worked example 1: the /12 trap</h3>
+<p>Take 172.16.5.9/12. The mask is 255.240.0.0, so only the top 4 bits of the second octet belong to the network: 16 AND 240 = 16, but addresses from 172.16.0.0 through 172.31.255.255 all share the same 12 network bits. The calculator returns network 172.16.5.9 → 172.16.0.0, broadcast 172.31.255.255, usable 172.16.0.1 – 172.31.255.254 — 1,048,576 total addresses, 1,048,574 usable. This is the classic RFC 1918 range people mis-size by treating it as a /16.</p>
+<h3>Worked example 2: splitting a /24 four ways</h3>
+<p>Divide 192.168.10.0/24 into 4 equal subnets and each gets 2 more host bits sacrificed: four /26s of 64 addresses. The split table above lists them — .0/26, .64/26, .128/26, .192/26 — each with 62 usable hosts, 248 usable addresses across the whole /24 (4 × 62). Planning rule of thumb: size subnets to your host count plus ~20% headroom, not to round numbers — the wastage between a /27 (30 hosts) and a /26 (62) adds up fast across a large campus.</p>
+<h3>Sizing a subnet backwards</h3>
+<p>Need room for 300 hosts? Solve 2<sup>n</sup> − 2 ≥ 300: n = 9 gives 510 usable (2<sup>9</sup> = 512, minus 2). So the prefix is 32 − 9 = <strong>/23</strong>, mask 255.255.254.0. The "need usable hosts" box in the calculator does this math for any count up to 16,777,214.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How many usable hosts are in a /26 subnet?</h3><p>A /26 has 26 mask bits, so 32 − 26 = 6 host bits and 2<sup>6</sup> = 64 total addresses. The network address and broadcast address are reserved, leaving 62 usable hosts spanning x.x.x.1 through x.x.x.62 in a 255.255.255.192 block. For example, 192.168.10.0/26 runs from 192.168.10.1 to 192.168.10.62, with 192.168.10.63 as broadcast.</p></div>
+<div class="faq-item"><h3>How do you calculate the subnet mask from CIDR notation?</h3><p>The CIDR number counts the leading 1-bits in the 32-bit mask. Write that many 1s, pad the rest with 0s, and read each octet. /26 is 26 ones followed by 6 zeros: 11111111.11111111.11111111.11000000, which is 255.255.255.192. The wildcard (inverse) mask is the complement: 0.0.0.63.</p></div>
+<div class="faq-item"><h3>How many /26 subnets fit in a /24?</h3><p>Four. A /24 has 256 addresses and a /26 has 64, and 256 / 64 = 4. The four subnets are 192.168.10.0/26, 192.168.10.64/26, 192.168.10.128/26, and 192.168.10.192/26, each holding 62 usable hosts — 248 usable addresses across the four combined.</p></div>
+<div class="faq-item"><h3>Why does 172.16.5.9/12 belong to the network 172.16.0.0?</h3><p>A /12 mask is 255.240.0.0 — the second octet is masked to its top 4 bits. ANDing the address 172.16.5.9 with mask 255.240.0.0 gives network 172.16.0.0 because the entire 172.16.0.0/12 private block (RFC 1918) spans 172.16.0.0 through 172.31.255.255: 1,048,576 addresses total, 1,048,574 usable. Any address in that range lands in the same network.</p></div>
+<div class="faq-item"><h3>What is the broadcast address used for?</h3><p>It is the last address in a subnet, with every host bit set to 1 (192.168.10.63 for 192.168.10.0/26). Traffic sent to it reaches all hosts on that subnet, which is how ARP requests and DHCP discovery broadcasts work on IPv4 networks. It cannot be assigned to a device, which is one of the two reserved addresses per subnet.</p></div>
+<div class="faq-item"><h3>What is the smallest subnet that fits 300 hosts?</h3><p>A /23. You need at least 302 addresses (300 hosts plus network and broadcast), and 2<sup>(32−23)</sup> = 512 total addresses, leaving 510 usable. A /24's 254 usable hosts would be too small. The rule: find the smallest n where 2<sup>n</sup> − 2 is at least your host count, then the prefix is 32 − n.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/binary-converter/">🔢 Binary Converter</a>
+<a href="/chmod-calculator/">🔐 Chmod Calculator</a>
+<a href="/epoch-converter/">⏰ Epoch Converter</a>
+<a href="/certificate-decoder/">🔓 Certificate Decoder</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---SC-ENGINE-START---
+// Subnet math mirrors rs/node-netmask (MIT) semantics for IPv4.
+function ip2long(s){var p=s.split('.');if(p.length!==4)return null;var n=0;for(var i=0;i<4;i++){var o=p[i];if(!/^\d{1,3}$/.test(o))return null;o=+o;if(o>255)return null;n=(n*256)+o;}return n>>>0;}
+function long2ip(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');}
+function maskOf(bits){return bits===0?0:(0xFFFFFFFF<<(32-bits))>>>0;}
+function bitsOfOnes(m){var c=0;for(var i=31;i>=0;i--){if((m&(1<<i))>>>0)c++;}return c;}
+function isContiguousMask(m){var seenZero=false;for(var i=31;i>=0;i--){var bit=(m&(1<<i))>>>0;if(!bit)seenZero=true;else if(seenZero)return false;}return true;}
+function subnetOf(ipL,bits){
+  var m=maskOf(bits),net=(ipL&m)>>>0,bc=(net|(~m>>>0))>>>0;
+  var total=Math.pow(2,32-bits);
+  var usable=bits<=30?total-2:(bits===31?2:1);
+  var first=bits<=30?net+1:net,last=bits<=30?bc-1:bc;
+  return {net:net,bc:bc,mask:m,first:first,last:last,total:total,usable:usable,bits:bits};
+}
+function parseInput(str){
+  str=(str||'').trim();
+  if(!str)return null;
+  var idx=str.lastIndexOf('/');
+  var ipPart=idx>=0?str.slice(0,idx):str;
+  var maskPart=idx>=0?str.slice(idx+1):'24';
+  var ip=ip2long(ipPart);
+  if(ip===null)return null;
+  var bits;
+  if(/^\d{1,2}$/.test(maskPart)){bits=+maskPart;if(bits<0||bits>32)return null;}
+  else{var m=ip2long(maskPart);if(m===null||!isContiguousMask(m))return null;bits=bitsOfOnes(m);}
+  return {ip:ip,bits:bits};
+}
+function ipClass(o1){if(o1<128)return 'A';if(o1<192)return 'B';if(o1<224)return 'C';if(o1<240)return 'D (multicast)';return 'E (reserved)';}
+function privInfo(ipL){
+  var a=(ipL>>>24)&255,b=(ipL>>>16)&255;
+  if(a===10)return 'Private (RFC 1918, 10.0.0.0/8)';
+  if(a===172&&b>=16&&b<=31)return 'Private (RFC 1918, 172.16.0.0/12)';
+  if(a===192&&b===168)return 'Private (RFC 1918, 192.168.0.0/16)';
+  if(a===127)return 'Loopback (RFC 1122)';
+  if(a===169&&b===254)return 'Link-local (RFC 3927)';
+  if(a===100&&b>=64&&b<=127)return 'CGNAT (RFC 6598)';
+  if(a>=224)return 'Multicast/reserved';
+  return 'Public';
+}
+function bin32(n){var s=n.toString(2);while(s.length<32)s='0'+s;return s.replace(/(.{8})(?=.)/g,'$1.');}
+function fmt(n){return n.toLocaleString('en-US');}
+// ---- browser wiring ----
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function cell(lbl,val,cls){return '<div class="res-cell"><div class="lbl">'+lbl+'</div><div class="val'+(cls?' '+cls:'')+'">'+val+'</div></div>';}
+function render(){
+  var out=document.getElementById('result'),split=document.getElementById('splitTable');
+  var p=parseInput(document.getElementById('cidrInput').value);
+  if(!p){out.innerHTML='<div class="errbox">Enter an address like 192.168.10.0/26 or 10.0.0.0/255.255.0.0.</div>';split.innerHTML='';return;}
+  var s=subnetOf(p.ip,p.bits);
+  var o1=(p.ip>>>24)&255;
+  var h='';
+  h+='<div class="results-grid">';
+  h+=cell('Network address',long2ip(s.net),'big');
+  h+=cell('Broadcast address',long2ip(s.bc),'big');
+  h+=cell('Subnet mask',long2ip(s.mask)+' <small>/'+s.bits+'</small>');
+  h+=cell('Wildcard mask',long2ip((~s.mask)>>>0));
+  h+=cell('First usable host',long2ip(s.first));
+  h+=cell('Last usable host',long2ip(s.last));
+  h+=cell('Total addresses',fmt(s.total));
+  h+=cell('Usable hosts',fmt(s.usable),'big');
+  h+=cell('IP class (legacy)',ipClass(o1));
+  h+=cell('This address is',privInfo(p.ip));
+  h+='</div>';
+  h+='<p style="color:var(--muted);font-size:.8rem;margin-top:.6rem;font-family:ui-monospace,Menlo,Consolas,monospace">Mask binary: '+bin32(s.mask)+'</p>';
+  if(p.ip!==s.net)h+='<p style="color:var(--warn);font-size:.8rem;margin-top:.2rem">Note: '+long2ip(p.ip)+' is a host inside '+long2ip(s.net)+'/'+s.bits+', not the network address itself.</p>';
+  out.innerHTML=h;
+  renderSplit(s);
+}
+function renderSplit(s){
+  var n=parseInt(document.getElementById('splitCount').value,10)||4;
+  var el=document.getElementById('splitTable');
+  if(s.bits+n>32){el.innerHTML='<p class="hint">Cannot split a /'+s.bits+' into '+n+' subnets — that would need /'+(s.bits+n)+'.</p>';return;}
+  var newBits=s.bits+Math.round(Math.log2(n));
+  var per=Math.pow(2,32-newBits);
+  var rows='';
+  for(var i=0;i<n;i++){
+    var base=(s.net+i*per)>>>0;
+    var sub=subnetOf(base,newBits);
+    rows+='<tr><td><code>'+long2ip(sub.net)+'/'+newBits+'</code></td><td>'+long2ip(sub.bc)+'</td><td>'+long2ip(sub.first)+' – '+long2ip(sub.last)+'</td><td>'+fmt(sub.usable)+'</td></tr>';
+  }
+  el.innerHTML='<div class="table-wrap"><table class="data-table"><thead><tr><th>Subnet</th><th>Broadcast</th><th>Usable range</th><th>Hosts</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function renderHosts(){
+  var v=parseInt(document.getElementById('hostsNeeded').value,10);
+  var el=document.getElementById('hostsAnswer');
+  if(!v||v<1||v>16777214){el.textContent='';return;}
+  var n=1;while(Math.pow(2,n)-2<v)n++;
+  var bits=32-n,total=Math.pow(2,n);
+  el.innerHTML='→ smallest fit is <strong>/'+bits+'</strong> (mask '+long2ip(maskOf(bits))+', '+fmt(total)+' total, '+fmt(total-2)+' usable)';
+}
+document.getElementById('cidrInput').addEventListener('input',render);
+document.getElementById('splitCount').addEventListener('change',render);
+document.getElementById('hostsNeeded').addEventListener('input',renderHosts);
+render();renderHosts();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

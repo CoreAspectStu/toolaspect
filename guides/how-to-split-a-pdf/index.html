@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Split a PDF: Ranges, Chunks &amp; Burst | ToolAspect</title>
+<meta name="description" content="Split a PDF three ways: typed page ranges (1-3, 5, 8-10), fixed chunks of N pages, or one file per page. Syntax, remainder math, and CLI equivalents.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-split-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Split a PDF: Ranges, Chunks & Burst Explained","description":"Splitting a PDF means copying its pages into new, standalone documents — and there are exactly three shapes of split that cover every real job: typed page ranges for chapter cuts, fixed-size chunks for upload limits and print batches, and burst mode for one-file-per-page workflows. This guide explains the range syntax, walks the chunk arithmetic (a 12-page file split every 5 pages gives files of 5, 5, and 2 pages), covers encrypted files and quality questions, and gives the pdftk and qpdf command-line equivalents. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Split a PDF","item":"https://toolaspect.com/guides/how-to-split-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I split a PDF by page ranges?","acceptedAnswer":{"@type":"Answer","text":"Type comma-separated ranges — 1-3, 5, 8-10 — and each range becomes its own PDF. A 10-page document split as 1-3, 5, 8-10 produces three files with 3, 1, and 3 pages. Ranges are inclusive on both ends; a bare number is a single page; 9- means page 9 through the end; -4 means pages 1 through 4."}},
+{"@type":"Question","name":"How do I split a PDF into equal parts?","acceptedAnswer":{"@type":"Answer","text":"Use fixed chunks of N pages. The tool cuts at multiples of N, and the last file holds the remainder: a 12-page PDF split every 5 pages gives three files of pages 1-5, 6-10, and 11-12 — that's 5, 5, and 2 pages. Page counts that divide evenly (12 split every 4) produce equal files with no remainder."}},
+{"@type":"Question","name":"How do I save just one page of a PDF?","acceptedAnswer":{"@type":"Answer","text":"Split with the single page number as the range — type 7 for page 7 — and you get a one-page PDF. In a terminal: qpdf in.pdf --pages . 7 -- page7.pdf. For every page as its own file, use burst mode (pdftk in.pdf burst is the CLI version)."}},
+{"@type":"Question","name":"Can I split a password-protected PDF?","acceptedAnswer":{"@type":"Answer","text":"Only after unlocking it. Encrypted PDFs can't be read by any splitter — browser or desktop — while locked. Open the file with its password in a viewer and re-save an unlocked copy (or print-to-PDF), then split that. Owner-password restrictions are the usual reason a file refuses to load."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Split a PDF: Ranges, Chunks &amp; Burst Explained</h1>
+<div class="meta"><span>✂️ PDF</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">Every real PDF-splitting job reduces to one of three shapes: cut here-to-here (ranges), cut every N pages (chunks), or cut everywhere (burst). Once you know which shape you need, the tool — or the one-line command — follows immediately. Here's the syntax, the arithmetic that catches people out (remainders), and what happens to quality and file size when you cut a document up.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does splitting actually do?</h2>
+<p>Each output file is a fresh, valid PDF containing byte-for-byte copies of the pages you selected, along with the fonts and images those pages reference. Nothing is recompressed: text stays selectable, scans stay scans, page sizes pass through unchanged. One side effect worth knowing — each small file carries its own copy of shared resources, so splitting one 10 MB document into ten pieces can total slightly more than 10 MB. That's duplicated fonts, not degraded quality.</p>
+<h2>Shape 1: How do you split by page ranges?</h2>
+<p>Ranges are the scalpel. Type comma-separated selections in a human format:</p>
+<ul>
+<li><code>1-3</code> — pages 1, 2, and 3 (inclusive on both ends)</li>
+<li><code>5</code> — just page 5</li>
+<li><code>1-3, 5, 8-10</code> — three selections, three output files (3 + 1 + 3 pages)</li>
+<li><code>9-</code> — page 9 through the last page</li>
+<li><code>-4</code> — page 1 through 4</li>
+</ul>
+<p>On a 12-page document, <code>1-3, 5, 8-10</code> yields three PDFs: one with pages 1–3, one with page 5, one with pages 8–10. Pages 4, 6, 7, 11, and 12 are simply not included — that's the point. Range splits are how you pull a chapter, redact by omission (send the version minus the pages you don't want seen), or assemble the pieces of a custom packet.</p>
+<h2>Shape 2: How does every-N-pages chunking work?</h2>
+<p>The tool cuts at fixed boundaries of N pages and puts the remainder in the last file. The arithmetic: a 12-page PDF split every 5 pages gives ceil(12 ÷ 5) = 3 files — pages 1–5, 6–10, and 11–12, i.e. 5, 5, and 2 pages, summing back to exactly 12. Every page lands in exactly one output; nothing is duplicated or dropped. Even divisions are cleaner: 12 split every 4 gives three equal 4-page files.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pages</th><th>Split every</th><th>Resulting files</th><th>Pages per file</th></tr></thead>
+<tbody>
+<tr><td>12</td><td>5</td><td>3</td><td>5, 5, 2</td></tr>
+<tr><td>12</td><td>4</td><td>3</td><td>4, 4, 4</td></tr>
+<tr><td>10</td><td>3</td><td>4</td><td>3, 3, 3, 1</td></tr>
+<tr><td>25</td><td>10</td><td>3</td><td>10, 10, 5</td></tr>
+</tbody>
+</table>
+</div>
+<p>Chunk mode exists for hard constraints: email attachment ceilings, upload limits on portals that cap page counts, and print batches that need to move in fives or tens.</p>
+<h2>Shape 3: When do you want burst mode?</h2>
+<p>Burst — one file per page — is chunk mode with N = 1, and it's what you want when pages are processed individually: per-page review, feeding a fax-style workflow, dropping scanned pages into a system that takes one at a time, or building a page thumbnail set. A 6-page document becomes 6 PDFs, named <code>file-1.pdf</code> through <code>file-6.pdf</code>.</p>
+<h2>How do you do it from the command line?</h2>
+<p>Two tools cover it. With <strong>qpdf</strong>, a range split is <code>qpdf in.pdf --pages . 1-3 -- part1.pdf</code> (the <code>.</code> means "from the input file"; the range is 1-based and inclusive), and every-page splitting is <code>qpdf --split-pages in.pdf</code>. With <strong>pdftk</strong>: <code>pdftk in.pdf cat 1-3 5 output parts.pdf</code> concatenates selected ranges into one file, <code>pdftk in.pdf cat 1-3 output part1.pdf</code> writes them separately, and <code>pdftk in.pdf burst output page_%02d.pdf</code> is burst mode. The <a href="/pdf-split/">browser splitter</a> is the same operation without a terminal — and without your document leaving the machine.</p>
+<h2>What about extracting pages into one file?</h2>
+<p>Splitting makes many files; extraction makes one file from a selection. If you need pages 2, 5–7 as a single new PDF, either use the CLI above (<code>qpdf in.pdf --pages . 2,5-7 -- extracted.pdf</code>) or do the two-step in the browser: split those ranges out, then recombine them with the <a href="/pdf-merge/">PDF Merge tool</a>. The split→merge pair also solves reordering: cut a document into its new sections, then merge them back in the order you want.</p>
+<h2>What breaks, and how do you fix it?</h2>
+<ul>
+<li><strong>Encrypted PDFs</strong> refuse to load in any splitter while locked. Unlock with the password, re-save, then split.</li>
+<li><strong>Bookmark and link targets</strong> live at the document level, so internal navigation usually doesn't survive a split. Content is untouched.</li>
+<li><strong>Signatures</strong> don't validate in the pieces — a signature covers the original whole document's bytes. Split first, sign the parts that need signing.</li>
+<li><strong>Odd page numbering</strong> — printed footers are page content; a "page 1" footer on the 7th physical page stays "page 1". Physical position is what ranges refer to.</li>
+</ul>
+<div class="cta-box"><h3>Split a PDF right now</h3><p style="color:#fff;opacity:.9">Ranges, chunks, or burst — in your browser, no upload, no watermark, plan preview before you commit.</p><a href="/pdf-split/">Split a PDF →</a></div>
+<h2>The bottom line</h2>
+<p>Pick the shape first: ranges for selections, chunks for equal cuts, burst for everything. Know that the last chunk holds the remainder (12 every 5 = 5+5+2), that quality never changes because pages are copied not re-rendered, and that encrypted files must be unlocked before any tool will touch them. For one-off jobs the browser tool is fastest; for pipelines, qpdf and pdftk are the same math in a terminal.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I split a PDF by page ranges?</h3><p>Type comma-separated ranges — 1-3, 5, 8-10 — and each range becomes its own PDF. A 10-page document split as 1-3, 5, 8-10 produces three files with 3, 1, and 3 pages. Ranges are inclusive on both ends; a bare number is a single page; 9- means page 9 through the end; -4 means pages 1 through 4.</p></div>
+<div class="faq-item"><h3>How do I split a PDF into equal parts?</h3><p>Use fixed chunks of N pages. The tool cuts at multiples of N, and the last file holds the remainder: a 12-page PDF split every 5 pages gives three files of pages 1-5, 6-10, and 11-12 — that's 5, 5, and 2 pages. Page counts that divide evenly (12 split every 4) produce equal files with no remainder.</p></div>
+<div class="faq-item"><h3>How do I save just one page of a PDF?</h3><p>Split with the single page number as the range — type 7 for page 7 — and you get a one-page PDF. In a terminal: qpdf in.pdf --pages . 7 -- page7.pdf. For every page as its own file, use burst mode (pdftk in.pdf burst is the CLI version).</p></div>
+<div class="faq-item"><h3>Can I split a password-protected PDF?</h3><p>Only after unlocking it. Encrypted PDFs can't be read by any splitter — browser or desktop — while locked. Open the file with its password in a viewer and re-save an unlocked copy (or print-to-PDF), then split that. Owner-password restrictions are the usual reason a file refuses to load.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/pdf-split/">PDF Split</a>
+<a href="/pdf-merge/">PDF Merge</a>
+<a href="/pdf-to-qr-code/">PDF to QR Code</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

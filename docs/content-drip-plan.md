@@ -121,6 +121,34 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   completing the 10d746c "all count claims" sweep that missed those three.
   Wave-2 queue state: prompt-library guide still owed (depth pass done 8-29);
   currency-converter, qr-code-generator, macro, water-intake, age-calculator complete.
+- 2026-08-31 batch guides: prompt-library → guides/how-to-write-ai-prompts/;
+  hourly-to-salary → guides/how-to-convert-hourly-to-salary/;
+  sales-tax → guides/how-does-sales-tax-work/
+  (each: 1,308–1,386 words, verified data tables — prompt anatomy + weak-vs-repaired,
+  rate→period conversion + salary→effective-hourly, Tax Foundation 2026 combined
+  rates — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  all-tools guides section updated, count 71→74; guide backlinks added to all
+  three tool pages' related sections; FLSA $684/week threshold verified vs DOL,
+  sales-tax tool page stale "California highest combined avg" claim corrected
+  to TF-2026 Louisiana 10.11%)
+- 2026-08-31 depth passes: compound-interest-calculator (190 → 1,240 words,
+  +simple-vs-compound +rate-grid +frequency +Rule-of-72 reference tables,
+  +5 FAQs with new FAQPage JSON-LD + BreadcrumbList; fixed wrong
+  "$10k + $500/mo @7%/30y = $566,755" bullet → $691,150 monthly-compounded
+  (old figure dropped the principal and used annual contributions); guide link
+  in related; calculator JS untouched);
+  heloc-payment-calculator (764 → 1,274 words, +payment-jump-by-balance table
+  (verified: $50k→$200k at 8.5%), +variable-rate mechanics +blunt-the-jump
+  sections, +2 FAQs with FAQPage JSON-LD update 5→7, guide links in related;
+  calculator JS untouched)
+  Skipped guide (matching exists): compound-interest (how-to-calculate-compound-
+  interest), heloc-payment (heloc-vs-cash-out-refi, heloc-vs-home-equity-loan),
+  home-equity (how-to-build-home-equity), life-insurance-needs
+  (how-much-life-insurance-do-i-need), loan (how-to-calculate-loan-payoff).
+  Queue state: high-value queue (/tmp/guide-priority.json) guides complete
+  except low-monetization tail (engagement-rate, average, percentage-change,
+  placeholder-image); thin pages still under 900 for a future depth pass:
+  home-equity-calculator (810), va-loan-calculator (842).
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A

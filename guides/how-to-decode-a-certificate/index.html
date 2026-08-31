@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Decode a Certificate: PEM, DER, ASN.1 | ToolAspect</title>
+<meta name="description" content="A PEM certificate is base64-wrapped DER, which is ASN.1 with tags and lengths. How to read one: serial, validity, SANs, key size, signature algorithm.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-decode-a-certificate/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Decode a Certificate: PEM, DER, and ASN.1 Explained","description":"Every TLS certificate is three layers deep: ASN.1 structures, DER-encoded with tag-length-value bytes, then base64-wrapped as PEM so it survives copy-paste. This guide walks a real certificate through those layers — serial numbers, validity windows, SANs, RSA modulus bit lengths, EC curves, signature algorithm OIDs — shows the openssl one-liners for each field, and explains what to check before a cert ships: key size, SAN coverage of every hostname, chain position, and expiry math against your renewal schedule. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Decode a Certificate","item":"https://toolaspect.com/guides/how-to-decode-a-certificate/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is inside a PEM file?","acceptedAnswer":{"@type":"Answer","text":"Base64-encoded DER bytes between BEGIN/END markers. Strip the markers and the base64 armor, and what's left is a stream of tag-length-value records — the ASN.1 structure of a certificate, CSR, or key. Multiple BEGIN/END blocks in one file (a chain) are just multiple structures stacked in order."}},
+{"@type":"Question","name":"How do I check a certificate's expiration date?","acceptedAnswer":{"@type":"Answer","text":"Decode it and read notAfter in the Validity section — certificates carry both notBefore and notAfter as UTC dates. With openssl: openssl x509 -in cert.pem -noout -enddate. Renew at roughly two-thirds of the lifetime; for a 90-day Let's Encrypt certificate that means starting renewal around day 60, which is exactly what certbot's auto-renewal timer does."}},
+{"@type":"Question","name":"Why does the serial number show extra bytes?","acceptedAnswer":{"@type":"Answer","text":"DER integers are signed, so a positive number whose top bit is set gets a leading 0x00 byte to keep it positive, and serials are random 16-to-20-byte values. Decoders show the hex — sometimes with that padding byte — which is why the same serial can appear as 40 or 42 hex characters depending on who's printing it."}},
+{"@type":"Question","name":"What is a SAN and why does it matter more than the CN?","acceptedAnswer":{"@type":"Answer","text":"The Subject Alternative Name extension (OID 2.5.29.17) lists every DNS name, IP address, and email the certificate is valid for. Browsers since about 2017 validate against SANs and ignore the commonName entirely — a cert with CN=example.com but no matching SAN fails. Before shipping a cert, check that every hostname and IP it serves appears in the SAN list."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:12px 14px;font-size:.8rem;overflow-x:auto}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Decode a Certificate: PEM, DER, and ASN.1 Explained</h1>
+<div class="meta"><span>🔓 TLS / PKI</span><span>⏱️ 8 min read</span><span>Free tool included</span></div>
+<p class="intro">Certificates look opaque because they're wearing three layers: ASN.1 (the structure), DER (the binary encoding), and PEM (the base64 armor). Peel them in order and every field you care about — expiry, SANs, key size, who signed it — is sitting at a predictable offset in a tagged tree. Here's the full walkthrough, plus the openssl one-liners for people who want the same answers from a terminal.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What are PEM, DER, and ASN.1, actually?</h2>
+<p>ASN.1 is a notation for structured data: values have types (INTEGER, OID, SEQUENCE, time, strings), and types nest. X.509 certificates are defined in ASN.1 — a certificate is a SEQUENCE containing a TBSCertificate ("to be signed"), the signature algorithm, and the signature.</p>
+<p>DER is one way to serialize ASN.1 to bytes, chosen because it's deterministic: every value is written as a tag byte (its type), a length, and the content. <code>30 82 04 F3</code>, the first four bytes of almost every certificate you'll meet, is literally "SEQUENCE, 1267 bytes, long-form length." That regularity is why a decoder can walk the structure without knowing anything about certificates.</p>
+<p>PEM takes those DER bytes, base64-encodes them, and wraps them in BEGIN/END lines so they survive email and terminals. One PEM file can hold several blocks — a server cert plus its intermediates — which decode one at a time, in order.</p>
+<h2>How does a decoder read the fields?</h2>
+<p>It walks the DER tree and reads the certificate's fixed shape: version (a [0]-tagged wrapper, absent means v1), serial (INTEGER), signature algorithm (an OID like 1.2.840.113549.1.1.11 — sha256WithRSAEncryption), issuer name, validity (two times), subject name, public key info, and — in v3 — the extensions. Names are SEQUENCEs of RDNs, each a SET of type-value pairs like CN=api.example.com. The public key lives inside a BIT STRING: RSA is two INTEGERs (modulus and exponent, with the key size read from the modulus's bit length), EC is a curve OID plus a point, Ed25519 a raw 32-byte key.</p>
+<h2>What should you actually check on a certificate?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Field</th><th>What to look for</th><th>openssl</th></tr></thead>
+<tbody>
+<tr><td>Validity</td><td>notBefore in the past, notAfter comfortably ahead; 90-day certs should renew at ~day 60</td><td><code>openssl x509 -noout -dates</code></td></tr>
+<tr><td>SANs</td><td>Every hostname and IP the cert serves, or the handshake fails</td><td><code>openssl x509 -noout -ext subjectAltName</code></td></tr>
+<tr><td>Key size</td><td>RSA 2048+; ECDSA P-256/P-384; nothing at 1024</td><td><code>openssl x509 -noout -text | grep Public-Key</code></td></tr>
+<tr><td>Issuer</td><td>Who signed it — matches the intermediate above it in the chain</td><td><code>openssl x509 -noout -issuer</code></td></tr>
+<tr><td>basicConstraints</td><td>CA:FALSE on leaf certs; path length on CAs</td><td><code>openssl x509 -noout -text | grep -A1 Basic</code></td></tr>
+<tr><td>Signature algorithm</td><td>sha256WithRSAEncryption or ecdsa-with-SHA256+; SHA-1 is dead</td><td><code>openssl x509 -noout -text | grep Signature</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2>Why do serials and key bytes look weird?</h2>
+<p>Two DER quirks account for most head-scratching. First, DER integers are signed, so a positive value whose first byte has the high bit set gets a padding 0x00 — that's why serials are shown as 16-to-20-byte hex blobs that sometimes start with 00. Second, public key material rides inside BIT STRINGs, which spend their first content byte saying how many trailing bits are unused (usually 0) — decoders strip it before parsing what's inside.</p>
+<p>Object identifiers deserve their own sentence: an OID like 1.2.840.113549.1.1.11 encodes as base-128 bytes where the first value packs the first two arcs (1.2 → 42 → 0x2A). The decoder expands them back to dotted form and, when it knows the OID, prints the name — which is how "sha256WithRSAEncryption" appears where the raw bytes said <code>2A 86 48 86 F7 0D 01 01 0B</code>.</p>
+<h2>How do you decode a CSR?</h2>
+<p>A certificate signing request is the same trick in a smaller package: PKCS#10 wraps the requested subject and public key with a signature proving you hold the key. The field worth checking is the requested SAN extension — CAs copy the CSR's SANs into the cert (the CN alone is not enough), so a missing SAN in the CSR means a cert that won't validate. The challengePassword attribute, when present, is also visible in the structure.</p>
+<h2>What about private keys?</h2>
+<p>The same decoder logic reads key files — that's by design, not accident. <code>RSA PRIVATE KEY</code> is PKCS#1 (version, modulus, exponent, private components), <code>EC PRIVATE KEY</code> is SEC 1, <code>PRIVATE KEY</code> is the algorithm-agnostic PKCS#8 wrapper, and <code>ENCRYPTED PRIVATE KEY</code> is PKCS#8 with a cipher OID (PBES2 → usually aes-256-cbc with PBKDF2) where the payload stays encrypted. If you paste a key into a decoder, use one that runs entirely in the page — our <a href="/certificate-decoder/">certificate decoder</a> never transmits what you paste and never shows private exponents in copyable form. For the surrounding toolkit, the <a href="/jwt-decoder/">JWT decoder</a> unwraps the other certificate-adjacent blob you'll meet (JOSE headers carry the same algorithm OIDs), and the <a href="/base64-encoder/">base64 encoder</a> is handy for the armor layer itself.</p>
+<div class="cta-box"><h3>Decode a certificate right now</h3><p style="color:#fff;opacity:.9">Paste any PEM — cert, CSR, or key — and get the full ASN.1 tree plus subject, validity, SANs, key size, and signature algorithm. Free, private, in-browser.</p><a href="/certificate-decoder/">Certificate Decoder →</a></div>
+<h2>The bottom line</h2>
+<p>Tag, length, value — repeated recursively. Once you see that rhythm in the hex, a certificate stops being a mystery blob and becomes a readable document with an expiry date, a hostname list, and a key you can size up. Decode before you deploy, and the worst outages (the expired-cert-on-Saturday kind) never happen.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is inside a PEM file?</h3><p>Base64-encoded DER bytes between BEGIN/END markers. Strip the markers and the base64 armor, and what's left is a stream of tag-length-value records — the ASN.1 structure of a certificate, CSR, or key. Multiple BEGIN/END blocks in one file (a chain) are just multiple structures stacked in order.</p></div>
+<div class="faq-item"><h3>How do I check a certificate's expiration date?</h3><p>Decode it and read notAfter in the Validity section — certificates carry both notBefore and notAfter as UTC dates. With openssl: openssl x509 -in cert.pem -noout -enddate. Renew at roughly two-thirds of the lifetime; for a 90-day Let's Encrypt certificate that means starting renewal around day 60, which is exactly what certbot's auto-renewal timer does.</p></div>
+<div class="faq-item"><h3>Why does the serial number show extra bytes?</h3><p>DER integers are signed, so a positive number whose top bit is set gets a leading 0x00 byte to keep it positive, and serials are random 16-to-20-byte values. Decoders show the hex — sometimes with that padding byte — which is why the same serial can appear as 40 or 42 hex characters depending on who's printing it.</p></div>
+<div class="faq-item"><h3>What is a SAN and why does it matter more than the CN?</h3><p>The Subject Alternative Name extension (OID 2.5.29.17) lists every DNS name, IP address, and email the certificate is valid for. Browsers since about 2017 validate against SANs and ignore the commonName entirely — a cert with CN=example.com but no matching SAN fails. Before shipping a cert, check that every hostname and IP it serves appears in the SAN list.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/certificate-decoder/">Certificate Decoder</a>
+<a href="/jwt-decoder/">JWT Decoder</a>
+<a href="/base64-encoder/">Base64 Encoder</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

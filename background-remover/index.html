@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Background Remover — Free Online Image Tool | ToolAspect</title>
+<meta name="description" content="Free background remover that runs in your browser. Cut out people in one click with a 25 MB AI model — no upload, no watermark, PNG transparency.">
+<link rel="canonical" href="https://toolaspect.com/background-remover/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Background Remover — Free Online Image Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Remove image backgrounds in your browser with an Apache-2.0 matting model. No upload, no watermark, transparent PNG download.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/background-remover/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Background Remover | Free Online Tool">
+<meta name="twitter:description" content="One-click background removal that never uploads your photo. Transparent PNG output.">
+<meta name="keywords" content="background remover, remove background from image, transparent background maker, png background remover, free background remover, image cutout">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Background Remover","description":"Free browser-based background remover. Loads an Apache-2.0 MODNet matting model in your browser, estimates an alpha matte for every pixel, and exports a transparent PNG. Nothing is uploaded.","url":"https://toolaspect.com/background-remover/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is this background remover really free and private?","acceptedAnswer":{"@type":"Answer","text":"Yes. The tool downloads the open-source MODNet model (Apache-2.0) straight from a public CDN and runs it on your device with WebAssembly. Your photo is never uploaded to any server — you can watch the network tab and see that nothing leaves the page after the model files arrive. There is no watermark, no signup, and no image limit because there is no server doing the work."}},
+{"@type":"Question","name":"Why does the first run take longer?","acceptedAnswer":{"@type":"Answer","text":"The first removal downloads the model weights — about 25 MB for the full-precision version or 6.3 MB for the quantized one — plus the WebAssembly runtime. Your browser caches both, so the second and later images process in seconds. If you switch between the Balanced and Fast quality settings, each setting's model is downloaded once."}},
+{"@type":"Question","name":"What kind of photos work best?","acceptedAnswer":{"@type":"Answer","text":"MODNet is a portrait matting model, so photos of people give the cleanest cutouts. Product shots, pets, and objects with clear edges usually work well too. Fine details like individual hair strands, glass, and sheer fabric are where free in-browser models fall short of paid services — expect soft edges there instead of perfect ones."}},
+{"@type":"Question","name":"Why does my download have a checkerboard pattern in it?","acceptedAnswer":{"@type":"Answer","text":"It doesn't — that checkerboard is only the on-page preview showing you where the image is transparent. The exported PNG keeps true transparency. If a program shows a solid white background instead, that app filled transparent pixels for display; the alpha channel is still in the file."}},
+{"@type":"Question","name":"Should I export PNG or JPEG?","acceptedAnswer":{"@type":"Answer","text":"PNG. JPEG has no alpha channel, so a transparent cutout saved as JPEG gets a solid background baked in. PNG and WebP both support transparency; PNG is the safe universal choice for pasting into slides, docs, and editors."}},
+{"@type":"Question","name":"How is this different from remove.bg?","acceptedAnswer":{"@type":"Answer","text":"remove.bg runs a large server-side model, which is why it handles complex hair and edges better. This tool trades some edge quality for privacy and price: the model runs on your machine, so nothing is uploaded, there are no credits, and there is no resolution cap imposed by an upload limit. For profile photos, product shots, and presentation cutouts, the results are usually indistinguishable."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Background Remover","item":"https://toolaspect.com/background-remover/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone:hover,.dropzone.dragover{border-color:var(--primary)}
+.dropzone .icon{font-size:2rem;margin-bottom:.5rem}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .hint{font-size:.78rem;margin-top:.35rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn{display:inline-block;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:.75rem 1.5rem;font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+.progress-wrap{margin-top:1rem;display:none}
+.progress-label{font-size:.8rem;color:var(--muted);margin-bottom:.35rem}
+.progress-bar{height:8px;background:var(--bg);border-radius:6px;overflow:hidden}
+.progress-bar .fill{height:100%;width:0;background:var(--primary);border-radius:6px;transition:width .2s}
+.result-wrap{margin-top:1.25rem;display:none}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.compare-grid{grid-template-columns:1fr}}
+.compare-item{text-align:center}
+.compare-item .c-label{font-size:.8rem;color:var(--muted);margin-bottom:.4rem}
+.canvas-frame{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;line-height:0}
+.canvas-frame canvas{width:100%;height:auto;display:block}
+.checker{background-image:linear-gradient(45deg,#2a2d3a 25%,transparent 25%),linear-gradient(-45deg,#2a2d3a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a2d3a 75%),linear-gradient(-45deg,transparent 75%,#2a2d3a 75%);background-size:18px 18px;background-position:0 0,0 9px,9px -9px,-9px 0;background-color:#1a1d27}
+.status-line{margin-top:.75rem;font-size:.85rem;color:var(--muted);text-align:center;min-height:1.2em}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.75rem;text-align:center}
+.stat .s-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.stat .s-value{font-size:1.05rem;font-weight:700;margin-top:.2rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✂️ Background Remover</h1>
+<p>Cut out people and objects in your browser — nothing gets uploaded</p>
+</div>
+<div class="aio-answer">This background remover runs the open-source <strong>MODNet</strong> matting model (Apache-2.0) directly in your browser via transformers.js and WebAssembly. Drop in a photo, click remove, and get a transparent PNG: the model estimates an alpha value for every pixel, so edges fade out instead of cutting hard. The weights — 25 MB full-precision or 6.3 MB quantized — load once from a CDN and cache; your image never leaves the page. It's strongest on people (that's what MODNet was trained for) and honest where it's weak: fine hair and glass.</div>
+
+<div class="section-card">
+<h2>Remove a Background</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p id="dzText">Drop an image here or click to choose</p>
+<p class="hint">JPG, PNG, or WebP · processed on your device</p>
+<input type="file" id="fileInput" accept="image/*" hidden>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>Quality</label>
+<select id="quality">
+<option value="fp32">Balanced — full precision (25 MB model, best edges)</option>
+<option value="q8">Fast — quantized (6.3 MB model, quicker download)</option>
+</select>
+</div>
+<div class="input-group"><label>Output background</label>
+<select id="bgMode">
+<option value="transparent">Transparent (PNG)</option>
+<option value="#ffffff">Solid white</option>
+<option value="custom">Custom color…</option>
+</select>
+</div>
+</div>
+<div class="input-group" id="customColorGroup" style="display:none"><label>Custom background color</label><input type="color" id="customColor" value="#6366f1"></div>
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-label" id="progressLabel">Loading model…</div>
+<div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+</div>
+<div class="status-line" id="status"></div>
+<div class="result-wrap" id="resultWrap">
+<div class="compare-grid">
+<div class="compare-item"><div class="c-label">Original</div><div class="canvas-frame" id="srcFrame"></div></div>
+<div class="compare-item"><div class="c-label">Cutout</div><div class="canvas-frame checker" id="outFrame"></div></div>
+</div>
+<div class="result-stats">
+<div class="stat"><div class="s-label">Dimensions</div><div class="s-value" id="statDims">—</div></div>
+<div class="stat"><div class="s-label">Pixels</div><div class="s-value" id="statPx">—</div></div>
+<div class="stat"><div class="s-label">Process time</div><div class="s-value" id="statTime">—</div></div>
+<div class="stat"><div class="s-label">PNG size</div><div class="s-value" id="statSize">—</div></div>
+</div>
+<div style="text-align:center;margin-top:1rem">
+<button class="btn" id="downloadBtn">⬇️ Download PNG</button>
+<button class="btn secondary" id="resetBtn">Start over</button>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/image-compressor/">Image Compressor</a></li><li style="margin:4px 0"><a href="/image-watermark/">Image Watermark</a></li><li style="margin:4px 0"><a href="/image-upscaler/">Image Upscaler</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Browser Matting Models Compared</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Model</th><th>License</th><th>Download size</th><th>Best at</th><th>In this tool</th></tr></thead>
+<tbody>
+<tr><td>MODNet (full precision)</td><td>Apache-2.0</td><td>24.7 MB</td><td>Portraits, people</td><td>Yes — Balanced mode</td></tr>
+<tr><td>MODNet (8-bit quantized)</td><td>Apache-2.0</td><td>6.3 MB</td><td>Same, slightly softer edges</td><td>Yes — Fast mode</td></tr>
+<tr><td>U2-Net</td><td>Apache-2.0</td><td>~168 MB (fp32)</td><td>General objects</td><td>No — too heavy for a page load</td></tr>
+<tr><td>BRIA RMBG-1.4</td><td>Custom, non-commercial</td><td>~44 MB</td><td>General purpose</td><td>No — license forbids commercial use</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">License matters as much as quality here. Several popular background-removal models carry non-commercial terms, which is why they're excluded even though they benchmark well. Everything this tool loads is Apache-2.0, both the runtime (transformers.js) and the weights (MODNet).</p>
+</div>
+
+<div class="content-section">
+<h2>How It Works</h2>
+<p>Old-school background removal drew a hard boundary around a subject. Modern matting models do something better: for every pixel they predict an alpha value between 0 and 1 — how much of that pixel belongs to the person and how much belongs to the background. Semi-transparent pixels along hair and shoulders stay semi-transparent, which is what makes cutouts look natural when you paste them somewhere new.</p>
+<h3>The pipeline</h3>
+<p>Your image is decoded, resized to what the model expects, and pushed through MODNet as a tensor. The model outputs a single-channel matte; transformers.js multiplies it into an alpha channel, reattaches your original colors, and hands back a full RGBA image. From there the page composites it onto transparent, white, or a color you pick, and encodes a PNG.</p>
+<h3>How to use it</h3>
+<p>Drop a photo, pick a quality setting, and wait for the matte. First run downloads the model; after that it's cached and each image takes seconds. Use the output-background selector to flatten onto white for a clean product-card look, or leave it transparent and drop the PNG into a slide deck, an email, or a marketplace listing.</p>
+<h3>A worked example with real numbers</h3>
+<p>Take a 1920×1080 photo. That's 2,073,600 pixels (2.07 megapixels). Before the model runs, the raw color data is 1920 × 1080 × 3 bytes = 6,220,800 bytes, about 5.93 MiB. The output adds an alpha channel: 1920 × 1080 × 4 = 8,294,400 bytes of raw RGBA, 7.91 MiB — a third more data, because each pixel now carries opacity alongside red, green, and blue. PNG compression typically squeezes that back down below the original JPEG's size for clean cutouts with large empty regions.</p>
+<p>On the model side, the trade is the download: full-precision MODNet is 24.7 MB, while the 8-bit quantized build is 6.3 MB — 25.5% of the original size, a 74.5% saving, at the cost of slightly softer edge gradation. If you're processing one photo on a phone, Fast mode is usually the right call; for headshots going on a company page, let Balanced load once and cache.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is this background remover really free and private?</h3><p>Yes. The tool downloads the open-source MODNet model (Apache-2.0) straight from a public CDN and runs it on your device with WebAssembly. Your photo is never uploaded to any server — you can watch the network tab and see that nothing leaves the page after the model files arrive. There is no watermark, no signup, and no image limit because there is no server doing the work.</p></div>
+<div class="faq-item"><h3>Why does the first run take longer?</h3><p>The first removal downloads the model weights — about 25 MB for the full-precision version or 6.3 MB for the quantized one — plus the WebAssembly runtime. Your browser caches both, so the second and later images process in seconds. If you switch between the Balanced and Fast quality settings, each setting's model is downloaded once.</p></div>
+<div class="faq-item"><h3>What kind of photos work best?</h3><p>MODNet is a portrait matting model, so photos of people give the cleanest cutouts. Product shots, pets, and objects with clear edges usually work well too. Fine details like individual hair strands, glass, and sheer fabric are where free in-browser models fall short of paid services — expect soft edges there instead of perfect ones.</p></div>
+<div class="faq-item"><h3>Why does my download have a checkerboard pattern in it?</h3><p>It doesn't — that checkerboard is only the on-page preview showing you where the image is transparent. The exported PNG keeps true transparency. If a program shows a solid white background instead, that app filled transparent pixels for display; the alpha channel is still in the file.</p></div>
+<div class="faq-item"><h3>Should I export PNG or JPEG?</h3><p>PNG. JPEG has no alpha channel, so a transparent cutout saved as JPEG gets a solid background baked in. PNG and WebP both support transparency; PNG is the safe universal choice for pasting into slides, docs, and editors.</p></div>
+<div class="faq-item"><h3>How is this different from remove.bg?</h3><p>remove.bg runs a large server-side model, which is why it handles complex hair and edges better. This tool trades some edge quality for privacy and price: the model runs on your machine, so nothing is uploaded, there are no credits, and there is no resolution cap imposed by an upload limit. For profile photos, product shots, and presentation cutouts, the results are usually indistinguishable.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/image-watermark/">💧 Image Watermark</a>
+<a href="/image-metadata-remover/">🧾 Image Metadata Remover</a>
+<a href="/image-upscaler/">🔎 Image Upscaler</a>
+<a href="/image-tools/">🧰 All Image Tools</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script type="module">
+const TRANSFORMERS_CDN = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const qualitySel = document.getElementById('quality');
+const bgModeSel = document.getElementById('bgMode');
+const customColorGroup = document.getElementById('customColorGroup');
+const customColor = document.getElementById('customColor');
+const progressWrap = document.getElementById('progressWrap');
+const progressLabel = document.getElementById('progressLabel');
+const progressFill = document.getElementById('progressFill');
+const statusEl = document.getElementById('status');
+const resultWrap = document.getElementById('resultWrap');
+const srcFrame = document.getElementById('srcFrame');
+const outFrame = document.getElementById('outFrame');
+const statDims = document.getElementById('statDims');
+const statPx = document.getElementById('statPx');
+const statTime = document.getElementById('statTime');
+const statSize = document.getElementById('statSize');
+
+let pipelines = {};
+let srcBitmap = null;   // ImageBitmap of the original
+let cutRGBA = null;     // {data,width,height} cutout with alpha
+let cutCanvas = null;
+let downloadBlob = null;
+
+function setStatus(msg){ statusEl.textContent = msg; }
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault(); dropzone.classList.remove('dragover');
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+async function getPipeline(dtype){
+  if (!pipelines[dtype]) {
+    progressWrap.style.display = 'block';
+    pipelines[dtype] = (async () => {
+      const { pipeline } = await import(TRANSFORMERS_CDN);
+      return pipeline('background-removal', 'Xenova/modnet', {
+        dtype,
+        progress_callback: p => {
+          if (p.status === 'progress' && p.total) {
+            progressLabel.textContent = 'Downloading ' + (p.file || 'model') + ' — ' + Math.round(p.progress) + '%';
+            progressFill.style.width = Math.round(p.progress) + '%';
+          } else if (p.status === 'ready') {
+            progressLabel.textContent = 'Model ready';
+            progressFill.style.width = '100%';
+          }
+        }
+      });
+    })();
+    pipelines[dtype].catch(() => { delete pipelines[dtype]; });
+  }
+  return pipelines[dtype];
+}
+
+async function handleFile(file){
+  if (!file.type.startsWith('image/')) { setStatus('That file is not an image.'); return; }
+  try {
+    srcBitmap = await createImageBitmap(file);
+  } catch { setStatus('Could not decode that image.'); return; }
+  if (Math.max(srcBitmap.width, srcBitmap.height) > 4096) {
+    setStatus('Large image (' + srcBitmap.width + '×' + srcBitmap.height + ') — this will be slow but will work.');
+  }
+  document.getElementById('dzText').textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+  srcFrame.innerHTML = '';
+  const sc = document.createElement('canvas');
+  sc.width = srcBitmap.width; sc.height = srcBitmap.height;
+  sc.getContext('2d').drawImage(srcBitmap, 0, 0);
+  srcFrame.appendChild(sc);
+  runRemoval();
+}
+
+async function runRemoval(){
+  if (!srcBitmap) return;
+  resultWrap.style.display = 'none';
+  downloadBtn.disabled = true;
+  const t0 = performance.now();
+  setStatus('Loading model (first run downloads it once)…');
+  let pipe;
+  try { pipe = await getPipeline(qualitySel.value); }
+  catch (err) { setStatus('Model failed to load: ' + err.message); return; }
+  setStatus('Estimating matte — keep this tab open…');
+  try {
+    const blob = await srcToBlob(srcBitmap);
+    const out = await pipe(blob);
+    const img = Array.isArray(out) ? out[0] : out;
+    if (img && img.data && img.width) {
+      cutRGBA = { data: img.data, width: img.width, height: img.height };
+    } else if (img instanceof Blob) {
+      const bmp = await createImageBitmap(img);
+      const c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(bmp, 0, 0);
+      cutRGBA = ctx.getImageData(0, 0, c.width, c.height);
+    } else {
+      throw new Error('unexpected model output');
+    }
+    const dt = (performance.now() - t0) / 1000;
+    progressWrap.style.display = 'none';
+    composite();
+    statDims.textContent = cutRGBA.width + '×' + cutRGBA.height;
+    statPx.textContent = (cutRGBA.width * cutRGBA.height / 1e6).toFixed(2) + ' MP';
+    statTime.textContent = dt.toFixed(1) + ' s';
+    setStatus('Done — pick a background or download the PNG.');
+  } catch (err) {
+    setStatus('Removal failed: ' + (err.message || err));
+  }
+}
+async function srcToBlob(bmp){
+  const c = document.createElement('canvas');
+  c.width = bmp.width; c.height = bmp.height;
+  c.getContext('2d').drawImage(bmp, 0, 0);
+  return new Promise(res => c.toBlob(res, 'image/png'));
+}
+
+function currentBg(){
+  if (bgModeSel.value === 'transparent') return null;
+  if (bgModeSel.value === 'custom') return customColor.value;
+  return bgModeSel.value;
+}
+function composite(){
+  const { width, height, data } = cutRGBA;
+  if (!cutCanvas) { cutCanvas = document.createElement('canvas'); outFrame.innerHTML = ''; outFrame.appendChild(cutCanvas); }
+  cutCanvas.width = width; cutCanvas.height = height;
+  const ctx = cutCanvas.getContext('2d');
+  const bg = currentBg();
+  ctx.clearRect(0, 0, width, height);
+  const imgData = new ImageData(new Uint8ClampedArray(data), width, height);
+  if (bg) {
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+    const tmp = document.createElement('canvas');
+    tmp.width = width; tmp.height = height;
+    tmp.getContext('2d').putImageData(imgData, 0, 0);
+    ctx.drawImage(tmp, 0, 0);
+  } else {
+    ctx.putImageData(imgData, 0, 0);
+  }
+  resultWrap.style.display = 'block';
+  cutCanvas.toBlob(b => {
+    if (b) { downloadBlob = b; statSize.textContent = (b.size / 1024).toFixed(0) + ' KB'; downloadBtn.disabled = false; }
+  }, 'image/png');
+}
+
+qualitySel.addEventListener('change', runRemoval);
+bgModeSel.addEventListener('change', () => {
+  customColorGroup.style.display = bgModeSel.value === 'custom' ? 'flex' : 'none';
+  if (cutRGBA) composite();
+});
+customColor.addEventListener('input', () => { if (cutRGBA) composite(); });
+
+const downloadBtn = document.getElementById('downloadBtn');
+downloadBtn.addEventListener('click', () => {
+  if (!downloadBlob) return;
+  const a = document.createElement('a');
+  a.download = 'cutout-' + Date.now() + '.png';
+  a.href = URL.createObjectURL(downloadBlob);
+  a.click();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  resultWrap.style.display = 'none';
+  cutRGBA = null; cutCanvas = null; srcBitmap = null; downloadBlob = null;
+  srcFrame.innerHTML = ''; outFrame.innerHTML = '';
+  document.getElementById('dzText').textContent = 'Drop an image here or click to choose';
+  fileInput.value = '';
+  setStatus('');
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

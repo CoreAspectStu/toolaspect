@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Color Picker — HEX From Any Image | ToolAspect</title>
+<meta name="description" content="Pick colors from any image: an eyedropper for the exact HEX, RGB, and HSL at any pixel, plus a dominant palette from the image. No upload.">
+<link rel="canonical" href="https://toolaspect.com/image-color-picker/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Image Color Picker — HEX From Any Image">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Eyedropper any pixel for exact HEX/RGB/HSL and get a dominant color palette from the whole image — entirely in your browser, no upload.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-color-picker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Color Picker | Free HEX Eyedropper">
+<meta name="twitter:description" content="Get HEX, RGB, HSL from any image pixel + dominant palette. In-browser, private, free.">
+<meta name="keywords" content="image color picker, pick color from image, hex code from image, eyedropper online, color palette from image, dominant color, get rgb from image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Color Picker","description":"Free image color picker. Click any pixel with the eyedropper to get its exact HEX, RGB, and HSL values, hover for a live preview, and extract a dominant-color palette from the whole image with contrast checks against white and black. Runs entirely in your browser — the image is never uploaded.","url":"https://toolaspect.com/image-color-picker/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I get the HEX code from an image?","acceptedAnswer":{"@type":"Answer","text":"Load the image, move your cursor over it to preview the color live, and click the pixel you want. The tool reads the exact red, green, and blue values at that pixel from the rendered image and converts them to HEX (#RRGGBB), rgb(), and hsl() — click any value to copy it. Because it samples the actual pixels, it works on screenshots, logos, photos, and scans alike."}},
+{"@type":"Question","name":"What is a dominant color?","acceptedAnswer":{"@type":"Answer","text":"The color that best represents the image overall — technically, the largest cluster after the image's colors are quantized into a palette. The dominant color of a product photo is usually the product's main tone; of a website screenshot, the background. The palette shows the dominant color first, then the next-largest clusters, so you get a usable brand scheme rather than one number."}},
+{"@type":"Question","name":"Why is the color I picked slightly different from the original design?","acceptedAnswer":{"@type":"Answer","text":"Three common causes: JPEG compression shifts pixel values slightly; antialiasing blends edge pixels between two colors (pick from the middle of a solid area, not an edge); and color profiles (sRGB vs Display P3) render differently across screens. For matching a brand color, sample a large flat area and cross-check 2-3 pixels — they should agree."}},
+{"@type":"Question","name":"Is this color picker accessible for text?","acceptedAnswer":{"@type":"Answer","text":"The tool computes WCAG 2 contrast ratios for every color you pick: luminance from the sRGB channels, then (L1+0.05)/(L2+0.05). White text on #2563EB, for instance, has a ratio of 5.17 — above the 4.5 AA threshold for normal text but below the 7.0 AAA bar. Dark text on the same blue is 4.06. The thresholds to know: 3.0 for large text and UI components, 4.5 for normal text (AA), 7.0 for normal text (AAA)."}},
+{"@type":"Question","name":"What's the difference between HEX, RGB, and HSL?","acceptedAnswer":{"@type":"Answer","text":"Same color, three coordinate systems. HEX (#2563EB) and rgb(37,99,235) are the same numbers in base-16 and base-10 — direct intensity of red, green, and blue. HSL (hue 221, saturation 83%, lightness 53%) is human-shaped: one dial for the color itself, one for vividness, one for brightness, which is why design tools use it for generating tints and shades."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Creator Tools","item":"https://toolaspect.com/creator-tools/"},{"@type":"ListItem","position":3,"name":"Image Color Picker","item":"https://toolaspect.com/image-color-picker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.canvas-wrap{margin-top:1rem;text-align:center}
+.canvas-wrap img{max-width:100%;border-radius:var(--radius);border:1px solid var(--border);cursor:crosshair;image-rendering:auto}
+.hover-bar{display:flex;align-items:center;gap:.6rem;justify-content:center;margin-top:.6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--muted)}
+.hover-bar .swatch{width:22px;height:22px;border-radius:6px;border:1px solid var(--border)}
+.picked-card{display:flex;gap:1rem;align-items:stretch;margin-top:1rem;flex-wrap:wrap}
+.big-swatch{width:130px;min-height:130px;border-radius:var(--radius);border:1px solid var(--border);flex:none}
+.val-block{flex:1;min-width:240px;display:grid;gap:.4rem;align-content:center}
+.val-row{display:flex;align-items:center;gap:.6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem}
+.val-row .k{width:52px;color:var(--muted);font-size:.72rem;text-transform:uppercase}
+.val-row button{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:inherit;font-size:.8rem;padding:.25rem .6rem;cursor:pointer}
+.val-row button:hover{border-color:var(--primary)}
+.contrast-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.chip{border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.78rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.chip .pass{color:var(--success)}
+.chip .fail{color:var(--danger)}
+.palette-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.8rem}
+.pal{width:64px;border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;overflow:hidden}
+.pal .fill{height:52px}
+.pal .code{display:block;text-align:center;font-size:.62rem;font-family:ui-monospace,Menlo,Consolas,monospace;padding:3px 0;background:var(--bg);color:var(--muted)}
+.copied{color:var(--success);font-size:.8rem;margin-left:.4rem}
+.errbox{background:var(--surface);border:1px solid var(--danger);border-radius:var(--radius);color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/colorthief@2.6.0/dist/color-thief.umd.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🎯 Image Color Picker</h1>
+<p>Exact HEX/RGB/HSL from any pixel + a dominant palette from the whole image</p>
+</div>
+
+<div class="aio-answer">To get a color from an image: load it below, hover to preview any pixel, and click to pick — you'll get the exact <strong>HEX</strong>, <strong>RGB</strong>, and <strong>HSL</strong> at that spot, plus WCAG contrast checks for text on it. A typical brand blue like <code>#2563EB</code> is rgb(37, 99, 235), hsl(221, 83%, 53%), and carries a 5.17 contrast ratio with white text (passes WCAG AA's 4.5 bar, falls short of AAA's 7.0). The palette panel also extracts the image's dominant colors — the quantized color clusters that define its look. The image is processed entirely in your browser; nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Pick colors</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p>Click or drag an image here (PNG, JPG, WebP, GIF)</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+</div>
+<div id="imageArea"></div>
+<div id="output"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/color-converter/">Color Converter</a></li><li style="margin:4px 0"><a href="/gradient-generator/">Gradient Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-pick-colors-from-an-image/">Read the color picking guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>WCAG 2 Contrast Requirements (What the Chips Mean)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Level</th><th>Contrast Ratio</th><th>Applies To</th></tr></thead>
+<tbody>
+<tr><td>AA</td><td>≥ 4.5:1</td><td>Normal body text</td></tr>
+<tr><td>AA</td><td>≥ 3.0:1</td><td>Large text (≥ 24px, or ≥ 18.7px bold) and UI components / graphical objects</td></tr>
+<tr><td>AAA</td><td>≥ 7.0:1</td><td>Normal body text</td></tr>
+<tr><td>AAA</td><td>≥ 4.5:1</td><td>Large text</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The tool computes (L1 + 0.05) / (L2 + 0.05) from WCAG 2.x relative luminance for your picked color against both white and black, so you can see immediately which text colors pass on it.</p>
+</div>
+
+<div class="section-card">
+<h2>Color Format Reference — Same Color, Three Coordinate Systems</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Format</th><th>Example</th><th>What the numbers mean</th></tr></thead>
+<tbody>
+<tr><td><strong>HEX</strong></td><td><code>#2563EB</code></td><td>Three byte pairs in base-16: 25 red, 63 green, EB blue. Shorthand #abc expands to #aabbcc.</td></tr>
+<tr><td><strong>RGB</strong></td><td><code>rgb(37, 99, 235)</code></td><td>Same bytes in decimal, 0–255 per channel — the raw values stored in every pixel.</td></tr>
+<tr><td><strong>HSL</strong></td><td><code>hsl(221, 83%, 53%)</code></td><td>Hue 0–360° around the color wheel, saturation 0–100% (distance from gray), lightness 0–100% (0 = black, 100 = white).</td></tr>
+<tr><td><strong>Alpha</strong></td><td><code>#2563EBCC</code> / <code>rgba(…, 0.8)</code></td><td>Optional 4th channel for transparency; 8-digit HEX uses two hex digits (CC = 204 = 80%).</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Color Picker Works</h2>
+<p>The eyedropper is a direct pixel read: your image is drawn to a canvas, and a click maps the cursor position to image coordinates (accounting for any scaling between natural and displayed size) and reads that single pixel's red, green, and blue bytes. HEX is those bytes in base-16, RGB is the same in decimal, and HSL is a polar re-coordination — hue from which channel dominates, saturation from how far it dominates, lightness from the overall magnitude.</p>
+<h3>Dominant color and palettes</h3>
+<p>One pixel can't speak for a whole photo, so the palette panel runs the image through the color quantizer behind ColorThief (MIT, lokesh/color-thief): it samples the pixels, clusters them in RGB space, and returns the cluster centers ordered by size. The first swatch is the dominant color — the biggest cluster — and the rest are a ready-to-use brand palette: backgrounds, accents, and supporting tones that genuinely appear in the image. Photos with strong subjects produce clean palettes; noisy screenshots produce muted ones.</p>
+<h3>A worked example</h3>
+<p>Take the common UI blue #2563EB. Converting: hex 25 = 37, 63 = 99, EB = 235, so rgb(37, 99, 235). In HSL that's hsl(221, 83%, 53%) — hue 221° because blue dominates, 83% saturation because the channels differ strongly. Its relative luminance works out to 0.1532, giving a contrast ratio against white of (1.0 + 0.05) / (0.1532 + 0.05) = <strong>5.17</strong> — white text on this blue passes AA (4.5) but not AAA (7.0). Against black it's (0.1532 + 0.05) / (0 + 0.05) = <strong>4.06</strong>, which fails AA for normal text — so pair this blue with white text, not black. Flip the case to a bright amber like #F59E0B (luminance 0.4389): white text drops to 2.15 (fails everything), black text rises to 9.78 (passes AAA). Bright backgrounds want dark text; the contrast chips under each pick tell you which side you're on.</p>
+<h3>Getting pixel-perfect results</h3>
+<ul>
+<li><strong>Pick from flat areas,</strong> not edges — antialiasing blends neighboring colors into values that exist nowhere in the design.</li>
+<li><strong>Prefer PNG sources for brand work</strong> — JPEG compression perturbs pixel values slightly, especially around sharp transitions.</li>
+<li><strong>Watch color profiles</strong> — a Display P3 screenshot viewed as sRGB can shift hue a few degrees; design systems live in sRGB (#-codes) so sample accordingly.</li>
+<li><strong>Cross-check 2-3 pixels</strong> in the same region; they should agree exactly in a PNG and within ±1-2 in a JPEG.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I get the HEX code from an image?</h3><p>Load the image, move your cursor over it to preview the color live, and click the pixel you want. The tool reads the exact red, green, and blue values at that pixel from the rendered image and converts them to HEX (#RRGGBB), rgb(), and hsl() — click any value to copy it. Because it samples the actual pixels, it works on screenshots, logos, photos, and scans alike.</p></div>
+<div class="faq-item"><h3>What is a dominant color?</h3><p>The color that best represents the image overall — technically, the largest cluster after the image's colors are quantized into a palette. The dominant color of a product photo is usually the product's main tone; of a website screenshot, the background. The palette shows the dominant color first, then the next-largest clusters, so you get a usable brand scheme rather than one number.</p></div>
+<div class="faq-item"><h3>Why is the color I picked slightly different from the original design?</h3><p>Three common causes: JPEG compression shifts pixel values slightly; antialiasing blends edge pixels between two colors (pick from the middle of a solid area, not an edge); and color profiles (sRGB vs Display P3) render differently across screens. For matching a brand color, sample a large flat area and cross-check 2-3 pixels — they should agree.</p></div>
+<div class="faq-item"><h3>Is this color picker accessible for text?</h3><p>The tool computes WCAG 2 contrast ratios for every color you pick: luminance from the sRGB channels, then (L1+0.05)/(L2+0.05). White text on #2563EB, for instance, has a ratio of 5.17 — above the 4.5 AA threshold for normal text but below the 7.0 AAA bar. Dark text on the same blue is 4.06. The thresholds to know: 3.0 for large text and UI components, 4.5 for normal text (AA), 7.0 for normal text (AAA).</p></div>
+<div class="faq-item"><h3>What's the difference between HEX, RGB, and HSL?</h3><p>Same color, three coordinate systems. HEX (#2563EB) and rgb(37,99,235) are the same numbers in base-16 and base-10 — direct intensity of red, green, and blue. HSL (hue 221, saturation 83%, lightness 53%) is human-shaped: one dial for the color itself, one for vividness, one for brightness, which is why design tools use it for generating tints and shades.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/color-converter/">🎨 Color Converter</a>
+<a href="/gradient-generator/">🌈 Gradient Generator</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/box-shadow-generator/">🌓 Box Shadow Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---ICP-ENGINE-START---
+// Eyedropper + palette: color math is WCAG 2.x / standard formulas;
+// quantization via ColorThief (MIT, lokesh/color-thief) v2.6.0 from jsdelivr.
+function icpHex(r,g,b){var h=(1<<24)+(r<<16)+(g<<8)+b;return '#'+h.toString(16).slice(1).toUpperCase();}
+function icpRgb2Hsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  var mx=Math.max(r,g,b),mn=Math.min(r,g,b),h=0,s=0,l=(mx+mn)/2,d=mx-mn;
+  if(d!==0){
+    s=l>0.5?d/(2-mx-mn):d/(mx+mn);
+    switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;}
+    h*=60;
+  }
+  return [Math.round(h),Math.round(s*100),Math.round(l*100)];
+}
+function icpLin(c){c/=255;return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+function icpLuminance(r,g,b){return 0.2126*icpLin(r)+0.7152*icpLin(g)+0.0722*icpLin(b);}
+function icpContrast(rgb1,rgb2){
+  var L1=icpLuminance(rgb1[0],rgb1[1],rgb1[2]),L2=icpLuminance(rgb2[0],rgb2[1],rgb2[2]);
+  var a=Math.max(L1,L2),b=Math.min(L1,L2);
+  return (a+0.05)/(b+0.05);
+}
+function icpVerdict(r){ // WCAG 2 thresholds
+  return {aa:r>=4.5,aaa:r>=7.0,aaLarge:r>=3.0};
+}
+function icpCopy(text,afterEl){
+  function done(){if(afterEl){afterEl.textContent=' copied';setTimeout(function(){afterEl.textContent='';},1200);}}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}
+  else{
+    var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);done();
+  }
+}
+// ---- browser wiring ----
+var ICP={img:null,natW:0,natH:0};
+function icpEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function icpRenderColor(rgb){
+  var r=rgb[0],g=rgb[1],b=rgb[2];
+  var hex=icpHex(r,g,b);
+  var hsl=icpRgb2Hsl(r,g,b);
+  var cw=icpContrast(rgb,[255,255,255]),cb=icpContrast(rgb,[0,0,0]);
+  var vw=icpVerdict(cw),vb=icpVerdict(cb);
+  var out=document.getElementById('output');
+  out.innerHTML=''
+    +'<div class="picked-card">'
+    +'<div class="big-swatch" id="bigSwatch" style="background:'+hex+'" title="Click to copy HEX"></div>'
+    +'<div class="val-block">'
+    +'<div class="val-row"><span class="k">HEX</span><span>'+hex+'</span><button data-copy="'+hex+'">copy</button></div>'
+    +'<div class="val-row"><span class="k">RGB</span><span>rgb('+r+', '+g+', '+b+')</span><button data-copy="rgb('+r+', '+g+', '+b+')">copy</button></div>'
+    +'<div class="val-row"><span class="k">HSL</span><span>hsl('+hsl[0]+', '+hsl[1]+'%, '+hsl[2]+'%)</span><button data-copy="hsl('+hsl[0]+', '+hsl[1]+'%, '+hsl[2]+'%)">copy</button></div>'
+    +'<div class="contrast-row">'
+    +'<span class="chip">white text '+cw.toFixed(2)+' <span class="'+(vw.aa?'pass':'fail')+'">'+(vw.aaa?'AAA':(vw.aa?'AA':(vw.aaLarge?'AA-large only':'fail')))+'</span></span>'
+    +'<span class="chip">black text '+cb.toFixed(2)+' <span class="'+(vb.aa?'pass':'fail')+'">'+(vb.aaa?'AAA':(vb.aa?'AA':(vb.aaLarge?'AA-large only':'fail')))+'</span></span>'
+    +'</div>'
+    +'</div></div>';
+  document.getElementById('bigSwatch').addEventListener('click',function(){icpCopy(hex);});
+  Array.prototype.forEach.call(out.querySelectorAll('button[data-copy]'),function(btn){
+    btn.addEventListener('click',function(){icpCopy(btn.getAttribute('data-copy'));});
+  });
+}
+function icpPixelAt(e){
+  var imgEl=document.getElementById('previewImg');
+  var rect=imgEl.getBoundingClientRect();
+  var x=Math.round((e.clientX-rect.left)*(ICP.natW/rect.width));
+  var y=Math.round((e.clientY-rect.top)*(ICP.natH/rect.height));
+  x=Math.max(0,Math.min(ICP.natW-1,x));
+  y=Math.max(0,Math.min(ICP.natH-1,y));
+  var c=document.createElement('canvas');c.width=ICP.natW;c.height=ICP.natH;
+  var ctx=c.getContext('2d');ctx.drawImage(ICP.img,0,0);
+  var d=ctx.getImageData(x,y,1,1).data;
+  return [d[0],d[1],d[2]];
+}
+function icpExtractPalette(){
+  try{
+    var ct=new ColorThief();
+    var pal=ct.getPalette(ICP.img,6,5);
+    if(!pal||!pal.length)return;
+    var out=document.getElementById('output');
+    var row=document.createElement('div');
+    row.className='palette-row';
+    row.innerHTML='<div style="width:100%;font-size:.8rem;color:var(--muted);margin-bottom:2px">Dominant color &amp; palette (click a swatch):</div>';
+    pal.forEach(function(p){
+      var hex=icpHex(p[0],p[1],p[2]);
+      var d=document.createElement('div');
+      d.className='pal';
+      d.innerHTML='<div class="fill" style="background:'+hex+'"></div><span class="code">'+hex+'</span>';
+      d.title='Click to use this color';
+      d.addEventListener('click',function(){icpRenderColor(p);});
+      row.appendChild(d);
+    });
+    out.appendChild(row);
+    icpRenderColor(pal[0]);
+  }catch(e){/* palette is best-effort; eyedropper still works */}
+}
+function icpLoad(file){
+  if(!/^image\//.test(file.type))return;
+  var url=URL.createObjectURL(file);
+  var img=new Image();
+  img.onload=function(){
+    ICP.img=img;ICP.natW=img.naturalWidth;ICP.natH=img.naturalHeight;
+    var area=document.getElementById('imageArea');
+    area.innerHTML='<div class="canvas-wrap"><img id="previewImg" alt="preview"></div>'
+      +'<div class="hover-bar"><span class="swatch" id="hoverSwatch"></span><span id="hoverVal">hover the image, click to pick</span></div>';
+    var pv=document.getElementById('previewImg');
+    pv.src=url;
+    pv.addEventListener('mousemove',function(e){
+      try{
+        var rgb=icpPixelAt(e);
+        var hex=icpHex(rgb[0],rgb[1],rgb[2]);
+        document.getElementById('hoverSwatch').style.background=hex;
+        document.getElementById('hoverVal').textContent=hex+' · rgb('+rgb[0]+', '+rgb[1]+', '+rgb[2]+')';
+      }catch(err){}
+    });
+    pv.addEventListener('click',function(e){
+      try{icpRenderColor(icpPixelAt(e));}catch(err){}
+    });
+    document.getElementById('output').innerHTML='';
+    if(typeof ColorThief==='undefined'){
+      document.getElementById('output').innerHTML='<div class="errbox">Palette engine failed to load (offline or blocked) — the eyedropper still works.</div>';
+    }else{
+      setTimeout(icpExtractPalette,50);
+    }
+  };
+  img.onerror=function(){
+    document.getElementById('imageArea').innerHTML='<div class="errbox">That file could not be read as an image.</div>';
+  };
+  img.src=url;
+}
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)icpLoad(e.dataTransfer.files[0]);});
+fi.addEventListener('change',function(e){if(e.target.files.length)icpLoad(e.target.files[0]);fi.value='';});
+window.addEventListener('paste',function(e){
+  if(e.clipboardData&&e.clipboardData.files&&e.clipboardData.files.length)icpLoad(e.clipboardData.files[0]);
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
