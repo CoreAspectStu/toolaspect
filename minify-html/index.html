@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minify HTML — Free In-Browser Tool | ToolAspect</title>
+<meta name="description" content="Minify HTML in your browser: comments + whitespace strip cuts our 1,011-byte sample 23.5%. All 40 tags survive. No uploads.">
+<link rel="canonical" href="https://toolaspect.com/minify-html/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Minify HTML — Free In-Browser Tool">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Run html-minifier 4.0.0 on your markup locally: strip comments and collapse whitespace, with byte and gzip sizes for each pass.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/minify-html/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Minify HTML | Free Online Tool">
+<meta name="twitter:description" content="html-minifier powered HTML minifier that runs entirely in your browser. No uploads, no signup.">
+<meta name="keywords" content="minify html, html minifier, compress html, shrink html, html whitespace remover, html comment remover">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Minify HTML","description":"Free in-browser HTML minifier powered by html-minifier 4.0.0 (MIT). Strip comments and collapse whitespace conservatively, or trim attribute quotes and redundant attributes aggressively, with byte and gzip sizes for each pass. Nothing uploads.","url":"https://toolaspect.com/minify-html/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is it safe to collapse whitespace in HTML?","acceptedAnswer":{"@type":"Answer","text":"Almost always. HTML treats any run of whitespace as a single space between inline elements, so deleting indentation and newlines renders identically — except inside <pre>, <textarea>, and <script> and <style> blocks, where whitespace is significant. html-minifier knows this and leaves those elements alone by default. The one visual risk is between inline elements where your CSS relies on the whitespace character for a gap; if a layout was silently using that 4px space, replace it with a margin before minifying."}},
+{"@type":"Question","name":"How much smaller will my HTML get?","acceptedAnswer":{"@type":"Answer","text":"Typical hand-written or framework-rendered markup loses 15-30%: our 1,011-byte sample page drops to 773 bytes conservatively (23.5%) and 742 bytes aggressively (26.6%). Template-heavy markup with deep indentation shrinks more; server-rendered output that's already compact shrinks less. After gzip the three sizes sit within about 70 bytes of each other — minify HTML for parser and cache wins more than network ones."}},
+{"@type":"Question","name":"What does the aggressive preset remove that conservative doesn't?","acceptedAnswer":{"@type":"Answer","text":"Attribute quotes where the spec allows unquoted values (class=x instead of class=\"x\"), redundant attributes the HTML spec marks as defaults (type=\"text\" on inputs, for example), and type attributes on script and link tags whose values are their defaults. Those are spec-safe, but they make the file harder to hand-edit and some validators and templating tools expect the quotes — which is why they're not in the default preset."}},
+{"@type":"Question","name":"Will minification break my inline JavaScript or CSS?","acceptedAnswer":{"@type":"Answer","text":"No — by default this tool leaves the contents of script and style elements untouched; it only removes the whitespace around the markup. html-minifier can also minify their contents, and the vendored build includes working JS minification, but enabling content minification changes behavior inside those blocks, so this page keeps it off. Use the dedicated tools for that: minify your JS and CSS first, then minify the HTML around them."}},
+{"@type":"Question","name":"Does it remove HTML comments? What about conditional comments?","acceptedAnswer":{"@type":"Answer","text":"removeComments deletes standard <!-- --> comments in both presets. Conditional comments targeting old Internet Explorer (<!--[if lt IE 9]>) are structurally comments too — if you still serve legacy bundles through them, test after minifying, because anything comment-based will be treated as a comment. Server-side includes and comment-based placeholders (<!-- more -->) also disappear, so don't minify templates that carry them."}},
+{"@type":"Question","name":"Is my markup uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The html-minifier 4.0.0 engine is vendored on this site and runs in your browser; nothing is sent to a server. That said, if your HTML embeds secrets — API keys in templates, internal URLs — follow your employer's policy on pasting into third-party pages."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Minify HTML","item":"https://toolaspect.com/minify-html/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group select:focus{outline:none;border-color:var(--primary)}
+textarea.ta-io{width:100%;min-height:220px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5;box-sizing:border-box;resize:vertical;tab-size:2}
+textarea.ta-io:focus{outline:none;border-color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-all}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Minify HTML — Free In-Browser Tool", "url": "https://toolaspect.com/minify-html/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Minify HTML in your browser: comments + whitespace strip cuts our 1,011-byte sample 23.5%. All 40 tags survive. No uploads."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Minify HTML free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Minify HTML on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Minify HTML work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Minify HTML calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📄 Minify HTML</h1>
+<p>html-minifier 4.0.0 in your browser — strip comments, collapse whitespace</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> HTML minification removes comments and collapses runs of whitespace to single spaces (never inside <code>&lt;pre&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;script&gt;</code>, or <code>&lt;style&gt;</code>). Percent saved = (input − output) ÷ input × 100. On our 1,011-byte sample page, the conservative pass outputs 773 B (23.5% saved) and the aggressive pass 742 B (26.6%); all 40 tags and the doctype survive, and the only thing deleted outright is the comment. Runs locally — markup never uploads.</p>
+
+<div class="section-card">
+<h2>Your HTML</h2>
+<div class="input-grid">
+<div class="input-group"><label>Preset</label><select id="preset"></select></div>
+<div class="input-group" style="justify-content:flex-end"><label>&nbsp;</label>
+<div class="btn-row" style="margin-top:0"><button type="button" class="btn ghost" id="sample">Sample</button><button type="button" class="btn ghost" id="clear">Clear</button></div>
+</div>
+</div>
+<textarea class="ta-io" id="src" spellcheck="false" placeholder="Paste HTML here…" style="margin-top:1rem"></textarea>
+<div class="btn-row" style="justify-content:space-between">
+<div style="display:flex;gap:.6rem;flex-wrap:wrap"><button type="button" class="btn" id="copy">Copy output</button><button type="button" class="btn ghost" id="download">Download .html</button></div>
+</div>
+<textarea class="ta-io" id="out" spellcheck="false" readonly placeholder="Minified output…" style="margin-top:1rem"></textarea>
+<div class="stats-grid">
+<div class="result-item"><div class="ri-label">Input</div><div class="ri-value" id="inBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Output</div><div class="ri-value" id="outBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Saved</div><div class="ri-value" id="saved">—</div></div>
+<div class="result-item"><div class="ri-label">Gzip in → out</div><div class="ri-value" id="gzOut" style="font-size:.9rem">—</div><div class="ri-label" id="gzIn" style="margin-top:.15rem">—</div></div>
+</div>
+<div class="status-line" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/minify-js/">Minify JS</a></li><li style="margin:4px 0"><a href="/css-minifier/">CSS Minifier</a></li><li style="margin:4px 0"><a href="/html-to-markdown/">HTML to Markdown</a></li><li style="margin:4px 0"><a href="/word-counter/">Word Counter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Pass Buys You</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Preset</th><th>What it does</th><th>1,011-B sample →</th><th>Saved</th></tr></thead>
+<tbody>
+<tr><td>Conservative</td><td>Removes comments, collapses whitespace between tags</td><td>773 B</td><td>238 B (23.5%)</td></tr>
+<tr><td>Aggressive</td><td>…plus unquotes attribute values, drops spec-redundant attributes</td><td>742 B</td><td>269 B (26.6%)</td></tr>
+<tr><td>Aggressive, gzipped</td><td>Transport compression on top</td><td>454 B</td><td>vs 472 B conservative</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Measured with html-minifier 4.0.0 — the exact vendored build this page loads — on the sample behind the Sample button. Deeply indented templates shrink further; already-compact server output shrinks less. Integrity check: the sample's 41 raw "&lt;" characters are 40 tags + doctype plus one comment — after either pass exactly 40 remain, so nothing but the comment was deleted.</p>
+</div>
+
+<div class="content-section">
+<h2>How the HTML Minifier Works</h2>
+<p>The engine is <strong>html-minifier 4.0.0</strong> (MIT), the classic kangax minifier, vendored on this site as a self-contained browser bundle and run locally in your tab. It parses markup with a real HTML tokenizer rather than regexes, which is how it knows that whitespace inside <code>&lt;pre&gt;</code> and <code>&lt;script&gt;</code> is load-bearing and must stay.</p>
+<h3>The math</h3>
+<p>Bytes saved = input − output; percent = (input − output) ÷ input × 100. UTF-8 bytes, and gzip columns when your browser supports CompressionStream. HTML compresses well over the wire (523 → 454 B on the sample), so the raw and gzip columns bracket the true win.</p>
+<h3>How to use it</h3>
+<p>Paste markup (or load the Sample), pick a preset, and output updates as you type. <em>Conservative</em> is the right default for production pages: comments gone, whitespace collapsed, every attribute still quoted. <em>Aggressive</em> also unquotes attribute values and removes attributes the spec defines as defaults — a few percent more, at the cost of hand-editability. Malformed markup gets html-minifier's own parse error with a position hint.</p>
+<h3>A worked example</h3>
+<p>The Sample button loads a 1,011-byte store page: head with meta and a stylesheet link, a nav, a product card, a footer. The conservative pass returns 773 bytes — the <code>&lt;!-- Demo store product page --&gt;</code> comment is the only content that disappears; every one of the 40 tags and the doctype is still there, and the paragraph text collapses to single spaces without merging words. The aggressive pass reaches 742 bytes mostly by unquoting (<code>class=product-card</code>, <code>lang=en</code>). Gzipped, 523 bytes in becomes 454 out. Inline <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> contents are left byte-for-byte intact by both presets — minify those with the <a href="/minify-js/">JS</a> and <a href="/css-minifier/">CSS</a> siblings first, then wrap the minified HTML around them.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is it safe to collapse whitespace in HTML?</h3><p>Almost always. HTML treats any run of whitespace as a single space between inline elements, so deleting indentation and newlines renders identically — except inside <code>&lt;pre&gt;</code>, <code>&lt;textarea&gt;</code>, and <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> blocks, where whitespace is significant. html-minifier knows this and leaves those elements alone by default. The one visual risk is between inline elements where your CSS relies on the whitespace character for a gap; if a layout was silently using that 4px space, replace it with a margin before minifying.</p></div>
+<div class="faq-item"><h3>How much smaller will my HTML get?</h3><p>Typical hand-written or framework-rendered markup loses 15-30%: our 1,011-byte sample page drops to 773 bytes conservatively (23.5%) and 742 bytes aggressively (26.6%). Template-heavy markup with deep indentation shrinks more; server-rendered output that's already compact shrinks less. After gzip the three sizes sit within about 70 bytes of each other — minify HTML for parser and cache wins more than network ones.</p></div>
+<div class="faq-item"><h3>What does the aggressive preset remove that conservative doesn't?</h3><p>Attribute quotes where the spec allows unquoted values (<code>class=x</code> instead of <code>class="x"</code>), redundant attributes the HTML spec marks as defaults (<code>type="text"</code> on inputs, for example), and type attributes on script and link tags whose values are their defaults. Those are spec-safe, but they make the file harder to hand-edit and some validators and templating tools expect the quotes — which is why they're not in the default preset.</p></div>
+<div class="faq-item"><h3>Will minification break my inline JavaScript or CSS?</h3><p>No — by default this tool leaves the contents of script and style elements untouched; it only removes the whitespace around the markup. html-minifier can also minify their contents, and the vendored build includes working JS minification, but enabling content minification changes behavior inside those blocks, so this page keeps it off. Use the dedicated tools for that: minify your JS and CSS first, then minify the HTML around them.</p></div>
+<div class="faq-item"><h3>Does it remove HTML comments? What about conditional comments?</h3><p>removeComments deletes standard <code>&lt;!-- --&gt;</code> comments in both presets. Conditional comments targeting old Internet Explorer (<code>&lt;!--[if lt IE 9]&gt;</code>) are structurally comments too — if you still serve legacy bundles through them, test after minifying, because anything comment-based will be treated as a comment. Server-side includes and comment-based placeholders (<code>&lt;!-- more --&gt;</code>) also disappear, so don't minify templates that carry them.</p></div>
+<div class="faq-item"><h3>Is my markup uploaded anywhere?</h3><p>No. The html-minifier 4.0.0 engine is vendored on this site and runs in your browser; nothing is sent to a server. That said, if your HTML embeds secrets — API keys in templates, internal URLs — follow your employer's policy on pasting into third-party pages.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/minify-js/">⚡ Minify JS</a>
+<a href="/css-minifier/">🎨 CSS Minifier</a>
+<a href="/html-to-markdown/">📝 HTML to Markdown</a>
+<a href="/html-entity-converter/">🔤 HTML Entity Converter</a>
+<a href="/html-to-jsx/">⚛️ HTML to JSX</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+window.TA_SAMPLE = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Demo store product page -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Store — Widget Pro</title>
+    <link rel="stylesheet" href="/css/product.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <h1 class="logo">Demo Store</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/cart">Cart (1)</a>
+      </nav>
+    </header>
+    <main>
+      <article class="product-card">
+        <h2 class="title">Widget Pro</h2>
+        <p class="price">$49.00</p>
+        <p class="desc">
+          The Widget Pro is our best-selling widget. It ships in 2 business
+          days and comes with a 30-day money-back guarantee.
+        </p>
+        <button type="button" class="buy">Add to cart</button>
+      </article>
+    </main>
+    <footer>
+      <p>&copy; 2026 Demo Store. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
+`;
+</script>
+<script src="/minify-js/shell.js"></script>
+<script>TA.minify.mount('html');</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

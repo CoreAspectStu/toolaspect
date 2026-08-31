@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gitignore Generator — Build .gitignore Free | ToolAspect</title>
+<meta name="description" content="Generate a .gitignore from GitHub's official CC0 templates. Pick Node, Python, Go, macOS, VS Code and more — 217 lines of rules in two clicks.">
+<link rel="canonical" href="https://toolaspect.com/gitignore-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Gitignore Generator — Build .gitignore Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Assemble a .gitignore from GitHub's official template collection: languages, operating systems, and IDEs in one file.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/gitignore-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gitignore Generator | Free Online Tool">
+<meta name="twitter:description" content="Build a .gitignore from GitHub's official templates — languages, OS and IDE rules in one click.">
+<meta name="keywords" content="gitignore generator, generate gitignore, gitignore template, node gitignore, python gitignore, what is gitignore, git ignore file">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Gitignore Generator","description":"Free .gitignore generator built on GitHub's official template collection (CC0 licensed). Check off your languages, operating system, and editors, and get one concatenated .gitignore to copy or download. Runs in your browser.","url":"https://toolaspect.com/gitignore-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a .gitignore file?","acceptedAnswer":{"@type":"Answer","text":"It's a plain text file in your repository root listing paths Git should not track. Each line is a pattern — node_modules/, *.log, .env — and matching files stop showing up in git status and can't be committed by accident. One .gitignore at the repo root covers the whole tree; subdirectories can add their own for extra rules."}},
+{"@type":"Question","name":"Where do I put the .gitignore file?","acceptedAnswer":{"@type":"Answer","text":"In the repository root, next to the .git directory. Patterns are relative to the file's location, so node_modules/ in the root ignores every node_modules folder at any depth. You can add more .gitignore files in subdirectories when one folder needs rules the rest of the repo shouldn't have."}},
+{"@type":"Question","name":"Does .gitignore affect files already committed?","acceptedAnswer":{"@type":"Answer","text":"No. Git only consults .gitignore for untracked files. A file that's already in the index keeps being tracked even if you add it to .gitignore afterwards. To stop tracking it, run git rm --cached <file>, commit that removal, and then the ignore rule takes over."}},
+{"@type":"Question","name":"What's the difference between node_modules/ and node_modules in .gitignore?","acceptedAnswer":{"@type":"Answer","text":"The trailing slash limits the pattern to directories, so a file literally named node_modules would still be tracked. In practice the slash is what you want almost always. A leading slash anchors the pattern to the .gitignore's directory: /build ignores only the top-level build folder, while build ignores every folder named build anywhere in the tree."}},
+{"@type":"Question","name":"How do I ignore a file except one copy of it?","acceptedAnswer":{"@type":"Answer","text":"Use a negation pattern: *.log on one line, then !important.log on the next re-includes that one file. Two caveats: Git won't re-include a file if its parent directory is excluded (exclude logs/, then !logs/keep.log fails), and negations after a broad directory exclusion are the number-one source of confusing .gitignore bugs."}},
+{"@type":"Question","name":"Can I ignore one file globally across all my repos?","acceptedAnswer":{"@type":"Answer","text":"Yes — that's what the global ignore file is for. Run git config --global core.excludesfile ~/.gitignore_global and put machine-specific patterns there: .DS_Store, your editor's swap files, local env files. Repository .gitignore files stay shareable with the team, while your OS cruft stays out of every repo without repeating it."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Gitignore Generator","item":"https://toolaspect.com/gitignore-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:700px){.pick-grid{grid-template-columns:1fr}}
+.pick-col h3{font-size:.85rem;font-weight:600;color:var(--primary-hover);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.04em}
+.pick-list{display:flex;flex-direction:column;gap:.3rem}
+.pick-item{display:flex;align-items:center;gap:.5rem;font-size:.88rem;color:var(--text);cursor:pointer;padding:.25rem .4rem;border-radius:6px}
+.pick-item:hover{background:var(--bg)}
+.pick-item input{accent-color:var(--primary)}
+.custom-rules{margin-top:1rem}
+.custom-rules label{font-size:.85rem;color:var(--muted);font-weight:500;display:block;margin-bottom:.35rem}
+.custom-rules textarea{width:100%;min-height:70px;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.82rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;box-sizing:border-box;resize:vertical}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.act-btn{padding:.55rem 1.1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.act-btn:hover{background:var(--primary-hover)}
+.act-btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-msg{font-size:.85rem;color:var(--muted);margin-top:.6rem;min-height:1.2em}
+.status-msg.err{color:var(--danger)}
+.out-area{width:100%;min-height:340px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.78rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5;box-sizing:border-box;resize:vertical;white-space:pre}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{white-space:nowrap;font-size:.8rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Gitignore Generator — Build .gitignore Free", "url": "https://toolaspect.com/gitignore-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Generate a .gitignore from GitHub's official CC0 templates. Pick Node, Python, Go, macOS, VS Code and more — 217 lines of rules in two clicks."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Gitignore Generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Gitignore Generator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Gitignore Generator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Gitignore Generator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🙈 Gitignore Generator</h1>
+<p>Assemble a .gitignore from GitHub's official template collection — languages, OS, and IDE rules in one file</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> a <code>.gitignore</code> is a file in your repo root listing paths Git shouldn't track — <code>node_modules/</code>, <code>__pycache__/</code>, <code>.env</code>, <code>.DS_Store</code>. This generator concatenates the official templates from <a href="https://github.com/github/gitignore" rel="noopener">github/gitignore</a> (CC0-1.0 licensed, ~175k stars): check off what your project uses, add any custom rules, and copy or download the finished file. A Node + macOS + VS Code selection produces <strong>217 lines of rules in two clicks</strong>.
+</div>
+
+<div class="section-card">
+<h2>Pick Your Templates</h2>
+<div class="pick-grid">
+<div class="pick-col"><h3>Languages</h3><div class="pick-list" id="colLang"></div></div>
+<div class="pick-col"><h3>Operating systems</h3><div class="pick-list" id="colOs"></div></div>
+<div class="pick-col"><h3>Editors &amp; IDEs</h3><div class="pick-list" id="colIde"></div></div>
+</div>
+<div class="custom-rules">
+<label for="customIn">Your own extra rules (optional — appended last)</label>
+<textarea id="customIn" spellcheck="false" placeholder=".env
+/secrets/
+*.local"></textarea>
+</div>
+<div class="btn-row">
+<button type="button" class="act-btn" id="genBtn">Generate .gitignore</button>
+<button type="button" class="act-btn ghost" id="copyBtn">Copy</button>
+<button type="button" class="act-btn ghost" id="dlBtn">Download .gitignore</button>
+</div>
+<div class="status-msg" id="status"></div>
+</div>
+
+<div class="section-card">
+<h2>Your .gitignore</h2>
+<textarea id="outArea" class="out-area" spellcheck="false" readonly placeholder="Check templates above and hit Generate…"></textarea>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/robots-txt-generator/">Robots Txt Generator</a></li><li style="margin:4px 0"><a href="/cron-generator/">Cron Generator</a></li><li style="margin:4px 0"><a href="/password-generator/">Password Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/what-is-gitignore/">Read what .gitignore really does</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What the Popular Templates Cover</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Template</th><th>Lines</th><th>Headline entries</th></tr></thead>
+<tbody>
+<tr><td>Node</td><td>143</td><td><code>node_modules/</code>, <code>dist/</code>, <code>npm-debug.log*</code>, <code>.env</code></td></tr>
+<tr><td>Python</td><td>220</td><td><code>__pycache__/</code>, <code>*.py[codz]</code>, <code>.venv</code>, <code>.pytest_cache/</code></td></tr>
+<tr><td>Go</td><td>32</td><td><code>*.exe</code>, test binaries <code>*.test</code>, coverage files, <code>go.work</code></td></tr>
+<tr><td>Rust</td><td>24</td><td><code>target</code>, <code>debug</code>, <code>**/*.rs.bk</code>, <code>*.pdb</code></td></tr>
+<tr><td>Java</td><td>24</td><td><code>*.class</code>, package archives <code>*.jar</code> <code>*.war</code>, <code>hs_err_pid*</code></td></tr>
+<tr><td>macOS (Global)</td><td>57</td><td><code>.DS_Store</code>, <code>._*</code>, <code>.Spotlight-V100</code>, <code>.Trashes</code></td></tr>
+<tr><td>Windows (Global)</td><td>24</td><td><code>Thumbs.db</code>, <code>[Dd]esktop.ini</code>, <code>$RECYCLE.BIN/</code>, <code>*.lnk</code></td></tr>
+<tr><td>VS Code (Global)</td><td>11</td><td><code>.vscode/*</code> with re-included <code>settings.json</code>, <code>launch.json</code>, <code>extensions.json</code></td></tr>
+<tr><td>JetBrains (Global)</td><td>87</td><td>selective <code>.idea</code> rules: <code>workspace.xml</code>, <code>shelf</code>, <code>dictionaries</code></td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Line counts from the live templates at github/gitignore (CC0-1.0); they shift a little as the collection is maintained.</p>
+</div>
+
+<div class="section-card">
+<h2>Pattern Syntax Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pattern</th><th>Matches</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>node_modules/</code></td><td>Any directory with that name, at any depth</td><td>packages/api/node_modules</td></tr>
+<tr><td><code>/build</code></td><td>Only the build folder at the repo root</td><td>build ✔ &nbsp; app/build ❌</td></tr>
+<tr><td><code>*.log</code></td><td>Every file ending in .log, anywhere</td><td>debug.log, a/b/error.log</td></tr>
+<tr><td><code>docs/*.md</code></td><td>.md files directly inside docs/</td><td>docs/readme.md</td></tr>
+<tr><td><code>docs/**/*.md</code></td><td>.md files at any depth under docs/</td><td>docs/guides/setup.md</td></tr>
+<tr><td><code>!keep.me</code></td><td>Negation: re-include a file an earlier pattern excluded</td><td><code>*.log</code> then <code>!important.log</code></td></tr>
+<tr><td><code># comment</code></td><td>Ignored line — templates use these as section headers</td><td># Logs</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The one rule that trips everyone: negation can't rescue a file whose parent directory was excluded by an earlier pattern. Exclude files, not their folders, if you plan to re-include some.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Gitignore Generator Works</h2>
+<p>GitHub maintains a repository called <a href="https://github.com/github/gitignore" rel="noopener">github/gitignore</a> — roughly 175,000 stars — containing battle-tested ignore templates for nearly every language, framework, operating system, and editor. When you create a new repository on github.com and pick a .gitignore template, that's where it comes from. The collection is released under CC0 1.0 (public domain dedication), so anyone may copy, modify, and ship the templates, which is exactly what this tool does: it fetches the templates you check straight from the jsDelivr CDN mirror of the repo and concatenates them with section headers into one file.</p>
+<h3>How to use it</h3>
+<p>Tick one box per language plus your operating system and editor, add any project-specific patterns in the custom box (environment files and secret paths are the usual suspects), and hit Generate. The result appears below with per-template headers so you can see which rules came from where. Copy it into a file named <code>.gitignore</code> at your repository root, or use the download button to get it ready-named.</p>
+<h3>A worked example</h3>
+<p>Take the default selection: Node, macOS, and VS Code. The three templates weigh in at 143, 57, and 11 lines respectively. Concatenated with section headers the finished file is 217 lines and about 3.3 KB: every <code>node_modules/</code> folder, npm debug log, and build output directory is covered on the Node side; <code>.DS_Store</code> and friends on the macOS side; and the VS Code template does something clever worth stealing — it ignores <code>.vscode/*</code> wholesale, then re-includes the files teams genuinely share (<code>settings.json</code>, <code>launch.json</code>, <code>extensions.json</code>) with negation patterns. Commit that file once and the repository stays clean for every teammate on every OS.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is a .gitignore file?</h3><p>It's a plain text file in your repository root listing paths Git should not track. Each line is a pattern — node_modules/, *.log, .env — and matching files stop showing up in git status and can't be committed by accident. One .gitignore at the repo root covers the whole tree; subdirectories can add their own for extra rules.</p></div>
+<div class="faq-item"><h3>Where do I put the .gitignore file?</h3><p>In the repository root, next to the .git directory. Patterns are relative to the file's location, so node_modules/ in the root ignores every node_modules folder at any depth. You can add more .gitignore files in subdirectories when one folder needs rules the rest of the repo shouldn't have.</p></div>
+<div class="faq-item"><h3>Does .gitignore affect files already committed?</h3><p>No. Git only consults .gitignore for untracked files. A file that's already in the index keeps being tracked even if you add it to .gitignore afterwards. To stop tracking it, run git rm --cached &lt;file&gt;, commit that removal, and then the ignore rule takes over.</p></div>
+<div class="faq-item"><h3>What's the difference between node_modules/ and node_modules in .gitignore?</h3><p>The trailing slash limits the pattern to directories, so a file literally named node_modules would still be tracked. In practice the slash is what you want almost always. A leading slash anchors the pattern to the .gitignore's directory: /build ignores only the top-level build folder, while build ignores every folder named build anywhere in the tree.</p></div>
+<div class="faq-item"><h3>How do I ignore a file except one copy of it?</h3><p>Use a negation pattern: *.log on one line, then !important.log on the next re-includes that one file. Two caveats: Git won't re-include a file if its parent directory is excluded (exclude logs/, then !logs/keep.log fails), and negations after a broad directory exclusion are the number-one source of confusing .gitignore bugs.</p></div>
+<div class="faq-item"><h3>Can I ignore one file globally across all my repos?</h3><p>Yes — that's what the global ignore file is for. Run git config --global core.excludesfile ~/.gitignore_global and put machine-specific patterns there: .DS_Store, your editor's swap files, local env files. Repository .gitignore files stay shareable with the team, while your OS cruft stays out of every repo without repeating it.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/robots-txt-generator/">🤖 Robots.txt Generator</a>
+<a href="/robots-txt-validator/">🧪 Robots.txt Validator</a>
+<a href="/cron-generator/">⏰ Cron Generator</a>
+<a href="/password-generator/">🔑 Password Generator</a>
+<a href="/meta-tag-generator/">🏷️ Meta Tag Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var BASE='https://cdn.jsdelivr.net/gh/github/gitignore@main/';
+  var TPL=[
+    // group, label, path, checked
+    ['lang','Node','Node',1],
+    ['lang','Python','Python',0],
+    ['lang','Go','Go',0],
+    ['lang','Rust','Rust',0],
+    ['lang','Java','Java',0],
+    ['lang','C','C',0],
+    ['lang','C++','C%2B%2B',0],
+    ['lang','C# (Visual Studio)','VisualStudio',0],
+    ['lang','Ruby','Ruby',0],
+    ['lang','Ruby on Rails','Rails',0],
+    ['lang','Laravel (PHP)','Laravel',0],
+    ['lang','Maven','Maven',0],
+    ['lang','Gradle','Gradle',0],
+    ['lang','Swift','Swift',0],
+    ['lang','Kotlin','Kotlin',0],
+    ['lang','Dart','Dart',0],
+    ['lang','Flutter','Flutter',0],
+    ['lang','Elixir','Elixir',0],
+    ['lang','Haskell','Haskell',0],
+    ['lang','Terraform','Terraform',0],
+    ['os','macOS','Global/macOS',1],
+    ['os','Windows','Global/Windows',0],
+    ['os','Linux','Global/Linux',0],
+    ['ide','VS Code','Global/VisualStudioCode',1],
+    ['ide','JetBrains (IntelliJ etc.)','Global/JetBrains',0],
+    ['ide','Vim','Global/Vim',0],
+    ['ide','Emacs','Global/Emacs',0],
+    ['ide','Sublime Text','Global/SublimeText',0],
+    ['ide','Xcode','Global/Xcode',0]
+  ];
+  var COLS={lang:'colLang',os:'colOs',ide:'colIde'};
+  var cache={},outArea=document.getElementById('outArea'),status=document.getElementById('status'),
+      customIn=document.getElementById('customIn');
+
+  Object.keys(COLS).forEach(function(group){
+    var host=document.getElementById(COLS[group]);
+    host.innerHTML=TPL.map(function(t,i){
+      if(t[0]!==group)return '';
+      return '<label class="pick-item"><input type="checkbox" data-i="'+i+'"'+(t[3]?' checked':'')+'><span>'+t[1]+'</span></label>';
+    }).join('');
+  });
+
+  function sel(){return [].slice.call(document.querySelectorAll('.pick-item input:checked')).map(function(cb){return TPL[parseInt(cb.getAttribute('data-i'),10)];});}
+  function fetchTpl(t,cb){
+    if(cache[t[2]]!=null){cb(cache[t[2]]);return;}
+    fetch(BASE+t[2]+'.gitignore').then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.text();
+    }).then(function(txt){
+      cache[t[2]]=txt;cb(txt);
+    }).catch(function(e){
+      cache[t[2]]=false;cb(false);
+    });
+  }
+  function generate(){
+    var picks=sel();
+    if(!picks.length){status.textContent='Check at least one template first.';status.classList.add('err');outArea.value='';return;}
+    status.classList.remove('err');
+    status.textContent='Fetching '+picks.length+' template'+(picks.length===1?'':'s')+' from github/gitignore (via jsDelivr)…';
+    var done=0,fails=[],parts=new Array(picks.length);
+    picks.forEach(function(t,ix){
+      fetchTpl(t,function(txt){
+        parts[ix]=txt===false?null:'### '+t[1]+' ###\n'+String(txt).trimEnd();
+        if(txt===false)fails.push(t[1]);
+        done++;
+        if(done===picks.length)render(picks,parts,fails);
+      });
+    });
+  }
+  function render(picks,parts,fails){
+    var extra=customIn.value.replace(/\s+$/,'');
+    var body=parts.filter(Boolean).join('\n\n');
+    if(extra)body+='\n\n### Custom ###\n'+extra;
+    body+='\n';
+    outArea.value=body;
+    var lines=body.split('\n').length;
+    status.textContent=picks.length-fails.length+' template'+(picks.length-fails.length===1?'':'s')+' merged · '+lines+' lines · '+(new Blob([body]).size).toLocaleString('en-US')+' bytes'+
+      (fails.length?' · could not load: '+fails.join(', '):'');
+    if(fails.length)status.classList.add('err');
+  }
+  document.getElementById('genBtn').addEventListener('click',generate);
+  customIn.addEventListener('input',function(){if(outArea.value)generate();});
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var btn=this,done=function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy';},1500);};
+    if(!outArea.value)return;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(outArea.value).then(done,done);}
+    else{outArea.select();try{document.execCommand('copy');}catch(e){}done();}
+  });
+  document.getElementById('dlBtn').addEventListener('click',function(){
+    if(!outArea.value)return;
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([outArea.value],{type:'text/plain'}));
+    a.download='.gitignore';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+  });
+  generate();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

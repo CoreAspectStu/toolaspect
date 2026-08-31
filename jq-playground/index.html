@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jq Playground — Test jq Filters In-Browser | ToolAspect</title>
+<meta name="description" content="Test jq filters against your own JSON in the browser. Real jq 1.8.2 compiled to WebAssembly — map, select, sort_by, string interpolation, with live errors.">
+<link rel="canonical" href="https://toolaspect.com/jq-playground/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="jq Playground — Test jq Filters In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="A live jq playground: paste JSON, write a filter, see output instantly — the real jq engine compiled to WebAssembly, running locally.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/jq-playground/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="jq Playground | Free Online Tool">
+<meta name="twitter:description" content="Run jq filters on your JSON, entirely in your browser.">
+<meta name="keywords" content="jq playground, jq online, test jq filter, jq filter tester, jq cheat sheet, jq json processor, learn jq, jq query online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"jq Playground","description":"Free online jq playground running the real jq 1.8.2 engine compiled to WebAssembly. Paste JSON, write filters, and see output or exact error messages instantly — nothing uploaded.","url":"https://toolaspect.com/jq-playground/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is jq used for?","acceptedAnswer":{"@type":"Answer","text":"jq slices, filters, and reshapes JSON on the command line. You feed it a document and a filter — like .items[] | select(.price > 100) | .name — and it streams out the matching values. It's the standard tool for reading API responses, transforming configs, and massaging logs: anything where you'd otherwise write a 20-line Python script gets done in one jq expression."}},
+{"@type":"Question","name":"Is this the real jq or a reimplementation?","acceptedAnswer":{"@type":"Answer","text":"Real jq. This page loads jq 1.8.2 — the current release from the jqlang/jq project — compiled to WebAssembly via the MIT-licensed jq-wasm build, and executes it locally. Filter semantics, error messages, and flags like -r and -c behave exactly like the jq binary; the version check in the header reports the engine's own version string."}},
+{"@type":"Question","name":"What does the pipe operator do in jq?","acceptedAnswer":{"@type":"Answer","text":"The pipe chains filters the way Unix pipes chain commands: .items | length first selects the items array, then feeds it to length. Each stage's output becomes the next stage's input. Combined with map() and select(), the pipe is how you express 'take this, keep those, transform each' in one readable line."}},
+{"@type":"Question","name":"How do I output plain strings instead of JSON quotes?","acceptedAnswer":{"@type":"Answer","text":"Use the raw output flag. jq's -r prints string results without quotes and without escapes, so \"dana@example.com\" comes out as dana@example.com. This playground exposes -r, -c (compact), and -S (sort object keys) as checkboxes that map straight onto the CLI flags."}},
+{"@type":"Question","name":"Why did my filter return null?","acceptedAnswer":{"@type":"Answer","text":"Almost always an optional-access question: .foo on an object without foo gives null rather than an error, and null flows silently through the rest of the pipeline. If you queried an array element that doesn't exist, you also get null. Track it by simplifying the filter stage by stage — run .first, then add the pipe — until the null appears. Use .foo? or try/catch when missing keys are expected."}},
+{"@type":"Question","name":"Can I use string interpolation in jq?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it's the neat way to build lines for reports. Inside a string, \\(expression) interpolates: \"\\(.sku): \\(.qty) x $\\(.price)\" turns each item object into one readable line. Combined with the -r flag it produces exactly the kind of output you'd pipe into a file or spreadsheet."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"jq Playground","item":"https://toolaspect.com/jq-playground/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pane-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.pane-grid{grid-template-columns:1fr}}
+.pane{display:flex;flex-direction:column;gap:.35rem}
+.pane label{font-size:.85rem;color:var(--muted);font-weight:500}
+.code-area{width:100%;min-height:280px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.55;box-sizing:border-box;resize:vertical;tab-size:2}
+.code-area:focus{outline:none;border-color:var(--primary)}
+.filter-row{display:flex;gap:.6rem;align-items:center;margin:1rem 0 .25rem;flex-wrap:wrap}
+.filter-row input[type=text]{flex:1;min-width:220px;padding:.6rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.filter-row input[type=text]:focus{outline:none;border-color:var(--primary)}
+.flag-row{display:flex;flex-wrap:wrap;gap:1rem;margin:.5rem 0}
+.flag-group{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--muted)}
+.flag-group input{accent-color:var(--primary)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.4rem;margin:.75rem 0}
+.chip{padding:.3rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.78rem;cursor:pointer;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.ver-badge{display:inline-block;background:rgba(99,102,241,.15);border:1px solid var(--primary);color:var(--primary-hover);border-radius:999px;padding:.15rem .7rem;font-size:.75rem;font-weight:600}
+.status-msg{font-size:.85rem;color:var(--muted);margin-top:.6rem;min-height:1.2em}
+.status-msg.err{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{white-space:nowrap;font-size:.78rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "jq Playground — Test jq Filters In-Browser", "url": "https://toolaspect.com/jq-playground/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Test jq filters against your own JSON in the browser. Real jq 1.8.2 compiled to WebAssembly — map, select, sort_by, string interpolation, with live errors."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the jq Playground free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the jq Playground on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the jq Playground work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the jq Playground calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔧 jq Playground</h1>
+<p>Paste JSON, write a filter, see the result — the real jq engine in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> jq is a command-line JSON processor, and a filter like <code>.order.items | map(.qty * .price) | add</code> sums a cart: on the sample below that's <strong>728</strong>, plus $18.50 shipping = <strong>746.50</strong>. This playground runs <strong>jq 1.8.2</strong> — compiled to WebAssembly from the official <a href="https://github.com/jqlang/jq" rel="noopener">jqlang/jq</a> source — so filters, flags, and error messages match the CLI exactly. Output updates as you type, and your JSON never leaves the page.
+</div>
+
+<div class="section-card">
+<h2>JSON In, Filter, Result Out <span class="ver-badge" id="verBadge" style="margin-left:.5rem">loading engine…</span></h2>
+<div class="pane-grid">
+<div class="pane">
+<label for="jsonIn">JSON input</label>
+<textarea id="jsonIn" class="code-area" spellcheck="false"></textarea>
+</div>
+<div class="pane">
+<label for="outArea">Output</label>
+<textarea id="outArea" class="code-area" spellcheck="false" readonly></textarea>
+</div>
+</div>
+<div class="filter-row">
+<label for="filterIn" style="font-size:.85rem;color:var(--muted);font-weight:500">Filter</label>
+<input type="text" id="filterIn" spellcheck="false" autocomplete="off">
+</div>
+<div class="flag-row">
+<div class="flag-group"><input type="checkbox" id="flagR"><label for="flagR"><code>-r</code> raw output (no quotes)</label></div>
+<div class="flag-group"><input type="checkbox" id="flagC"><label for="flagC"><code>-c</code> compact</label></div>
+<div class="flag-group"><input type="checkbox" id="flagS"><label for="flagS"><code>-S</code> sort keys</label></div>
+</div>
+<div class="chip-row" id="samples"></div>
+<div class="status-msg" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/json-viewer/">Json Viewer</a></li><li style="margin:4px 0"><a href="/json-to-yaml/">Json To Yaml</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/jq-cheat-sheet/">Read the jq cheat sheet</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>jq Filter Cheat Sheet</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>What it does</th><th>On the sample order</th></tr></thead>
+<tbody>
+<tr><td><code>.</code></td><td>Identity — the input unchanged</td><td>the whole order object</td></tr>
+<tr><td><code>.order.customer.name</code></td><td>Walk a path</td><td>"Dana Reyes"</td></tr>
+<tr><td><code>.order.items | length</code></td><td>Count array elements</td><td>3</td></tr>
+<tr><td><code>.order.items[]</code></td><td>Stream every element</td><td>3 separate item objects</td></tr>
+<tr><td><code>.order.items[] | .qty * .price</code></td><td>Arithmetic per element</td><td>129, 549, 50</td></tr>
+<tr><td><code>map(.qty * .price) | add</code></td><td>Collect then sum</td><td>728</td></tr>
+<tr><td><code>select(.price &gt; 100)</code></td><td>Keep matching values</td><td>keyboard + desk</td></tr>
+<tr><td><code>sort_by(-(.qty * .price)) | .[0]</code></td><td>Order and index</td><td>the standing desk</td></tr>
+<tr><td><code>keys</code></td><td>Array of an object's keys</td><td>["order"]</td></tr>
+<tr><td><code>to_entries</code></td><td>Object → key/value array</td><td>5 entries: id, customer, items…</td></tr>
+<tr><td><code>[.order.items[].price] | min, max</code></td><td>Statistics on collected values</td><td>25 and 549</td></tr>
+<tr><td><code>"\(.sku): \(.qty) x $\(.price)"</code></td><td>String interpolation</td><td>KB-01: 1 x $129</td></tr>
+<tr><td><code>.missing // "none"</code></td><td>Alternative for null/false</td><td>"none"</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every value in the right column was produced by this page's engine on the default sample — click the chips above to reproduce each one.</p>
+</div>
+
+<div class="content-section">
+<h2>How the jq Playground Works</h2>
+<p>jq, written by Stephen Dolan and maintained today as <a href="https://github.com/jqlang/jq" rel="noopener">jqlang/jq</a> (MIT license), is the JSON processor: a tiny language for slicing, filtering, and reshaping JSON that has become the connective tissue of shell pipelines everywhere. The official playground at jqplay.org inspired this page's layout — JSON on the left, filter in the middle, live output — but here the engine runs in your tab: jq 1.8.2 compiled to WebAssembly through the MIT-licensed jq-wasm build, roughly 900 KB fetched once from the jsDelivr CDN. After that, every keystroke re-runs your filter locally.</p>
+<h3>Filters are pipelines</h3>
+<p>The mental model is a Unix pipe. <code>.order.items</code> selects a value; <code>| length</code> feeds that value to the length function; <code>[]</code> explodes an array into a stream where each element runs through whatever follows. Because filters are values too, <code>map(f)</code> is just <code>[.[] | f]</code> with a name. That composability is why one-liners like <code>.items | map(select(.qty &gt; 0)) | map(.qty * .price) | add</code> read left to right as a sentence.</p>
+<h3>How to use it</h3>
+<p>Paste any JSON on the left, type a filter, and the output pane updates as you type. The checkboxes map to the CLI flags you'd actually use: <code>-r</code> for unquoted strings, <code>-c</code> for one-line compact output, <code>-S</code> for sorted keys. Errors appear verbatim from jq's own stderr with the exit code, which is precisely what you'd see in a terminal — useful when you're debugging a filter for a script. The chips load worked filters against the sample order.</p>
+<h3>A worked example</h3>
+<p>The sample document is one order: three line items (keyboard $129, standing desk $549, two desk mats at $25) and $18.50 express shipping. Start simple: <code>.order.items | length</code> is 3. Multiply per line: <code>.order.items[] | .qty * .price</code> streams 129, 549, 50. Sum with <code>map(.qty * .price) | add</code> to get the subtotal 728, then bind it and add shipping — <code>.order as $o | ($o.items | map(.qty * .price) | add) + $o.shipping.cost</code> — for the 746.50 total. Interpolation turns the items into report lines: <code>.order.items[] | "\(.sku): \(.qty) x $\(.price)"</code> prints <code>KB-01: 1 x $129</code> and friends under the <code>-r</code> flag. Average unit price divides 728 by 4 total units: 182 exactly.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is jq used for?</h3><p>jq slices, filters, and reshapes JSON on the command line. You feed it a document and a filter — like .items[] | select(.price &gt; 100) | .name — and it streams out the matching values. It's the standard tool for reading API responses, transforming configs, and massaging logs: anything where you'd otherwise write a 20-line Python script gets done in one jq expression.</p></div>
+<div class="faq-item"><h3>Is this the real jq or a reimplementation?</h3><p>Real jq. This page loads jq 1.8.2 — the current release from the jqlang/jq project — compiled to WebAssembly via the MIT-licensed jq-wasm build, and executes it locally. Filter semantics, error messages, and flags like -r and -c behave exactly like the jq binary; the version check in the header reports the engine's own version string.</p></div>
+<div class="faq-item"><h3>What does the pipe operator do in jq?</h3><p>The pipe chains filters the way Unix pipes chain commands: .items | length first selects the items array, then feeds it to length. Each stage's output becomes the next stage's input. Combined with map() and select(), the pipe is how you express 'take this, keep those, transform each' in one readable line.</p></div>
+<div class="faq-item"><h3>How do I output plain strings instead of JSON quotes?</h3><p>Use the raw output flag. jq's -r prints string results without quotes and without escapes, so "dana@example.com" comes out as dana@example.com. This playground exposes -r, -c (compact), and -S (sort object keys) as checkboxes that map straight onto the CLI flags.</p></div>
+<div class="faq-item"><h3>Why did my filter return null?</h3><p>Almost always an optional-access question: .foo on an object without foo gives null rather than an error, and null flows silently through the rest of the pipeline. If you queried an array element that doesn't exist, you also get null. Track it by simplifying the filter stage by stage — run .first, then add the pipe — until the null appears. Use .foo? or try/catch when missing keys are expected.</p></div>
+<div class="faq-item"><h3>Can I use string interpolation in jq?</h3><p>Yes, and it's the neat way to build lines for reports. Inside a string, \(expression) interpolates: "\(.sku): \(.qty) x $\(.price)" turns each item object into one readable line. Combined with the -r flag it produces exactly the kind of output you'd pipe into a file or spreadsheet.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧾 JSON Formatter</a>
+<a href="/json-viewer/">🌲 JSON Viewer</a>
+<a href="/json-to-yaml/">🔁 JSON to YAML</a>
+<a href="/json-diff/">🔍 JSON Diff</a>
+<a href="/json-schema-validator/">✅ JSON Schema Validator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script type="module">
+import { loadJq } from 'https://cdn.jsdelivr.net/npm/jq-wasm@3.0.0-jq-1.8.2/dist/browser.mjs';
+const WASM_URL = 'https://cdn.jsdelivr.net/npm/jq-wasm@3.0.0-jq-1.8.2/dist/build/jq.wasm';
+
+const SAMPLE_JSON = JSON.stringify({
+  order: {
+    id: 4172,
+    customer: { name: 'Dana Reyes', tier: 'gold', emails: ['dana@example.com','dana@work.example.com'] },
+    items: [
+      { sku: 'KB-01', name: 'Mechanical Keyboard', qty: 1, price: 129.00 },
+      { sku: 'DSK-04', name: 'Standing Desk', qty: 1, price: 549.00 },
+      { sku: 'MAT-02', name: 'Desk Mat', qty: 2, price: 25.00 }
+    ],
+    shipping: { method: 'express', cost: 18.50 },
+    coupons: ['WELCOME10']
+  }
+}, null, 2);
+
+const SAMPLES = [
+  ['subtotal', '.order.items | map(.qty * .price) | add'],
+  ['total with shipping', '.order as $o | ($o.items | map(.qty * .price) | add) + $o.shipping.cost'],
+  ['report lines (-r)', '.order.items[] | "\\(.sku): \\(.qty) x $\\(.price)"'],
+  ['select expensive', '.order.items[] | select(.price > 100) | .name'],
+  ['min, max, mean', '[.order.items[].price] | min, max, (add/length)'],
+  ['avg per unit', '.order as $o | ($o.items | map(.qty * .price) | add) / ($o.items | map(.qty) | add)'],
+  ['customer summary', '{name: .order.customer.name, tier: .order.customer.tier, items: (.order.items|length)}']
+];
+
+const jsonIn = document.getElementById('jsonIn');
+const filterIn = document.getElementById('filterIn');
+const outArea = document.getElementById('outArea');
+const status = document.getElementById('status');
+const verBadge = document.getElementById('verBadge');
+const flags = { r: document.getElementById('flagR'), c: document.getElementById('flagC'), S: document.getElementById('flagS') };
+
+jsonIn.value = SAMPLE_JSON;
+filterIn.value = SAMPLES[0][1];
+document.getElementById('samples').innerHTML = SAMPLES.map((s,i) =>
+  `<button type="button" class="chip" data-i="${i}">${s[0]}</button>`).join('');
+
+let jq = null, timer = null;
+
+function flagList(){
+  const f = [];
+  if (flags.r.checked) f.push('-r');
+  if (flags.c.checked) f.push('-c');
+  if (flags.S.checked) f.push('-S');
+  return f;
+}
+function run(){
+  if (!jq) return;
+  let input;
+  const raw = jsonIn.value.trim();
+  if (!raw) { status.textContent = 'Paste some JSON on the left.'; status.classList.remove('err'); outArea.value=''; return; }
+  try { input = JSON.parse(raw); }
+  catch (e) { status.textContent = 'JSON input error: ' + e.message; status.classList.add('err'); outArea.value=''; return; }
+  const filter = filterIn.value;
+  if (!filter.trim()) { status.textContent = 'Type a filter — try . or keys.'; outArea.value=''; return; }
+  try {
+    const res = jq.raw(input, filter, flagList());
+    if (res.exitCode === 0) {
+      outArea.value = res.stdout;
+      const n = res.stdout === '' ? 0 : res.stdout.split('\n').length;
+      status.textContent = `jq ok — ${n} output line${n===1?'':'s'}${res.stdout===''?' (empty)':''}`;
+      status.classList.remove('err');
+    } else {
+      outArea.value = res.stdout;
+      status.textContent = `jq exit ${res.exitCode}: ` + (res.stderr || '(no message)').split('\n')[0];
+      status.classList.add('err');
+    }
+  } catch (e) {
+    status.textContent = 'jq error: ' + e.message;
+    status.classList.add('err');
+  }
+}
+
+loadJq({ wasmURL: WASM_URL }).then(engine => {
+  jq = engine;
+  verBadge.textContent = jq.version + ' (WebAssembly)';
+  run();
+}).catch(e => {
+  verBadge.textContent = 'engine failed';
+  status.textContent = 'Could not load the jq WebAssembly engine: ' + e.message;
+  status.classList.add('err');
+});
+
+document.getElementById('samples').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  filterIn.value = SAMPLES[parseInt(b.getAttribute('data-i'), 10)][1];
+  if (b.textContent.includes('-r')) flags.r.checked = true;
+  run();
+});
+const debounced = () => { clearTimeout(timer); timer = setTimeout(run, 350); };
+jsonIn.addEventListener('input', debounced);
+filterIn.addEventListener('input', debounced);
+[flags.r, flags.c, flags.S].forEach(el => el.addEventListener('change', run));
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

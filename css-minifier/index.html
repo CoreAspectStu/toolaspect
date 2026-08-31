@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Minifier — csso in Your Browser | ToolAspect</title>
+<meta name="description" content="Minify CSS with csso 5.0.5 in your browser: structure-safe 25.9% or restructure 28.1% off our sample. No uploads, gzip sizes shown.">
+<link rel="canonical" href="https://toolaspect.com/css-minifier/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="CSS Minifier — csso in Your Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Run csso 5.0.5 on your stylesheet locally: whitespace strip or full restructure with rule merging, byte and gzip sizes for each pass.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/css-minifier/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSS Minifier | Free Online Tool">
+<meta name="twitter:description" content="csso-powered CSS minifier that runs entirely in your browser. No uploads, no signup.">
+<meta name="keywords" content="css minifier, minify css, compress css, csso online, css compressor, shrink stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CSS Minifier","description":"Free in-browser CSS minifier powered by csso 5.0.5 (MIT). Strip whitespace and comments or let csso restructure and merge rules, with byte and gzip sizes for each pass. Nothing uploads.","url":"https://toolaspect.com/css-minifier/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the difference between keeping structure and restructuring?","acceptedAnswer":{"@type":"Answer","text":"Keeping structure only deletes whitespace, comments, and trailing semicolons — every rule stays where it was, so the cascade order is byte-for-byte predictable. Restructuring lets csso merge selectors that share a block, merge adjacent rules with the same selector, and remove overridden declarations. Same rendered result, smaller file, but the source order changes, which matters if you debug by line number or diff output against input."}},
+{"@type":"Question","name":"How much smaller will my CSS get?","acceptedAnswer":{"@type":"Answer","text":"Hand-written CSS with comments typically loses 20-30% raw: our 772-byte sample goes to 572 bytes keeping structure (25.9%) and 555 bytes restructured (28.1%). Machine-generated CSS from Sass or Tailwind builds often shrinks more, because expanded nesting and duplicated vendor prefixes collapse. Over the wire the gap narrows — gzip already squeezes repetition — 321 versus 326 bytes on the same sample."}},
+{"@type":"Question","name":"Does csso shorten colors and rewrite values?","acceptedAnswer":{"@type":"Answer","text":"Yes. csso folds #ffffff to #fff where equivalent, drops the leading zero on 0.10, collapses 24px 24px 24px 24px to 24px, trims 0px to 0, and removes units from zero lengths. Those rewrites are semantics-preserving by CSS specification, not heuristics — but if your pipeline asserts exact strings in visual regression tests, compare before shipping."}},
+{"@type":"Question","name":"Is minified CSS safe for production?","acceptedAnswer":{"@type":"Answer","text":"Yes — csso parses your stylesheet into its own AST and regenerates it, so the output is valid CSS by construction, and it powers production toolchains behind the scenes. The one thing to keep in mind is specificity: restructuring preserves computed styles, but if you later patch the minified file by hand instead of the source, you lose the ability to re-minify cleanly. Always keep the unminified source as the source of truth."}},
+{"@type":"Question","name":"Does restructuring break media queries or custom properties?","acceptedAnswer":{"@type":"Answer","text":"No. At-rule blocks like @media are minified inside-out and their contents merge only within the same query; custom properties (--brand and friends) are declarations like any other and pass through untouched. Our sample stylesheet uses both, and every pass preserves them — :root variables first, the max-width: 640px block intact."}},
+{"@type":"Question","name":"Is my stylesheet uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. csso 5.0.5 loads from a CDN into your browser and runs locally. Your CSS never leaves the tab — suitable for client work under NDA, though your employer's policy on pasting into third-party pages still applies."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"CSS Minifier","item":"https://toolaspect.com/css-minifier/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group select:focus{outline:none;border-color:var(--primary)}
+textarea.ta-io{width:100%;min-height:220px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5;box-sizing:border-box;resize:vertical;tab-size:2}
+textarea.ta-io:focus{outline:none;border-color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-all}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "CSS Minifier — csso in Your Browser", "url": "https://toolaspect.com/css-minifier/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Minify CSS with csso 5.0.5 in your browser: structure-safe 25.9% or restructure 28.1% off our sample. No uploads, gzip sizes shown."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the CSS Minifier free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the CSS Minifier on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the CSS Minifier work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the CSS Minifier calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🎨 CSS Minifier</h1>
+<p>csso 5.0.5 in your browser — whitespace strip or full restructure</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> minifying CSS deletes comments, whitespace, and redundant values, and can merge rules that repeat selectors. Percent saved = (input − output) ÷ input × 100. On our 772-byte sample stylesheet, csso with structure kept outputs 572 B (25.9% saved) and with restructuring 555 B (28.1% saved; 321 B gzipped). Custom properties and the media query survive every pass. Runs locally — your stylesheet is never uploaded.</p>
+
+<div class="section-card">
+<h2>Your CSS</h2>
+<div class="input-grid">
+<div class="input-group"><label>Preset</label><select id="preset"></select></div>
+<div class="input-group" style="justify-content:flex-end"><label>&nbsp;</label>
+<div class="btn-row" style="margin-top:0"><button type="button" class="btn ghost" id="sample">Sample</button><button type="button" class="btn ghost" id="clear">Clear</button></div>
+</div>
+</div>
+<textarea class="ta-io" id="src" spellcheck="false" placeholder="Paste CSS here…" style="margin-top:1rem"></textarea>
+<div class="btn-row" style="justify-content:space-between">
+<div style="display:flex;gap:.6rem;flex-wrap:wrap"><button type="button" class="btn" id="copy">Copy output</button><button type="button" class="btn ghost" id="download">Download .css</button></div>
+</div>
+<textarea class="ta-io" id="out" spellcheck="false" readonly placeholder="Minified output…" style="margin-top:1rem"></textarea>
+<div class="stats-grid">
+<div class="result-item"><div class="ri-label">Input</div><div class="ri-value" id="inBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Output</div><div class="ri-value" id="outBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Saved</div><div class="ri-value" id="saved">—</div></div>
+<div class="result-item"><div class="ri-label">Gzip in → out</div><div class="ri-value" id="gzOut" style="font-size:.9rem">—</div><div class="ri-label" id="gzIn" style="margin-top:.15rem">—</div></div>
+</div>
+<div class="status-line" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/minify-js/">Minify JS</a></li><li style="margin:4px 0"><a href="/minify-html/">Minify HTML</a></li><li style="margin:4px 0"><a href="/svg-optimizer/">SVG Optimizer</a></li><li style="margin:4px 0"><a href="/gradient-generator/">Gradient Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each csso Pass Buys You</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Preset</th><th>What it does</th><th>772-B sample →</th><th>Saved</th></tr></thead>
+<tbody>
+<tr><td>Keep structure</td><td>Deletes comments, whitespace, trailing semicolons; value shorthand folds (<code>24px 24px 24px 24px</code> → <code>24px</code>)</td><td>572 B</td><td>200 B (25.9%)</td></tr>
+<tr><td>Restructure</td><td>…plus merges duplicate selectors, drops overridden declarations, reorders safely</td><td>555 B</td><td>217 B (28.1%)</td></tr>
+<tr><td>Restructured, gzipped</td><td>Transport compression on top</td><td>321 B</td><td>vs 326 B for keep-structure</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Measured with csso 5.0.5 — the exact script this page loads — on the sample behind the Sample button. Stylesheets with more comments and repeated blocks shrink further; already-processed files shrink less.</p>
+</div>
+
+<div class="content-section">
+<h2>How the CSS Minifier Works</h2>
+<p>This is <strong>csso 5.0.5</strong> (MIT), the CSS optimizer CSS-OSS toolchains have trusted for a decade, loaded from a CDN and running entirely in your tab. It's not a regex cruncher: csso parses your stylesheet into an AST, rewrites it, and regenerates clean CSS, which is why the output is valid even when the input had quirks a naive tool would mangle.</p>
+<h3>The math</h3>
+<p>Bytes saved = input − output; percent = (input − output) ÷ input × 100. The tool counts UTF-8 bytes, and when your browser supports CompressionStream it shows gzip sizes too — the honest number for anything served over HTTP, since text/html+css compresses well and raw savings overstate the network win.</p>
+<h3>How to use it</h3>
+<p>Paste a stylesheet (the Sample button loads ours), pick a preset, and the output updates as you type. <em>Keep structure</em> is the choice when you want byte-predictable output that still mirrors your source order. <em>Restructure</em> squeezes further by merging rules with identical selectors and discarding declarations that later rules override. Copy or download when you're happy; errors surface csso's own parse message with a line reference.</p>
+<h3>A worked example</h3>
+<p>The Sample button loads a 772-byte product-card stylesheet: a <code>:root</code> block of custom properties, three rules, a hover state, and a <code>@media (max-width: 640px)</code> override. Keeping structure takes it to 572 bytes — the comment goes, <code>"Helvetica Neue", Arial, sans-serif</code> keeps its quotes, <code>24px 24px 24px 24px</code> folds to <code>24px</code>, and <code>0px 0px 8px 0px</code> trims to <code>0 0 8px</code>. Restructuring reaches 555 bytes. Gzipped, that's 321 bytes across the wire — on a 772-byte file the gzip win (391 → 321) is smaller than the minify win, which is exactly why both columns are shown: minify first, then let transport compression do its job.</p>
+<p>Custom properties and media queries ride through untouched in both passes — they're declarations and at-rules like any other, and csso merges only what the spec guarantees equivalent.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the difference between keeping structure and restructuring?</h3><p>Keeping structure only deletes whitespace, comments, and trailing semicolons — every rule stays where it was, so the cascade order is byte-for-byte predictable. Restructuring lets csso merge selectors that share a block, merge adjacent rules with the same selector, and remove overridden declarations. Same rendered result, smaller file, but the source order changes, which matters if you debug by line number or diff output against input.</p></div>
+<div class="faq-item"><h3>How much smaller will my CSS get?</h3><p>Hand-written CSS with comments typically loses 20-30% raw: our 772-byte sample goes to 572 bytes keeping structure (25.9%) and 555 bytes restructured (28.1%). Machine-generated CSS from Sass or Tailwind builds often shrinks more, because expanded nesting and duplicated vendor prefixes collapse. Over the wire the gap narrows — gzip already squeezes repetition — 321 versus 326 bytes on the same sample.</p></div>
+<div class="faq-item"><h3>Does csso shorten colors and rewrite values?</h3><p>Yes. csso folds <code>#ffffff</code> to <code>#fff</code> where equivalent, drops the leading zero on <code>0.10</code>, collapses <code>24px 24px 24px 24px</code> to <code>24px</code>, trims <code>0px</code> to <code>0</code>, and removes units from zero lengths. Those rewrites are semantics-preserving by CSS specification, not heuristics — but if your pipeline asserts exact strings in visual regression tests, compare before shipping.</p></div>
+<div class="faq-item"><h3>Is minified CSS safe for production?</h3><p>Yes — csso parses your stylesheet into its own AST and regenerates it, so the output is valid CSS by construction, and it powers production toolchains behind the scenes. The one thing to keep in mind is specificity: restructuring preserves computed styles, but if you later patch the minified file by hand instead of the source, you lose the ability to re-minify cleanly. Always keep the unminified source as the source of truth.</p></div>
+<div class="faq-item"><h3>Does restructuring break media queries or custom properties?</h3><p>No. At-rule blocks like <code>@media</code> are minified inside-out and their contents merge only within the same query; custom properties (<code>--brand</code> and friends) are declarations like any other and pass through untouched. Our sample stylesheet uses both, and every pass preserves them — <code>:root</code> variables first, the <code>max-width: 640px</code> block intact.</p></div>
+<div class="faq-item"><h3>Is my stylesheet uploaded anywhere?</h3><p>No. csso 5.0.5 loads from a CDN into your browser and runs locally. Your CSS never leaves the tab — suitable for client work under NDA, though your employer's policy on pasting into third-party pages still applies.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/minify-js/">⚡ Minify JS</a>
+<a href="/minify-html/">📄 Minify HTML</a>
+<a href="/svg-optimizer/">✨ SVG Optimizer</a>
+<a href="/gradient-generator/">🌈 Gradient Generator</a>
+<a href="/color-converter/">🎨 Color Converter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+window.TA_SAMPLE = `/* Product card styles for the ToolAspect demo store */
+:root {
+  --brand: #6366f1;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --radius: 12px;
+}
+
+.product-card {
+  background-color: var(--surface);
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius);
+  padding: 24px 24px 24px 24px;
+  color: var(--text);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.product-card .title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0px 0px 8px 0px;
+}
+
+.product-card .price {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.product-card:hover {
+  border-color: var(--brand);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+@media (max-width: 640px) {
+  .product-card {
+    padding: 16px;
+  }
+  .product-card .title {
+    font-size: 18px;
+  }
+}
+`;
+</script>
+<script src="/minify-js/shell.js"></script>
+<script>TA.minify.mount('css');</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

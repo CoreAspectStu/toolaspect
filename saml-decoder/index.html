@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAML Decoder — Decode SAML Response XML Free | ToolAspect</title>
+<meta name="description" content="Decode SAML 2.0 responses in your browser: base64, DEFLATE, or a full redirect URL to pretty XML with issuer, NameID and validity window. Nothing uploaded.">
+<link rel="canonical" href="https://toolaspect.com/saml-decoder/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="SAML Decoder — Decode SAML Response XML">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste a base64, DEFLATE-compressed, or URL-embedded SAML response and get pretty XML plus the fields that matter: issuer, NameID, audience, and validity window.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/saml-decoder/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SAML Decoder | Free Online Tool">
+<meta name="twitter:description" content="Turn a raw SAML response into readable XML and extracted fields — locally in your browser.">
+<meta name="keywords" content="saml decoder, decode saml response, saml response base64, saml request decoder, inflate saml, saml tracer, saml xml viewer, sso debugger">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SAML Decoder","description":"Free SAML 2.0 decoder that turns base64, DEFLATE-compressed, or redirect-URL SAML requests and responses into pretty-printed XML, and extracts issuer, NameID, audience, timestamps, and validity window. Runs entirely in your browser with pako.","url":"https://toolaspect.com/saml-decoder/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I decode a SAML response?","acceptedAnswer":{"@type":"Answer","text":"It depends on the binding. A POST-binding SAMLResponse is base64 text: decode it and you have XML. A redirect-binding SAMLRequest or SAMLResponse was DEFLATE-compressed before encoding, so after base64 decoding the bytes you still need to inflate them. The decoder above handles both plus the plain-XML case automatically — paste the value, a whole redirect URL, or URL-encoded XML."}},
+{"@type":"Question","name":"Is a SAML response base64 or compressed?","acceptedAnswer":{"@type":"Answer","text":"Both encodings exist. The HTTP-POST binding sends base64(XML) in a form field with no compression. The HTTP-Redirect binding puts the message in the query string, where size matters, so it sends base64url(DEFLATE(XML)) — raw DEFLATE with no zlib header, using - and _ in place of + and /. A decoder that only does base64 will show garbage for redirect messages; it needs an inflate step."}},
+{"@type":"Question","name":"What fields should I check when SAML login fails?","acceptedAnswer":{"@type":"Answer","text":"Start with the timestamps and audiences. NotBefore and NotOnOrAfter must bracket the current moment, allowing for clock skew between the identity provider and your server — 5 minutes is the conventional tolerance. Audience must equal your SP entity ID, Recipient and Destination must match your ACS URL, and InResponseTo must match the AuthnRequest ID you sent if you sent one. Mismatches in any of these are the most common causes of 'invalid response' errors."}},
+{"@type":"Question","name":"Does decoding a SAML response verify its signature?","acceptedAnswer":{"@type":"Answer","text":"No. Decoding is just unpacking layers: base64, compression, XML. Signature verification means validating the ds:Signature block against the identity provider's X.509 certificate, checking the signed references, and the wrap-attack checks on the assertion. Always do that in your SAML library server-side; a decoder is for reading and debugging, never for making access decisions."}},
+{"@type":"Question","name":"Why is clock skew such a problem in SAML?","acceptedAnswer":{"@type":"Answer","text":"Assertions are typically valid for just 5 minutes. If the identity provider's clock is 3 minutes ahead of your server, a freshly issued assertion can look not-yet-valid on arrival. That's why every SAML stack has a skew setting — it widens the NotBefore/NotOnOrAfter window on both ends. A few minutes of tolerance is standard; more than 10 usually masks a real NTP problem you should fix instead."}},
+{"@type":"Question","name":"Is it safe to paste a production SAML response here?","acceptedAnswer":{"@type":"Answer","text":"The page decodes locally — nothing is uploaded, and there's no server call with your input. That said, a decoded response contains the NameID (often an email), group attributes, and session identifiers. If your organization treats tokens as sensitive, redact or use a test response. And never treat any pasted token as still-secret: assertions expire within minutes anyway."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"SAML Decoder","item":"https://toolaspect.com/saml-decoder/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;box-sizing:border-box;resize:vertical}
+.input-group textarea:focus{outline:none;border-color:var(--primary)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem}
+.chip{padding:.3rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.78rem;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem}
+.act-btn{padding:.55rem 1.1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.act-btn:hover{background:var(--primary-hover)}
+.act-btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-msg{font-size:.85rem;color:var(--muted);margin-top:.6rem;min-height:1.2em}
+.status-msg.err{color:var(--danger)}
+.enc-chip{display:inline-block;background:rgba(99,102,241,.15);border:1px solid var(--primary);color:var(--primary-hover);border-radius:999px;padding:.2rem .8rem;font-size:.78rem;font-weight:600;margin-bottom:.75rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.75rem .9rem}
+.result-item .ri-label{font-size:.72rem;color:var(--muted);margin-bottom:.2rem;text-transform:uppercase;letter-spacing:.04em}
+.result-item .ri-value{font-size:.85rem;font-weight:600;word-break:break-all}
+.valid-chip{display:inline-block;border-radius:6px;padding:.15rem .6rem;font-size:.78rem;font-weight:700}
+.valid-chip.ok{background:rgba(34,197,94,.15);color:var(--success)}
+.valid-chip.warn{background:rgba(239,68,68,.15);color:var(--danger)}
+.xml-out{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.74rem;line-height:1.5;color:var(--text);white-space:pre;overflow:auto;max-height:460px}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{font-size:.78rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "SAML Decoder — Decode SAML Response XML Free", "url": "https://toolaspect.com/saml-decoder/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Decode SAML 2.0 responses in your browser: base64, DEFLATE, or a full redirect URL to pretty XML with issuer, NameID and validity window. Nothing uploaded."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the SAML Decoder free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the SAML Decoder on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the SAML Decoder work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the SAML Decoder calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔐 SAML Decoder</h1>
+<p>Turn raw SAML responses and requests into pretty XML — base64, DEFLATE, or a full redirect URL</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> a SAML response is XML wrapped in layers: the POST binding sends <code>base64(XML)</code> in a form field, while the redirect binding sends <code>base64url(DEFLATE(XML))</code> in the URL. To decode one, strip the URL wrapper if present, base64-decode, inflate if the bytes aren't XML yet, then pretty-print. The decoder below does all of it — paste any format and get readable XML plus <strong>issuer, NameID, audience, InResponseTo, and the NotBefore/NotOnOrAfter validity window</strong>, computed locally with pako. Nothing is uploaded.
+</div>
+
+<div class="section-card">
+<h2>Decode a SAML Message</h2>
+<div class="input-group">
+<label for="samlIn">Paste a SAMLResponse/SAMLRequest value, a full redirect URL, or plain XML</label>
+<textarea id="samlIn" rows="5" spellcheck="false" placeholder="PD94bWwgdmVyc2lvbj0iMS4wIj8+…  or  https://idp.example.com/sso?SAMLRequest=fZJfT8IwFMW%2F…"></textarea>
+</div>
+<div class="chip-row" id="samples"></div>
+<div class="btn-row">
+<button type="button" class="act-btn" id="decodeBtn">Decode</button>
+<button type="button" class="act-btn ghost" id="copyBtn">Copy XML</button>
+<button type="button" class="act-btn ghost" id="clearBtn">Clear</button>
+</div>
+<div class="status-msg" id="status"></div>
+<div id="encLine"></div>
+<div class="xml-out" id="xmlOut" hidden></div>
+<div id="fields"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/certificate-decoder/">Certificate Decoder</a></li><li style="margin:4px 0"><a href="/jwt-decoder/">Jwt Decoder</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/decode-saml-response/">Read how to decode SAML by hand</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>SAML Bindings: How the Message Is Wrapped</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Binding</th><th>Transport</th><th>Encoding layers</th><th>Typical size</th></tr></thead>
+<tbody>
+<tr><td>HTTP-POST</td><td>HTML form field</td><td>base64 (no compression)</td><td>a few KB of base64</td></tr>
+<tr><td>HTTP-Redirect</td><td>URL query parameter</td><td>DEFLATE → base64url → URL-encode</td><td>must fit in a URL (~8 KB browser limit)</td></tr>
+<tr><td>HTTP-Artifact</td><td>URL or form</td><td>artifact reference only; XML fetched via back-channel</td><td>tiny</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Redirect's compression is why a decoded value can still look like binary garbage after base64 decoding — the DEFLATE stream has to be inflated first. POST payloads skip compression because they're not size-constrained.</p>
+</div>
+
+<div class="section-card">
+<h2>Fields to Check First When Debugging</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Field</th><th>What it must satisfy</th><th>Common failure</th></tr></thead>
+<tbody>
+<tr><td><code>Issuer</code></td><td>Exactly equals the IdP entity ID in your SP config</td><td>Trailing slash or http-vs-https mismatch</td></tr>
+<tr><td><code>Audience</code></td><td>Equals your SP entity ID</td><td>IdP metadata copied from another environment</td></tr>
+<tr><td><code>Recipient</code> / <code>Destination</code></td><td>Your ACS URL</td><td>Wrong host behind a proxy or load balancer</td></tr>
+<tr><td><code>InResponseTo</code></td><td>The ID of the AuthnRequest you sent (SP-initiated flow)</td><td>IdP-initiated login where SP expects a request</td></tr>
+<tr><td><code>NotBefore</code></td><td>≤ now + allowed skew</td><td>IdP clock ahead; assertion "not yet valid"</td></tr>
+<tr><td><code>NotOnOrAfter</code></td><td>&gt; now</td><td>Replay of an old capture; expired assertion</td></tr>
+<tr><td><code>StatusCode</code></td><td><code>…:status:Success</code></td><td>AuthnFailed, NoPassive, or requester/p responder codes</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Assertions are deliberately short-lived: 5 minutes of validity is the norm, and 5 minutes of clock-skew tolerance is the conventional fix on the SP side.</p>
+</div>
+
+<div class="content-section">
+<h2>How the SAML Decoder Works</h2>
+<p>SAML 2.0 single sign-on moves an XML message between an identity provider (IdP) and your service provider (SP), but the XML never travels naked. Depending on the binding it's base64-encoded, DEFLATE-compressed, or both, and often the only artifact you can grab is the whole redirect URL. This tool unwraps all of those, prints the XML with indentation, and pulls out the fields that decide whether your login works. Decompression uses <a href="https://github.com/nodeca/pako" rel="noopener">pako 2.1.0</a> (MIT/Zlib licensed, ~6,100 stars on GitHub, actively maintained), loaded from jsDelivr and run client-side.</p>
+<h3>The decode sequence</h3>
+<p>Step one, if the paste is a URL, extract the <code>SAMLResponse</code> or <code>SAMLRequest</code> parameter and URL-decode it. Step two, normalize base64url characters (- and _) back to + and /, and pad. Step three, decode to bytes and sniff: if the first byte is <code>&lt;</code> you have XML (POST binding). Otherwise inflate — first raw DEFLATE (redirect binding), then zlib-wrapped as a fallback, since some stacks emit it. Step four, pretty-print and extract fields.</p>
+<h3>How to use it</h3>
+<p>Capture the value from your browser's devtools (Network tab, look for the POST to your ACS endpoint, then the SAMLResponse form field) or grab the entire IdP redirect URL. Paste either one and hit Decode. The chips load a known-good sample in each encoding so you can see every layer handled. The validity panel compares NotBefore and NotOnOrAfter against your own device clock and flags not-yet-valid, expired, or valid-within-window.</p>
+<h3>A worked example</h3>
+<p>The redirect sample is a realistic 2,527-byte assertion. As a POST payload it becomes 3,372 characters of base64. Compressed for the redirect binding it drops to 706 bytes of DEFLATE — 27.9% of the original — which base64url-encodes to 942 characters in the URL. Decoding reverses all of that, and the fields tell the story: Issuer <code>https://idp.example.com/saml/metadata</code>, NameID <code>dev@example.com</code> (emailAddress format), Audience <code>https://app.example.com/metadata</code>, InResponseTo <code>id-9c8d7e6f</code>. The window runs from NotBefore 11:59:00Z to NotOnOrAfter 12:05:00Z — a 6-minute validity window, issued at 12:00:00Z for 5 minutes of usable life. That's the standard SAML rhythm: short-lived by design, and the reason a few minutes of clock skew breaks logins.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I decode a SAML response?</h3><p>It depends on the binding. A POST-binding SAMLResponse is base64 text: decode it and you have XML. A redirect-binding SAMLRequest or SAMLResponse was DEFLATE-compressed before encoding, so after base64 decoding the bytes you still need to inflate them. The decoder above handles both plus the plain-XML case automatically — paste the value, a whole redirect URL, or URL-encoded XML.</p></div>
+<div class="faq-item"><h3>Is a SAML response base64 or compressed?</h3><p>Both encodings exist. The HTTP-POST binding sends base64(XML) in a form field with no compression. The HTTP-Redirect binding puts the message in the query string, where size matters, so it sends base64url(DEFLATE(XML)) — raw DEFLATE with no zlib header, using - and _ in place of + and /. A decoder that only does base64 will show garbage for redirect messages; it needs an inflate step.</p></div>
+<div class="faq-item"><h3>What fields should I check when SAML login fails?</h3><p>Start with the timestamps and audiences. NotBefore and NotOnOrAfter must bracket the current moment, allowing for clock skew between the identity provider and your server — 5 minutes is the conventional tolerance. Audience must equal your SP entity ID, Recipient and Destination must match your ACS URL, and InResponseTo must match the AuthnRequest ID you sent if you sent one. Mismatches in any of these are the most common causes of "invalid response" errors.</p></div>
+<div class="faq-item"><h3>Does decoding a SAML response verify its signature?</h3><p>No. Decoding is just unpacking layers: base64, compression, XML. Signature verification means validating the ds:Signature block against the identity provider's X.509 certificate, checking the signed references, and the wrap-attack checks on the assertion. Always do that in your SAML library server-side; a decoder is for reading and debugging, never for making access decisions.</p></div>
+<div class="faq-item"><h3>Why is clock skew such a problem in SAML?</h3><p>Assertions are typically valid for just 5 minutes. If the identity provider's clock is 3 minutes ahead of your server, a freshly issued assertion can look not-yet-valid on arrival. That's why every SAML stack has a skew setting — it widens the NotBefore/NotOnOrAfter window on both ends. A few minutes of tolerance is standard; more than 10 usually masks a real NTP problem you should fix instead.</p></div>
+<div class="faq-item"><h3>Is it safe to paste a production SAML response here?</h3><p>The page decodes locally — nothing is uploaded, and there's no server call with your input. That said, a decoded response contains the NameID (often an email), group attributes, and session identifiers. If your organization treats tokens as sensitive, redact or use a test response. And never treat any pasted token as still-secret: assertions expire within minutes anyway.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/certificate-decoder/">📜 Certificate Decoder</a>
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/base64-encoder/">🔤 Base64 Encoder</a>
+<a href="/url-encoder/">🔗 URL Encoder</a>
+<a href="/xml-formatter/">📄 XML Formatter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+var PAKO_SRC='https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js';
+var SAMPLE_POST='PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c2FtbDJwOlJlc3BvbnNlIHhtbG5zOnNhbWwycD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiBEZXN0aW5hdGlvbj0iaHR0cHM6Ly9hcHAuZXhhbXBsZS5jb20vYWNzIiBJRD0iXzhmNmU1YTRkM2IyYzFhMGIiIEluUmVzcG9uc2VUbz0iaWQtOWM4ZDdlNmYiIElzc3VlSW5zdGFudD0iMjAyNi0wOC0zMVQxMjowMDowMFoiIFZlcnNpb249IjIuMCI+PHNhbWwyOklzc3VlciB4bWxuczpzYW1sMj0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiI+aHR0cHM6Ly9pZHAuZXhhbXBsZS5jb20vc2FtbC9tZXRhZGF0YTwvc2FtbDI6SXNzdWVyPjxzYW1sMnA6U3RhdHVzPjxzYW1sMnA6U3RhdHVzQ29kZSBWYWx1ZT0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnN0YXR1czpTdWNjZXNzIi8+PC9zYW1sMnA6U3RhdHVzPjxzYW1sMjpBc3NlcnRpb24geG1sbnM6c2FtbDI9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIElEPSJfYTFiMmMzZDRlNSIgSXNzdWVJbnN0YW50PSIyMDI2LTA4LTMxVDEyOjAwOjAwWiIgVmVyc2lvbj0iMi4wIj48c2FtbDI6SXNzdWVyPmh0dHBzOi8vaWRwLmV4YW1wbGUuY29tL3NhbWwvbWV0YWRhdGE8L3NhbWwyOklzc3Vlcj48c2FtbDI6U3ViamVjdD48c2FtbDI6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6MS4xOm5hbWVpZC1mb3JtYXQ6ZW1haWxBZGRyZXNzIiBTUE5hbWVRdWFsaWZpZXI9Imh0dHBzOi8vYXBwLmV4YW1wbGUuY29tL21ldGFkYXRhIj5kZXZAZXhhbXBsZS5jb208L3NhbWwyOk5hbWVJRD48c2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sMjpTdWJqZWN0Q29uZmlybWF0aW9uRGF0YSBJblJlc3BvbnNlVG89ImlkLTljOGQ3ZTZmIiBOb3RPbk9yQWZ0ZXI9IjIwMjYtMDgtMzFUMTI6MDU6MDBaIiBSZWNpcGllbnQ9Imh0dHBzOi8vYXBwLmV4YW1wbGUuY29tL2FjcyIvPjwvc2FtbDI6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWwyOlN1YmplY3Q+PHNhbWwyOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDI2LTA4LTMxVDExOjU5OjAwWiIgTm90T25PckFmdGVyPSIyMDI2LTA4LTMxVDEyOjA1OjAwWiI+PHNhbWwyOkF1ZGllbmNlUmVzdHJpY3Rpb24+PHNhbWwyOkF1ZGllbmNlPmh0dHBzOi8vYXBwLmV4YW1wbGUuY29tL21ldGFkYXRhPC9zYW1sMjpBdWRpZW5jZT48L3NhbWwyOkF1ZGllbmNlUmVzdHJpY3Rpb24+PC9zYW1sMjpDb25kaXRpb25zPjxzYW1sMjpBdXRoblN0YXRlbWVudCBBdXRobkluc3RhbnQ9IjIwMjYtMDgtMzFUMTI6MDA6MDBaIiBTZXNzaW9uSW5kZXg9Il9zZXNzLTc3MzQxMiI+PHNhbWwyOkF1dGhuQ29udGV4dD48c2FtbDI6QXV0aG5Db250ZXh0Q2xhc3NSZWY+dXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRUcmFuc3BvcnQ8L3NhbWwyOkF1dGhuQ29udGV4dENsYXNzUmVmPjwvc2FtbDI6QXV0aG5Db250ZXh0Pjwvc2FtbDI6QXV0aG5TdGF0ZW1lbnQ+PHNhbWwyOkF0dHJpYnV0ZVN0YXRlbWVudD48c2FtbDI6QXR0cmlidXRlIE5hbWU9InVpZCI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSI+amRvZTwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJlZHVQZXJzb25BZmZpbGlhdGlvbiI+PHNhbWwyOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSI+bWVtYmVyPC9zYW1sMjpBdHRyaWJ1dGVWYWx1ZT48c2FtbDI6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIj5zdGFmZjwvc2FtbDI6QXR0cmlidXRlVmFsdWU+PC9zYW1sMjpBdHRyaWJ1dGU+PHNhbWwyOkF0dHJpYnV0ZSBOYW1lPSJtYWlsIj48c2FtbDI6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIj5kZXZAZXhhbXBsZS5jb208L3NhbWwyOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDI6QXR0cmlidXRlPjwvc2FtbDI6QXR0cmlidXRlU3RhdGVtZW50Pjwvc2FtbDI6QXNzZXJ0aW9uPjwvc2FtbDJwOlJlc3BvbnNlPg==';
+var SAMPLE_REDIRECT='zVZtb9owEP4rkb9DXihtZ5V0rKgSUl9YYdW0L5OxL8VVYke2U9i_3yVpoKS8TOuXSkjId-e757k35-JylaXeCxgrtRqQsBsQDxTXQqqnAfkxu-6ck8v4wrIsjXL6ADbXyoKHl5SltXRACqOoZlZaqlgGljpOp8PbGxp1A5ob7TTXKfFGYJ1UzFWBFs7llvo-y_MurFiWp9DlOvMZt8Qbjwbk93lyCn12InrziIcsmKNYNfFnekCk6Hzh5-IMThNUWVvAWFnHlBuQKIhOO8F5pxfOwogGAf5-Ee-xIYmwyCslWl00b_kcpsOsBVNSIHFDQYptCqUXPwPHBHPswn8bZ53IqWOusK3jlRbgPbK0gMMYbGVNpwXnYC3x49cgLbd02GD9H3p1EViI2e-JE-h_OMcfyBdSnT8Dd83xDnGPR961Nhlz-wmF3bCSYKcklSmFjMl0KIQp8-ZNJ6Wj7wVLZSLB7G_KBhyJBbx8faNp0NaAWmivtEpkGbaswC24hRaHk88zOgdmwJADnkaI49Ak3Gl3r-7NMHElo1aV-nWVHoDLXEJZxkNzuG6sXTjaugYy2ghZGtgSyjfAzMM2jpD2v9Q4_gHrupcLgYA5IG9nJK8RbKviY-VrEK8vtAVbzv02n008t1DlpEGGKfSq45GxmGK_oYuxErDCqbJ47Jyd9U7CiGx5xWAOVm6X7CrF2XyAJD44vpzy0g7FE_xbaiMmuH-xPCBmhinsGeM2rHd436XcFq6Zr1E6TNq8cLBf45UDgs0vBXmnqxaet7KSuj85Gq1wUaFKPZHXtYWquk-xtMvlsrvsdbV58qMgCP2ftzdTvsCx7siqAhw2t45fIvGz0LBmt4UofifexwpEMcG1p9UwSWQqWf06fCqaGWRzMPuIfiakeCdJPlqRcst_sgrseTiOM_T3D5nfeuY33wHN6xD_BQ';
+(function(){
+var SAMPLE_XML='<?xml version="1.0" encoding="UTF-8"?>\n<saml2p:Response xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" Destination="https://app.example.com/acs" ID="_8f6e5a4d3b2c1a0b" InResponseTo="id-9c8d7e6f" IssueInstant="2026-08-31T12:00:00Z" Version="2.0">\n  <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">https://idp.example.com/saml/metadata</saml2:Issuer>\n  <saml2p:Status>\n    <saml2p:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>\n  </saml2p:Status>\n  <saml2:Assertion xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" ID="_a1b2c3d4e5" IssueInstant="2026-08-31T12:00:00Z" Version="2.0">\n    <saml2:Issuer>https://idp.example.com/saml/metadata</saml2:Issuer>\n    <saml2:Subject>\n      <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" SPNameQualifier="https://app.example.com/metadata">dev@example.com</saml2:NameID>\n      <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">\n        <saml2:SubjectConfirmationData InResponseTo="id-9c8d7e6f" NotOnOrAfter="2026-08-31T12:05:00Z" Recipient="https://app.example.com/acs"/>\n      </saml2:SubjectConfirmation>\n    </saml2:Subject>\n    <saml2:Conditions NotBefore="2026-08-31T11:59:00Z" NotOnOrAfter="2026-08-31T12:05:00Z">\n      <saml2:AudienceRestriction>\n        <saml2:Audience>https://app.example.com/metadata</saml2:Audience>\n      </saml2:AudienceRestriction>\n    </saml2:Conditions>\n    <saml2:AuthnStatement AuthnInstant="2026-08-31T12:00:00Z" SessionIndex="_sess-773412">\n      <saml2:AuthnContext>\n        <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml2:AuthnContextClassRef>\n      </saml2:AuthnContext>\n    </saml2:AuthnStatement>\n    <saml2:AttributeStatement>\n      <saml2:Attribute Name="uid"><saml2:AttributeValue>jdoe</saml2:AttributeValue></saml2:Attribute>\n      <saml2:Attribute Name="eduPersonAffiliation"><saml2:AttributeValue>member</saml2:AttributeValue><saml2:AttributeValue>staff</saml2:AttributeValue></saml2:Attribute>\n      <saml2:Attribute Name="mail"><saml2:AttributeValue>dev@example.com</saml2:AttributeValue></saml2:Attribute>\n    </saml2:AttributeStatement>\n  </saml2:Assertion>\n</saml2p:Response>';
+
+var input=document.getElementById('samlIn'),status=document.getElementById('status'),xmlOut=document.getElementById('xmlOut'),
+    encLine=document.getElementById('encLine'),fields=document.getElementById('fields');
+
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+function b64ToBytes(s){
+  s=s.replace(/\s+/g,'').replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';
+  var bin=atob(s),len=bin.length,bytes=new Uint8Array(len);
+  for(var i=0;i<len;i++)bytes[i]=bin.charCodeAt(i);
+  return bytes;
+}
+function bytesToText(bytes){return new TextDecoder('utf-8').decode(bytes);}
+
+function prettyXml(xml){
+  var indent='  ',depth=0,out=[];
+  var compact=xml.replace(/>\s+</g,'><').trim();
+  var tokens=compact.replace(/></g,'>\n<').split('\n');
+  tokens.forEach(function(tok){
+    tok=tok.trim();if(!tok)return;
+    if(/^<\/[\w:.-]+/.test(tok))depth=Math.max(0,depth-1);
+    else if(!/^<[\w:.-]+[^>]*\/>\s*$/.test(tok)&&!/^<\?/.test(tok)&&!/^<!/.test(tok)&&/^<[\w:.-]/.test(tok)){}// depth applied after print
+    out.push(new Array(depth+1).join(indent)+tok);
+    if(/^<[\w:.-]+[^>]*[^\/]>\s*$/.test(tok)&&!/^<\?/.test(tok)&&!/^<!/.test(tok))depth++;
+  });
+  return out.join('\n');
+}
+function pick(xml,re){var m=xml.match(re);return m?m[1]:null;}
+function extract(xml){
+  return [
+    ['Issuer',pick(xml,/<saml2?:Issuer[^>]*>([^<]+)<\/saml2?:Issuer>/)],
+    ['NameID',pick(xml,/<saml2?:NameID[^>]*>([^<]+)<\/saml2?:NameID>/)],
+    ['NameID Format',shortUrn(pick(xml,/NameID Format="([^"]+)"/))],
+    ['Audience',pick(xml,/<saml2?:Audience>([^<]+)<\/saml2?:Audience>/)],
+    ['Destination',pick(xml,/Destination="([^"]+)"/)],
+    ['InResponseTo',pick(xml,/InResponseTo="([^"]+)"/)],
+    ['IssueInstant',pick(xml,/IssueInstant="([^"]+)"/)],
+    ['NotBefore',pick(xml,/NotBefore="([^"]+)"/)],
+    ['NotOnOrAfter',pick(xml,/NotOnOrAfter="([^"]+)"/)],
+    ['SessionIndex',pick(xml,/SessionIndex="([^"]+)"/)],
+    ['Authn Context',shortUrn(pick(xml,/AuthnContextClassRef>([^<]+)</))],
+    ['Status',shortUrn(pick(xml,/StatusCode Value="([^"]+)"/))]
+  ];
+}
+function shortUrn(u){return u?u.replace(/^urn:oasis:names:tc:SAML:.*:/,''):u;}
+function validity(xml){
+  var nb=pick(xml,/NotBefore="([^"]+)"/),no=pick(xml,/NotOnOrAfter="([^"]+)"/);
+  if(!nb&&!no)return null;
+  var t=Date.now(),p=function(s){return s?Date.parse(s):null;};
+  var nbd=p(nb),nod=p(no);
+  var winMs=(nod&&nbd)?(nod-nbd):null;
+  var cls='ok',label='VALID';
+  if(nbd&&t<nbd-0){cls='warn';label='NOT YET VALID';}
+  if(nod&&t>=nod){cls='warn';label='EXPIRED';}
+  return {label:label,cls:cls,windowMin:winMs!=null?Math.round(winMs/60000):null,
+    nowLocal:new Date(t).toISOString().replace(/\.\d+Z$/,' UTC')};
+}
+function decode(raw,cb){
+  var step1='';
+  var inputVal=raw.trim();
+  if(!inputVal){renderErr('Paste a SAML value, URL, or XML first.');return;}
+  // full URL with a SAML param
+  if(/^https?:\/\//.test(inputVal)&&/[?&](SAMLRequest|SAMLResponse)=/.test(inputVal)){
+    try{
+      var u=new URL(inputVal);
+      var k=u.searchParams.has('SAMLResponse')?'SAMLResponse':'SAMLRequest';
+      inputVal=u.searchParams.get(k);
+      step1='extracted '+k+' from URL · ';
+    }catch(e){renderErr('That looks like a URL but it would not parse.');return;}
+  }
+  // URL-encoded XML
+  if(/^%3[Cc]/.test(inputVal)){
+    try{inputVal=decodeURIComponent(inputVal);step1+='URL-decoded · ';}catch(e){}
+  }
+  // plain XML
+  if(/^\s*</.test(inputVal)){
+    finish(inputVal,step1+'plain XML');return;
+  }
+  // base64 layers
+  var bytes;
+  try{bytes=b64ToBytes(inputVal);}
+  catch(e){renderErr('Not valid base64 — check for truncated copies.');return;}
+  var txt=bytesToText(bytes);
+  if(/^\s*</.test(txt)){finish(txt,step1+'base64 (POST binding)');return;}
+  go();
+  function go(){
+    if(!(window.pako&&window.pako.inflateRaw)){
+      status.textContent='Loading pako inflate engine…';
+      var s=document.createElement('script');s.src=PAKO_SRC;s.async=true;
+      s.onload=go;s.onerror=function(){renderErr('Could not load the pako engine — check your connection.');};
+      (document.head||document.documentElement).appendChild(s);
+      return;
+    }
+    try{finish(window.pako.inflateRaw(bytes,{to:'string'}),step1+'base64url + DEFLATE (redirect binding)');return;}catch(e){}
+    try{finish(window.pako.inflate(bytes,{to:'string'}),step1+'base64 + zlib-wrapped DEFLATE');return;}catch(e){}
+    renderErr('Decoded the base64 layer but the result is neither XML nor a DEFLATE stream — the value may be truncated or not a SAML message.');
+  }
+}
+function finish(xml,encDesc){
+  if(!xml||!/</.test(xml)){renderErr('Decoding produced no XML.');return;}
+  status.textContent='';
+  status.classList.remove('err');
+  encLine.innerHTML='<span class="enc-chip">'+esc(encDesc)+'</span>';
+  var pretty=prettyXml(xml);
+  xmlOut.textContent=pretty;
+  xmlOut.hidden=false;
+  var rows=extract(xml).filter(function(r){return r[1]!=null&&r[1]!=='';});
+  var v=validity(xml);
+  var html='<div class="result-grid">';
+  rows.forEach(function(r){html+='<div class="result-item"><div class="ri-label">'+esc(r[0])+'</div><div class="ri-value">'+esc(r[1])+'</div></div>';});
+  html+='</div>';
+  if(v){
+    html+='<div class="result-item" style="margin-top:.75rem"><div class="ri-label">Validity vs your clock ('+esc(v.nowLocal)+')</div>'+
+      '<div class="ri-value"><span class="valid-chip '+v.cls+'">'+v.label+'</span>'+
+      (v.windowMin!=null?' <span style="font-weight:400;color:var(--muted)">window: '+v.windowMin+' min (NotBefore → NotOnOrAfter)</span>':'')+
+      '</div></div>';
+  }
+  fields.innerHTML=html;
+}
+function renderErr(msg){
+  status.textContent=msg;status.classList.add('err');
+  xmlOut.hidden=true;xmlOut.textContent='';encLine.innerHTML='';fields.innerHTML='';
+}
+var SAMPLES=[
+  ['POST sample (base64)',SAMPLE_POST],
+  ['Redirect sample (DEFLATE)',SAMPLE_REDIRECT],
+  ['Plain XML',SAMPLE_XML],
+  ['Full redirect URL','https://idp.example.com/idp/profile/SAML2/Redirect/SSO?SAMLRequest='+SAMPLE_REDIRECT]
+];
+document.getElementById('samples').innerHTML=SAMPLES.map(function(s,i){
+  return '<button type="button" class="chip" data-i="'+i+'">'+esc(s[0])+'</button>';
+}).join('');
+document.getElementById('samples').addEventListener('click',function(e){
+  var b=e.target.closest('.chip');if(!b)return;
+  input.value=SAMPLES[parseInt(b.getAttribute('data-i'),10)][1];
+  decode(input.value);
+});
+document.getElementById('decodeBtn').addEventListener('click',function(){decode(input.value);});
+input.addEventListener('input',function(){clearTimeout(window.__t);window.__t=setTimeout(function(){decode(input.value);},400);});
+document.getElementById('clearBtn').addEventListener('click',function(){
+  input.value='';renderErr('');status.textContent='';
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+  var btn=this,done=function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy XML';},1500);};
+  if(!xmlOut.textContent)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(xmlOut.textContent).then(done,done);}
+  else{var ta=document.createElement('textarea');ta.value=xmlOut.textContent;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();}
+});
+decode(SAMPLE_POST);
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code Formatting Explained: Beautifiers, Minifiers &amp; Style | ToolAspect</title>
+<meta name="description" content="What code formatting actually does, why minified code is unreadable, how beautifiers like js-beautify reverse it, and the style options (indent, braces, wrap) worth knowing.">
+<link rel="canonical" href="https://toolaspect.com/guides/code-formatting-explained/">
+<meta property="og:title" content="Code Formatting Explained: Beautifiers, Minifiers &amp; Style">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/code-formatting-explained/">
+<meta property="og:description" content="What code formatting actually does, why minified code is unreadable, and how beautifiers reverse it — with the style options worth knowing.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Code Formatting Explained: Beautifiers, Minifiers &amp; Style","description":"Why minified code looks like garbage, what a beautifier can and can't restore, and the formatting options — indent size, brace style, line wrap — that matter.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Code Formatting Explained","item":"https://toolaspect.com/guides/code-formatting-explained/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the difference between beautifying and minifying?","acceptedAnswer":{"@type":"Answer","text":"Minification makes code small for delivery: it strips whitespace, shortens variable names, and deletes comments. Beautifying makes code readable for humans: it restores indentation and line structure. They're not inverses — a beautifier can't recover the names and comments a minifier removed. The output of beautify(minify(source)) runs identically but reads differently from the original."}},
+{"@type":"Question","name":"Does formatting change how code runs?","acceptedAnswer":{"@type":"Answer","text":"No — with one historical footnote. Whitespace and line breaks don't affect JavaScript semantics except where automatic semicolon insertion makes a newline meaningful. That's rare and considered a bug in the source, not a reason to fear formatters. Formatting changes bytes, not behavior."}},
+{"@type":"Question","name":"Should I use a formatter on my own code or an editor plugin?","acceptedAnswer":{"@type":"Answer","text":"Editor plugin, or format-on-save with Prettier or js-beautify wired in. A browser beautifier is for reading third-party artifacts: production bundles, copied snippets, compressed theme files. Your own source has names and comments worth keeping, and a formatter that runs on every save keeps style consistent without a manual step."}},
+{"@type":"Question","name":"What indent size and brace style should I use?","acceptedAnswer":{"@type":"Answer","text":"The honest answer is: whatever your team's lint config says, and if there isn't one, 2-space indent with collapsed (K&R) braces is the most common modern default for JavaScript. Consistency beats any specific choice. js-beautify's own defaults are 4-space indent and collapsed braces; most web projects override to 2."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}pre{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.78rem;line-height:1.6;margin:12px 0}pre code{background:none;border:none;padding:0}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.data-table td code{white-space:nowrap}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Code Formatting Explained: Beautifiers, Minifiers & Style", "url": "https://toolaspect.com/guides/code-formatting-explained/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "What code formatting actually does, why minified code is unreadable, how beautifiers like js-beautify reverse it, and the style options (indent, braces, wrap) worth knowing."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Code Formatting Explained free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free to read on ToolAspect."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>Code Formatting Explained: Beautifiers, Minifiers &amp; Style</h1>
+<div class="meta"><span>⏱️ 7 min read</span><span>🛠️ Pairs with the Code Beautifier</span></div>
+<p class="intro">You paste a JavaScript file into your editor and get one 40,000-character line. This guide covers why that happens, what a beautifier can honestly do about it, and which formatting choices — indent size, brace style, line wrap — actually matter once you're producing readable code.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What code formatting is</h2>
+<p>Source code carries two layers: what it <em>does</em> (semantics) and how it <em>reads</em> (layout). The layout layer — indentation, line breaks, spacing around operators, brace placement — exists purely for humans. The interpreter or compiler throws it away, or in JavaScript's case, mostly ignores it. Formatting is the craft of choosing that layout so structure is visible at a glance: nesting depth shows in the indent, related statements group into lines, function boundaries announce themselves.</p>
+<p>Because layout is meaningless to machines, tooling can transform it freely in both directions. Minifiers compress it away to shrink downloads. Beautifiers restore it to restore comprehension. Neither touches behavior.</p>
+<h2>Why minified code looks like noise</h2>
+<p>A minifier's job is byte reduction. It deletes every space and newline the grammar allows, renames every local variable to one or two characters, strips comments, collapses what it can, and drops code it can prove is unreachable. The result is fast to download and miserable to read. Here's a realistic taste — 110 characters, one line:</p>
+<pre><code>function add(a,b){return a+b}const calc={add:function(x,y){return x+y;},mul:(a,b)=&gt;a*b};console.log(add(2,3));</code></pre>
+<p>Beautified with js-beautify at 2-space indent, the same program becomes 10 lines and reads like code again:</p>
+<pre><code>function add(a, b) {
+  return a + b
+}
+const calc = {
+  add: function(x, y) {
+    return x + y;
+  },
+  mul: (a, b) =&gt; a*b
+};
+console.log(add(2, 3));</code></pre>
+<p>The character count grows about 35% in this small example. On real bundles the reverse trip is more dramatic — a 500 KB library minified from a readable source gains hundreds of lines back when beautified, because the minifier squeezed out every skippable byte.</p>
+<h2>What a beautifier can't recover</h2>
+<p>This is the part every guide should say out loud: <strong>beautify is not unminify</strong>. Three losses are permanent:</p>
+<ul>
+<li><strong>Variable names.</strong> <code>totalWithTax</code> became <code>t</code> in the minifier and no tool can guess it back.</li>
+<li><strong>Comments.</strong> Deleted outright. The "// why we do this weird thing" knowledge is gone.</li>
+<li><strong>Dead code.</strong> If the minifier removed an unused function, beautifying the bundle won't resurrect it.</li>
+</ul>
+<p>So a beautifier is a reading aid for artifacts you don't own — production bundles you're debugging, a suspicious script, a copied snippet. For code you do own, format the original source with an editor plugin so nothing is lost in the first place.</p>
+<h2>The style options worth knowing</h2>
+<p>Formatting engines expose a lot of knobs. Four of them explain almost all the visible differences between two teams' code:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Option</th><th>js-beautify default</th><th>What it decides</th></tr></thead>
+<tbody>
+<tr><td><code>indent_size</code></td><td>4</td><td>Spaces per nesting level; 2 is the common modern override for web code</td></tr>
+<tr><td><code>brace_style</code></td><td><code>collapse</code></td><td>K&amp;R (<code>if (x) {</code>) vs <code>expand</code> (Allman, brace on its own line)</td></tr>
+<tr><td><code>wrap_line_length</code></td><td>unlimited</td><td>Break lines after roughly N characters at the next safe point</td></tr>
+<tr><td><code>preserve_newlines</code></td><td>true</td><td>Keep blank lines the author wrote (capped by <code>max_preserve_newlines</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two honorable mentions: <code>end_with_newline</code> (POSIX-friendly files end with a newline) and <code>space_after_anon_function</code>, which decides between <code>function()</code> and <code>function ()</code> — the single most religious whitespace argument in JavaScript history.</p>
+<h2>Brace styles, in one paragraph each</h2>
+<p><strong>Collapse</strong> puts the opening brace on the statement line. It's compact, it's the C-family default going back to K&amp;R, and it's what most style guides ask for. <strong>Expand</strong> (Allman) puts every brace on its own line; vertical alignment makes block boundaries pop, at the cost of screen real estate. <strong>End-expand</strong> moves only closing braces to their own lines, and <strong>none</strong> leaves braces exactly where they were — useful when you're tidying indentation around hand-written layout you don't want perturbed.</p>
+<h2>Prettier vs js-beautify</h2>
+<p>Both format JavaScript; they differ in philosophy. Prettier is opinionated — few options, one canonical output, and it reformats whole files on save so style arguments end. js-beautify is configurable — the four options above plus more, permissive about existing layout, and lighter weight, which is why it's been the engine inside editor beautify plugins since long before Prettier existed. For CI-enforced consistency on a team codebase, Prettier is the standard answer. For "make this third-party blob readable right now," js-beautify is exactly the right tool.</p>
+<h2>How to choose settings that stick</h2>
+<ol>
+<li>If a lint config or style guide exists at work, mirror it — formatter and linter fighting each other is worse than either.</li>
+<li>No config? Use 2-space indent and collapsed braces for JavaScript. Nobody will be surprised.</li>
+<li>Set <code>end_with_newline</code> when files go through Unix tooling; diffs stay clean.</li>
+<li>Only add <code>wrap_line_length</code> if your team actually reviews on narrow screens; wrapping has a reflow cost on later edits.</li>
+</ol>
+<p>Then stop tuning. The point of a formatter is that nobody thinks about formatting again.</p>
+<div class="cta-box"><h3>Beautify minified JS, CSS or HTML now</h3><p style="color:#fff;opacity:.9">Paste a minified file and get indented, readable code with your choice of indent and brace style — locally in your browser.</p><a href="/code-beautifier/">Open the Code Beautifier →</a></div>
+<h2>Formatting beyond JavaScript</h2>
+<p>The same minify/beautify cycle hits everything tree-structured. JSON APIs ship minified; a formatter restores it (our <a href="/json-formatter/">JSON formatter</a> also validates while it's at it). SQL squeezed into one line for logging comes back to life with indentation — the <a href="/sql-formatter/">SQL formatter</a> handles joins and subqueries. XML, YAML, HTML all have the same story. The general principle holds across every one of them: formatting is reversible, minification's name-shortening is not, and the best time to make code readable is before it ships minified.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the difference between beautifying and minifying?</h3><p>Minification makes code small for delivery: it strips whitespace, shortens variable names, and deletes comments. Beautifying makes code readable for humans: it restores indentation and line structure. They're not inverses — a beautifier can't recover the names and comments a minifier removed. The output of beautify(minify(source)) runs identically but reads differently from the original.</p></div>
+<div class="faq-item"><h3>Does formatting change how code runs?</h3><p>No — with one historical footnote. Whitespace and line breaks don't affect JavaScript semantics except where automatic semicolon insertion makes a newline meaningful. That's rare and considered a bug in the source, not a reason to fear formatters. Formatting changes bytes, not behavior.</p></div>
+<div class="faq-item"><h3>Should I use a formatter on my own code or an editor plugin?</h3><p>Editor plugin, or format-on-save with Prettier or js-beautify wired in. A browser beautifier is for reading third-party artifacts: production bundles, copied snippets, compressed theme files. Your own source has names and comments worth keeping, and a formatter that runs on every save keeps style consistent without a manual step.</p></div>
+<div class="faq-item"><h3>What indent size and brace style should I use?</h3><p>The honest answer is: whatever your team's lint config says, and if there isn't one, 2-space indent with collapsed (K&amp;R) braces is the most common modern default for JavaScript. Consistency beats any specific choice. js-beautify's own defaults are 4-space indent and collapsed braces; most web projects override to 2.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/code-beautifier/">Code Beautifier</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/sql-formatter/">SQL Formatter</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

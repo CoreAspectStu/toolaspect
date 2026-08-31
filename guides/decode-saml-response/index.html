@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Decode a SAML Response by Hand | ToolAspect</title>
+<meta name="description" content="Decode any SAML response step by step: URL unwrap, base64/base64url, DEFLATE inflate, then read Issuer, NameID, NotBefore and NotOnOrAfter. With a worked example.">
+<link rel="canonical" href="https://toolaspect.com/guides/decode-saml-response/">
+<meta property="og:title" content="How to Decode a SAML Response by Hand">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/decode-saml-response/">
+<meta property="og:description" content="The four layers of a SAML message, unwrapped one at a time, plus the fields that decide whether a login succeeds.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Decode a SAML Response by Hand","description":"The four layers of a SAML message — URL, base64/base64url, DEFLATE, XML — unwrapped one at a time, plus the fields that decide whether a login succeeds.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Decode SAML Response","item":"https://toolaspect.com/guides/decode-saml-response/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why won't base64-decoding alone show my SAML XML?","acceptedAnswer":{"@type":"Answer","text":"Because the message was probably compressed first. Redirect-binding messages are DEFLATE-compressed before base64url encoding, so decoding gives you a raw DEFLATE stream — binary bytes that don't start with '<'. You have to inflate those bytes (pako.inflateRaw in JavaScript, zlib inflateRawSync in Node) before the XML appears. POST-binding messages skip compression, so plain base64 decoding does show XML."}},
+{"@type":"Question","name":"How do I capture a SAML response from my browser?","acceptedAnswer":{"@type":"Answer","text":"Open devtools before clicking login. For POST binding, watch the Network tab for the POST to your ACS URL (often /acs or /saml/acs), then look in the form data for the SAMLResponse field. For redirect binding, copy the full IdP URL with the SAMLRequest or SAMLResponse query parameter. Browser extensions like SAML-tracer automate exactly this capture."}},
+{"@type":"Question","name":"What is clock skew in SAML?","acceptedAnswer":{"@type":"Answer","text":"Assertions carry NotBefore and NotOnOrAfter timestamps, and SPs accept them only if they bracket 'now' on the SP's clock. If the IdP server's clock runs a couple of minutes ahead of yours, fresh assertions look not-yet-valid. Skew tolerance — typically 5 minutes, configured on the SP — widens the accepted window on both ends to absorb normal drift."}},
+{"@type":"Question","name":"Can I decode a SAML response that's signed?","acceptedAnswer":{"@type":"Answer","text":"Yes — signatures live inside the XML as a ds:Signature block, and they don't prevent decoding. But decoding is not verifying. Confirming the signature requires the IdP's X.509 certificate and cryptographic checks that belong in your SAML library, not in a human reading pretty-printed XML."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}pre{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.76rem;line-height:1.6;margin:12px 0}pre code{background:none;border:none;padding:0}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.data-table td code{white-space:nowrap}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "How to Decode a SAML Response by Hand", "url": "https://toolaspect.com/guides/decode-saml-response/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Decode any SAML response step by step: URL unwrap, base64/base64url, DEFLATE inflate, then read Issuer, NameID, NotBefore and NotOnOrAfter. With a worked example."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the How to Decode a SAML Response by Hand free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free to read on ToolAspect."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Decode a SAML Response by Hand</h1>
+<div class="meta"><span>⏱️ 8 min read</span><span>🔐 Pairs with the SAML Decoder</span></div>
+<p class="intro">When single sign-on breaks, the evidence is a wall of base64 squiggles. This guide unwraps a SAML message layer by layer — URL, encoding, compression, XML — and then reads the handful of fields that decide whether the login was ever going to work.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What you're actually looking at</h2>
+<p>A SAML 2.0 response is an XML assertion — "this person authenticated, here's who they are, here's how long I vouch for them" — sent from an identity provider (IdP) to your service provider (SP). The XML never travels in the clear. It gets wrapped in layers chosen by the binding, and each layer has to come off in order:</p>
+<ol>
+<li><strong>URL.</strong> In the redirect binding the whole message rides in the query string as <code>SAMLRequest</code> or <code>SAMLResponse</code>, URL-encoded on top of everything else.</li>
+<li><strong>Base64 or base64url.</strong> POST binding uses standard base64; redirect uses the URL-safe alphabet (<code>-</code> and <code>_</code> for <code>+</code> and <code>/</code>, usually without padding).</li>
+<li><strong>DEFLATE.</strong> Redirect-binding messages are compressed with raw DEFLATE before encoding — no zlib header, no gzip header.</li>
+<li><strong>XML.</strong> What's left is the message itself, with namespaced tags like <code>&lt;saml2p:Response&gt;</code>.</li>
+</ol>
+<p>The bindings differ in one crucial way, and it's the difference between "base64-decode worked" and "I got binary garbage":</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Binding</th><th>Wraps as</th><th>Compressed?</th><th>Where you find it</th></tr></thead>
+<tbody>
+<tr><td>HTTP-POST</td><td><code>base64(XML)</code></td><td>No</td><td>Form field SAMLResponse in the POST to your ACS URL</td></tr>
+<tr><td>HTTP-Redirect</td><td><code>base64url(DEFLATE(XML))</code></td><td>Yes — raw DEFLATE</td><td>Query parameter on the IdP redirect URL</td></tr>
+</tbody>
+</table>
+</div>
+<p>Redirect compresses because URLs have hard length limits in browsers — around 8 KB — and assertions don't fit uncompressed.</p>
+<h2>The decode, one layer at a time</h2>
+<p><strong>Step 1: strip the URL.</strong> If what you captured is a full URL, pull the parameter out and URL-decode it. In JavaScript, <code>new URL(theUrl).searchParams.get('SAMLResponse')</code> does both.</p>
+<p><strong>Step 2: normalize the alphabet.</strong> Convert base64url back to base64 (<code>-</code>→<code>+</code>, <code>_</code>→<code>/</code>), strip whitespace, pad to a multiple of four with <code>=</code>. Now standard base64 decoders accept it.</p>
+<p><strong>Step 3: decode and sniff.</strong> Base64-decode to bytes. If the first byte is <code>&lt;</code> (0x3C), you had a POST-binding message — the bytes are XML, and you're done. Otherwise you're holding a DEFLATE stream.</p>
+<p><strong>Step 4: inflate.</strong> Raw DEFLATE, no header — in Node that's <code>zlib.inflateRawSync(buf)</code>; in the browser, pako's <code>inflateRaw</code>. Some stacks in the wild emit zlib-wrapped deflate instead (first byte <code>0x78</code>), so a decoder worth using tries raw first, then wrapped. Out pops XML.</p>
+<p>Or skip the steps: the <a href="/saml-decoder/">SAML decoder</a> on this site does all four and pretty-prints the result, entirely in your browser.</p>
+<h2>A worked example, with numbers</h2>
+<p>Take a realistic assertion: 2,527 bytes of XML naming <code>dev@example.com</code> for the audience <code>https://app.example.com/metadata</code>. Two encodings of the same message:</p>
+<ul>
+<li><strong>POST binding:</strong> base64 of the raw XML = 3,372 characters. Decode it and you're reading XML immediately.</li>
+<li><strong>Redirect binding:</strong> DEFLATE compresses those 2,527 bytes to 706 — 27.9% of the original — which base64url-encodes to 942 characters of URL. Decode the base64 and you get the 706 compressed bytes; inflate them and the 2,527-byte XML returns intact.</li>
+</ul>
+<p>That 72% size cut is why the redirect binding exists at all.</p>
+<h2>Reading the fields that matter</h2>
+<p>Once you can see the XML, six fields settle most debugging sessions:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Field</th><th>Example value</th><th>Fails when…</th></tr></thead>
+<tbody>
+<tr><td><code>Issuer</code></td><td>https://idp.example.com/saml/metadata</td><td>Not byte-identical to the IdP entity ID in your SP config</td></tr>
+<tr><td><code>NameID</code></td><td>dev@example.com</td><td>Format (emailAddress vs persistent) isn't what your user lookup expects</td></tr>
+<tr><td><code>Audience</code></td><td>https://app.example.com/metadata</td><td>It equals some other SP's entity ID — wrong audience restriction</td></tr>
+<tr><td><code>InResponseTo</code></td><td>id-9c8d7e6f</td><td>Doesn't match an AuthnRequest ID you sent (or you expected IdP-initiated)</td></tr>
+<tr><td><code>NotBefore</code></td><td>2026-08-31T11:59:00Z</td><td>Your clock says earlier — "not yet valid", the classic skew failure</td></tr>
+<tr><td><code>NotOnOrAfter</code></td><td>2026-08-31T12:05:00Z</td><td>Your clock says later — expired assertion, often a replayed capture</td></tr>
+</tbody>
+</table>
+</div>
+<p>Those last two deserve attention. In the example, the assertion was issued at 12:00:00Z, valid from 11:59:00Z until 12:05:00Z — a 6-minute window, 5 minutes of usable life after issue. SAML assertions are deliberately short-lived. If the IdP's clock is 3 minutes ahead of the SP's, the assertion arrives "not yet valid" and every login fails until someone adds skew tolerance. Five minutes is the conventional setting; needing more than ten usually means someone should fix NTP instead.</p>
+<div class="cta-box"><h3>Decode your SAML response now</h3><p style="color:#fff;opacity:.9">Paste the base64, the DEFLATE-compressed value, or the entire redirect URL — get pretty XML and the extracted fields, computed locally.</p><a href="/saml-decoder/">Open the SAML Decoder →</a></div>
+<h2>What decoding does not do</h2>
+<p>A decoded response is readable, not verified. The <code>ds:Signature</code> block you'll see inside is a claim until it's cryptographically checked against the IdP's X.509 certificate, with the reference digests and wrap-attack checks your SAML library performs. Never make an access decision by eyeballing decoded XML — decode to debug, verify in code. And since assertions carry names, emails, and group memberships, treat captures of production traffic the way you'd treat a password dump from your own HR system.</p>
+<h2>Related debugging tools</h2>
+<p>SAML is one of several "trust artifact" formats you'll end up squinting at. JWTs hide their claims in base64url too — the <a href="/jwt-decoder/">JWT decoder</a> unpacks headers and payloads (also without verifying signatures). And since SAML verification bottoms out in X.509 certificates, the <a href="/certificate-decoder/">certificate decoder</a> is the next stop when the question becomes "is this even the right cert?"</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Why won't base64-decoding alone show my SAML XML?</h3><p>Because the message was probably compressed first. Redirect-binding messages are DEFLATE-compressed before base64url encoding, so decoding gives you a raw DEFLATE stream — binary bytes that don't start with '&lt;'. You have to inflate those bytes (pako.inflateRaw in JavaScript, zlib inflateRawSync in Node) before the XML appears. POST-binding messages skip compression, so plain base64 decoding does show XML.</p></div>
+<div class="faq-item"><h3>How do I capture a SAML response from my browser?</h3><p>Open devtools before clicking login. For POST binding, watch the Network tab for the POST to your ACS URL (often /acs or /saml/acs), then look in the form data for the SAMLResponse field. For redirect binding, copy the full IdP URL with the SAMLRequest or SAMLResponse query parameter. Browser extensions like SAML-tracer automate exactly this capture.</p></div>
+<div class="faq-item"><h3>What is clock skew in SAML?</h3><p>Assertions carry NotBefore and NotOnOrAfter timestamps, and SPs accept them only if they bracket 'now' on the SP's clock. If the IdP server's clock runs a couple of minutes ahead of yours, fresh assertions look not-yet-valid. Skew tolerance — typically 5 minutes, configured on the SP — widens the accepted window on both ends to absorb normal drift.</p></div>
+<div class="faq-item"><h3>Can I decode a SAML response that's signed?</h3><p>Yes — signatures live inside the XML as a ds:Signature block, and they don't prevent decoding. But decoding is not verifying. Confirming the signature requires the IdP's X.509 certificate and cryptographic checks that belong in your SAML library, not in a human reading pretty-printed XML.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/saml-decoder/">SAML Decoder</a>
+<a href="/jwt-decoder/">JWT Decoder</a>
+<a href="/certificate-decoder/">Certificate Decoder</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

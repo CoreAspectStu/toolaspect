@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Address Generator — US Test Data | ToolAspect</title>
+<meta name="description" content="Free random address generator: fictional US streets + real 50 states, seeded and reproducible. CSV/JSON export, no uploads.">
+<link rel="canonical" href="https://toolaspect.com/random-address-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Random Address Generator — US Test Data">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Generate fictional US addresses for testing: street, apt, city, real state names, ZIP-format codes. Seeded, CSV/JSON export, in-browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/random-address-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Random Address Generator | Free Online Tool">
+<meta name="twitter:description" content="Fictional US test addresses from @faker-js/faker, seeded and exportable. Nothing uploads.">
+<meta name="keywords" content="random address generator, fake address generator, test addresses, dummy addresses, us address generator, seeded address data">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Random Address Generator","description":"Free browser-based US address generator powered by @faker-js/faker 10.6.0 (MIT). Fictional streets and cities paired with the real 50 state names, ZIP-format codes, reproducible seeds, and CSV/JSON export. Nothing uploads.","url":"https://toolaspect.com/random-address-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are these addresses real, deliverable places?","acceptedAnswer":{"@type":"Answer","text":"No, and that's deliberate. Streets and cities are pattern-built fiction — 49049 Pierce Fort in Mervinshire does not exist — while the state names are the real 50 US states and the ZIP codes match the real 5-digit and ZIP+4 formats without matching the state they're printed next to. That combination is what you want for test data: realistic shape, zero chance a mail merge or signup test touches a real household."}},
+{"@type":"Question","name":"Do the ZIP codes match their state?","acceptedAnswer":{"@type":"Answer","text":"No. Faker draws ZIP codes as random digits in the ##### or #####-#### format, independent of the state on the same row. Real ZIP prefixes are geographic — 9 and 8 for the West Coast, 0 and 1 for the Northeast — so a validator that checks state-ZIP consistency will flag these rows. If you need state-consistent ZIPs, generate the state first and fill the ZIP from the real prefix ranges for that state in your own fixtures step."}},
+{"@type":"Question","name":"Why do the city names look made-up?","acceptedAnswer":{"@type":"Answer","text":"Because they are. Faker builds cities from prefixes and suffixes — Mervinshire, East Marcellefort, Joanaboro — out of a pool of 927 city names built from those parts. Some draws resemble real towns (that's the generator doing its job), but the generator never looks up real places. If your tests need real cities, pair this tool's street and ZIP fields with your own city list."}},
+{"@type":"Question","name":"Can I regenerate the exact same addresses later?","acceptedAnswer":{"@type":"Answer","text":"Yes — type a seed. Seed 2026 with count 3 and Apt/Suite set to Always produces 49049 Pierce Fort, Apt. 380, Mervinshire, AK 26291; 56865 Marvin Lock, Apt. 593, East Marcellefort, TX 19040; and 9436 Oxford Road, Suite 196, Fort Kelsi, ME 42711-8728 — on every machine, every day, as long as the locale data and Faker version (10.6.0) stay the same. Store the seed in your test, not the addresses."}},
+{"@type":"Question","name":"Is it safe to use fake addresses on signup forms?","acceptedAnswer":{"@type":"Answer","text":"For QA runs on systems you own or are authorized to test, yes — fictional addresses are the standard way to exercise address validation, shipping calculators, and tax tables. On third-party services, read the terms first: entering fake data on a real storefront can violate them, pollute someone's analytics, or trigger fraud filters, and if a payment step is involved the address must be the cardholder's real billing address. Test where you're allowed to test."}},
+{"@type":"Question","name":"Does the generator include DC, territories, or international addresses?","acceptedAnswer":{"@type":"Answer","text":"Not on this page. Faker's English locale ships exactly 50 state names — Washington, DC and the territories (PR, GU, VI, and the rest) are not in the pool, and country data is a separate module. International testing needs other locales, which double the download; for now, generate US-shaped rows here and handle other countries in your fixtures layer."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Random Address Generator","item":"https://toolaspect.com/random-address-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+pre.plain-out{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;color:var(--text);font-size:.85rem;line-height:1.8;overflow-x:auto;white-space:pre-wrap;margin-top:1rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Random Address Generator — US Test Data", "url": "https://toolaspect.com/random-address-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free random address generator: fictional US streets + real 50 states, seeded and reproducible. CSV/JSON export, no uploads."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Random Address Generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Random Address Generator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Random Address Generator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Random Address Generator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🏠 Random Address Generator</h1>
+<p>Fictional US streets, real 50 state names, ZIP-format codes — seeded, exportable</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> each row combines a made-up street (from 749 street names + 195 suffixes), an optional Apt./Suite line (2 formats), a fictional city (927-city pool), one of the <strong>real 50 US state names</strong>, and a random 5-digit or ZIP+4 code. Streets, cities, and ZIPs don't exist as a real place — safe for test data, useless for mail. Seed 2026 yields 49049 Pierce Fort, Apt. 380, Mervinshire, AK 26291. Everything generates in your browser; nothing uploads.</p>
+
+<div class="section-card">
+<h2>Generate Addresses</h2>
+<div class="input-grid">
+<div class="input-group"><label>How many</label><input type="number" id="count" value="10" min="1" max="500" step="1"></div>
+<div class="input-group"><label>Seed (optional)</label><input type="number" id="seed" placeholder="e.g. 2026" min="0" step="1"></div>
+<div class="input-group"><label>Output</label><select id="format"><option value="table" selected>Table</option><option value="lines">One per line</option><option value="json">JSON</option></select></div>
+<div class="input-group"><label>Apt / Suite line</label><select id="secondary"><option value="yes" selected>Sometimes (realistic)</option><option value="no">Never</option><option value="always">Always</option></select></div>
+</div>
+<div class="btn-row">
+<button type="button" class="btn" id="go">Generate</button>
+<button type="button" class="btn ghost" id="csv">Copy CSV</button>
+<button type="button" class="btn ghost" id="dl">Download CSV</button>
+</div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table" id="out">
+<thead><tr><th>#</th><th>Street</th><th>Apt / Suite</th><th>City</th><th>State</th><th>ZIP</th></tr></thead>
+<tbody id="rows"><tr><td colspan="6" style="color:var(--muted)">Loading Faker engine…</td></tr></tbody>
+</table>
+</div>
+<pre class="plain-out" id="plain" style="display:none"></pre>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">City pool</div><div class="ri-value">927</div></div>
+<div class="result-item"><div class="ri-label">Real state names</div><div class="ri-value">50</div></div>
+<div class="result-item"><div class="ri-label">Street names</div><div class="ri-value">749</div></div>
+</div>
+<div class="status-line" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/fake-name-generator/">Fake Name Generator</a></li><li style="margin:4px 0"><a href="/fake-email-generator/">Fake Email Generator</a></li><li style="margin:4px 0"><a href="/phone-number-validator/">Phone Number Validator</a></li><li style="margin:4px 0"><a href="/csv-to-excel/">CSV to Excel</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What's Real and What's Generated</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Field</th><th>Source</th><th>Matches reality?</th></tr></thead>
+<tbody>
+<tr><td>Street number</td><td>Random 1–5 digits</td><td>Format-real, fictional</td></tr>
+<tr><td>Street name</td><td>749-name pool + 195 suffixes, 3 patterns</td><td>Fictional (e.g. Pierce Fort, Marvin Lock)</td></tr>
+<tr><td>Apt / Suite</td><td>2 formats: <code>Apt. ###</code>, <code>Suite ###</code></td><td>Format-real, fictional</td></tr>
+<tr><td>City</td><td>927-city pool built from prefixes + suffixes</td><td>Fictional (Mervinshire, Joanaboro)</td></tr>
+<tr><td>State</td><td>The real 50 US state names (no DC or territories)</td><td>Real</td></tr>
+<tr><td>ZIP</td><td>Random digits, <code>#####</code> or <code>#####-####</code></td><td>Format-real, not state-matched</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Pool sizes measured from @faker-js/faker 10.6.0's English locale — the exact bundle this page lazy-loads. Multiply the pools (streets × suffixes × cities × states × 100,000 ZIPs) and the row space is over 600 trillion combinations, so cross-run collisions are effectively zero even before seeding.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Address Generator Works</h2>
+<p>Under the hood this is <strong>@faker-js/faker 10.6.0</strong> (MIT) with its English locale, lazy-loaded on first generate and run entirely in your tab. The address module assembles each row the way real address data is shaped — number, street, optional unit, city, state, postal code — which is why it slots straight into address forms, shipping calculators, and tax-table tests that expect US-shaped input.</p>
+<h3>How seeding works</h3>
+<p>A seed pins the generator's random sequence. Same seed, same addresses, on any machine, any day — the locale data and Faker version are pinned too (10.6.0, en). Leave the seed blank for fresh rows every click. Seeded runs are the way to ship reproducible fixtures: store <code>seed=2026</code> in the test, not 500 rows of CSV.</p>
+<h3>How to use it</h3>
+<p>Choose a count up to 500, optionally set a seed, and pick an output: table (readable), one-per-line (paste into forms or text fixtures), or JSON (array of objects with <code>street</code>, <code>secondary</code>, <code>city</code>, <code>state</code>, <code>stateAbbr</code>, <code>zip</code>). The Apt/Suite control decides whether unit lines appear sometimes, never, or always. CSV copy/download works from any view.</p>
+<h3>A worked example</h3>
+<p>Seed <code>2026</code>, count 3, Apt/Suite: Always. You get:</p>
+<ol style="color:var(--muted);line-height:1.9;padding-left:1.5rem">
+<li>49049 Pierce Fort, Apt. 380 — Mervinshire, AK 26291</li>
+<li>56865 Marvin Lock, Apt. 593 — East Marcellefort, TX 19040</li>
+<li>9436 Oxford Road, Suite 196 — Fort Kelsi, ME 42711-8728</li>
+</ol>
+<p>Notice what's honest about these rows: the states are real (Alaska, Texas, Maine), the ZIPs follow real formats — but 26291 is not an Alaska prefix (real AK ZIPs start with 995–999), and Pierce Fort is not a street in a town called Mervinshire. If your validator checks state-ZIP consistency, use the state field and generate state-correct ZIPs yourself; if it only checks shape, these rows pass. That's the difference between format-realistic and geographically-true test data, and knowing it saves an afternoon of debugging.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Are these addresses real, deliverable places?</h3><p>No, and that's deliberate. Streets and cities are pattern-built fiction — 49049 Pierce Fort in Mervinshire does not exist — while the state names are the real 50 US states and the ZIP codes match the real 5-digit and ZIP+4 formats without matching the state they're printed next to. That combination is what you want for test data: realistic shape, zero chance a mail merge or signup test touches a real household.</p></div>
+<div class="faq-item"><h3>Do the ZIP codes match their state?</h3><p>No. Faker draws ZIP codes as random digits in the <code>#####</code> or <code>#####-####</code> format, independent of the state on the same row. Real ZIP prefixes are geographic — 9 and 8 for the West Coast, 0 and 1 for the Northeast — so a validator that checks state-ZIP consistency will flag these rows. If you need state-consistent ZIPs, generate the state first and fill the ZIP from the real prefix ranges for that state in your own fixtures step.</p></div>
+<div class="faq-item"><h3>Why do the city names look made-up?</h3><p>Because they are. Faker builds cities from prefixes and suffixes — Mervinshire, East Marcellefort, Joanaboro — out of a pool of 927 city names built from those parts. Some draws resemble real towns (that's the generator doing its job), but the generator never looks up real places. If your tests need real cities, pair this tool's street and ZIP fields with your own city list.</p></div>
+<div class="faq-item"><h3>Can I regenerate the exact same addresses later?</h3><p>Yes — type a seed. Seed 2026 with count 3 and Apt/Suite set to Always produces 49049 Pierce Fort, Apt. 380, Mervinshire, AK 26291; 56865 Marvin Lock, Apt. 593, East Marcellefort, TX 19040; and 9436 Oxford Road, Suite 196, Fort Kelsi, ME 42711-8728 — on every machine, every day, as long as the locale data and Faker version (10.6.0) stay the same. Store the seed in your test, not the addresses.</p></div>
+<div class="faq-item"><h3>Is it safe to use fake addresses on signup forms?</h3><p>For QA runs on systems you own or are authorized to test, yes — fictional addresses are the standard way to exercise address validation, shipping calculators, and tax tables. On third-party services, read the terms first: entering fake data on a real storefront can violate them, pollute someone's analytics, or trigger fraud filters, and if a payment step is involved the address must be the cardholder's real billing address. Test where you're allowed to test.</p></div>
+<div class="faq-item"><h3>Does the generator include DC, territories, or international addresses?</h3><p>Not on this page. Faker's English locale ships exactly 50 state names — Washington, DC and the territories (PR, GU, VI, and the rest) are not in the pool, and country data is a separate module. International testing needs other locales, which double the download; for now, generate US-shaped rows here and handle other countries in your fixtures layer.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/fake-name-generator/">🪪 Fake Name Generator</a>
+<a href="/fake-email-generator/">📧 Fake Email Generator</a>
+<a href="/phone-number-validator/">📞 Phone Number Validator</a>
+<a href="/csv-to-excel/">📊 CSV to Excel</a>
+<a href="/sales-tax-calculator/">🧾 Sales Tax Calculator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---FAKER-ENGINE-START---
+var FAKER_URLS = [
+  'https://cdn.jsdelivr.net/npm/@faker-js/faker@10.6.0/dist/locale/en.js',
+  'https://unpkg.com/@faker-js/faker@10.6.0/dist/locale/en.js'
+];
+var POOLS = { cities: 927, states: 50, streetNames: 749, streetSuffixes: 195, counties: 106, countries: 249 };
+
+function parseSeed(v) {
+  if (v === '' || v === null || v === undefined) return null;
+  var n = parseInt(v, 10);
+  return isNaN(n) || n < 0 ? NaN : n;
+}
+function csvField(v) {
+  var s = String(v === null || v === undefined ? '' : v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function rowsToCSV(headers, rows) {
+  var lines = [headers.map(csvField).join(',')];
+  rows.forEach(function (r) { lines.push(r.map(csvField).join(',')); });
+  return lines.join('\n');
+}
+function stateAbbrOf(stateName, names, abbrs) {
+  var i = names.indexOf(stateName);
+  return i >= 0 ? abbrs[i] : '';
+}
+function addressRow(faker, names, abbrs, secondary) {
+  var st = faker.location.state();
+  var sec = faker.location.secondaryAddress();
+  var wantSec = secondary === 'always' ? true : secondary === 'no' ? false : faker.datatype.boolean(0.35);
+  return {
+    street: faker.location.streetAddress(),
+    secondary: wantSec ? sec : '',
+    city: faker.location.city(),
+    state: st,
+    stateAbbr: stateAbbrOf(st, names, abbrs),
+    zip: faker.location.zipCode()
+  };
+}
+// ---- browser wiring ----
+var fakerMod = null, loading = null;
+function loadFaker() {
+  if (fakerMod) return Promise.resolve(fakerMod);
+  if (loading) return loading;
+  var p = Promise.reject();
+  FAKER_URLS.forEach(function (url) { p = p.catch(function () { return import(url); }); });
+  loading = p.then(function (mod) { fakerMod = mod; return mod; });
+  return loading;
+}
+function status(msg, cls) {
+  var el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status-line' + (cls ? ' ' + cls : '');
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+var lastRows = [];
+function render() {
+  var fmt = document.getElementById('format').value;
+  var table = document.getElementById('out'), plain = document.getElementById('plain');
+  if (fmt === 'table') {
+    table.style.display = ''; plain.style.display = 'none';
+    document.getElementById('rows').innerHTML = lastRows.map(function (r, i) {
+      return '<tr><td>' + (i + 1) + '</td><td>' + esc(r.street) + '</td><td>' + esc(r.secondary) + '</td><td>' + esc(r.city) + '</td><td>' + esc(r.state) + ' (' + esc(r.stateAbbr) + ')</td><td>' + esc(r.zip) + '</td></tr>';
+    }).join('');
+  } else {
+    table.style.display = 'none'; plain.style.display = '';
+    if (fmt === 'lines') {
+      plain.textContent = lastRows.map(function (r) {
+        var unit = r.secondary ? ', ' + r.secondary : '';
+        return r.street + unit + ', ' + r.city + ', ' + r.stateAbbr + ' ' + r.zip;
+      }).join('\n');
+    } else {
+      plain.textContent = JSON.stringify(lastRows, null, 2);
+    }
+  }
+}
+function generate() {
+  var count = Math.min(500, Math.max(1, parseInt(document.getElementById('count').value, 10) || 10));
+  var seed = parseSeed(document.getElementById('seed').value);
+  var secondary = document.getElementById('secondary').value;
+  if (isNaN(seed)) { status('Seed must be a non-negative integer (or leave it blank).', 'err'); return; }
+  loadFaker().then(function (mod) {
+    var faker = mod.faker;
+    if (seed !== null) faker.seed(seed);
+    var L = faker.rawDefinitions.location;
+    lastRows = [];
+    for (var i = 0; i < count; i++) lastRows.push(addressRow(faker, L.state, L.state_abbr, secondary));
+    render();
+    status('Generated ' + count + ' address' + (count === 1 ? '' : 'es') + (seed !== null ? ' from seed ' + seed : '') + ' — Faker 10.6.0 (MIT) ran locally.', 'ok');
+  }).catch(function (e) { status('Engine failed to load: ' + (e && e.message ? e.message : e), 'err'); });
+}
+document.getElementById('go').addEventListener('click', generate);
+document.getElementById('format').addEventListener('change', render);
+document.getElementById('csv').addEventListener('click', function () {
+  if (!lastRows.length) return status('Generate first.', 'err');
+  var csv = rowsToCSV(['street', 'secondary', 'city', 'state', 'stateAbbr', 'zip'], lastRows.map(function (r) { return [r.street, r.secondary, r.city, r.state, r.stateAbbr, r.zip]; }));
+  (navigator.clipboard ? navigator.clipboard.writeText(csv) : Promise.reject()).then(
+    function () { status('CSV copied (' + lastRows.length + ' rows).', 'ok'); },
+    function () { status('Clipboard blocked.', 'err'); }
+  );
+});
+document.getElementById('dl').addEventListener('click', function () {
+  if (!lastRows.length) return status('Generate first.', 'err');
+  var csv = rowsToCSV(['street', 'secondary', 'city', 'state', 'stateAbbr', 'zip'], lastRows.map(function (r) { return [r.street, r.secondary, r.city, r.state, r.stateAbbr, r.zip]; }));
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'random-addresses.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  status('Downloaded random-addresses.csv.', 'ok');
+});
+generate();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

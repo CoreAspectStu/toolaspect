@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Beautifier — JS, CSS &amp; HTML Formatter | ToolAspect</title>
+<meta name="description" content="Free code beautifier for JavaScript, CSS and HTML, powered by js-beautify. A 110-character minified line reformats to 10 readable lines in one click.">
+<link rel="canonical" href="https://toolaspect.com/code-beautifier/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Code Beautifier — JS, CSS &amp; HTML Formatter">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Beautify minified JavaScript, CSS and HTML in your browser with the js-beautify engine. Indentation, brace style and line-wrap options included.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/code-beautifier/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Code Beautifier | Free Online Formatter">
+<meta name="twitter:description" content="Turn minified JS, CSS or HTML back into readable, indented code — locally in your browser.">
+<meta name="keywords" content="code beautifier, js beautifier, css beautifier, html beautifier, format javascript online, beautify css, unminify javascript, pretty print code">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Code Beautifier","description":"Free online code beautifier for JavaScript, CSS and HTML, powered by js-beautify. Paste minified code and get clean, indented, readable output with configurable indent size, brace style and line wrapping. Runs entirely in your browser.","url":"https://toolaspect.com/code-beautifier/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does a code beautifier do?","acceptedAnswer":{"@type":"Answer","text":"It reformats source code for humans without changing what it does. Minified files strip out every space and newline the compiler doesn't need; a beautifier puts them back — one statement per line, consistent indentation, braces on predictable lines. The code is byte-for-byte different but semantically identical, which is why you can beautify a library file to read it, then keep using the minified original."}},
+{"@type":"Question","name":"Is beautifying the same as minifying in reverse?","acceptedAnswer":{"@type":"Answer","text":"Almost, but not exactly. Minification also renames variables, drops comments, and removes dead code — none of which can be recovered from the output. A beautifier restores whitespace and line structure only. Variable names like a, b, and t stay short, and comments stay gone. For code you own, run a formatter in your editor instead so names and comments survive."}},
+{"@type":"Question","name":"Does this tool change or upload my code?","acceptedAnswer":{"@type":"Answer","text":"Your code never leaves the browser. The formatting engine, js-beautify, is loaded from a CDN and executed locally — there is no server-side call with your input. The output is deterministic: the same input and options always produce the same output, so it's safe for proprietary code."}},
+{"@type":"Question","name":"Why does the beautified output keep some things on one line?","acceptedAnswer":{"@type":"Answer","text":"That's the preserve-newlines behavior and the brace style at work. By default js-beautify keeps blank lines you already have (up to the max you set) and collapses braces onto the statement line, which is the common K&R layout. Switch brace style to expand for Allman braces on their own lines, or set a wrap line length to break long chained calls."}},
+{"@type":"Question","name":"Which brace style should I pick?","acceptedAnswer":{"@type":"Answer","text":"Collapse is the default and matches most style guides: if (x) { on one line. Expand puts every brace on its own line (Allman style), end-expand only moves closing braces, and none leaves braces where they found them. If your team has a lint rule, match it here; otherwise collapse with 2-space indent is the most common modern choice."}},
+{"@type":"Question","name":"Can I beautify HTML with embedded CSS and JavaScript?","acceptedAnswer":{"@type":"Answer","text":"Yes. The HTML mode of js-beautify recognizes style and script tags and reformats their contents with the matching engine. Just paste the whole document and let it sort out which parts are markup, which are styles, and which are scripts."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Code Beautifier","item":"https://toolaspect.com/code-beautifier/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.mode-tabs{display:flex;gap:.4rem;margin-bottom:1rem}
+.mode-tab{flex:1;padding:.55rem .5rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--muted);font-weight:600;font-size:.9rem;cursor:pointer;font-family:inherit}
+.mode-tab.active{border-color:var(--primary);color:var(--text);background:rgba(99,102,241,.12)}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.io-grid{grid-template-columns:1fr}}
+.io-pane{display:flex;flex-direction:column;gap:.4rem}
+.io-pane label{font-size:.85rem;color:var(--muted);font-weight:500}
+.code-area{width:100%;min-height:300px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.82rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.55;box-sizing:border-box;resize:vertical;tab-size:2}
+.code-area:focus{outline:none;border-color:var(--primary)}
+.opt-row{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin:1rem 0 .25rem}
+.opt-group{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--muted)}
+.opt-group select,.opt-group input[type=number]{padding:.35rem .5rem;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.85rem;font-family:inherit}
+.opt-group input[type=checkbox]{accent-color:var(--primary)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.act-btn{padding:.55rem 1.1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.act-btn:hover{background:var(--primary-hover)}
+.act-btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-msg{font-size:.82rem;color:var(--muted);margin-top:.6rem;min-height:1.2em}
+.status-msg.err{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text);margin:.75rem 0}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.content-section pre code{background:none;border:none;padding:0}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td code{white-space:nowrap;font-size:.8rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Code Beautifier — JS, CSS & HTML Formatter", "url": "https://toolaspect.com/code-beautifier/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free code beautifier for JavaScript, CSS and HTML, powered by js-beautify. A 110-character minified line reformats to 10 readable lines in one click."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Code Beautifier free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Code Beautifier on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Code Beautifier work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Code Beautifier calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✨ Code Beautifier</h1>
+<p>Beautify minified JavaScript, CSS and HTML back into readable, indented code</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> a code beautifier (also called a formatter or pretty-printer) reformats minified source so humans can read it — one statement per line, consistent indentation — without changing what the code does. Paste minified JS, CSS or HTML below, pick your indent and brace style, and the <strong>js-beautify</strong> engine (the same library behind editor plugins for 15+ years) reformats it instantly in your browser. A 110-character one-liner becomes 10 readable lines in one click, and your code never leaves the page.
+</div>
+
+<div class="section-card">
+<h2>Beautify Your Code</h2>
+<div class="mode-tabs" id="modeTabs">
+<button type="button" class="mode-tab active" data-mode="js">JavaScript</button>
+<button type="button" class="mode-tab" data-mode="css">CSS</button>
+<button type="button" class="mode-tab" data-mode="html">HTML</button>
+</div>
+<div class="io-grid">
+<div class="io-pane">
+<label for="inArea">Input (minified or messy code)</label>
+<textarea id="inArea" class="code-area" spellcheck="false" placeholder="Paste minified JavaScript here…"></textarea>
+</div>
+<div class="io-pane">
+<label for="outArea">Output (beautified)</label>
+<textarea id="outArea" class="code-area" spellcheck="false" readonly></textarea>
+</div>
+</div>
+<div class="opt-row">
+<div class="opt-group"><label for="indentSel">Indent</label>
+<select id="indentSel"><option value="2" selected>2 spaces</option><option value="4">4 spaces</option><option value="tab">Tab</option></select></div>
+<div class="opt-group"><label for="braceSel">Brace style (JS)</label>
+<select id="braceSel"><option value="collapse" selected>collapse</option><option value="expand">expand</option><option value="end-expand">end-expand</option><option value="none">none</option></select></div>
+<div class="opt-group"><label for="wrapIn">Wrap at</label>
+<input type="number" id="wrapIn" min="0" step="10" value="0" style="width:5.5rem"><span>chars (0 = off)</span></div>
+<div class="opt-group"><input type="checkbox" id="preserveCb" checked><label for="preserveCb">Keep blank lines</label></div>
+<div class="opt-group"><input type="checkbox" id="newlineCb"><label for="newlineCb">End with newline</label></div>
+</div>
+<div class="btn-row">
+<button type="button" class="act-btn" id="runBtn">Beautify</button>
+<button type="button" class="act-btn ghost" id="sampleBtn">Load sample</button>
+<button type="button" class="act-btn ghost" id="copyBtn">Copy output</button>
+<button type="button" class="act-btn ghost" id="clearBtn">Clear</button>
+</div>
+<div class="status-msg" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/sql-formatter/">Sql Formatter</a></li><li style="margin:4px 0"><a href="/xml-formatter/">Xml Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/code-formatting-explained/">Read the formatting guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>js-beautify Options Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Option</th><th>Default</th><th>What it controls</th></tr></thead>
+<tbody>
+<tr><td><code>indent_size</code></td><td>4</td><td>Spaces per indent level (this page defaults to 2, the modern convention)</td></tr>
+<tr><td><code>indent_char</code></td><td>space</td><td>Character used for indentation — space or tab</td></tr>
+<tr><td><code>preserve_newlines</code></td><td>true</td><td>Keep line breaks that already exist in the input</td></tr>
+<tr><td><code>max_preserve_newlines</code></td><td>unlimited</td><td>Cap on consecutive blank lines kept in one chunk</td></tr>
+<tr><td><code>brace_style</code></td><td><code>"collapse"</code></td><td>Brace placement: collapse (K&amp;R), expand (Allman), end-expand, none</td></tr>
+<tr><td><code>space_after_anon_function</code></td><td>false</td><td><code>function ()</code> vs <code>function()</code> in anonymous functions</td></tr>
+<tr><td><code>space_before_conditional</code></td><td>true</td><td><code>if (x)</code> vs <code>if(x)</code></td></tr>
+<tr><td><code>wrap_line_length</code></td><td>unlimited</td><td>Wrap lines at the next opportunity after N characters</td></tr>
+<tr><td><code>end_with_newline</code></td><td>false</td><td>Add a trailing newline to the output</td></tr>
+<tr><td><code>unescape_strings</code></td><td>false</td><td>Decode <code>\xNN</code> escapes into readable characters</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Defaults are documented in the js-beautify 1.15.4 source that this page runs. The tool exposes the five options that matter day to day; the rest are engine defaults.</p>
+</div>
+
+<div class="section-card">
+<h2>Worked Examples (Run Through This Tool)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Mode</th><th>Input</th><th>Output</th><th>Growth</th></tr></thead>
+<tbody>
+<tr><td>JavaScript</td><td>1 line, 110 chars</td><td>10 lines, 149 chars</td><td>+35%</td></tr>
+<tr><td>CSS</td><td>1 line, 135 chars</td><td>17 lines, 182 chars</td><td>+35%</td></tr>
+<tr><td>HTML</td><td>1 line, 130 chars</td><td>18 lines, 177 chars</td><td>+36%</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Real minified bundles grow far more — the minifier of a 500 KB library squeezed out every space, so beautified output typically lands 20–40% larger by characters and many hundreds of lines longer.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Code Beautifier Works</h2>
+<p>Minifiers and bundlers make code small; this tool makes it readable again. It runs <a href="https://github.com/beautify-web/js-beautify" rel="noopener">js-beautify 1.15.4</a> (MIT license, the library that powers formatter plugins across many editors), loaded from jsDelivr and executed entirely in your browser. Three modes share one page: a JavaScript beautifier, a CSS beautifier, and an HTML beautifier that also reformats the script and style blocks it finds inside your markup.</p>
+<h3>Beautify vs minify vs format-on-save</h3>
+<p>Beautifying restores whitespace only. It can't bring back the variable names a minifier shortened or the comments it deleted, so treat it as a reading aid for third-party code, not a round trip. For your own code, a formatter in your editor (Prettier, or js-beautify via a plugin) works from the original source, so nothing is lost. This page fills the gap when all you have is the minified artifact: a production bundle you're debugging, a copied snippet, a theme file shipped compressed.</p>
+<h3>How to use it</h3>
+<p>Pick the tab matching your code, paste, and hit Beautify — output appears in the right pane and updates as you type. Choose 2 or 4 spaces (or tabs) for indentation, a brace style for JavaScript, and an optional wrap length that breaks long lines at the next sensible point. Copy grabs the formatted result; Load sample drops in a known minified snippet so you can see the effect before pasting your own.</p>
+<h3>A worked example</h3>
+<p>Feed it the one-line JavaScript <code>function add(a,b){return a+b}const calc={add:function(x,y){return x+y;},mul:(a,b)=&gt;a*b};console.log(add(2,3));</code> — 110 characters, no whitespace. Out comes 10 lines and 149 characters: the function body drops to its own line, the object literal breaks one property per line, and each gains a two-space indent. The logic is untouched; only the layout changed. The CSS and HTML samples behave the same way — a 135-character stylesheet becomes 17 lines with each declaration on its own row, and a squashed HTML document gets its head, body, and nested lists indented back into shape.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does a code beautifier do?</h3><p>It reformats source code for humans without changing what it does. Minified files strip out every space and newline the compiler doesn't need; a beautifier puts them back — one statement per line, consistent indentation, braces on predictable lines. The code is byte-for-byte different but semantically identical, which is why you can beautify a library file to read it, then keep using the minified original.</p></div>
+<div class="faq-item"><h3>Is beautifying the same as minifying in reverse?</h3><p>Almost, but not exactly. Minification also renames variables, drops comments, and removes dead code — none of which can be recovered from the output. A beautifier restores whitespace and line structure only. Variable names like a, b, and t stay short, and comments stay gone. For code you own, run a formatter in your editor instead so names and comments survive.</p></div>
+<div class="faq-item"><h3>Does this tool change or upload my code?</h3><p>Your code never leaves the browser. The formatting engine, js-beautify, is loaded from a CDN and executed locally — there is no server-side call with your input. The output is deterministic: the same input and options always produce the same output, so it's safe for proprietary code.</p></div>
+<div class="faq-item"><h3>Why does the beautified output keep some things on one line?</h3><p>That's the preserve-newlines behavior and the brace style at work. By default js-beautify keeps blank lines you already have (up to the max you set) and collapses braces onto the statement line, which is the common K&amp;R layout. Switch brace style to expand for Allman braces on their own lines, or set a wrap line length to break long chained calls.</p></div>
+<div class="faq-item"><h3>Which brace style should I pick?</h3><p>Collapse is the default and matches most style guides: if (x) { on one line. Expand puts every brace on its own line (Allman style), end-expand only moves closing braces, and none leaves braces where they found them. If your team has a lint rule, match it here; otherwise collapse with 2-space indent is the most common modern choice.</p></div>
+<div class="faq-item"><h3>Can I beautify HTML with embedded CSS and JavaScript?</h3><p>Yes. The HTML mode of js-beautify recognizes style and script tags and reformats their contents with the matching engine. Just paste the whole document and let it sort out which parts are markup, which are styles, and which are scripts.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-formatter/">🧾 JSON Formatter</a>
+<a href="/sql-formatter/">🗃️ SQL Formatter</a>
+<a href="/xml-formatter/">📂 XML Formatter</a>
+<a href="/js-obfuscator/">🛡️ JS Obfuscator</a>
+<a href="/yaml-validator/">✅ YAML Validator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var CDNV='https://cdn.jsdelivr.net/npm/js-beautify@1.15.4/js/lib/';
+  var loaded={};
+  var SAMPLES={
+    js:'function add(a,b){return a+b}const calc={add:function(x,y){return x+y;},mul:(a,b)=>a*b};console.log(add(2,3));',
+    css:'body{margin:0;padding:0}.btn{color:#fff;background:#6366f1;border-radius:8px;padding:8px 16px}@media(max-width:600px){.btn{width:100%}}',
+    html:'<!DOCTYPE html><html><head><title>Hi</title></head><body><div class="wrap"><p>Hello</p><ul><li>one<li>two</ul></div></body></html>'
+  };
+  var mode='js', pending=false, timer=null;
+  var inArea=document.getElementById('inArea'),outArea=document.getElementById('outArea'),status=document.getElementById('status');
+  var indentSel=document.getElementById('indentSel'),braceSel=document.getElementById('braceSel'),wrapIn=document.getElementById('wrapIn'),
+      preserveCb=document.getElementById('preserveCb'),newlineCb=document.getElementById('newlineCb');
+
+  function engineGlobals(){
+    if(mode==='js')return window.js_beautify?{fn:window.js_beautify,name:'js_beautify'}:null;
+    if(mode==='css')return window.css_beautify?{fn:window.css_beautify,name:'css_beautify'}:null;
+    return window.html_beautify?{fn:window.html_beautify,name:'html_beautify'}:null;
+  }
+  function loadEngine(cb){
+    var g=engineGlobals();
+    if(g){cb(g);return;}
+    var src = mode==='js'?CDNV+'beautify.js':mode==='css'?CDNV+'beautify-css.js':CDNV+'beautify-html.js';
+    if(loaded[src]){ // loaded but global still missing = load race; retry shortly
+      setTimeout(function(){loadEngine(cb);},50);return;
+    }
+    loaded[src]=true;
+    status.textContent='Loading formatter engine from jsDelivr…';
+    var s=document.createElement('script');
+    s.src=src;s.async=true;
+    s.onload=function(){status.textContent='';cb(engineGlobals());};
+    s.onerror=function(){status.textContent='Could not load the js-beautify engine. Check your connection and try again.';status.classList.add('err');};
+    (document.head||document.documentElement).appendChild(s);
+  }
+  function opts(){
+    var ind = indentSel.value==='tab'?{indent_size:1,indent_char:'\t'}:{indent_size:parseInt(indentSel.value,10),indent_char:' '};
+    var o={preserve_newlines:preserveCb.checked,end_with_newline:newlineCb.checked,wrap_line_length:parseInt(wrapIn.value,10)||0};
+    for(var k in ind)o[k]=ind[k];
+    if(mode==='js')o.brace_style=braceSel.value;
+    return o;
+  }
+  function beautify(){
+    var v=inArea.value;
+    if(!v.trim()){outArea.value='';status.textContent='';return;}
+    loadEngine(function(g){
+      if(!g)return;
+      try{
+        outArea.value=g.fn(v,opts());
+        var il=v.split('\n').length,ol=outArea.value.split('\n').length;
+        status.textContent='Beautified with '+g.name+' (js-beautify 1.15.4): '+il+' line'+(il===1?'':'s')+' in, '+ol+' lines out, '+v.length+' chars to '+outArea.value.length+'.';
+        status.classList.remove('err');
+      }catch(e){
+        outArea.value='';
+        status.textContent='Could not beautify: '+e.message;
+        status.classList.add('err');
+      }
+    });
+  }
+  document.getElementById('modeTabs').addEventListener('click',function(e){
+    var b=e.target.closest('.mode-tab');if(!b)return;
+    mode=b.getAttribute('data-mode');
+    [].forEach.call(document.querySelectorAll('.mode-tab'),function(t){t.classList.toggle('active',t===b);});
+    beautify();
+  });
+  var debounced=function(){clearTimeout(timer);timer=setTimeout(beautify,300);};
+  inArea.addEventListener('input',debounced);
+  [indentSel,braceSel,wrapIn,preserveCb,newlineCb].forEach(function(el){el.addEventListener('change',beautify);});
+  document.getElementById('runBtn').addEventListener('click',beautify);
+  document.getElementById('sampleBtn').addEventListener('click',function(){inArea.value=SAMPLES[mode];beautify();});
+  document.getElementById('clearBtn').addEventListener('click',function(){inArea.value='';outArea.value='';status.textContent='';});
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var btn=this,done=function(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy output';},1500);};
+    if(!outArea.value)return;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(outArea.value).then(done,done);}
+    else{outArea.select();try{document.execCommand('copy');}catch(e){}done();}
+  });
+  inArea.value=SAMPLES.js;
+  beautify();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

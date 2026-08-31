@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minify JS — Terser in Your Browser | ToolAspect</title>
+<meta name="description" content="Minify JavaScript with Terser 5.51.2 in your browser: our 823-byte sample drops 52.6% to 390 bytes. No upload, gzip sizes shown.">
+<link rel="canonical" href="https://toolaspect.com/minify-js/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Minify JS — Terser in Your Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Run Terser 5.51.2 on your JavaScript locally: strip, compress, or compress + mangle, with byte and gzip sizes for every pass.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/minify-js/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Minify JS | Free Online Tool">
+<meta name="twitter:description" content="Terser-powered JavaScript minifier that runs entirely in your browser. No uploads, no signup.">
+<meta name="keywords" content="minify js, javascript minifier, terser online, compress javascript, mangle javascript, js minifier free">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Minify JS","description":"Free in-browser JavaScript minifier powered by Terser 5.51.2 (BSD-2-Clause). Strip comments and whitespace, compress, or compress and mangle top-level names, with byte and gzip sizes for every pass. Nothing uploads.","url":"https://toolaspect.com/minify-js/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is minified JavaScript still valid JavaScript?","acceptedAnswer":{"@type":"Answer","text":"Yes. Terser parses your code into an AST and prints it back out, so the output is syntactically valid by construction. Semantics can shift only for code that relies on function and variable names at runtime — Function.prototype.name, recursion by name after top-level mangling, or eval-based lookups. We verified all three passes on a cart-totals sample: every version computed the identical $68.99 subtotal, $5.69 tax, and $74.68 total."}},
+{"@type":"Question","name":"How much smaller will my JavaScript get?","acceptedAnswer":{"@type":"Answer","text":"It depends on how much of the file is comments, whitespace, and renamable identifiers. On our commented 823-byte sample, stripping alone saved 20.9%, compression brought it to 27.3%, and compression plus mangling reached 52.6%. Real bundles — already terse, with long shared strings — usually land between 30% and 50% raw, and less after gzip because renames compress well anyway."}},
+{"@type":"Question","name":"What does mangle actually rename?","acceptedAnswer":{"@type":"Answer","text":"Mangling shortens identifiers to 1-2 characters. Scope-aware by default: a variable inside a function is renamed without touching same-named variables elsewhere. Top-level mangling (toplevel: true, used by the smallest preset here) also renames globals in the file, which is safe for self-contained scripts and bundles but breaks code that expects those names from outside — drop it if other scripts call into yours by name."}},
+{"@type":"Question","name":"Does minification replace gzip or Brotli?","acceptedAnswer":{"@type":"Answer","text":"No, they stack. Minification shrinks the file; transport compression shrinks it further on the wire. Our sample goes 823 to 390 bytes minified, then gzips down to 277 — and the tool shows both columns so you can see the real over-the-wire size. Serve minified files with gzip or Brotli enabled; never rely on transport compression alone to undo wasteful source."}},
+{"@type":"Question","name":"Is my code uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Terser 5.51.2 is loaded from a CDN into your browser and runs locally, like the rest of ToolAspect. Your JavaScript never leaves the tab — which is why this tool is usable on proprietary code, though you should still follow your employer's policy on pasting source into third-party pages."}},
+{"@type":"Question","name":"Why does the tool show an error on my code?","acceptedAnswer":{"@type":"Answer","text":"Terser refuses to minify code it cannot parse, so the error usually means a syntax error — a missing brace or bracket — or non-standard syntax the parser doesn't accept. The status line surfaces Terser's own message with a line reference. Fix the syntax and it re-runs automatically as you type."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Minify JS","item":"https://toolaspect.com/minify-js/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.65rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.95rem;box-sizing:border-box}
+.input-group select:focus{outline:none;border-color:var(--primary)}
+textarea.ta-io{width:100%;min-height:220px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.5;box-sizing:border-box;resize:vertical;tab-size:2}
+textarea.ta-io:focus{outline:none;border-color:var(--primary)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-all}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Minify JS — Terser in Your Browser", "url": "https://toolaspect.com/minify-js/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Minify JavaScript with Terser 5.51.2 in your browser: our 823-byte sample drops 52.6% to 390 bytes. No upload, gzip sizes shown."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Minify JS free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Minify JS on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Minify JS work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Minify JS calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⚡ Minify JS</h1>
+<p>Terser 5.51.2 in your browser — strip, compress, or compress + mangle</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> minification removes what browsers don't need — comments, whitespace, and (with mangling) long variable names — without changing what the code does. Percent saved = (input − output) ÷ input × 100. On our 823-byte cart-totals sample, Terser strips it to 651 B (20.9% saved), compresses to 598 B (27.3%), and compress+mangle reaches 390 B (52.6% saved, 277 B gzipped). All three passes compute the identical $74.68 cart total. Everything runs locally; no code is uploaded.</p>
+
+<div class="section-card">
+<h2>Your JavaScript</h2>
+<div class="input-grid">
+<div class="input-group"><label>Preset</label><select id="preset"></select></div>
+<div class="input-group" style="justify-content:flex-end"><label>&nbsp;</label>
+<div class="btn-row" style="margin-top:0"><button type="button" class="btn ghost" id="sample">Sample</button><button type="button" class="btn ghost" id="clear">Clear</button></div>
+</div>
+</div>
+<textarea class="ta-io" id="src" spellcheck="false" placeholder="Paste JavaScript here…" style="margin-top:1rem"></textarea>
+<div class="btn-row" style="justify-content:space-between">
+<div style="display:flex;gap:.6rem;flex-wrap:wrap"><button type="button" class="btn" id="copy">Copy output</button><button type="button" class="btn ghost" id="download">Download .js</button></div>
+</div>
+<textarea class="ta-io" id="out" spellcheck="false" readonly placeholder="Minified output…" style="margin-top:1rem"></textarea>
+<div class="stats-grid">
+<div class="result-item"><div class="ri-label">Input</div><div class="ri-value" id="inBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Output</div><div class="ri-value" id="outBytes">—</div></div>
+<div class="result-item"><div class="ri-label">Saved</div><div class="ri-value" id="saved">—</div></div>
+<div class="result-item"><div class="ri-label">Gzip in → out</div><div class="ri-value" id="gzOut" style="font-size:.9rem">—</div><div class="ri-label" id="gzIn" style="margin-top:.15rem">—</div></div>
+</div>
+<div class="status-line" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/css-minifier/">CSS Minifier</a></li><li style="margin:4px 0"><a href="/minify-html/">Minify HTML</a></li><li style="margin:4px 0"><a href="/js-obfuscator/">JS Obfuscator</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Terser Pass Buys You</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pass</th><th>What it removes</th><th>823-B sample →</th><th>Saved</th></tr></thead>
+<tbody>
+<tr><td>Strip only</td><td>Comments, indentation, newlines</td><td>651 B</td><td>172 B (20.9%)</td></tr>
+<tr><td>Compress</td><td>…plus dead branches, constant folding, joined declarations</td><td>598 B</td><td>225 B (27.3%)</td></tr>
+<tr><td>Compress + mangle</td><td>…plus 1–2 character names, inline helpers (<code>TAX_RATE</code> → <code>t</code>)</td><td>390 B</td><td>433 B (52.6%)</td></tr>
+<tr><td>Same file, gzipped</td><td>Transport compression on top of the smallest pass</td><td>277 B</td><td>29.5% off the 393-B gzip</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row was measured with Terser 5.51.2 — the exact browser bundle this page loads — on the sample behind the Sample button. Your mileage depends on your comment density and name lengths: a heavily commented file shrinks more; a machine-generated bundle shrinks less.</p>
+</div>
+
+<div class="content-section">
+<h2>How the JS Minifier Works</h2>
+<p>This tool is a thin, honest wrapper around <strong>Terser 5.51.2</strong> (BSD-2-Clause), the minifier that webpack, Vite, and Parcel lean on in production builds. It loads the official Terser browser bundle on first use and runs it in your tab. No server sees your code, which makes it usable for quick one-off shrinks, snippets heading into CMS blocks, or checking what a bundler pass would buy you.</p>
+<h3>The math</h3>
+<p>Bytes saved = input − output. Savings percent = (input − output) ÷ input × 100. The tool counts UTF-8 bytes (not characters) so multi-byte strings report honestly, and when your browser supports CompressionStream it also shows gzip sizes for both sides — the number that actually crosses the network.</p>
+<h3>How to use it</h3>
+<p>Paste code (or hit Sample), pick a preset, and results update as you type. <em>Strip only</em> is the safe default for code you'll still need to debug from stack traces: line breaks go but nothing is renamed. <em>Compress</em> rewrites the logic to shorter equivalents. <em>Compress + mangle</em> also renames top-level names — smallest output, but other scripts can no longer call your globals by name, and <code>Function.prototype.name</code> changes.</p>
+<h3>A worked example</h3>
+<p>The Sample button loads an 823-byte cart-totals script: a tax constant, a money formatter, a per-line discount helper, and a <code>cartTotal()</code> that returns subtotal, tax, and total. Run each preset and the output column walks down 651 → 598 → 390 bytes. We verified all three outputs in Node against the same bundle: each one computes <code>{subtotal: "$68.99", tax: "$5.69", total: "$74.68", itemCount: 2}</code> from a two-item cart — identical answers, 52.6% of the bytes gone at the strongest pass, and 277 B once gzipped.</p>
+<p>One caution worth repeating: minification is not obfuscation. Anyone can pretty-print 390 bytes back to readable form in seconds. If the goal is deterring reverse engineering rather than shipping smaller files, that's a different tool — our <a href="/js-obfuscator/">JS Obfuscator</a> lane covers it.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is minified JavaScript still valid JavaScript?</h3><p>Yes. Terser parses your code into an AST and prints it back out, so the output is syntactically valid by construction. Semantics can shift only for code that relies on function and variable names at runtime — <code>Function.prototype.name</code>, recursion by name after top-level mangling, or eval-based lookups. We verified all three passes on a cart-totals sample: every version computed the identical $68.99 subtotal, $5.69 tax, and $74.68 total.</p></div>
+<div class="faq-item"><h3>How much smaller will my JavaScript get?</h3><p>It depends on how much of the file is comments, whitespace, and renamable identifiers. On our commented 823-byte sample, stripping alone saved 20.9%, compression brought it to 27.3%, and compression plus mangling reached 52.6%. Real bundles — already terse, with long shared strings — usually land between 30% and 50% raw, and less after gzip because renames compress well anyway.</p></div>
+<div class="faq-item"><h3>What does mangle actually rename?</h3><p>Mangling shortens identifiers to 1-2 characters. It's scope-aware by default: a variable inside a function is renamed without touching same-named variables elsewhere. Top-level mangling (<code>toplevel: true</code>, used by the smallest preset here) also renames globals in the file, which is safe for self-contained scripts and bundles but breaks code that expects those names from outside — drop it if other scripts call into yours by name.</p></div>
+<div class="faq-item"><h3>Does minification replace gzip or Brotli?</h3><p>No, they stack. Minification shrinks the file; transport compression shrinks it further on the wire. Our sample goes 823 to 390 bytes minified, then gzips down to 277 — and the tool shows both columns so you can see the real over-the-wire size. Serve minified files with gzip or Brotli enabled; never rely on transport compression alone to undo wasteful source.</p></div>
+<div class="faq-item"><h3>Is my code uploaded anywhere?</h3><p>No. Terser 5.51.2 is loaded from a CDN into your browser and runs locally, like the rest of ToolAspect. Your JavaScript never leaves the tab — which is why this tool is usable on proprietary code, though you should still follow your employer's policy on pasting source into third-party pages.</p></div>
+<div class="faq-item"><h3>Why does the tool show an error on my code?</h3><p>Terser refuses to minify code it cannot parse, so the error usually means a syntax error — a missing brace or bracket — or non-standard syntax the parser doesn't accept. The status line surfaces Terser's own message with a line reference. Fix the syntax and it re-runs automatically as you type.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/css-minifier/">🎨 CSS Minifier</a>
+<a href="/minify-html/">📄 Minify HTML</a>
+<a href="/js-obfuscator/">🛡️ JS Obfuscator</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/svg-optimizer/">✨ SVG Optimizer</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+window.TA_SAMPLE = `// Cart totals for the ToolAspect demo store
+const TAX_RATE = 0.0825;
+
+function formatMoney(cents) {
+  // always show two decimals
+  const dollars = cents / 100;
+  return '$' + dollars.toFixed(2);
+}
+
+function lineTotal(item) {
+  const subtotal = item.price * item.quantity;
+  const discount = subtotal * (item.discount || 0);
+  return subtotal - discount;
+}
+
+function cartTotal(items) {
+  let subtotal = 0;
+  for (const item of items) {
+    subtotal += lineTotal(item);
+  }
+  const tax = subtotal * TAX_RATE;
+  return {
+    subtotal: formatMoney(Math.round(subtotal * 100)),
+    tax: formatMoney(Math.round(tax * 100)),
+    total: formatMoney(Math.round((subtotal + tax) * 100)),
+    itemCount: items.length
+  };
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { cartTotal, lineTotal, formatMoney, TAX_RATE };
+}
+`;
+</script>
+<script src="/minify-js/shell.js"></script>
+<script>TA.minify.mount('js');</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

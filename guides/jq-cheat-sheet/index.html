@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The jq Cheat Sheet: 25 Filters You'll Actually Use | ToolAspect</title>
+<meta name="description" content="A jq cheat sheet built around one order object: field access, pipes, select, map, sorting, stats, string interpolation and error handling — every output verified.">
+<link rel="canonical" href="https://toolaspect.com/guides/jq-cheat-sheet/">
+<meta property="og:title" content="The jq Cheat Sheet: 25 Filters You'll Actually Use">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/jq-cheat-sheet/">
+<meta property="og:description" content="Every core jq filter demonstrated on one JSON order, with verified outputs — from field access to string interpolation.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The jq Cheat Sheet: 25 Filters You'll Actually Use","description":"Every core jq filter demonstrated on one JSON order object with verified outputs: field access, pipes, select, map, sorting, statistics, string interpolation, and error handling.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"jq Cheat Sheet","item":"https://toolaspect.com/guides/jq-cheat-sheet/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is jq in one sentence?","acceptedAnswer":{"@type":"Answer","text":"jq is a filter language for JSON: you give it a document and an expression like .items[] | select(.price > 100) | .name, and it streams out the values that match. It runs in the terminal, so it plugs into pipes — curl something, jq it, done."}},
+{"@type":"Question","name":"What does the pipe (|) do in jq?","acceptedAnswer":{"@type":"Answer","text":"It feeds one filter's output into the next, exactly like a shell pipe. .order.items | length first navigates to the array, then counts it. Every nontrivial jq program is a chain of small filters connected by pipes, which is why jq one-liners read left to right as a sentence."}},
+{"@type":"Question","name":"How is .[] different from plain .?","acceptedAnswer":{"@type":"Answer","text":"Plain . is the input unchanged; .[] iterates. On an array it emits each element as a separate output; on an object it emits each value. So [.order.items[] | .price] wraps iteration in brackets to collect results back into an array, while .order.items[] | .price leaves them as a stream."}},
+{"@type":"Question","name":"Why does jq print null instead of erroring?","acceptedAnswer":{"@type":"Answer","text":"By design: field access on a missing key is null, not a failure, so filters survive ragged data. That convenience hides bugs — null flows through the pipeline silently. Use .foo? to suppress errors on wrong types, // \"default\" to substitute for null, and strict error() in scripts where you'd rather crash."}},
+{"@type":"Question","name":"How do I get raw strings without quotes?","acceptedAnswer":{"@type":"Answer","text":"Pass -r. Without it, jq's output is valid JSON, so strings print quoted; with -r, string results print as their raw contents. It's the difference between \"dana@example.com\" and dana@example.com, and it's what makes jq usable for feeding values into shell scripts."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}pre{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;font-size:.76rem;line-height:1.6;margin:12px 0}pre code{background:none;border:none;padding:0}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.data-table td code{white-space:nowrap}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "The jq Cheat Sheet: 25 Filters You'll Actually Use", "url": "https://toolaspect.com/guides/jq-cheat-sheet/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "A jq cheat sheet built around one order object: field access, pipes, select, map, sorting, stats, string interpolation and error handling — every output verified."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the jq Cheat Sheet free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free to read on ToolAspect."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>The jq Cheat Sheet: 25 Filters You'll Actually Use</h1>
+<div class="meta"><span>⏱️ 9 min read</span><span>🔧 Pairs with the jq Playground</span></div>
+<p class="intro">Most jq cheat sheets list syntax you'll never touch. This one runs on a single realistic document — an order with a customer, three line items, and shipping — and shows what each filter actually returns. Every output below was produced by jq 1.8.2 on this exact data, and you can reproduce any of them in the playground two clicks from now.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>The example document</h2>
+<pre><code>{
+  "order": {
+    "id": 4172,
+    "customer": { "name": "Dana Reyes", "tier": "gold",
+                  "emails": ["dana@example.com", "dana@work.example.com"] },
+    "items": [
+      { "sku": "KB-01",  "name": "Mechanical Keyboard", "qty": 1, "price": 129 },
+      { "sku": "DSK-04", "name": "Standing Desk",       "qty": 1, "price": 549 },
+      { "sku": "MAT-02", "name": "Desk Mat",             "qty": 2, "price": 25 }
+    ],
+    "shipping": { "method": "express", "cost": 18.50 },
+    "coupons": ["WELCOME10"]
+  }
+}</code></pre>
+<h2>Navigation: getting to the data</h2>
+<p>Everything starts with <code>.</code> — the identity filter, the input itself. From there you navigate by field and index:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>.</code></td><td>the whole document</td></tr>
+<tr><td><code>.order.customer.name</code></td><td>"Dana Reyes"</td></tr>
+<tr><td><code>.order.items[0].sku</code></td><td>"KB-01"</td></tr>
+<tr><td><code>.order.coupons[0]</code></td><td>"WELCOME10"</td></tr>
+<tr><td><code>.order.customer.emails | length</code></td><td>2</td></tr>
+<tr><td><code>.order.items | length</code></td><td>3</td></tr>
+<tr><td><code>.order | keys</code></td><td>["coupons","customer","id","items","shipping"]</td></tr>
+<tr><td><code>.order.items[0] | keys</code></td><td>["name","price","qty","sku"]</td></tr>
+<tr><td><code>.order.items | type</code></td><td>"array"</td></tr>
+<tr><td><code>.order | has("shipping")</code></td><td>true</td></tr>
+</tbody>
+</table>
+</div>
+<p>Missing keys return <code>null</code> rather than erroring — <code>.order.customer.phone</code> is null. Convenient for exploration, treacherous in scripts; more on that under errors.</p>
+<h2>Iteration and the pipe</h2>
+<p><code>.[]</code> explodes a structure into a stream: each array element (or object value) becomes its own output. The pipe connects filters so each stage works on the last stage's output:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>.order.items[] | .sku</code></td><td>"KB-01", "DSK-04", "MAT-02" (three outputs)</td></tr>
+<tr><td><code>[.order.items[].price]</code></td><td>[129, 549, 25] — brackets re-collect</td></tr>
+<tr><td><code>.order.items[] | .qty * .price</code></td><td>129, 549, 50</td></tr>
+<tr><td><code>.order.items | map(.qty * .price)</code></td><td>[129, 549, 50] — map is [ .[] | f ]</td></tr>
+<tr><td><code>.order.customer.emails | join("; ")</code></td><td>"dana@example.com; dana@work.example.com"</td></tr>
+</tbody>
+</table>
+</div>
+<p>That last table row is the mental unlock: <code>map(f)</code> is nothing but iterate-and-collect. Once you see jq as shell plumbing for JSON, unfamiliar filters decompose into familiar ones.</p>
+<h2>Filtering and searching</h2>
+<p><code>select()</code> passes values that satisfy a condition and drops the rest — the WHERE clause of jq:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>.order.items[] | select(.price &gt; 100) | .name</code></td><td>"Mechanical Keyboard", "Standing Desk"</td></tr>
+<tr><td><code>.order.items | map(select(.name | contains("Desk"))) | length</code></td><td>2</td></tr>
+<tr><td><code>.order.items | sort_by(.price) | .[0].name</code></td><td>"Desk Mat" (cheapest)</td></tr>
+<tr><td><code>.order.items | sort_by(-(.qty * .price)) | .[0].name</code></td><td>"Standing Desk" (biggest line)</td></tr>
+<tr><td><code>.order.items | reverse | .[0].sku</code></td><td>"MAT-02"</td></tr>
+<tr><td><code>[.order.items[].price] | unique | length</code></td><td>3 (no duplicate prices)</td></tr>
+<tr><td><code>.order.coupon // "none"</code></td><td>"none" — alternative operator</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two idioms to internalize: negated sort keys (<code>sort_by(-.price)</code>) for descending order, and <code>//</code> for defaults when a field is null or false.</p>
+<h2>Arithmetic and statistics</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>.order.items | map(.qty * .price) | add</code></td><td>728 (subtotal)</td></tr>
+<tr><td><code>.order as $o | (… | add) + $o.shipping.cost</code></td><td>746.5 (total with shipping)</td></tr>
+<tr><td><code>[.order.items[].price] | min</code></td><td>25</td></tr>
+<tr><td><code>[.order.items[].price] | max</code></td><td>549</td></tr>
+<tr><td><code>[.order.items[].price] | add / length</code></td><td>234.333… (mean item price)</td></tr>
+<tr><td><code>.order.items | map(.qty) | add</code></td><td>4 (total units)</td></tr>
+</tbody>
+</table>
+</div>
+<p>The <code>as $var</code> binding is how you compute with two distant parts of one document — bind the root, navigate away, come back. And 728 divided by 4 units is 182 even, the average price per unit:</p>
+<pre><code>.order as $o
+| ($o.items | map(.qty * .price) | add) / ($o.items | map(.qty) | add)
+# =&gt; 182</code></pre>
+<h2>Reshaping output</h2>
+<p>Half of jq's value is producing the shape the next tool wants, not just reading what's there:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Filter</th><th>Returns</th></tr></thead>
+<tbody>
+<tr><td><code>{name: .order.customer.name, items: (.order.items|length)}</code></td><td>{"name":"Dana Reyes","items":3}</td></tr>
+<tr><td><code>.order.items[0] | to_entries | map(.key)</code></td><td>["sku","name","qty","price"]</td></tr>
+<tr><td><code>.order.customer.name | ascii_upcase</code></td><td>"DANA REYES"</td></tr>
+<tr><td><code>.order.customer.name | @base64</code></td><td>"RGFuYSBSZXllcw=="</td></tr>
+</tbody>
+</table>
+</div>
+<p>Object construction <code>{…}</code> builds exactly the fields you name; <code>to_entries</code> turns an object into key/value pairs you can map over; <code>@base64</code> and friends encode for transport.</p>
+<h2>Strings that report for duty</h2>
+<p>String interpolation — <code>\(expression)</code> inside a string — is how jq becomes a report writer:</p>
+<pre><code>.order.items[] | "\(.sku): \(.qty) x $\(.price)"
+# with -r (raw output):
+# KB-01: 1 x $129
+# DSK-04: 1 x $549
+# MAT-02: 2 x $25
+
+"order #\(.order.id) — \(.order.items | length) items"
+# =&gt; order #4172 — 3 items</code></pre>
+<p>Under <code>-r</code>, string results print unquoted, which is exactly what you want for lines headed to a file or a shell loop.</p>
+<h2>Errors and missing data</h2>
+<ul>
+<li><strong>Missing key:</strong> <code>.order.customer.phone</code> → null, silently. Catch it with <code>// "default"</code> or test with <code>has("phone")</code>.</li>
+<li><strong>Wrong type:</strong> <code>.order.id | .foo</code> errors ("Cannot index number with foo"). Append <code>?</code> — <code>.foo?</code> — to suppress and get null instead.</li>
+<li><strong>Compile errors:</strong> a misspelled function like <code>lengthh</code> fails before any input runs; jq reports <code>jq: 1 compile error</code> with a caret at the offending token.</li>
+<li><strong>Debugging:</strong> insert <code>.</code> stages — run <code>.order.items</code>, then <code>.order.items[]</code>, then the full pipeline — until the surprise appears.</li>
+</ul>
+<div class="cta-box"><h3>Try every filter on your own JSON</h3><p style="color:#fff;opacity:.9">The playground runs real jq 1.8.2 via WebAssembly — paste a document, type a filter, watch output and errors live.</p><a href="/jq-playground/">Open the jq Playground →</a></div>
+<h2>The 60-second recap</h2>
+<p>Navigate with <code>.a.b[0]</code>, stream with <code>.[]</code>, chain with <code>|</code>, filter with <code>select()</code>, transform each with <code>map()</code>, collect with <code>[…]</code>, bind with <code>as $x</code>, default with <code>//</code>, report with <code>"\(...)"</code> and <code>-r</code>. That's nine ideas and roughly 95% of daily jq. When your data isn't JSON yet, the <a href="/json-formatter/">JSON formatter</a> will tell you why, the <a href="/json-viewer/">JSON viewer</a> shows structure at a glance, and the <a href="/json-to-yaml/">JSON to YAML converter</a> bridges the config world.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is jq in one sentence?</h3><p>jq is a filter language for JSON: you give it a document and an expression like .items[] | select(.price &gt; 100) | .name, and it streams out the values that match. It runs in the terminal, so it plugs into pipes — curl something, jq it, done.</p></div>
+<div class="faq-item"><h3>What does the pipe (|) do in jq?</h3><p>It feeds one filter's output into the next, exactly like a shell pipe. .order.items | length first navigates to the array, then counts it. Every nontrivial jq program is a chain of small filters connected by pipes, which is why jq one-liners read left to right as a sentence.</p></div>
+<div class="faq-item"><h3>How is .[] different from plain .?</h3><p>Plain . is the input unchanged; .[] iterates. On an array it emits each element as a separate output; on an object it emits each value. So [.order.items[] | .price] wraps iteration in brackets to collect results back into an array, while .order.items[] | .price leaves them as a stream.</p></div>
+<div class="faq-item"><h3>Why does jq print null instead of erroring?</h3><p>By design: field access on a missing key is null, not a failure, so filters survive ragged data. That convenience hides bugs — null flows through the pipeline silently. Use .foo? to suppress errors on wrong types, // "default" to substitute for null, and strict error() in scripts where you'd rather crash.</p></div>
+<div class="faq-item"><h3>How do I get raw strings without quotes?</h3><p>Pass -r. Without it, jq's output is valid JSON, so strings print quoted; with -r, string results print as their raw contents. It's the difference between "dana@example.com" and dana@example.com, and it's what makes jq usable for feeding values into shell scripts.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/jq-playground/">jq Playground</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/json-viewer/">JSON Viewer</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

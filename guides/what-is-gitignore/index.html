@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Is .gitignore? Patterns, Precedence &amp; Mistakes | ToolAspect</title>
+<meta name="description" content=".gitignore explained with real patterns: what the trailing slash means, how negation fails, why already-committed files stay tracked, and the global excludes file.">
+<link rel="canonical" href="https://toolaspect.com/guides/what-is-gitignore/">
+<meta property="og:title" content="What Is .gitignore? Patterns, Precedence &amp; Mistakes">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/what-is-gitignore/">
+<meta property="og:description" content="The ignore rules Git actually follows — pattern syntax, precedence, the negation trap, and the committed-file caveat.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What Is .gitignore? Patterns, Precedence &amp; Mistakes","description":"The ignore rules Git actually follows: pattern syntax, precedence, the negation trap, and why already-committed files stay tracked.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"What Is .gitignore?","item":"https://toolaspect.com/guides/what-is-gitignore/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Where does the .gitignore file go?","acceptedAnswer":{"@type":"Answer","text":"In the repository root, next to the .git directory. Patterns in it are matched relative to its location, so node_modules/ in the root file ignores every node_modules folder at any depth. Subdirectories can carry their own .gitignore files for rules only they need, and the global excludes file handles machine-specific patterns across all repos."}},
+{"@type":"Question","name":"Is .gitignore itself committed to the repo?","acceptedAnswer":{"@type":"Answer","text":"Yes — the shared one is. A committed root .gitignore distributes the team's rules to every clone, which is the whole point. The exception is machine-specific noise (.DS_Store, your editor's swap files), which belongs in your global excludes file rather than a repo file everyone inherits."}},
+{"@type":"Question","name":"Why is a file still showing in git status after I ignored it?","acceptedAnswer":{"@type":"Answer","text":"Because it was already tracked. .gitignore only filters untracked files; anything already in the index keeps being tracked. Run git rm --cached <file> and commit the removal — then the ignore rule takes over. This is the single most common .gitignore confusion."}},
+{"@type":"Question","name":"Can .gitignore patterns be negated?","acceptedAnswer":{"@type":"Answer","text":"Yes, with a leading ! — *.log then !important.log keeps that one file. The catch: negation cannot re-include a file whose parent directory was excluded, because Git doesn't descend into ignored directories at all. Exclude files (.log), not whole directories (logs/), when you plan to carve exceptions back out."}},
+{"@type":"Question","name":"Does .gitignore work retroactively?","acceptedAnswer":{"@type":"Answer","text":"Not for tracked files, and not for history. Adding build/ to .gitignore stops future tracking of untracked build outputs, but files already committed stay in the index until removed, and every historical version keeps whatever was committed before. Purging history needs git filter-repo, which is a different, heavier operation."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}.data-table td code{white-space:nowrap}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "What Is .gitignore? Patterns, Precedence & Mistakes", "url": "https://toolaspect.com/guides/what-is-gitignore/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": ".gitignore explained with real patterns: what the trailing slash means, how negation fails, why already-committed files stay tracked, and the global excludes file."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the What Is .gitignore? free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, it is completely free to read on ToolAspect."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<h1>What Is .gitignore? Patterns, Precedence &amp; Mistakes</h1>
+<div class="meta"><span>⏱️ 7 min read</span><span>🙈 Pairs with the Gitignore Generator</span></div>
+<p class="intro">Most developers write a .gitignore once, copy it forever, and only think about it when something that should be ignored isn't. This is the mental model that fixes that: how patterns match, which rules win, and the three traps — negation, already-tracked files, and directory exclusion — behind almost every "why is Git still showing this?" moment.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What .gitignore actually is</h2>
+<p>It's a plain text file, conventionally named <code>.gitignore</code> and placed in the repository root, listing path patterns Git should not track. One pattern per line; <code>#</code> starts a comment. A matching untracked file stops appearing in <code>git status</code> and can't be swept into a commit by <code>git add .</code>. That's the whole job — and crucially, it's a promise about the <em>future</em>, not the past.</p>
+<p>The file itself is normally committed. Shared ignore rules are part of the project, like the README: when a new teammate clones the repo, <code>node_modules/</code> is already ignored because the rule came down with the clone.</p>
+<h2>Pattern syntax, precisely</h2>
+<p>Patterns are shell globs with three kinds of anchoring. Getting these straight resolves most surprises:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pattern</th><th>Matches</th><th>Does not match</th></tr></thead>
+<tbody>
+<tr><td><code>logs/</code></td><td>Any directory named logs, at any depth</td><td>A file named logs</td></tr>
+<tr><td><code>logs</code></td><td>Any file or directory named logs, anywhere</td><td>(the slash form is just narrower)</td></tr>
+<tr><td><code>/build</code></td><td>Only the root-level build</td><td><code>app/build</code></td></tr>
+<tr><td><code>build</code></td><td>Every build at every depth</td><td>—</td></tr>
+<tr><td><code>*.log</code></td><td>Every .log file, anywhere</td><td><code>debug.log.1</code></td></tr>
+<tr><td><code>docs/*.md</code></td><td>.md files directly in docs/</td><td><code>docs/guides/x.md</code></td></tr>
+<tr><td><code>docs/**/*.md</code></td><td>.md files at any depth under docs/</td><td>—</td></tr>
+<tr><td><code>!keep.me</code></td><td>Negation: un-ignores keep.me</td><td>Anything inside an ignored directory</td></tr>
+</tbody>
+</table>
+</div>
+<p>Three details do most of the work in that table. The <strong>trailing slash</strong> restricts a pattern to directories. The <strong>leading slash</strong> anchors it to the .gitignore's own directory. And <code>**</code> means "any number of directories," which is how you reach arbitrarily nested paths without listing them.</p>
+<h2>Precedence: which rule wins</h2>
+<p>Within one .gitignore, the <strong>last matching pattern wins</strong>. So order matters when you carve out exceptions:</p>
+<pre><code>*.log
+!important.log
+temp/*
+!temp/keep.cfg   # fails — temp/ already excluded the directory</code></pre>
+<p>That second exception is the famous trap, and it's not a Git bug — it's how the walk works. Git doesn't descend into an excluded directory at all, so it never sees <code>temp/keep.cfg</code> to consider un-ignoring it. The workaround is to exclude the files instead of the folder: <code>temp/*</code> followed by <code>!temp/keep.cfg</code> still fails for the same reason in modern Git (the directory itself is excluded by <code>temp/*</code>); the reliable form is to name files directly or restructure so exceptions live outside excluded trees.</p>
+<p>Between files, precedence runs from broad to narrow: command-line excludes, then <code>.git/info/exclude</code>, then patterns deeper in the tree beat patterns nearer the root, and within the same file, later beats earlier.</p>
+<h2>The committed-file caveat</h2>
+<p>Here's the rule that generates the most confusion in real repos: <strong>.gitignore applies to untracked files only</strong>. A file that was committed before you ignored it stays tracked, keeps appearing in diffs, and keeps receiving changes. Adding <code>.env</code> to .gitignore after committing <code>.env</code> protects nothing — the secret is already in history.</p>
+<p>The fix for the index is mechanical:</p>
+<pre><code>git rm --cached .env
+git commit -m "stop tracking .env"</code></pre>
+<p>The fix for history is not: removing a file from past commits means rewriting history with <code>git filter-repo</code>, then rotating whatever secret leaked. If you take one lesson from this page: ignore files <em>before</em> their first commit, especially <code>.env</code>.</p>
+<h2>The global excludes file</h2>
+<p>Some noise is yours, not the project's: <code>.DS_Store</code> on a Mac, <code>Thumbs.db</code> on Windows, your editor's swap files. Repeating them in every repository is noise of a second kind. Point Git at a personal file once:</p>
+<pre><code>git config --global core.excludesfile ~/.gitignore_global</code></pre>
+<p>then fill that file with machine-specific patterns. They apply to every repo you touch, on your machine only — the right place for "my laptop's cruft" as opposed to "this project's build output."</p>
+<h2>What good templates look like</h2>
+<p>You don't have to write these from scratch. GitHub's <a href="https://github.com/github/gitignore" rel="noopener">github/gitignore</a> collection — the same templates offered when you create a repository — is maintained per language, OS, and editor, and dedicated to the public domain (CC0). A typical merge for a Node project on a Mac using VS Code pulls three templates: Node (143 lines: <code>node_modules/</code>, <code>dist</code>, <code>npm-debug.log*</code>, <code>.env</code>), macOS (57 lines: <code>.DS_Store</code>, <code>._*</code>, <code>.Trashes</code>), and VS Code (11 lines, and worth reading — it ignores <code>.vscode/*</code> then deliberately re-includes <code>settings.json</code>, <code>launch.json</code>, and <code>extensions.json</code> with negation patterns, because those three are genuinely team-shared). Concatenated with section headers: 217 lines, about 3.3 KB, one commit, and the repo stays clean for every teammate on every OS.</p>
+<div class="cta-box"><h3>Build your .gitignore in two clicks</h3><p style="color:#fff;opacity:.9">Check off your languages, OS, and editors — GitHub's official CC0 templates merge into one file you can copy or download.</p><a href="/gitignore-generator/">Open the Gitignore Generator →</a></div>
+<h2>Debugging with git check-ignore</h2>
+<p>When a path misbehaves and you want to know which rule is responsible:</p>
+<pre><code>git check-ignore -v path/to/file</code></pre>
+<p>It prints the source file, line number, and pattern that matched — or nothing, meaning the file isn't ignored at all and something else (like being already tracked) is your real problem. Thirty seconds with <code>check-ignore</code> beats thirty minutes of pattern staring.</p>
+<p>Ignore-file thinking extends past Git, too: robots.txt is the same idea for crawlers, and you can draft one with our <a href="/robots-txt-generator/">robots.txt generator</a> and verify rules against real URLs with the <a href="/robots-txt-validator/">robots.txt validator</a>. If your ignore lists grow because of generated artifacts on a schedule, the <a href="/cron-generator/">cron expression generator</a> helps with the cleanup job that should be deleting them instead.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Where does the .gitignore file go?</h3><p>In the repository root, next to the .git directory. Patterns in it are matched relative to its location, so node_modules/ in the root file ignores every node_modules folder at any depth. Subdirectories can carry their own .gitignore files for rules only they need, and the global excludes file handles machine-specific patterns across all repos.</p></div>
+<div class="faq-item"><h3>Is .gitignore itself committed to the repo?</h3><p>Yes — the shared one is. A committed root .gitignore distributes the team's rules to every clone, which is the whole point. The exception is machine-specific noise (.DS_Store, your editor's swap files), which belongs in your global excludes file rather than a repo file everyone inherits.</p></div>
+<div class="faq-item"><h3>Why is a file still showing in git status after I ignored it?</h3><p>Because it was already tracked. .gitignore only filters untracked files; anything already in the index keeps being tracked. Run git rm --cached &lt;file&gt; and commit the removal — then the ignore rule takes over. This is the single most common .gitignore confusion.</p></div>
+<div class="faq-item"><h3>Can .gitignore patterns be negated?</h3><p>Yes, with a leading ! — *.log then !important.log keeps that one file. The catch: negation cannot re-include a file whose parent directory was excluded, because Git doesn't descend into ignored directories at all. Exclude files (.log), not whole directories (logs/), when you plan to carve exceptions back out.</p></div>
+<div class="faq-item"><h3>Does .gitignore work retroactively?</h3><p>Not for tracked files, and not for history. Adding build/ to .gitignore stops future tracking of untracked build outputs, but files already committed stay in the index until removed, and every historical version keeps whatever was committed before. Purging history needs git filter-repo, which is a different, heavier operation.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/gitignore-generator/">Gitignore Generator</a>
+<a href="/robots-txt-generator/">Robots.txt Generator</a>
+<a href="/cron-generator/">Cron Generator</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

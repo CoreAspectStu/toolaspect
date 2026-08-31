@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Playground — Run SQLite In Your Browser | ToolAspect</title>
+<meta name="description" content="Run real SQL in your browser on a sample store database. SQLite 3.49 compiled to WebAssembly: CREATE, INSERT, JOIN, GROUP BY, results grid. No signup.">
+<link rel="canonical" href="https://toolaspect.com/sql-playground/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="SQL Playground — Run SQLite In Your Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Practice SQL in your browser: a sample store database, real SQLite via WebAssembly, and a results grid for your queries. Nothing uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/sql-playground/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SQL Playground | Free Online Tool">
+<meta name="twitter:description" content="Write and run SQL against a sample database, entirely in your browser.">
+<meta name="keywords" content="sql playground, run sql online, practice sql online, sqlite online, sql editor free, learn sql queries, sql query tester">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SQL Playground","description":"Free browser SQL playground running real SQLite compiled to WebAssembly. Practice SELECTs, JOINs, and GROUP BYs on a loaded sample store database, or write your own DDL. Nothing is uploaded.","url":"https://toolaspect.com/sql-playground/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can I practice SQL online without installing anything?","acceptedAnswer":{"@type":"Answer","text":"Yes. This playground runs a complete SQLite database engine compiled to WebAssembly inside your browser tab. There's no server holding your queries and no signup — the sample database loads locally, your SQL runs locally, and resetting just rebuilds it in memory."}},
+{"@type":"Question","name":"Which SQL dialect does this playground use?","acceptedAnswer":{"@type":"Answer","text":"SQLite 3.49. The core vocabulary — SELECT, JOIN, GROUP BY, subqueries, window functions, CTEs — is shared with every major database, so it's ideal for learning. A few things differ from PostgreSQL or MySQL: INTEGER PRIMARY KEY is SQLite's row-id alias, types are flexible rather than strict, and functions like STRING_AGG spell differently. Your query logic transfers; occasional syntax doesn't."}},
+{"@type":"Question","name":"Can I create my own tables?","acceptedAnswer":{"@type":"Answer","text":"Yes. The editor accepts any mix of statements — CREATE TABLE, INSERT, UPDATE, DELETE, DROP — followed by a SELECT. Everything runs in order against the in-memory database, and the results grid shows the output of your last SELECT. Hit Reset sample DB to restore the original four tables."}},
+{"@type":"Question","name":"How big is the download?","acceptedAnswer":{"@type":"Answer","text":"The WebAssembly build of SQLite is about 650 KB, fetched once from a CDN when you first run a query. After that, everything happens in memory — queries on the sample database return in well under a millisecond, and no query or result ever leaves your machine."}},
+{"@type":"Question","name":"Why learn SQL on a store database?","acceptedAnswer":{"@type":"Answer","text":"Because a shop is the most common shape of real data: customers place orders, orders contain items, items reference products. Almost every SQL concept — inner joins, aggregation, grouping, filtering after aggregation with HAVING, subqueries — maps onto a question a store owner would actually ask, like revenue by category or average order value."}},
+{"@type":"Question","name":"Do my queries and tables survive a page refresh?","acceptedAnswer":{"@type":"Answer","text":"No. The database lives in the tab's memory, so a refresh rebuilds the sample data from scratch. That's deliberate for a playground — you can experiment freely, DROP anything, and always get back to a known state. For work you want to keep, copy your statements out before closing the tab."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"SQL Playground","item":"https://toolaspect.com/sql-playground/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.95rem;line-height:1.6;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.sql-area{width:100%;min-height:190px;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.82rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.6;box-sizing:border-box;resize:vertical;tab-size:2}
+.sql-area:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.75rem}
+.act-btn{padding:.55rem 1.1rem;background:var(--primary);border:none;border-radius:var(--radius);color:#fff;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.act-btn:hover{background:var(--primary-hover)}
+.act-btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.chip-row{display:flex;flex-wrap:wrap;gap:.4rem;margin:.75rem 0}
+.chip{padding:.3rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.78rem;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--primary);color:var(--text)}
+.status-msg{font-size:.85rem;color:var(--muted);margin-top:.6rem;min-height:1.2em}
+.status-msg.err{color:var(--danger)}
+.grid-wrap{overflow-x:auto;margin-top:1rem;border:1px solid var(--border);border-radius:var(--radius)}
+.data-table{width:100%;border-collapse:collapse;font-size:.84rem}
+.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;white-space:nowrap}
+.data-table th{background:var(--bg);position:sticky;top:0}
+.schema-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.76rem;line-height:1.7;color:var(--text);white-space:pre;overflow-x:auto}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "SQL Playground — Run SQLite In Your Browser", "url": "https://toolaspect.com/sql-playground/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Run real SQL in your browser on a sample store database. SQLite 3.49 compiled to WebAssembly — CREATE, INSERT, JOIN, GROUP BY, results in a grid. No signup."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the SQL Playground free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the SQL Playground on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the SQL Playground work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the SQL Playground calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🗃️ SQL Playground</h1>
+<p>Run real SQLite in your browser — sample store database, results grid, your own DDL welcome</p>
+</div>
+
+<div class="aio-answer">
+<strong>Answer:</strong> this is a full SQL engine in a tab. SQLite 3.49, compiled to WebAssembly (~650 KB, loaded once from a CDN), runs a four-table sample store — 6 customers, 8 products, 9 orders, 16 line items. Write any SQL: the default <code>GROUP BY</code> query returns <strong>Furniture $1,831.00 · Hardware $1,155.98 · Audio $518.97</strong> in revenue. CREATE your own tables, DROP anything, reset to restore. Nothing you type is uploaded anywhere.
+</div>
+
+<div class="section-card">
+<h2>Query Editor</h2>
+<textarea id="sqlIn" class="sql-area" spellcheck="false"></textarea>
+<div class="chip-row" id="samples"></div>
+<div class="btn-row">
+<button type="button" class="act-btn" id="runBtn">▶ Run</button>
+<button type="button" class="act-btn ghost" id="resetBtn">Reset sample DB</button>
+</div>
+<div class="status-msg" id="status">Loading SQLite engine…</div>
+<div id="resultHost"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/sql-formatter/">Sql Formatter</a></li><li style="margin:4px 0"><a href="/csv-to-sql/">Csv To Sql</a></li><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/practice-sql-online/">Read the SQL practice workbook</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Sample Database Schema</h2>
+<div class="schema-box" id="schemaBox"></div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table">
+<thead><tr><th>Table</th><th>Rows</th><th>Key columns</th><th>What it holds</th></tr></thead>
+<tbody>
+<tr><td><code>customers</code></td><td>6</td><td><code>id</code> PK</td><td>name, city, signup date</td></tr>
+<tr><td><code>products</code></td><td>8</td><td><code>id</code> PK</td><td>name, category, price — 3 categories</td></tr>
+<tr><td><code>orders</code></td><td>9</td><td><code>id</code> PK, <code>customer_id</code> FK</td><td>order date, status (8 usable, 1 cancelled)</td></tr>
+<tr><td><code>order_items</code></td><td>16</td><td><code>order_id</code>, <code>product_id</code></td><td>quantity per product per order</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Try <code>SELECT * FROM sqlite_master;</code> to see the raw DDL, or <code>.tables</code>-style exploration via <code>SELECT name FROM sqlite_master WHERE type='table';</code>.</p>
+</div>
+
+<div class="section-card">
+<h2>Worked Queries (Verified Outputs)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Question</th><th>Query shape</th><th>Answer on this data</th></tr></thead>
+<tbody>
+<tr><td>Revenue by category</td><td>3-way JOIN + GROUP BY</td><td>Furniture $1,831.00 · Hardware $1,155.98 · Audio $518.97</td></tr>
+<tr><td>Items sold per category</td><td>COUNT(*) in the same GROUP BY</td><td>6 · 6 · 3</td></tr>
+<tr><td>Average order value</td><td>subquery: SUM per order, then AVG</td><td>$438.24 across 8 orders</td></tr>
+<tr><td>Revenue in shipped orders</td><td>WHERE status = 'shipped'</td><td>6 items, $1,446.46</td></tr>
+<tr><td>Customers per city</td><td>GROUP BY city</td><td>Boston 2 · New York 2 · Helsinki 1 · London 1</td></tr>
+<tr><td>Top 3 spenders</td><td>CTE + join back to customers</td><td>$998.49 · $697.50 · $578.00</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every number above comes from running the exact queries on this page's sample data with the same SQLite build — load the chips in the editor and check them yourself.</p>
+</div>
+
+<div class="content-section">
+<h2>How the SQL Playground Works</h2>
+<p>Most "run SQL online" sites round-trip your query to a server. This one doesn't ship your SQL anywhere: it loads <a href="https://github.com/sql-js/sql.js" rel="noopener">sql.js</a> — SQLite (public domain) compiled to WebAssembly by the sql.js project (MIT) — from the jsDelivr CDN and executes it in the page. The engine is the real thing, version 3.49.1, not a SQL subset reimplementation, so CTEs, window functions, and date functions all behave exactly as they do in the sqlite3 CLI.</p>
+<h3>The sample data</h3>
+<p>A tiny online store, because store data exercises every join shape: customers to orders is one-to-many, orders to products is many-to-many through order_items. The sample ships four tables you can query immediately, corrupt deliberately, and rebuild with one click. Prices are round enough to sanity-check by hand — when the revenue-by-category query says Furniture earned $1,831.00, you can verify that with a calculator if you're suspicious.</p>
+<h3>How to use it</h3>
+<p>Hit Run (or Ctrl/Cmd+Enter) to execute everything in the editor top to bottom. The results grid shows the last SELECT's output; message statements report how many statements ran. The chips load worked examples from easiest to hardest. Write your own DDL freely — CREATE TABLE, INSERT, UPDATE, DELETE all work, and Reset restores the original database.</p>
+<h3>A worked example</h3>
+<p>Take the default query: join order_items to products (for prices) and orders (for status), skip the one cancelled order, group by category, and sum price times quantity. Three rows come back. Furniture wins with 6 items and $1,831.00 — two standing desks at $549 plus an ergonomic chair and other bits. Hardware lands at 6 items and $1,155.98, Audio at 3 items and $518.97. The average order value across the 8 surviving orders is $438.24. Change a quantity with an UPDATE, rerun, and watch the numbers move — that feedback loop is the whole point of a playground.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can I practice SQL online without installing anything?</h3><p>Yes. This playground runs a complete SQLite database engine compiled to WebAssembly inside your browser tab. There's no server holding your queries and no signup — the sample database loads locally, your SQL runs locally, and resetting just rebuilds it in memory.</p></div>
+<div class="faq-item"><h3>Which SQL dialect does this playground use?</h3><p>SQLite 3.49. The core vocabulary — SELECT, JOIN, GROUP BY, subqueries, window functions, CTEs — is shared with every major database, so it's ideal for learning. A few things differ from PostgreSQL or MySQL: INTEGER PRIMARY KEY is SQLite's row-id alias, types are flexible rather than strict, and functions like STRING_AGG spell differently. Your query logic transfers; occasional syntax doesn't.</p></div>
+<div class="faq-item"><h3>Can I create my own tables?</h3><p>Yes. The editor accepts any mix of statements — CREATE TABLE, INSERT, UPDATE, DELETE, DROP — followed by a SELECT. Everything runs in order against the in-memory database, and the results grid shows the output of your last SELECT. Hit Reset sample DB to restore the original four tables.</p></div>
+<div class="faq-item"><h3>How big is the download?</h3><p>The WebAssembly build of SQLite is about 650 KB, fetched once from a CDN when you first run a query. After that, everything happens in memory — queries on the sample database return in well under a millisecond, and no query or result ever leaves your machine.</p></div>
+<div class="faq-item"><h3>Why learn SQL on a store database?</h3><p>Because a shop is the most common shape of real data: customers place orders, orders contain items, items reference products. Almost every SQL concept — inner joins, aggregation, grouping, filtering after aggregation with HAVING, subqueries — maps onto a question a store owner would actually ask, like revenue by category or average order value.</p></div>
+<div class="faq-item"><h3>Do my queries and tables survive a page refresh?</h3><p>No. The database lives in the tab's memory, so a refresh rebuilds the sample data from scratch. That's deliberate for a playground — you can experiment freely, DROP anything, and always get back to a known state. For work you want to keep, copy your statements out before closing the tab.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/sql-formatter/">🧹 SQL Formatter</a>
+<a href="/csv-to-sql/">📤 CSV to SQL</a>
+<a href="/json-formatter/">🧾 JSON Formatter</a>
+<a href="/er-diagram-maker/">📐 ER Diagram Maker</a>
+<a href="/xlsx-to-csv/">📊 XLSX to CSV</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+var SQLJS='https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/sql-wasm.js';
+var WASM_BASE='https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/';
+var SCHEMA_SQL=[
+"CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT, city TEXT, signup TEXT);",
+"INSERT INTO customers (name, city, signup) VALUES",
+" ('Ada Lovelace','London','2025-01-14'),",
+" ('Grace Hopper','New York','2025-02-03'),",
+" ('Linus Torvalds','Helsinki','2025-02-21'),",
+" ('Margaret Hamilton','Boston','2025-03-09'),",
+" ('Ken Thompson','New York','2025-04-17'),",
+" ('Barbara Liskov','Boston','2025-05-26');",
+"CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, category TEXT, price REAL);",
+"INSERT INTO products (name, category, price) VALUES",
+" ('Mechanical Keyboard','Hardware',129.00),",
+" ('USB-C Hub','Hardware',49.50),",
+" ('4K Monitor','Hardware',349.99),",
+" ('Noise-Cancelling Headphones','Audio',249.00),",
+" ('USB Microphone','Audio',89.99),",
+" ('Standing Desk','Furniture',549.00),",
+" ('Ergonomic Chair','Furniture',329.00),",
+" ('Desk Mat','Furniture',25.00);",
+"CREATE TABLE orders (id INTEGER PRIMARY KEY, customer_id INTEGER, order_date TEXT, status TEXT);",
+"INSERT INTO orders (customer_id, order_date, status) VALUES",
+" (1,'2025-06-02','shipped'),(2,'2025-06-04','delivered'),(3,'2025-06-11','shipped'),",
+" (1,'2025-06-19','delivered'),(4,'2025-06-25','cancelled'),(5,'2025-07-02','delivered'),",
+" (6,'2025-07-08','shipped'),(2,'2025-07-15','delivered'),(4,'2025-07-22','delivered');",
+"CREATE TABLE order_items (order_id INTEGER, product_id INTEGER, qty INTEGER);",
+"INSERT INTO order_items VALUES",
+" (1,1,1),(1,5,1),(2,3,1),(2,8,2),(3,2,3),(3,6,1),(4,7,1),(5,4,1),(6,1,1),(6,8,1),",
+" (7,5,2),(7,3,1),(8,6,1),(8,2,1),(9,4,1),(9,7,1);"
+].join('\n');
+var SAMPLES=[
+['Revenue by category (default)',"SELECT p.category, COUNT(*) AS items_sold, ROUND(SUM(p.price * oi.qty), 2) AS revenue\nFROM order_items oi\nJOIN products p ON p.id = oi.product_id\nJOIN orders o ON o.id = oi.order_id\nWHERE o.status != 'cancelled'\nGROUP BY p.category\nORDER BY revenue DESC;"],
+['Customers per city',"SELECT city, COUNT(*) AS customers\nFROM customers\nGROUP BY city\nORDER BY customers DESC, city;"],
+['Average order value (subquery)',"SELECT ROUND(AVG(sub.total), 2) AS avg_order_value, COUNT(*) AS orders\nFROM (\n  SELECT o.id, SUM(p.price * oi.qty) AS total\n  FROM orders o\n  JOIN order_items oi ON oi.order_id = o.id\n  JOIN products p ON p.id = oi.product_id\n  WHERE o.status != 'cancelled'\n  GROUP BY o.id\n) sub;"],
+['Top spender (CTE + JOIN)',"WITH spend AS (\n  SELECT o.customer_id, SUM(p.price * oi.qty) AS total\n  FROM orders o\n  JOIN order_items oi ON oi.order_id = o.id\n  JOIN products p ON p.id = oi.product_id\n  WHERE o.status != 'cancelled'\n  GROUP BY o.customer_id\n)\nSELECT c.name, c.city, ROUND(s.total, 2) AS total_spent\nFROM spend s JOIN customers c ON c.id = s.customer_id\nORDER BY s.total DESC\nLIMIT 3;"],
+['Your own DDL',"CREATE TABLE notes (id INTEGER PRIMARY KEY, txt TEXT);\nINSERT INTO notes (txt) VALUES ('hello'), ('world');\nSELECT COUNT(*) AS note_count FROM notes;"]
+];
+var sqlIn=document.getElementById('sqlIn'),status=document.getElementById('status'),resultHost=document.getElementById('resultHost');
+var db=null,SQL=null;
+
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+function buildDb(){
+  if(db)db.close();
+  db=new SQL.Database();
+  db.run(SCHEMA_SQL);
+}
+function ensureEngine(cb){
+  if(SQL){cb();return;}
+  status.textContent='Loading SQLite engine (~650 KB, once)…';
+  var s=document.createElement('script');
+  s.src=SQLJS;s.async=true;
+  s.onload=function(){
+    window.initSqlJs({locateFile:function(f){return WASM_BASE+f;}}).then(function(engine){
+      SQL=engine;buildDb();cb();
+    }).catch(function(e){
+      status.textContent='Could not start SQLite: '+e.message;status.classList.add('err');
+    });
+  };
+  s.onerror=function(){status.textContent='Could not load the sql.js engine — check your connection.';status.classList.add('err');};
+  (document.head||document.documentElement).appendChild(s);
+}
+function fmtCell(v){
+  if(v==null)return '<span style="color:var(--muted)">NULL</span>';
+  if(typeof v==='number')return esc(Math.round(v*100)/100);
+  return esc(v);
+}
+function run(){
+  ensureEngine(function(){
+    var sql=sqlIn.value.trim();
+    if(!sql){status.textContent='Write a query first — or click a sample chip.';resultHost.innerHTML='';return;}
+    try{
+      var results=db.exec(sql);
+      var last=null;
+      for(var i=0;i<results.length;i++){if(results[i].columns&&results[i].columns.length)last=results[i];}
+      status.classList.remove('err');
+      if(last){
+        var html='<div class="grid-wrap"><table class="data-table"><thead><tr>';
+        last.columns.forEach(function(c){html+='<th>'+esc(c)+'</th>';});
+        html+='</tr></thead><tbody>';
+        last.values.forEach(function(row){
+          html+='<tr>';row.forEach(function(v){html+='<td>'+fmtCell(v)+'</td>';});
+          html+='</tr>';
+        });
+        html+='</tbody></table></div>';
+        resultHost.innerHTML=html;
+        status.textContent=results.length+' statement'+(results.length===1?'':'s')+' executed · '+last.values.length+' row'+(last.values.length===1?'':'s')+' · SQLite 3.49.1 (WebAssembly)';
+      }else{
+        resultHost.innerHTML='';
+        status.textContent=results.length+' statement'+(results.length===1?'':'s')+' executed · no SELECT result to show.';
+      }
+    }catch(e){
+      status.textContent='SQL error: '+e.message;
+      status.classList.add('err');
+      resultHost.innerHTML='';
+    }
+  });
+}
+document.getElementById('runBtn').addEventListener('click',run);
+document.getElementById('resetBtn').addEventListener('click',function(){
+  ensureEngine(function(){buildDb();status.textContent='Sample database rebuilt (customers 6 · products 8 · orders 9 · order_items 16).';resultHost.innerHTML='';});
+});
+sqlIn.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();run();}
+});
+document.getElementById('samples').innerHTML=SAMPLES.map(function(s,i){
+  return '<button type="button" class="chip" data-i="'+i+'">'+esc(s[0])+'</button>';
+}).join('');
+document.getElementById('samples').addEventListener('click',function(e){
+  var b=e.target.closest('.chip');if(!b)return;
+  sqlIn.value=SAMPLES[parseInt(b.getAttribute('data-i'),10)][1];
+  run();
+});
+document.getElementById('schemaBox').textContent=
+'customers  (6 rows)   id PK · name · city · signup\n'+
+'products   (8 rows)   id PK · name · category · price\n'+
+'orders     (9 rows)   id PK · customer_id → customers.id · order_date · status\n'+
+'order_items(16 rows)  order_id → orders.id · product_id → products.id · qty';
+sqlIn.value=SAMPLES[0][1];
+ensureEngine(function(){run();});
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

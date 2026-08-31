@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Email Generator — Test Addresses | ToolAspect</title>
+<meta name="description" content="Free fake email generator: name-based test addresses with gmail-style or RFC 2606 example.com domains. Seeded, CSV export, in-browser.">
+<link rel="canonical" href="https://toolaspect.com/fake-email-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Fake Email Generator — Test Addresses">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Generate realistic fake email addresses for testing: gmail-style providers, RFC 2606 reserved domains, or your own domain. Seeded, exportable.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/fake-email-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fake Email Generator | Free Online Tool">
+<meta name="twitter:description" content="Name-based fake emails from @faker-js/faker, seeded and exportable. Never send to them.">
+<meta name="keywords" content="fake email generator, test email addresses, dummy email, example.com addresses, random email generator, seeded emails">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Fake Email Generator","description":"Free browser-based fake email generator powered by @faker-js/faker 10.6.0 (MIT). Name-based addresses on gmail-style providers, RFC 2606 reserved example domains, or a custom domain, with reproducible seeds and CSV/JSON export. Nothing uploads.","url":"https://toolaspect.com/fake-email-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can I send email to these addresses?","acceptedAnswer":{"@type":"Answer","text":"No — never. Provider mode builds addresses on gmail.com, hotmail.com, and yahoo.com. Those are real domains with real inboxes: mail to Ashton_Donnelly-Veum78@gmail.com either bounces or, worse, lands in a stranger's account. The reserved mode (example.com, example.net, example.org) is the safe one for documentation and test data — those domains are IANA-reserved by RFC 2606 and can never receive mail, which is precisely why the standard reserves them."}},
+{"@type":"Question","name":"What's the difference between the three domain modes?","acceptedAnswer":{"@type":"Answer","text":"Provider mode draws gmail.com, hotmail.com, or yahoo.com — the most realistic-looking option, for UI screenshots and fixture files that must resemble production data. Reserved mode swaps in example.com, example.net, or example.org — safe to publish because they can't receive mail, but some signup forms deliberately reject them. Custom mode uses your own domain, which is what you want when a test suite needs to accept the address and you control the domain's catch-all inbox."}},
+{"@type":"Question","name":"How are the usernames built?","acceptedAnswer":{"@type":"Answer","text":"The same way real signup systems build them: a first name, an underscore or hyphenated surname, and usually a number — Ashton_Donnelly-Veum78, Amari_Hickle92, Colleen_Roberts8. The pattern draws from Faker's 3,186-name pool, so large batches look organically varied. Local parts stay far under the 64-character limit RFC 5321 sets, and domains under its 255-character cap."}},
+{"@type":"Question","name":"Will these pass email validation?","acceptedAnswer":{"@type":"Answer","text":"Format validators pass them — they're syntactically valid addresses on syntactically valid domains. Deliverability checks are another story: provider-mode addresses may or may not have real inboxes (undecidable without sending mail), and reserved-mode addresses fail any DNS/MX lookup because example.com deliberately has no mail exchanger for external use. If your validator does MX checks, use custom mode on a domain you control."}},
+{"@type":"Question","name":"How do I test that my app actually receives email?","acceptedAnswer":{"@type":"Answer","text":"Fake addresses exercise validation and storage, not delivery. For end-to-end flows — password resets, confirmation links — use a dedicated test-inbox service (the Mailosaur and Mailtrap class) or a catch-all domain you control, where every address lands in one inbox you can read from the test. Generate addresses here in custom mode pointed at that domain, and you get realistic usernames plus real receivable mail."}},
+{"@type":"Question","name":"Are the generated addresses reproducible?","acceptedAnswer":{"@type":"Answer","text":"Yes, with a seed. Seed 2026, count 5, provider mode produces Ashton_Donnelly-Veum78@gmail.com, Amari_Hickle92@hotmail.com, Dasia68@gmail.com, Deven45@yahoo.com, and Colleen_Roberts8@gmail.com — every time, on any machine, because the generator and its locale data are version-pinned (Faker 10.6.0, English locale). Store the seed in the test, not the addresses."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Fake Email Generator","item":"https://toolaspect.com/fake-email-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:.9rem 1.1rem;margin:1.25rem 0 .25rem;color:var(--text);font-size:.93rem;line-height:1.65}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{background:var(--primary);border:none;color:#fff;border-radius:var(--radius);padding:.65rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn.ghost:hover{border-color:var(--primary)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.status-line{color:var(--muted);font-size:.85rem;margin-top:.75rem;min-height:1.2em}
+.status-line.err{color:var(--danger)}
+.status-line.ok{color:var(--success)}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td{word-break:break-all}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-size:.85em;color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Fake Email Generator — Test Addresses", "url": "https://toolaspect.com/fake-email-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free fake email generator: name-based test addresses with gmail-style or RFC 2606 example.com domains. Seeded, CSV export, in-browser."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Fake Email Generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Fake Email Generator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Fake Email Generator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Fake Email Generator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📧 Fake Email Generator</h1>
+<p>Realistic test addresses — provider, reserved, or your own domain</p>
+</div>
+
+<p class="aio-answer"><strong>Quick answer:</strong> this generator builds name-based addresses like Ashton_Donnelly-Veum78 in three domain flavors: real providers (gmail.com, hotmail.com, yahoo.com — look realistic, <strong>never send to them</strong>), IANA-reserved domains (example.com/.net/.org — can't receive mail, safe to publish), or your own domain for catch-all test inboxes. Seed 2026 in provider mode yields Ashton_Donnelly-Veum78@gmail.com, Amari_Hickle92@hotmail.com, Dasia68@gmail.com, Deven45@yahoo.com, Colleen_Roberts8@gmail.com. Local parts stay well under the 64-character RFC 5321 limit. Runs in your browser.</p>
+
+<div class="section-card">
+<h2>Generate Email Addresses</h2>
+<div class="input-grid">
+<div class="input-group"><label>How many</label><input type="number" id="count" value="10" min="1" max="500" step="1"></div>
+<div class="input-group"><label>Domain mode</label><select id="mode"><option value="free" selected>Real providers</option><option value="reserved">Reserved (example.com)</option><option value="custom">Custom domain…</option></select></div>
+<div class="input-group" id="domainGroup" style="display:none"><label>Your domain</label><input type="text" id="domain" placeholder="mail.yourtest.dev" spellcheck="false"></div>
+<div class="input-group"><label>Seed (optional)</label><input type="number" id="seed" placeholder="e.g. 2026" min="0" step="1"></div>
+</div>
+<div class="btn-row">
+<button type="button" class="btn" id="go">Generate</button>
+<button type="button" class="btn ghost" id="csv">Copy CSV</button>
+<button type="button" class="btn ghost" id="json">Copy JSON</button>
+<button type="button" class="btn ghost" id="dl">Download CSV</button>
+</div>
+<div class="table-wrap" style="margin-top:1rem">
+<table class="data-table" id="out">
+<thead><tr><th>#</th><th>Email address</th><th>Domain type</th></tr></thead>
+<tbody id="rows"><tr><td colspan="3" style="color:var(--muted)">Loading Faker engine…</td></tr></tbody>
+</table>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Real providers</div><div class="ri-value">3</div></div>
+<div class="result-item"><div class="ri-label">Reserved domains</div><div class="ri-value">3</div></div>
+<div class="result-item"><div class="ri-label">RFC 5321 local-part cap</div><div class="ri-value">64 chars</div></div>
+</div>
+<div class="status-line" id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/fake-name-generator/">Fake Name Generator</a></li><li style="margin:4px 0"><a href="/random-address-generator/">Random Address Generator</a></li><li style="margin:4px 0"><a href="/password-generator/">Password Generator</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Reserved Names That Can Never Receive Mail (RFC 2606 / 6761)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Reserved name</th><th>Kind</th><th>Safe to publish?</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td>example.com</td><td>Second-level domain</td><td>Yes</td><td>Documentation, fixture files, screenshots</td></tr>
+<tr><td>example.net</td><td>Second-level domain</td><td>Yes</td><td>Same, when you need variety</td></tr>
+<tr><td>example.org</td><td>Second-level domain</td><td>Yes</td><td>Same</td></tr>
+<tr><td>.test</td><td>Top-level domain</td><td>Yes</td><td>Internal test hostnames (user@mail.test)</td></tr>
+<tr><td>.example</td><td>Top-level domain</td><td>Yes</td><td>Examples in docs and specs</td></tr>
+<tr><td>.invalid</td><td>Top-level domain</td><td>Yes</td><td>Deliberately non-resolving names</td></tr>
+<tr><td>.localhost</td><td>Top-level domain</td><td>Yes</td><td>Local-only names</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The second-level domains are what Faker's reserved mode draws from; the four TLDs are reserved alongside them and never appear in the public DNS. That's the whole trick: an address at example.com is guaranteed undeliverable by construction, not by convention.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Email Generator Works</h2>
+<p>The engine is <strong>@faker-js/faker 10.6.0</strong> (MIT), lazy-loaded on first generate and run entirely in your tab. Its internet module builds addresses the way real signup flows do — a person's name transformed into a mailbox, plus a domain — which is why generated lists look like production data instead of <code>user123@test.com</code> over and over.</p>
+<h3>How the modes differ</h3>
+<p><em>Real providers</em> draws from exactly three domains — gmail.com, hotmail.com, yahoo.com — the provider pool in Faker's English locale. <em>Reserved</em> swaps in example.com, example.net, or example.org. <em>Custom domain</em> takes whatever you type (validated as a hostname — letters, digits, dots, hyphens, at least one dot) so every address points at a domain you control.</p>
+<h3>How to use it</h3>
+<p>Pick a count up to 500, choose the domain mode, optionally set a seed for reproducibility, and generate. Copy as CSV for spreadsheets and imports, as JSON for fixtures, or download the CSV. The Domain type column keeps the three modes distinguishable when you're staring at a 200-row list at 6pm.</p>
+<h3>A worked example</h3>
+<p>Seed <code>2026</code>, count 5, Real providers:</p>
+<ol style="color:var(--muted);line-height:1.8;padding-left:1.5rem">
+<li>Ashton_Donnelly-Veum78@gmail.com</li>
+<li>Amari_Hickle92@hotmail.com</li>
+<li>Dasia68@gmail.com</li>
+<li>Deven45@yahoo.com</li>
+<li>Colleen_Roberts8@gmail.com</li>
+</ol>
+<p>Same seed in Reserved mode re-draws the same usernames on reserved domains — Ashton_Donnelly-Veum78@example.com, Amari_Hickle92@example.net, and so on — because the username sequence and domain choice both restart from the seed. In Custom mode with <code>toolaspect.com</code>, seed 2026 gives Vivienne.Yundt@toolaspect.com, Gerardo.Beahan@toolaspect.com, and three more in the First.Last pattern. Notice the custom mode's different username style — Faker formats provider-less addresses as dotted names, which happens to match how most corporate mail systems build aliases.</p>
+<p>And the reminder that matters most: the provider-mode addresses sit on real domains. A quarter of name-based gmail addresses probably belong to somebody. Generate them, store them, screenshot them — but never put them in a To: field.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can I send email to these addresses?</h3><p>No — never. Provider mode builds addresses on gmail.com, hotmail.com, and yahoo.com. Those are real domains with real inboxes: mail to Ashton_Donnelly-Veum78@gmail.com either bounces or, worse, lands in a stranger's account. The reserved mode (example.com, example.net, example.org) is the safe one for documentation and test data — those domains are IANA-reserved by RFC 2606 and can never receive mail, which is precisely why the standard reserves them.</p></div>
+<div class="faq-item"><h3>What's the difference between the three domain modes?</h3><p>Provider mode draws gmail.com, hotmail.com, or yahoo.com — the most realistic-looking option, for UI screenshots and fixture files that must resemble production data. Reserved mode swaps in example.com, example.net, or example.org — safe to publish because they can't receive mail, but some signup forms deliberately reject them. Custom mode uses your own domain, which is what you want when a test suite needs to accept the address and you control the domain's catch-all inbox.</p></div>
+<div class="faq-item"><h3>How are the usernames built?</h3><p>The same way real signup systems build them: a first name, an underscore or hyphenated surname, and usually a number — Ashton_Donnelly-Veum78, Amari_Hickle92, Colleen_Roberts8. The pattern draws from Faker's 3,186-name pool, so large batches look organically varied. Local parts stay far under the 64-character limit RFC 5321 sets, and domains under its 255-character cap.</p></div>
+<div class="faq-item"><h3>Will these pass email validation?</h3><p>Format validators pass them — they're syntactically valid addresses on syntactically valid domains. Deliverability checks are another story: provider-mode addresses may or may not have real inboxes (undecidable without sending mail), and reserved-mode addresses fail any DNS/MX lookup because example.com deliberately has no mail exchanger for external use. If your validator does MX checks, use custom mode on a domain you control.</p></div>
+<div class="faq-item"><h3>How do I test that my app actually receives email?</h3><p>Fake addresses exercise validation and storage, not delivery. For end-to-end flows — password resets, confirmation links — use a dedicated test-inbox service (the Mailosaur and Mailtrap class) or a catch-all domain you control, where every address lands in one inbox you can read from the test. Generate addresses here in custom mode pointed at that domain, and you get realistic usernames plus real receivable mail.</p></div>
+<div class="faq-item"><h3>Are the generated addresses reproducible?</h3><p>Yes, with a seed. Seed 2026, count 5, provider mode produces Ashton_Donnelly-Veum78@gmail.com, Amari_Hickle92@hotmail.com, Dasia68@gmail.com, Deven45@yahoo.com, and Colleen_Roberts8@gmail.com — every time, on any machine, because the generator and its locale data are version-pinned (Faker 10.6.0, English locale). Store the seed in the test, not the addresses.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/fake-name-generator/">🪪 Fake Name Generator</a>
+<a href="/random-address-generator/">🏠 Random Address Generator</a>
+<a href="/password-generator/">🔑 Password Generator</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/uuid-generator/">🆔 UUID Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---FAKER-ENGINE-START---
+var FAKER_URLS = [
+  'https://cdn.jsdelivr.net/npm/@faker-js/faker@10.6.0/dist/locale/en.js',
+  'https://unpkg.com/@faker-js/faker@10.6.0/dist/locale/en.js'
+];
+var DOMAIN_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i;
+
+function parseSeed(v) {
+  if (v === '' || v === null || v === undefined) return null;
+  var n = parseInt(v, 10);
+  return isNaN(n) || n < 0 ? NaN : n;
+}
+function csvField(v) {
+  var s = String(v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function rowsToCSV(headers, rows) {
+  var lines = [headers.map(csvField).join(',')];
+  rows.forEach(function (r) { lines.push(r.map(csvField).join(',')); });
+  return lines.join('\n');
+}
+function domainLabel(mode) {
+  return mode === 'free' ? 'real provider' : mode === 'reserved' ? 'RFC 2606 reserved' : 'custom';
+}
+function emailRow(faker, mode, domain) {
+  if (mode === 'reserved') return faker.internet.exampleEmail();
+  if (mode === 'custom') return faker.internet.email({ provider: domain });
+  return faker.internet.email();
+}
+// ---- browser wiring ----
+var fakerMod = null, loading = null;
+function loadFaker() {
+  if (fakerMod) return Promise.resolve(fakerMod);
+  if (loading) return loading;
+  var p = Promise.reject();
+  FAKER_URLS.forEach(function (url) { p = p.catch(function () { return import(url); }); });
+  loading = p.then(function (mod) { fakerMod = mod; return mod; });
+  return loading;
+}
+function status(msg, cls) {
+  var el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status-line' + (cls ? ' ' + cls : '');
+}
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+var lastRows = [];
+function generate() {
+  var count = Math.min(500, Math.max(1, parseInt(document.getElementById('count').value, 10) || 10));
+  var mode = document.getElementById('mode').value;
+  var domain = document.getElementById('domain').value.trim().toLowerCase();
+  var seed = parseSeed(document.getElementById('seed').value);
+  if (isNaN(seed)) { status('Seed must be a non-negative integer (or leave it blank).', 'err'); return; }
+  if (mode === 'custom' && !DOMAIN_RE.test(domain)) { status('Enter a valid domain (letters, digits, dots, hyphens — e.g. mail.yourtest.dev).', 'err'); return; }
+  loadFaker().then(function (mod) {
+    var faker = mod.faker;
+    if (seed !== null) faker.seed(seed);
+    lastRows = [];
+    for (var i = 0; i < count; i++) {
+      lastRows.push([i + 1, emailRow(faker, mode, domain), domainLabel(mode)]);
+    }
+    document.getElementById('rows').innerHTML = lastRows.map(function (r) {
+      return '<tr><td>' + r[0] + '</td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>';
+    }).join('');
+    var warn = mode === 'free' ? ' These sit on real domains — never send mail to them.' : '';
+    status('Generated ' + count + ' address' + (count === 1 ? '' : 'es') + (seed !== null ? ' from seed ' + seed : '') + ' — Faker 10.6.0 (MIT) ran locally.' + warn, 'ok');
+  }).catch(function (e) { status('Engine failed to load: ' + (e && e.message ? e.message : e), 'err'); });
+}
+document.getElementById('go').addEventListener('click', generate);
+document.getElementById('mode').addEventListener('change', function () {
+  document.getElementById('domainGroup').style.display = this.value === 'custom' ? '' : 'none';
+});
+document.getElementById('csv').addEventListener('click', function () {
+  if (!lastRows.length) return status('Generate first.', 'err');
+  var csv = rowsToCSV(['index', 'email', 'domainType'], lastRows);
+  (navigator.clipboard ? navigator.clipboard.writeText(csv) : Promise.reject()).then(
+    function () { status('CSV copied (' + lastRows.length + ' rows).', 'ok'); },
+    function () { status('Clipboard blocked.', 'err'); }
+  );
+});
+document.getElementById('json').addEventListener('click', function () {
+  if (!lastRows.length) return status('Generate first.', 'err');
+  var json = JSON.stringify(lastRows.map(function (r) { return { index: r[0], email: r[1], domainType: r[2] }; }), null, 2);
+  (navigator.clipboard ? navigator.clipboard.writeText(json) : Promise.reject()).then(
+    function () { status('JSON copied.', 'ok'); },
+    function () { status('Clipboard blocked.', 'err'); }
+  );
+});
+document.getElementById('dl').addEventListener('click', function () {
+  if (!lastRows.length) return status('Generate first.', 'err');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rowsToCSV(['index', 'email', 'domainType'], lastRows)], { type: 'text/csv' }));
+  a.download = 'fake-emails.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  status('Downloaded fake-emails.csv.', 'ok');
+});
+generate();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
