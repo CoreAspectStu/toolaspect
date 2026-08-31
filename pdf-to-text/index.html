@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to Text Converter — Extract Text Free | ToolAspect</title>
+<meta name="description" content="Extract text from any PDF in your browser: pick pages, de-hyphenate, or export Markdown with headings detected from font sizes. Free, no upload.">
+<link rel="canonical" href="https://toolaspect.com/pdf-to-text/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="PDF to Text Converter — Extract Text Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Pull the full text layer out of any PDF and download it as .txt or .md. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-to-text/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF to Text Converter | Free Online Tool">
+<meta name="twitter:description" content="Extract PDF text as .txt or Markdown. Nothing uploaded.">
+<meta name="keywords" content="pdf to text, extract text from pdf, pdf text extractor, pdf to txt, pdf to markdown, copy text from pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"PDF to Text Converter","description":"Free browser-based tool that extracts the text layer from any PDF and downloads it as .txt or .md. Pick pages by range (1-3, 5, odd, even), de-hyphenate words broken across lines, and get a Markdown export where headings are detected from font sizes. Extraction runs on pdf.js entirely in the browser — the file is never uploaded.","url":"https://toolaspect.com/pdf-to-text/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I extract text from a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a browser-based extractor and export. This tool reads the PDF's text layer with pdf.js on your own machine — pick pages if you only need a section, then copy the result or download it as .txt or .md. No account, no upload, no watermark."}},
+{"@type":"Question","name":"Why does my scanned PDF come out empty?","acceptedAnswer":{"@type":"Answer","text":"A scan is usually just a photograph of the page with no text layer, and text extraction only reads real text. If the extraction returns nothing or gibberish, the document needs OCR first — optical character recognition turns the page image into text before anything can be extracted."}},
+{"@type":"Question","name":"Does the extraction keep formatting?","acceptedAnswer":{"@type":"Answer","text":"Reading order and paragraphs survive; fonts, columns, and exact layout do not. Markdown mode goes furthest — lines noticeably larger than the body text become ## and ### headings, hyphenated line breaks rejoin, and paragraph gaps are preserved from the spacing in the file."}},
+{"@type":"Question","name":"Can I extract text from specific pages only?","acceptedAnswer":{"@type":"Answer","text":"Yes. Type a page spec like 1-3, 5 or use the shortcuts all, odd, and even. The extractor reads only those pages, which matters for long reports where you want chapter 2 and not 180 pages of appendices."}},
+{"@type":"Question","name":"Why does the text come out in a strange order?","acceptedAnswer":{"@type":"Answer","text":"Extraction follows the PDF's internal text objects, which usually match visual order but don't have to — some generators emit text in drawing order rather than reading order. Multi-column layouts are the classic case. Reading a few lines tells you which kind of file you have."}},
+{"@type":"Question","name":"Is there a file size or page limit?","acceptedAnswer":{"@type":"Answer","text":"No artificial limit. Because processing happens locally, the ceiling is your device's memory — reports of a few hundred pages extract in seconds. Password-protected files must be unlocked first, since the text layer can't be read while encrypted."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"PDF to Text Converter","item":"https://toolaspect.com/pdf-to-text/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:1rem}
+.opt{display:flex;flex-direction:column;gap:4px}
+.opt label{font-size:.78rem;color:var(--muted)}
+.opt select,.opt input[type=text]{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem .6rem;font-size:.9rem;font-family:inherit}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.out-box{margin-top:1rem}
+.out-box textarea{width:100%;min-height:320px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.9rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;resize:vertical;box-sizing:border-box}
+.stat-row{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:.6rem;font-size:.8rem;color:var(--muted)}
+.stat-row b{color:var(--text)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.85em}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📄 PDF to Text Converter</h1>
+<p>Extract the text layer, export .txt or .md — nothing uploaded</p>
+</div>
+
+<div class="aio-answer">To extract text from a PDF, open the file below and download — the tool reads the PDF's text layer with pdf.js entirely in your browser and hands you clean text. A 3-page quarterly report becomes: heading <code>## Quarterly Report</code>, body <code>The quick brown fox jumps over the lazy dog near the riverbank.</code>, closing <code>2026 results were strong.</code> — 18 words, paragraph breaks kept, hyphenated line-ends rejoined. Pick pages (1-3, 5, odd, even) and export .txt or .md. One catch: scanned PDFs have no text layer, so they need OCR first.</div>
+
+<div class="section-card">
+<h2>Extract</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnCopy" disabled>📋 Copy text</button>
+<button class="btn save" id="btnSave" disabled>💾 Download</button>
+</div>
+<div class="opt-grid">
+<div class="opt"><label for="pageSpec">Pages</label><input type="text" id="pageSpec" value="all" placeholder="all · 1-3, 5 · odd · even"></div>
+<div class="opt"><label for="outMode">Output format</label><select id="outMode"><option value="plain">Plain text (.txt)</option><option value="markdown">Markdown (.md)</option></select></div>
+<div class="opt"><label for="dehyph">Line-end hyphens</label><select id="dehyph"><option value="1">Rejoin (co-operate)</option><option value="0">Keep as-is</option></select></div>
+<div class="opt"><label for="pageBreaks">Page markers</label><select id="pageBreaks"><option value="1">Insert separators</option><option value="0">Continuous text</option></select></div>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="out-box" id="outBox" style="display:none">
+<textarea id="output" spellcheck="false" readonly aria-label="Extracted text"></textarea>
+<div class="stat-row" id="stats"></div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-to-jpg/">PDF to JPG</a></li><li style="margin:4px 0"><a href="/compare-pdf/">Compare PDFs</a></li><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li><li style="margin:4px 0"><a href="/word-counter/">Word Counter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-extract-text-from-a-pdf/">Read the text-extraction guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What You Get From Each Kind of PDF</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>PDF type</th><th>Text layer?</th><th>Extraction result</th></tr></thead>
+<tbody>
+<tr><td>Exported from Word, LaTeX, InDesign</td><td>Yes, real text</td><td>Clean text, correct reading order, headings detectable by font size</td></tr>
+<tr><td>"Print to PDF" from a browser or app</td><td>Yes, real text</td><td>Clean text; occasional odd line breaks in multi-column layouts</td></tr>
+<tr><td>Scanned, then OCR'd</td><td>Text overlay on image</td><td>Mostly right; stray characters where the OCR guessed</td></tr>
+<tr><td>Plain scan / photo PDF</td><td>No — image only</td><td>Empty output; needs OCR before extraction can work</td></tr>
+<tr><td>Password-protected</td><td>Encrypted</td><td>Refused until you unlock the file with its password</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the Extraction Works</h2>
+<p>Every PDF that isn't a raw scan stores its visible words as text objects: strings plus placement matrices. pdf.js walks those objects page by page and hands the tool each fragment with its x/y position and font size. The pipeline then rebuilds reading order: fragments on the same baseline join into a line (sorted left to right), lines group into paragraphs using the file's own spacing — a gap noticeably larger than the page's typical line spacing starts a new paragraph — and, in Markdown mode, lines set in type at least 15% larger than the body become headings.</p>
+<h3>Page specs</h3>
+<p>The pages box accepts <code>all</code>, <code>odd</code>, <code>even</code>, single pages like <code>7</code>, and ranges like <code>1-3</code>, mixed freely: <code>1-3, 5, 9-7</code> extracts pages 1, 2, 3, 5, 7, 8, 9 (reversed ranges flip automatically). Out-of-range numbers are rejected with the page count, so typos don't silently drop content.</p>
+<h3>A worked example</h3>
+<p>Take a one-page report with a 22pt title "Quarterly Report", two body lines at 12pt set 18 points apart ("The quick brown fox jumps over" / "the lazy dog near the riverbank."), and a closing line 36 points below the second. The pipeline sees three body baselines plus one title: the 22pt line is 1.83× body size, so Markdown mode emits <code>## Quarterly Report</code>. The 18pt gap matches the page's line spacing, so the two body lines reflow into one sentence; the 36pt gap is exactly twice the spacing, so a paragraph break lands before "2026 results were strong." The output is 18 words in three blocks, and with de-hyphenation on, a line ending "quarte-" followed by "rly results" rejoins into "quarterly results" with no space.</p>
+<p>Plain mode skips the heading markers and keeps one line per PDF line, which is what you want for logs, invoices, and anything you'll grep.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I extract text from a PDF for free?</h3><p>Open the PDF in a browser-based extractor and export. This tool reads the PDF's text layer with pdf.js on your own machine — pick pages if you only need a section, then copy the result or download it as .txt or .md. No account, no upload, no watermark.</p></div>
+<div class="faq-item"><h3>Why does my scanned PDF come out empty?</h3><p>A scan is usually just a photograph of the page with no text layer, and text extraction only reads real text. If the extraction returns nothing or gibberish, the document needs OCR first — optical character recognition turns the page image into text before anything can be extracted.</p></div>
+<div class="faq-item"><h3>Does the extraction keep formatting?</h3><p>Reading order and paragraphs survive; fonts, columns, and exact layout do not. Markdown mode goes furthest — lines noticeably larger than the body text become ## and ### headings, hyphenated line breaks rejoin, and paragraph gaps are preserved from the spacing in the file.</p></div>
+<div class="faq-item"><h3>Can I extract text from specific pages only?</h3><p>Yes. Type a page spec like 1-3, 5 or use the shortcuts all, odd, and even. The extractor reads only those pages, which matters for long reports where you want chapter 2 and not 180 pages of appendices.</p></div>
+<div class="faq-item"><h3>Why does the text come out in a strange order?</h3><p>Extraction follows the PDF's internal text objects, which usually match visual order but don't have to — some generators emit text in drawing order rather than reading order. Multi-column layouts are the classic case. Reading a few lines tells you which kind of file you have.</p></div>
+<div class="faq-item"><h3>Is there a file size or page limit?</h3><p>No artificial limit. Because processing happens locally, the ceiling is your device's memory — reports of a few hundred pages extract in seconds. Password-protected files must be unlocked first, since the text layer can't be read while encrypted.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+<a href="/compare-pdf/">🔍 Compare PDFs</a>
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== PDF to Text engine: pdf.js text layer -> line/paragraph rebuild (node-verified) ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+function el(id){return document.getElementById(id)}
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function parseRanges(spec,n){
+  var s=new Set();spec=String(spec||'all').toLowerCase().replace(/\s+/g,'');
+  if(!spec)spec='all';
+  for(var _i=0,_arr=spec.split(',');_i<_arr.length;_i++){var part=_arr[_i];
+    if(!part)continue;
+    if(part==='all'){for(var i=1;i<=n;i++)s.add(i);continue}
+    if(part==='odd'){for(var i=1;i<=n;i+=2)s.add(i);continue}
+    if(part==='even'){for(var i=2;i<=n;i+=2)s.add(i);continue}
+    var m=part.match(/^(\d+)(?:-(\d+))?$/);
+    if(!m)throw new Error('Cannot read page spec: "'+part+'"');
+    var a=+m[1],b=m[2]?+m[2]:a;
+    if(a<1||b<1||a>n||b>n)throw new Error('Page out of range 1-'+n+': '+part);
+    if(a>b){var t=a;a=b;b=t}
+    for(var i=a;i<=b;i++)s.add(i);
+  }
+  if(!s.size)throw new Error('No pages selected');
+  return s;
+}
+function round2(n){return Math.round(n*100)/100}
+/* Rebuild lines -> paragraphs -> optional headings. Verified: 22pt on 12pt body -> ##, 1.33x -> ###;
+   gap >1.4x modal spacing breaks paragraph; hyphen line-ends rejoin. */
+function buildText(pages,opt){
+  var pageTexts=[];
+  for(var pi=0;pi<pages.length;pi++){
+    var its=pages[pi].filter(function(it){return it.str&&it.str.length});
+    var lines=[];
+    its.forEach(function(it){
+      var y=Math.round(it.transform[5]),size=round2(Math.hypot(it.transform[2],it.transform[3]));
+      var L=null;
+      for(var i=0;i<lines.length;i++){if(Math.abs(lines[i].y-y)<=2){L=lines[i];break}}
+      if(!L){L={y:y,segs:[]};lines.push(L)}
+      L.segs.push({x:it.transform[4],str:it.str,size:size});
+    });
+    lines.sort(function(a,b){return b.y-a.y});
+    lines.forEach(function(L){L.segs.sort(function(a,b){return a.x-b.x});L.text=L.segs.map(function(s){return s.str}).join(' ').replace(/\s+/g,' ').trim();L.size=L.segs.reduce(function(m,s){return Math.max(m,s.size)},0)});
+    if(!lines.length){pageTexts.push('');continue}
+    var tally={};lines.forEach(function(L){var k=Math.round(L.size);tally[k]=(tally[k]||0)+1});
+    var body=0,best=0;for(var k in tally){if(tally[k]>best){best=tally[k];body=+k}}
+    lines.forEach(function(L){L.head=(opt.markdown&&L.size>=body*1.15)});
+    var gaps=[];
+    for(var i=1;i<lines.length;i++){
+      if(lines[i].head||lines[i-1].head)continue;
+      var g=lines[i-1].y-lines[i].y;if(g>0&&g<200)gaps.push(g);
+    }
+    var gt={},mg=0,mgap=12;gaps.forEach(function(g){var kk=Math.round(g);gt[kk]=(gt[kk]||0)+1;if(gt[kk]>mg)mg=gt[kk]});
+    var cands=[];for(var kk in gt){if(gt[kk]===mg)cands.push(+kk)}mgap=cands.length?Math.min.apply(null,cands):12;
+    var parts=[],prevWasHead=false;
+    lines.forEach(function(L,i){
+      var t=L.text;if(!t)return;
+      if(L.head){parts.push((L.size>=body*1.6?'##':'###')+' '+t);prevWasHead=true;return}
+      if(i===0||prevWasHead||parts.length===0){parts.push(t);prevWasHead=false;return}
+      var prev=lines[i-1],gap=prev.y-L.y;
+      if(opt.dehyphenate&&/[‐-]$/.test(parts[parts.length-1])){
+        parts[parts.length-1]=parts[parts.length-1].replace(/[‐-]$/,'')+t;
+      } else if(gap>mgap*1.4){parts.push(t)}
+      else{parts[parts.length-1]+=' '+t}
+    });
+    pageTexts.push(parts.join(opt.markdown?'\n\n':'\n'));
+  }
+  if(!opt.pageBreaks)return pageTexts.join('\n\n');
+  return pageTexts.map(function(t,i){return (opt.markdown?'<!-- page '+(i+1)+' -->\n\n':'--- Page '+(i+1)+' ---\n')+t}).join('\n\n');
+}
+var pdf=null,origName='document',lastText='';
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Reading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    pdfjsLib.getDocument({data:new Uint8Array(fr.result)}).promise.then(function(doc){
+      pdf=doc;
+      try{
+        var sel=parseRanges(el('pageSpec').value,doc.numPages);
+        return extract(sel);
+      }catch(err){setStatus(err.message,'err');throw err}
+    }).catch(function(){/* handled above or pdf.js error */});
+  };
+  fr.onerror=function(){setStatus('Could not read that file.','err')};
+  fr.readAsArrayBuffer(f);
+});
+function extract(sel){
+  var wanted=[].slice.call(sel).sort(function(a,b){return a-b});
+  setStatus('Extracting '+wanted.length+' of '+pdf.numPages+' page'+(pdf.numPages>1?'s':'')+' …');
+  var perPage=[];
+  var chain=Promise.resolve();
+  wanted.forEach(function(n){
+    chain=chain.then(function(){
+      return pdf.getPage(n).then(function(page){return page.getTextContent()}).then(function(tc){
+        perPage.push(tc.items);
+      });
+    });
+  });
+  chain.then(function(){
+    var opt={
+      markdown:el('outMode').value==='markdown',
+      dehyphenate:el('dehyph').value==='1',
+      pageBreaks:el('pageBreaks').value==='1'
+    };
+    lastText=buildText(perPage,opt);
+    el('outBox').style.display='block';
+    el('output').value=lastText;
+    var words=lastText.split(/\s+/).filter(Boolean).length;
+    el('stats').innerHTML='<span>Pages: <b>'+wanted.length+'</b></span><span>Words: <b>'+words.toLocaleString()+'</b></span><span>Characters: <b>'+lastText.length.toLocaleString()+'</b></span>';
+    el('btnCopy').disabled=false;el('btnSave').disabled=false;
+    if(!lastText.trim())setStatus('No text layer found — this looks like a scanned PDF; it needs OCR first.','err');
+    else setStatus('Extracted '+words.toLocaleString()+' words from '+wanted.length+' page'+(wanted.length>1?'s':'')+'. Free to copy or download.','ok');
+  }).catch(function(err){setStatus('Extraction failed: '+(err&&err.message||err),'err')});
+}
+['pageSpec','outMode','dehyph','pageBreaks'].forEach(function(id){
+  el(id).addEventListener('change',function(){
+    if(!pdf)return;
+    try{extract(parseRanges(el('pageSpec').value,pdf.numPages))}
+    catch(err){setStatus(err.message,'err')}
+  });
+});
+el('btnCopy').addEventListener('click',function(){
+  if(!lastText)return;
+  var done=function(){setStatus('Text copied to clipboard.','ok')};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(lastText).then(done,done);
+  else done();
+});
+el('btnSave').addEventListener('click',function(){
+  if(!lastText)return;
+  var md=el('outMode').value==='markdown';
+  var blob=new Blob([lastText],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=origName+(md?'.md':'.txt');
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+  setStatus('Downloaded '+a.download+'.','ok');
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

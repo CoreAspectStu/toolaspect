@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Extract Text From a PDF (Without Losing It) | ToolAspect</title>
+<meta name="description" content="Getting clean text out of a PDF: how text layers work, why scans come back empty, what Markdown mode can rebuild from font sizes, and page-range extraction.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-extract-text-from-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Extract Text From a PDF (Without Losing It)","description":"Copying text out of a PDF sounds trivial until you meet a scanned contract or a 200-page report. This guide covers how a PDF's text layer works, why some PDFs extract perfectly and others come back empty or scrambled, what a good extractor can rebuild (paragraphs, hyphenated words, headings from font sizes), how to pull just the pages you need, and when you actually need OCR. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Extract Text From a PDF","item":"https://toolaspect.com/guides/how-to-extract-text-from-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I copy all the text from a PDF at once?","acceptedAnswer":{"@type":"Answer","text":"Use a text extractor rather than select-all in a viewer — viewers copy in visual order and frequently mangle columns. An extractor reads the text objects in the file, rebuilds lines and paragraphs, and gives you one clean block to copy or download as .txt."}},
+{"@type":"Question","name":"Why can't I select or extract text from my scanned PDF?","acceptedAnswer":{"@type":"Answer","text":"Because there is no text to select. A scan stores a picture of the page; until OCR runs, the words you can see are pixels. Run the file through an OCR tool first, then extract normally."}},
+{"@type":"Question","name":"What's the difference between PDF to text and OCR?","acceptedAnswer":{"@type":"Answer","text":"Text extraction reads characters that already exist in the file — instant and exact. OCR looks at page images and guesses the characters — slower and imperfect, but the only option for scans. Many PDFs contain both: an OCR text layer under a scan image."}},
+{"@type":"Question","name":"Can extraction turn a PDF into Markdown?","acceptedAnswer":{"@type":"Answer","text":"Partially. Lines set noticeably larger than the body text can be tagged as headings, paragraphs can be rebuilt from spacing, and hyphenated line breaks rejoined — but tables, footnotes, and multi-column layouts rarely survive intact. It's a head start for editing, not a faithful conversion."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Extract Text From a PDF (Without Losing It)</h1>
+<div class="meta"><span>📄 PDF workflows</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">Copying text out of a PDF sounds trivial — until the file is a 200-page report, a scanned contract, or a two-column paper that pastes as word salad. The difference between those outcomes is one thing: whether the file contains real text. Here's how to tell, and how to get clean text either way.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why do some PDFs copy cleanly and others don't?</h2>
+<p>A PDF built by Word, LaTeX, or a browser's print dialog stores its words as text objects — strings with positions and font sizes. Those extract perfectly. A scan stores a photograph of the page; the words you can read are pixels, and no amount of selecting will copy them. A third kind, common in legal and medical files, is a scan with an invisible OCR text layer underneath: extraction works, but quality depends on how well that OCR guessed years ago.</p>
+<p>The one-second test: open the file, click anywhere on a paragraph, and try to select a word. Selectable means a text layer exists; a blue box around nothing means image-only.</p>
+<h2>What does an extractor actually do?</h2>
+<p>It walks the text objects in the file and rebuilds structure that PDFs don't store directly. A page gives the extractor a pile of fragments with x/y coordinates; the extractor joins fragments sharing a baseline into lines, orders lines top to bottom, and uses the document's own spacing to decide where paragraphs break — a vertical gap noticeably larger than the typical line spacing means a new paragraph. Two refinements matter in practice:</p>
+<ul>
+<li><strong>Hyphen rejoins.</strong> Lines that end "quarte-" and resume "rly results" become "quarterly results" — typography for print, noise for text.</li>
+<li><strong>Heading detection by font size.</strong> A line set at least ~15% larger than the body text was almost certainly a heading, so a good Markdown export marks it <code>##</code> instead of losing it into a wall of body text.</li>
+</ul>
+<h2>Extraction vs. OCR — which do you need?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Your file</th><th>Right tool</th><th>What you get</th></tr></thead>
+<tbody>
+<tr><td>Exported from Word / LaTeX / browser print</td><td>Text extraction</td><td>Exact characters, instant</td></tr>
+<tr><td>Scan with OCR text layer</td><td>Text extraction</td><td>The OCR's best guess, usually fine</td></tr>
+<tr><td>Plain scan or photo PDF</td><td>OCR first, then extraction</td><td>Machine-recognized text; check names and numbers</td></tr>
+<tr><td>Password-protected</td><td>Unlock, then either</td><td>Nothing works while encrypted</td></tr>
+</tbody>
+</table>
+</div>
+<p>Rule of thumb: extraction is exact but only works on real text; OCR works on anything visual but is a guess. If the document already has text, never OCR it — you'd be trading perfect characters for a machine's approximations.</p>
+<h2>How do I extract only part of a document?</h2>
+<p>Good extractors take a page spec: <code>all</code>, <code>odd</code>, <code>even</code> for split scans, single pages, or ranges like <code>1-3, 5</code>. This matters more than it sounds. A 180-page regulatory filing where you need section 4 is a ten-second job with a range and a slog without one — and extracting less also means reviewing less, which is the part that actually takes time.</p>
+<h2>What can't extraction recover?</h2>
+<p>Layout. A PDF doesn't store "this is a two-column article with a sidebar" — it stores positioned strings — so columns can interleave, tables collapse into run-on lines, and footnotes land mid-paragraph. Extraction reliably gives you <em>reading order</em>, paragraphs, and headings; it does not give you a document model. If you need structure rather than text — tables as tables — a full converter or a copy-paste by hand into a spreadsheet is the honest path.</p>
+<h2>A quick way to do all of this free</h2>
+<p>Open your file in the <a href="/pdf-to-text/">PDF to Text converter</a>: it reads the text layer locally in your browser, takes page specs, rejoins hyphens, and exports plain text or Markdown with headings detected from font sizes. For the surrounding workflow, <a href="/organize-pdf/">Organize PDF</a> fixes page order before you extract, and <a href="/compare-pdf/">Compare PDFs</a> diffs two versions textually — handy once the text is out. Scans that need OCR rather than extraction are the exception; run those through an OCR step first, then extract the result.</p>
+<div class="cta-box"><h3>Extract text from a PDF now</h3><p style="color:#fff;opacity:.9">Pages, hyphen rejoins, Markdown export — all local, all free, nothing uploaded.</p><a href="/pdf-to-text/">Open the converter →</a></div>
+<h2>The bottom line</h2>
+<p>Check for a text layer first — selectable words mean extraction will work and OCR is the wrong tool. Extract with page ranges instead of wading through appendices, keep hyphen rejoins on, and expect reading order rather than layout. And if a file refuses to give up any text at all, it's telling you it's a picture: OCR it, then extract.</p>
+<div class="related-tools"><a href="/pdf-to-text/">📄 PDF to Text</a><a href="/organize-pdf/">🗂️ Organize PDF</a><a href="/compare-pdf/">🔍 Compare PDFs</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG to PNG Converter — Free, Any Resolution | ToolAspect</title>
+<meta name="description" content="Convert SVG to PNG free in your browser at any scale, 1x to 10x. A 512px logo exports sharp at 2048x2048. No upload, no server, instant download.">
+<link rel="canonical" href="https://toolaspect.com/svg-to-png-converter/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="SVG to PNG Converter — Free, Any Resolution">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Rasterize SVG files to crisp PNGs in your browser. Pick a scale factor up to 10x, keep transparency, batch files. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/svg-to-png-converter/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SVG to PNG Converter Free | ToolAspect">
+<meta name="twitter:description" content="Rasterize SVG to PNG at any scale — 512px becomes 2048px. No upload, no watermark.">
+<meta name="keywords" content="svg to png, svg to png converter, convert svg to png, svg to png high resolution, rasterize svg, svg to png 4x, svg to png transparent background, svg to png offline">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SVG to PNG Converter","description":"Free SVG to PNG converter that runs entirely in your browser. Drop SVG files, choose a scale factor from 0.5x to 10x, keep or replace transparency, and download crisp PNGs. Nothing is uploaded to any server.","url":"https://toolaspect.com/svg-to-png-converter/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert SVG to PNG at a higher resolution?","acceptedAnswer":{"@type":"Answer","text":"Load the SVG, pick a scale factor, and export. The converter multiplies the SVG's native size by your factor before rasterizing: a 512x512 icon at 4x becomes a 2048x2048 PNG (4,194,304 pixels). Because SVG is vector art, the browser re-renders every curve at the target size, so edges stay sharp rather than getting stretched the way an upscaled PNG would."}},
+{"@type":"Question","name":"Does the PNG keep the transparent background of my SVG?","acceptedAnswer":{"@type":"Answer","text":"Yes, transparency is the default: the canvas starts empty and only your artwork is drawn. If a tool or platform needs a solid background (some slide decks and image hosts compositing over white), switch Background from Transparent to White and the converter fills the canvas before drawing."}},
+{"@type":"Question","name":"What happens if my SVG has no width or height attributes?","acceptedAnswer":{"@type":"Answer","text":"The converter reads the viewBox instead and renders at the viewBox's user-unit size, so an SVG with only viewBox=\"0 0 300 200\" exports as 300x200 at 1x. If only a width is given, height is derived from the viewBox aspect ratio, matching how browsers infer the missing dimension. Files with neither get a 512x512 fallback."}},
+{"@type":"Question","name":"Why do SVG text and fonts sometimes render differently?","acceptedAnswer":{"@type":"Answer","text":"SVG text renders with fonts available on your machine unless the file embeds them. If the SVG specifies a font you don't have installed, the browser substitutes one and spacing can shift. Converters that run server-side hit the same problem — they substitute their fonts, not yours. For pixel-identical output everywhere, convert text to outlines in a vector editor first."}},
+{"@type":"Question","name":"Is converting SVG to PNG here private?","acceptedAnswer":{"@type":"Answer","text":"Yes. The rasterization uses your browser's own DOMParser and canvas APIs — the same engine that displays SVGs on web pages — so files are read from disk into memory and handed back as downloads. Nothing is uploaded, there is no server-side copy, and the page keeps working if you go offline after it loads."}},
+{"@type":"Question","name":"PNG or SVG — which should I ship for favicons and app icons?","acceptedAnswer":{"@type":"Answer","text":"Browsers want PNG: Apple touch icons must be PNG (180x180), most favicon setups pair a 32x32 PNG with an .ico, and app stores require raster sizes like 512x512 for Play. SVG wins for simple scalable marks on the web itself. The usual workflow is one master SVG exported to PNG at each required size — 16, 32, 180, 192, 512."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"SVG to PNG Converter","item":"https://toolaspect.com/svg-to-png-converter/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.scale-chip{padding:.4rem .85rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--text);font-size:.85rem;cursor:pointer;font-family:inherit}
+.scale-chip.active{border-color:var(--primary);color:var(--primary-hover);font-weight:600}
+.file-list{margin-top:1rem}
+.file-row{display:flex;align-items:center;gap:.6rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.55rem .8rem;margin-top:.5rem}
+.file-row .num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted);font-size:.8rem;min-width:1.4rem}
+.file-row .name{flex:1;font-size:.85rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-row .meta{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.file-row .meta .ok{color:var(--success)}
+.file-row .meta .bad{color:var(--danger)}
+.file-row .meta a{color:var(--success);font-weight:600}
+.thumb{width:36px;height:36px;border:1px solid var(--border);border-radius:6px;background:repeating-conic-gradient(#2a2d3a 0% 25%, #1a1d27 0% 50%) 50%/12px 12px;object-fit:contain}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);width:26px;height:26px;cursor:pointer;font-size:.75rem;line-height:1}
+.icon-btn:hover{border-color:var(--primary);color:var(--text)}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.opt-grid{grid-template-columns:1fr}}
+.opt-group{display:flex;flex-direction:column;gap:.35rem}
+.opt-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.opt-group input,.opt-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.opt-group input:focus,.opt-group select:focus{outline:none;border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🖼️ SVG to PNG Converter</h1>
+<p>Rasterize SVG files to crisp PNGs at any scale, entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To convert an SVG to PNG without uploading it: drop the file below, pick a scale factor (1x–10x), and click Convert — a 512×512 logo at 4x downloads as a 2048×2048 PNG. Because SVG is vector art, the browser re-renders every curve at the target resolution, so a 4x export is genuinely sharper than a 1x export stretched in an image editor. Transparency is preserved by default. The pipeline is a port of the open-source vincerubinetti/svg-to-png rasterizer (MIT) running on your machine — no file ever touches a server.</div>
+
+<div class="section-card">
+<h2>Convert SVG Files</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p>Click or drag SVG files here (multiple at once)</p>
+<input type="file" id="fileInput" accept=".svg,image/svg+xml" multiple style="display:none">
+</div>
+<div class="file-list" id="fileList"></div>
+<div class="opt-grid">
+<div class="opt-group"><label>Scale factor</label><input type="number" id="scale" value="2" min="0.5" max="10" step="0.5"></div>
+<div class="opt-group"><label>Background</label><select id="bg"><option value="transparent">Transparent (keep alpha)</option><option value="#ffffff">White</option><option value="#000000">Black</option><option value="custom">Custom…</option></select></div>
+<div class="opt-group"><label>Custom color (if Custom)</label><input type="text" id="bgCustom" value="#f1f5f9" placeholder="#rrggbb"></div>
+</div>
+<div class="btn-row">
+<button class="scale-chip" data-s="1">1x</button>
+<button class="scale-chip active" data-s="2">2x</button>
+<button class="scale-chip" data-s="3">3x</button>
+<button class="scale-chip" data-s="4">4x</button>
+<button class="scale-chip" data-s="8">8x</button>
+<button class="btn" id="btnConvert">Convert to PNG</button>
+<button class="btn ghost" id="btnClear">Clear all</button>
+</div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/image-compressor/">Compress an image</a></li><li style="margin:4px 0"><a href="/favicon-generator/">Make a favicon</a></li><li style="margin:4px 0"><a href="/image-cropper/">Crop an image</a></li><li style="margin:4px 0"><a href="/image-to-svg-converter/">Image to SVG (reverse)</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/svg-to-png/">Read the SVG-to-PNG guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What One 512px SVG Exports To</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Scale</th><th>Output PNG</th><th>Pixel Count</th><th>Raw RGBA Size (before compression)</th><th>Typical Use</th></tr></thead>
+<tbody>
+<tr><td>1x</td><td>512 × 512</td><td>262,144</td><td>1 MiB (1,048,576 B)</td><td>Web display, PWA icon</td></tr>
+<tr><td>2x</td><td>1024 × 1024</td><td>1,048,576</td><td>4 MiB</td><td>Retina @2x assets</td></tr>
+<tr><td>4x</td><td>2048 × 2048</td><td>4,194,304</td><td>16 MiB (16,777,216 B)</td><td>Google Play 512+ icon masters, print</td></tr>
+<tr><td>8x</td><td>4096 × 4096</td><td>16,777,216</td><td>64 MiB</td><td>Large-format print, banners</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Raw size = width × height × 4 bytes (RGBA). The PNG you download is far smaller once compressed — a flat logo at 2048×2048 typically lands in the tens-to-hundreds of KB range. The raw figure is the honest ceiling for what your device must hold in memory.</p>
+</div>
+
+<div class="section-card">
+<h2>SVG Length Units → Pixels (CSS 96dpi Reference)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Unit in <code>width=</code>/<code>height=</code></th><th>1 Unit in Pixels</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>px</code> (or no unit)</td><td>1</td><td><code>width="300"</code> → 300 px</td></tr>
+<tr><td><code>in</code></td><td>96</td><td><code>width="2in"</code> → 192 px</td></tr>
+<tr><td><code>pc</code> (pica)</td><td>16</td><td><code>width="12pc"</code> → 192 px</td></tr>
+<tr><td><code>pt</code> (point)</td><td>1.3333</td><td><code>width="12pt"</code> → 16 px</td></tr>
+<tr><td><code>cm</code></td><td>37.795</td><td><code>width="5cm"</code> → 189 px</td></tr>
+<tr><td><code>mm</code></td><td>3.7795</td><td><code>width="50mm"</code> → 189 px</td></tr>
+<tr><td><code>q</code> (quarter-mm)</td><td>0.9449</td><td><code>width="200q"</code> → 189 px</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Browsers rasterize SVG at the CSS reference resolution of 96 pixels per inch, per the W3C CSS Values spec. That's why 1pt = 96/72 = 1.3333px. Exporting at 4x is the vector equivalent of asking for 384 dpi — same artwork, four times the samples per curve.</p>
+</div>
+
+<div class="content-section">
+<h2>How SVG to PNG Rasterization Works</h2>
+<p>An SVG is a set of drawing instructions — paths, fills, gradients — not a grid of pixels. Converting to PNG means asking a rendering engine to execute those instructions onto a pixel grid of your chosen size. This tool uses the highest-quality rendering engine you own: your browser. It parses the SVG (tolerantly, the way a browser does), infers the native size from the <code>width</code>/<code>height</code> attributes or the <code>viewBox</code>, loads the SVG into an image element, and draws it onto a canvas scaled by your chosen factor.</p>
+<h3>Size inference, exactly as the browser does it</h3>
+<p>If both <code>width</code> and <code>height</code> are present (with or without units), those dimensions are used, converted per the table above. If only one is present, the other is derived from the viewBox's aspect ratio. If neither is present but a viewBox is, the viewBox's user-unit size is the output size. Files with none of the above render at a 512×512 fallback — the same behavior as the reference implementation.</p>
+<h3>A worked example</h3>
+<p>Take a badge SVG marked <code>viewBox="0 0 300 200"</code> with no width/height. At 1x it exports 300×200 = 60,000 pixels. At 3x the canvas is 900×600 = 540,000 pixels — nine times the pixels, because pixel count scales with the square of the linear factor (3² = 9). A 512×512 icon at 4x hits 2048×2048 = 4,194,304 pixels; its raw RGBA footprint is exactly 16 MiB (4,194,304 × 4 bytes = 16,777,216), though the compressed PNG of a simple logo will be a fraction of that.</p>
+<h3>When you actually need PNG instead of SVG</h3>
+<ul>
+<li><strong>Favicons and app icons:</strong> Apple touch icons must be PNG at 180×180; Android wants a 512×512 PNG master.</li>
+<li><strong>Email and Office apps:</strong> many mail clients and older Office versions won't render inline SVG.</li>
+<li><strong>Software that expects rasters:</strong> video editors, some CMS upload fields, and print workflows that request TIFF/PNG at target dimensions.</li>
+<li><strong>Protecting artwork:</strong> a PNG is harder to lift and re-edit than a clean SVG source file.</li>
+</ul>
+<h3>Privacy, concretely</h3>
+<p>This page loads once; after that, conversion is pure local computation through the browser's FileReader, DOMParser, and canvas APIs. Open the network tab while converting — zero requests. Your logo files, icon sets, and unreleased brand artwork never leave the device, which is exactly what you want for pre-launch assets.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert SVG to PNG at a higher resolution?</h3><p>Load the SVG, pick a scale factor, and export. The converter multiplies the SVG's native size by your factor before rasterizing: a 512x512 icon at 4x becomes a 2048x2048 PNG (4,194,304 pixels). Because SVG is vector art, the browser re-renders every curve at the target size, so edges stay sharp rather than getting stretched the way an upscaled PNG would.</p></div>
+<div class="faq-item"><h3>Does the PNG keep the transparent background of my SVG?</h3><p>Yes, transparency is the default: the canvas starts empty and only your artwork is drawn. If a tool or platform needs a solid background (some slide decks and image hosts compositing over white), switch Background from Transparent to White and the converter fills the canvas before drawing.</p></div>
+<div class="faq-item"><h3>What happens if my SVG has no width or height attributes?</h3><p>The converter reads the viewBox instead and renders at the viewBox's user-unit size, so an SVG with only viewBox="0 0 300 200" exports as 300x200 at 1x. If only a width is given, height is derived from the viewBox aspect ratio, matching how browsers infer the missing dimension. Files with neither get a 512x512 fallback.</p></div>
+<div class="faq-item"><h3>Why do SVG text and fonts sometimes render differently?</h3><p>SVG text renders with fonts available on your machine unless the file embeds them. If the SVG specifies a font you don't have installed, the browser substitutes one and spacing can shift. Converters that run server-side hit the same problem — they substitute their fonts, not yours. For pixel-identical output everywhere, convert text to outlines in a vector editor first.</p></div>
+<div class="faq-item"><h3>Is converting SVG to PNG here private?</h3><p>Yes. The rasterization uses your browser's own DOMParser and canvas APIs — the same engine that displays SVGs on web pages — so files are read from disk into memory and handed back as downloads. Nothing is uploaded, there is no server-side copy, and the page keeps working if you go offline after it loads.</p></div>
+<div class="faq-item"><h3>PNG or SVG — which should I ship for favicons and app icons?</h3><p>Browsers want PNG: Apple touch icons must be PNG (180x180), most favicon setups pair a 32x32 PNG with an .ico, and app stores require raster sizes like 512x512 for Play. SVG wins for simple scalable marks on the web itself. The usual workflow is one master SVG exported to PNG at each required size — 16, 32, 180, 192, 512.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/image-to-svg-converter/">🖊️ Image to SVG Converter</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/favicon-generator/">⭐ Favicon Generator</a>
+<a href="/image-cropper/">✂️ Image Cropper</a>
+<a href="/pdf-to-jpg/">📄 PDF to JPG</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PM-ENGINE-START---
+// Rasterizer pipeline ported from vincerubinetti/svg-to-png (MIT license),
+// pinned to upstream commit 8231982ce96f (2026-01-01). Port covers:
+// lenient DOMParser parse -> parsererror reporting -> native-size inference
+// (width/height attrs with CSS absolute-unit conversion, viewBox aspect
+// fallback, 512px last resort) -> data-URL Image -> canvas draw at the chosen
+// scale factor -> PNG blob. All local: FileReader + canvas, no network.
+var PM = { files: [] };
+
+function pmUnitsToPixels(string) {
+  var units = { px: 1, in: 96, pc: 96 / 6, pt: 96 / 72, cm: 96 / 2.54, mm: 96 / 2.54 / 10, q: 96 / 2.54 / 40 };
+  var m = String(string).match(/(\d+\.?\d*)\s*(\w*)/) || [];
+  var value = Number(m[1] || 0);
+  return value * (units[(m[2] || 'px').toLowerCase()] || 0);
+}
+
+function pmSourceToSvg(source) {
+  var doc = new DOMParser().parseFromString(source, 'text/html');
+  var svg = doc.querySelector('svg');
+  if (!svg) throw new Error('no root <svg> element found');
+  return svg;
+}
+
+function pmSvgProps(source, filename) {
+  var svg = pmSourceToSvg(source);
+  var specified = { width: svg.getAttribute('width') || '', height: svg.getAttribute('height') || '' };
+  var absolute = { width: pmUnitsToPixels(specified.width), height: pmUnitsToPixels(specified.height) };
+  var vb = (svg.getAttribute('viewBox') || '').split(/\s/).map(parseFloat);
+  var viewBox = { x: vb[0] || 0, y: vb[1] || 0, width: vb[2] || 0, height: vb[3] || 0 };
+  var size = { width: 512, height: 512 };
+  if (absolute.width && absolute.height) { size.width = absolute.width; size.height = absolute.height; }
+  else if (absolute.width && viewBox.width && viewBox.height) { size.width = absolute.width; size.height = absolute.width * (viewBox.height / viewBox.width); }
+  else if (absolute.height && viewBox.width && viewBox.height) { size.width = absolute.height * (viewBox.width / viewBox.height); size.height = absolute.height; }
+  else if (viewBox.width && viewBox.height) { size.width = viewBox.width; size.height = viewBox.height; }
+  else if (absolute.width) { size.width = absolute.width; size.height = absolute.width; }
+  else if (absolute.height) { size.width = absolute.height; size.height = absolute.height; }
+  else if (viewBox.width) { size.width = viewBox.width; size.height = viewBox.width; }
+  else if (viewBox.height) { size.width = viewBox.height; size.height = viewBox.height; }
+  return { name: (filename || 'image').replace(/\.svg$/i, ''), specified: specified, absolute: absolute, viewBox: viewBox, size: size };
+}
+
+function pmSvgToImage(svg) {
+  return new Promise(function (resolve, reject) {
+    var url = 'data:image/svg+xml;charset=utf8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
+    var img = new Image();
+    img.onload = function () { resolve(img); };
+    img.onerror = function () { reject(new Error('browser could not render the SVG (check for broken external refs)')); };
+    img.src = url;
+  });
+}
+
+function pmReadText(f) {
+  return new Promise(function (res, rej) {
+    var fr = new FileReader();
+    fr.onload = function () { res(fr.result); };
+    fr.onerror = function () { rej(new Error('unreadable')); };
+    fr.readAsText(f);
+  });
+}
+
+function pmEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function pmFmtSize(b) { if (b >= 1048576) return (b / 1048576).toFixed(1) + ' MB'; if (b >= 1024) return (b / 1024).toFixed(0) + ' KB'; return b + ' B'; }
+
+async function pmAddFiles(fileList) {
+  var arr = Array.prototype.slice.call(fileList).filter(function (f) { return /\.svg$/i.test(f.name) || f.type === 'image/svg+xml'; });
+  for (var i = 0; i < arr.length; i++) {
+    var entry = { file: arr[i], name: arr[i].name, source: null, props: null, err: null, out: null };
+    PM.files.push(entry);
+    pmRenderList();
+    try {
+      entry.source = await pmReadText(arr[i]);
+      entry.props = pmSvgProps(entry.source, arr[i].name);
+    } catch (e) {
+      entry.err = String(e && e.message || e);
+    }
+    pmRenderList();
+  }
+}
+
+function pmRemove(idx) { PM.files.splice(idx, 1); pmRenderList(); }
+
+function pmRenderList() {
+  var el = document.getElementById('fileList');
+  el.innerHTML = '';
+  PM.files.forEach(function (f, i) {
+    var row = document.createElement('div');
+    row.className = 'file-row';
+    var size = f.err ? '<span class="bad">' + pmEsc(f.err) + '</span>'
+      : (f.props ? '<span class="ok">' + Math.round(f.props.size.width) + '×' + Math.round(f.props.size.height) + ' native</span>' : 'reading…');
+    var done = f.out ? '<a href="' + f.out.url + '" download="' + pmEsc(f.out.name) + '">⬇ ' + pmEsc(f.out.name) + ' (' + pmFmtSize(f.out.bytes) + ')</a>' : '';
+    row.innerHTML = '<span class="num">' + (i + 1) + '.</span>' + (f.props && !f.err ? '<img class="thumb" src="data:image/svg+xml;charset=utf8,' + encodeURIComponent(f.source) + '" alt="">' : '<span class="thumb"></span>')
+      + '<span class="name">' + pmEsc(f.name) + '</span><span class="meta">' + size + (done ? ' · ' + done : '') + '</span>'
+      + '<button class="icon-btn" data-act="rm" title="Remove">✕</button>';
+    row.addEventListener('click', function (e) {
+      if (e.target.getAttribute && e.target.getAttribute('data-act') === 'rm') pmRemove(i);
+    });
+    el.appendChild(row);
+  });
+  var btn = document.getElementById('btnConvert');
+  var ok = PM.files.length > 0 && PM.files.every(function (f) { return f.props; });
+  btn.disabled = !ok;
+  btn.textContent = ok ? 'Convert ' + PM.files.length + ' file' + (PM.files.length > 1 ? 's' : '') + ' to PNG' : 'Convert to PNG';
+}
+
+async function pmConvert() {
+  var scale = Math.min(10, Math.max(0.5, parseFloat(document.getElementById('scale').value) || 2));
+  var bgSel = document.getElementById('bg').value;
+  var bgCustom = document.getElementById('bgCustom').value.trim();
+  var bg = bgSel === 'transparent' ? null : (bgSel === 'custom' ? (/^#?[0-9a-f]{3,8}$/i.test(bgCustom) ? (bgCustom[0] === '#' ? bgCustom : '#' + bgCustom) : null) : bgSel);
+  for (var i = 0; i < PM.files.length; i++) {
+    var f = PM.files[i];
+    if (!f.props) continue;
+    try {
+      var svg = pmSourceToSvg(f.source);
+      var img = await pmSvgToImage(svg);
+      var w = Math.max(1, Math.round(f.props.size.width * scale));
+      var h = Math.max(1, Math.round(f.props.size.height * scale));
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      if (bg) { ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); }
+      ctx.drawImage(img, 0, 0, w, h);
+      var blob = await new Promise(function (res) { canvas.toBlob(res, 'image/png'); });
+      if (f.out) URL.revokeObjectURL(f.out.url);
+      f.out = { url: URL.createObjectURL(blob), bytes: blob.size, name: f.props.name + '-' + w + 'x' + h + '.png', w: w, h: h };
+    } catch (e) {
+      f.err = String(e && e.message || e);
+    }
+    pmRenderList();
+  }
+  var made = PM.files.filter(function (f) { return f.out; }).length;
+  var status = document.getElementById('status');
+  status.innerHTML = made
+    ? '<div style="background:var(--bg);border:1px solid var(--success);border-radius:10px;padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">✅ Rasterized <strong>' + made + '</strong> file' + (made > 1 ? 's' : '') + ' at ' + scale + 'x — use the ⬇ links above to save each PNG.</div>'
+    : '<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">Nothing converted — check the flagged files.</div>';
+}
+// ---- browser wiring ----
+var dz = document.getElementById('dropzone');
+var fi = document.getElementById('fileInput');
+dz.addEventListener('click', function () { fi.click(); });
+dz.addEventListener('dragover', function (e) { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', function () { dz.classList.remove('dragover'); });
+dz.addEventListener('drop', function (e) { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer && e.dataTransfer.files.length) pmAddFiles(e.dataTransfer.files); });
+fi.addEventListener('change', function (e) { pmAddFiles(e.target.files); fi.value = ''; });
+document.getElementById('btnConvert').addEventListener('click', pmConvert);
+document.getElementById('btnClear').addEventListener('click', function () { PM.files.forEach(function (f) { if (f.out) URL.revokeObjectURL(f.out.url); }); PM.files = []; document.getElementById('status').innerHTML = ''; pmRenderList(); });
+Array.prototype.forEach.call(document.querySelectorAll('.scale-chip'), function (chip) {
+  chip.addEventListener('click', function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.scale-chip'), function (c) { c.classList.remove('active'); });
+    chip.classList.add('active');
+    document.getElementById('scale').value = chip.getAttribute('data-s');
+  });
+});
+pmRenderList();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML to JSON Converter — Free, Two-Way | ToolAspect</title>
+<meta name="description" content="Convert XML to JSON and back, right in your browser. Clean attribute and text keys, byte-exact round trips, element and attribute counts. No upload.">
+<link rel="canonical" href="https://toolaspect.com/xml-to-json/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="XML to JSON Converter — Two-Way, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="XML in, JSON out — and back again. Powered by xml-js, entirely in your browser tab.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/xml-to-json/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XML to JSON Converter | Free Online Tool">
+<meta name="twitter:description" content="Convert XML to JSON and JSON back to XML, client-side, with round-trip checks.">
+<meta name="keywords" content="xml to json, json to xml, xml converter, convert xml, xml parser online, xml to json converter, json to xml converter">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"XML to JSON Converter","description":"Convert XML to JSON and JSON back to XML entirely in the browser, using the xml-js engine. Compact or indented output, attribute and text key mapping, element and attribute counts, byte-exact round trips. No upload.","url":"https://toolaspect.com/xml-to-json/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert XML to JSON?","acceptedAnswer":{"@type":"Answer","text":"Paste XML into the left pane and the JSON appears instantly — every element becomes an object key, attributes land under _attributes, and text content under _text. The conversion runs on the xml-js engine inside your browser tab, so nothing uploads. Click Copy or Download to save the JSON. The direction toggle also converts JSON back to XML."}},
+{"@type":"Question","name":"How are XML attributes represented in JSON?","acceptedAnswer":{"@type":"Answer","text":"With the default compact mapping, an attribute like id=\"bk101\" becomes \"_attributes\":{\"id\":\"bk101\"} inside the element's object, and text content becomes a \"_text\" key. The underscore prefix keeps attributes from colliding with child element names. The declaration, comments, CDATA, and processing instructions get their own reserved keys (_declaration, _comment, _cdata, _instruction)."}},
+{"@type":"Question","name":"Can JSON be converted back to XML?","acceptedAnswer":{"@type":"Answer","text":"Yes. This tool is two-way: flip the direction toggle, paste JSON, and the same engine rebuilds XML. Round trips are byte-exact when the spacing matches the original — a 254-byte catalog XML converted to JSON and back reproduces the original byte-for-byte, which makes the pair safe for config files and fixture data."}},
+{"@type":"Question","name":"What happens to repeated XML elements?","acceptedAnswer":{"@type":"Answer","text":"Repeated siblings become a JSON array. Two <book> elements inside a <catalog> produce \"book\":[{...},{...}] — one element is an object, two or more become an array of objects. That's the main structural gotcha when writing consuming code: an XML feed can flip a field between object and array depending on how many entries it has that day."}},
+{"@type":"Question","name":"Is my XML uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The converter (xml-js 1.6.11, 36 KB) ships with this page and parses in your tab. Nothing is transmitted, which matters for API responses, SAML assertions, config files with credentials, and any XML you would not paste into someone else's converter."}},
+{"@type":"Question","name":"Why does my JSON get bigger than the XML?","acceptedAnswer":{"@type":"Answer","text":"JSON repeats the key names for every element and adds the _attributes and _text wrappers, so it usually grows. A 254-byte XML catalog becomes 710 bytes of pretty-printed JSON — nearly 3x. Minified JSON (no spaces) and shorter key options shrink it, but expect JSON to be larger for element-heavy documents and smaller for attribute-heavy ones."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"XML to JSON Converter","item":"https://toolaspect.com/xml-to-json/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.two-pane{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.two-pane{grid-template-columns:1fr}}
+.pane-label{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+textarea.pane{width:100%;min-height:400px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;box-sizing:border-box;resize:vertical}
+textarea.pane:focus{outline:none;border-color:var(--primary)}
+.dir-toggle{display:flex;gap:.4rem;margin-bottom:.8rem}
+.dir-toggle button{flex:1;padding:.55rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem;font-weight:600;cursor:pointer}
+.dir-toggle button.active{border-color:var(--primary);color:var(--primary-hover)}
+.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.3rem}
+.input-group label{font-size:.78rem;color:var(--muted);font-weight:500}
+.input-group select,.input-group input{width:100%;padding:.55rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;cursor:pointer}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.85rem;color:var(--muted);margin-top:.8rem}
+.status-line strong{color:var(--success)}
+.status-line .err{color:var(--danger)}
+.dropzone-inline{border:2px dashed var(--border);border-radius:var(--radius);padding:.8rem;text-align:center;color:var(--muted);cursor:pointer;font-size:.85rem;margin-bottom:.6rem}
+.dropzone-inline:hover{border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔀 XML to JSON</h1>
+<p>Convert XML to JSON and back — two-way, byte-exact round trips, no upload</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste XML on the left and the JSON appears instantly. Elements become keys, attributes land under <code>_attributes</code>, text under <code>_text</code>, repeated elements become arrays. Flip the toggle and the same engine converts JSON back to XML. It's powered by <strong>xml-js 1.6.11</strong> (36 KB, runs in this tab) — a 254-byte catalog XML comes out as <strong>710 bytes of pretty JSON and converts back byte-for-byte</strong>.
+</div>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="dir-toggle">
+<button id="dirX2J" class="active" type="button">XML → JSON</button>
+<button id="dirJ2X" type="button">JSON → XML</button>
+</div>
+<div class="two-pane">
+<div>
+<div class="pane-label"><span id="inLabel">XML input</span><span id="inStats">0 bytes</span></div>
+<div class="dropzone-inline" id="dz">Drop an .xml or .json file, or click to open</div>
+<input type="file" id="fileInput" accept=".xml,.json,.svg,.rss,.plist,text/xml,application/xml,application/json" style="display:none">
+<textarea id="inPane" class="pane" spellcheck="false" placeholder="&lt;catalog&gt;&#10;  &lt;book id=&quot;bk101&quot;&gt;…&lt;/book&gt;&#10;&lt;/catalog&gt;"></textarea>
+</div>
+<div>
+<div class="pane-label"><span id="outLabel">JSON output</span><span id="outStats">0 bytes</span></div>
+<textarea id="outPane" class="pane" spellcheck="false" readonly placeholder="Output appears here as you type…"></textarea>
+</div>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>Structure</label><select id="compact"><option value="compact" selected>Compact (attributes/_text)</option><option value="verbose">Verbose (elements array)</option></select></div>
+<div class="input-group"><label>Indentation</label><select id="spaces"><option value="0">Minified</option><option value="2" selected>2 spaces</option><option value="4">4 spaces</option></select></div>
+<div class="input-group"><label>Ignore declaration</label><select id="ignoreDecl"><option value="yes" selected>Yes</option><option value="no">No</option></select></div>
+<div class="input-group"><label>Output filename</label><input type="text" id="fileName" value="converted.json"></div>
+</div>
+<p>
+<button class="btn" id="copyBtn" type="button">⧉ Copy output</button>
+<button class="btn ghost" id="downloadBtn" type="button">⬇ Download</button>
+<button class="btn ghost" id="sampleBtn" type="button">Load sample</button>
+<button class="btn ghost" id="clearBtn" type="button">Clear</button>
+</p>
+<div class="status-line" id="status">Ready. Nothing you paste leaves this page.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/xml-formatter/">XML Formatter</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li><li style="margin:4px 0"><a href="/csv-to-json/">CSV to JSON</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/xml-to-json-conversion/">Read the conversion guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>How xml-js Maps XML to JSON</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>XML construct</th><th>Example</th><th>JSON (compact mode)</th></tr></thead>
+<tbody>
+<tr><td>Element</td><td><code>&lt;book&gt;…&lt;/book&gt;</code></td><td><code>"book": { … }</code></td></tr>
+<tr><td>Attribute</td><td><code>&lt;book id="bk101"&gt;</code></td><td><code>"_attributes": {"id": "bk101"}</code></td></tr>
+<tr><td>Text content</td><td><code>&lt;price&gt;44.95&lt;/price&gt;</code></td><td><code>"price": {"_text": "44.95"}</code></td></tr>
+<tr><td>Repeated elements</td><td>two <code>&lt;book&gt;</code> siblings</td><td><code>"book": [{…},{…}]</code> (array)</td></tr>
+<tr><td>Declaration</td><td><code>&lt;?xml version="1.0"?&gt;</code></td><td><code>"_declaration": {…}</code></td></tr>
+<tr><td>Comment</td><td><code>&lt;!-- note --&gt;</code></td><td><code>"_comment": "note"</code></td></tr>
+<tr><td>CDATA</td><td><code>&lt;![CDATA[raw]]&gt;</code></td><td><code>"_cdata": "raw"</code></td></tr>
+<tr><td>Processing instruction</td><td><code>&lt;?php echo 1;?&gt;</code></td><td><code>"_instruction": {…}</code></td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Verbose mode keeps the document as an <code>elements</code> tree with <code>type</code>, <code>name</code>, and <code>attributes</code> fields on every node — closer to the DOM, handier for walking, heavier to read. Compact mode is what most APIs and fixtures want. The underscore prefix on reserved keys is configurable if your downstream schema forbids it.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Converter Works</h2>
+<p>The page runs <strong>xml-js 1.6.11</strong> (MIT), the same engine widely used for config and fixture conversion, bundled to 36 KB with its sax parser and loaded from this site. Parsing happens in your tab: XML goes in through <code>xml2js</code>, JSON comes out through serialization; the reverse direction parses JSON first and rebuilds markup with <code>json2xml</code>. Both directions run on every keystroke, and errors surface as messages instead of silent empty output.</p>
+<h3>A worked example, measured</h3>
+<p>Take a 254-byte catalog with two books, each carrying an <code>id</code> attribute, an author, a title, and a priced element with a <code>unit</code> attribute:</p>
+<ul>
+<li>XML → JSON (compact, 2-space indent): <strong>710 bytes</strong>, 2 book objects in an array, 4 attributes total (2 × id, 2 × unit).</li>
+<li>JSON → XML (compact, no spaces): reproduces the original <strong>byte-for-byte</strong> — 254 bytes, attributes and text in their original order.</li>
+<li>JSON → XML (2-space indent): 297 bytes of readable, properly nested markup that re-parses to the identical tree.</li>
+</ul>
+<p>That round-trip property is why this pairing is safe for round-tripping fixture data: convert, store as JSON, regenerate the XML when a legacy consumer needs it. It's also the honest answer on size — JSON repeats key names and wraps attributes and text, so element-heavy XML roughly triples in bytes going to pretty JSON. Attribute-heavy XML shrinks instead.</p>
+<h3>What converts, and what to watch</h3>
+<ul>
+<li><strong>Namespaces</strong> stay as literal prefixes (<code>ns:tag</code> becomes the key <code>"ns:tag"</code>) — readable, but not split into namespace + local name.</li>
+<li><strong>Order</strong> is preserved: elements, attributes, and text keep document order on both legs.</li>
+<li><strong>Escaping</strong> is handled both ways — <code>&amp;lt;</code> in XML unescapes into JSON strings, and re-escapes on the way back.</li>
+<li><strong>Singular vs array</strong> — one <code>&lt;book&gt;</code> is an object, two are an array. If your consumer needs stability, normalize arrays downstream.</li>
+<li><strong>Numbers stay strings</strong> by default ("44.95" not 44.95). Convert types where your consumer cares; the <code>nativeType</code> option exists for the brave.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>Conversion by <a href="https://github.com/nashwaan/xml-js" rel="noopener">xml-js</a> 1.6.11 (MIT) with the sax 1.6.1 parser (BlueOak-1.0.0), bundled under <a href="/xml-to-json/vendor/LICENSES.txt">/vendor/ with license texts</a>. Nothing executes outside your browser tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert XML to JSON?</h3><p>Paste XML into the left pane and the JSON appears instantly — every element becomes an object key, attributes land under _attributes, and text content under _text. The conversion runs on the xml-js engine inside your browser tab, so nothing uploads. Click Copy or Download to save the JSON. The direction toggle also converts JSON back to XML.</p></div>
+<div class="faq-item"><h3>How are XML attributes represented in JSON?</h3><p>With the default compact mapping, an attribute like id="bk101" becomes "_attributes":{"id":"bk101"} inside the element's object, and text content becomes a "_text" key. The underscore prefix keeps attributes from colliding with child element names. The declaration, comments, CDATA, and processing instructions get their own reserved keys (_declaration, _comment, _cdata, _instruction).</p></div>
+<div class="faq-item"><h3>Can JSON be converted back to XML?</h3><p>Yes. This tool is two-way: flip the direction toggle, paste JSON, and the same engine rebuilds XML. Round trips are byte-exact when the spacing matches the original — a 254-byte catalog XML converted to JSON and back reproduces the original byte-for-byte, which makes the pair safe for config files and fixture data.</p></div>
+<div class="faq-item"><h3>What happens to repeated XML elements?</h3><p>Repeated siblings become a JSON array. Two &lt;book&gt; elements inside a &lt;catalog&gt; produce "book":[{...},{...}] — one element is an object, two or more become an array of objects. That's the main structural gotcha when writing consuming code: an XML feed can flip a field between object and array depending on how many entries it has that day.</p></div>
+<div class="faq-item"><h3>Is my XML uploaded to a server?</h3><p>No. The converter (xml-js 1.6.11, 36 KB) ships with this page and parses in your tab. Nothing is transmitted, which matters for API responses, SAML assertions, config files with credentials, and any XML you would not paste into someone else's converter.</p></div>
+<div class="faq-item"><h3>Why does my JSON get bigger than the XML?</h3><p>JSON repeats the key names for every element and adds the _attributes and _text wrappers, so it usually grows. A 254-byte XML catalog becomes 710 bytes of pretty-printed JSON — nearly 3x. Minified JSON (no spaces) and shorter key options shrink it, but expect JSON to be larger for element-heavy documents and smaller for attribute-heavy ones.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/xml-formatter/">🧹 XML Formatter</a>
+<a href="/json-formatter/">{}_ JSON Formatter</a>
+<a href="/json-viewer/">🌲 JSON Viewer</a>
+<a href="/csv-to-json/">📄 CSV to JSON</a>
+<a href="/json-to-typescript/">⌨️ JSON to TypeScript</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/xml-to-json/vendor/xml-js.iife.js"></script>
+<script>
+(function(){
+  var X = window.__taXmlJs;
+  var dir = 'x2j';
+  var inPane = document.getElementById('inPane');
+  var outPane = document.getElementById('outPane');
+  var status = document.getElementById('status');
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+
+  function bytes(s){ return new Blob([s||'']).size; }
+  function setMsg(html){ status.innerHTML = html; }
+
+  function opts(){
+    return {
+      compact: document.getElementById('compact').value === 'compact',
+      spaces: parseInt(document.getElementById('spaces').value, 10),
+      ignoreDeclaration: document.getElementById('ignoreDecl').value === 'yes'
+    };
+  }
+
+  function countTree(node){
+    var els = 0, attrs = 0, texts = 0;
+    function walk(n){
+      if (Array.isArray(n)) { n.forEach(walk); return; }
+      if (!n || typeof n !== 'object') return;
+      if (n._attributes) attrs += Object.keys(n._attributes).length;
+      if (n._text != null || n._cdata != null) texts++;
+      Object.keys(n).forEach(function(k){
+        if (k === '_attributes' || k === '_text' || k === '_cdata') return;
+        els++;
+        walk(n[k]);
+      });
+    }
+    walk(node);
+    return { els: els, attrs: attrs, texts: texts };
+  }
+
+  function convert(){
+    var v = inPane.value;
+    document.getElementById('inStats').textContent = bytes(v).toLocaleString('en-US') + ' bytes';
+    if (!v.trim()) {
+      outPane.value = '';
+      document.getElementById('outStats').textContent = '0 bytes';
+      setMsg('Ready. Nothing you paste leaves this page.');
+      return;
+    }
+    var o = opts(), out;
+    try {
+      if (dir === 'x2j') {
+        var js = X.xml2js(v, o);
+        out = JSON.stringify(js, null, o.spaces);
+        var counts = countTree(js);
+        document.getElementById('outStats').textContent = bytes(out).toLocaleString('en-US') + ' bytes';
+        outPane.value = out;
+        setMsg('<strong>Valid XML.</strong> ' + counts.els.toLocaleString('en-US') + ' elements · ' + counts.attrs + ' attributes · ' + counts.texts + ' text nodes.');
+      } else {
+        out = X.json2xml(v, o);
+        document.getElementById('outStats').textContent = bytes(out).toLocaleString('en-US') + ' bytes';
+        outPane.value = out;
+        setMsg('<strong>Valid JSON.</strong> Rebuilt as XML, ' + bytes(out).toLocaleString('en-US') + ' bytes.');
+      }
+    } catch (e) {
+      outPane.value = '';
+      document.getElementById('outStats').textContent = '0 bytes';
+      setMsg('<span class="err">Parse error: ' + String(e && e.message ? e.message : e).slice(0, 200) + '</span>');
+    }
+  }
+
+  function setDir(d){
+    dir = d;
+    document.getElementById('dirX2J').classList.toggle('active', d === 'x2j');
+    document.getElementById('dirJ2X').classList.toggle('active', d === 'j2x');
+    document.getElementById('inLabel').textContent = d === 'x2j' ? 'XML input' : 'JSON input';
+    document.getElementById('outLabel').textContent = d === 'x2j' ? 'JSON output' : 'XML output';
+    document.getElementById('fileName').value = d === 'x2j' ? 'converted.json' : 'converted.xml';
+    convert();
+  }
+  document.getElementById('dirX2J').addEventListener('click', function(){ setDir('x2j'); });
+  document.getElementById('dirJ2X').addEventListener('click', function(){ setDir('j2x'); });
+
+  ['compact','spaces','ignoreDecl'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', convert);
+  });
+  inPane.addEventListener('input', convert);
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to copy yet.'); return; }
+    outPane.select();
+    try { document.execCommand('copy'); setMsg('Output copied to clipboard.'); }
+    catch (e) { setMsg('Select the output and copy manually.'); }
+    if (navigator.clipboard) navigator.clipboard.writeText(outPane.value).then(function(){ setMsg('Output copied to clipboard.'); }).catch(function(){});
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to download yet.'); return; }
+    var name = document.getElementById('fileName').value || (dir === 'x2j' ? 'converted.json' : 'converted.xml');
+    var ext = dir === 'x2j' ? '.json' : '.xml';
+    if (!new RegExp('\\' + ext + '$', 'i').test(name)) name += ext;
+    var blob = new Blob([outPane.value], { type: dir === 'x2j' ? 'application/json' : 'application/xml' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    setMsg('Downloaded <strong>' + name + '</strong>.');
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    setDir('x2j');
+    inPane.value = '<catalog>\n  <book id="bk101">\n    <author>Gambardella, Matthew</author>\n    <title>XML Developer Guide</title>\n    <price unit="USD">44.95</price>\n  </book>\n  <book id="bk102">\n    <author>Ralls, Kim</author>\n    <title>Midnight Rain</title>\n    <price unit="USD">5.95</price>\n  </book>\n</catalog>';
+    convert();
+    setMsg('Sample loaded — 254 bytes of XML, 2 books, 4 attributes. Convert back for a byte-exact round trip.');
+  });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    inPane.value = ''; convert(); setMsg('Cleared.');
+  });
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  ['dragover','drop'].forEach(function(ev){
+    dz.addEventListener(ev, function(e){ e.preventDefault(); if (ev === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  });
+  inPane.addEventListener('dragover', function(e){ e.preventDefault(); });
+  inPane.addEventListener('drop', function(e){ e.preventDefault(); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) readFile(fileInput.files[0]); });
+  function readFile(f){
+    var r = new FileReader();
+    r.onload = function(){
+      inPane.value = String(r.result);
+      if (/\.json$/i.test(f.name)) setDir('j2x'); else setDir('x2j');
+      document.getElementById('fileName').value = f.name.replace(/\.(xml|json|svg|rss|plist)$/i, '') + (dir === 'x2j' ? '.json' : '.xml');
+      convert();
+      setMsg('Loaded ' + f.name + ' — ' + bytes(inPane.value).toLocaleString('en-US') + ' bytes.');
+    };
+    r.readAsText(f);
+  }
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

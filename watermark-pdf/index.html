@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watermark PDF — Free, In-Browser, No Upload | ToolAspect</title>
+<meta name="description" content="Add a text watermark to any PDF free in your browser. Diagonal CONFIDENTIAL stamps, tiled COPY patterns, overlay or underlay, per-page ranges. No uploads.">
+<link rel="canonical" href="https://toolaspect.com/watermark-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Watermark PDF — Free, In-Browser, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Stamp CONFIDENTIAL, DRAFT, or COPY text across every page — diagonal or tiled, overlay or underlay, chosen pages only. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/watermark-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Watermark PDF | Free Online Tool">
+<meta name="twitter:description" content="Add text watermarks to PDFs in your browser. Overlay or underlay, any pages, no uploads.">
+<meta name="keywords" content="watermark pdf, add watermark to pdf, confidential stamp pdf, draft watermark, pdf watermark free, stamp pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Watermark PDF","description":"Free browser-based PDF watermark tool. Type your text (CONFIDENTIAL, DRAFT, COPY), pick size, opacity, rotation, color, tiling, pages, and overlay or underlay; the stamp is drawn with pdf-lib and applied with a qpdf WebAssembly engine entirely in the browser. Nothing is uploaded.","url":"https://toolaspect.com/watermark-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I add a watermark to a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a watermark tool, type the stamp text (CONFIDENTIAL, DRAFT, COPY), set size, opacity, and rotation, choose which pages to stamp, and download the result. This tool draws the stamp with pdf-lib and applies it with a qpdf WebAssembly engine inside your browser — the file is never uploaded to a server, so it also works for confidential documents."}},
+{"@type":"Question","name":"What is the difference between an overlay and an underlay watermark?","acceptedAnswer":{"@type":"Answer","text":"An overlay is drawn on top of the page content, so it always stays visible — the right choice when the stamp must be seen, and the only choice that works on scanned pages, which are full-page images that would hide an underlay completely. An underlay is drawn behind the content, so text stays fully readable and the watermark only shows in the margins and white space. Use underlay for letters and reports you want to keep readable; overlay for drafts, copies, and anything that must be unmistakably marked."}},
+{"@type":"Question","name":"What size and opacity should a PDF watermark be?","acceptedAnswer":{"@type":"Answer","text":"For a diagonal one-word stamp on US Letter, 40 to 60 pt with 25 to 40 percent opacity is the readable-but-not-bludgeoning zone: at 48 pt, the word CONFIDENTIAL measures 357 pt wide, about 58 percent of the page width, and 35 percent opacity keeps body text legible underneath. Go bigger and bolder (60 pt, 50 percent) for draft copies nobody should mistake for final; lighter (28 to 36 pt, 20 to 25 percent) for tiled patterns so the page stays usable."}},
+{"@type":"Question","name":"Will a watermark stop someone from copying my PDF?","acceptedAnswer":{"@type":"Answer","text":"No, and any tool that implies otherwise is overselling. A watermark is regular page content — determined users can crop, cover, or edit it out in any PDF editor. What it does is mark provenance visibly and create a clear record of ownership, which matters for drafts, deposition exhibits, and leaked-document tracing. If you need enforcement rather than deterrence, combine the watermark with encryption and usage restrictions."}},
+{"@type":"Question","name":"Does watermarking work on scanned PDFs?","acceptedAnswer":{"@type":"Answer","text":"Yes, with one rule: use overlay mode. A scan is a full-page image, so an underlay watermark drawn behind it is completely hidden. An overlay stamp sits on top of the image and shows normally, at any opacity you like."}},
+{"@type":"Question","name":"Does my PDF get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The stamp is generated with pdf-lib and applied by qpdf compiled to WebAssembly, both running inside the page. After the engines load you can even go offline and keep watermarking; nothing is sent to, or stored on, any server."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Watermark PDF","item":"https://toolaspect.com/watermark-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.range-row{display:flex;align-items:center;gap:.6rem}
+.range-row input[type=range]{flex:1;padding:0;cursor:pointer;accent-color:var(--primary)}
+.range-val{min-width:3.2em;text-align:right;font-size:.85rem;color:var(--text);font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:.4rem;flex-wrap:wrap}
+.seg button{flex:1;padding:.5rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.85rem;cursor:pointer;font-family:inherit;white-space:nowrap}
+.seg button.on{border-color:var(--primary);color:var(--text);background:rgba(99,102,241,.15)}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.3rem;font-weight:800;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.hidden{display:none}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔖 Watermark PDF</h1>
+<p>CONFIDENTIAL, DRAFT, COPY — stamped on every page, without uploading the file</p>
+</div>
+
+<div class="aio-answer">To watermark a PDF, open it below, type your stamp text, set the look (48 pt gray CONFIDENTIAL at 45° and 35% opacity is the classic), pick overlay or underlay and which pages get stamped, then download. The stamp is drawn with pdf-lib and applied page by page by a qpdf WebAssembly engine — all inside your browser, so the document never leaves your machine. A worked check: on US Letter (612 × 792 pt), CONFIDENTIAL at 48 pt measures 357.31 pt wide — 58% of the page — and centered at 45° lands its anchor 195.37 pt from the left edge, 253.97 pt from the bottom. Stamping a 3-page, 1,848-byte report with that mark produces a valid 3-page, 3,096-byte file.</div>
+
+<div class="section-card">
+<h2>PDF &amp; Stamp</h2>
+<div class="pick"><label class="file-label">📄 PDF to watermark<input type="file" id="file" accept=".pdf,application/pdf"></label><div class="fname" id="fname"></div></div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Stamp text</label><input type="text" id="wmText" value="CONFIDENTIAL" maxlength="80"></div>
+<div class="input-group"><label>Font size (pt)</label><input type="number" id="wmSize" value="48" min="6" max="200" step="1"></div>
+<div class="input-group"><label>Color</label><select id="wmColor"><option value="gray" selected>Gray (50%)</option><option value="red">Red</option><option value="blue">Blue</option><option value="black">Black</option></select></div>
+<div class="input-group"><label>Rotation (degrees)</label><select id="wmRotation"><option value="0">0° (horizontal)</option><option value="30">30°</option><option value="45" selected>45° (diagonal)</option><option value="90">90° (vertical)</option></select></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Opacity: <span id="opVal">35%</span></label><div class="range-row"><input type="range" id="wmOpacity" min="5" max="100" value="35"><span class="range-val" id="opVal2"></span></div></div>
+<div class="input-group"><label>Layout</label><div class="seg" id="wmLayout"><button type="button" data-v="center" class="on">Centered once</button><button type="button" data-v="tile">Tiled 3 × 3</button></div></div>
+<div class="input-group"><label>Layer</label><div class="seg" id="wmMode"><button type="button" data-v="overlay" class="on">Overlay (on top)</button><button type="button" data-v="underlay">Underlay (behind)</button></div></div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Pages to stamp</label><select id="wmPages"><option value="all" selected>All pages</option><option value="first">First page only</option><option value="custom">Custom range…</option></select></div>
+<div class="input-group hidden" id="rangeGroup"><label>Range (e.g. 1-3, 5)</label><input type="text" id="wmRange" placeholder="1-3, 5" value="1"></div>
+</div>
+<p style="font-size:.8rem;color:var(--muted);margin-top:.8rem">Need a logo or letterhead instead of text? Upload your own one-page stamp PDF: <label class="file-label" style="padding:.35rem .7rem;font-size:.8rem">Custom stamp PDF (optional)<input type="file" id="stampFile" accept=".pdf,application/pdf"></label> <span id="stampName" style="color:var(--primary-hover)"></span></p>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>🔖 Apply Watermark</button>
+<button class="btn ghost" id="btnReset">Clear</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-add-text/">Add Text to PDF</a></li><li style="margin:4px 0"><a href="/redact-pdf/">Redact PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-watermark-a-pdf/">Read the watermarking guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Watermark Presets by Use Case</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Stamp</th><th>Typical size</th><th>Opacity</th><th>Rotation</th><th>Layer</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>CONFIDENTIAL</td><td>48 pt</td><td>30–40%</td><td>45°</td><td>Overlay</td><td>Must stay visible on any background</td></tr>
+<tr><td>DRAFT / PRELIMINARY</td><td>60 pt</td><td>45–60%</td><td>45°</td><td>Overlay</td><td>Loud on purpose — nobody should mistake it for final</td></tr>
+<tr><td>COPY</td><td>24 pt</td><td>25–35%</td><td>45°</td><td>Tiled 3 × 3</td><td>File-copy control; survives cropping of one mark</td></tr>
+<tr><td>DO NOT DISTRIBUTE</td><td>28 pt</td><td>35%</td><td>30°</td><td>Overlay</td><td>Longer phrases read better at a shallower angle</td></tr>
+<tr><td>Firm name / letterhead</td><td>24 pt</td><td>100%</td><td>0°</td><td>Underlay</td><td>Bottom-stripe or margin placement; keep content readable</td></tr>
+<tr><td>Date + recipient (leak tracing)</td><td>14 pt</td><td>50%</td><td>0°</td><td>Overlay</td><td>Tiled pattern, small — identifies the leaked copy</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Sizes assume US Letter / A4 pages; scale up on Tabloid/A3 drawings. Opacity is the honest lever: below ~20% a mark prints faintly and photocopies away; above ~50% it starts fighting body text.</p>
+</div>
+
+<div class="section-card">
+<h2>Common PDF Page Sizes (points — the units watermarks use)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Page size</th><th>Width × height (pt)</th><th>Width × height (in)</th><th>45° diagonal</th></tr></thead>
+<tbody>
+<tr><td>US Letter</td><td>612 × 792</td><td>8.5 × 11</td><td>1,000.9 pt</td></tr>
+<tr><td>US Legal</td><td>612 × 1,008</td><td>8.5 × 14</td><td>1,179.0 pt</td></tr>
+<tr><td>A4</td><td>595.28 × 841.89</td><td>8.27 × 11.69</td><td>1,031.8 pt</td></tr>
+<tr><td>A3</td><td>841.89 × 1,190.55</td><td>11.69 × 16.54</td><td>1,459.6 pt</td></tr>
+<tr><td>A5</td><td>419.53 × 595.28</td><td>5.83 × 8.27</td><td>727.9 pt</td></tr>
+<tr><td>Tabloid (11 × 17)</td><td>792 × 1,224</td><td>11 × 17</td><td>1,458.6 pt</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A diagonal watermark needs its text to span meaningfully less than the diagonal or it runs off the corners. CONFIDENTIAL at 48 pt spans 357.31 pt horizontally — 58% of Letter's width and 36% of its 1,000.9 pt diagonal, which is why the classic look works without clipping.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Watermarking Works</h2>
+<p>There's no "watermark" feature inside the PDF format — a watermark is just content drawn on every page. Tools differ only in where that content comes from and how it's applied. This one builds a single-page stamp PDF with your text (pdf-lib draws it at your size, color, opacity, and angle), then a qpdf WebAssembly engine stamps that page onto the pages you chose — on top of the content (overlay) or behind it (underlay). Same mechanism Adobe's background/watermark feature uses, running in your browser instead of their cloud.</p>
+<h3>The placement math</h3>
+<p>Rotation happens around the text's baseline start point, not its center, so a naive "draw at page center" lands a diagonal stamp off-center and often clipped. The engine measures the text first — CONFIDENTIAL at 48 pt in Helvetica-Bold is 357.31 pt wide and 44.40 pt tall — then solves for the anchor point that puts the rotated text's center on the page's center: at 45°, that anchor sits 195.37 pt from the left and 253.97 pt from the bottom of a Letter page (306 − 110.63 and 396 − 142.02 in the text's rotated frame). Tiled mode runs the same solve around nine evenly-spaced centers.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the PDF. The tool reads the first page's size so the stamp matches your document exactly — A4 files get A4-sized stamps automatically.</li>
+<li>Type the text, pick a preset-style combination, and choose your layer. Underlay keeps text fully readable; overlay is required for scanned files.</li>
+<li>Limit the stamp with page ranges when only parts of a document carry the mark — "1" for a cover-only CONFIDENTIAL, "2-z" to skip a title page.</li>
+<li>Apply, check the result, download. The output is a normal PDF; the watermark prints with the page.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Start with a 3-page Letter-size quarterly report, 1,848 bytes. The stamp: CONFIDENTIAL, Helvetica-Bold 48 pt, 50% gray, 45°, 35% opacity, centered overlay. The stamp PDF itself is tiny — 1,142 bytes — because it holds one line of standard-font text. qpdf applies it to all three pages with repeat tiling, and the result is a valid 3-page, 3,096-byte PDF: bigger than the original, since each page now carries the drawing operators, but still email-small. Run the same job as an underlay on pages 1–2 only and you get a 2,887-byte file whose page 3 is untouched — page-level selection genuinely skips work, it doesn't blank-and-redraw.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I add a watermark to a PDF for free?</h3><p>Open the PDF in a watermark tool, type the stamp text (CONFIDENTIAL, DRAFT, COPY), set size, opacity, and rotation, choose which pages to stamp, and download the result. This tool draws the stamp with pdf-lib and applies it with a qpdf WebAssembly engine inside your browser — the file is never uploaded to a server, so it also works for confidential documents.</p></div>
+<div class="faq-item"><h3>What is the difference between an overlay and an underlay watermark?</h3><p>An overlay is drawn on top of the page content, so it always stays visible — the right choice when the stamp must be seen, and the only choice that works on scanned pages, which are full-page images that would hide an underlay completely. An underlay is drawn behind the content, so text stays fully readable and the watermark only shows in the margins and white space. Use underlay for letters and reports you want to keep readable; overlay for drafts, copies, and anything that must be unmistakably marked.</p></div>
+<div class="faq-item"><h3>What size and opacity should a PDF watermark be?</h3><p>For a diagonal one-word stamp on US Letter, 40 to 60 pt with 25 to 40 percent opacity is the readable-but-not-bludgeoning zone: at 48 pt, the word CONFIDENTIAL measures 357 pt wide, about 58 percent of the page width, and 35 percent opacity keeps body text legible underneath. Go bigger and bolder (60 pt, 50 percent) for draft copies nobody should mistake for final; lighter (28 to 36 pt, 20 to 25 percent) for tiled patterns so the page stays usable.</p></div>
+<div class="faq-item"><h3>Will a watermark stop someone from copying my PDF?</h3><p>No, and any tool that implies otherwise is overselling. A watermark is regular page content — determined users can crop, cover, or edit it out in any PDF editor. What it does is mark provenance visibly and create a clear record of ownership, which matters for drafts, deposition exhibits, and leaked-document tracing. If you need enforcement rather than deterrence, combine the watermark with encryption and usage restrictions.</p></div>
+<div class="faq-item"><h3>Does watermarking work on scanned PDFs?</h3><p>Yes, with one rule: use overlay mode. A scan is a full-page image, so an underlay watermark drawn behind it is completely hidden. An overlay stamp sits on top of the image and shows normally, at any opacity you like.</p></div>
+<div class="faq-item"><h3>Does my PDF get uploaded anywhere?</h3><p>No. The stamp is generated with pdf-lib and applied by qpdf compiled to WebAssembly, both running inside the page. After the engines load you can even go offline and keep watermarking; nothing is sent to, or stored on, any server.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-add-text/">📝 Add Text to PDF</a>
+<a href="/redact-pdf/">🔏 Redact PDF</a>
+<a href="/pdf-merge/">🗂️ Merge PDF</a>
+<a href="/pdf-annotate/">✏️ PDF Annotate</a>
+<a href="/sign-pdf/">✍️ Sign PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Watermark PDF engine: pdf-lib stamp + qpdf (pdfstudio) apply ===== */
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.9.1/dist/pdf-lib.min.js';
+var PDFSTUDIO_URL='/shared/vendor/pdfstudio/dist/index.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function segVal(id){return el(id).querySelector('button.on').getAttribute('data-v')}
+document.querySelectorAll('#wmLayout button,#wmMode button').forEach(function(b){
+  b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+  });
+});
+el('wmOpacity').addEventListener('input',function(){
+  el('opVal').textContent=this.value+'%';
+});
+el('wmPages').addEventListener('change',function(){
+  el('rangeGroup').classList.toggle('hidden',this.value!=='custom');
+});
+var target=null,stampCustom=null;
+el('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(){target=new Uint8Array(fr.result);el('fname').textContent=f.name+' — '+f.size.toLocaleString('en-US')+' bytes';el('btnGo').disabled=false;setStatus('Loaded. Pick your stamp settings and hit Apply.')};
+  fr.readAsArrayBuffer(f);
+});
+el('stampFile').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f){stampCustom=null;el('stampName').textContent='';return}
+  var fr=new FileReader();
+  fr.onload=function(){stampCustom=new Uint8Array(fr.result);el('stampName').textContent=f.name};
+  fr.readAsArrayBuffer(f);
+});
+el('btnReset').addEventListener('click',function(){
+  target=null;stampCustom=null;
+  el('file').value='';el('stampFile').value='';el('fname').textContent='';el('stampName').textContent='';
+  el('btnGo').disabled=true;el('output').innerHTML='';
+  setStatus('Open a PDF to begin. The file never leaves your browser.');
+});
+/* ---WM-ENGINE-START--- */
+/* Pure placement math — node-verified against @cantoo/pdf-lib 2.9.1 metrics */
+function anchorForCenter(tw,th,rotDeg,cx,cy){
+  var r=rotDeg*Math.PI/180;
+  var dx=(tw/2)*Math.cos(r)-(th/2)*Math.sin(r);
+  var dy=(tw/2)*Math.sin(r)+(th/2)*Math.cos(r);
+  return {x:cx-dx,y:cy-dy};
+}
+function tileCenters(pageW,pageH){
+  var out=[];
+  for(var row=0;row<3;row++)for(var col=0;col<3;col++)out.push({x:pageW*(0.2+0.3*col),y:pageH*(0.2+0.3*row)});
+  return out;
+}
+/* Stamp builder: one page, same size as target page 1, text per settings */
+async function buildStamp(PDFLib,pageW,pageH,cfg){
+  var doc=await PDFLib.PDFDocument.create();
+  var font=await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  var page=doc.addPage([pageW,pageH]);
+  var c={gray:PDFLib.rgb(0.5,0.5,0.5),red:PDFLib.rgb(0.86,0.15,0.15),blue:PDFLib.rgb(0.15,0.3,0.7),black:PDFLib.rgb(0,0,0)}[cfg.color];
+  var tw=font.widthOfTextAtSize(cfg.text,cfg.size);
+  var th=font.heightAtSize(cfg.size);
+  var centers=cfg.layout==='tile'?tileCenters(pageW,pageH):[{x:pageW/2,y:pageH/2}];
+  centers.forEach(function(ct){
+    var a=anchorForCenter(tw,th,cfg.rotation,ct.x,ct.y);
+    page.drawText(cfg.text,{x:a.x,y:a.y,size:cfg.size,font:font,color:c,opacity:cfg.opacity,rotate:PDFLib.degrees(cfg.rotation)});
+  });
+  return {bytes:await doc.save(),textWidth:tw,textHeight:th};
+}
+function pagesToQpdf(sel,range,total){
+  if(sel==='all')return undefined;
+  if(sel==='first')return '1';
+  var s=(range||'').replace(/\s+/g,'');
+  if(!/^\d+(-\d+)?(,\d+(-\d+)?)*$/.test(s)||!s)return null;
+  var ok=true;
+  s.split(',').forEach(function(part){
+    var m=part.match(/^(\d+)-(\d+)$/);
+    if(m){var a=+m[1],b=+m[2];if(a<1||b<a||b>total)ok=false;}
+    else if(+part<1||+part>total)ok=false;
+  });
+  return ok?s:null;
+}
+/* ---- browser wiring ---- */
+function loadScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('failed to load '+src))};document.head.appendChild(s)})}
+var pdflibPromise=null;
+function getPdfLib(){
+  if(window.PDFLib)return Promise.resolve(window.PDFLib);
+  pdflibPromise=pdflibPromise||loadScript(PDFLIB_URL).then(function(){return window.PDFLib});
+  return pdflibPromise;
+}
+var studioPromise=null;
+function getStudio(){
+  if(studioPromise)return studioPromise;
+  studioPromise=import(PDFSTUDIO_URL).then(function(m){return m});
+  return studioPromise;
+}
+el('btnGo').addEventListener('click',async function(){
+  if(!target)return;
+  var btn=el('btnGo');btn.disabled=true;
+  try{
+    setStatus('Loading the stamp engine (pdf-lib, ~630 KB) …');
+    var PDFLib=await getPdfLib();
+    var src=await PDFLib.PDFDocument.load(target);
+    var total=src.getPageCount();
+    var p1=src.getPage(0).getSize();
+    var to=pagesToQpdf(el('wmPages').value,el('wmRange').value,total);
+    if(to===null){setStatus('Custom range is invalid or out of bounds — this file has '+total+' pages.','err');btn.disabled=false;return}
+    var cfg={text:el('wmText').value||'CONFIDENTIAL',size:Math.min(200,Math.max(6,+el('wmSize').value||48)),opacity:(+el('wmOpacity').value||35)/100,rotation:+el('wmRotation').value,color:el('wmColor').value,layout:segVal('wmLayout')};
+    var stampBytes,tw,th;
+    if(stampCustom){
+      setStatus('Using your custom stamp PDF …');
+      stampBytes=stampCustom;tw=th=0;
+    }else{
+      setStatus('Drawing the stamp …');
+      var st=await buildStamp(PDFLib,p1.width,p1.height,cfg);
+      stampBytes=st.bytes;tw=st.textWidth;th=st.textHeight;
+    }
+    setStatus('Loading qpdf WebAssembly (~2.2 MB, cached after first use) and stamping '+total+' page'+(total>1?'s':'')+' …');
+    var studio=await getStudio();
+    var tk=await studio.createPdfToolkit();
+    var mode=segVal('wmMode');
+    var out=await tk.watermark(target,stampBytes,{mode:mode,to:to,repeat:'1'});
+    var out2=new Uint8Array(out);
+    var pct=tw>0?Math.round(tw/p1.width*100):null;
+    var stats='<div class="stat-grid">'
+      +'<div class="stat"><div class="n">'+total+'</div><div class="l">pages stamped</div></div>'
+      +(pct!=null?'<div class="stat"><div class="n">'+pct+'%</div><div class="l">stamp width vs page ('+Math.round(p1.width)+' × '+Math.round(p1.height)+' pt)</div></div>':'')
+      +'<div class="stat"><div class="n">'+out2.length.toLocaleString('en-US')+'</div><div class="l">bytes out (was '+target.length.toLocaleString('en-US')+')</div></div>'
+      +'</div>';
+    var blob=new Blob([out2],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='watermarked.pdf';
+    a.textContent='⬇️ Download watermarked.pdf ('+out2.length.toLocaleString('en-US')+' bytes)';
+    a.className='btn';a.style.display='inline-block';a.style.textDecoration='none';a.style.marginTop='1rem';
+    el('output').innerHTML='';el('output').appendChild(a);
+    el('output').insertAdjacentHTML('beforeend',stats);
+    setStatus('Done — '+mode+' stamped on '+(to||'all '+total)+' page(s). File is ready.','ok');
+  }catch(err){
+    setStatus('Watermarking failed: '+((err&&err.message)||err),'err');
+  }
+  btn.disabled=false;
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

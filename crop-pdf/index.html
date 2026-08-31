@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crop PDF — Trim Margins Free, No Upload | ToolAspect</title>
+<meta name="description" content="Crop a PDF in your browser: auto-detect whitespace or set fixed margins. Writes a real CropBox — a 37% margin cut on Letter needs no upload.">
+<link rel="canonical" href="https://toolaspect.com/crop-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Crop PDF — Trim Margins Free, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Auto-trim whitespace or crop fixed margins off every page. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/crop-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Crop PDF | Free Online Tool">
+<meta name="twitter:description" content="Trim PDF margins or auto-detect content bounds. Nothing uploaded.">
+<meta name="keywords" content="crop pdf, trim pdf margins, pdf cropper, remove white borders from pdf, crop pdf free, pdf crop box">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Crop PDF","description":"Free browser-based PDF cropper. Auto-detects the content on each page and writes a real CropBox, or crops fixed margins off every page. Runs entirely in your browser — no upload, no watermark.","url":"https://toolaspect.com/crop-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I crop a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the file in the cropper, pick auto-trim (it finds the content on each page) or fixed margins, preview the rectangle on page one, and download. This tool runs entirely in your browser — no account, no watermark, and the file is never uploaded to a server."}},
+{"@type":"Question","name":"Does cropping a PDF remove the content outside the box?","acceptedAnswer":{"@type":"Answer","text":"No. Cropping sets a CropBox, which tells viewers to display and print only that region — the underlying content still exists in the file. That is why cropping is reversible, and also why you should never crop to hide sensitive text; for that, use a redaction tool that destroys the content."}},
+{"@type":"Question","name":"Will cropping make my PDF file smaller?","acceptedAnswer":{"@type":"Answer","text":"Rarely. The page content streams, fonts, and images are all still in the file, so the byte size barely moves. If you need a smaller file, run it through a PDF compressor afterward — the two operations are independent."}},
+{"@type":"Question","name":"What is the difference between CropBox and MediaBox?","acceptedAnswer":{"@type":"Answer","text":"MediaBox defines the physical page; CropBox defines the region shown, printed, and exported. Viewers honor the CropBox when one is present. This tool writes a CropBox and leaves the MediaBox untouched, so the change is easy to reverse or redo."}},
+{"@type":"Question","name":"Do printers use the PDF CropBox?","acceptedAnswer":{"@type":"Answer","text":"In general yes — most PDF print pipelines print the CropBox region when one is set, which is exactly why cropping is the right fix for scans with fat white borders that print oddly or shrink your content."}},
+{"@type":"Question","name":"Can I crop every page by a different amount?","acceptedAnswer":{"@type":"Answer","text":"In auto-trim mode, effectively yes: the detector scans each page independently, so a 2-inch border on page 1 and a half-inch border on page 9 each get their own box. Fixed-margin mode applies one uniform cut to every page."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Crop PDF","item":"https://toolaspect.com/crop-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.mode-row{display:flex;gap:1.25rem;flex-wrap:wrap;margin-bottom:1rem}
+.mode-row label{display:flex;align-items:center;gap:.4rem;font-size:.9rem;cursor:pointer;color:var(--text)}
+.mode-row input{accent-color:var(--primary)}
+.crop-inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.crop-inputs{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box}
+.preview-wrap{margin-top:1.25rem;display:flex;gap:1.25rem;flex-wrap:wrap;align-items:flex-start}
+.preview-stage{position:relative;background:#fff;border-radius:8px;overflow:hidden;line-height:0;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+.preview-stage canvas{display:block;max-width:100%}
+.crop-rect{position:absolute;border:2px dashed var(--danger);background:rgba(99,102,241,.14);pointer-events:none}
+.dim-mask{position:absolute;background:rgba(15,17,23,.55);pointer-events:none}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✂️ Crop PDF</h1>
+<p>Auto-trim white borders or crop fixed margins — a real CropBox, written in your browser</p>
+</div>
+
+<div class="aio-answer">To crop a PDF without uploading it: open the file below, choose <strong>Auto-trim whitespace</strong> (each page is scanned and the box hugs its content) or <strong>Fixed margins</strong>, check the red rectangle on the preview, and download. The tool writes a proper CropBox into the file — viewers, printers, and exporters honor it — while the original stays untouched on your disk. Cropping Letter pages with 1-inch margins down to their content removes 37.4% of the page area. Free, no account, no watermark, nothing sent to a server.</div>
+
+<div class="section-card">
+<h2>1 · Open a PDF</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnReset" disabled>↺ Reset</button>
+<button class="btn save" id="btnSave" disabled>💾 Download cropped PDF</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+</div>
+
+<div class="section-card">
+<h2>2 · Choose how to crop</h2>
+<div class="mode-row">
+<label><input type="radio" name="mode" value="auto" checked> Auto-trim whitespace (per page)</label>
+<label><input type="radio" name="mode" value="fixed"> Fixed margins on every page</label>
+</div>
+<div class="crop-inputs">
+<div class="input-group"><label>Mode settings</label><select id="autoWhat">
+<option value="all">Scan every page separately</option>
+<option value="first">Use page 1's bounds for all pages</option>
+</select></div>
+<div class="input-group"><label>Margin / padding (pt)</label><input type="number" id="pad" value="12" min="0" max="144" step="1"></div>
+<div class="input-group"><label>White threshold (0–255)</label><input type="number" id="thresh" value="245" min="128" max="255" step="1"></div>
+<div class="input-group"><label>Detection scale</label><select id="detScale"><option value="1.5">1.5× (fast)</option><option value="2">2× (thorough)</option></select></div>
+</div>
+<p style="color:var(--muted);font-size:.82rem;margin:.75rem 0 0">Padding is added around the detected or fixed box before writing, so auto-trim keeps a small breathing border (set 0 for a tight hug). 72 pt = 1 inch.</p>
+</div>
+
+<div class="section-card">
+<h2>3 · Preview (page 1, detection view)</h2>
+<div class="preview-wrap">
+<div class="preview-stage" id="stage" style="display:none"><canvas id="pv"></canvas><div class="crop-rect" id="crect"></div><div class="dim-mask" id="mtop"></div><div class="dim-mask" id="mbottom"></div><div class="dim-mask" id="mleft"></div><div class="dim-mask" id="mright"></div></div>
+<div class="result-grid" style="flex:1;min-width:260px">
+<div class="result-item"><div class="ri-label">Original page</div><div class="ri-value" id="oDim">—</div></div>
+<div class="result-item"><div class="ri-label">Cropped page</div><div class="ri-value" id="cDim">—</div></div>
+<div class="result-item"><div class="ri-label">Crop box [x0 y0 x1 y1] pt</div><div class="ri-value" id="cBox" style="font-size:.95rem">—</div></div>
+<div class="result-item"><div class="ri-label">Page area removed</div><div class="ri-value" id="cCut">—</div></div>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/extract-pdf-pages/">Extract PDF Pages</a></li><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-crop-a-pdf/">Read the cropping guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Common Page Sizes (PDF Points)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Size</th><th>Points (w × h)</th><th>Inches (w × h)</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>US Letter</td><td>612 × 792</td><td>8.5 × 11</td><td>Default in North America</td></tr>
+<tr><td>A4</td><td>595.28 × 841.89</td><td>8.27 × 11.69</td><td>ISO default elsewhere</td></tr>
+<tr><td>US Legal</td><td>612 × 1008</td><td>8.5 × 14</td><td>Contracts, court filings</td></tr>
+<tr><td>Tabloid / A3-ish</td><td>792 × 1224</td><td>11 × 17</td><td>Spreads, drawings</td></tr>
+<tr><td>A5</td><td>419.53 × 595.28</td><td>5.83 × 8.27</td><td>Booklets, half-size</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">PDF coordinates are measured in points, and 72 points make an inch — so a full-margin crop on Letter leaves 468 × 648 pt (6.5 × 9 in) of page.</p>
+</div>
+
+<div class="section-card">
+<h2>The Five Page Boxes in a PDF</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Box</th><th>What it defines</th><th>Who honors it</th></tr></thead>
+<tbody>
+<tr><td>MediaBox</td><td>The physical page; the outer boundary everything else must fit inside</td><td>Every PDF consumer, always</td></tr>
+<tr><td>CropBox</td><td>The region displayed, printed, and exported</td><td>Viewers, printers, most converters (what this tool writes)</td></tr>
+<tr><td>BleedBox</td><td>Content plus bleed allowance for print finishing</td><td>Professional print pipelines</td></tr>
+<tr><td>TrimBox</td><td>The finished page size after trimming</td><td>Professional print pipelines</td></tr>
+<tr><td>ArtBox</td><td>The bounding box of the artwork itself</td><td>Design handoff workflows</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">When no CropBox is set, viewers fall back to the MediaBox — which is why a scan's fat white borders show up until you crop.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Cropping Works</h2>
+<p>Cropping a PDF is not painting white over the edges. A page carries several boundary boxes in its dictionary, and the CropBox is the one that says "this is what you show." Set it, and every viewer, printer, and thumbnail generator instantly treats your page as the smaller rectangle — the scan borders vanish, the content stops shrinking to fit oversized paper, and e-reader exports stop wrapping white rails around every page.</p>
+<h3>The auto-trim detector</h3>
+<p>The tool renders each page to a canvas with pdf.js, scans the pixels for the first and last "ink" in each direction (a pixel counts as ink when it is darker than the white threshold), and maps those pixel bounds back to PDF points: x = view-origin + pixel ÷ scale, y = page-height − pixel ÷ scale, because canvas coordinates run top-down while PDF coordinates run bottom-up. A padding of your choosing is added, the box is clamped inside the MediaBox, and pdf-lib writes it as the page's CropBox.</p>
+<h3>How to use it</h3>
+<p>Open the file, pick a mode, and watch the preview. Auto-trim with "scan every page separately" handles mixed documents — a full-bleed cover followed by bordered text pages each get their own box. Fixed margins is the one to choose for print prep, where every page must shrink by the same amount. The download appends <em>-cropped</em> to your filename; the original is never modified.</p>
+<h3>A worked example</h3>
+<p>A Letter-size scan (612 × 792 pt) is rendered at 2× — a 1224 × 1584-pixel canvas. The detector finds ink from pixel x = 150 to 1049 and y = 310 to 1275, which maps to a crop box of [75, 154, 525, 637] in points: 450 × 483 pt, or 6.25 × 6.71 inches. That removes 55.2% of the page area — the white border was more than half the scan. With the default 12 pt padding the box grows to 474 × 507 pt (6.58 × 7.04 in) and the cut is 50.4%, leaving a slim breathing border that looks intentional rather than accidental.</p>
+<p>For contrast, a clean office PDF with uniform 1-inch margins crops to 468 × 648 pt (6.5 × 9 in) — 37.4% of the page area gone, and the text jumps from "small island on white paper" to "page that fills the screen."</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I crop a PDF for free?</h3><p>Open the file in the cropper, pick auto-trim (it finds the content on each page) or fixed margins, preview the rectangle on page one, and download. This tool runs entirely in your browser — no account, no watermark, and the file is never uploaded to a server.</p></div>
+<div class="faq-item"><h3>Does cropping a PDF remove the content outside the box?</h3><p>No. Cropping sets a CropBox, which tells viewers to display and print only that region — the underlying content still exists in the file. That is why cropping is reversible, and also why you should never crop to hide sensitive text; for that, use a redaction tool that destroys the content.</p></div>
+<div class="faq-item"><h3>Will cropping make my PDF file smaller?</h3><p>Rarely. The page content streams, fonts, and images are all still in the file, so the byte size barely moves. If you need a smaller file, run it through a PDF compressor afterward — the two operations are independent.</p></div>
+<div class="faq-item"><h3>What is the difference between CropBox and MediaBox?</h3><p>MediaBox defines the physical page; CropBox defines the region shown, printed, and exported. Viewers honor the CropBox when one is present. This tool writes a CropBox and leaves the MediaBox untouched, so the change is easy to reverse or redo.</p></div>
+<div class="faq-item"><h3>Do printers use the PDF CropBox?</h3><p>In general yes — most PDF print pipelines print the CropBox region when one is set, which is exactly why cropping is the right fix for scans with fat white borders that print oddly or shrink your content.</p></div>
+<div class="faq-item"><h3>Can I crop every page by a different amount?</h3><p>In auto-trim mode, effectively yes: the detector scans each page independently, so a 2-inch border on page 1 and a half-inch border on page 9 each get their own box. Fixed-margin mode applies one uniform cut to every page.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/extract-pdf-pages/">📄 Extract PDF Pages</a>
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/redact-pdf/">🔏 Redact PDF</a>
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== Crop PDF engine: pdf.js pixel detection -> pdf-lib setCropBox ===== */
+// ---CROP-ENGINE-START---
+function ptToIn(pt){return pt/72;}
+function fmtPt(w,h){return Math.round(w*100)/100+' × '+Math.round(h*100)/100+' pt ('+(Math.round(w/72*100)/100)+' × '+(Math.round(h/72*100)/100)+' in)';}
+function pxBoundsToPdfBox(b,scale,view){
+  // b = [x0,y0,x1,y1] canvas pixels, top-left origin; view = [x0,y0,x1,y1] user-space region shown
+  return [ view[0]+b[0]/scale,
+           view[3]-b[3]/scale,
+           view[0]+b[2]/scale,
+           view[3]-b[1]/scale ];
+}
+function padBox(box,pad){return [box[0]-pad,box[1]-pad,box[2]+pad,box[3]+pad];}
+function clampBox(box,W,H){return [Math.max(0,box[0]),Math.max(0,box[1]),Math.min(W,box[2]),Math.min(H,box[3])];}
+function boxArea(b){return (b[2]-b[0])*(b[3]-b[1]);}
+function areaCutPct(box,W,H){return (1-boxArea(box)/(W*H))*100;}
+function detectInkBounds(img,threshold){
+  var x0=img.width,y0=img.height,x1=-1,y1=-1;
+  for(var y=0;y<img.height;y++){
+    for(var x=0;x<img.width;x++){
+      var i=(y*img.width+x)*4;
+      if(img.data[i+3]<10)continue;
+      var lum=0.299*img.data[i]+0.587*img.data[i+1]+0.114*img.data[i+2];
+      if(lum<threshold){
+        if(x<x0)x0=x; if(x+1>x1)x1=x+1; if(y<y0)y0=y; if(y+1>y1)y1=y+1;
+      }
+    }
+  }
+  return x1<0?null:[x0,y0,x1,y1];
+}
+function fixedMarginBox(media,m){
+  // media = {x,y,width,height} in user space
+  return [media.x+m,media.y+m,media.x+media.width-m,media.y+media.height-m];
+}
+// ---- browser wiring ----
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'');}
+function loadScript(url){return new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};(document.head||document.documentElement).appendChild(s);});}
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+var pdf=null,origBytes=null,origName='document';
+function renderRaw(pageNum,scale){
+  // rotation 0 = user-space orientation, so detection maps back 1:1 (with view offset)
+  return pdf.getPage(pageNum).then(function(page){
+    var vp=page.getViewport({scale:scale,rotation:0});
+    var c=document.createElement('canvas');
+    c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+    return page.render({canvasContext:c.getContext('2d',{willReadFrequently:true}),viewport:vp}).promise.then(function(){return {canvas:c,view:vp.view.slice(0,2).concat([vp.view[0]+vp.width,vp.view[1]+vp.height])};});
+  });
+}
+function mode(){return document.querySelector('input[name=mode]:checked').value;}
+function currentBoxFor(pageNum){
+  var scale=parseFloat(el('detScale').value)||1.5;
+  if(mode()==='fixed'){
+    var vp;return pdf.getPage(pageNum).then(function(p){
+      vp=p.getViewport({scale:1,rotation:0});
+      var m=parseFloat(el('pad').value)||0;
+      var media={x:vp.view[0],y:vp.view[1],width:vp.view[2]-vp.view[0],height:vp.view[3]-vp.view[1]};
+      return {box:clampBox(fixedMarginBox(media,m),vp.view[2],vp.view[3]),view:[vp.view[0],vp.view[1],vp.view[2],vp.view[3]],W:media.width,H:media.height};
+    });
+  }
+  return renderRaw(pageNum,scale).then(function(r){
+    var ctx=r.canvas.getContext('2d');
+    var img=ctx.getImageData(0,0,r.canvas.width,r.canvas.height);
+    var b=detectInkBounds(img,parseFloat(el('thresh').value)||245);
+    var view=[r.view[0],r.view[1],r.view[0]+r.canvas.width/scale,r.view[1]+r.canvas.height/scale];
+    if(!b)return {box:null,view:view,W:view[2]-view[0],H:view[3]-view[1]};
+    var pad=parseFloat(el('pad').value)||0;
+    var raw=pxBoundsToPdfBox(b,scale,view);
+    return {box:clampBox(padBox(raw,pad),view[2],view[3]),view:view,W:view[2]-view[0],H:view[3]-view[1]};
+  });
+}
+function drawPreview(res){
+  el('oDim').textContent=fmtPt(res.W,res.H);
+  if(!res.box){el('cDim').textContent='—';el('cBox').textContent='nothing detected';el('cCut').textContent='—';el('stage').style.display='none';return;}
+  el('cDim').textContent=fmtPt(res.box[2]-res.box[0],res.box[3]-res.box[1]);
+  el('cBox').textContent=res.box.map(function(v){return Math.round(v)}).join(' ');
+  el('cCut').textContent=(Math.round(areaCutPct(res.box,res.W,res.H)*10)/10)+'%';
+  // overlay on detection view canvas
+  var stage=el('stage'),c=el('pv'),ctx=c.getContext('2d');
+  var pvScale=Math.min(520/res.pvCanvas.width,1);
+  c.width=Math.round(res.pvCanvas.width*pvScale);c.height=Math.round(res.pvCanvas.height*pvScale);
+  ctx.drawImage(res.pvCanvas,0,0,c.width,c.height);
+  var s=res.detScale*pvScale; // canvas px per user pt
+  var x=(res.box[0]-res.view[0])*s,y=(res.view[3]-res.box[3])*s,w=(res.box[2]-res.box[0])*s,h=(res.box[3]-res.box[1])*s;
+  stage.style.display='inline-block';
+  [['mtop',0,0,c.width,y],['mbottom',0,y+h,c.width,c.height-y-h],['mleft',0,y,x,h],['mright',x+w,y,c.width-x-w,h]].forEach(function(m){
+    var d=el(m[0]);d.style.left=m[1]+'px';d.style.top=m[2]+'px';d.style.width=m[3]+'px';d.style.height=m[4]+'px';
+  });
+  var r=el('crect');r.style.left=x+'px';r.style.top=y+'px';r.style.width=w+'px';r.style.height=h+'px';
+}
+function refreshPreview(){
+  if(!pdf)return;
+  var scale=parseFloat(el('detScale').value)||1.5;
+  currentBoxFor(1).then(function(res){
+    return renderRaw(1,scale).then(function(r){
+      res.pvCanvas=r.canvas;res.detScale=scale;
+      drawPreview(res);
+      setStatus('Preview shows page 1. '+(mode()==='auto'?'Auto-trim':'Fixed margins')+' ready — '+el('pad').value+' pt padding.','ok');
+    });
+  }).catch(function(err){setStatus('Preview failed: '+(err&&err.message||err),'err');});
+}
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(doc){
+      pdf=doc;
+      el('btnReset').disabled=false;el('btnSave').disabled=false;
+      setStatus('Loaded '+doc.numPages+' pages. Pick a mode — the preview updates live.','ok');
+      refreshPreview();
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err');});
+  };
+  fr.readAsArrayBuffer(f);
+});
+['pad','thresh','detScale'].forEach(function(id){el(id).addEventListener('input',refreshPreview);});
+document.querySelectorAll('input[name=mode]').forEach(function(r){r.addEventListener('change',refreshPreview);});
+el('autoWhat').addEventListener('change',refreshPreview);
+el('btnReset').addEventListener('click',function(){
+  el('fileInput').value='';pdf=null;origBytes=null;
+  el('btnReset').disabled=true;el('btnSave').disabled=true;
+  el('stage').style.display='none';
+  ['oDim','cDim','cCut','cBox'].forEach(function(id){el(id).textContent='—';});
+  setStatus('Cleared. Open a PDF to begin.');
+});
+el('btnSave').addEventListener('click',function(){
+  if(!pdf)return;
+  el('btnSave').disabled=true;
+  var perPage=el('autoWhat').value==='all';
+  setStatus('Detecting '+(perPage?'each page':'page 1')+' and writing CropBoxes …');
+  var firstBox=null;
+  var chain=Promise.resolve();
+  var boxes=[];
+  for(var i=1;i<=pdf.numPages;i++){
+    (function(n){chain=chain.then(function(){
+      if(!perPage&&firstBox){boxes.push({n:n,box:firstBox.box});return;}
+      return currentBoxFor(n).then(function(res){
+        if(!res.box)boxes.push({n:n,box:null});else{boxes.push({n:n,box:res.box});if(!firstBox)firstBox=res;}
+      });
+    });})(i);
+  }
+  chain.then(function(){
+    return loadScript(PDFLIB_URL).then(function(){
+      var PDFLib=window.PDFLib;
+      return PDFLib.PDFDocument.load(origBytes.slice()).then(function(doc){
+        var applied=0;
+        boxes.forEach(function(b){
+          if(!b.box)return;
+          var pg=doc.getPage(b.n-1);
+          pg.setCropBox(b.box[0],b.box[1],b.box[2]-b.box[0],b.box[3]-b.box[1]);
+          applied++;
+        });
+        return doc.save().then(function(bytes){
+          var blob=new Blob([bytes],{type:'application/pdf'});
+          var a=document.createElement('a');
+          a.href=URL.createObjectURL(blob);
+          a.download=origName+'-cropped.pdf';
+          a.click();
+          setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+          setStatus('Downloaded '+origName+'-cropped.pdf — CropBox written on '+applied+' of '+doc.getPageCount()+' pages. Original untouched.','ok');
+        });
+      });
+    });
+  }).catch(function(err){setStatus('Export failed: '+(err&&err.message||err),'err');}).then(function(){el('btnSave').disabled=false;});
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

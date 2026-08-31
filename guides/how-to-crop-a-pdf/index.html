@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Crop a PDF: Margins, CropBox, Auto-Trim | ToolAspect</title>
+<meta name="description" content="Cropping a PDF explained: what the CropBox is, why white borders happen, auto-trim vs fixed margins, a worked 55% example, and a free no-upload cropper.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-crop-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Crop a PDF: Margins, CropBox, and Auto-Trim","description":"A PDF page keeps its visible region in a CropBox, which is why cropping is a one-line change to the file and fully reversible. This guide covers why scans grow white borders, how auto-trim detectors find content bounds, fixed margins for print prep, what cropping does to file size, why cropping is never redaction, and a free browser cropper that never uploads your file. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Crop a PDF","item":"https://toolaspect.com/guides/how-to-crop-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I crop a PDF without paying for software?","acceptedAnswer":{"@type":"Answer","text":"Use a browser-based cropper that writes a real CropBox: open the file, preview the rectangle, download. The good ones auto-detect the content bounds per page so mixed documents with different border widths still come out right — and nothing gets uploaded."}},
+{"@type":"Question","name":"Is cropping a PDF reversible?","acceptedAnswer":{"@type":"Answer","text":"Yes, if it was done by setting a CropBox. The underlying MediaBox and page content stay in the file, so another pass can set a different box or restore the original. Content removal is a different operation entirely — cropping hides by geometry, redaction destroys."}},
+{"@type":"Question","name":"Why does cropping not reduce file size?","acceptedAnswer":{"@type":"Answer","text":"Because the text, images, and fonts outside the crop region are still in the file — the viewer simply is not showing them. If you need fewer bytes, compress the PDF; if you need pages gone, delete them; cropping changes geometry, not payload."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Crop a PDF: Margins, CropBox, and Auto-Trim</h1>
+<div class="meta"><span>✂️ PDF workflows</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">Scans with inch-thick white borders, slides exported onto Letter paper, spreadsheets printed at 60% size — these are all the same problem: the page is bigger than the content on it. PDFs have a dedicated mechanism for exactly this, and using it properly beats screenshotting or re-exporting every time. Here's how cropping actually works inside the file, when to auto-trim versus set fixed margins, and how to do it without uploading the document anywhere.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does cropping a PDF actually change?</h2>
+<p>Every PDF page carries a set of boundary boxes in its dictionary. The <code>MediaBox</code> is the physical page; the <code>CropBox</code> is the region viewers agree to display, print, and export. When a CropBox is present, it wins — which means cropping is the act of writing a smaller rectangle there. No pixels get painted, no text gets touched: you are updating geometry, and the viewer does the rest.</p>
+<p>That geometry-first design has two consequences worth knowing. Cropping is reversible, because the page content outside the box is still in the file. And cropping is not secrecy, for exactly the same reason — anyone who lifts the CropBox sees what was outside it. Hiding is not deleting.</p>
+<h2>Why do PDFs grow fat white borders?</h2>
+<ul>
+<li><strong>Scanners</strong> guess the page size conservatively, so a 7-inch-wide receipt lands on an 8.5-inch-wide canvas with automatic rails.</li>
+<li><strong>Print-to-PDF drivers</strong> keep the paper size you chose even when the content is narrower — the classic "spreadsheet shrunk to 60%" export.</li>
+<li><strong>Slide and diagram exports</strong> paste content onto a standard page with generous padding so nothing clips.</li>
+<li><strong>Book scans</strong> capture two-page spreads that need splitting before they need cropping — a different tool.</li>
+</ul>
+<p>The pattern behind all four: content smaller than the page. Cropping closes the gap.</p>
+<h2>Auto-trim or fixed margins — which do you need?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Mode</th><th>How it works</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>Auto-trim (per page)</td><td>Each page is rendered and scanned for its content bounds; the box hugs what the detector finds, plus a small padding</td><td>Scans, mixed documents, receipts, inconsistent borders</td></tr>
+<tr><td>Auto-trim (page 1 for all)</td><td>One detection, applied uniformly</td><td>Slide decks and uniform documents, faster on big files</td></tr>
+<tr><td>Fixed margins</td><td>One inset cut on every page — e.g. 0.5 in off each side</td><td>Print prep, binding allowances, uniform trimming</td></tr>
+</tbody>
+</table>
+</div>
+<p>The tell is consistency. If every page has the same problem, fixed margins are predictable and instant. If borders vary — page 3 has a receipt, page 9 has a full-bleed photo — per-page auto-trim is the only thing that comes out right.</p>
+<h2>A worked example: how much page does a border eat?</h2>
+<p>Take a Letter scan, 612 × 792 points (PDF units are points, and 72 points make an inch). Rendered at 2× for detection, the scan measures 1224 × 1584 pixels, and the ink turns out to run from pixel (150, 310) to (1049, 1275). Mapping those pixel bounds back to PDF space — x = 150 ÷ 2 = 75, y = 792 − 1276 ÷ 2 = 154, and so on — gives a crop box of [75, 154, 525, 637]: a 450 × 483-point page, 6.25 × 6.71 inches.</p>
+<p>Run the arithmetic on area and the border was 55.2% of the page. More than half the scan was white paper. With a 12-point padding (a sixth of an inch of breathing room), the box relaxes to 474 × 507 points and the cut is 50.4% — the content keeps a slim frame that reads as intentional rather than accidental.</p>
+<p>For contrast, a clean office PDF with uniform one-inch margins crops to 468 × 648 points (6.5 × 9 in), removing 37.4% of the page area. Same operation, very different documents, same one-line change per page.</p>
+<h2>Does cropping change file size or text?</h2>
+<p>Neither, and it's worth being clear-eyed about that. The content outside the crop is still in the file, so the byte count barely moves — if you need a smaller file, that's <a href="/compress-pdf/">compression</a> territory. Text inside the box stays exactly as it was: selectable, searchable, and untouched, because cropping never re-renders content, it only re-frames it. That's also why cropped PDFs don't degrade — there is no re-encoding step to degrade.</p>
+<h2>Can you crop a PDF without uploading it?</h2>
+<p>Yes — detection is just pixel scanning and writing a box, both of which JavaScript does well. Our <a href="/crop-pdf/">Crop PDF tool</a> renders each page with pdf.js, finds the ink bounds, and writes the CropBox with pdf-lib, all in your browser. There's no account, no watermark, and the original file on disk is never modified — the download is a new copy with <em>-cropped</em> appended. Pair it with <a href="/organize-pdf/">Organize PDF</a> when the border problem comes with a page-order problem, and with <a href="/pdf-to-jpg/">PDF to JPG</a> when the cropped output needs to become images.</p>
+<div class="cta-box"><h3>Crop a PDF right now</h3><p style="color:#fff;opacity:.9">Auto-trim white borders or cut fixed margins on every page, preview before you download. Free, private, in-browser.</p><a href="/crop-pdf/">Crop PDF →</a></div>
+<h2>The bottom line</h2>
+<p>Cropping is geometry, not surgery: set the CropBox, keep the MediaBox, and the file both looks right and stays reversible. Auto-trim for raggedy scans, fixed margins for print prep, and never confuse hiding for redaction — sensitive text needs a tool built to destroy it.</p>
+<div class="related-tools"><a href="/crop-pdf/">✂️ Crop PDF</a><a href="/organize-pdf/">🗂️ Organize PDF</a><a href="/compress-pdf/">🗜️ Compress PDF</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+</body>
+</html>
