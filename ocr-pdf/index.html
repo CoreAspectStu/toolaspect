@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR PDF — Free Text Recognition, No Upload | ToolAspect</title>
+<meta name="description" content="OCR a PDF in your browser: pdf.js renders each page, Tesseract reads it. 300 DPI Letter scans render at 2550×3300 px. Free, no upload, no account.">
+<link rel="canonical" href="https://toolaspect.com/ocr-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="OCR PDF — Free Text Recognition, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn scanned PDFs into selectable, searchable text with pdf.js + Tesseract, entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/ocr-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OCR PDF | Free Online Tool">
+<meta name="twitter:description" content="Recognize text in scanned PDFs locally. Nothing uploaded.">
+<meta name="keywords" content="ocr pdf, pdf to text, scanned pdf to text, free ocr online, tesseract online, searchable pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"OCR PDF","description":"Free browser-based OCR for PDFs. pdf.js renders each page at your chosen DPI and Tesseract — the open-source OCR engine — recognizes the text locally. Copy or download the result as plain text. Nothing is uploaded.","url":"https://toolaspect.com/ocr-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript and WebAssembly"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I OCR a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the scanned PDF in a browser OCR tool, pick a language and DPI, and let it run: each page is rendered to an image and read by the OCR engine, and you copy or download the text. This one uses pdf.js plus Tesseract entirely in your browser — no page limit, no account, no upload."}},
+{"@type":"Question","name":"Is my document uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The PDF is read by your browser, rendered by pdf.js locally, and recognized by Tesseract running as WebAssembly on your machine. The only downloads are the engine itself from a CDN — your document's pixels and text never leave the tab."}},
+{"@type":"Question","name":"What DPI should I use for OCR?","acceptedAnswer":{"@type":"Answer","text":"300 DPI is the working standard for scans: a Letter page becomes 2550×3300 pixels, which is enough resolution for Tesseract to segment characters reliably. 150 DPI (1275×1650 on Letter) runs about a quarter of the pixels and is usually fine for large, clean type like headlines or forms. Small print, faxes, and anything faint deserves 300."}},
+{"@type":"Question","name":"Why did the OCR make mistakes on my scan?","acceptedAnswer":{"@type":"Answer","text":"OCR accuracy depends mostly on input quality: skew, blur, low contrast, and photocopy noise do far more damage than engine choice. Re-scan straight at 300 DPI with decent contrast, or raise DPI here to 300 if it was lower. Handwriting and heavily styled logos remain hard for all OCR engines, this one included."}},
+{"@type":"Question","name":"Does OCR work on a PDF that already has selectable text?","acceptedAnswer":{"@type":"Answer","text":"Technically yes, but it's the wrong tool: if you can already select text, copy it directly — that's the original digital text with perfect accuracy. OCR is for page images (scans, photos, exports as images) where no text layer exists. Some extractors detect this and just take the embedded text instead."}},
+{"@type":"Question","name":"How long does OCR take?","acceptedAnswer":{"@type":"Answer","text":"Roughly a few seconds per page on a typical laptop at 300 DPI, and it varies with page complexity, DPI, and your CPU — the engine runs locally, so there is no queue and no server speeding things up. The first run also downloads the engine (about 4.5 MB of WebAssembly) plus the language file (about 10.4 MB for standard English, 1.9 MB for the fast variant), both cached by the browser for later pages and later visits."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"OCR PDF","item":"https://toolaspect.com/ocr-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.ocr-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+@media(max-width:640px){.ocr-inputs{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.pagebar{margin-top:1rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;font-size:.8rem;color:var(--muted)}
+.pagebar .chip{padding:.22rem .6rem;border:1px solid var(--border);border-radius:20px;color:var(--muted);cursor:pointer}
+.pagebar .chip.on{border-color:var(--success);color:var(--success)}
+.pagebar .chip.done{border-color:var(--success);color:var(--success)}
+.pagebar .chip.off{opacity:.4;text-decoration:line-through}
+.pg-text{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;font-size:.88rem;color:var(--text);white-space:pre-wrap;max-height:340px;overflow-y:auto;margin-top:.5rem;line-height:1.6}
+.pg-head{display:flex;gap:.6rem;align-items:center;margin-top:1.2rem;font-size:.85rem;color:var(--muted)}
+.allbox{margin-top:1.25rem}
+.allbox textarea{width:100%;min-height:220px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.88rem;padding:.9rem 1rem;box-sizing:border-box;font-family:inherit;line-height:1.6}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔍 OCR PDF</h1>
+<p>Scanned PDF → selectable text, with pdf.js and Tesseract in your browser</p>
+</div>
+
+<div class="aio-answer">To recognize text in a scanned PDF without uploading it: open the file below, choose a language and DPI, and press <strong>Recognize</strong>. Each page is rendered locally by pdf.js — a Letter page at 300 DPI becomes a 2550×3300-pixel image — and read by Tesseract, the open-source OCR engine, running as WebAssembly in your tab. You get per-page text plus one combined transcript to copy or download as .txt. Free, no account, no page limit, and the document itself never leaves your machine.</div>
+
+<div class="section-card">
+<h2>1 · Open a scanned PDF</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnReset" disabled>↺ Reset</button>
+<button class="btn" id="btnGo" disabled>🔍 Recognize text</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="pagebar" id="pagebar" style="display:none"></div>
+</div>
+
+<div class="section-card">
+<h2>2 · Settings</h2>
+<div class="ocr-inputs">
+<div class="input-group"><label>Language</label><select id="lang"><option value="eng" selected>English</option><option value="spa">Spanish</option><option value="fra">French</option><option value="deu">German</option></select></div>
+<div class="input-group"><label>Render DPI</label><select id="dpi"><option value="150">150 — fast, big type</option><option value="300" selected>300 — standard for scans</option></select></div>
+<div class="input-group"><label>Model</label><select id="quality"><option value="std" selected>Standard (~10.4 MB, best accuracy)</option><option value="fast">Fast (~1.9 MB, quicker)</option></select></div>
+</div>
+<div class="pagebar" id="pages" style="display:none"></div>
+</div>
+
+<div class="section-card" id="outCard" style="display:none">
+<h2>3 · Recognized text</h2>
+<div id="pagesOut"></div>
+<div class="allbox">
+<div class="pg-head">Combined transcript &nbsp;·&nbsp; <span id="wordCount" style="color:var(--muted)"></span></div>
+<textarea id="allText" readonly spellcheck="false" aria-label="All recognized text"></textarea>
+<div class="btn-row">
+<button class="btn ghost" id="btnCopy">📋 Copy text</button>
+<button class="btn save" id="btnTxt">💾 Download .txt</button>
+</div>
+</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-to-jpg/">Pdf To Jpg Converter</a></li><li style="margin:4px 0"><a href="/compare-pdf/">Compare Pdfs</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-ocr-a-pdf/">Read the OCR guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Render DPI — What Your Page Becomes</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>DPI</th><th>Scale vs. PDF pt</th><th>Letter (612×792 pt)</th><th>A4 (595×841.89 pt)</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>72</td><td>1.0×</td><td>612 × 792 px</td><td>595 × 842 px</td><td>Screen reading only — too low for OCR</td></tr>
+<tr><td>150</td><td>2.083×</td><td>1275 × 1650 px</td><td>1240 × 1754 px</td><td>Headlines, forms, large clean type</td></tr>
+<tr><td>300</td><td>4.167×</td><td>2550 × 3300 px</td><td>2480 × 3508 px</td><td>Standard for scans and small print</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Pixels are the raw material of OCR — the engine can't read characters smaller than its segmentation can see. A 300-DPI Letter page is 8.4 million pixels; held as RGBA that's a 33.7 MB buffer your browser processes per page, which is why OCR is heavier than viewing and why DPI is the speed/accuracy dial.</p>
+</div>
+
+<div class="section-card">
+<h2>What Loads When (and What Never Loads Your File)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Component</th><th>Size</th><th>When</th></tr></thead>
+<tbody>
+<tr><td>pdf.js renderer</td><td>~0.3 MB</td><td>When you open a PDF</td></tr>
+<tr><td>tesseract.js</td><td>~0.06 MB</td><td>On first Recognize</td></tr>
+<tr><td>Tesseract WebAssembly core</td><td>~4.5 MB</td><td>On first Recognize (cached after)</td></tr>
+<tr><td>English model, standard</td><td>~10.4 MB</td><td>First page (cached after)</td></tr>
+<tr><td>English model, fast</td><td>~1.9 MB</td><td>First page if you pick Fast (cached after)</td></tr>
+<tr><td>Your document</td><td>—</td><td>Never uploaded — processed in the tab only</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">All engine code comes from a public CDN; all document data stays local. Both the WASM core and the language model are cached by the browser, so page two and your next visit skip the big downloads.</p>
+</div>
+
+<div class="content-section">
+<h2>How Browser OCR Works</h2>
+<p>OCR — optical character recognition — turns pictures of text into actual text. A scanned PDF is exactly that: photographs of pages wrapped in a PDF container, with no text layer to select or search. The pipeline here has two stages. pdf.js rasterizes each page at your chosen DPI, producing the pixels an OCR engine needs. Tesseract, the engine originally developed at HP and maintained as open source, then segments those pixels into lines, words, and characters, and matches each glyph against its trained language model.</p>
+<h3>The DPI trade-off</h3>
+<p>DPI is the accuracy dial. At 300 DPI a Letter page renders at 2550×3300 pixels and characters are large enough for reliable segmentation; at 150 DPI the same page is 1275×1650 and only 25% as many pixels get processed, which is fine for big type and risky for eight-point footnotes. The math is linear in area: halving DPI quarters the pixels, so 150 DPI runs about four times lighter than 300.</p>
+<h3>How to use it</h3>
+<p>Open the scan, leave the language on English unless the document says otherwise, keep 300 DPI for anything with small print, and press Recognize. Click any page chip to toggle it off if you only need part of a long file. Results appear page by page as they finish; the combined transcript updates underneath. Copy it, or download it as a .txt next to the original.</p>
+<h3>A worked example</h3>
+<p>A 10-page scanned contract at Letter size, 300 DPI, English, standard model. Each page renders to 2550×3300 pixels — 8,415,000 pixels, 33,660,000 bytes as an RGBA buffer. Recognized in sequence, the ten pages produce one transcript; with typical scan quality expect to proofread numbers, names, and any stamped or handwritten marks, because those are where every OCR engine — not just this one — slips. Total engine download on a cold cache: about 15 MB (0.3 MB pdf.js + 0.06 MB tesseract.js + 4.5 MB WASM + 10.4 MB English model), all cached before page two starts.</p>
+<p>If your goal is a searchable PDF rather than a transcript, pair this with <a href="/pdf-to-jpg/">PDF to JPG</a> for images or <a href="/word-to-pdf/">Word to PDF</a> when you'd rather fix the text in a document and re-export it.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I OCR a PDF for free?</h3><p>Open the scanned PDF in a browser OCR tool, pick a language and DPI, and let it run: each page is rendered to an image and read by the OCR engine, and you copy or download the text. This one uses pdf.js plus Tesseract entirely in your browser — no page limit, no account, no upload.</p></div>
+<div class="faq-item"><h3>Is my document uploaded anywhere?</h3><p>No. The PDF is read by your browser, rendered by pdf.js locally, and recognized by Tesseract running as WebAssembly on your machine. The only downloads are the engine itself from a CDN — your document's pixels and text never leave the tab.</p></div>
+<div class="faq-item"><h3>What DPI should I use for OCR?</h3><p>300 DPI is the working standard for scans: a Letter page becomes 2550×3300 pixels, which is enough resolution for Tesseract to segment characters reliably. 150 DPI (1275×1650 on Letter) runs about a quarter of the pixels and is usually fine for large, clean type like headlines or forms. Small print, faxes, and anything faint deserves 300.</p></div>
+<div class="faq-item"><h3>Why did the OCR make mistakes on my scan?</h3><p>OCR accuracy depends mostly on input quality: skew, blur, low contrast, and photocopy noise do far more damage than engine choice. Re-scan straight at 300 DPI with decent contrast, or raise DPI here to 300 if it was lower. Handwriting and heavily styled logos remain hard for all OCR engines, this one included.</p></div>
+<div class="faq-item"><h3>Does OCR work on a PDF that already has selectable text?</h3><p>Technically yes, but it's the wrong tool: if you can already select text, copy it directly — that's the original digital text with perfect accuracy. OCR is for page images (scans, photos, exports as images) where no text layer exists. Some extractors detect this and just take the embedded text instead.</p></div>
+<div class="faq-item"><h3>How long does OCR take?</h3><p>Roughly a few seconds per page on a typical laptop at 300 DPI, and it varies with page complexity, DPI, and your CPU — the engine runs locally, so there is no queue and no server speeding things up. The first run also downloads the engine (about 4.5 MB of WebAssembly) plus the language file (about 10.4 MB for standard English, 1.9 MB for the fast variant), both cached by the browser for later pages and later visits.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/extract-pdf-pages/">📄 Extract PDF Pages</a>
+<a href="/pdf-to-jpg/">🖼️ PDF to JPG</a>
+<a href="/compare-pdf/">🔀 Compare PDFs</a>
+<a href="/word-to-pdf/">📝 Word to PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== OCR PDF engine: pdf.js render -> tesseract.js recognize ===== */
+// ---OCR-ENGINE-START---
+function dpiToScale(dpi){return dpi/72;}
+function renderDims(wPt,hPt,dpi){return [Math.round(wPt*dpiToScale(dpi)),Math.round(hPt*dpiToScale(dpi))];}
+function rgbaBytes(w,h){return w*h*4;}
+function fmtBytes(b){return (b/1048576).toFixed(1)+' MB';}
+function wordCountOf(text){var m=String(text).match(/[A-Za-z0-9À-ɏ][A-Za-z0-9À-ɏ'’-]*/g);return m?m.length:0;}
+// ---- browser wiring ----
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var TESS_JS='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';
+var TESS_WORKER='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/worker.min.js';
+var TESS_CORE='https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0';
+var LANG_ROOT='https://tessdata.projectnaptha.com/4.0.0';
+var LANG_ROOT_FAST='https://tessdata.projectnaptha.com/4.0.0_fast';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'');}
+function loadScript(url){return new Promise(function(res,rej){var s=document.createElement('script');s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};(document.head||document.documentElement).appendChild(s);});}
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+var pdf=null,origBytes=null,origName='document';
+var selected={},results={};
+var ocrProgress={page:0};
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(doc){
+      pdf=doc;results={};selected={};
+      for(var i=1;i<=doc.numPages;i++)selected[i]=true;
+      el('btnReset').disabled=false;el('btnGo').disabled=false;
+      renderPagebar();
+      el('outCard').style.display='none';el('pagesOut').innerHTML='';el('allText').value='';
+      setStatus('Loaded '+doc.numPages+' pages. Pick language/DPI and press Recognize.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err');});
+  };
+  fr.readAsArrayBuffer(f);
+});
+function renderPagebar(){
+  var bar=el('pagebar');
+  bar.style.display='flex';
+  bar.innerHTML='<span>Pages:</span>';
+  for(var i=1;i<=pdf.numPages;i++){
+    (function(n){
+      var c=document.createElement('span');
+      c.className='chip'+(selected[n]?(results[n]?' done':' on'):' off');
+      c.textContent='p'+n;
+      c.title='Click to '+(selected[n]?'exclude':'include')+' page '+n;
+      c.addEventListener('click',function(){selected[n]=!selected[n];renderPagebar();});
+      bar.appendChild(c);
+    })(i);
+  }
+}
+el('btnReset').addEventListener('click',function(){
+  el('fileInput').value='';pdf=null;origBytes=null;results={};selected={};
+  el('btnReset').disabled=true;el('btnGo').disabled=true;
+  el('pagebar').style.display='none';el('outCard').style.display='none';
+  el('pagesOut').innerHTML='';el('allText').value='';
+  setStatus('Cleared. Open a PDF to begin.');
+});
+el('btnGo').addEventListener('click',function(){
+  if(!pdf)return;
+  var lang=el('lang').value,dpi=parseInt(el('dpi').value,10),quality=el('quality').value;
+  var pages=[];for(var i=1;i<=pdf.numPages;i++)if(selected[i])pages.push(i);
+  if(!pages.length){setStatus('Every page is toggled off — click at least one page chip.','err');return;}
+  el('btnGo').disabled=true;
+  el('outCard').style.display='block';
+  setStatus('Loading the OCR engine (one-time ~5 MB, then cached) …');
+  loadScript(TESS_JS).then(function(){
+    var worker;
+    var opts={workerPath:TESS_WORKER,corePath:TESS_CORE,langPath:quality==='fast'?LANG_ROOT_FAST:LANG_ROOT,
+      logger:function(m){
+        if(m&&m.status)setStatus('Page '+((ocrProgress.page||0))+' of '+pages.length+': '+m.status+(m.progress!=null?' '+Math.round(m.progress*100)+'%':''));
+      }};
+    return Tesseract.createWorker(lang,1,opts).then(function(w){
+      worker=w;ocrProgress={page:0};
+      var chain=Promise.resolve();
+      pages.forEach(function(n,ix){
+        chain=chain.then(function(){
+          ocrProgress={page:ix+1};
+          return pdf.getPage(n).then(function(page){
+            var vp1=page.getViewport({scale:1});
+            var dims=renderDims(vp1.width,vp1.height,dpi);
+            var vp=page.getViewport({scale:dpiToScale(dpi)});
+            var c=document.createElement('canvas');
+            c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+            setStatus('Rendering page '+n+' at '+dims[0]+'×'+dims[1]+' px ('+dpi+' DPI) …');
+            return page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){
+              setStatus('Recognizing page '+n+' of '+pdf.numPages+' ('+(ix+1)+'/'+pages.length+') …');
+              return worker.recognize(c);
+            }).then(function(r){
+              results[n]=(r&&r.data&&r.data.text!=null)?r.data.text:'';
+              delete c;
+            });
+          });
+        });
+      });
+      return chain.then(function(){return worker.terminate();});
+    }).catch(function(err){
+      if(worker&&worker.terminate)try{worker.terminate();}catch(_){}
+      throw err;
+    });
+  }).then(function(){
+    renderOutputs();
+    setStatus('Done — '+pages.length+' page'+(pages.length>1?'s':'')+' recognized. Proofread numbers and names; OCR is good, not psychic.','ok');
+    el('btnGo').disabled=false;
+  }).catch(function(err){
+    setStatus('OCR failed: '+(err&&err.message||err),'err');
+    el('btnGo').disabled=false;
+  });
+});
+var ocrProgress={page:0};
+function renderOutputs(){
+  var wrap=el('pagesOut');
+  wrap.innerHTML='';
+  var all=[];
+  for(var n=1;n<=pdf.numPages;n++){
+    if(!(n in results))continue;
+    all.push('--- Page '+n+' ---\n'+results[n].trim());
+    var d=document.createElement('div');
+    var head=document.createElement('div');
+    head.className='pg-head';
+    head.innerHTML='Page '+n+' &nbsp;·&nbsp; '+wordCountOf(results[n])+' words &nbsp;·&nbsp; '+results[n].trim().split(/\n+/).filter(function(l){return l.trim()}).length+' non-empty lines';
+    d.appendChild(head);
+    var t=document.createElement('div');
+    t.className='pg-text';
+    t.textContent=results[n].trim()||(selected[n]?'(no text recognized)':'(page excluded)');
+    d.appendChild(t);
+    wrap.appendChild(d);
+  }
+  var joined=all.join('\n\n');
+  el('allText').value=joined;
+  el('wordCount').textContent=wordCountOf(joined).toLocaleString('en-US')+' words total';
+}
+el('btnCopy').addEventListener('click',function(){
+  el('allText').select();
+  try{document.execCommand('copy');setStatus('Transcript copied to clipboard.','ok');}catch(_){}
+  if(navigator.clipboard){navigator.clipboard.writeText(el('allText').value).then(function(){setStatus('Transcript copied to clipboard.','ok');}).catch(function(){});}
+});
+el('btnTxt').addEventListener('click',function(){
+  var blob=new Blob([el('allText').value],{type:'text/plain'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=origName+'-ocr.txt';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+  setStatus('Downloaded '+origName+'-ocr.txt.','ok');
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

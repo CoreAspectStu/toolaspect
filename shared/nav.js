@@ -152,6 +152,7 @@
         { label: 'Annotate PDF',       href: '/pdf-annotate/' },
         { label: 'Redact PDF',         href: '/redact-pdf/' },
         { label: 'Watermark PDF', href: '/watermark-pdf/' },
+        { label: 'Rotate PDF',      href: '/rotate-pdf/' },
         { label: 'PDF to Text', href: '/pdf-to-text/' },
         { label: 'Extract PDF Pages', href: '/extract-pdf-pages/' },
         { label: 'Crop PDF', href: '/crop-pdf/' },

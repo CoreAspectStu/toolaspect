@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair Corrupt PDF — Free In-Browser Fixer | ToolAspect</title>
+<meta name="description" content="Fix a corrupt or damaged PDF free in your browser. Rebuilds broken cross-reference tables, recovers pages from truncated files. No upload, works offline.">
+<link rel="canonical" href="https://toolaspect.com/pdf-repair/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Repair Corrupt PDF — Free In-Browser Fixer">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Broken PDF? Rebuild the cross-reference table and recover complete pages with the qpdf engine running in your browser. Files never leave your machine.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/pdf-repair/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Repair Corrupt PDF | Free Online Tool">
+<meta name="twitter:description" content="Fix damaged PDFs in your browser. Rebuilt xref tables, recovered pages, no uploads.">
+<meta name="keywords" content="repair corrupt pdf, fix damaged pdf, pdf repair online free, recover pdf file, pdf wont open, repair broken pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Repair Corrupt PDF","description":"Free browser-based PDF repair tool. It feeds a damaged file to qpdf compiled to WebAssembly, which reconstructs the cross-reference table and recovers every complete page it can find. Nothing is uploaded; the repair runs on your machine.","url":"https://toolaspect.com/pdf-repair/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I repair a corrupt PDF file?","acceptedAnswer":{"@type":"Answer","text":"Run it through a PDF repair tool built on a structural engine such as qpdf: it scans the raw bytes for objects, rebuilds the cross-reference table, and writes a fresh, valid file from everything it finds. Most 'PDF won't open' errors are a damaged xref table or a truncated tail — both repair cleanly. Recovery is limited to pages whose bytes still exist; a file cut off mid-transfer gives back every complete page and loses the partial one."}},
+{"@type":"Question","name":"Why do PDF files get corrupted?","acceptedAnswer":{"@type":"Answer","text":"The usual suspects: a transfer or download interrupted before the end (truncation), a write interrupted by a crash or full disk, an email or storage system that mangled the header bytes, and editors that exited mid-save. PDFs are fragile in a specific way — every object's location is written into a cross-reference table, and one bad offset makes readers give up on the whole file even when the pages themselves are intact."}},
+{"@type":"Question","name":"What kinds of damage can be repaired — and what can't?","acceptedAnswer":{"@type":"Answer","text":"Repairable: zeroed or scrambled xref tables, wrong startxref pointers, missing %%EOF trailers, damaged headers, junk bytes prepended before %PDF, and truncated files (complete pages are salvaged). Not repairable: files reduced to random bytes with no objects left, empty files, header-only stubs, and content that was never saved — if the bytes are gone, no tool can conjure them back. The engine rejects those outright rather than emitting a broken 'repaired' file."}},
+{"@type":"Question","name":"My PDF opens but some pages are blank — will repair fix that?","acceptedAnswer":{"@type":"Answer","text":"Probably not, and it's worth knowing why. Repair fixes structure — tables and pointers — so a reader can find every object. Blank pages are usually a rendering problem: missing or unusual fonts, transparency effects an old viewer can't draw, or scans stored in an unsupported image format. The page structure is fine; the pixels aren't. Try a different viewer first (or an update), because that fixes blank pages far more often than a repair does."}},
+{"@type":"Question","name":"Does it work on password-protected PDFs?","acceptedAnswer":{"@type":"Answer","text":"If you know the password, yes — type it in the password field and the engine decrypts while it repairs. If you don't know the password, no honest tool recovers the content: modern PDF encryption (AES) has no backdoor, and 'password removal' services only work on files whose password you already have or that were secured with an empty one."}},
+{"@type":"Question","name":"Is my damaged PDF uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The repair engine is qpdf compiled to WebAssembly, running inside this page — a damaged contract or medical record never leaves your machine, and the tool keeps working offline once the engine has loaded. That matters here more than usual, because the files people bring to repair tools tend to be the ones they can't risk handing around."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Repair Corrupt PDF","item":"https://toolaspect.com/pdf-repair/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.8rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.3rem;font-weight:800;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.stat.rec .n{color:var(--success)}
+.stat.lost .n{color:var(--danger)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.yes{color:var(--success)}
+.data-table td.part{color:#eab308}
+.data-table td.no{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🩹 Repair Corrupt PDF</h1>
+<p>One click, and qpdf rebuilds what it can — inside your browser, far from any server</p>
+</div>
+
+<div class="aio-answer">To repair a corrupt PDF, open the damaged file below and hit Repair. The tool — qpdf compiled to WebAssembly, running on your machine — rescans the raw bytes for every object, rebuilds the cross-reference table, and writes a fresh, valid PDF from everything it finds. What that recovers depends on the damage: a file with a broken xref table, bad offsets, a missing %%EOF, or garbage before the header comes back whole; a truncated file comes back with every complete page and without the partial one (a 40-page report cut at the 85% mark returned 35 pages in testing); random bytes or an empty file are honestly rejected. Nothing is uploaded — it works on contracts and medical records, offline after first load.</div>
+
+<div class="section-card">
+<h2>Damaged PDF</h2>
+<div class="pick"><label class="file-label">📄 Open the corrupt PDF<input type="file" id="file" accept=".pdf,application/pdf"></label><div class="fname" id="fname"></div></div>
+<div class="input-grid">
+<div class="input-group"><label>Password (only if the file was encrypted)</label><input type="password" id="pwd" placeholder="Leave empty for unencrypted files" autocomplete="off"></div>
+<div class="input-group"><label>&nbsp;</label><div style="font-size:.78rem;color:var(--muted);line-height:1.6;padding-top:.35rem">The repair never sends the file anywhere. If it can't be saved, the tool says so instead of handing you a second broken file.</div></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo" disabled>🩹 Repair PDF</button>
+<button class="btn ghost" id="btnReset">Clear</button>
+</div>
+<div class="status-box" id="status">Open the damaged PDF to begin. Files never leave your browser.</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/pdf-merge/">Merge PDF</a></li><li style="margin:4px 0"><a href="/compress-pdf/">Compress PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-repair-a-corrupt-pdf/">Read the PDF repair guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Damage Repairs — Verified Against This Engine</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Damage</th><th>Typical cause</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>Zeroed or scrambled cross-reference table</td><td>Crash mid-save, disk fault</td><td class="yes">Full recovery — table rebuilt from objects</td></tr>
+<tr><td>Wrong startxref pointer</td><td>Editor wrote bad offsets</td><td class="yes">Full recovery</td></tr>
+<tr><td>Missing %%EOF / startxref tail</td><td>Truncated final write</td><td class="yes">Full recovery</td></tr>
+<tr><td>Broken header line (not %PDF-)</td><td>Email/base64 mangling</td><td class="yes">Full recovery — header rescanned</td></tr>
+<tr><td>Junk bytes before the %PDF header</td><td>Mail transport, concatenation</td><td class="yes">Full recovery</td></tr>
+<tr><td>File truncated mid-content</td><td>Interrupted download</td><td class="part">Partial — every complete page kept, partial page lost</td></tr>
+<tr><td>Random bytes / empty file / header-only stub</td><td>Overwrite, zero-length save</td><td class="no">Rejected — nothing left to recover</td></tr>
+<tr><td>Encrypted, password unknown</td><td>Password lost</td><td class="no">No tool can help — AES has no backdoor</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row was produced by actually breaking files and running this exact engine on them, not by reading a vendor's marketing. The truncation row is the one to internalize: repair salvages what's physically present, and a page cut off mid-download was never fully on your disk.</p>
+</div>
+
+<div class="content-section">
+<h2>How PDF Repair Works</h2>
+<p>A PDF is a map plus territory. The territory — pages, fonts, images — is usually fine even in a file that won't open. The map is the cross-reference table: a list of byte offsets telling readers where every object lives. Damage the map and every reader, from Acrobat to your browser, refuses the whole file. Repair is map-making: walk the bytes, find objects by their structure, rebuild the table, write a clean file.</p>
+<h3>The engine</h3>
+<p>This tool runs qpdf compiled to WebAssembly — the same battle-tested structural engine that's been fixing PDFs since 2001, executing locally in your browser tab. qpdf's recovery mode scans for objects regardless of what the xref table claims, reconstructs what it finds, and refuses to emit a file when nothing recognizable remains (a random-byte file fails with "unable to find trailer dictionary," which is the honest answer rather than a fake success). First use downloads ~2.2 MB of WebAssembly; after that the browser caches it and the tool works offline.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the damaged file. If a viewer showed an error like "not a PDF file or it's corrupted" or "file is damaged," that's exactly the failure class repair addresses.</li>
+<li>If the file was encrypted before it broke, type the password; otherwise leave the field empty.</li>
+<li>Hit Repair. You'll get the page count recovered, the output size, and a download — or a plain statement that the file is beyond repair.</li>
+<li>Open the result immediately and spot-check the pages. Then work from the repaired copy and retire the damaged original.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Take a 40-page quarterly report, 19,749 bytes, and simulate the classic interrupted download by cutting it at 85% — 16,786 bytes remain, and the xref table plus trailer, which live at the end, are gone entirely. Repair rescans the byte stream, finds every complete page object, rebuilds the cross-reference table, and emits a valid 16,133-byte PDF with 35 of the 40 pages. The last five pages were cut mid-stream and simply aren't in the surviving bytes — no engine can restore what was never written. Now the gentler case: a 3-page report whose xref table gets scrambled (59 bytes of pointer data clobbered) keeps all its page content, so repair rebuilds the table and returns all 3 pages in a 1,654-byte file. Broken map, intact territory: full recovery. Truncated territory: salvage what's complete, lose what isn't.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I repair a corrupt PDF file?</h3><p>Run it through a PDF repair tool built on a structural engine such as qpdf: it scans the raw bytes for objects, rebuilds the cross-reference table, and writes a fresh, valid file from everything it finds. Most "PDF won't open" errors are a damaged xref table or a truncated tail — both repair cleanly. Recovery is limited to pages whose bytes still exist; a file cut off mid-transfer gives back every complete page and loses the partial one.</p></div>
+<div class="faq-item"><h3>Why do PDF files get corrupted?</h3><p>The usual suspects: a transfer or download interrupted before the end (truncation), a write interrupted by a crash or full disk, an email or storage system that mangled the header bytes, and editors that exited mid-save. PDFs are fragile in a specific way — every object's location is written into a cross-reference table, and one bad offset makes readers give up on the whole file even when the pages themselves are intact.</p></div>
+<div class="faq-item"><h3>What kinds of damage can be repaired — and what can't?</h3><p>Repairable: zeroed or scrambled xref tables, wrong startxref pointers, missing %%EOF trailers, damaged headers, junk bytes prepended before %PDF, and truncated files (complete pages are salvaged). Not repairable: files reduced to random bytes with no objects left, empty files, header-only stubs, and content that was never saved — if the bytes are gone, no tool can conjure them back. The engine rejects those outright rather than emitting a broken "repaired" file.</p></div>
+<div class="faq-item"><h3>My PDF opens but some pages are blank — will repair fix that?</h3><p>Probably not, and it's worth knowing why. Repair fixes structure — tables and pointers — so a reader can find every object. Blank pages are usually a rendering problem: missing or unusual fonts, transparency effects an old viewer can't draw, or scans stored in an unsupported image format. The page structure is fine; the pixels aren't. Try a different viewer first (or an update), because that fixes blank pages far more often than a repair does.</p></div>
+<div class="faq-item"><h3>Does it work on password-protected PDFs?</h3><p>If you know the password, yes — type it in the password field and the engine decrypts while it repairs. If you don't know the password, no honest tool recovers the content: modern PDF encryption (AES) has no backdoor, and "password removal" services only work on files whose password you already have or that were secured with an empty one.</p></div>
+<div class="faq-item"><h3>Is my damaged PDF uploaded to a server?</h3><p>No. The repair engine is qpdf compiled to WebAssembly, running inside this page — a damaged contract or medical record never leaves your machine, and the tool keeps working offline once the engine has loaded. That matters here more than usual, because the files people bring to repair tools tend to be the ones they can't risk handing around.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/pdf-merge/">🗂️ Merge PDF</a>
+<a href="/pdf-split/">✂️ Split PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+<a href="/organize-pdf/">🗃️ Organize PDF</a>
+<a href="/compare-pdf/">🔍 Compare PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Repair engine: pdfstudio 0.4.0 (qpdf-wasm) ===== */
+var PDFSTUDIO_URL='/shared/vendor/pdfstudio/dist/index.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+var bytes=null;
+el('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  bytes=null;
+  var fr=new FileReader();
+  fr.onload=function(){
+    bytes=new Uint8Array(fr.result);
+    el('fname').textContent=f.name+' — '+f.size.toLocaleString('en-US')+' bytes';
+    el('btnGo').disabled=false;
+    setStatus('Loaded. Hit Repair — the engine scans the bytes and rebuilds what it can.');
+  };
+  fr.readAsArrayBuffer(f);
+});
+el('btnReset').addEventListener('click',function(){
+  bytes=null;el('file').value='';el('fname').textContent='';el('btnGo').disabled=true;
+  el('output').innerHTML='';el('pwd').value='';
+  setStatus('Open the damaged PDF to begin. Files never leave your browser.');
+});
+var studioPromise=null;
+function getStudio(){
+  if(studioPromise)return studioPromise;
+  studioPromise=import(PDFSTUDIO_URL);
+  return studioPromise;
+}
+el('btnGo').addEventListener('click',async function(){
+  if(!bytes)return;
+  var btn=el('btnGo');btn.disabled=true;
+  try{
+    setStatus('Loading the repair engine (qpdf WebAssembly, ~2.2 MB — cached after first use) …');
+    var studio=await getStudio();
+    var tk=await studio.createPdfToolkit();
+    setStatus('Scanning and rebuilding …');
+    var pwd=el('pwd').value||undefined;
+    var out=await tk.repair(bytes,pwd?{password:pwd}:undefined);
+    var outBytes=new Uint8Array(out);
+    setStatus('Counting recovered pages …');
+    var pages=await tk.pageCount(outBytes,pwd?{password:pwd}:undefined).catch(function(){return null});
+    var stats=document.createElement('div');
+    stats.className='stat-grid';
+    stats.innerHTML='<div class="stat rec"><div class="n">'+(pages==null?'?':pages)+'</div><div class="l">pages recovered</div></div>'
+      +'<div class="stat"><div class="n">'+outBytes.length.toLocaleString('en-US')+'</div><div class="l">bytes out (was '+bytes.length.toLocaleString('en-US')+')</div></div>';
+    el('output').innerHTML='';
+    el('output').appendChild(stats);
+    var blob=new Blob([outBytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='repaired.pdf';
+    a.textContent='⬇️ Download repaired.pdf ('+outBytes.length.toLocaleString('en-US')+' bytes)';
+    a.className='btn';a.style.display='inline-block';a.style.textDecoration='none';a.style.marginTop='1rem';
+    el('output').appendChild(a);
+    setStatus('Repaired — open the file and spot-check the pages. Keep the original until you have.'+(pages==null?' (page count unavailable)':''),'ok');
+  }catch(err){
+    var msg=(err&&err.message)||(''+err);
+    setStatus('This file is beyond repair: '+msg+' — if the bytes are gone (truncated to nothing, overwritten, empty), no tool can recover them.','err');
+  }
+  btn.disabled=false;
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

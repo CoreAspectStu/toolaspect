@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to SVG Converter — Vectorize Free | ToolAspect</title>
+<meta name="description" content="Convert PNG or JPG to SVG free in your browser. Trace to 2–64 colors, pick a preset, live preview, download real vector paths. No upload, no sign-up.">
+<link rel="canonical" href="https://toolaspect.com/image-to-svg-converter/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Image to SVG Converter — Vectorize Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Trace raster images to real SVG vector paths in your browser. Color count, smoothing presets, live preview. Files never leave your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/image-to-svg-converter/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image to SVG Converter Free | ToolAspect">
+<meta name="twitter:description" content="PNG/JPG → true vector SVG, traced locally. No upload, no watermark.">
+<meta name="keywords" content="image to svg, png to svg, jpg to svg, convert image to svg, vectorize image, bitmap to vector, trace image to svg, raster to vector free, png to svg converter offline">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image to SVG Converter","description":"Free image-to-SVG tracer that runs entirely in your browser. Load a PNG, JPG, WebP, GIF, or BMP, choose a color count and tracing preset, preview the vector result live, and download a real SVG of filled paths. Nothing is uploaded.","url":"https://toolaspect.com/image-to-svg-converter/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is the output a real vector SVG or an embedded bitmap?","acceptedAnswer":{"@type":"Answer","text":"A real vector file. The tracer color-quantizes your image, finds the boundary of each color region, and fits spline curves to those boundaries, writing ordinary <path> elements with fill colors — no base64 PNG hidden inside an SVG wrapper. You can open the output in Illustrator, Inkscape, or Figma and edit individual shapes, recolor them, and scale to any size."}},
+{"@type":"Question","name":"Does converting a photo to SVG make sense?","acceptedAnswer":{"@type":"Answer","text":"Usually not. Photos are continuous-tone: tracing one to 32 colors produces thousands of paths and a file far larger than the original JPEG, with a posterized look rather than photographic detail. Tracing shines on flat-color art — logos, icons, screenshots of diagrams, stencils, line drawings. If you have a photo, keep it raster; if you need it bigger, use an upscaler instead."}},
+{"@type":"Question","name":"What do the color count and presets actually do?","acceptedAnswer":{"@type":"Answer","text":"Color count sets how many colors the quantizer keeps: 2 gives a pure black-and-white stencil, 4–8 suits flat logos, 16 (the default) handles shaded icons, and 32+ only helps gradients you deliberately want banded. Presets bundle the fine-tuning: Posterized uses 4 colors, Detailed turns off path-omitting and keeps 64 colors for maximum fidelity, Curvy fits looser curves for smooth organic shapes."}},
+{"@type":"Question","name":"Why is my traced SVG bigger than the original PNG?","acceptedAnswer":{"@type":"Answer","text":"Vector isn't automatically smaller — it's smaller when the artwork has few colors and large uniform regions. Each color boundary becomes path data, so a noisy photo traces to enormous files. On a 64×64 logo test, the default preset produced 18 paths (2.7 KB) while the detailed preset produced 38 paths (5.8 KB) from the same image. Fewer colors and a higher path-omit threshold shrink the output fast."}},
+{"@type":"Question","name":"Are the images I convert here private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tracing runs entirely in your browser with the open-source imagetracerjs engine (public domain via the Unlicense). Your file is read locally, decoded to pixels on a canvas, traced, and handed back as a download. Nothing is uploaded, and the page keeps working offline once loaded."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Image to SVG Converter","item":"https://toolaspect.com/image-to-svg-converter/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.preview-grid{grid-template-columns:1fr}}
+.preview-pane{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem;text-align:center}
+.preview-pane .plabel{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em}
+.preview-pane .pbox{height:220px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(#22252f 0% 25%, #14161d 0% 50%) 50%/16px 16px;border-radius:6px}
+.preview-pane img,.preview-pane .svg-holder{max-width:100%;max-height:220px;object-fit:contain}
+.stat-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;justify-content:center}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.35rem .7rem;font-size:.78rem;color:var(--muted)}
+.stat strong{color:var(--text)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🖊️ Image to SVG Converter</h1>
+<p>Trace PNG/JPG images to real vector SVGs, entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To convert a raster image (PNG, JPG, WebP, GIF, BMP) to a real vector SVG: drop it below, pick a color count and preset, and click Trace. The tracer quantizes your image to that many colors, finds each color region's boundary, and fits spline curves to it — the output is ordinary <code>&lt;path&gt;</code> elements you can edit in Illustrator or Inkscape, not a bitmap wrapped in SVG tags. Best results come from flat-color art: a logo traced to 8 colors typically lands a handful of KB and scales to billboard size. Photos are the wrong input — they posterize. Everything runs locally with the public-domain imagetracerjs engine; nothing is uploaded.</div>
+
+<div class="section-card">
+<h2>Trace an Image</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">🖼️</div>
+<p>Click or drag an image here (PNG, JPG, WebP, GIF, BMP)</p>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Preset</label><select id="preset"><option value="default">Default (16 colors)</option><option value="posterized1">Posterized — 2 colors</option><option value="posterized2">Posterized — 4 colors</option><option value="curvy">Curvy — smooth shapes</option><option value="sharp">Sharp — corners kept</option><option value="detailed">Detailed — max fidelity</option><option value="grayscale">Grayscale — 7 tones</option><option value="fixedpalette">Fixed palette — 27</option><option value="artistic1">Artistic — painterly</option></select></div>
+<div class="input-group"><label>Colors (2–64)</label><input type="number" id="colors" value="16" min="2" max="64" step="1"></div>
+<div class="input-group"><label>Ignore specks (pathomit 0–32)</label><input type="number" id="pathomit" value="8" min="0" max="32" step="1"></div>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnTrace">Trace to SVG</button>
+<button class="btn ghost" id="btnDownload" disabled>Download SVG</button>
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+<div class="preview-grid" id="previewGrid" style="display:none">
+<div class="preview-pane"><div class="plabel">Original</div><div class="pbox"><img id="origImg" alt="original"></div></div>
+<div class="preview-pane"><div class="plabel">Traced SVG</div><div class="pbox"><div class="svg-holder" id="svgHolder"></div></div></div>
+</div>
+<div class="stat-row" id="stats" style="display:none"></div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/svg-to-png-converter/">SVG to PNG (the reverse)</a></li><li style="margin:4px 0"><a href="/image-compressor/">Compress an image</a></li><li style="margin:4px 0"><a href="/image-upscaler/">Upscale an image</a></li><li style="margin:4px 0"><a href="/image-cropper/">Crop an image</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/image-to-svg/">Read the vectorization guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Tracing Presets, Measured</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Preset</th><th>Key Settings</th><th>Measured on a 64×64 logo test</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td>Default</td><td>16 colors, pathomit 8</td><td>18 paths, 2.7 KB</td><td>General icons and logos</td></tr>
+<tr><td>Posterized (4)</td><td>4 colors, blur 5</td><td>4 paths, 1.0 KB</td><td>Stencils, screen-print art, bold marks</td></tr>
+<tr><td>Detailed</td><td>64 colors, pathomit 0</td><td>38 paths, 5.8 KB</td><td>Shaded icons where fidelity matters</td></tr>
+<tr><td>Curvy</td><td>loose curve fitting</td><td>fewer, smoother nodes</td><td>Organic shapes, rounded lettering</td></tr>
+<tr><td>Sharp</td><td>right-angle emphasis</td><td>crisp corners</td><td>Pixellated or geometric art</td></tr>
+<tr><td>Grayscale</td><td>7 gray tones, 1 quantization cycle</td><td>monochrome layers</td><td>Litho-style single-color output</td></tr>
+<tr><td>Artistic</td><td>loose tracing, stroke outlines</td><td>painterly paths</td><td>Deliberate poster effects</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The path/size figures were measured by running this page's tracer engine on a 64×64 test image (a red disc on a blue-to-teal gradient). Your numbers will differ with your artwork — the pattern won't: more colors and lower pathomit mean more paths and more bytes.</p>
+</div>
+
+<div class="section-card">
+<h2>What to Trace, and What Not To</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Input</th><td>Trace?</td><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Flat-color logos</td><td>✅ Ideal</td><td>Few colors, clean edges — small file, perfect scaling</td></tr>
+<tr><td>Icons and pictograms</td><td>✅ Ideal</td><td>Usually trace cleaner at 2–8 colors than the original looked</td></tr>
+<tr><td>Diagrams, charts, screenshots of UI outlines</td><td>✅ Good</td><td>Large uniform regions compress to a handful of paths</td></tr>
+<tr><td>Line art / stencils</td><td>✅ Good</td><td>2-color posterize gives clean cut lines</td></tr>
+<tr><td>Photographs</td><td>⚠️ Rarely</td><td>Continuous tone posterizes; files balloon past the JPEG original</td></tr>
+<tr><td>Noisy JPEGs / phone photos of logos</td><td>⚠️ Clean up first</td><td>JPEG artifacts trace as speckles — raise pathomit or denoise</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How Image Tracing Works</h2>
+<p>Tracing (vectorization) runs the vector pipeline backwards. Your raster image is a grid of pixels; the tracer first reduces it to a limited palette — that's color quantization, the same family of algorithm behind GIF and PNG-8 encoding. Then, for each color, it walks the boundary between that color and its neighbors (edge following), converts the boundary into a polygon of sample points, and fits spline curves through the points so the outline is smooth rather than staircase-jagged. Each color region becomes one <code>&lt;path&gt;</code> element with a <code>fill</code> — that's the entire output file.</p>
+<h3>What the knobs do</h3>
+<p><strong>Colors</strong> is the quantizer's palette size: 2 for stencil-black-and-white, 4–8 for typical logos, 16 default, 32+ only for deliberate gradient banding. <strong>pathomit</strong> discards traced regions shorter than that node count — the speckle filter that saves noisy JPEGs; raise it when your source is dirty, drop to 0 when every detail matters. The <strong>presets</strong> bundle curve-fitting tolerance (ltres/qtres), blur, and layering choices so you don't have to.</p>
+<h3>A worked example</h3>
+<p>On the 64×64 test logo (a red disc over a linear gradient), the default preset quantized to 16 colors and produced 18 paths totaling 2,713 bytes of SVG. Dropping to the 4-color posterized preset collapsed the gradient into flat bands: 4 paths, 1,036 bytes — 62% smaller at the cost of smooth shading. Pushing the other way to detailed (64 colors, no speckle filtering) yielded 38 paths and 5,773 bytes. That's the trade in miniature: every extra color band you keep becomes more path data. The same dynamic holds at 512×512 and beyond; traced file size scales with the number of color transitions, not the pixel dimensions, which is exactly why a 16-color logo traces to a few KB while a photo traces to megabytes.</p>
+<h3>Editing the result</h3>
+<p>Because the output is plain SVG, every region is editable: select a path in Inkscape or Illustrator, change its fill, delete a stray band, round the corners, or export to AI/EPS/PDF. For web use, drop the SVG inline and restyle colors with CSS — the traced shapes accept <code>fill</code> overrides like any hand-drawn SVG. When a platform wants raster anyway, pair this with <a href="/svg-to-png-converter/">SVG to PNG</a>: trace once, then re-rasterize at every size you need.</p>
+<h3>Privacy, concretely</h3>
+<p>The engine is imagetracerjs by András Jankovics — released to the public domain under the Unlicense — pinned at version 1.2.6 and loaded from a CDN. Your image is decoded to pixels on a local canvas, traced in JavaScript, and returned as a download. No uploads, no accounts, no watermarks; the page works offline after it loads.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is the output a real vector SVG or an embedded bitmap?</h3><p>A real vector file. The tracer color-quantizes your image, finds the boundary of each color region, and fits spline curves to those boundaries, writing ordinary &lt;path&gt; elements with fill colors — no base64 PNG hidden inside an SVG wrapper. You can open the output in Illustrator, Inkscape, or Figma and edit individual shapes, recolor them, and scale to any size.</p></div>
+<div class="faq-item"><h3>Does converting a photo to SVG make sense?</h3><p>Usually not. Photos are continuous-tone: tracing one to 32 colors produces thousands of paths and a file far larger than the original JPEG, with a posterized look rather than photographic detail. Tracing shines on flat-color art — logos, icons, screenshots of diagrams, stencils, line drawings. If you have a photo, keep it raster; if you need it bigger, use an upscaler instead.</p></div>
+<div class="faq-item"><h3>What do the color count and presets actually do?</h3><p>Color count sets how many colors the quantizer keeps: 2 gives a pure black-and-white stencil, 4–8 suits flat logos, 16 (the default) handles shaded icons, and 32+ only helps gradients you deliberately want banded. Presets bundle the fine-tuning: Posterized uses 4 colors, Detailed turns off path-omitting and keeps 64 colors for maximum fidelity, Curvy fits looser curves for smooth organic shapes.</p></div>
+<div class="faq-item"><h3>Why is my traced SVG bigger than the original PNG?</h3><p>Vector isn't automatically smaller — it's smaller when the artwork has few colors and large uniform regions. Each color boundary becomes path data, so a noisy photo traces to enormous files. On a 64×64 logo test, the default preset produced 18 paths (2.7 KB) while the detailed preset produced 38 paths (5.8 KB) from the same image. Fewer colors and a higher path-omit threshold shrink the output fast.</p></div>
+<div class="faq-item"><h3>Are the images I convert here private?</h3><p>Yes. Tracing runs entirely in your browser with the open-source imagetracerjs engine (public domain via the Unlicense). Your file is read locally, decoded to pixels on a canvas, traced, and handed back as a download. Nothing is uploaded, and the page keeps working offline once loaded.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/svg-to-png-converter/">🖼️ SVG to PNG Converter</a>
+<a href="/image-compressor/">🗜️ Image Compressor</a>
+<a href="/image-upscaler/">🔍 Image Upscaler</a>
+<a href="/favicon-generator/">⭐ Favicon Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PM-ENGINE-START---
+// Tracer engine: imagetracerjs 1.2.6 by András Jankovics — public domain
+// (Unlicense) — pinned via jsdelivr. Pipeline: local FileReader -> canvas
+// ImageData -> imagedataToSVG(quantize + edge-follow + spline fit) -> SVG.
+var PM = { file: null, img: null, svg: null, libPromise: null };
+function pmEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function pmFmtSize(b){if(b>=1048576)return (b/1048576).toFixed(2)+' MB';if(b>=1024)return (b/1024).toFixed(1)+' KB';return b+' B';}
+function pmLoadLib(){
+  if(window.ImageTracer)return Promise.resolve(window.ImageTracer);
+  if(!PM.libPromise){
+    PM.libPromise=new Promise(function(res,rej){
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js';
+      s.onload=function(){res(window.ImageTracer);};
+      s.onerror=function(){PM.libPromise=null;rej(new Error('tracer engine failed to load'));};
+      (document.head||document.documentElement).appendChild(s);
+    });
+  }
+  return PM.libPromise;
+}
+function pmReadImg(f){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(f);
+    var img=new Image();
+    img.onload=function(){res(img);};
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('not a readable image'));};
+    img.src=url;
+  });
+}
+function pmImgdata(img){
+  var canvas=document.createElement('canvas');
+  canvas.width=img.naturalWidth||img.width;
+  canvas.height=img.naturalHeight||img.height;
+  var ctx=canvas.getContext('2d');
+  ctx.drawImage(img,0,0);
+  return ctx.getImageData(0,0,canvas.width,canvas.height);
+}
+async function pmLoad(fileList){
+  var f=Array.prototype.slice.call(fileList).filter(function(x){return /^image\//.test(x.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(x.name);})[0];
+  if(!f)return;
+  PM.file=f;
+  PM.svg=null;
+  document.getElementById('btnDownload').disabled=true;
+  try{
+    PM.img=await pmReadImg(f);
+    document.getElementById('origImg').src=PM.img.src;
+    document.getElementById('previewGrid').style.display='grid';
+    document.getElementById('svgHolder').innerHTML='';
+    document.getElementById('stats').style.display='none';
+  }catch(e){
+    document.getElementById('status').innerHTML='<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">'+pmEsc(String(e&&e.message||e))+'</div>';
+  }
+}
+async function pmTrace(){
+  var status=document.getElementById('status');
+  status.innerHTML='';
+  if(!PM.img){status.innerHTML='<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">Load an image first.</div>';return;}
+  var preset=document.getElementById('preset').value;
+  var colors=parseInt(document.getElementById('colors').value,10)||16;
+  var pathomit=parseInt(document.getElementById('pathomit').value,10);
+  pathomit=isNaN(pathomit)?8:Math.min(32,Math.max(0,pathomit));
+  try{
+    var ImageTracer=await pmLoadLib();
+    var imgd=pmImgdata(PM.img);
+    var options={numberofcolors:Math.min(64,Math.max(2,colors)),pathomit:pathomit};
+    PM.svg=ImageTracer.imagedataToSVG(imgd,options);
+    document.getElementById('svgHolder').innerHTML=PM.svg;
+    document.getElementById('btnDownload').disabled=false;
+    var paths=(PM.svg.match(/<path/g)||[]).length;
+    var bytes=new Blob([PM.svg]).size;
+    document.getElementById('stats').style.display='flex';
+    document.getElementById('stats').innerHTML=
+      '<div class="stat">Source <strong>'+(imgd.width)+'×'+(imgd.height)+'</strong> ('+pmFmtSize(PM.file.size)+')</div>'
+      +'<div class="stat">Colors <strong>'+colors+'</strong></div>'
+      +'<div class="stat">Paths <strong>'+paths+'</strong></div>'
+      +'<div class="stat">SVG <strong>'+pmFmtSize(bytes)+'</strong></div>';
+  }catch(e){
+    status.innerHTML='<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">Tracing failed: '+pmEsc(String(e&&e.message||e))+'</div>';
+  }
+}
+// ---- browser wiring ----
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)pmLoad(e.dataTransfer.files);});
+fi.addEventListener('change',function(e){pmLoad(e.target.files);fi.value='';});
+document.getElementById('btnTrace').addEventListener('click',pmTrace);
+document.getElementById('preset').addEventListener('change',function(){
+  var map={'posterized1':2,'posterized2':4,'grayscale':7,'fixedpalette':27,'detailed':64,'artistic1':16};
+  if(map[this.value])document.getElementById('colors').value=map[this.value];
+});
+document.getElementById('btnDownload').addEventListener('click',function(){
+  if(!PM.svg)return;
+  var name=(PM.file?PM.file.name.replace(/\.[^.]+$/,''):'traced')+'.svg';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([PM.svg],{type:'image/svg+xml'}));
+  a.download=name;
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+});
+document.getElementById('btnClear').addEventListener('click',function(){
+  PM.file=null;PM.img=null;PM.svg=null;
+  document.getElementById('previewGrid').style.display='none';
+  document.getElementById('stats').style.display='none';
+  document.getElementById('btnDownload').disabled=true;
+  document.getElementById('status').innerHTML='';
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

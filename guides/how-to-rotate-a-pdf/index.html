@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Rotate a PDF and Make It Stay That Way | ToolAspect</title>
+<meta name="description" content="Why your PDF viewer's rotate button never saves, how the page /Rotate value works, fixing duplex scans with odd/even turns, and when rotating breaks something.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-rotate-a-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Rotate a PDF and Make It Stay That Way","description":"Everyone has re-rotated the same sideways scan five times. This guide explains why viewer rotation is temporary, how a page's stored rotation value makes a turn permanent without re-rendering anything, how to fix duplex scans where every other page is sideways in two clicks, what rotation does to printing and bookmarks, and the one case where rotating causes trouble. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@type":"BreadcrumbList","@context":"https://schema.org","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Rotate a PDF","item":"https://toolaspect.com/guides/how-to-rotate-a-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I permanently rotate a PDF?","acceptedAnswer":{"@type":"Answer","text":"Change each page's stored rotation value inside the file — a dedicated rotation tool does this on download. Your PDF reader's rotate button only changes your view for the session, which is why the sideways page returns the next time you open the document."}},
+{"@type":"Question","name":"Why does my PDF look rotated on one device and fine on another?","acceptedAnswer":{"@type":"Answer","text":"Some viewers quietly apply their own view rotation and remember it per file, while others strictly follow the stored value. The file is only truly fixed when its pages carry the rotation you want — then every device agrees."}},
+{"@type":"Question","name":"Does rotating a PDF reduce quality?","acceptedAnswer":{"@type":"Answer","text":"No. The rotation is metadata: viewers display the identical content turned. No re-rendering, no recompression, no quality loss — file size typically changes by a few bytes."}},
+{"@type":"Question","name":"Can I rotate just the landscape pages in a report?","acceptedAnswer":{"@type":"Answer","text":"Yes — list the pages by number or range (for example 2-3, 5) and apply a 90-degree turn to exactly those. In a browser tool with thumbnails you can also turn single pages one click at a time and see the result immediately."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Rotate a PDF and Make It Stay That Way</h1>
+<div class="meta"><span>🔄 PDF workflows</span><span>⏱️ 5 min read</span><span>Free tool included</span></div>
+<p class="intro">You've rotated that sideways scan before. Probably twice this month. It comes back because your viewer is turning your <em>view</em>, not the file — and the fix is a two-minute lesson in the one number every PDF page carries.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why your viewer's rotate button never saves</h2>
+<p>When you press rotate in Acrobat, Preview, or a browser tab, the app adjusts how it displays that page for this session and drops the setting when the document closes. It's a mercy in disguise: imagine opening a shared contract to find your colleague's temporary 90° turns baked in. The trade-off is that a genuine fix — a scan fed sideways, a landscape table stored portrait — has to be written into the file itself.</p>
+<p>That's what a rotation tool does: it rewrites each page's stored rotation and hands you a new file. Every viewer, printer, phone, and print shop then displays the pages the same way, permanently.</p>
+<h2>The one number that does all the work</h2>
+<p>Every page object in a PDF carries a rotation value — 0, 90, 180, or 270 — the number of degrees the page should be turned clockwise when displayed. The content itself never changes; the viewer just draws it turned. That's why rotating is the safest edit in the PDF toolbox:</p>
+<ul>
+<li>No re-rendering — text stays selectable and searchable</li>
+<li>No recompression — images keep their exact pixels</li>
+<li>No size growth worth mentioning — a few bytes of metadata per page</li>
+<li>Links, form fields, and bookmarks all keep working</li>
+</ul>
+<p>Turns accumulate with plain addition: a page at 90 that gets another 90 lands at 180, and a fourth quarter-turn wraps back to 0. A good tool shows you the extra degrees per page so a double-turned table is obvious before you download.</p>
+<h2>The duplex-scan fix that saves afternoons</h2>
+<p>Feed a two-sided stack through a sheet feeder and one parity often comes out sideways — every front upright, every back turned, or the reverse. The fix is the odd/even shortcut: select <code>odd</code> (or <code>even</code>), apply one 90-degree turn, download. Two clicks for the whole document, versus turning pages one at a time and hoping you didn't miss page 47. If the first parity guess is wrong, reset and try the other side — the directions of feeder flips vary by scanner, but which pages are affected never changes mid-document.</p>
+<h2>Rotating for print: what actually happens</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Situation</th><th>What to do</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Scan fed sideways</td><td>Turn affected pages 90°</td><td>Stored rotation makes every printer honor the turn</td></tr>
+<tr><td>Landscape table on portrait page</td><td>Usually leave it alone</td><td>The author rotated the content; the page value was already correct</td></tr>
+<tr><td>Upside-down page</td><td>180° on that page</td><td>Reversed feed, common with ADF scanners</td></tr>
+<tr><td>Whole document rotated</td><td><code>all</code> + one turn</td><td>Export bug or phone scanner held the wrong way</td></tr>
+</tbody>
+</table>
+</div>
+<p>The trap in that table is row two. Some landscape tables are authored as rotated content on a portrait page — the page value is already 0 and the content is drawn turned. Adding another 90° to "fix" the sideways-looking thumbnail actually breaks the page. The tell: if text on the page reads correctly when you turn your head, the file is fine; if the thumbnail alone looks wrong, the page value is wrong.</p>
+<h2>Rotate a PDF now, free</h2>
+<p>Open your file in the <a href="/rotate-pdf/">Rotate PDF tool</a>: thumbnails show exactly which pages are sideways, single-page buttons turn cards in place, and a page spec (<code>1-3, 5</code>, <code>odd</code>, <code>even</code>, <code>all</code>) applies a 90° or 180° turn to the whole set. The download writes the final angles into the file — everything runs in your browser. While you're fixing orientation, <a href="/organize-pdf/">Organize PDF</a> handles page order and deletions in the same sitting, and <a href="/rearrange-pdf-pages/">Rearrange PDF Pages</a> covers pure reordering.</p>
+<div class="cta-box"><h3>Make the turn permanent</h3><p style="color:#fff;opacity:.9">Per-page, per-range, odd/even for duplex scans — rotation written into the file, not your view of it.</p><a href="/rotate-pdf/">Rotate PDF →</a></div>
+<h2>The bottom line</h2>
+<p>If a page keeps coming back sideways, the file — not your viewer — needs the edit. Rotation is one number per page, accumulated modulo a full turn, written permanently on export. Fix the whole document with odd/even when a scanner is to blame, leave author-rotated tables alone, and download once to be done with it forever.</p>
+<div class="related-tools"><a href="/rotate-pdf/">🔄 Rotate PDF</a><a href="/organize-pdf/">🗂️ Organize PDF</a><a href="/rearrange-pdf-pages/">🔀 Rearrange PDF Pages</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
