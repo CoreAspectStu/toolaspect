@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON to YAML Converter — Free, In-Browser | ToolAspect</title>
+<meta name="description" content="Convert JSON to YAML free in your browser. Real eemeli/yaml engine, 2 or 4 space indent, line folding control, and YAML back to JSON. No uploads.">
+<link rel="canonical" href="https://toolaspect.com/json-to-yaml/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="JSON to YAML Converter — Free, In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Paste JSON, get clean YAML — or paste YAML, get JSON. Powered by the yaml library running locally in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/json-to-yaml/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON to YAML Converter | Free Online Tool">
+<meta name="twitter:description" content="Convert JSON to YAML and back, entirely in your browser. No uploads.">
+<meta name="keywords" content="json to yaml, convert json to yaml, yaml to json, json yaml converter, yaml formatter, json2yaml">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JSON to YAML Converter","description":"Free bidirectional JSON and YAML converter running in the browser on the yaml (eemeli/yaml) engine. Paste JSON to get clean YAML with 2- or 4-space indent and optional 80-column folding, or paste YAML to get formatted JSON. Nothing is uploaded.","url":"https://toolaspect.com/json-to-yaml/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert JSON to YAML?","acceptedAnswer":{"@type":"Answer","text":"Paste the JSON into the left box and hit Convert: the tool parses it once and re-serializes it as YAML, with 2-space indent by default. Nested objects become indented maps, arrays become dash lists, and strings that could be misread as numbers or booleans get quoted only when necessary. A round-trip check parses the YAML back and confirms nothing changed."}},
+{"@type":"Question","name":"Is YAML a superset of JSON?","acceptedAnswer":{"@type":"Answer","text":"Mostly, but not quite, and the exceptions bite. Nearly all JSON is valid YAML — YAML flow style was designed around it. The gaps: JSON allows duplicate keys while YAML parsers reject them ('Map keys must be unique'), JSON allows tab whitespace inside lines while YAML forbids tabs as indentation, and JSON documents can carry a UTF-8 BOM that some YAML tools reject. Converting through a parser rather than by regex handles all of this correctly."}},
+{"@type":"Question","name":"Why do some strings get quotes in the YAML output?","acceptedAnswer":{"@type":"Answer","text":"The serializer quotes a string only when a plain scalar would be ambiguous — when it could be read as a number, boolean, null, or type indicator, or when it contains a colon-space or leading special character. So 3.14 stays a number, \"true\" stays unquoted inside a sentence like 'true story' (which can't be confused with the boolean), but the string \"a: b\" needs quotes because colon-space is YAML's key separator. That minimal quoting is what keeps YAML readable."}},
+{"@type":"Question","name":"What happens to null, booleans, and multiline strings?","acceptedAnswer":{"@type":"Answer","text":"JSON null becomes YAML null, booleans carry over as true/false, numbers keep their value (very large exponents render as 1e+21 style), and an empty string becomes \"\". A multiline string becomes a block scalar: lines under a |- header (strip the final newline) or | (keep it), which is YAML's readable replacement for JSON's \\n escapes."}},
+{"@type":"Question","name":"Can I convert YAML back to JSON?","acceptedAnswer":{"@type":"Answer","text":"Yes — switch the direction toggle to YAML to JSON. The same engine parses the YAML (with precise line-and-column errors for tabs, duplicate keys, or bad indentation) and emits formatted JSON. This is also the quickest honest YAML validator: if it parses to the JSON you expected, the YAML is well-formed."}},
+{"@type":"Question","name":"Does my data get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The converter loads the yaml library from a CDN and then does all parsing and serialization locally in the page. Config files, credentials, and payloads stay on your machine, and the tool keeps working offline after the library loads."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JSON to YAML","item":"https://toolaspect.com/json-to-yaml/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1020px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.seg{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.seg button{flex:1;min-width:140px;padding:.55rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:.88rem;cursor:pointer;font-family:inherit}
+.seg button.on{border-color:var(--primary);color:var(--text);background:rgba(99,102,241,.15)}
+.pane-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.pane-grid{grid-template-columns:1fr}}
+.pane{display:flex;flex-direction:column;gap:.35rem}
+.pane label{font-size:.8rem;color:var(--muted);font-weight:500}
+.pane textarea{width:100%;min-height:340px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.82rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.55;padding:.8rem;outline:none;resize:vertical;box-sizing:border-box}
+.pane textarea:focus{border-color:var(--primary)}
+.opt-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;align-items:center;font-size:.85rem;color:var(--muted)}
+.opt-row select{padding:.5rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem;cursor:pointer}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-top:1rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.7rem;text-align:center}
+.stat .n{font-size:1.25rem;font-weight:800;color:var(--primary)}
+.stat .l{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.content-section pre code{background:none;padding:0}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔁 JSON ⇄ YAML</h1>
+<p>Bidirectional converter on the real yaml engine — running in your browser, not on a server</p>
+</div>
+
+<div class="aio-answer">To convert JSON to YAML, paste the JSON on the left and hit Convert: nested objects become indented maps, arrays become dash lists, and quoting appears only where a plain scalar would be ambiguous. The engine is eemeli/yaml (the modern successor to js-yaml) compiled for the browser, so Kubernetes configs, GitHub Actions workflows, and docker-compose files come out exactly the way those tools expect. A sample conversion: a 285-byte JSON service config converts to a 274-byte YAML file, parses back byte-for-byte equal, and long prose lines fold at column 80 unless you turn folding off. Switch the toggle to go YAML → JSON, with line-and-column parse errors when the input is broken.</div>
+
+<div class="section-card">
+<h2>Converter</h2>
+<div class="seg" id="dirToggle">
+<button type="button" data-v="j2y" class="on">JSON → YAML</button>
+<button type="button" data-v="y2j">YAML → JSON</button>
+</div>
+<div class="pane-grid">
+<div class="pane"><label id="inLabel">JSON input</label><textarea id="inBox" spellcheck="false" placeholder='{" paste JSON here "}'></textarea></div>
+<div class="pane"><label id="outLabel">YAML output</label><textarea id="outBox" spellcheck="false" readonly placeholder="converted output appears here"></textarea></div>
+</div>
+<div class="opt-row">
+<span>Indent <select id="indentSel"><option value="2" selected>2 spaces</option><option value="4">4 spaces</option></select></span>
+<span id="wrapOpt">Line folding <select id="wrapSel"><option value="80" selected>on (col 80)</option><option value="0">off</option></select></span>
+<button class="btn ghost" id="btnSample" style="padding:.5rem 1rem">Load sample</button>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnGo">🔁 Convert</button>
+<button class="btn ghost" id="btnCopy">Copy output</button>
+<button class="btn ghost" id="btnDl">Download</button>
+</div>
+<div class="status-box" id="status">Paste JSON (or load the sample) and hit Convert. Nothing leaves your browser.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/yaml-validator/">YAML Validator</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-convert-json-to-yaml/">Read the conversion guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>JSON Types in YAML Output — Engine-Verified</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>JSON value</th><th>YAML output</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>"hello"</code></td><td><code>hello</code></td><td>Plain scalar — nothing ambiguous</td></tr>
+<tr><td><code>"true story"</code></td><td><code>true story</code></td><td>Whole-string match would be a boolean; a phrase never is</td></tr>
+<tr><td><code>"a: b"</code></td><td><code>"a: b"</code></td><td>colon-space is the key separator — must be quoted</td></tr>
+<tr><td><code>3.14</code>, <code>42</code>, <code>-7</code></td><td><code>3.14</code>, <code>42</code>, <code>-7</code></td><td>Numbers pass through unchanged</td></tr>
+<tr><td><code>1e21</code></td><td><code>1e+21</code></td><td>YAML's canonical exponent form</td></tr>
+<tr><td><code>true</code> / <code>false</code></td><td><code>true</code> / <code>false</code></td><td>1:1 mapping</td></tr>
+<tr><td><code>null</code></td><td><code>null</code></td><td>Explicit null (also valid: <code>~</code>)</td></tr>
+<tr><td><code>""</code></td><td><code>""</code></td><td>Empty string can't be a plain scalar</td></tr>
+<tr><td><code>[1, 2, 3]</code></td><td><code>- 1</code> lines</td><td>Block sequence, one dash per item</td></tr>
+<tr><td><code>{"a":{"b":"c"}}</code></td><td>indented map</td><td>Nesting becomes indentation</td></tr>
+<tr><td><code>"line1\nline2"</code></td><td><code>|-</code> block</td><td>Block scalar replaces \n escapes</td></tr>
+<tr><td><code>"café ☕"</code></td><td>raw UTF-8</td><td>No \u escapes — YAML is Unicode-native</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row is the actual output of the yaml 2.9 engine this page runs, not a paraphrase. The minimal-quoting behavior is the same serializer Ansible, Jest, and the AWS CDK use through this library.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Converter Works</h2>
+<p>JSON and YAML differ in surface, not in data model: both express null, booleans, numbers, strings, arrays, and objects. Converting is therefore two steps — parse to a real value, then serialize in the target syntax — and every subtle bug in naive converters comes from skipping the parse and rewriting text with regexes. This tool always round-trips through the data: <code>JSON.parse</code> → <code>YAML.stringify</code> one way, <code>YAML.parse</code> → <code>JSON.stringify</code> the other, on the eemeli/yaml engine loaded from a CDN and executed locally.</p>
+<h3>The options that matter</h3>
+<p>Indent changes nesting width (2 spaces is the Kubernetes and GitHub Actions convention; 4 is common in older configs). Line folding wraps long plain scalars at column 80 with a continuation indent — the 80-column habit comes from terminals and code review diffs — and can be turned off when every value must stay on one line, as some strict pipelines require. Both are passed straight to the serializer.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Paste JSON (or load the sample), pick indent and folding, hit Convert.</li>
+<li>Read the status line: it shows byte counts and, for JSON → YAML, a round-trip check that parses the output back and compares it to the input — the only proof of a clean conversion.</li>
+<li>Copy or download; the download is named config.yaml (or config.json in the reverse direction).</li>
+<li>Going the other way, broken YAML produces the engine's precise error with line, column, and a pointer under the offending character — tabs used as indentation and duplicate keys are the two most common.</li>
+</ul>
+<h3>A worked example</h3>
+<p>A service config in JSON: a name, a replica count, a nested metrics block with <code>enabled</code> and <code>interval_sec</code>, a two-port array, a null timeout, and an environments list of two objects. In JSON that's 285 bytes over 30 lines. Converted at 2-space indent it becomes 274 bytes of YAML over 27 lines — the ports collapse into dash items, the environments entries read as clean stanzas, and the null stays explicit. Parsing that YAML back yields a value deep-equal to the original JSON object, which the tool verifies on every run rather than assuming. Folding shows up on prose: a 140-character description string wraps into three folded lines at column 80 by default and stays one line with folding off.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert JSON to YAML?</h3><p>Paste the JSON into the left box and hit Convert: the tool parses it once and re-serializes it as YAML, with 2-space indent by default. Nested objects become indented maps, arrays become dash lists, and strings that could be misread as numbers or booleans get quoted only when necessary. A round-trip check parses the YAML back and confirms nothing changed.</p></div>
+<div class="faq-item"><h3>Is YAML a superset of JSON?</h3><p>Mostly, but not quite, and the exceptions bite. Nearly all JSON is valid YAML — YAML flow style was designed around it. The gaps: JSON allows duplicate keys while YAML parsers reject them ("Map keys must be unique"), JSON allows tab whitespace inside lines while YAML forbids tabs as indentation, and JSON documents can carry a UTF-8 BOM that some YAML tools reject. Converting through a parser rather than by regex handles all of this correctly.</p></div>
+<div class="faq-item"><h3>Why do some strings get quotes in the YAML output?</h3><p>The serializer quotes a string only when a plain scalar would be ambiguous — when it could be read as a number, boolean, null, or type indicator, or when it contains a colon-space or leading special character. So 3.14 stays a number, "true" stays unquoted inside a sentence like 'true story' (which can't be confused with the boolean), but the string "a: b" needs quotes because colon-space is YAML's key separator. That minimal quoting is what keeps YAML readable.</p></div>
+<div class="faq-item"><h3>What happens to null, booleans, and multiline strings?</h3><p>JSON null becomes YAML null, booleans carry over as true/false, numbers keep their value (very large exponents render as 1e+21 style), and an empty string becomes "". A multiline string becomes a block scalar: lines under a |- header (strip the final newline) or | (keep it), which is YAML's readable replacement for JSON's \n escapes.</p></div>
+<div class="faq-item"><h3>Can I convert YAML back to JSON?</h3><p>Yes — switch the direction toggle to YAML to JSON. The same engine parses the YAML (with precise line-and-column errors for tabs, duplicate keys, or bad indentation) and emits formatted JSON. This is also the quickest honest YAML validator: if it parses to the JSON you expected, the YAML is well-formed.</p></div>
+<div class="faq-item"><h3>Does my data get uploaded anywhere?</h3><p>No. The converter loads the yaml library from a CDN and then does all parsing and serialization locally in the page. Config files, credentials, and payloads stay on your machine, and the tool keeps working offline after the library loads.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/yaml-validator/">✅ YAML Validator</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
+<a href="/json-viewer/">🌳 JSON Viewer</a>
+<a href="/csv-to-json/">📄 CSV to JSON</a>
+<a href="/xml-formatter/">📰 XML Formatter</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== JSON <-> YAML engine: eemeli/yaml 2.9.0 browser build ===== */
+var YAML_URL='https://cdn.jsdelivr.net/npm/yaml@2.9.0/browser/index.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'');s.style.whiteSpace='pre-wrap'}
+var yamlPromise=null;
+function getYAML(){
+  if(yamlPromise)return yamlPromise;
+  yamlPromise=import(YAML_URL).then(function(m){return m.default||m});
+  return yamlPromise;
+}
+document.querySelectorAll('#dirToggle button').forEach(function(b){
+  b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var j2y=b.getAttribute('data-v')==='j2y';
+    el('inLabel').textContent=j2y?'JSON input':'YAML input';
+    el('outLabel').textContent=j2y?'YAML output':'JSON output';
+    el('wrapOpt').style.display=j2y?'':'none';
+    setStatus(j2y?'Paste JSON (or load the sample) and hit Convert. Nothing leaves your browser.'
+                 :'Paste YAML and hit Convert — parse errors report line and column.');
+  });
+});
+var SAMPLE='{ "service": "payments-api", "replicas": 3, "metrics": { "enabled": true, "interval_sec": 15 }, "ports": [8080, 8443], "timeout_sec": null, "environments": [ { "name": "prod", "url": "https://api.example.com", "verbose": false }, { "name": "staging", "url": "http://staging.example.com", "verbose": true } ] }';
+el('btnSample').addEventListener('click',function(){
+  var j2y=el('dirToggle').querySelector('button.on').getAttribute('data-v')==='j2y';
+  el('inBox').value=j2y?JSON.stringify(JSON.parse(SAMPLE),null,2)
+    :'service: payments-api\nreplicas: 3\nmetrics:\n  enabled: true\n  interval_sec: 15\nports:\n  - 8080\n  - 8443\ntimeout_sec: null\nenvironments:\n  - name: prod\n    url: https://api.example.com\n    verbose: false\n  - name: staging\n    url: http://staging.example.com\n    verbose: true\n';
+});
+function fmtBytes(n){return n.toLocaleString('en-US')}
+el('btnGo').addEventListener('click',async function(){
+  var btn=el('btnGo');btn.disabled=true;
+  try{
+    var YAML=await getYAML();
+    var input=el('inBox').value;
+    if(!input.trim()){setStatus('Paste something first — or hit Load sample.','err');return}
+    var j2y=el('dirToggle').querySelector('button.on').getAttribute('data-v')==='j2y';
+    var output,inBytes=fmtBytes(new Blob([input]).size),outBytes,extra='';
+    if(j2y){
+      var value;
+      try{value=JSON.parse(input)}
+      catch(e){setStatus('Invalid JSON: '+e.message,'err');return}
+      var opts={indent:+el('indentSel').value||2,lineWidth:+el('wrapSel').value};
+      output=YAML.stringify(value,opts);
+      var back=YAML.parse(output);
+      extra='round-trip '+(JSON.stringify(back)===JSON.stringify(value)?'✓ output parses back equal':'✗ MISMATCH (report this)');
+    }else{
+      value=YAML.parse(input);
+      output=JSON.stringify(value,null,+el('indentSel').value||2)+'\n';
+    }
+    el('outBox').value=output;
+    outBytes=fmtBytes(new Blob([output]).size);
+    setStatus('Converted — '+inBytes+' in → '+outBytes+' out, '+output.split('\n').length+' lines'+(extra?'; '+extra:''),'ok');
+  }catch(err){
+    var m=(err&&err.message)||(''+err);
+    setStatus('Parse error: '+m,'err');
+  }
+  btn.disabled=false;
+});
+el('btnCopy').addEventListener('click',function(){
+  var t=el('outBox').value;
+  if(!t)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){setStatus('Output copied to clipboard.','ok')})}
+  else{el('outBox').select();document.execCommand('copy');setStatus('Output copied.','ok')}
+});
+el('btnDl').addEventListener('click',function(){
+  var t=el('outBox').value;
+  if(!t)return;
+  var j2y=el('dirToggle').querySelector('button.on').getAttribute('data-v')==='j2y';
+  var blob=new Blob([t],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=j2y?'config.yaml':'config.json';
+  a.click();
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

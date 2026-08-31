@@ -307,7 +307,8 @@ textarea.pane:focus{outline:none;border-color:var(--primary)}
     var out = T(rows, { align: hasAlign ? align : null });
     if (!document.getElementById('padCells').checked){
       out = out.split('\n').map(function(l){
-        return l.split('|').map(function(s){ return s.trim(); }).join(' |').replace(/^\| /,'|').replace(/ \|$/,'|');
+        var cells = l.split('|'); cells.shift(); cells.pop();
+        return '|' + cells.map(function(s){ return s.trim(); }).join('|') + '|';
       }).join('\n');
     }
     outPane.value = out;

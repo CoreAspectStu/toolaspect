@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>When to Vectorize an Image (and When Not To) | ToolAspect</title>
+<meta name="description" content="How image-to-SVG tracing works: color quantization, edge following, curve fitting — and why logos trace beautifully while photos turn into poster-art megabytes.">
+<link rel="canonical" href="https://toolaspect.com/guides/image-to-svg/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"When to Vectorize an Image (and When Not To)","description":"Converting a raster image to SVG means tracing: quantize to a palette, follow color boundaries, fit curves. This guide explains the pipeline, why flat-color logos trace to a few KB while photos explode into megabytes, how color count and pathomit settings shape the result, and how to pick between vectorizing, upscaling, and staying raster. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"When to Vectorize an Image","item":"https://toolaspect.com/guides/image-to-svg/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can you convert any image to SVG?","acceptedAnswer":{"@type":"Answer","text":"Technically yes, usefully no. Tracing works by reducing the image to a small palette and fitting curves to the color boundaries, so it shines on flat-color art: logos, icons, stencils, diagrams. Photographs are continuous-tone — tracing one produces thousands of paths, a posterized look, and a file larger than the original. For photos that need to be bigger, upscaling is the right tool, not vectorizing."}},
+{"@type":"Question","name":"How many colors should I use when tracing?","acceptedAnswer":{"@type":"Answer","text":"Match the artwork: 2 colors for stencils and pure black-and-white, 4–8 for flat logos, 16 (the common default) for shaded icons, and 32+ only when you want deliberate gradient banding. Every extra color band adds path data — on one 64×64 test, the default 16-color trace produced 18 paths (2.7 KB) while a 64-color detailed trace produced 38 paths (5.8 KB)."}},
+{"@type":"Question","name":"Why does my traced SVG look posterized?","acceptedAnswer":{"@type":"Answer","text":"Because tracing quantizes: it must choose a finite palette, and every pixel is snapped to the nearest palette color. Smooth gradients become visible bands. That's inherent to the technique, not a bug in the tracer — the fix is either more colors (bigger file) or embracing the poster look. True gradient meshes exist in vector formats but no automatic tracer generates them well from photos."}},
+{"@type":"Question","name":"Is a traced SVG smaller than the original PNG?","acceptedAnswer":{"@type":"Answer","text":"Often, for the right artwork. A flat logo traced to 8 colors can shrink dramatically and then scale to any size. But size scales with the number of color transitions, not pixel dimensions — a noisy JPEG or a photo traces to more path data than the pixels were worth. Raise the speckle-filter setting (pathomit) and lower the color count to shrink noisy output."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>When to Vectorize an Image (and When Not To)</h1>
+<div class="meta"><span>🖼️ Images</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">"Convert image to SVG" is one of the most searched image tasks, and most of those searches end in disappointment — because vectorizing is powerful for exactly one category of image and a bad idea for the other one. The dividing line isn't file format or size; it's how many colors your artwork really has. Here's the pipeline, the trade-offs, and the decision rule.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What does image-to-SVG tracing actually do?</h2>
+<p>A tracer runs three stages. First, <strong>color quantization</strong>: the image is reduced to a fixed palette (you choose the size — 2, 8, 16, 64 colors) using a k-means-style clustering pass, the same family of algorithm behind GIF and PNG-8. Second, <strong>edge following</strong>: for each palette color, the algorithm walks the boundary between regions of that color and everything else, recording the boundary as a chain of sample points. Third, <strong>curve fitting</strong>: splines are fitted through those points — with corner detection so hard angles stay hard — and each region is written out as an SVG <code>&lt;path&gt;</code> with a <code>fill</code>. The result is genuine vector geometry you can open and edit in Illustrator, Inkscape, or Figma.</p>
+<p>The <a href="/image-to-svg-converter/">Image to SVG Converter</a> on this site exposes exactly those stages: the color count, a speckle filter (pathomit) that drops tiny regions below a size threshold, and presets that bundle curve-fitting behavior. Everything runs locally in your browser.</p>
+<h2>Why do logos trace beautifully and photos don't?</h2>
+<p>File size and fidelity both scale with the number of color transitions, not with pixel dimensions. A flat logo has maybe six colors and large uniform regions: quantization is nearly lossless, boundaries are clean, and the whole thing collapses to a handful of paths — kilobytes that scale to a billboard. A photograph has effectively unlimited colors: quantization snaps every subtle gradient to bands, every boundary is noisy, and the tracer emits thousands of paths trying to follow them. You get poster art and a file bigger than the JPEG you started with.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Artwork</th><th>Trace result</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>Flat-color logo (4–8 colors)</td><td>Few paths, tiny file, perfect scaling</td><td>✅ Ideal</td></tr>
+<tr><td>Icon / pictogram</td><td>Often cleaner traced at 8 colors than the original</td><td>✅ Ideal</td></tr>
+<tr><td>Diagram / chart screenshot</td><td>Uniform regions collapse nicely</td><td>✅ Good</td></tr>
+<tr><td>Line art, stencil</td><td>2-color posterize gives clean cut paths</td><td>✅ Good</td></tr>
+<tr><td>Photograph</td><td>Thousands of paths, banded colors, huge file</td><td>⚠️ Don't</td></tr>
+<tr><td>Noisy JPEG of a logo</td><td>Compression artifacts traced as speckles</td><td>⚠️ Clean up or raise pathomit</td></tr>
+</tbody>
+</table>
+</div>
+<h2>How do the settings change the output?</h2>
+<p><strong>Color count</strong> is the big lever. Measured on a 64×64 test logo (a red disc over a gradient), the default 16-color trace produced 18 paths and 2.7 KB of SVG; a 4-color posterized pass produced 4 paths and 1.0 KB — 62% smaller, with the gradient flattened to bands; a 64-color detailed pass produced 38 paths and 5.8 KB. More colors, more truth, more bytes. <strong>pathomit</strong> is the speckle filter: any traced boundary with fewer nodes than the threshold is discarded. It's the single best fix for noisy sources — JPEG artifacts, dust on scans, moiré on screenshots. Start at 8; go to 0 only for deliberate detail work.</p>
+<h2>What's the honest alternative to vectorizing?</h2>
+<ul>
+<li><strong>Need it bigger, it's a photo:</strong> upscale it. <a href="/image-upscaler/">Image upscalers</a> add pixels without posterizing; tracing cannot recover photographic detail that isn't in the palette.</li>
+<li><strong>Need it smaller, it's a photo:</strong> recompress. <a href="/image-compressor/">Target-size compression</a> beats a traced look-alike on both quality and size.</li>
+<li><strong>It's a logo and you have the original file:</strong> go back to the source. Designers usually have an AI/SVG/PDF master somewhere — asking beats tracing a 200px web copy.</li>
+<li><strong>The source is truly gone:</strong> that's the moment tracing earns its keep. Trace at 8 colors, clean up stray paths in Inkscape, and save a proper SVG master.</li>
+</ul>
+<h2>How do you clean up a traced SVG?</h2>
+<p>Open it in Inkscape (free) and expect three chores: delete stray paths (the speckles pathomit didn't catch), merge paths that share a fill, and simplify jumpy curves (Path → Simplify). Recolor by selecting paths and changing fill — useful for rebuilding a brand mark's exact palette. The payoff is a master file: from one traced SVG you can <a href="/svg-to-png-converter/">export PNG at any size</a>, print at any resolution, and restyle with CSS on the web. That last property — inline SVG recolorable from your stylesheet — is the quiet reason vectorizing interface icons is so popular.</p>
+<div class="cta-box"><h3>Vectorize your logo now — privately</h3><p style="color:#fff;opacity:.9">Drop a PNG or JPG, pick colors, trace to a real SVG. Runs entirely in your browser.</p><a href="/image-to-svg-converter/">Trace an Image →</a></div>
+<h2>The bottom line</h2>
+<p>Vectorizing is a lossy re-interpretation that pays off only when the artwork is flat and the goal is infinite scaling or editability. Logos, icons, stencils: trace away, at the lowest color count that still looks right. Photos: don't — upscale or compress instead. And when you do trace, remember the two knobs that matter are colors (fidelity vs. size) and pathomit (noise immunity), in that order.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can you convert any image to SVG?</h3><p>Technically yes, usefully no. Tracing works by reducing the image to a small palette and fitting curves to the color boundaries, so it shines on flat-color art: logos, icons, stencils, diagrams. Photographs are continuous-tone — tracing one produces thousands of paths, a posterized look, and a file larger than the original. For photos that need to be bigger, upscaling is the right tool, not vectorizing.</p></div>
+<div class="faq-item"><h3>How many colors should I use when tracing?</h3><p>Match the artwork: 2 colors for stencils and pure black-and-white, 4–8 for flat logos, 16 (the common default) for shaded icons, and 32+ only when you want deliberate gradient banding. Every extra color band adds path data — on one 64×64 test, the default 16-color trace produced 18 paths (2.7 KB) while a 64-color detailed trace produced 38 paths (5.8 KB).</p></div>
+<div class="faq-item"><h3>Why does my traced SVG look posterized?</h3><p>Because tracing quantizes: it must choose a finite palette, and every pixel is snapped to the nearest palette color. Smooth gradients become visible bands. That's inherent to the technique, not a bug in the tracer — the fix is either more colors (bigger file) or embracing the poster look. True gradient meshes exist in vector formats but no automatic tracer generates them well from photos.</p></div>
+<div class="faq-item"><h3>Is a traced SVG smaller than the original PNG?</h3><p>Often, for the right artwork. A flat logo traced to 8 colors can shrink dramatically and then scale to any size. But size scales with the number of color transitions, not pixel dimensions — a noisy JPEG or a photo traces to more path data than the pixels were worth. Raise the speckle-filter setting (pathomit) and lower the color count to shrink noisy output.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/image-to-svg-converter/">Image to SVG Converter</a>
+<a href="/svg-to-png-converter/">SVG to PNG Converter</a>
+<a href="/image-upscaler/">Image Upscaler</a>
+<a href="/image-compressor/">Image Compressor</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

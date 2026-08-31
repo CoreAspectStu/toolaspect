@@ -127,8 +127,10 @@
         { label: 'Favicon Generator',  href: '/favicon-generator/' },
         { label: 'Barcode Generator',  href: '/barcode-generator/' },
         { label: 'XML to JSON', href: '/xml-to-json/' },
+        { label: 'Markdown Table', href: '/markdown-table-generator/' },
         { label: 'SVG to PNG', href: '/svg-to-png-converter/' },
         { label: 'Image to SVG', href: '/image-to-svg-converter/' },
+        { label: 'SVG Editor', href: '/svg-editor/' },
         { label: 'Color Contrast', href: '/color-contrast-checker/' },
         { label: 'Asset Tag Generator',href: '/asset-tag-generator/' },
       ]
