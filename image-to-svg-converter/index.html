@@ -265,7 +265,11 @@ async function pmTrace(){
   try{
     var ImageTracer=await pmLoadLib();
     var imgd=pmImgdata(PM.img);
-    var options={numberofcolors:Math.min(64,Math.max(2,colors)),pathomit:pathomit};
+    // copy the preset object — checkoptions fills defaults onto whatever it's
+    // given, so passing the library's shared preset directly would mutate it.
+    var options=Object.assign({},preset!=='default'?(ImageTracer.optionpresets[preset]||{}):{});
+    options.numberofcolors=Math.min(64,Math.max(2,colors));
+    options.pathomit=pathomit;
     PM.svg=ImageTracer.imagedataToSVG(imgd,options);
     document.getElementById('svgHolder').innerHTML=PM.svg;
     document.getElementById('btnDownload').disabled=false;

@@ -281,10 +281,10 @@ el('btnGo').addEventListener('click',function(){
     var worker;
     var opts={workerPath:TESS_WORKER,corePath:TESS_CORE,langPath:quality==='fast'?LANG_ROOT_FAST:LANG_ROOT,
       logger:function(m){
-        if(m&&m.status)setStatus('Page '+((ocrProgress.page||0))+' of '+pages.length+': '+m.status+(m.progress!=null?' '+Math.round(m.progress*100)+'%':''));
+        if(m&&m.status&&ocrProgress)setStatus('Page '+((ocrProgress.page||0))+' of '+pages.length+': '+m.status+(m.progress!=null?' '+Math.round(m.progress*100)+'%':''));
       }};
     return Tesseract.createWorker(lang,1,opts).then(function(w){
-      worker=w;ocrProgress={page:0};
+      worker=w;
       var chain=Promise.resolve();
       pages.forEach(function(n,ix){
         chain=chain.then(function(){
@@ -301,7 +301,6 @@ el('btnGo').addEventListener('click',function(){
               return worker.recognize(c);
             }).then(function(r){
               results[n]=(r&&r.data&&r.data.text!=null)?r.data.text:'';
-              delete c;
             });
           });
         });
@@ -320,7 +319,6 @@ el('btnGo').addEventListener('click',function(){
     el('btnGo').disabled=false;
   });
 });
-var ocrProgress={page:0};
 function renderOutputs(){
   var wrap=el('pagesOut');
   wrap.innerHTML='';

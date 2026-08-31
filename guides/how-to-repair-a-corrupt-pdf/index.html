@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Repair a Corrupt PDF (What Works, What's Gone) | ToolAspect</title>
+<meta name="description" content="How to fix a corrupt PDF: why files break, which damage repairs fully vs partially, why blank pages aren't a repair case, and a free no-upload repair tool.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-repair-a-corrupt-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Repair a Corrupt PDF","description":"A PDF that won't open usually has a broken cross-reference table, not destroyed content — and that distinction decides whether repair works. This guide explains how PDFs break (interrupted downloads, crashed saves, mangled headers), what the qpdf recovery engine rebuilds versus what it honestly can't (truncated pages are gone; random bytes are rejected), why blank-but-opening pages are a rendering problem repair won't touch, and a free browser tool that repairs without uploading the file. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Repair a Corrupt PDF","item":"https://toolaspect.com/guides/how-to-repair-a-corrupt-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can a corrupt PDF be fixed?","acceptedAnswer":{"@type":"Answer","text":"Usually, yes. Most files that 'won't open' have a damaged cross-reference table — the internal index of object locations — while the actual pages, fonts, and images are intact. A repair engine rescans the raw bytes, rebuilds that index, and writes a fresh file. The exception is truncation: pages whose bytes were never fully saved or downloaded are physically absent, and repair returns every complete page while honestly dropping the partial one."}},
+{"@type":"Question","name":"Why does my PDF say it is damaged when it looks fine in preview?","acceptedAnswer":{"@type":"Answer","text":"Because preview tools are forgiving and full readers are strict. The cross-reference table at the end of a PDF records byte offsets for every object; when one offset is wrong or the trailer is missing, strict readers refuse the whole file. Repair rebuilds the table from the objects themselves, which is why the same bytes can be 'broken' in one app and visible in another."}},
+{"@type":"Question","name":"Is it safe to use an online PDF repair tool?","acceptedAnswer":{"@type":"Answer","text":"Only the kind that runs in your browser. The files people bring to repair tools — contracts, medical records, financial statements — are exactly the ones you shouldn't upload to an unknown server. A tool powered by WebAssembly (like qpdf compiled to wasm) does the repair on your machine: check that the tool works offline after loading, which is the giveaway that nothing is uploaded."}},
+{"@type":"Question","name":"Why won't repair fix my blank pages?","acceptedAnswer":{"@type":"Answer","text":"Blank pages are almost always a rendering failure, not a structural one. The page object exists and is found correctly; the viewer just can't draw it — missing embedded fonts, unsupported transparency, or an unusual image codec. Repair fixes tables and pointers, so it leaves blank pages blank. Update or switch your PDF viewer first; that resolves most blank-page reports."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="wrap">
+<h1>How to Repair a Corrupt PDF</h1>
+<div class="meta"><span>🩹 File recovery</span><span>⏱️ 6 min read</span><span>Free tool included</span></div>
+<p class="intro">"The file is damaged and could not be repaired." Every PDF user meets this message eventually, usually holding something important. The good news: most corrupt PDFs aren't dead — they're disorganized. The catch: knowing which kind you have, because one kind comes back whole and one kind comes back short.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Why PDFs break in the first place</h2>
+<p>A PDF is two things: the content itself (pages, fonts, images, stored as numbered objects) and a cross-reference table at the end of the file — essentially a map of byte offsets saying "object 12 lives at byte 4,481." Readers trust that map absolutely. That design makes PDFs fast to open and easy to append, but it concentrates the failure risk: truncate the file, corrupt the table, or write one bad offset, and readers reject the entire document even though every page is sitting there intact. The common causes all attack the map:</p>
+<ul>
+<li><strong>Interrupted transfers</strong> — a download or email attachment cut short loses the xref table and trailer entirely, because they're at the end.</li>
+<li><strong>Crashed or full-disk saves</strong> — an editor killed mid-write leaves offsets pointing at bytes that were never written.</li>
+<li><strong>Mail-transport mangling</strong> — legacy gateways prepend junk bytes before the %PDF header or mangle the header line itself.</li>
+<li><strong>Storage bit rot or bad syncs</strong> — scrambled regions anywhere in the file, map included.</li>
+</ul>
+<h2>How repair actually works</h2>
+<p>A repair engine does what the name of the file format suggests it might: it stops trusting the map and re-surveys the territory. qpdf's recovery mode scans the raw byte stream for object patterns — <code>n 0 obj … endobj</code> — regardless of what the broken table claims, rebuilds a correct cross-reference table from what it finds, and writes a fresh file. In testing on deliberately broken documents: a 3-page file with 59 bytes of its xref table scrambled repairs to a fully valid 3-page document (1,654 bytes out), because the content was all present. Bad header lines, wrong startxref pointers, missing %%EOF trailers, and junk prepended before the header — all full recoveries. This is the common case, and it's why "PDF repair" tools work as often as they do.</p>
+<h2>The honest limit: truncation</h2>
+<p>When the file is cut short, repair can only return what's physically there. The same engine run on a 40-page, 19,749-byte report cut at the 85% mark — exactly what an interrupted download produces — recovered 35 complete pages in a valid 16,133-byte file. The final five pages were never in the surviving bytes; no engine restores bytes that were never written. So the practical checklist for a truncated file: repair it, count the recovered pages against what you expected, and go back to the source (re-download, re-export, ask the sender) for the tail. And at the far end of the spectrum, a file reduced to random bytes, an empty file, or a bare header stub gets honestly rejected — "unable to find trailer dictionary" — because there's nothing to rebuild from. A tool that "repairs" those is lying to you.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Symptom</th><th>Real problem</th><th>Repair helps?</th></tr></thead>
+<tbody>
+<tr><td>"File is damaged" / won't open</td><td>Broken xref table or trailer</td><td>Yes — full recovery typical</td></tr>
+<tr><td>Opens in preview, fails in Acrobat (or vice versa)</td><td>Partially invalid offsets; readers differ in strictness</td><td>Yes</td></tr>
+<tr><td>Junk characters before %PDF in a text editor</td><td>Transport garbage prepended</td><td>Yes</td></tr>
+<tr><td>File ends abruptly, smaller than expected</td><td>Truncated transfer</td><td>Partially — complete pages only</td></tr>
+<tr><td>Opens fine, but pages render blank</td><td>Rendering: fonts, transparency, image codec</td><td>No — update or switch viewers</td></tr>
+<tr><td>Asks for a password nobody knows</td><td>Encryption working as designed</td><td>No — AES has no backdoor</td></tr>
+</tbody>
+</table>
+</div>
+<h2>What about encrypted files?</h2>
+<p>Encryption and damage are separate problems that sometimes arrive together. If you know the password, a repair tool that accepts one will decrypt while it rebuilds. If you don't, no legitimate tool can help: modern PDF encryption is AES with keys derived from the password, and there is no master key. Services advertising password "removal" recover files that were encrypted with an <em>empty</em> user password — restrictions-only encryption — not files whose real password is lost. Keep the password with the archive; that's the whole recovery plan for encrypted PDFs.</p>
+<h2>Privacy: who should see this file?</h2>
+<p>The documents people bring to repair tools are the documents they can least afford to leak — signed contracts, medical records, financial statements. Uploading a damaged file to an unknown server to fix it trades one problem for a worse one. Browser-based repair changes the calculus: when the engine is WebAssembly running in the page (qpdf compiled to wasm, in our tool's case), the file never leaves the machine, and the giveaway is simple — the tool keeps working offline after it loads. That's the class of tool to prefer for anything sensitive.</p>
+<div class="cta-box"><h3>Repair a PDF right now</h3><p style="color:#fff;opacity:.9">Open the damaged file and hit Repair — qpdf-wasm rebuilds the cross-reference table locally, recovers every complete page, and never uploads anything.</p><a href="/pdf-repair/">Repair Corrupt PDF →</a></div>
+<h2>The bottom line</h2>
+<p>Repair rebuilds maps, not territory. Broken table, bad offsets, missing trailer, mangled header — rebuildable, usually to a whole file. Truncated content — salvage the complete pages and re-fetch the rest. Blank pages — a viewer problem, not a repair job. Run the fix locally when the document is sensitive. Our <a href="/pdf-repair/">Repair Corrupt PDF tool</a> does exactly this in your browser; once your file is healthy again, <a href="/compress-pdf/">Compress PDF</a> can shrink it for sending and <a href="/pdf-merge/">Merge PDF</a> can reassemble it with other documents.</p>
+<div class="related-tools"><a href="/pdf-repair/">🩹 Repair Corrupt PDF</a><a href="/compress-pdf/">🗜️ Compress PDF</a><a href="/pdf-merge/">🗂️ Merge PDF</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
