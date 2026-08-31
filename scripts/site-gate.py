@@ -61,7 +61,11 @@ if sm:
 else:
     warns.append("no sitemap.xml found")
 
-# 3. HOMEPAGE TOOL-COUNT CLAIMS — numbers must match reality (±10% floor)
+# 3. HOMEPAGE TOOL-COUNT CLAIMS — sitewide counts are set to a static "2,000+"
+# (Stu doctrine 2026-08-31: visitors come for ONE tool, not the count; a static
+# round number needs no maintenance and can't go stale). Gate only checks for
+# LOW hard counts (e.g. "550 tools") that undersell reality — "2,000+" style
+# aspirational claims are allowed and ignored.
 n_tools = len([t for t in tools if t not in HUBS | {'account','about','contact','privacy','terms','disclaimer','blog','okf-policy'}])
 n_conv = len(list((repo/'convert').glob('*/index.html')))
 home = (repo/'index.html').read_text() + nav
@@ -69,6 +73,7 @@ import re as _re
 for m in _re.finditer(r'(\d[\d,]*)\s*\+?\s*(?:free\s+)?(?:online\s+)?(?:tools|calculators|converters)', home):
     claimed = int(m.group(1).replace(',', ''))
     if claimed <= 25: continue  # per-category counts, not sitewide claims
+    if claimed >= 1000: continue  # static aspirational sitewide claim ("2,000+") — allowed
     limit = n_conv if 'converter' in m.group(0).lower() else n_tools
     floor = int(limit * 0.9)
     if claimed < floor:
