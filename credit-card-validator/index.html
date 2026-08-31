@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Validator — Luhn &amp; BIN Check | ToolAspect</title>
+<meta name="description" content="Validate card numbers free: Luhn checksum, brand from the BIN, length and CVV check. 4242 4242 4242 4242 passes Luhn with weighted sum 80. Runs locally.">
+<link rel="canonical" href="https://toolaspect.com/credit-card-validator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Credit Card Validator — Luhn &amp; BIN Check">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Check any card number's Luhn checksum, brand, expected length, and CVV format. Runs entirely in your browser — nothing typed is transmitted.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/credit-card-validator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Credit Card Validator Free | ToolAspect">
+<meta name="twitter:description" content="Luhn check, brand detection from the BIN, length + CVV validation — all local, all free.">
+<meta name="keywords" content="credit card validator, luhn check, luhn algorithm calculator, card number validator, bin check, iin lookup, validate credit card number, card checksum, test credit card numbers, cvv length check">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Credit Card Validator","description":"Free credit card number validator that runs entirely in your browser. Check the Luhn checksum, detect the brand from the BIN/IIN, verify length and CVV format, and validate the expiration date. Nothing typed is ever transmitted.","url":"https://toolaspect.com/credit-card-validator/","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How does the Luhn checksum work?","acceptedAnswer":{"@type":"Answer","text":"Starting from the rightmost digit, double every second digit; if a doubling produces a two-digit number, subtract 9 (equivalently, add its digits). Sum everything. The number is valid when the total is a multiple of 10. For 4242 4242 4242 4242, the doubled digits (4→8) and plain digits (2) total 80, and 80 mod 10 = 0 — valid. The checksum catches any single mistyped digit and most adjacent transpositions, which is why every card network uses it."}},
+{"@type":"Question","name":"What is a BIN or IIN?","acceptedAnswer":{"@type":"Answer","text":"The Bank Identification Number — also called the Issuer Identification Number — is the first 6 to 8 digits of a card number. The leading digits map to the network: 4 is Visa, 51–55 and 2221–2720 are Mastercard, 34 and 37 are Amex, 6011/65/644–649 are Discover. The same prefix ranges tell a payment form how to format the number and how long the security code should be, before any network call happens."}},
+{"@type":"Question","name":"Does a passing Luhn check mean the card works?","acceptedAnswer":{"@type":"Answer","text":"No — it means the number is well-formed. Luhn is a checksum for catching typos, not a proof of existence, and it says nothing about whether the account is open, funded, or not stolen. Only an authorized transaction (or a $0 auth) against the payment network can confirm a card is live. Validators like this one exist so forms reject garbage before that expensive step."}},
+{"@type":"Question","name":"Is it safe to type a card number here?","acceptedAnswer":{"@type":"Answer","text":"The check runs entirely in your browser with the open-source braintree/card-validator engine loaded from this site — no network request carries what you type, and you can verify that in the network tab. Still, the smarter habit is to use public test numbers (4242 4242 4242 4242 and friends) unless you're checking your own card. Never paste real card numbers into sites you don't trust."}},
+{"@type":"Question","name":"Why does 4242 4242 4242 4242 come up everywhere?","acceptedAnswer":{"@type":"Answer","text":"It's Stripe's canonical public test card — a Visa number chosen to pass Luhn, published by payment processors for developers to test checkout flows without real money. Others in the set include 5555 5555 5555 4444 (Mastercard, Luhn sum 60), 3782 822463 10005 (Amex, sum 60), and 6011 1111 1111 1117 (Discover). They're well-formed by design; they will always decline in live processing."}},
+{"@type":"Question","name":"How long is a credit card number supposed to be?","acceptedAnswer":{"@type":"Answer","text":"16 digits is the norm, not the rule. Visa uses 16, 18, or 19; Mastercard exactly 16; Amex 15; Diners Club 14, 16, or 19; Discover 16 or 19; JCB and UnionPay anywhere from 16 to 19 (UnionPay down to 14). The validator knows each network's allowed lengths and flags a length mismatch even when Luhn passes."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"Credit Card Validator","item":"https://toolaspect.com/credit-card-validator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.8rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.05rem;box-sizing:border-box;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.03em}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.verdict{border-radius:var(--radius);padding:1rem 1.25rem;margin-top:.25rem;font-size:.95rem}
+.verdict.ok{background:rgba(34,197,94,.08);border:1px solid var(--success);color:var(--success)}
+.verdict.bad{background:rgba(239,68,68,.08);border:1px solid var(--danger);color:var(--danger)}
+.verdict.partial{background:rgba(245,158,11,.08);border:1px solid var(--warn);color:var(--warn)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
+@media(max-width:640px){.detail-grid{grid-template-columns:1fr}}
+.detail-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem}
+.detail-item .di-label{font-size:.78rem;color:var(--muted);margin-bottom:.2rem}
+.detail-item .di-value{font-size:.95rem;font-weight:700}
+.detail-item .di-value.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.chip{padding:.35rem .75rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--text);font-size:.8rem;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+.notebox{background:var(--surface);border:1px solid var(--warn);border-radius:var(--radius);color:var(--warn);padding:.8rem 1.25rem;margin-top:1rem;font-size:.85rem;line-height:1.6}
+</style>
+<script src="/credit-card-validator/vendor/card-validator.js"></script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>💳 Credit Card Validator</h1>
+<p>Luhn checksum, brand from the BIN, length and CVV checks — all in your browser</p>
+</div>
+
+<div class="aio-answer">To check whether a card number is well-formed: type it below. The validator runs the Luhn checksum (doubling every second digit from the right and requiring a multiple of 10 — 4242 4242 4242 4242 scores exactly 80, so it passes), identifies the brand from the BIN (4 = Visa, 51–55/2221–2720 = Mastercard, 34/37 = Amex), and checks the length and security-code format that brand requires. A pass means the number is structurally valid, not that the account exists — only the payment network can confirm that. Everything computes locally; what you type is never transmitted.</div>
+
+<div class="section-card">
+<h2>Check a Card Number</h2>
+<div class="input-group">
+<label>Card number (digits only or with spaces)</label>
+<input type="text" id="cardNum" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="4242 4242 4242 4242" maxlength="26">
+</div>
+<div class="two-col">
+<div class="input-group"><label>Expiry (MM/YY or MM/YYYY)</label><input type="text" id="expiry" inputmode="numeric" autocomplete="off" placeholder="12/30" maxlength="7"></div>
+<div class="input-group"><label>Security code (CVV/CVC/CID)</label><input type="text" id="cvv" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4"></div>
+</div>
+<div id="verdict" class="verdict partial">Type a number to see the Luhn, brand, length, and code checks.</div>
+<div class="detail-grid">
+<div class="detail-item"><div class="di-label">Brand (from BIN)</div><div class="di-value" id="dBrand">—</div></div>
+<div class="detail-item"><div class="di-label">BIN / IIN (first 6–8)</div><div class="di-value mono" id="dBin">—</div></div>
+<div class="detail-item"><div class="di-label">Digits entered / allowed</div><div class="di-value mono" id="dLen">—</div></div>
+<div class="detail-item"><div class="di-label">Security code name &amp; size</div><div class="di-value" id="dCode">—</div></div>
+<div class="detail-item"><div class="di-label">Luhn checksum</div><div class="di-value" id="dLuhn">—</div></div>
+<div class="detail-item"><div class="di-label">Formatted number</div><div class="di-value mono" id="dFmt">—</div></div>
+</div>
+<div class="chips" id="testChips">
+<button class="chip" data-n="4242424242424242">Visa test</button>
+<button class="chip" data-n="5555555555554444">Mastercard test</button>
+<button class="chip" data-n="378282246310005">Amex test</button>
+<button class="chip" data-n="6011111111111117">Discover test</button>
+<button class="chip" data-n="3566002020360505">JCB test</button>
+<button class="chip" data-n="4242424242424241">Luhn fail</button>
+</div>
+<div class="notebox">This tool checks number structure only — it can't and doesn't query any bank or network. For testing payment forms, use the public test numbers above; they always decline in live processing. Never share real card details with sites you don't trust.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/credit-card-payoff-calculator/">Credit card payoff calculator</a></li><li style="margin:4px 0"><a href="/credit-card-payoff/">Debt payoff tool</a></li><li style="margin:4px 0"><a href="/loan-calculator/">Loan calculator</a></li><li style="margin:4px 0"><a href="/dti-calculator/">DTI calculator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-credit-card-validation-works/">Read how validation works</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Card Brands: BIN Ranges, Lengths, and Security Codes</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Network</th><th>Leading Digits (BIN)</th><th>Number Length</th><th>Code Name &amp; Length</th></tr></thead>
+<tbody>
+<tr><td>Visa</td><td>4</td><td>16, 18, 19</td><td>CVV — 3</td></tr>
+<tr><td>Mastercard</td><td>51–55, 2221–2720</td><td>16</td><td>CVC — 3</td></tr>
+<tr><td>American Express</td><td>34, 37</td><td>15</td><td>CID — 4</td></tr>
+<tr><td>Diners Club</td><td>300–305, 36, 38–39</td><td>14, 16, 19</td><td>CVV — 3</td></tr>
+<tr><td>Discover</td><td>6011, 644–649, 65</td><td>16, 19</td><td>CID — 3</td></tr>
+<tr><td>JCB</td><td>3528–3589 (also 2131, 1800)</td><td>16–19</td><td>CVV — 3</td></tr>
+<tr><td>UnionPay</td><td>62 (620–629 ranges)</td><td>14–19</td><td>CVN — 3</td></tr>
+<tr><td>Maestro</td><td>50, 56–59, 63, 67</td><td>12–19</td><td>CVC — 3</td></tr>
+<tr><td>Mir</td><td>2200–2204</td><td>16–19</td><td>CVP2 — 3</td></tr>
+<tr><td>Troy</td><td>9792, 65 (subset)</td><td>16</td><td>CVV — 3</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Grouping quirks worth knowing: American Express numbers format as 4-6-5 (gaps after positions 4 and 10) instead of the usual 4-4-4-4, and carry a 4-digit code on the front. Maestro's 12–19 length range is the widest of any network. Local networks (Elo, Hipercard in Brazil; Troy in Türkiye; Mir in Russia) mostly coexist with the global six.</p>
+</div>
+
+<div class="section-card">
+<h2>Public Test Numbers (All Pass Luhn)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Number</th><th>Brand</th><th>Luhn Weighted Sum</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td><code>4242 4242 4242 4242</code></td><td>Visa</td><td>80</td><td>Stripe's canonical test card</td></tr>
+<tr><td><code>5555 5555 5555 4444</code></td><td>Mastercard</td><td>60</td><td>Standard MC test number</td></tr>
+<tr><td><code>3782 822463 10005</code></td><td>American Express</td><td>60</td><td>15-digit format + 4-digit CID</td></tr>
+<tr><td><code>6011 1111 1111 1117</code></td><td>Discover</td><td>30</td><td>Discover test number</td></tr>
+<tr><td><code>3566 0020 2036 0505</code></td><td>JCB</td><td>50</td><td>16-digit JCB test</td></tr>
+<tr><td><code>6200 0000 0000 0005</code></td><td>UnionPay</td><td>10</td><td>UnionPay start-62 test</td></tr>
+<tr><td><code>5019 7170 1010 3742</code></td><td>Maestro</td><td>50</td><td>Debit-format test</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">These are published by payment processors for testing checkout flows; they always decline in live processing. Sums were computed with this page's engine (every second digit from the right doubled, two-digit results reduced by 9).</p>
+</div>
+
+<div class="content-section">
+<h2>How Card Number Validation Works</h2>
+<p>A payment form can reject a card number as malformed without contacting anyone — that's what the Luhn checksum, BIN prefix rules, and per-network length rules accomplish together. This tool runs the same validation library (braintree's card-validator, MIT-licensed, the engine behind major checkout SDKs) locally in your browser.</p>
+<h3>The Luhn algorithm, step by step</h3>
+<p>Take the number and, starting from the rightmost digit, double every second digit. If a doubling gives a two-digit result, subtract 9 (which equals adding those two digits). Sum all the values; the number passes when the total is divisible by 10.</p>
+<h3>A worked example</h3>
+<p><code>4242 4242 4242 4242</code>: from the right, positions 2, 4, 6… hold the 4s, and each doubles 4 → 8 (no reduction needed since 8 is single-digit). The odd positions hold the 2s and stay 2. There are eight 4s and eight 2s, so the weighted sum is (8 × 8) + (8 × 2) = 64 + 16 = 80. Since 80 mod 10 = 0, the number is Luhn-valid — which is exactly why Stripe picked it as a test card. Flip the last digit to 1 and the sum becomes 79: not divisible by 10, invalid. A transposition of two adjacent different digits shifts the sum off a multiple of 10 in almost every case too, which is why the checksum survives as the front line of every card form.</p>
+<h3>What the BIN tells you</h3>
+<p>The first 6–8 digits identify the network and (to issuers with BIN-table access) the issuing bank, country, and product tier. For validation purposes the network ranges give you three things for free: the expected number length (Amex 15, Mastercard exactly 16…), the security-code length (3 digits, except Amex's 4-digit CID), and the display grouping (4-6-5 for Amex versus 4-4-4-4 elsewhere). This tool reads the prefix, names the brand, and enforces all three as you type.</p>
+<h3>What validation cannot tell you</h3>
+<ul>
+<li><strong>Existence:</strong> a Luhn-passing number can be entirely fictional — test numbers prove it.</li>
+<li><strong>Account state:</strong> open, funded, frozen, over limit — only the issuing network knows.</li>
+<li><strong>Fraud:</strong> stolen cards validate perfectly; validation is formatting, not risk scoring.</li>
+<li><strong>Cardholder:</strong> the name and billing address are checked by AVS at transaction time, not by the number.</li>
+</ul>
+<h3>Privacy, concretely</h3>
+<p>The engine is vendored on this page (open source, MIT) and runs entirely locally — open the network tab and type: no request fires. Nothing you enter is stored, logged, or transmitted, and the page works offline after loading.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How does the Luhn checksum work?</h3><p>Starting from the rightmost digit, double every second digit; if a doubling produces a two-digit number, subtract 9 (equivalently, add its digits). Sum everything. The number is valid when the total is a multiple of 10. For 4242 4242 4242 4242, the doubled digits (4→8) and plain digits (2) total 80, and 80 mod 10 = 0 — valid. The checksum catches any single mistyped digit and most adjacent transpositions, which is why every card network uses it.</p></div>
+<div class="faq-item"><h3>What is a BIN or IIN?</h3><p>The Bank Identification Number — also called the Issuer Identification Number — is the first 6 to 8 digits of a card number. The leading digits map to the network: 4 is Visa, 51–55 and 2221–2720 are Mastercard, 34 and 37 are Amex, 6011/65/644–649 are Discover. The same prefix ranges tell a payment form how to format the number and how long the security code should be, before any network call happens.</p></div>
+<div class="faq-item"><h3>Does a passing Luhn check mean the card works?</h3><p>No — it means the number is well-formed. Luhn is a checksum for catching typos, not a proof of existence, and it says nothing about whether the account is open, funded, or not stolen. Only an authorized transaction (or a $0 auth) against the payment network can confirm a card is live. Validators like this one exist so forms reject garbage before that expensive step.</p></div>
+<div class="faq-item"><h3>Is it safe to type a card number here?</h3><p>The check runs entirely in your browser with the open-source braintree/card-validator engine loaded from this site — no network request carries what you type, and you can verify that in the network tab. Still, the smarter habit is to use public test numbers (4242 4242 4242 4242 and friends) unless you're checking your own card. Never paste real card numbers into sites you don't trust.</p></div>
+<div class="faq-item"><h3>Why does 4242 4242 4242 4242 come up everywhere?</h3><p>It's Stripe's canonical public test card — a Visa number chosen to pass Luhn, published by payment processors for developers to test checkout flows without real money. Others in the set include 5555 5555 5555 4444 (Mastercard, Luhn sum 60), 3782 822463 10005 (Amex, sum 60), and 6011 1111 1111 1117 (Discover). They're well-formed by design; they will always decline in live processing.</p></div>
+<div class="faq-item"><h3>How long is a credit card number supposed to be?</h3><p>16 digits is the norm, not the rule. Visa uses 16, 18, or 19; Mastercard exactly 16; Amex 15; Diners Club 14, 16, or 19; Discover 16 or 19; JCB and UnionPay anywhere from 16 to 19 (UnionPay down to 14). The validator knows each network's allowed lengths and flags a length mismatch even when Luhn passes.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/credit-card-payoff-calculator/">💳 Credit Card Payoff</a>
+<a href="/dti-calculator/">📊 DTI Calculator</a>
+<a href="/loan-calculator/">🏦 Loan Calculator</a>
+<a href="/debt-settlement-vs-bankruptcy-calculator/">⚖️ Debt Settlement vs Bankruptcy</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PM-ENGINE-START---
+// Validation engine: braintree/card-validator 10.0.4 (MIT; bundles
+// credit-card-type, MIT) — vendored unmodified at /credit-card-validator/
+// vendor/card-validator.js, exposing global CardValidator via esbuild IIFE.
+// All checks run locally: Luhn (number), expirationDate, cvv, BIN brand.
+(function(){
+  var numEl=document.getElementById('cardNum');
+  var expEl=document.getElementById('expiry');
+  var cvvEl=document.getElementById('cvv');
+  var verdict=document.getElementById('verdict');
+  function digits(s){return String(s||'').replace(/[^0-9]/g,'');}
+  function fmtGroup(d,gaps){
+    var out='';
+    for(var i=0;i<d.length;i++){
+      if(gaps.indexOf(i)>-1)out+=' ';
+      out+=d[i];
+    }
+    return out;
+  }
+  function luhnSum(d){
+    var sum=0;
+    for(var i=0;i<d.length;i++){
+      var posFromRight=d.length-i;
+      var v=+d[i];
+      if(posFromRight%2===0){v*=2;if(v>9)v-=9;}
+      sum+=v;
+    }
+    return sum;
+  }
+  function check(){
+    var d=digits(numEl.value);
+    var r=typeof CardValidator!=='undefined'?CardValidator.number(d):null;
+    var brand='—',bin='—',len='—',code='—',luhn='—',fmt='—';
+    var okAll=false,partial=false,msg='Type a number to see the Luhn, brand, length, and code checks.';
+    if(d.length>0&&r){
+      var c=r.card;
+      if(c){
+        brand=c.niceType;
+        bin=d.slice(0,8)||'—';
+        len=d.length+' / '+(c.lengths||[]).join(', ');
+        code=(c.code&&c.code.name||'CVC')+' — '+(c.code&&c.code.size||3)+' digits';
+        fmt=fmtGroup(d,c.gaps||[4,8,12]);
+        var lenOk=(c.lengths||[]).indexOf(d.length)>-1;
+        var luhnOk=luhnSum(d)%10===0;
+        luhn=(luhnOk?'passes':'fails')+' (weighted sum '+luhnSum(d)+')';
+        if(luhnOk&&lenOk){okAll=true;msg='✅ Well-formed '+c.niceType+' number — Luhn passes, length valid.';}
+        else if(!luhnOk&&lenOk){msg='❌ Luhn checksum fails (sum '+luhnSum(d)+' is not a multiple of 10) — a digit is likely mistyped.';}
+        else if(luhnOk&&!lenOk){partial=true;msg='⚠️ Luhn passes, but '+d.length+' digits is not a valid '+c.niceType+' length ('+(c.lengths||[]).join('/')+').';}
+        else{msg='❌ Fails Luhn and length for '+c.niceType+'.';}
+        // expiry
+        var exp=expEl.value.trim();
+        if(exp){
+          var er=CardValidator.expirationDate(exp);
+          if(er.isValid)msg+=' Expiry valid.';
+          else if(er.isPotentiallyValid)msg+=' Expiry incomplete.';
+          else msg+=' Expiry invalid or past.';
+          if(!er.isValid&&er.isPotentiallyValid===false)okAll=false;
+        }
+        // cvv
+        var cv=digits(cvvEl.value);
+        if(cv){
+          var need=c.code?c.code.size:3;
+          var cr=CardValidator.cvv(cv,need);
+          if(cr.isValid)msg+=' Code valid.';
+          else if(cv.length<need)msg+=' Code needs '+need+' digits for '+c.niceType+'.';
+          else{msg+=' Code invalid.';okAll=false;}
+        }
+      } else {
+        partial=true;
+        bin=d.slice(0,8);
+        len=d.length+' digits';
+        luhn=(luhnSum(d)%10===0?'passes':'fails')+' (weighted sum '+luhnSum(d)+')';
+        msg=d.length<2?'Keep typing…':'⚠️ No recognized network for this prefix yet — number may still be incomplete.';
+        if(luhnSum(d)%10===0&&d.length>=16){msg='⚠️ Luhn passes but the BIN matches no known network.';}
+      }
+    }
+    document.getElementById('dBrand').textContent=brand;
+    document.getElementById('dBin').textContent=bin;
+    document.getElementById('dLen').textContent=len;
+    document.getElementById('dCode').textContent=code;
+    document.getElementById('dLuhn').textContent=luhn;
+    document.getElementById('dFmt').textContent=fmt;
+    verdict.className='verdict '+(okAll?'ok':(d.length?'partial':'partial'));
+    if(okAll)verdict.className='verdict ok';
+    else if(d.length&&msg&&msg.indexOf('❌')>-1)verdict.className='verdict bad';
+    verdict.textContent=msg;
+  }
+  numEl.addEventListener('input',check);
+  expEl.addEventListener('input',check);
+  cvvEl.addEventListener('input',check);
+  document.getElementById('testChips').addEventListener('click',function(e){
+    var n=e.target.getAttribute&&e.target.getAttribute('data-n');
+    if(!n)return;
+    numEl.value=n;
+    expEl.value='12/30';
+    cvvEl.value=n.length===15?'1234':'123';
+    check();
+  });
+  check();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

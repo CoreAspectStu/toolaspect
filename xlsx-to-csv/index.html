@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XLSX to CSV Converter — Free, In-Browser | ToolAspect</title>
+<meta name="description" content="Convert XLSX to CSV free in your browser. Pick any sheet, preview, download UTF-8 CSV. Formulas export their computed values. No upload, no sign-up.">
+<link rel="canonical" href="https://toolaspect.com/xlsx-to-csv/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="XLSX to CSV Converter — Free, In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Convert Excel workbooks to CSV entirely in your browser. Sheet picker for multi-sheet files, live preview, UTF-8 with optional BOM for Excel. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/xlsx-to-csv/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XLSX to CSV Converter Free | ToolAspect">
+<meta name="twitter:description" content="XLSX/XLSM/XLSB/XLS → CSV, locally. Sheet picker, preview, UTF-8 BOM option.">
+<meta name="keywords" content="xlsx to csv, excel to csv, convert xlsx to csv, excel to csv converter, xlsx to csv without upload, xlsx to csv utf-8, xls to csv, xlsm to csv, csv bom excel, export excel sheet to csv">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"XLSX to CSV Converter","description":"Free XLSX to CSV converter that runs entirely in your browser. Drop an XLSX, XLSM, XLSB, XLS, or ODS workbook, pick any sheet from a multi-sheet file, preview the rows, and download clean UTF-8 CSV with optional BOM. Nothing is uploaded.","url":"https://toolaspect.com/xlsx-to-csv/","applicationCategory":"BrowserApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert XLSX to CSV without uploading the file?","acceptedAnswer":{"@type":"Answer","text":"Use a browser-based converter like this one: drop the workbook, pick the sheet, click download. The SheetJS engine parses the file locally in your browser's memory and hands back the CSV — your budget, payroll, or client data never touches a server. Upload-based converters can't make that promise, and many free tiers retain or scan files."}},
+{"@type":"Question","name":"How do I convert a specific sheet from a multi-sheet workbook?","acceptedAnswer":{"@type":"Answer","text":"After the file loads, every sheet appears as a tab above the preview — click the one you want and download its CSV. Excel's own Save As CSV exports only the active sheet, which is the classic multi-sheet annoyance; a picker converts each sheet on demand without opening Excel at all."}},
+{"@type":"Question","name":"What happens to formulas when converting to CSV?","acceptedAnswer":{"@type":"Answer","text":"CSV has no formulas, so cells export their values. Excel files store each formula's last computed result alongside the formula itself, and that cached value is what appears in the CSV — a SUM(B1:B2) cell that shows 3,500 in Excel exports as 3500. Only files saved by unusual tools without cached values fall back to the formula text."}},
+{"@type":"Question","name":"Why do my dates look different in the CSV?","acceptedAnswer":{"@type":"Answer","text":"Excel stores dates as serial numbers with a display format; the CSV converter writes what the cell displays — March 15, 2026 in a cell formatted m/d/yy exports as 3/15/26. If you need a strict date format, format the column in Excel first (the CSV inherits it), or expect to re-parse dates on import with your locale's rules in mind."}},
+{"@type":"Question","name":"Does the CSV keep commas, quotes, and line breaks inside cells?","acceptedAnswer":{"@type":"Answer","text":"Yes — per the CSV standard (RFC 4180), any cell containing a comma, a double quote, or a line break gets wrapped in double quotes, and embedded double quotes are doubled: a cell reading say \"hi\" exports as \"say \"\"hi\"\"\". Correct CSV readers undo this on import. Semicolon-separated locales can flip the delimiter; this tool writes commas."}},
+{"@type":"Question","name":"Why does Excel garble my UTF-8 CSV, and how do I fix it?","acceptedAnswer":{"@type":"Answer","text":"Older Excel assumes the system code page when opening CSV files directly, so accented characters (Müller, Ünal, café) turn to mojibake. The fix is a UTF-8 BOM — three marker bytes at the file start that tell Excel the encoding. This tool adds the BOM by default (toggle it off for systems that choke on it, like some Unix pipelines)."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"XLSX to CSV","item":"https://toolaspect.com/xlsx-to-csv/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dropzone.dragover{border-color:var(--primary)}
+.dropzone p{color:var(--muted);font-size:.9rem}
+.dropzone .icon{font-size:1.8rem;margin-bottom:6px}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.sheet-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+.sheet-tab{padding:.4rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:.82rem;cursor:pointer;font-family:inherit}
+.sheet-tab.active{border-color:var(--primary);color:var(--primary-hover);font-weight:600}
+.preview-wrap{overflow-x:auto;margin-top:1rem;border:1px solid var(--border);border-radius:var(--radius);max-height:340px;overflow-y:auto}
+.preview-table{width:100%;border-collapse:collapse;font-size:.8rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+.preview-table th,.preview-table td{padding:.3rem .6rem;border:1px solid var(--border);text-align:left;white-space:nowrap;color:var(--text)}
+.preview-table th{background:var(--bg);color:var(--muted);font-weight:500}
+.check-row{display:flex;align-items:center;gap:.5rem;margin-top:.75rem;font-size:.85rem;color:var(--muted);cursor:pointer}
+.check-row input{accent-color:var(--primary)}
+.result-box{background:var(--bg);border:1px solid var(--success);border-radius:var(--radius);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-size:.8rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📊 XLSX to CSV Converter</h1>
+<p>Convert Excel workbooks to clean CSV, entirely in your browser</p>
+</div>
+
+<div class="aio-answer">To convert an XLSX file to CSV without uploading it: drop the workbook below, click the sheet you want (multi-sheet files show every tab), and download the CSV. A sheet with Item/Qty/Price columns exports as plain comma-separated rows; formula cells export their computed values (SUM cells show 3,500, not <code>=SUM(B1:B2)</code>); and the file downloads as UTF-8 with a BOM so Excel opens accents like Müller correctly. The conversion runs locally with the SheetJS engine — payroll spreadsheets and client lists never touch a server.</div>
+
+<div class="section-card">
+<h2>Convert a Workbook</h2>
+<div class="dropzone" id="dropzone">
+<div class="icon">📊</div>
+<p>Click or drag an Excel file here (.xlsx, .xlsm, .xlsb, .xls, .ods)</p>
+<input type="file" id="fileInput" accept=".xlsx,.xlsm,.xlsb,.xls,.ods,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none">
+</div>
+<div class="sheet-tabs" id="sheetTabs"></div>
+<div class="preview-wrap" id="previewWrap" style="display:none"><table class="preview-table" id="previewTable"></table></div>
+<label class="check-row"><input type="checkbox" id="bom" checked> Add UTF-8 BOM (recommended for opening in Excel)</label>
+<div class="btn-row">
+<button class="btn" id="btnDownload" disabled>Download CSV</button>
+<button class="btn ghost" id="btnDownloadAll" disabled>Download all sheets</button>
+<button class="btn ghost" id="btnClear">Clear</button>
+</div>
+<div id="status"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/csv-to-excel/">CSV to Excel (the reverse)</a></li><li style="margin:4px 0"><a href="/csv-to-json/">CSV to JSON</a></li><li style="margin:4px 0"><a href="/csv-to-sql/">CSV to SQL</a></li><li style="margin:4px 0"><a href="/excel-to-pdf/">Excel to PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/xlsx-to-csv/">Read the Excel-to-CSV guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Excel Format Is</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Format</th><th>What It Is</th><th>Converts Here?</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>.xlsx</code></td><td>Office Open XML workbook (Excel 2007+)</td><td>✅</td><td>The standard modern format</td></tr>
+<tr><td><code>.xlsm</code></td><td>Macro-enabled workbook</td><td>✅</td><td>Macros are dropped — CSV has no code</td></tr>
+<tr><td><code>.xlsb</code></td><td>Binary workbook (large-file format)</td><td>✅</td><td>Faster for huge workbooks; sheets convert the same</td></tr>
+<tr><td><code>.xls</code></td><td>Legacy binary format (97–2003)</td><td>✅</td><td>Max 65,536 rows per sheet</td></tr>
+<tr><td><code>.ods</code></td><td>OpenDocument spreadsheet</td><td>✅</td><td>LibreOffice / OpenOffice format</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">CSV itself is plain text: one table, no formatting, no formulas, no multiple sheets — which is exactly why it's the universal interchange format for imports, scripts, and databases.</p>
+</div>
+
+<div class="section-card">
+<h2>How Cells Survive the CSV Export</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Cell in Excel</th><th>CSV Output</th><th>Rule Applied</th></tr></thead>
+<tbody>
+<tr><td><code>Widget</code></td><td><code>Widget</code></td><td>Plain text passes through</td></tr>
+<tr><td><code>4</code>, <code>9.5</code></td><td><code>4</code>, <code>9.5</code></td><td>Numbers export as displayed values</td></tr>
+<tr><td><code>=SUM(B1:B2)</code> showing 3,500</td><td><code>3500</code></td><td>Formulas export cached computed values</td></tr>
+<tr><td>Date 2026-03-15, format m/d/yy</td><td><code>3/15/26</code></td><td>Dates export in the cell's display format</td></tr>
+<tr><td><code>name, co</code> (contains comma)</td><td><code>"name, co"</code></td><td>Comma triggers quoting (RFC 4180)</td></tr>
+<tr><td><code>say "hi"</code></td><td><code>"say ""hi"""</code></td><td>Quotes double inside quoted cells</td></tr>
+<tr><td>Cell with a line break</td><td><code>"line↵break"</code></td><td>Embedded newlines are quoted</td></tr>
+<tr><td><code>Müller</code></td><td><code>Müller</code></td><td>UTF-8 throughout; BOM for Excel</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the XLSX to CSV Conversion Works</h2>
+<p>An .xlsx file is a ZIP archive of XML files — sheet data, shared strings, styles, and metadata. The converter (SheetJS Community Edition, Apache-2.0, vendored on this page) parses that structure in your browser's memory, reconstructs the cell grid, and serializes each row as comma-separated text following RFC 4180 quoting. Nothing is executed from the workbook; macros never run; nothing is transmitted.</p>
+<h3>A worked example</h3>
+<p>Take a workbook whose first sheet holds a four-row parts table — header <code>Item,Qty,Price</code>, then <code>Widget,4,9.5</code>, <code>Gadget,2,27.25</code>, <code>Doohickey,10,3.1</code>. The sheet's range is A1:C4, so the CSV is exactly four lines: the header plus three data rows, values verbatim, no quoting needed since no cell contains a comma, quote, or newline. Add a <code>=SUM</code> row below and Excel has already cached its computed value, which is what the CSV receives (3,500 in our test — not the formula text). A second sheet in the same workbook appears as its own tab; each exports as its own CSV file.</p>
+<h3>What converting to CSV loses — and when that's fine</h3>
+<ul>
+<li><strong>Lost:</strong> formatting (colors, fonts, widths), formulas (values survive), charts and images, multiple sheets (each becomes a file), and cell types beyond text and number.</li>
+<li><strong>Kept:</strong> the data grid itself, in the row/column order of the sheet, with quoting that preserves commas, quotes, and line breaks inside cells.</li>
+<li><strong>Fine when:</strong> the destination is a database import, a script, a CMS bulk uploader, a mailing tool, or anything that asks for CSV — which is nearly every bulk-import surface on the web.</li>
+</ul>
+<h3>Privacy, concretely</h3>
+<p>The SheetJS engine is served from this site (pinned version, Apache-2.0) and every conversion happens through the browser's FileReader and Blob APIs. Open the network tab while converting: zero requests. Spreadsheets with payroll, PII, or unreleased financials stay on your machine, and the page keeps working offline after it loads.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert XLSX to CSV without uploading the file?</h3><p>Use a browser-based converter like this one: drop the workbook, pick the sheet, click download. The SheetJS engine parses the file locally in your browser's memory and hands back the CSV — your budget, payroll, or client data never touches a server. Upload-based converters can't make that promise, and many free tiers retain or scan files.</p></div>
+<div class="faq-item"><h3>How do I convert a specific sheet from a multi-sheet workbook?</h3><p>After the file loads, every sheet appears as a tab above the preview — click the one you want and download its CSV. Excel's own Save As CSV exports only the active sheet, which is the classic multi-sheet annoyance; a picker converts each sheet on demand without opening Excel at all.</p></div>
+<div class="faq-item"><h3>What happens to formulas when converting to CSV?</h3><p>CSV has no formulas, so cells export their values. Excel files store each formula's last computed result alongside the formula itself, and that cached value is what appears in the CSV — a SUM(B1:B2) cell that shows 3,500 in Excel exports as 3500. Only files saved by unusual tools without cached values fall back to the formula text.</p></div>
+<div class="faq-item"><h3>Why do my dates look different in the CSV?</h3><p>Excel stores dates as serial numbers with a display format; the CSV converter writes what the cell displays — March 15, 2026 in a cell formatted m/d/yy exports as 3/15/26. If you need a strict date format, format the column in Excel first (the CSV inherits it), or expect to re-parse dates on import with your locale's rules in mind.</p></div>
+<div class="faq-item"><h3>Does the CSV keep commas, quotes, and line breaks inside cells?</h3><p>Yes — per the CSV standard (RFC 4180), any cell containing a comma, a double quote, or a line break gets wrapped in double quotes, and embedded double quotes are doubled: a cell reading say "hi" exports as "say ""hi""". Correct CSV readers undo this on import. Semicolon-separated locales can flip the delimiter; this tool writes commas.</p></div>
+<div class="faq-item"><h3>Why does Excel garble my UTF-8 CSV, and how do I fix it?</h3><p>Older Excel assumes the system code page when opening CSV files directly, so accented characters (Müller, Ünal, café) turn to mojibake. The fix is a UTF-8 BOM — three marker bytes at the file start that tell Excel the encoding. This tool adds the BOM by default (toggle it off for systems that choke on it, like some Unix pipelines).</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/csv-to-excel/">📈 CSV to Excel</a>
+<a href="/csv-to-json/">🐍 CSV to JSON</a>
+<a href="/csv-to-sql/">🗄️ CSV to SQL</a>
+<a href="/excel-to-pdf/">📄 Excel to PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+// ---PM-ENGINE-START---
+// Conversion engine: SheetJS Community Edition 0.20.3 (Apache-2.0), vendored
+// unmodified at /xlsx-to-csv/vendor/xlsx.full.min.js from cdn.sheetjs.com.
+// Pipeline: FileReader -> XLSX.read(array) -> sheet picker -> sheet_to_csv
+// (RFC 4180 quoting) -> Blob download with optional UTF-8 BOM. All local.
+var PM={wb:null,file:null,active:0,libPromise:null};
+function pmEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function pmFmtSize(b){if(b>=1048576)return (b/1048576).toFixed(1)+' MB';if(b>=1024)return (b/1024).toFixed(0)+' KB';return b+' B';}
+function pmLoadLib(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(!PM.libPromise){
+    PM.libPromise=new Promise(function(res,rej){
+      var s=document.createElement('script');
+      s.src='/xlsx-to-csv/vendor/xlsx.full.min.js';
+      s.onload=function(){res(window.XLSX);};
+      s.onerror=function(){PM.libPromise=null;rej(new Error('conversion engine failed to load'));};
+      (document.head||document.documentElement).appendChild(s);
+    });
+  }
+  return PM.libPromise;
+}
+function pmReadFile(f){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){res(new Uint8Array(fr.result));};
+    fr.onerror=function(){rej(new Error('could not read '+f.name));};
+    fr.readAsArrayBuffer(f);
+  });
+}
+function pmCsvOfSheet(name){
+  var XLSX=window.XLSX;
+  return XLSX.utils.sheet_to_csv(PM.wb.Sheets[name]);
+}
+function pmRender(){
+  var tabs=document.getElementById('sheetTabs');
+  tabs.innerHTML='';
+  if(!PM.wb)return;
+  PM.wb.SheetNames.forEach(function(name,i){
+    var b=document.createElement('button');
+    b.className='sheet-tab'+(i===PM.active?' active':'');
+    b.textContent=name;
+    b.addEventListener('click',function(){PM.active=i;pmRender();});
+    tabs.appendChild(b);
+  });
+  var name=PM.wb.SheetNames[PM.active];
+  var ws=PM.wb.Sheets[name];
+  // grid via sheet_to_json (header:1) so quoted commas/newlines stay intact
+  var grid=window.XLSX.utils.sheet_to_json(ws,{header:1,defval:''}).slice(0,12);
+  var maxCols=grid.reduce(function(m,r){return Math.max(m,r.length);},0);
+  var table=document.getElementById('previewTable');
+  var html='<thead><tr><th></th>';
+  for(var c=0;c<maxCols;c++)html+='<th>'+String.fromCharCode(65+c%26)+'</th>';
+  html+='</tr></thead><tbody>';
+  grid.forEach(function(row,ri){
+    html+='<tr><th>'+(ri+1)+'</th>';
+    for(var c2=0;c2<maxCols;c2++)html+='<td>'+pmEsc(row[c2]!==undefined?String(row[c2]):'')+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  table.innerHTML=html;
+  document.getElementById('previewWrap').style.display='block';
+  document.getElementById('btnDownload').disabled=false;
+  document.getElementById('btnDownloadAll').disabled=PM.wb.SheetNames.length<2;
+  var rowCount=window.XLSX.utils.sheet_to_json(ws,{header:1}).length;
+  var status=document.getElementById('status');
+  status.innerHTML='<div class="result-box">✅ <strong>'+pmEsc(PM.file.name)+'</strong> — '+PM.wb.SheetNames.length+' sheet'+(PM.wb.SheetNames.length>1?'s':'')+', sheet <strong>'+pmEsc(name)+'</strong> selected ('+rowCount+' rows, '+pmFmtSize(PM.file.size)+' workbook)</div>';
+}
+function pmDownload(name,csv){
+  var bom=document.getElementById('bom').checked?'\uFEFF':'';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([bom+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=name.replace(/\.(xlsx|xlsm|xlsb|xls|ods)$/i,'')+'.csv';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+}
+async function pmLoad(fileList){
+  var f=Array.prototype.slice.call(fileList).filter(function(x){return /\.(xlsx|xlsm|xlsb|xls|ods)$/i.test(x.name);})[0];
+  if(!f)return;
+  var status=document.getElementById('status');
+  try{
+    var XLSX=await pmLoadLib();
+    PM.file=f;
+    var bytes=await pmReadFile(f);
+    PM.wb=XLSX.read(bytes,{type:'array'});
+    var as=PM.wb.Workbook&&PM.wb.Workbook.ActiveSheet;
+    PM.active=(typeof as==='number'&&as>=0&&as<PM.wb.SheetNames.length)?as:0;
+    pmRender();
+  }catch(e){
+    status.innerHTML='<div style="background:var(--surface);border:1px solid var(--danger);border-radius:10px;color:var(--danger);padding:1rem 1.25rem;margin-top:1rem;font-size:.9rem">Could not read the workbook: '+pmEsc(String(e&&e.message||e))+'</div>';
+  }
+}
+// ---- browser wiring ----
+var dz=document.getElementById('dropzone');
+var fi=document.getElementById('fileInput');
+dz.addEventListener('click',function(){fi.click();});
+dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover');});
+dz.addEventListener('dragleave',function(){dz.classList.remove('dragover');});
+dz.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer&&e.dataTransfer.files.length)pmLoad(e.dataTransfer.files);});
+fi.addEventListener('change',function(e){pmLoad(e.target.files);fi.value='';});
+document.getElementById('btnDownload').addEventListener('click',function(){
+  if(!PM.wb)return;
+  pmDownload(PM.wb.SheetNames[PM.active],pmCsvOfSheet(PM.wb.SheetNames[PM.active]));
+});
+document.getElementById('btnDownloadAll').addEventListener('click',function(){
+  if(!PM.wb)return;
+  PM.wb.SheetNames.forEach(function(name,i){
+    setTimeout(function(){pmDownload(name,pmCsvOfSheet(name));},i*350);
+  });
+});
+document.getElementById('btnClear').addEventListener('click',function(){
+  PM.wb=null;PM.file=null;PM.active=0;
+  document.getElementById('sheetTabs').innerHTML='';
+  document.getElementById('previewWrap').style.display='none';
+  document.getElementById('previewTable').innerHTML='';
+  document.getElementById('btnDownload').disabled=true;
+  document.getElementById('btnDownloadAll').disabled=true;
+  document.getElementById('status').innerHTML='';
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

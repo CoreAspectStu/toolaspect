@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Strength Checker — Crack Time Test | ToolAspect</title>
+<meta name="description" content="Check password strength with zxcvbn: entropy in bits, guess count, and crack time at 4 attack speeds. Local-only; Tr0ub4dour&3 falls in 41 seconds.">
+<link rel="canonical" href="https://toolaspect.com/password-strength-checker/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Password Strength Checker — Crack Time Test">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Type a password variant and see its zxcvbn score, entropy, and crack time — computed in your browser, never sent anywhere.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/password-strength-checker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Password Strength Checker | Free Online Tool">
+<meta name="twitter:description" content="zxcvbn entropy, guesses, and crack times — computed locally.">
+<meta name="keywords" content="password strength checker, how strong is my password, password entropy calculator, password crack time, zxcvbn test">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Password Strength Checker","description":"Free password strength checker powered by zxcvbn, the open-source estimator used by password managers. Shows the 0-4 score, guesses, entropy in bits, crack times at four realistic attack speeds, and why the password is weak. Runs entirely in your browser.","url":"https://toolaspect.com/password-strength-checker/","applicationCategory":"SecurityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How strong is my password?","acceptedAnswer":{"@type":"Answer","text":"Strength is the number of guesses an attacker needs, which a good estimator derives from what your password is made of — dictionary words, names, dates, keyboard patterns, and l33t substitutions all collapse the possibilities. This checker shows the estimate as a 0-4 score, an entropy figure in bits, and crack times at four attack speeds, from throttled online login attempts to a fast offline rig doing ten billion guesses per second."}},
+{"@type":"Question","name":"Is it safe to type my real password into this page?","acceptedAnswer":{"@type":"Answer","text":"Nothing is transmitted — the estimator runs as JavaScript in your tab and there is no server involved. That said, the healthiest habit is to never type a real password into any web page, including this one: test a variant with the same shape instead (same length, same mix of word, name, number, and symbol) and the score will be representative."}},
+{"@type":"Question","name":"Why is Tr0ub4dour&3 rated weak when it looks complex?","acceptedAnswer":{"@type":"Answer","text":"Because attackers don't guess character by character — they guess patterns. The estimator recognizes 'Tr0ub4dour' as a dictionary word with l33t substitutions and ranks the whole password at about 412 billion guesses: roughly 41 seconds against a fast offline attack. Complexity theater (swapping a for 4) adds almost nothing once the base word is known."}},
+{"@type":"Question","name":"What is a good number of entropy bits?","acceptedAnswer":{"@type":"Answer","text":"Against a serious offline attack (10 billion guesses per second), you want the crack time in centuries, which starts around 60 bits. A truly random 16-character password from all printable ASCII carries about 105 bits; a four-word passphrase made of common words lands near 65 bits. Anything under 30 bits falls in seconds to minutes offline."}},
+{"@type":"Question","name":"Does length or symbol soup matter more?","acceptedAnswer":{"@type":"Answer","text":"Length, by a wide margin, and the mathematics is unromantic: twenty random lowercase letters carry about 94 bits, while eleven fully random characters from the entire printable ASCII set carry about 72 bits. A longer simple password beats a shorter complex one. That's also why NIST's digital identity guidance favors length over mandatory composition rules."}},
+{"@type":"Question","name":"What guesses-per-second speeds do the crack times assume?","acceptedAnswer":{"@type":"Answer","text":"Four standard scenarios: 100 guesses per hour for a throttled login form; 10 per second for an unthrottled online attack; 10,000 per second for a slow hash like bcrypt properly configured; and 10 billion per second for a fast hash attacked offline with GPU hardware. The first two are what website logins face; the last is the worst case when a leaked database used fast hashing."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Password Strength Checker","item":"https://toolaspect.com/password-strength-checker/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pw-row{display:flex;gap:.6rem;align-items:center}
+.pw-row input{flex:1;padding:.85rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.05rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;box-sizing:border-box}
+.pw-row input:focus{outline:none;border-color:var(--primary)}
+.btn{padding:.65rem 1.1rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.8rem;color:var(--muted);margin-top:.6rem}
+.meter{height:14px;background:var(--bg);border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-top:1rem}
+.meter .fill{height:100%;width:0%;background:var(--danger);transition:width .25s ease,background .25s ease}
+.meter-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.04em}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.25rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.25rem;font-weight:700}
+.crack-table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:1.25rem}
+.crack-table th,.crack-table td{padding:.55rem .75rem;border:1px solid var(--border);text-align:left}
+.crack-table th{background:var(--bg)}
+.crack-table td.cv{font-weight:700;text-align:right}
+.seq-list{margin-top:1rem;font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.4rem}
+.seq-list .tok{padding:.2rem .6rem;border:1px solid var(--border);border-radius:20px;background:var(--bg)}
+.seq-list .tok b{color:var(--primary-hover);font-weight:600}
+.feedback-box{margin-top:1rem;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:0 var(--radius) var(--radius) 0;padding:.8rem 1rem;font-size:.88rem;color:var(--text)}
+.feedback-box ul{margin:.4rem 0 0;padding-left:1.2rem;line-height:1.6}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔐 Password Strength Checker</h1>
+<p>zxcvbn scoring, entropy in bits, and crack time at four attack speeds — all local</p>
+</div>
+
+<div class="aio-answer">This checker scores a password the way attackers attack it: with <strong>zxcvbn</strong>, the open-source estimator behind many password managers. Type a variant (never the real thing, anywhere) and you get the 0-4 score, the guess count, entropy in bits, and crack times for throttled logins through fast offline GPUs. The famous example: <strong>Tr0ub4dour&amp;3</strong> looks strong but rates about 412 billion guesses — roughly <strong>41 seconds</strong> against a fast offline attack — because "Tr0ub4dour" is a dictionary word wearing l33t makeup. Twenty random lowercase letters (≈94 bits) beat eleven random everything-characters (≈72 bits). Nothing you type is sent anywhere: the dictionaries load once from a CDN, the math runs in your tab.</div>
+
+<div class="section-card">
+<h2>Test a password variant</h2>
+<div class="pw-row">
+<input type="password" id="pw" placeholder="Type a pattern like your real one — not the real one" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
+<button class="btn ghost" id="toggle">👁 Show</button>
+</div>
+<div class="status-line" id="statusLine">The dictionaries (~1.6 MB) load on your first keystroke, once. Nothing is transmitted.</div>
+<div class="meter"><div class="fill" id="meterFill"></div></div>
+<div class="meter-labels"><span>0 too guessable</span><span>1 very</span><span>2 somewhat</span><span>3 safely</span><span>4 very unguessable</span></div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Score (0–4)</div><div class="ri-value" id="rScore">—</div></div>
+<div class="result-item"><div class="ri-label">Entropy (log₂ guesses)</div><div class="ri-value" id="rBits">—</div></div>
+<div class="result-item"><div class="ri-label">Guesses needed</div><div class="ri-value" id="rGuesses">—</div></div>
+<div class="result-item"><div class="ri-label">Character-pool entropy*</div><div class="ri-value" id="rPool">—</div></div>
+</div>
+<table class="crack-table" id="crackTable">
+<thead><tr><th>Attack scenario</th><th>Speed</th><th>Time to crack</th></tr></thead>
+<tbody>
+<tr><td>Online, throttled login form</td><td>100 / hour</td><td class="cv" id="ct0">—</td></tr>
+<tr><td>Online, no throttling</td><td>10 / second</td><td class="cv" id="ct1">—</td></tr>
+<tr><td>Offline, slow hash (bcrypt)</td><td>10,000 / second</td><td class="v cv" id="ct2">—</td></tr>
+<tr><td>Offline, fast hash + GPU</td><td>10 billion / second</td><td class="cv" id="ct3">—</td></tr>
+</tbody>
+</table>
+<div class="seq-list" id="seq"></div>
+<div class="feedback-box" id="feedback" style="display:none"></div>
+<p style="font-size:.78rem;color:var(--muted);margin-top:.8rem">*Character-pool entropy is the naïve "random string" figure — L × log₂(pool) for the character classes you used. zxcvbn's guess count is the honest one: it accounts for words, names, dates, repeats, sequences, and keyboard patterns. When the two disagree, believe zxcvbn.</p>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/password-generator/">Password Generator</a></li><li style="margin:4px 0"><a href="/hash-generator/">Hash Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-long-does-it-take-to-crack-a-password/">Read the crack-time guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Verified Sample Results (this engine, these dictionaries)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Password</th><th>Score</th><th>Guesses</th><th>Bits</th><th>Offline fast (10¹⁰/s)</th><th>Offline slow (10⁴/s)</th></tr></thead>
+<tbody>
+<tr><td><code>password</code></td><td>0</td><td>3</td><td>1.6</td><td>instant</td><td>instant</td></tr>
+<tr><td><code>qwerty12345</code></td><td>1</td><td>1,797</td><td>10.8</td><td>instant</td><td>instant</td></tr>
+<tr><td><code>Summer2024!</code></td><td>2</td><td>10,010,000</td><td>23.3</td><td>instant</td><td>17 minutes</td></tr>
+<tr><td><code>Danny2000!</code></td><td>3</td><td>108,091,600</td><td>26.7</td><td>instant</td><td>3 hours</td></tr>
+<tr><td><code>Tr0ub4dour&amp;3</code></td><td>4</td><td>411,604,000,000</td><td>38.6</td><td>41 seconds</td><td>1.3 years</td></tr>
+<tr><td><code>YVD4!n8Q#pLz2%Wq</code></td><td>4</td><td>10¹⁶</td><td>53.2</td><td>12 days</td><td>centuries</td></tr>
+<tr><td><code>correct horse battery staple</code></td><td>4</td><td>5.27 × 10¹⁹</td><td>65.5</td><td>167 years</td><td>centuries</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Note the trap in row five: score 4 with only 38.6 bits. The 0-4 score compresses everything from 10¹⁰ guesses upward into one bucket, so a "4" can mean twelve days or a thousand centuries — read the crack-time column, not the badge.</p>
+</div>
+
+<div class="section-card">
+<h2>Score Bands and What They Mean</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Score</th><th>Guesses below</th><th>Meaning</th><th>Example above</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>10³</td><td>Too guessable — rejected by any sane policy</td><td><code>password</code></td></tr>
+<tr><td>1</td><td>10⁶</td><td>Very guessable — trivial for offline attacks</td><td><code>qwerty12345</code></td></tr>
+<tr><td>2</td><td>10⁸</td><td>Somewhat guessable — fine with rate-limiting, not for valuables</td><td><code>Summer2024!</code></td></tr>
+<tr><td>3</td><td>10¹⁰</td><td>Safely unguessable — solid for most accounts</td><td><code>Danny2000!</code></td></tr>
+<tr><td>4</td><td>10¹⁰ and up</td><td>Very unguessable — but check actual crack time (see note above)</td><td><code>correct horse battery staple</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How Password Strength Is Actually Measured</h2>
+<p>Character-counting strength meters lie to you. They see "12 characters, upper, lower, digit, symbol — strong!" while an attacker's first guesses are dictionary words with common decorations, and "Tr0ub4dour&3" is in the first billion tries. zxcvbn — first released by Dropbox's security team and maintained today as an open-source TypeScript fork — estimates strength the way crackers work: it matches your password against dictionaries (common passwords, English words, names), keyboard adjacency patterns, sequences, repeats, and dates, then computes the cheapest way to guess it.</p>
+<h3>The math you're looking at</h3>
+<p>The engine returns a guess count, and everything on this page derives from it. Entropy in bits is log₂ of the guesses — 38.6 bits ≈ 412 billion possibilities. Crack time is guesses ÷ rate for each of the four standard scenarios, from a login form that allows 100 tries an hour to an offline rig with fast hashes doing 10 billion per second. The naïve character-pool figure (length × log₂ of pool size) is shown for contrast: for truly random strings the two agree, and for human patterns they diverge exactly as far as your password is predictable.</p>
+<h3>How to use it</h3>
+<p>Type a variant of your real password — same shape, different content — and read two numbers: the offline-fast crack time (the "database breach" scenario) and the entropy. Then look at the token chips: they show how the engine broke your password apart, which is precisely the recipe an attacker would use. The feedback box suggests the specific fix, and it usually says "add another word," not "add another symbol."</p>
+<h3>A worked example</h3>
+<p>Start with <code>Summer2024!</code> — the estimator finds "Summer" as a dictionary word, "2024" as a date, and the "!" as one of three obvious closers: 10,010,000 guesses, 23.3 bits, score 2. Offline with a slow hash that's 17 minutes; with a fast hash, instant. Replace the idea entirely with <code>correct horse battery staple</code>: four common words the engine can't compress below 5.27 × 10¹⁹ guesses — 65.5 bits, 167 years even at 10 billion guesses per second. Or go random: sixteen characters from all printable ASCII carry 16 × log₂(95) ≈ 105.1 bits, about 4.4 × 10³¹ possibilities, cracking in the tens of trillions of years at fast-hash speeds.</p>
+<p>When you've found a shape that holds up, generate it properly with our <a href="/password-generator/">Password Generator</a> rather than inventing one — humans are terrible sources of randomness, and the estimator knows it.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How strong is my password?</h3><p>Strength is the number of guesses an attacker needs, which a good estimator derives from what your password is made of — dictionary words, names, dates, keyboard patterns, and l33t substitutions all collapse the possibilities. This checker shows the estimate as a 0-4 score, an entropy figure in bits, and crack times at four attack speeds, from throttled online login attempts to a fast offline rig doing ten billion guesses per second.</p></div>
+<div class="faq-item"><h3>Is it safe to type my real password into this page?</h3><p>Nothing is transmitted — the estimator runs as JavaScript in your tab and there is no server involved. That said, the healthiest habit is to never type a real password into any web page, including this one: test a variant with the same shape instead (same length, same mix of word, name, number, and symbol) and the score will be representative.</p></div>
+<div class="faq-item"><h3>Why is Tr0ub4dour&3 rated weak when it looks complex?</h3><p>Because attackers don't guess character by character — they guess patterns. The estimator recognizes "Tr0ub4dour" as a dictionary word with l33t substitutions and ranks the whole password at about 412 billion guesses: roughly 41 seconds against a fast offline attack. Complexity theater (swapping a for 4) adds almost nothing once the base word is known.</p></div>
+<div class="faq-item"><h3>What is a good number of entropy bits?</h3><p>Against a serious offline attack (10 billion guesses per second), you want the crack time in centuries, which starts around 60 bits. A truly random 16-character password from all printable ASCII carries about 105 bits; a four-word passphrase made of common words lands near 65 bits. Anything under 30 bits falls in seconds to minutes offline.</p></div>
+<div class="faq-item"><h3>Does length or symbol soup matter more?</h3><p>Length, by a wide margin, and the mathematics is unromantic: twenty random lowercase letters carry about 94 bits, while eleven fully random characters from the entire printable ASCII set carry about 72 bits. A longer simple password beats a shorter complex one. That's also why NIST's digital identity guidance favors length over mandatory composition rules.</p></div>
+<div class="faq-item"><h3>What guesses-per-second speeds do the crack times assume?</h3><p>Four standard scenarios: 100 guesses per hour for a throttled login form; 10 per second for an unthrottled online attack; 10,000 per second for a slow hash like bcrypt properly configured; and 10 billion per second for a fast hash attacked offline with GPU hardware. The first two are what website logins face; the last is the worst case when a leaked database used fast hashing.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/password-generator/">🎲 Password Generator</a>
+<a href="/random-number-generator/">🔢 Random Number Generator</a>
+<a href="/hash-generator/">#️⃣ Hash Generator</a>
+<a href="/uuid-generator/">🆔 UUID Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+/* ===== Password strength engine: zxcvbn-ts (MIT) loaded lazily from CDN ===== */
+// ---PW-ENGINE-START---
+function bitsFromGuesses(g){return Math.log2(Math.max(g,1));}
+function entropyBits(len,pool){return len*Math.log2(pool);}
+function poolSizeFor(pw){
+  var has=/[a-z]/.test(pw),hasU=/[A-Z]/.test(pw),hasD=/[0-9]/.test(pw),hasS=/[^A-Za-z0-9]/.test(pw);
+  return (has?26:0)+(hasU?26:0)+(hasD?10:0)+(hasS?33:0);
+}
+function fmtBig(n){
+  if(!isFinite(n))return '∞';
+  if(n<1000)return String(Math.round(n*10)/10);
+  if(n>=1e18)return n.toExponential(2).replace('e+',' × 10^');
+  var units=['thousand','million','billion','trillion','quadrillion'];
+  var u=-1;
+  while(n>=1000&&u<units.length-1){n/=1000;u++;}
+  return (Math.round(n*100)/100)+' '+units[u];
+}
+function humanTime(s){
+  if(!isFinite(s))return 'forever';
+  if(s<1)return 'instant';
+  var MIN=60,HOUR=3600,DAY=86400,MONTH=2629800,YEAR=31557600;
+  if(s<MIN)return Math.max(1,Math.round(s))+' second'+(Math.round(s)===1?'':'s');
+  if(s<HOUR){var m=Math.round(s/MIN);return m+' minute'+(m===1?'':'s');}
+  if(s<DAY){var h=Math.round(s/HOUR);return h+' hour'+(h===1?'':'s');}
+  if(s<MONTH){var d=Math.round(s/DAY);return d+' day'+(d===1?'':'s');}
+  if(s<YEAR){var mo=Math.round(s/MONTH);return mo+' month'+(mo===1?'':'s');}
+  if(s<1000*YEAR){var y=s/YEAR;var yr=y<10?Math.round(y*10)/10:Math.round(y);return yr+' year'+(yr===1?'':'s');}
+  return 'centuries';
+}
+function crackSeconds(guesses,ratePerSec){return guesses/ratePerSec;}
+var RATES=[
+  {label:'throttled',perHour:100},
+  {label:'online',perSec:10},
+  {label:'slow',perSec:10000},
+  {label:'fast',perSec:10000000000}
+];
+// ---- browser wiring ----
+var ZX_CORE='https://cdn.jsdelivr.net/npm/@zxcvbn-ts/core@4.2.0/+esm';
+var ZX_COMMON='https://cdn.jsdelivr.net/npm/@zxcvbn-ts/language-common@4.1.3/+esm';
+var ZX_EN='https://cdn.jsdelivr.net/npm/@zxcvbn-ts/language-en@4.1.1/+esm';
+var el=function(id){return document.getElementById(id)};
+var zxcvbn=null,loading=null;
+function ensureEngine(){
+  if(zxcvbn)return Promise.resolve(zxcvbn);
+  if(loading)return loading;
+  el('statusLine').textContent='Loading dictionaries (~1.6 MB, once) …';
+  loading=Promise.all([
+    import(ZX_CORE),import(ZX_COMMON),import(ZX_EN)
+  ]).then(function(mods){
+    var core=mods[0],common=mods[1],en=mods[2];
+    var factory=new core.ZxcvbnFactory({
+      dictionary:Object.assign({},common.dictionary,en.dictionary),
+      graphs:common.adjacencyGraphs,
+      translations:en.translations
+    });
+    zxcvbn=factory;
+    el('statusLine').textContent='Dictionaries loaded. Nothing you type is transmitted.';
+    return zxcvbn;
+  }).catch(function(err){
+    loading=null;
+    el('statusLine').textContent='Could not load the estimator: '+(err&&err.message||err);
+    throw err;
+  });
+  return loading;
+}
+var PATTERN_NAMES={bruteforce:'brute force',dictionary:'dictionary',spatial:'keyboard pattern',repeat:'repeat',sequence:'sequence',regex:'pattern',date:'date'};
+function fmtBits(b){return (Math.round(b*10)/10)+' bits';}
+function render(r,pw){
+  el('rScore').textContent=r.score+' / 4';
+  el('rBits').textContent=fmtBits(bitsFromGuesses(r.guesses));
+  el('rGuesses').textContent=fmtBig(r.guesses);
+  var pool=poolSizeFor(pw);
+  el('rPool').textContent=pool?(pw.length+' chars × pool '+pool+' = '+fmtBits(entropyBits(pw.length,pool))):'—';
+  var ct=r.crackTimes;
+  var cells=[ct.onlineThrottlingXPerHour,ct.onlineNoThrottlingXPerSecond,ct.offlineSlowHashingXPerSecond,ct.offlineFastHashingXPerSecond];
+  var secs=[crackSeconds(r.guesses,RATES[0].perHour/3600),crackSeconds(r.guesses,RATES[1].perSec),crackSeconds(r.guesses,RATES[2].perSec),crackSeconds(r.guesses,RATES[3].perSec)];
+  for(var i=0;i<4;i++)el('ct'+i).textContent=(cells[i]&&cells[i].display)?cells[i].display:humanTime(secs[i]);
+  var fill=el('meterFill');
+  fill.style.width=((r.score+1)/5*100)+'%';
+  fill.style.background=['var(--danger)','var(--danger)','var(--warn)','#84cc16','var(--success)'][r.score];
+  var seq=el('seq');
+  seq.innerHTML='<span style="width:100%">How the engine breaks it apart:</span>';
+  (r.sequence||[]).forEach(function(m){
+    var t=document.createElement('span');
+    t.className='tok';
+    t.innerHTML='<b></b> <span></span>';
+    t.querySelector('b').textContent='"'+m.token+'"';
+    t.querySelector('span:last-child').textContent=PATTERN_NAMES[m.pattern]||m.pattern;
+    seq.appendChild(t);
+  });
+  var fb=el('feedback');
+  var w=r.feedback&&r.feedback.warning,sugg=r.feedback&&r.feedback.suggestions||[];
+  if(!w&&!sugg.length){fb.style.display='none';}
+  else{
+    fb.style.display='block';
+    var html='<strong>'+(r.score>=3?'Solid.':'Worth fixing.')+'</strong>';
+    if(w)html+=' '+w.replace(/^./,function(c){return c.toUpperCase()})+'.';
+    if(sugg.length){html+='<ul>'+sugg.slice(0,3).map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul>';}
+    fb.innerHTML=html;
+  }
+}
+var timer=null;
+el('pw').addEventListener('input',function(){
+  clearTimeout(timer);
+  var pw=el('pw').value;
+  if(!pw){
+    ['rScore','rBits','rGuesses','rPool','ct0','ct1','ct2','ct3'].forEach(function(id){el(id).textContent='—';});
+    el('meterFill').style.width='0%';el('seq').innerHTML='';el('feedback').style.display='none';
+    return;
+  }
+  timer=setTimeout(function(){
+    ensureEngine().then(function(){
+      var r=zxcvbn.check(el('pw').value);
+      render(r,el('pw').value);
+    }).catch(function(){});
+  },180);
+});
+el('toggle').addEventListener('click',function(){
+  var i=el('pw');
+  var show=i.type==='password';
+  i.type=show?'text':'password';
+  el('toggle').textContent=show?'🙈 Hide':'👁 Show';
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

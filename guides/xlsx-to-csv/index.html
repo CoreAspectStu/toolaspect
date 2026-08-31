@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Convert Excel to CSV Without Losing Data | ToolAspect</title>
+<meta name="description" content="How to convert XLSX to CSV: per-sheet exports, what happens to formulas (cached values), date formatting, RFC 4180 quoting, and the UTF-8 BOM fix for Excel mojibake.">
+<link rel="canonical" href="https://toolaspect.com/guides/xlsx-to-csv/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Convert Excel to CSV Without Losing Data","description":"CSV is the lingua franca of imports, scripts, and databases, but the trip from .xlsx loses things if you don't know what to expect: formulas export their cached values, dates export in display format, commas and quotes inside cells trigger RFC 4180 quoting, and Excel garbles UTF-8 accents unless the file starts with a BOM. This guide walks each behavior with examples, explains Excel's one-sheet-at-a-time Save As limitation, and shows a private in-browser conversion path for sensitive spreadsheets. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Convert Excel to CSV","item":"https://toolaspect.com/guides/xlsx-to-csv/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert all sheets of an Excel file to CSV?","acceptedAnswer":{"@type":"Answer","text":"Excel's Save As CSV exports only the active sheet, so a 5-sheet workbook means five manual saves. A converter with a sheet picker does it faster: load the workbook, click each tab, download each CSV (our tool adds a Download all sheets button). Scripted users get the same result with a short Python/openpyxl loop or ssconvert from Gnumeric."}},
+{"@type":"Question","name":"Do formulas survive the conversion to CSV?","acceptedAnswer":{"@type":"Answer","text":"As values, not formulas — CSV has no formula concept. Excel stores each formula's last computed result inside the file, and converters export that cached value: a cell showing 3,500 exports as 3500 even though it contains =SUM(B1:B2). Files saved by unusual tools without cached values can fall back to the formula text, which is the one case you'll see the formula itself in the output."}},
+{"@type":"Question","name":"Why do special characters break when I open the CSV in Excel?","acceptedAnswer":{"@type":"Answer","text":"Double-clicking a CSV makes Excel guess the encoding from the system code page, and UTF-8 accents like Müller become mojibake. The fix is a UTF-8 BOM (three bytes at the file start) — Excel then reads the file as UTF-8 correctly. Our converter adds the BOM by default and lets you toggle it off, since some Unix pipelines prefer BOM-less files."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.45rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Convert Excel to CSV Without Losing Data</h1>
+<div class="meta"><span>📊 Spreadsheets</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">CSV is what every import screen, script, and database actually wants — and the conversion from .xlsx is where good data goes weird: formulas turn into numbers (usually fine), dates turn into something else (sometimes fine), commas inside cells grow quote marks (correct but alarming), and accents turn into mojibake in Excel (fixable, always). Here's what actually happens cell by cell, and how to convert multi-sheet workbooks without opening Excel five times.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What is CSV, and what can it hold?</h2>
+<p>Comma-Separated Values: plain text, one table, rows separated by newlines, cells by commas, defined by RFC 4180. That's the entire format. No formatting, no formulas, no multiple sheets, no cell types — every value is text once quoted properly. The limitation is the feature: any program written in the last forty years can read it, which is why CSV is the interchange format for CMS imports, mail-merge lists, database loads, and every "upload a spreadsheet" screen on the web.</p>
+<h2>What happens to each kind of cell?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Excel cell</th><th>CSV output</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>Widget</code></td><td><code>Widget</code></td><td>Text passes through</td></tr>
+<tr><td><code>9.5</code></td><td><code>9.5</code></td><td>Numbers export as values</td></tr>
+<tr><td><code>=SUM(B1:B2)</code> → 3,500</td><td><code>3500</code></td><td>CSV gets the cached computed value</td></tr>
+<tr><td>Date shown as 3/15/26</td><td><code>3/15/26</code></td><td>Dates export in the cell's display format</td></tr>
+<tr><td><code>name, co</code></td><td><code>"name, co"</code></td><td>Comma forces quoting per RFC 4180</td></tr>
+<tr><td><code>say "hi"</code></td><td><code>"say ""hi"""</code></td><td>Embedded quotes double inside quotes</td></tr>
+<tr><td>Cell with line break</td><td><code>"line↵break"</code></td><td>Embedded newlines are quoted</td></tr>
+<tr><td><code>Müller</code></td><td><code>Müller</code></td><td>UTF-8 text is preserved (BOM helps Excel)</td></tr>
+</tbody>
+</table>
+</div>
+<p>The formula row is the one that surprises people: the value you see is the value Excel computed and stored the last time the file was saved. That's why a converted CSV "loses" nothing that was visible — and why re-opening the CSV in Excel and expecting live formulas to still work is a category error.</p>
+<h2>How do you convert a multi-sheet workbook?</h2>
+<p>Excel's own route — File → Save As → CSV — exports <em>only the active sheet</em>, silently. A five-sheet workbook needs five saves with five file names. Three better routes:</p>
+<ul>
+<li><strong>Browser converter with a sheet picker:</strong> the <a href="/xlsx-to-csv/">XLSX to CSV tool</a> shows every sheet as a tab with a data preview, downloads the selected sheet, or downloads all sheets as separate CSVs — without opening Excel or uploading anything.</li>
+<li><strong>Command line:</strong> <code>ssconvert workbook.xlsx output-%n.csv</code> (Gnumeric) loops all sheets; Python with openpyxl or pandas does the same in a few lines for scripted pipelines.</li>
+<li><strong>Google Sheets:</strong> File → Download → Comma Separated Values, but only the current sheet — same limitation as Excel, plus the upload.</li>
+</ul>
+<h2>Why do accents break in Excel, and what's the BOM fix?</h2>
+<p>When you double-click a .csv, Excel doesn't know it's UTF-8, so it decodes it with the system's legacy code page — and Müller becomes MÃ¼ller. The fix is a UTF-8 BOM: three bytes (EF BB BF) at the very start of the file that announce "this is UTF-8." Excel honors it, and every serious CSV reader tolerates it. Our converter writes the BOM by default with a toggle to disable it, since some Unix tools would rather see the marker bytes stripped. The alternative Excel-safe path — import via Data → From Text/CSV and pick 65001: Unicode (UTF-8) — works but isn't double-clickable.</p>
+<h2>What about dates, and why does 3/15/26 worry people?</h2>
+<p>Excel doesn't store dates; it stores day-counts since January 1, 1900, plus a display format. A converter writes what the cell displays, so the CSV inherits whatever format the workbook used — <code>3/15/26</code>, <code>15-Mar-2026</code>, or <code>2026-03-15</code>. Two rules keep dates safe: format the source column to ISO (YYYY-MM-DD) before converting if the destination parses dates strictly, and never let a locale-sensitive system guess between month-first and day-first. ISO dates are unambiguous everywhere.</p>
+<h2>How do you convert sensitive spreadsheets privately?</h2>
+<p>The trust question again: payroll, customer lists, and board decks shouldn't ride through a free upload converter whose retention policy you've never read. A browser-based converter runs the parsing engine (SheetJS, in our tool's case) on your own machine — the file is read into memory, converted, and handed back as a download, with zero network traffic during conversion. You can watch the network tab to confirm. For one-off or recurring sensitive exports, that's the same privacy as desktop software with the convenience of a URL.</p>
+<div class="cta-box"><h3>Convert your workbook now — privately</h3><p style="color:#fff;opacity:.9">Drop an XLSX, pick a sheet, preview, download clean UTF-8 CSV. All in your browser.</p><a href="/xlsx-to-csv/">Convert XLSX to CSV →</a></div>
+<h2>The bottom line</h2>
+<p>Expect values instead of formulas, display formats for dates, RFC 4180 quoting for anything with a comma, and a BOM for Excel-friendly UTF-8. Convert per sheet, preview before you trust, and keep sensitive files on your own machine. Going the other way — assembling CSVs into a real workbook — is what <a href="/csv-to-excel/">CSV to Excel</a> is for.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert all sheets of an Excel file to CSV?</h3><p>Excel's Save As CSV exports only the active sheet, so a 5-sheet workbook means five manual saves. A converter with a sheet picker does it faster: load the workbook, click each tab, download each CSV (our tool adds a Download all sheets button). Scripted users get the same result with a short Python/openpyxl loop or ssconvert from Gnumeric.</p></div>
+<div class="faq-item"><h3>Do formulas survive the conversion to CSV?</h3><p>As values, not formulas — CSV has no formula concept. Excel stores each formula's last computed result inside the file, and converters export that cached value: a cell showing 3,500 exports as 3500 even though it contains =SUM(B1:B2). Files saved by unusual tools without cached values can fall back to the formula text, which is the one case you'll see the formula itself in the output.</p></div>
+<div class="faq-item"><h3>Why do special characters break when I open the CSV in Excel?</h3><p>Double-clicking a CSV makes Excel guess the encoding from the system code page, and UTF-8 accents like Müller become mojibake. The fix is a UTF-8 BOM (three bytes at the file start) — Excel then reads the file as UTF-8 correctly. Our converter adds the BOM by default and lets you toggle it off, since some Unix pipelines prefer BOM-less files.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/xlsx-to-csv/">XLSX to CSV</a>
+<a href="/csv-to-excel/">CSV to Excel</a>
+<a href="/csv-to-json/">CSV to JSON</a>
+<a href="/excel-to-pdf/">Excel to PDF</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+</body>
+</html>

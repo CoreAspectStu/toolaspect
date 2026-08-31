@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How Long Does It Take to Crack a Password? | ToolAspect</title>
+<meta name="description" content="Crack time explained: guesses per second at four attack speeds, why Tr0ub4dour&3 falls in 41 seconds, the entropy bits that matter, and a free checker.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-long-does-it-take-to-crack-a-password/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Long Does It Take to Crack a Password?","description":"Crack time is just guesses divided by guessing speed, and both halves of that fraction are more interesting than they look. This guide covers the four standard attack scenarios (throttled logins, unthrottled online, slow hashes, fast hashes on GPUs), why pattern-matching attackers demolish complex-looking passwords, what entropy bits you actually need, why length beats symbol soup, and a free checker that runs the estimate in your browser. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How Long Does It Take to Crack a Password?","item":"https://toolaspect.com/guides/how-long-does-it-take-to-crack-a-password/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is password crack time calculated?","acceptedAnswer":{"@type":"Answer","text":"Divide the number of guesses an attacker needs by how fast they can guess. The estimator side comes from analyzing what the password is made of (words, names, dates, patterns); the speed side comes from the attack scenario — a throttled login allows 100 tries an hour, while a fast offline rig with leaked hashes can try ten billion per second."}},
+{"@type":"Question","name":"Why do complex-looking passwords crack fast?","acceptedAnswer":{"@type":"Answer","text":"Because real attackers don't try every character combination — they try likely patterns first: dictionary words, names, years, keyboard walks, and l33t substitutions. A password that looks like chaos to a human can sit near the top of a pattern list. Tr0ub4dour&3, the classic example, works out to about 412 billion guesses — 41 seconds offline at ten billion guesses per second."}},
+{"@type":"Question","name":"How many bits should my password have?","acceptedAnswer":{"@type":"Answer","text":"Aim for 60-plus against serious offline attacks — that's where crack times reach centuries at ten billion guesses per second. For context: a random 16-character password from all printable ASCII carries about 105 bits, and a four-common-word passphrase about 65 bits. Under 30 bits, you're measuring survival in seconds to minutes."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How Long Does It Take to Crack a Password?</h1>
+<div class="meta"><span>🔐 Security</span><span>⏱️ 8 min read</span><span>Free tool included</span></div>
+<p class="intro">Every password strength claim reduces to one fraction: guesses needed, divided by guesses per second. The numerator is about your password; the denominator is about how it gets attacked — and the same password can survive centuries in one scenario and die in seconds in another. Here's what the numbers actually mean, why complex-looking passwords collapse, and how to check yours without typing your real one into anything.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What's actually being divided by what?</h2>
+<p>Strength estimators output a guess count — how many tries a smart attacker needs. Crack time is that count divided by attack speed. Four standard speeds cover the realistic scenarios:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Scenario</th><th>Speed</th><th>When this is your world</th></tr></thead>
+<tbody>
+<tr><td>Throttled online login</td><td>100 / hour</td><td>The site locks or delays after failed attempts</td></tr>
+<tr><td>Unthrottled online</td><td>10 / second</td><td>No rate limiting on the login endpoint</td></tr>
+<tr><td>Offline, slow hash</td><td>10,000 / second</td><td>Breach of a database hashed with bcrypt/argon2, done right</td></tr>
+<tr><td>Offline, fast hash + GPU</td><td>10 billion / second</td><td>Breach of a database hashed with something fast like MD5 or SHA-1</td></tr>
+</tbody>
+</table>
+</div>
+<p>The jump from scenario one to four is a factor of 360 million billion. This is why "strong enough" is meaningless without a scenario: a password that survives a throttled login forever can evaporate the day its hash leaks from a fast-hashed database. The only scenario you fully control is the last one — assume it, and you're covered.</p>
+<h2>Why do complex-looking passwords crack in seconds?</h2>
+<p>Because nobody brute-forces character by character. Real cracking runs pattern lists: previous breach dumps, dictionary words, names, years, keyboard walks, and the substitutions everyone makes — a→4, e→3, o→0, plus a trailing "!" or "1". The estimator zxcvbn (first released by Dropbox's security team, now maintained as an open-source fork) models exactly this, which is how it lands on famous results like <code>Tr0ub4dour&amp;3</code>: twelve characters of apparent chaos, recognized as one dictionary word in light l33t plus a year-ish digit run and an obvious symbol. Total: about 412 billion guesses, which at ten billion per second is 41 seconds.</p>
+<p>Run the same math on genuinely random strings and the tables turn. Sixteen random characters from all printable ASCII: 16 × log₂(95) ≈ 105 bits of entropy, about 4.4 × 10³¹ possibilities — tens of trillions of years even at fast-hash speeds. The lesson isn't "symbols bad"; it's that symbols only help when they're random, and human-placed symbols almost never are.</p>
+<h2>How many bits do you actually need?</h2>
+<p>Bits are the currency: entropy in bits = log₂(guesses), and every extra bit doubles the work. Working backward from the nightmare scenario:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Entropy</th><th>Guesses (≈)</th><th>Offline fast-hash crack time</th><th>Feels like</th></tr></thead>
+<tbody>
+<tr><td>20 bits</td><td>10⁶</td><td>instant</td><td>toast</td></tr>
+<tr><td>30 bits</td><td>10⁹</td><td>less than a second</td><td>toast</td></tr>
+<tr><td>40 bits</td><td>10¹²</td><td>~2 minutes</td><td>toast</td></tr>
+<tr><td>50 bits</td><td>10¹⁵</td><td>~1.3 days</td><td>bad</td></tr>
+<tr><td>60 bits</td><td>10¹⁸</td><td>~3.7 years</td><td>borderline</td></tr>
+<tr><td>65 bits</td><td>3.7 × 10¹⁹</td><td>~117 years</td><td>fine for humans</td></tr>
+<tr><td>80 bits</td><td>10²⁴</td><td>~3.8 million years</td><td>fine for anything</td></tr>
+<tr><td>105 bits</td><td>4.1 × 10³¹</td><td>~10¹⁴ years</td><td>physics joke</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two anchors worth memorizing: a four-common-word passphrase rates around 65 bits (the classic <code>correct horse battery staple</code> scores 65.5 with the current estimator's dictionaries), and a random 16-character full-ASCII password around 105. Either clears the bar; the difference is mostly whether you can type it on a phone.</p>
+<h2>Does length beat complexity?</h2>
+<p>Mathematically, always. Entropy from randomness is length × log₂(pool size). Doubling the pool adds one bit per character; doubling the length doubles the total. Twenty random lowercase letters: 20 × log₂(26) ≈ 94 bits. Eleven random characters from all 95 printable ASCII: 11 × log₂(95) ≈ 72 bits. The boring string of lowercase wins by twenty-two bits. This is why NIST's digital identity guidance (SP 800-63B) pushes length over forced composition rules — and why "must contain a symbol" produced a decade of <code>Password1!</code>.</p>
+<h2>What about the passwords you can't choose?</h2>
+<p>The four-digit PIN, the bank password capped at 12 characters, the site that silently truncates — policy weaknesses you can't fix with cleverness. What you can do: never reuse across sites (so one fast-hash breach doesn't cascade), let a password manager generate and store the long random ones, and turn on two-factor authentication wherever it exists, because it breaks the crack-time math entirely: a stolen password plus a required second factor is a locked door. <a href="/password-generator/">Our generator</a> handles the first; the second is a settings page away.</p>
+<h2>How do you check a password without leaking it?</h2>
+<p>Run the estimator locally. Our <a href="/password-strength-checker/">Password Strength Checker</a> loads zxcvbn's dictionaries into your browser and computes the score, guess count, entropy, and all four crack times in the tab — no transmission, no server. Even so, the best hygiene is to test a variant with the same shape as your real password rather than the real one: same length, same mix of word, number, and symbol. You'll learn the same lesson without ever having typed the crown jewels into a form. For the principles behind the numbers, our longer <a href="/guides/what-makes-a-password-strong/">password strength guide</a> covers dictionaries, hashing, and why managers beat memory.</p>
+<div class="cta-box"><h3>Test a password variant now</h3><p style="color:#fff;opacity:.9">zxcvbn score, entropy in bits, and crack times at four attack speeds — computed entirely in your browser.</p><a href="/password-strength-checker/">Password Strength Checker →</a></div>
+<h2>The bottom line</h2>
+<p>Crack time is a fraction: be on the right side of both halves. Make the numerator huge with length and randomness (60+ bits; four random words or sixteen random characters), and shrink the denominator's importance with unique passwords, slow hashes on the sites you build, and 2FA on the accounts you own. And when a meter says "strong," check whether it counted patterns — because the attacker did.</p>
+<div class="related-tools"><a href="/password-strength-checker/">🔐 Password Strength Checker</a><a href="/password-generator/">🎲 Password Generator</a><a href="/hash-generator/">#️⃣ Hash Generator</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+</body>
+</html>

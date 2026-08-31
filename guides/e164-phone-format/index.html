@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E.164: The Phone Format Databases Should Store | ToolAspect</title>
+<meta name="description" content="E.164 explained with real numbers: why +14155552671 belongs in your database, the trunk-prefix trap, and possible vs valid — with a 14-country table.">
+<link rel="canonical" href="https://toolaspect.com/guides/e164-phone-format/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"E.164: The Phone Number Format Databases Should Store","description":"Every phone number format except one loses information. This guide explains E.164 — plus, country code, national significant number, 15 digits, nothing else — with verified examples across 14 countries, the trunk-prefix trap that breaks imports, and the difference between a possible and a valid number.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"E.164 Phone Format","item":"https://toolaspect.com/guides/e164-phone-format/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does an E.164 number look like?","acceptedAnswer":{"@type":"Answer","text":"A plus sign, the country calling code, and the national significant number — no spaces, dashes, parentheses, or leading zeros. A San Francisco number is +14155552671 in E.164; the same number written (415) 555-2671 is US national format and 4155552671 without the country code is not globally unique. Fifteen digits is the ITU maximum, including the country code."}},
+{"@type":"Question","name":"Why do UK numbers start with 0 sometimes and not others?","acceptedAnswer":{"@type":"Answer","text":"The 0 is a trunk prefix — the digit you dial to get out of the local network, used by the UK, Germany, France, Japan, Australia, and dozens of others. You dial 020 7031 3000 inside the UK but write +44 20 7031 3000 internationally, because E.164 drops the trunk prefix. The US and Canada never had one, which is why (415) 555-2671 loses nothing but punctuation going to +14155552671."}},
+{"@type":"Question","name":"Should I store phone numbers as E.164 in my database?","acceptedAnswer":{"@type":"Answer","text":"Yes — it's the only format that is simultaneously unique, sortable, and dialable. Store E.164, validate at the door with libphonenumber-style metadata, and render national or international format at display time. Storing formatted numbers means every dedupe, search, and SMS send fights inconsistent punctuation, and two rows can hold the same number."}},
+{"@type":"Question","name":"What's the difference between a valid and a possible phone number?","acceptedAnswer":{"@type":"Answer","text":"Possible means the length fits one of the country's allowed ranges — the number could exist. Valid means the leading digits also match an allocated block. +1 300-555-0100 is possible but not valid: ten digits like a US number, but area code 300 is unassigned. Neither check confirms the number is in service; only a call or SMS does that."}},
+{"@type":"Question","name":"How many digits can a phone number have?","acceptedAnswer":{"@type":"Answer","text":"Fifteen total in E.164, country code included, per the ITU standard. Real national significant numbers run from about 8 digits (Germany's fixed lines) to 11 (Brazil's mobiles); the US and Canada use 10. Numbers longer than 15 digits after the plus are either mistyped or carry an extension, which belongs in a separate field."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{font-size:.9em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>E.164: The Phone Number Format Databases Should Store</h1>
+<div class="meta"><span>💡 15K+ searches/mo</span><span>⏱️ 8 min read</span></div>
+<p class="intro">Phone numbers are the most commonly mangled data field in existence, and the mangle always starts the same way: someone stored what the user typed. Here's the one format that doesn't lose information, the country rules that break naive parsing, and the checks that matter — all with numbers you can verify.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>One format to store</h2>
+<p>E.164 is the ITU standard that defines how a globally unique phone number is written: a plus sign, the country calling code, then the national significant number (NSN) — the part that actually identifies the subscriber. No spaces, no dashes, no parentheses, no leading zeros. Maximum 15 digits including the country code.</p>
+<ul>
+<li><strong>US:</strong> <code>+14155552671</code> — country code 1, NSN 4155552671 (area code + line)</li>
+<li><strong>UK:</strong> <code>+442070313000</code> — country code 44, NSN 2070313000</li>
+<li><strong>Brazil:</strong> <code>+5511912345678</code> — country code 55, NSN 11912345678 (11 digits, mobile)</li>
+</ul>
+<p>Every other way of writing a number either loses the country (national format), loses uniqueness (a bare 10-digit string could be US, CA, or a dozen other +1 countries, or a Caribbean island), or carries decoration that varies by who typed it. Store E.164; render beautifully elsewhere.</p>
+<h2>The trunk prefix trap</h2>
+<p>Most of the world dials a leading 0 to escape the local network. The UK, Germany, France, Spain, the Netherlands, Australia, Japan, Nigeria — all trunk-prefix countries. The rule people get wrong: <strong>the trunk prefix is part of the domestic dialing ritual, not part of the number.</strong></p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Country</th><th>You dial domestically</th><th>E.164</th><th>NSN</th></tr></thead>
+<tbody>
+<tr><td>United Kingdom</td><td>020 7031 3000</td><td><code>+442070313000</code></td><td>10 digits</td></tr>
+<tr><td>Germany</td><td>030 901820</td><td><code>+4930901820</code></td><td>8 digits</td></tr>
+<tr><td>France</td><td>01 42 68 53 00</td><td><code>+33142685300</code></td><td>9 digits</td></tr>
+<tr><td>Australia</td><td>(02) 9250 7111</td><td><code>+61292507111</code></td><td>9 digits</td></tr>
+<tr><td>Japan</td><td>03-3212-1111</td><td><code>+81332121111</code></td><td>9 digits</td></tr>
+<tr><td>United States</td><td>(415) 555-2671</td><td><code>+14155552671</code></td><td>10 digits</td></tr>
+</tbody>
+</table>
+</div>
+<p>See the pattern? Strip the 0, prepend the country code. The US row looks the same only because North America never had a trunk prefix — its "1" is the country code it happens to share with Canada and 20-odd Caribbean nations, which is also why a bare "10-digit US number" is ambiguous the moment a Canadian signs up.</p>
+<p>The classic import bug: a spreadsheet of UK numbers in national format, someone strips punctuation and prepends +44 without removing the 0, and every SMS to <code>+4402070313000</code> silently fails. The 0 goes. Always.</p>
+<h2>Possible vs valid</h2>
+<p>Two checks, two meanings, and conflating them is how validation bugs ship:</p>
+<ol>
+<li><strong>Possible</strong> — the length fits one of the country's allowed NSN ranges. <code>+1 300-555-0100</code>: ten digits, possible. A cheap sanity check while someone is typing.</li>
+<li><strong>Valid</strong> — the leading digits match an allocated block. Area code 300 is unassigned, so that number is possible but not valid.</li>
+</ol>
+<p>What neither check tells you: whether anyone actually holds the number. Metadata knows the map, not the residents. Confirming possession takes an SMS code or a call — which is why every serious signup flow validates format offline first, then verifies ownership out-of-band.</p>
+<h2>Line type, and its honest limits</h2>
+<p>Numbering plans that encode line type in the prefix let metadata distinguish them: UK 07-prefixed numbers are mobile, 02-prefixed are fixed. Brazil's mobiles carry the 9. But the US and Canada lump everything as "fixed or mobile" because NANP allocation doesn't separate them. And portability — moving a number between carriers, or fixed-to-mobile — means the type baked into the prefix can drift from reality. Type is a strong hint, not a guarantee; if your flow depends on "this is definitely a mobile," an SMS handshake is the only proof.</p>
+<h2>Doing it right in four steps</h2>
+<ol>
+<li><strong>Accept anything</strong> — let users type numbers however they like, with a country selector for non-plus input.</li>
+<li><strong>Parse with real metadata</strong> — Google's libphonenumber (or libphonenumber-js on the web) knows every country's ranges and prefixes. Regexes for phone numbers are a spectator sport.</li>
+<li><strong>Store E.164</strong> — one column, one format, unique and sortable.</li>
+<li><strong>Format at display</strong> — national format for domestic users, international for everyone else, and <code>tel:+14155552671</code> (RFC 3966) for links and QR codes.</li>
+</ol>
+<p>Step 2 is where our <a href="/phone-number-validator/">phone number validator</a> lives: paste any number, get the verdict plus all four formats, with the entire Google dataset running in your browser — no API, so customer lists stay home.</p>
+<div class="cta-box"><h3>Validate a number right now</h3><p style="color:#fff;opacity:.9">Paste any number, get validity, E.164, and line type — offline metadata, zero uploads.</p><a href="/phone-number-validator/">Phone Number Validator →</a></div>
+<h2>The bottom line</h2>
+<p>Phone number handling goes wrong at the storage boundary, not the input boundary. Accept generously, parse with real metadata, store E.164, format for humans on the way out — and respect the trunk prefix, because that 0 is the single most expensive character in telecom data. The <a href="/phone-number-validator/">validator</a> covers the parse-and-check step; for the QR side of step 4, the <a href="/qr-code-generator/">QR code generator</a> takes <code>tel:</code> URIs directly.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does an E.164 number look like?</h3><p>A plus sign, the country calling code, and the national significant number — no spaces, dashes, parentheses, or leading zeros. A San Francisco number is +14155552671 in E.164; the same number written (415) 555-2671 is US national format and 4155552671 without the country code is not globally unique. Fifteen digits is the ITU maximum, including the country code.</p></div>
+<div class="faq-item"><h3>Why do UK numbers start with 0 sometimes and not others?</h3><p>The 0 is a trunk prefix — the digit you dial to get out of the local network, used by the UK, Germany, France, Japan, Australia, and dozens of others. You dial 020 7031 3000 inside the UK but write +44 20 7031 3000 internationally, because E.164 drops the trunk prefix. The US and Canada never had one, which is why (415) 555-2671 loses nothing but punctuation going to +14155552671.</p></div>
+<div class="faq-item"><h3>Should I store phone numbers as E.164 in my database?</h3><p>Yes — it's the only format that is simultaneously unique, sortable, and dialable. Store E.164, validate at the door with libphonenumber-style metadata, and render national or international format at display time. Storing formatted numbers means every dedupe, search, and SMS send fights inconsistent punctuation, and two rows can hold the same number.</p></div>
+<div class="faq-item"><h3>What's the difference between a valid and a possible phone number?</h3><p>Possible means the length fits one of the country's allowed ranges — the number could exist. Valid means the leading digits also match an allocated block. +1 300-555-0100 is possible but not valid: ten digits like a US number, but area code 300 is unassigned. Neither check confirms the number is in service; only a call or SMS does that.</p></div>
+<div class="faq-item"><h3>How many digits can a phone number have?</h3><p>Fifteen total in E.164, country code included, per the ITU standard. Real national significant numbers run from about 8 digits (Germany's fixed lines) to 11 (Brazil's mobiles); the US and Canada use 10. Numbers longer than 15 digits after the plus are either mistyped or carry an extension, which belongs in a separate field.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/phone-number-validator/">Phone Number Validator</a>
+<a href="/qr-code-generator/">QR Code Generator</a>
+<a href="/json-schema-validator/">JSON Schema Validator</a>
+<a href="/user-agent-parser/">User Agent Parser</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

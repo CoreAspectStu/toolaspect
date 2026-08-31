@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phone Number Validator — E.164 &amp; Line Type | ToolAspect</title>
+<meta name="description" content="Validate phone numbers offline: E.164, international and national formats, line type, and country — Google metadata running in your browser, no API calls.">
+<link rel="canonical" href="https://toolaspect.com/phone-number-validator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Phone Number Validator — E.164, Line Type, Offline">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Check any number's validity, get E.164 and national formats, and see its line type — with Google's phone metadata running locally.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/phone-number-validator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phone Number Validator | Free Online Tool">
+<meta name="twitter:description" content="Validity, E.164 formats, and line type for any number — entirely offline in your browser.">
+<meta name="keywords" content="phone number validator, validate phone number, e164 validator, phone number format, phone lookup, libphonenumber, phone validation online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Phone Number Validator","description":"Validate phone numbers against Google's libphonenumber metadata, entirely in the browser: is it valid, is it possible, what country and line type, and its E.164, international, national, and tel: URI formats. Includes as-you-type formatting. No API calls, nothing uploaded.","url":"https://toolaspect.com/phone-number-validator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I validate a phone number?","acceptedAnswer":{"@type":"Answer","text":"Paste the number and pick a default country for numbers written without a + prefix. The validator checks it against Google's libphonenumber rules: length against the country's allowed ranges, the prefix against allocated blocks, and the whole number against known line-type patterns. A valid US number like +1 415-555-2671 comes back valid=true with its E.164 form, +14155552671."}},
+{"@type":"Question","name":"What is E.164 format?","acceptedAnswer":{"@type":"Answer","text":"E.164 is the ITU standard for globally unique phone numbers: a plus sign, then the country code, then the national significant number, with no spaces, dashes, or parentheses — 15 digits maximum. +14155552671 is E.164; (415) 555-2671 is the same number in US national format. Databases and APIs should store E.164 and format for display at the edge."}},
+{"@type":"Question","name":"What is the difference between a possible and a valid phone number?","acceptedAnswer":{"@type":"Answer","text":"Possible means the length is right for the country — the number could exist. Valid means the prefix is also in an allocated block. +1 300-555-0100 is possible=true but valid=false: ten digits like a US number, but area code 300 isn't assigned. Validate when you need to dial; use possible as a softer check while someone is still typing."}},
+{"@type":"Question","name":"Can this tool tell if a number is a mobile or landline?","acceptedAnswer":{"@type":"Answer","text":"Yes, where the country's numbering plan distinguishes them. The UK is clean: 07400 123456 is MOBILE, 020 7031 3000 is FIXED_LINE. The US and Canada are lumped as FIXED_LINE_OR_MOBILE because NANP numbers don't carry the distinction in the number itself. Type comes from Google's metadata patterns, not a live carrier lookup — it can't tell you who currently holds the number."}},
+{"@type":"Question","name":"Does the validator call an API or upload my numbers?","acceptedAnswer":{"@type":"Answer","text":"No. The full Google libphonenumber metadata for every country ships with the page (about 257 KB) and every check runs in your browser tab. Nothing is transmitted — which is the difference between this and most 'free phone validation' sites that harvest the numbers you paste. Safe for customer lists."}},
+{"@type":"Question","name":"Why does my number fail without a country?","acceptedAnswer":{"@type":"Answer","text":"A number written in national format — 020 7031 3000, (212) 555-2368 — doesn't carry enough information on its own to identify the country. Either write it with the international prefix (+44 20 7031 3000) or set the default country dropdown to the country the number belongs to. Numbers starting with + always parse regardless of the dropdown."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Phone Number Validator","item":"https://toolaspect.com/phone-number-validator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.8rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1.05rem;box-sizing:border-box}
+.input-group select{font-size:.95rem;cursor:pointer}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary)}
+.ayt{font-size:.9rem;color:var(--muted);margin-top:.7rem;min-height:1.3em}
+.ayt strong{color:var(--text);font-variant-numeric:tabular-nums}
+.result-hero{text-align:center;padding:1.2rem 0 .6rem}
+.verdict{display:inline-block;padding:.35rem 1.1rem;border-radius:999px;font-size:.9rem;font-weight:700}
+.verdict.ok{background:rgba(34,197,94,.15);color:var(--success);border:1px solid rgba(34,197,94,.4)}
+.verdict.bad{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.4)}
+.verdict.warn{background:rgba(250,204,21,.12);color:#eab308;border:1px solid rgba(250,204,21,.4)}
+.e164{font-size:1.9rem;font-weight:800;color:var(--primary);margin-top:.5rem;font-variant-numeric:tabular-nums;word-break:break-all}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:.9rem;text-align:center}
+.result-item .ri-label{font-size:.78rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.05rem;font-weight:700;word-break:break-word}
+.formats{margin-top:1rem}
+.fmt-row{display:grid;grid-template-columns:130px 1fr;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border);align-items:center}
+.fmt-row:last-child{border-bottom:none}
+.fmt-row .k{font-size:.78rem;color:var(--muted);font-weight:600}
+.fmt-row .v{font-size:.95rem;color:var(--text);font-variant-numeric:tabular-nums;word-break:break-all}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📞 Phone Number Validator</h1>
+<p>Validity, E.164 formats, and line type — Google metadata, offline, in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste a number (with <code>+</code> for international, or pick a default country below) and you get its verdict, E.164 form, national and international formats, tel: URI, country, and line type. It distinguishes <strong>possible</strong> (right length) from <strong>valid</strong> (allocated prefix): <code>+1 300-555-0100</code> is possible but invalid; <code>+1 415-555-2671</code> is valid and formats to <code>+14155552671</code>. The metadata is Google's libphonenumber data — <strong>257 KB shipped with the page, zero API calls</strong>.
+</div>
+
+<div class="section-card">
+<h2>Validate a number</h2>
+<div class="input-grid">
+<div class="input-group"><label>Phone number</label><input type="tel" id="numIn" value="+1 415-555-2671" autocomplete="off" spellcheck="false" placeholder="+1 415 555 2671 or (415) 555-2671"></div>
+<div class="input-group"><label>Default country (no + prefix)</label><select id="defCountry">
+<option value="">Auto (+ required)</option>
+<option value="US" selected>United States (+1)</option>
+<option value="CA">Canada (+1)</option>
+<option value="GB">United Kingdom (+44)</option>
+<option value="DE">Germany (+49)</option>
+<option value="FR">France (+33)</option>
+<option value="ES">Spain (+34)</option>
+<option value="NL">Netherlands (+31)</option>
+<option value="AU">Australia (+61)</option>
+<option value="IN">India (+91)</option>
+<option value="BR">Brazil (+55)</option>
+<option value="MX">Mexico (+52)</option>
+<option value="JP">Japan (+81)</option>
+<option value="CN">China (+86)</option>
+<option value="NG">Nigeria (+234)</option>
+</select></div>
+</div>
+<div class="ayt">As you type: <strong id="aytOut">…</strong></div>
+<div class="result-hero">
+<span class="verdict ok" id="verdict">—</span>
+<div class="e164" id="e164">—</div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Country</div><div class="ri-value" id="rCountry">—</div></div>
+<div class="result-item"><div class="ri-label">Line type</div><div class="ri-value" id="rType">—</div></div>
+<div class="result-item"><div class="ri-label">National significant #</div><div class="ri-value" id="rNsn">—</div></div>
+</div>
+<div class="formats">
+<div class="fmt-row"><div class="k">E.164</div><div class="v" id="fE164">—</div></div>
+<div class="fmt-row"><div class="k">International</div><div class="v" id="fIntl">—</div></div>
+<div class="fmt-row"><div class="k">National</div><div class="v" id="fNatl">—</div></div>
+<div class="fmt-row"><div class="k">tel: URI (RFC 3966)</div><div class="v" id="fUri">—</div></div>
+<div class="fmt-row"><div class="k">Calling code</div><div class="v" id="fCc">—</div></div>
+</div>
+<p>
+<button class="btn ghost" id="copyBtn" type="button">⧉ Copy E.164</button>
+<button class="btn ghost" id="sampleBtn" type="button">Load edge-case samples</button>
+</p>
+<div class="ayt" id="status">Ready. Validation runs locally — nothing is uploaded.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-schema-validator/">JSON Schema Validator</a></li><li style="margin:4px 0"><a href="/user-agent-parser/">User Agent Parser</a></li><li style="margin:4px 0"><a href="/url-parser/">URL Parser</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/e164-phone-format/">Read the E.164 guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Verified Formats by Country</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Country</th><th>Code</th><th>Example (E.164)</th><th>National format</th><th>Type</th><th>NSN digits</th></tr></thead>
+<tbody>
+<tr><td>United States</td><td>+1</td><td><code>+14155552671</code></td><td>(415) 555-2671</td><td>Fixed or mobile</td><td>10</td></tr>
+<tr><td>Canada</td><td>+1</td><td><code>+14165550199</code></td><td>(416) 555-0199</td><td>Fixed or mobile</td><td>10</td></tr>
+<tr><td>United Kingdom</td><td>+44</td><td><code>+442070313000</code></td><td>020 7031 3000</td><td>Fixed line</td><td>10</td></tr>
+<tr><td>United Kingdom</td><td>+44</td><td><code>+447400123456</code></td><td>07400 123456</td><td>Mobile</td><td>10</td></tr>
+<tr><td>Germany</td><td>+49</td><td><code>+4930901820</code></td><td>030 901820</td><td>Fixed line</td><td>8</td></tr>
+<tr><td>France</td><td>+33</td><td><code>+33142685300</code></td><td>01 42 68 53 00</td><td>Fixed line</td><td>9</td></tr>
+<tr><td>Spain</td><td>+34</td><td><code>+34912345678</code></td><td>912 34 56 78</td><td>Fixed line</td><td>9</td></tr>
+<tr><td>Netherlands</td><td>+31</td><td><code>+31201234567</code></td><td>020 123 4567</td><td>Fixed line</td><td>9</td></tr>
+<tr><td>Australia</td><td>+61</td><td><code>+61292507111</code></td><td>(02) 9250 7111</td><td>Fixed line</td><td>9</td></tr>
+<tr><td>India</td><td>+91</td><td><code>+919876543210</code></td><td>098765 43210</td><td>Mobile</td><td>10</td></tr>
+<tr><td>Brazil</td><td>+55</td><td><code>+5511912345678</code></td><td>(11) 91234-5678</td><td>Mobile</td><td>11</td></tr>
+<tr><td>Mexico</td><td>+52</td><td><code>+525512345678</code></td><td>55 1234 5678</td><td>Fixed or mobile</td><td>10</td></tr>
+<tr><td>Japan</td><td>+81</td><td><code>+81332121111</code></td><td>03-3212-1111</td><td>Fixed line</td><td>9</td></tr>
+<tr><td>Nigeria</td><td>+234</td><td><code>+2348031234567</code></td><td>0803 123 4567</td><td>Mobile</td><td>10</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every row above was machine-checked against the metadata this page ships. The "national significant number" is what's left after the calling code and any trunk prefix — the US's 10 digits, Brazil's 11. National formats keep the trunk prefix you dial domestically (the leading 0 in the UK, Germany, France, and friends) that E.164 drops.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Validator Works</h2>
+<p>Under the hood this is <strong>libphonenumber-js 1.13.12</strong> (MIT) carrying the complete offline metadata from Google's libphonenumber project — the same dataset Android, WhatsApp, and half the CRM industry use to sanity-check numbers. Parsing extracts the country, calling code, and national significant number; validation checks length ranges and prefix allocations; formatting renders the number against the country's canonical patterns.</p>
+<h3>A worked example, three ways</h3>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Input</th><th>Possible</th><th>Valid</th><th>What the metadata says</th></tr></thead>
+<tbody>
+<tr><td><code>+1 415-555-2671</code></td><td>Yes</td><td><strong>Yes</strong></td><td>10-digit NSN, area 415 allocated → E.164 <code>+14155552671</code>, national <code>(415) 555-2671</code></td></tr>
+<tr><td><code>+1 300-555-0100</code></td><td>Yes</td><td><strong>No</strong></td><td>Length fits NANP, but area code 300 is unassigned — possible ≠ valid</td></tr>
+<tr><td><code>+1 415 555 26712</code></td><td>No</td><td><strong>No</strong></td><td>11-digit NSN doesn't fit any US length range</td></tr>
+</tbody>
+</table>
+</div>
+<p>The middle row is the whole reason two checks exist. "Possible" is the length check — useful while a user is typing, or to catch fat-fingered extra digits before the prefix check runs. "Valid" means the number matches an allocated block, which is as far as offline metadata can take you. Neither means the number is in service or owned by the person who typed it; that takes an SMS or a carrier lookup, by design.</p>
+<h3>What you get, per number</h3>
+<ul>
+<li><strong>E.164</strong> — the storage format: <code>+</code>, country code, NSN, nothing else, 15 digits max by ITU decree.</li>
+<li><strong>International format</strong> — spaces and dashes for humans reading it abroad.</li>
+<li><strong>National format</strong> — how the country writes it domestically, trunk prefix included.</li>
+<li><strong>tel: URI</strong> — <code>tel:+14155552671</code>, the RFC 3966 form links and QR codes should carry.</li>
+<li><strong>Line type</strong> — mobile, fixed line, VoIP, toll-free, or the NANP's honest "fixed or mobile" shrug.</li>
+<li><strong>As-you-type formatting</strong> — <code>4155552671</code> snaps to <code>(415) 555-2671</code> while it's being typed, which is the cheapest way to spot a wrong digit early.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>Validation and formatting by <a href="https://github.com/catamphetamine/libphonenumber-js" rel="noopener">libphonenumber-js</a> 1.13.12 (MIT), built on Google's <a href="https://github.com/google/libphonenumber" rel="noopener">libphonenumber</a> metadata (Apache-2.0), bundled to 257 KB under <a href="/phone-number-validator/vendor/LICENSES.txt">/vendor/ with both license texts</a>. Everything runs in your browser tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I validate a phone number?</h3><p>Paste the number and pick a default country for numbers written without a + prefix. The validator checks it against Google's libphonenumber rules: length against the country's allowed ranges, the prefix against allocated blocks, and the whole number against known line-type patterns. A valid US number like +1 415-555-2671 comes back valid=true with its E.164 form, +14155552671.</p></div>
+<div class="faq-item"><h3>What is E.164 format?</h3><p>E.164 is the ITU standard for globally unique phone numbers: a plus sign, then the country code, then the national significant number, with no spaces, dashes, or parentheses — 15 digits maximum. +14155552671 is E.164; (415) 555-2671 is the same number in US national format. Databases and APIs should store E.164 and format for display at the edge.</p></div>
+<div class="faq-item"><h3>What is the difference between a possible and a valid phone number?</h3><p>Possible means the length is right for the country — the number could exist. Valid means the prefix is also in an allocated block. +1 300-555-0100 is possible=true but valid=false: ten digits like a US number, but area code 300 isn't assigned. Validate when you need to dial; use possible as a softer check while someone is still typing.</p></div>
+<div class="faq-item"><h3>Can this tool tell if a number is a mobile or landline?</h3><p>Yes, where the country's numbering plan distinguishes them. The UK is clean: 07400 123456 is MOBILE, 020 7031 3000 is FIXED_LINE. The US and Canada are lumped as FIXED_LINE_OR_MOBILE because NANP numbers don't carry the distinction in the number itself. Type comes from Google's metadata patterns, not a live carrier lookup — it can't tell you who currently holds the number.</p></div>
+<div class="faq-item"><h3>Does the validator call an API or upload my numbers?</h3><p>No. The full Google libphonenumber metadata for every country ships with the page (about 257 KB) and every check runs in your browser tab. Nothing is transmitted — which is the difference between this and most "free phone validation" sites that harvest the numbers you paste. Safe for customer lists.</p></div>
+<div class="faq-item"><h3>Why does my number fail without a country?</h3><p>A number written in national format — 020 7031 3000, (212) 555-2368 — doesn't carry enough information on its own to identify the country. Either write it with the international prefix (+44 20 7031 3000) or set the default country dropdown to the country the number belongs to. Numbers starting with + always parse regardless of the dropdown.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/json-schema-validator/">✓ JSON Schema Validator</a>
+<a href="/user-agent-parser/">🖥️ User Agent Parser</a>
+<a href="/url-parser/">🔗 URL Parser</a>
+<a href="/qr-code-generator/">⬛ QR Code Generator</a>
+<a href="/certificate-decoder/">🔐 Certificate Decoder</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/phone-number-validator/vendor/libphonenumber.iife.js"></script>
+<script>
+(function(){
+  var L = window.__taLibphonenumber;
+  var numIn = document.getElementById('numIn');
+  var defCountry = document.getElementById('defCountry');
+  var status = document.getElementById('status');
+  var aytOut = document.getElementById('aytOut');
+
+  var TYPE_LABELS = {
+    MOBILE: 'Mobile', FIXED_LINE: 'Fixed line', FIXED_LINE_OR_MOBILE: 'Fixed or mobile',
+    PREMIUM_RATE: 'Premium rate', TOLL_FREE: 'Toll-free', SHARED_COST: 'Shared cost',
+    VOIP: 'VoIP', PERSONAL_NUMBER: 'Personal number', PAGER: 'Pager', UAN: 'UAN',
+    VOICEMAIL: 'Voicemail'
+  };
+  var COUNTRY_NAMES = {
+    US: 'United States', CA: 'Canada', GB: 'United Kingdom', DE: 'Germany', FR: 'France',
+    ES: 'Spain', NL: 'Netherlands', AU: 'Australia', IN: 'India', BR: 'Brazil', MX: 'Mexico',
+    JP: 'Japan', CN: 'China', NG: 'Nigeria'
+  };
+
+  function set(id, v){ document.getElementById(id).textContent = v; }
+  function verdictEl(){ return document.getElementById('verdict'); }
+
+  function validate(){
+    var raw = numIn.value.trim();
+    var cc = defCountry.value || undefined;
+
+    // as-you-type preview
+    try {
+      var ayt = new L.AsYouType(cc);
+      var pretty = ayt.input(raw.replace(/[^\d+]/g, ''));
+      aytOut.textContent = raw ? (pretty || '…') : '…';
+    } catch (e) { aytOut.textContent = '…'; }
+
+    var v = verdictEl();
+    ['rCountry','rType','rNsn','fE164','fIntl','fNatl','fUri','fCc'].forEach(function(id){ set(id, '—'); });
+    set('e164', '—');
+
+    if (!raw) { v.className = 'verdict warn'; v.textContent = 'Enter a number'; return; }
+
+    var p;
+    try { p = L.parsePhoneNumberFromString(raw, cc); }
+    catch (e) { p = null; }
+
+    if (!p) {
+      v.className = 'verdict bad';
+      v.textContent = 'Not a phone number';
+      status.textContent = 'Could not parse. Add the + prefix or set a default country — national formats are ambiguous on their own.';
+      return;
+    }
+
+    var possible = p.isPossible(), valid = p.isValid();
+    if (valid) { v.className = 'verdict ok'; v.textContent = 'Valid ✓'; }
+    else if (possible) { v.className = 'verdict warn'; v.textContent = 'Possible, not valid'; }
+    else { v.className = 'verdict bad'; v.textContent = 'Invalid'; }
+
+    set('e164', p.number);
+    set('fE164', p.number);
+    set('fIntl', p.formatInternational());
+    set('fNatl', p.formatNational());
+    set('fUri', p.format('RFC3966'));
+    set('fCc', '+' + p.countryCallingCode);
+    set('rCountry', (COUNTRY_NAMES[p.country] || p.country || 'Unknown') + (p.country ? ' (' + p.country + ')' : ''));
+    var t = p.getType();
+    set('rType', t ? (TYPE_LABELS[t] || t) : 'Unknown');
+    set('rNsn', p.nationalNumber.length + ' digits');
+
+    status.textContent = valid
+      ? 'Valid: length and prefix both check out against Google’s metadata for ' + (p.country || 'this country') + '.'
+      : (possible
+        ? 'Possible: the length fits ' + (p.country || 'the detected country') + ', but the prefix isn’t in an allocated block.'
+        : 'Invalid: the length doesn’t fit any range for ' + (p.country || 'the detected country') + '.');
+  }
+
+  numIn.addEventListener('input', validate);
+  defCountry.addEventListener('change', validate);
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    var val = document.getElementById('fE164').textContent;
+    if (val === '—') return;
+    if (navigator.clipboard) navigator.clipboard.writeText(val).then(function(){ status.textContent = 'Copied ' + val + ' to clipboard.'; }, function(){});
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    var samples = ['+1 415-555-2671', '+1 300-555-0100', '+1 415 555 26712', '+44 7400 123456', '+55 11 91234 5678'];
+    var next = samples[(sampleBtn.i = ((sampleBtn.i || 0) + 1) % samples.length)];
+    numIn.value = next;
+    validate();
+  });
+
+  validate();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

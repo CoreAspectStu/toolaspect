@@ -51,6 +51,8 @@ for i, t in enumerate(DATA, 1):
 <p class="note">npm/web component: <code>&lt;toolaspect-tool tool="{slug}"&gt;&lt;/toolaspect-tool&gt;</code> — see <a href="https://www.npmjs.com/package/@coreaspect/toolaspect-embed">@coreaspect/toolaspect-embed</a>. Attribution link is the license condition &mdash; please keep it.</p>
 </div>''')
 
+import json as _json
+SCHEMA_JSON = _json.dumps({'@context':'https://schema.org','@type':'WebApplication','name':'ToolAspect Embeddable Widgets','url':'https://toolaspect.com/embeds','applicationCategory':'UtilitiesApplication','operatingSystem':'Any','offers':{'@type':'Offer','price':'0','priceCurrency':'USD'},'description':'Free embeddable calculator and utility widgets for any website.'})
 page = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,10 +60,12 @@ page = f'''<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Embed Any Tool — {len(DATA)}+ Free Embeddable Widgets | ToolAspect</title>
 <meta name="description" content="Copy-paste embed snippets for every ToolAspect calculator and tool. iframe and WordPress-ready snippets, plus a web component loader. Free with attribution.">
-<link rel="canonical" href="{SITE}/embeds.html">
+<link rel="canonical" href="{SITE}/embeds">
+<script type="application/ld+json">{SCHEMA_JSON}</script>
+
 <meta property="og:title" content="Embed Any Tool — {len(DATA)}+ Free Embeddable Widgets">
 <meta property="og:type" content="website">
-<meta property="og:url" content="{SITE}/embeds.html">
+<meta property="og:url" content="{SITE}/embeds">
 <meta property="og:description" content="Copy-paste embed snippets for every ToolAspect calculator and tool. iframe and WordPress-ready snippets, plus a web component loader. Free with attribution.">
 <meta property="og:image" content="{SITE}/shared/og-image.png">
 <meta property="og:site_name" content="ToolAspect">

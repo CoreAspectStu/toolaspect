@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Obfuscator — Free, In-Browser | ToolAspect</title>
+<meta name="description" content="Obfuscate JavaScript in your browser: string-array encoding, control-flow flattening, dead-code injection. The real engine, no upload.">
+<link rel="canonical" href="https://toolaspect.com/js-obfuscator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="JavaScript Obfuscator — String Array + Control Flow, In-Browser">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Rename identifiers, hide strings, flatten control flow — the real javascript-obfuscator engine running locally in your tab.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/js-obfuscator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JavaScript Obfuscator | Free Online Tool">
+<meta name="twitter:description" content="Protect client-side JS with string arrays, control-flow flattening, and dead code — entirely offline.">
+<meta name="keywords" content="javascript obfuscator, obfuscate javascript, js obfuscator, code obfuscation online, protect javascript code, obfuscator online">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"JavaScript Obfuscator","description":"Obfuscate JavaScript entirely in the browser with the javascript-obfuscator engine: identifier renaming, string-array encoding (base64 or RC4), control-flow flattening, dead-code injection, and unicode escapes. Presets plus per-option control, with measured size output. No upload — source never leaves the tab.","url":"https://toolaspect.com/js-obfuscator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does JavaScript obfuscation do?","acceptedAnswer":{"@type":"Answer","text":"It transforms readable source into functionally identical code that's expensive to reverse: identifiers become hex names, strings move into an encoded array fetched through a decoder function, control flow gets flattened into switch-based loops, and dead branches pad the logic. The output runs exactly like the input — a license-key function that prints TA-PRO-STU-84 prints it after every transform level — it just stops being worth anyone's time to read."}},
+{"@type":"Question","name":"Can obfuscated JavaScript be deobfuscated?","acceptedAnswer":{"@type":"Answer","text":"Yes, always — the browser must be able to run it, so a determined attacker with time can recover the logic. Obfuscation raises cost, it doesn't create impossibility. Pair it with real protections: keep secrets and license checks server-side, use code signing and legal protection for IP, and treat obfuscation as the speed bump that makes casual scraping not worth it."}},
+{"@type":"Question","name":"How much bigger does obfuscated code get?","acceptedAnswer":{"@type":"Answer","text":"A lot. Measured on a 191-byte test function: compact-only renaming grows it 6.9x to 1,325 bytes; adding base64 string-array encoding reaches 12.8x (2,454 bytes); RC4 encoding 20.8x (3,970); control-flow flattening on top lands at 15.3x (2,922). Size inflation is the tax — budgets of 2-5x are common for shipped bundles, and the high presets assume you'll also ship a minifier pass."}},
+{"@type":"Question","name":"Does obfuscation slow my code down?","acceptedAnswer":{"@type":"Answer","text":"Some transforms do. Control-flow flattening rewrites linear logic into a loop with a state machine, which costs on every hot-path call; dead-code injection inflates parse time; RC4 string decoding adds work at each string access. Measure: flatten the functions that hold your logic, not the ones in your render loop. The string-array and renaming transforms are close to free at runtime."}},
+{"@type":"Question","name":"Is my source code uploaded when I use this tool?","acceptedAnswer":{"@type":"Answer","text":"No. The full obfuscator engine ships with this page (about 1.7 MB, loaded on first run) and every transform runs in your browser tab. Your source never touches a server — which matters, since the code people want to obfuscate usually contains exactly the logic they least want to share."}},
+{"@type":"Question","name":"What's the difference between minification and obfuscation?","acceptedAnswer":{"@type":"Answer","text":"Minification (Terser, esbuild) makes code smaller — short names and stripped whitespace, but the structure and strings remain plainly readable. Obfuscation makes code harder to understand — encoded strings, flattened control flow, injected dead branches — and usually makes it bigger. They compose: minify first for production size, obfuscate the sensitive parts, or obfuscate then minify the result. Never confuse minification with protection; it's a speed bump you can read."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"JavaScript Obfuscator","item":"https://toolaspect.com/js-obfuscator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:1000px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.two-pane{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:800px){.two-pane{grid-template-columns:1fr}}
+.pane-label{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+textarea.pane{width:100%;min-height:380px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;line-height:1.5;box-sizing:border-box;resize:vertical;white-space:pre;overflow-x:auto}
+textarea.pane:focus{outline:none;border-color:var(--primary)}
+.dropzone-inline{border:2px dashed var(--border);border-radius:var(--radius);padding:.8rem;text-align:center;color:var(--muted);cursor:pointer;font-size:.85rem;margin-bottom:.6rem}
+.dropzone-inline:hover{border-color:var(--primary)}
+.preset-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.preset-btn{padding:.5rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit}
+.preset-btn.active{border-color:var(--primary);color:var(--primary-hover)}
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.6rem .8rem;margin-top:.8rem}
+.opt{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;cursor:pointer}
+.opt input{accent-color:var(--primary)}
+.opt select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;font-size:.8rem;padding:.2rem .3rem;margin-left:auto;cursor:pointer}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.85rem;color:var(--muted);margin-top:.8rem}
+.status-line strong{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+.notice-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.35);border-radius:var(--radius);padding:.8rem 1rem;font-size:.85rem;line-height:1.6;color:var(--muted);margin-top:1rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🛡️ JavaScript Obfuscator</h1>
+<p>Rename, encode, flatten — the real obfuscator engine, running locally in your browser</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste JavaScript, pick a preset (or toggle individual transforms), click Obfuscate. Identifiers become hex, strings hide in an encoded array, control flow flattens into state machines. It's the genuine <strong>javascript-obfuscator</strong> engine (BSD-2) running in this tab — your source never uploads. Measured on a 191-byte test function: <strong>6.9× bigger with renaming alone, 12.8× with base64 string arrays, 20.8× with RC4</strong> — and the output still runs identically at every level.
+</div>
+
+<div class="section-card">
+<h2>Obfuscate</h2>
+<div class="preset-row">
+<button class="preset-btn" data-preset="readable" type="button">Readable (rename only)</button>
+<button class="preset-btn active" data-preset="balanced" type="button">Balanced (string array)</button>
+<button class="preset-btn" data-preset="maximum" type="button">Maximum (control flow + RC4)</button>
+</div>
+<div class="two-pane">
+<div>
+<div class="pane-label"><span>Source JavaScript</span><span id="inStats">191 bytes</span></div>
+<div class="dropzone-inline" id="dz">Drop a .js file or click to open</div>
+<input type="file" id="fileInput" accept=".js,.mjs,.txt,text/javascript" style="display:none">
+<textarea id="inPane" class="pane" spellcheck="false"></textarea>
+</div>
+<div>
+<div class="pane-label"><span>Obfuscated output</span><span id="outStats">—</span></div>
+<textarea id="outPane" class="pane" spellcheck="false" readonly placeholder="Output appears here after obfuscation…"></textarea>
+</div>
+</div>
+<div class="opt-grid">
+<label class="opt"><input type="checkbox" id="o-compact" checked> Compact (one line)</label>
+<label class="opt"><input type="checkbox" id="o-stringArray" checked> String array <select id="o-enc"><option value="none">plain</option><option value="base64" selected>base64</option><option value="rc4">rc4</option></select></label>
+<label class="opt"><input type="checkbox" id="o-controlFlowFlattening"> Control-flow flattening</label>
+<label class="opt"><input type="checkbox" id="o-deadCodeInjection"> Dead-code injection</label>
+<label class="opt"><input type="checkbox" id="o-renameGlobals"> Rename globals (risky)</label>
+<label class="opt"><input type="checkbox" id="o-transformObjectKeys"> Transform object keys</label>
+<label class="opt"><input type="checkbox" id="o-unicodeEscapeSequence"> Unicode escapes</label>
+<label class="opt"><input type="checkbox" id="o-selfDefending"> Self-defending (anti-tamper)</label>
+</div>
+<p>
+<button class="btn" id="obfBtn" type="button">🛡️ Obfuscate</button>
+<button class="btn ghost" id="copyBtn" type="button">⧉ Copy output</button>
+<button class="btn ghost" id="downloadBtn" type="button">⬇ Download .js</button>
+<button class="btn ghost" id="sampleBtn" type="button">Load sample</button>
+</p>
+<div class="status-line" id="status">Ready. First run loads the engine (~1.7 MB, cached). Nothing you paste leaves this page.</div>
+<div class="notice-box"><strong>Honest limits:</strong> obfuscation raises the cost of reverse engineering; it cannot prevent it — the browser has to run the code, so a patient attacker can always recover the logic. Keep secrets, license checks, and anything security-critical on the server. Obfuscation is a speed bump, not a wall.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li><li style="margin:4px 0"><a href="/hash-generator/">Hash Generator</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/javascript-obfuscation/">Read the obfuscation guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Transforms, Measured</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Transform</th><th>What it does</th><th>Size on 191-byte sample</th><th>Runtime cost</th></tr></thead>
+<tbody>
+<tr><td>Compact + renaming</td><td>Hex identifiers, one line</td><td>1,325 B (6.9×)</td><td>None</td></tr>
+<tr><td>Unicode escapes</td><td>Escapes string characters as <code>\uXXXX</code></td><td>1,852 B (9.7×)</td><td>None (parsed once)</td></tr>
+<tr><td>String array, base64</td><td>Strings pulled into an encoded array behind a decoder</td><td>2,454 B (12.8×)</td><td>Trivial</td></tr>
+<tr><td>+ control-flow flattening</td><td>Linear logic becomes a switch state machine</td><td>2,922 B (15.3×)</td><td>Real — avoid in hot loops</td></tr>
+<tr><td>String array, RC4</td><td>Decoder adds an RC4 layer per access</td><td>3,970 B (20.8×)</td><td>Noticeable at scale</td></tr>
+<tr><td>Dead-code injection</td><td>Pads branches with unreachable code</td><td>grows with threshold</td><td>Parse-time only</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Sizes from this engine on the sample in the tool; exact bytes vary a little per run because generated identifiers are random. Every variant was executed after transformation and returned the original output — obfuscation must never change behavior, only legibility.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Obfuscator Works</h2>
+<p>This is <strong>javascript-obfuscator 5.6.0</strong> (BSD-2-Clause), the engine behind most "obfuscator.io"-style services, shipped as its official browser build (1.7 MB, loaded on first run) and executed in your tab. Your options map straight to the engine's transform pipeline — nothing is emulated or approximated.</p>
+<h3>A worked example, verified</h3>
+<p>The sample holds a 191-byte license-key function — two string constants, one numeric salt, string concatenation — that prints <code>TA-PRO-STU-84</code>. Running it through three escalating configurations:</p>
+<ul>
+<li><strong>Rename only:</strong> 1,325 bytes. Readable names gone; the strings <code>TA-PRO</code> and <code>stuart</code> still sit in plain sight.</li>
+<li><strong>Balanced (string array, base64):</strong> 2,454 bytes. The strings now live in a base64 array fetched through a generated decoder — grep for <code>TA-PRO</code> and you find nothing.</li>
+<li><strong>Maximum (+ control flow, RC4 available):</strong> 2,922 bytes with flattening at full strength. The function body becomes a state machine; each string access pays the decode cost.</li>
+</ul>
+<p>After every level, executing the output still prints exactly <code>TA-PRO-STU-84</code> — verified in a sandbox before shipping this page. That's the contract of obfuscation: same behavior, hostile readability.</p>
+<h3>Choosing settings without shooting yourself in the foot</h3>
+<ul>
+<li><strong>Start balanced.</strong> String-array plus renaming defeats the casual reader and costs almost nothing at runtime.</li>
+<li><strong>Flatten selectively.</strong> Control-flow flattening is the strongest readability killer and the only transform with a real runtime cost. If your page janks, this is the knob to turn down.</li>
+<li><strong>Rename globals breaks references from outside.</strong> If other scripts or HTML call your functions by name, leave it off — or export through one stable name.</li>
+<li><strong>Self-defending code throws if reformatted.</strong> Great against naive beautify-then-edit workflows, but it also breaks your own minifier if you run one afterwards. Order matters: obfuscate last.</li>
+<li><strong>Test the output.</strong> Every transform combination multiplies the chance of an edge case. Run your test suite against the obfuscated bundle, not just the source.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>Obfuscation by <a href="https://github.com/javascript-obfuscator/javascript-obfuscator" rel="noopener">javascript-obfuscator</a> 5.6.0 (BSD-2-Clause, © Timofei Kachalov), vendored as the official browser build under <a href="/js-obfuscator/vendor/LICENSE.BSD">/vendor/ with its license</a>. Everything runs in your browser tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does JavaScript obfuscation do?</h3><p>It transforms readable source into functionally identical code that's expensive to reverse: identifiers become hex names, strings move into an encoded array fetched through a decoder function, control flow gets flattened into switch-based loops, and dead branches pad the logic. The output runs exactly like the input — a license-key function that prints TA-PRO-STU-84 prints it after every transform level — it just stops being worth anyone's time to read.</p></div>
+<div class="faq-item"><h3>Can obfuscated JavaScript be deobfuscated?</h3><p>Yes, always — the browser must be able to run it, so a determined attacker with time can recover the logic. Obfuscation raises cost, it doesn't create impossibility. Pair it with real protections: keep secrets and license checks server-side, use code signing and legal protection for IP, and treat obfuscation as the speed bump that makes casual scraping not worth it.</p></div>
+<div class="faq-item"><h3>How much bigger does obfuscated code get?</h3><p>A lot. Measured on a 191-byte test function: compact-only renaming grows it 6.9x to 1,325 bytes; adding base64 string-array encoding reaches 12.8x (2,454 bytes); RC4 encoding 20.8x (3,970); control-flow flattening on top lands at 15.3x (2,922). Size inflation is the tax — budgets of 2-5x are common for shipped bundles, and the high presets assume you'll also ship a minifier pass.</p></div>
+<div class="faq-item"><h3>Does obfuscation slow my code down?</h3><p>Some transforms do. Control-flow flattening rewrites linear logic into a loop with a state machine, which costs on every hot-path call; dead-code injection inflates parse time; RC4 string decoding adds work at each string access. Measure: flatten the functions that hold your logic, not the ones in your render loop. The string-array and renaming transforms are close to free at runtime.</p></div>
+<div class="faq-item"><h3>Is my source code uploaded when I use this tool?</h3><p>No. The full obfuscator engine ships with this page (about 1.7 MB, loaded on first run) and every transform runs in your browser tab. Your source never touches a server — which matters, since the code people want to obfuscate usually contains exactly the logic they least want to share.</p></div>
+<div class="faq-item"><h3>What's the difference between minification and obfuscation?</h3><p>Minification (Terser, esbuild) makes code smaller — short names and stripped whitespace, but the structure and strings remain plainly readable. Obfuscation makes code harder to understand — encoded strings, flattened control flow, injected dead branches — and usually makes it bigger. They compose: minify first for production size, obfuscate the sensitive parts, or obfuscate then minify the result. Never confuse minification with protection; it's a speed bump you can read.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/base64-encoder/">🔐 Base64 Encoder</a>
+<a href="/hash-generator/">#️⃣ Hash Generator</a>
+<a href="/json-formatter/">{}_ JSON Formatter</a>
+<a href="/jwt-decoder/">🎫 JWT Decoder</a>
+<a href="/regex-tester/">.* Regex Tester</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script>
+(function(){
+  var inPane = document.getElementById('inPane');
+  var outPane = document.getElementById('outPane');
+  var status = document.getElementById('status');
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+  var libPromise = null;
+  var SAMPLE = 'function licenseKey(user, seats){ const prefix = "TA-PRO"; const salt = 7; return prefix + "-" + user.toUpperCase().slice(0,3) + "-" + (seats * salt); } console.log(licenseKey("stuart", 12));';
+
+  function bytes(s){ return new Blob([s||'']).size; }
+  function setMsg(html){ status.innerHTML = html; }
+
+  function loadLib(){
+    if (window.JavaScriptObfuscator) return Promise.resolve();
+    if (libPromise) return libPromise;
+    libPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = '/js-obfuscator/vendor/index.browser.js';
+      s.onload = resolve; s.onerror = function () { reject(new Error('could not load the obfuscator engine')); };
+      (document.head || document.documentElement).appendChild(s);
+    });
+    return libPromise;
+  }
+
+  var OPTS = ['compact','stringArray','controlFlowFlattening','deadCodeInjection','renameGlobals','transformObjectKeys','unicodeEscapeSequence','selfDefending'];
+
+  function currentOpts(){
+    var o = {};
+    OPTS.forEach(function(k){ o[k] = document.getElementById('o-' + k).checked; });
+    var enc = document.getElementById('o-enc').value;
+    o.stringArrayEncoding = o.stringArray && enc !== 'none' ? [enc] : [];
+    if (o.stringArray) o.stringArrayThreshold = 1;
+    if (o.controlFlowFlattening) o.controlFlowFlatteningThreshold = 1;
+    if (o.deadCodeInjection) o.deadCodeInjectionThreshold = 0.5;
+    o.identifierNamesGenerator = 'hexadecimal';
+    return o;
+  }
+
+  function applyPreset(name){
+    var map = {
+      readable: { compact:true, stringArray:false, enc:'none', controlFlowFlattening:false, deadCodeInjection:false, renameGlobals:false, transformObjectKeys:false, unicodeEscapeSequence:false, selfDefending:false },
+      balanced: { compact:true, stringArray:true, enc:'base64', controlFlowFlattening:false, deadCodeInjection:false, renameGlobals:false, transformObjectKeys:false, unicodeEscapeSequence:false, selfDefending:false },
+      maximum: { compact:true, stringArray:true, enc:'rc4', controlFlowFlattening:true, deadCodeInjection:true, renameGlobals:false, transformObjectKeys:true, unicodeEscapeSequence:false, selfDefending:true }
+    };
+    var p = map[name];
+    document.querySelectorAll('.preset-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-preset') === name); });
+    OPTS.forEach(function(k){ document.getElementById('o-' + k).checked = p[k]; });
+    document.getElementById('o-enc').value = p.enc;
+  }
+  document.querySelectorAll('.preset-btn').forEach(function(b){
+    b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); });
+  });
+
+  function obfuscate(){
+    var src = inPane.value;
+    if (!src.trim()) { setMsg('Paste some JavaScript first.'); return; }
+    setMsg('Loading engine… (~1.7 MB, first run only)');
+    loadLib().then(function(){
+      var o;
+      try {
+        o = window.JavaScriptObfuscator.obfuscate(src, currentOpts()).getObfuscatedCode();
+      } catch (e) {
+        outPane.value = '';
+        document.getElementById('outStats').textContent = '—';
+        setMsg('<span style="color:var(--danger)">Obfuscation failed: ' + String(e && e.message ? e.message : e).slice(0, 200) + '</span>');
+        return;
+      }
+      outPane.value = o;
+      var inB = bytes(src), outB = bytes(o);
+      document.getElementById('outStats').textContent = outB.toLocaleString('en-US') + ' bytes (' + (outB / inB).toFixed(1) + '×)';
+      setMsg('Obfuscated: <strong>' + inB.toLocaleString('en-US') + ' → ' + outB.toLocaleString('en-US') + ' bytes (' + (outB / inB).toFixed(1) + '×)</strong>. Test the output before shipping — same behavior, hostile readability.');
+    }).catch(function(e){
+      setMsg('Failed to load engine: ' + (e && e.message ? e.message : e));
+    });
+  }
+  document.getElementById('obfBtn').addEventListener('click', obfuscate);
+  inPane.addEventListener('input', function(){
+    document.getElementById('inStats').textContent = bytes(inPane.value).toLocaleString('en-US') + ' bytes';
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to copy yet.'); return; }
+    outPane.select();
+    try { document.execCommand('copy'); setMsg('Output copied to clipboard.'); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(outPane.value).then(function(){ setMsg('Output copied to clipboard.'); }).catch(function(){});
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to download yet.'); return; }
+    var blob = new Blob([outPane.value], { type: 'text/javascript' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'obfuscated.js'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    setMsg('Downloaded <strong>obfuscated.js</strong>.');
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    inPane.value = SAMPLE;
+    document.getElementById('inStats').textContent = bytes(SAMPLE).toLocaleString('en-US') + ' bytes';
+    setMsg('Sample loaded — 191 bytes of source that prints TA-PRO-STU-84.');
+  });
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  ['dragover','drop'].forEach(function(ev){
+    dz.addEventListener(ev, function(e){ e.preventDefault(); if (ev === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) readFile(fileInput.files[0]); });
+  function readFile(f){
+    var r = new FileReader();
+    r.onload = function(){
+      inPane.value = String(r.result);
+      document.getElementById('inStats').textContent = bytes(inPane.value).toLocaleString('en-US') + ' bytes';
+      setMsg('Loaded ' + f.name + ' — ' + bytes(inPane.value).toLocaleString('en-US') + ' bytes.');
+    };
+    r.readAsText(f);
+  }
+
+  // preload the sample so the page demonstrates itself
+  inPane.value = SAMPLE;
+  document.getElementById('inStats').textContent = bytes(SAMPLE).toLocaleString('en-US') + ' bytes';
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

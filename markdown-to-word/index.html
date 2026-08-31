@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown to Word — Real .docx, No Upload | ToolAspect</title>
+<meta name="description" content="Convert markdown to a real Word .docx in one click — headings, tables, links, and lists as native OOXML. Runs in your browser; nothing is uploaded.">
+<link rel="canonical" href="https://toolaspect.com/markdown-to-word/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Markdown to Word Converter — One Click, Real OOXML">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Markdown in, a native .docx out: headings, tables, lists, and clickable links — generated entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markdown-to-word/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Markdown to Word | Free Online Tool">
+<meta name="twitter:description" content="Turn markdown into a real Word document — one click, entirely local.">
+<meta name="keywords" content="markdown to word, markdown to docx, md to word, convert markdown, markdown word converter, readme to word">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown to Word Converter","description":"Convert markdown to a real Word .docx file entirely in the browser. Headings become styled heading paragraphs, tables become native OOXML tables with alignment, lists get real numbering, and links stay clickable. One click, no upload, no server.","url":"https://toolaspect.com/markdown-to-word/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert markdown to a Word document?","acceptedAnswer":{"@type":"Answer","text":"Paste or drop your markdown, then click Download .docx — one click, no upload. The converter builds a real Word file with native headings, tables, lists, and clickable links. The alternative — copy-pasting from a markdown preview into Word — works but loses structure: tables arrive as tabs and code blocks as plain text."}},
+{"@type":"Question","name":"Is this a real .docx or an HTML file renamed?","acceptedAnswer":{"@type":"Answer","text":"A real .docx: an Office Open XML package with word/document.xml, styles.xml, numbering.xml, and relationships, zipped. The proof is inspectable — a sample 60-word document with a heading, lists, and a 3-row table produces a 10 KB package containing 21 paragraphs, one table with 3 rows and 9 cells, and a hyperlink wired through the relationships part. Word, LibreOffice, and Google Docs all open it natively."}},
+{"@type":"Question","name":"Do tables survive the conversion?","acceptedAnswer":{"@type":"Answer","text":"Yes — markdown tables become native Word tables with bordered cells, a styled header row, and per-column alignment. The alignment you set in markdown carries over: a column marked ---: in the delimiter row renders right-aligned in Word via the jc:right property. Cell text keeps its bold and italic formatting."}},
+{"@type":"Question","name":"What happens to links and images?","acceptedAnswer":{"@type":"Answer","text":"Links become real Word hyperlinks — the run carries a relationship into the document's rels part, so clicking it opens the target. Images embedded as data URIs become inline pictures; remote image URLs can't be fetched without a server round-trip, so they're inserted as labeled text rather than silently dropped."}},
+{"@type":"Question","name":"Is my markdown uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The markdown parser and the OOXML generator both ship with this page and run in your browser tab — the .docx is assembled locally and handed to your downloads folder. That makes it safe for contracts, internal reports, and anything you wouldn't paste into an unknown converter."}},
+{"@type":"Question","name":"Why would I use Word output instead of PDF?","acceptedAnswer":{"@type":"Answer","text":"When someone else needs to edit the result. PDF is a final-form format — comments and redlines fight the format — while .docx is where collaboration happens: track changes, comments, and style tweaks all expect Word. The usual pipeline is markdown to .docx for drafts and review, then the PDF version when the document is final."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Markdown to Word","item":"https://toolaspect.com/markdown-to-word/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.two-pane{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.two-pane{grid-template-columns:1fr}}
+.pane-label{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+textarea#mdInput{width:100%;min-height:430px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;box-sizing:border-box;resize:vertical}
+textarea#mdInput:focus{outline:none;border-color:var(--primary)}
+.preview-pane{background:#fff;color:#1f2328;border-radius:var(--radius);padding:1rem 1.2rem;min-height:430px;max-height:560px;overflow-y:auto;font-size:.85rem;line-height:1.6}
+.preview-pane h1{font-size:1.3em;color:#1f2328;border-bottom:1px solid #d8dee4;padding-bottom:.2em;margin:.6em 0 .4em}
+.preview-pane h2{font-size:1.15em;color:#1f2328;border-bottom:1px solid #d8dee4;padding-bottom:.2em;margin:.6em 0 .4em}
+.preview-pane h3{font-size:1em;color:#1f2328;margin:.6em 0 .3em}
+.preview-pane a{color:#0969da}
+.preview-pane code{background:#afb8c133;padding:.15em .35em;border-radius:4px;font-size:.88em;font-family:ui-monospace,Menlo,Consolas,monospace}
+.preview-pane pre{background:#f6f8fa;border-radius:8px;padding:.8em;overflow-x:auto}
+.preview-pane pre code{background:none;padding:0}
+.preview-pane blockquote{border-left:3px solid #d0d7de;color:#59636e;padding-left:.9em;margin:.5em 0}
+.preview-pane table{border-collapse:collapse;margin:.6em 0}
+.preview-pane th,.preview-pane td{border:1px solid #d8dee4;padding:.35em .6em;font-size:.92em}
+.preview-pane th{background:#f6f8fa}
+.preview-pane ul,.preview-pane ol{padding-left:1.4em}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem}
+.input-group{display:flex;flex-direction:column;gap:.3rem}
+.input-group label{font-size:.78rem;color:var(--muted);font-weight:500}
+.input-group input{width:100%;padding:.55rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.85rem;color:var(--muted);margin-top:.8rem}
+.status-line strong{color:var(--success)}
+.dropzone-inline{border:2px dashed var(--border);border-radius:var(--radius);padding:.8rem;text-align:center;color:var(--muted);cursor:pointer;font-size:.85rem;margin-bottom:.6rem}
+.dropzone-inline:hover{border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📝 Markdown to Word</h1>
+<p>Markdown in, a real editable .docx out — one click, no upload</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste markdown (or drop a <code>.md</code> file), click Download .docx, and get a native Word document — real heading styles, real tables with alignment, real list numbering, clickable links. It's genuine OOXML, not HTML in a trench coat: a 60-word sample with a table and lists builds a <strong>10 KB package with 21 paragraphs, one 3-row table, and a wired hyperlink</strong>. The engine runs in this tab; nothing uploads.
+</div>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="two-pane">
+<div>
+<div class="pane-label"><span>Markdown</span><span id="wordCount">0 words</span></div>
+<div class="dropzone-inline" id="dz">Drop a .md file or click to open</div>
+<input type="file" id="fileInput" accept=".md,.markdown,.txt,text/markdown,text/plain" style="display:none">
+<textarea id="mdInput" spellcheck="false" placeholder="# Your markdown here…"></textarea>
+</div>
+<div>
+<div class="pane-label"><span>Live preview</span><span>renders as you type</span></div>
+<div class="preview-pane" id="preview"></div>
+</div>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>.docx filename</label><input type="text" id="fileName" value="document.docx"></div>
+<div class="input-group"><label>Status</label><input type="text" id="status2" value="Nothing you type leaves this page." readonly></div>
+</div>
+<p>
+<button class="btn" id="downloadBtn" type="button">⬇ Download .docx</button>
+<button class="btn ghost" id="sampleBtn" type="button">Load sample</button>
+<button class="btn ghost" id="clearBtn" type="button">Clear</button>
+</p>
+<div class="status-line" id="status">Ready. Nothing you type leaves this page. First download loads the Word engine (~790 KB, cached).</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/markdown-to-pdf/">Markdown to PDF</a></li><li style="margin:4px 0"><a href="/word-to-pdf/">Word to PDF</a></li><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown to HTML</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/convert-markdown-to-word/">Read the conversion guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Markdown Becomes in Word</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Markdown</th><th>OOXML produced</th><th>Verified in output</th></tr></thead>
+<tbody>
+<tr><td><code># H1</code>, <code>## H2</code></td><td>Paragraphs styled <code>MdHeading1/2</code> (Word heading hierarchy)</td><td>Both styles present</td></tr>
+<tr><td>Paragraph text</td><td><code>&lt;w:p&gt;</code> with <code>MdParagraph</code> style</td><td>21 <code>w:p</code> total in the sample</td></tr>
+<tr><td><code>**bold**</code>, <code>*italic*</code></td><td>Runs with <code>&lt;w:b/&gt;</code>, <code>&lt;w:i/&gt;</code></td><td>1 bold + 1 italic run</td></tr>
+<tr><td><code>- bullets</code>, <code>1. numbered</code></td><td>List paragraphs + <code>numbering.xml</code> definitions</td><td>5 numbered refs, real numbering part</td></tr>
+<tr><td>GFM table with <code>---:</code></td><td><code>&lt;w:tbl&gt;</code> with header row, 9 bordered cells, <code>jc:right</code> where aligned</td><td>1 table, 3 rows, right-align carried over</td></tr>
+<tr><td><code>[link](url)</code></td><td><code>&lt;w:hyperlink&gt;</code> + relationship in document rels</td><td>1 hyperlink, target verified</td></tr>
+<tr><td><code>&gt; quote</code></td><td><code>MdBlockquote</code> styled paragraph</td><td>Present</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Every claim in the right column comes from unzipping a document this tool produced and counting — the same package Word, LibreOffice, and Google Docs open. Files in the package: <code>word/document.xml</code>, <code>styles.xml</code>, <code>numbering.xml</code>, <code>fontTable.xml</code>, <code>settings.xml</code>, plus the <code>_rels</code> and <code>docProps</code> parts a .docx is required to carry.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Converter Works</h2>
+<p>Two stages, all local. Your markdown is parsed and mapped into a document object — headings to styled paragraphs, tables to table definitions with per-column alignment, lists to numbering references — then <strong>markdown-docx 1.7.0</strong> (MIT) builds the full Office Open XML package on top of <strong>docx 9.5.1</strong> (MIT), the most-used JavaScript Word generator. The bytes are assembled in your tab and handed straight to your downloads folder.</p>
+<h3>A worked example, unzipped</h3>
+<p>Load the sample — a 60-word, 319-character API report with two heading levels, a bullet list, a numbered list, a 3-column table with right-aligned numeric columns, a blockquote, a bold/italic span, and one link. One click produces:</p>
+<ul>
+<li>A <strong>~10 KB .docx</strong> — 10,064 bytes in the test run (the package embeds a creation timestamp, so expect ±3 bytes); the markdown was 319 bytes, and Word packages carry styles, numbering definitions, and relationships.</li>
+<li><strong>21 paragraphs</strong>, one <strong>table with 3 rows and 9 cells</strong>, one <strong>clickable hyperlink</strong> wired through <code>word/_rels/document.xml.rels</code>.</li>
+<li>Five distinct paragraph styles (<code>MdHeading1</code>, <code>MdHeading2</code>, <code>MdParagraph</code>, <code>MdListItem</code>, <code>MdBlockquote</code>) defined in <code>styles.xml</code>.</li>
+<li>The table's <code>---:</code> alignment intact — Requests and Errors columns right-aligned in Word, exactly as the markdown asked.</li>
+</ul>
+<p>That's the difference between converting and screenshotting: every element in the output is a Word object your collaborators can restyle, comment on, and track-change.</p>
+<h3>What converts, and how</h3>
+<ul>
+<li><strong>Headings</strong> — six levels, mapped to the document's heading hierarchy so Word's navigation pane and TOC work.</li>
+<li><strong>Tables</strong> — GFM tables with header styling, borders, and column alignment preserved.</li>
+<li><strong>Lists</strong> — ordered and unordered, nested, with real numbering definitions (not typed "1." text).</li>
+<li><strong>Links</strong> — clickable, carried as relationships.</li>
+<li><strong>Code</strong> — fenced blocks in monospaced styled paragraphs, whitespace kept.</li>
+<li><strong>Images</strong> — data-URI images embed as inline pictures; remote URLs become labeled text (fetching them would mean an upload, which this tool doesn't do).</li>
+<li><strong>Raw HTML</strong> — treated as text. Predictable documents beat clever ones.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>Conversion by <a href="https://github.com/vace/markdown-docx" rel="noopener">markdown-docx</a> 1.7.0 (MIT) on <a href="https://github.com/dolanmiu/docx" rel="noopener">docx</a> 9.5.1 (MIT, pinned for compatibility), bundled to 790 KB with a Buffer polyfill (MIT, feross) under <a href="/markdown-to-word/vendor/LICENSES.txt">/vendor/ with license texts</a>. The live preview reuses the remarkable 1.7.4 (MIT) parser shipped with our <a href="/markdown-to-pdf/">markdown to PDF</a> tool. Everything runs in your browser tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert markdown to a Word document?</h3><p>Paste or drop your markdown, then click Download .docx — one click, no upload. The converter builds a real Word file with native headings, tables, lists, and clickable links. The alternative — copy-pasting from a markdown preview into Word — works but loses structure: tables arrive as tabs and code blocks as plain text.</p></div>
+<div class="faq-item"><h3>Is this a real .docx or an HTML file renamed?</h3><p>A real .docx: an Office Open XML package with word/document.xml, styles.xml, numbering.xml, and relationships, zipped. The proof is inspectable — a sample 60-word document with a heading, lists, and a 3-row table produces a 10 KB package containing 21 paragraphs, one table with 3 rows and 9 cells, and a hyperlink wired through the relationships part. Word, LibreOffice, and Google Docs all open it natively.</p></div>
+<div class="faq-item"><h3>Do tables survive the conversion?</h3><p>Yes — markdown tables become native Word tables with bordered cells, a styled header row, and per-column alignment. The alignment you set in markdown carries over: a column marked ---: in the delimiter row renders right-aligned in Word via the jc:right property. Cell text keeps its bold and italic formatting.</p></div>
+<div class="faq-item"><h3>What happens to links and images?</h3><p>Links become real Word hyperlinks — the run carries a relationship into the document's rels part, so clicking it opens the target. Images embedded as data URIs become inline pictures; remote image URLs can't be fetched without a server round-trip, so they're inserted as labeled text rather than silently dropped.</p></div>
+<div class="faq-item"><h3>Is my markdown uploaded anywhere?</h3><p>No. The markdown parser and the OOXML generator both ship with this page and run in your browser tab — the .docx is assembled locally and handed to your downloads folder. That makes it safe for contracts, internal reports, and anything you wouldn't paste into an unknown converter.</p></div>
+<div class="faq-item"><h3>Why would I use Word output instead of PDF?</h3><p>When someone else needs to edit the result. PDF is a final-form format — comments and redlines fight the format — while .docx is where collaboration happens: track changes, comments, and style tweaks all expect Word. The usual pipeline is markdown to .docx for drafts and review, then the PDF version when the document is final.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/markdown-to-pdf/">📄 Markdown to PDF</a>
+<a href="/word-to-pdf/">📄 Word to PDF</a>
+<a href="/markdown-to-html/">🌐 Markdown to HTML</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/markdown-table-generator/">📋 Markdown Table Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script type="text/markdown" id="sampleMd">
+# API Report
+
+Q3 summary with **bold**, *italic*, and [a link](https://toolaspect.com/).
+
+## Metrics
+
+- Requests: 1.2M
+- Errors: 340
+- Uptime: 99.97%
+
+| Region | Requests | Errors |
+| --- | ---: | ---: |
+| us-east | 700,000 | 200 |
+| eu-west | 500,000 | 140 |
+
+1. First
+2. Second
+
+> Verified against the live pipeline.
+</script>
+<script src="/markdown-to-pdf/vendor/remarkable.min.js"></script>
+<script>
+(function(){
+  var mdInput = document.getElementById('mdInput');
+  var preview = document.getElementById('preview');
+  var status = document.getElementById('status');
+  var status2 = document.getElementById('status2');
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+  var libPromise = null;
+
+  var md = new Remarkable('default');
+  md.set({ html: false, linkify: true, breaks: false });
+
+  function wordCount(s){ var m = s.trim().match(/\S+/g); return m ? m.length : 0; }
+  function renderPreview(){
+    var v = mdInput.value;
+    document.getElementById('wordCount').textContent = wordCount(v) + ' words';
+    preview.innerHTML = v.trim() ? md.render(v) : '<p style="color:#8b949e">Preview appears here…</p>';
+  }
+  mdInput.addEventListener('input', renderPreview);
+
+  function setMsg(t){ status.textContent = t; status2.value = t.replace(/<[^>]+>/g, ''); }
+
+  function loadLib(){
+    if (window.__taMarkdownDocx) return Promise.resolve();
+    if (libPromise) return libPromise;
+    libPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = '/markdown-to-word/vendor/markdown-docx.iife.js';
+      s.onload = resolve; s.onerror = function () { reject(new Error('could not load the Word engine')); };
+      (document.head || document.documentElement).appendChild(s);
+    });
+    return libPromise;
+  }
+
+  function b64ToBlob(b64, mime){
+    var bin = atob(b64), len = bin.length, bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  }
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if (!mdInput.value.trim()) { setMsg('Type or paste some markdown first.'); return; }
+    setMsg('Loading Word engine… (~790 KB, first time only)');
+    loadLib().then(function(){
+      var M = window.__taMarkdownDocx;
+      return M.markdownDocx(mdInput.value, {}).then(function(doc){
+        return M.Packer.toBase64String(doc);
+      });
+    }).then(function(b64){
+      var blob = b64ToBlob(b64, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      var name = document.getElementById('fileName').value || 'document.docx';
+      if (!/\.docx?$/i.test(name)) name += '.docx';
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      setMsg('Downloaded ' + name + ' — ' + (blob.size / 1024).toFixed(1) + ' KB of real OOXML.');
+    }).catch(function(e){
+      setMsg('Conversion failed: ' + (e && e.message ? e.message : e));
+    });
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    mdInput.value = document.getElementById('sampleMd').textContent.replace(/^\n/, '');
+    renderPreview();
+    setMsg('Sample loaded — 60 words; the .docx comes out around 10 KB with 21 paragraphs, a 3-row table, and a live link.');
+  });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    mdInput.value = ''; renderPreview(); setMsg('Cleared.');
+  });
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  ['dragover','drop'].forEach(function(ev){
+    dz.addEventListener(ev, function(e){ e.preventDefault(); if (ev === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  });
+  mdInput.addEventListener('dragover', function(e){ e.preventDefault(); });
+  mdInput.addEventListener('drop', function(e){ e.preventDefault(); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) readFile(fileInput.files[0]); });
+  function readFile(f){
+    var r = new FileReader();
+    r.onload = function(){
+      mdInput.value = String(r.result);
+      document.getElementById('fileName').value = f.name.replace(/\.(md|markdown|txt)$/i, '') + '.docx';
+      renderPreview();
+      setMsg('Loaded ' + f.name + ' — ' + wordCount(mdInput.value) + ' words.');
+    };
+    r.readAsText(f);
+  }
+
+  // preload the sample so the page demonstrates itself
+  mdInput.value = document.getElementById('sampleMd').textContent.replace(/^\n/, '');
+  renderPreview();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

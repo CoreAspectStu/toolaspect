@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flatten PDF — Forms &amp; Print-Ready, Free | ToolAspect</title>
+<meta name="description" content="Flatten a PDF in your browser: bake filled form fields into the page or rasterize press-ready. A 2-field form flattens to 0 editable fields. No upload.">
+<link rel="canonical" href="https://toolaspect.com/flatten-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Flatten PDF — Forms &amp; Print-Ready, Free">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn filled form fields into permanent page content, or rasterize whole pages for print shops. Runs entirely in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/flatten-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Flatten PDF | Free Online Tool">
+<meta name="twitter:description" content="Bake form fields into the page or rasterize for print. Nothing uploaded.">
+<meta name="keywords" content="flatten pdf, flatten pdf form, flatten form fields, print ready pdf, bake form fields, pdf flattener">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Flatten PDF","description":"Free browser-based PDF flattener with two modes. Forms mode bakes filled form fields into the page content with pdf-lib — values stay visible, fields stop being editable, text stays searchable. Press mode rasterizes every page with pdf.js at 150–300 DPI and rebuilds the file, flattening fields, annotations, and layers into pixels for print shops and variable-data workflows. Both run entirely in the browser.","url":"https://toolaspect.com/flatten-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does flattening a PDF actually do?","acceptedAnswer":{"@type":"Answer","text":"It bakes the editable parts of the document into the page itself. Form fields stop being fields — their current values get drawn as ordinary page content — and in the rasterizing mode, annotations and layers become pixels too. What the reader sees barely changes; what the reader can change is what disappears."}},
+{"@type":"Question","name":"Why do print shops ask for a flattened PDF?","acceptedAnswer":{"@type":"Answer","text":"Their imposition and variable-data software re-processes files, and interactive elements are where that pipeline breaks: fields can shift, render differently, or carry data between jobs. A flattened file is inert ink — it prints exactly what's on the page with nothing left to interpret."}},
+{"@type":"Question","name":"Does flattening delete what I typed into the form?","acceptedAnswer":{"@type":"Answer","text":"No — that's the opposite of what it's for. Flattening draws your filled values onto the page permanently and then removes the field machinery around them. The words stay; the little boxes you typed them into stop existing. Keep the original if you might need to edit the answers later."}},
+{"@type":"Question","name":"Can a flattened PDF be un-flattened?","acceptedAnswer":{"@type":"Answer","text":"No. Flattening is one-way by design — the field structure is removed from the file, not hidden. Treat it like printing: keep the original file with live fields, and flatten a copy for whoever asked for it."}},
+{"@type":"Question","name":"Which mode should I use?","acceptedAnswer":{"@type":"Answer","text":"Forms mode when you only need fields baked in — text stays selectable and searchable, and the file stays small. Press mode (rasterize) when a print shop or portal demands a fully flat file: everything becomes an image at 150–300 DPI, nothing is editable or searchable, and the file usually gets bigger."}},
+{"@type":"Question","name":"Will flattening reduce file size?","acceptedAnswer":{"@type":"Answer","text":"Forms mode: barely moves — you're swapping field objects for drawn text. Raster mode: usually grows, because each page becomes an image (a US Letter page at 200 DPI is about 1700×2200 pixels). If size is the goal, flatten first, then run the file through a PDF compressor."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Flatten PDF","item":"https://toolaspect.com/flatten-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--warn:#f59e0b;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1rem}
+.mode{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;cursor:pointer}
+.mode.sel{border-color:var(--primary)}
+.mode input{margin-right:.5rem}
+.mode b{font-size:.92rem}
+.mode p{font-size:.78rem;color:var(--muted);margin:.4rem 0 0;line-height:1.5}
+.dpi-row{margin-top:1rem;display:flex;gap:.6rem;align-items:center}
+.dpi-row label{font-size:.8rem;color:var(--muted)}
+.dpi-row select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem .6rem;font-size:.9rem;font-family:inherit}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.fieldcount{font-size:.82rem;color:var(--warn);margin-top:.6rem;display:none}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.y{color:var(--success)} .data-table td.n{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.85em}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+@media(max-width:560px){.mode-grid{grid-template-columns:1fr}}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🧇 Flatten PDF</h1>
+<p>Bake form fields into the page — or rasterize the whole file print-shop flat</p>
+</div>
+
+<div class="aio-answer">Flattening a PDF turns its editable parts into permanent page content: your filled-in form values get drawn onto the page and the field machinery is removed — a form with a name box and a checkbox flattens from <strong>2 editable fields to 0</strong>, with the values still visible and the text still searchable. Print shops and upload portals that choke on interactive fields want exactly that. This tool's two modes: <strong>Forms</strong> (pdf-lib bakes just the fields — text stays selectable) and <strong>Press</strong> (every page rasterizes at 150–300 DPI and rebuilds, flattening fields, annotations, and layers alike). Free, in your browser, no upload. It's one-way, so keep your original.</div>
+
+<div class="section-card">
+<h2>Flatten a file</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn save" id="btnGo" disabled>🧇 Flatten &amp; download</button>
+</div>
+<div class="mode-grid">
+<div class="mode sel" id="modeForms">
+<label><input type="radio" name="mode" value="forms" checked> <b>Forms — bake the fields</b></label>
+<p>Field values become page content. Text stays selectable and searchable; file size barely changes. Comment annotations are left as-is.</p>
+</div>
+<div class="mode" id="modePress">
+<label><input type="radio" name="mode" value="press"> <b>Press — rasterize everything</b></label>
+<p>Every page becomes an image at your chosen DPI. Fields, annotations, layers — all flattened to pixels. Nothing left to edit; text no longer searchable.</p>
+</div>
+</div>
+<div class="dpi-row" id="dpiRow" style="display:none">
+<label for="dpi">Rasterize quality</label>
+<select id="dpi">
+<option value="150">150 DPI — compact</option>
+<option value="200" selected>200 DPI — standard print</option>
+<option value="300">300 DPI — press quality</option>
+</select>
+</div>
+<div class="fieldcount" id="fieldCount"></div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/sign-pdf/">Sign PDF</a></li><li style="margin:4px 0"><a href="/pdf-add-text/">Add Text to PDF</a></li><li style="margin:4px 0"><a href="/compress-pdf/">Compress PDF</a></li><li style="margin:4px 0"><a href="/organize-pdf/">Organize PDF</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-flatten-a-pdf/">Read the flattening guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What Each Mode Flattens</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>In your PDF</th><th>Forms mode</th><th>Press mode (raster)</th></tr></thead>
+<tbody>
+<tr><td>Filled form fields</td><td class="y">Baked into the page</td><td class="y">Baked (as pixels)</td></tr>
+<tr><td>Empty form fields</td><td class="y">Removed</td><td class="y">Removed</td></tr>
+<tr><td>Comment annotations</td><td class="n">Kept as annotations</td><td class="y">Flattened to pixels</td></tr>
+<tr><td>Layers (optional content)</td><td class="n">Kept</td><td class="y">Baked as displayed</td></tr>
+<tr><td>Text stays selectable</td><td class="y">Yes</td><td class="n">No — pages are images</td></tr>
+<tr><td>Typical file size</td><td>About the same</td><td>Usually larger</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section-card">
+<h2>Raster Dimensions by DPI (Press Mode)</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Page size</th><th>Points (PDF units)</th><th>150 DPI</th><th>200 DPI</th><th>300 DPI</th></tr></thead>
+<tbody>
+<tr><td>US Letter (8.5×11")</td><td>612×792</td><td>1275×1650</td><td>1700×2200</td><td>2550×3300</td></tr>
+<tr><td>A4 (210×297 mm)</td><td>595×842</td><td>1240×1754</td><td>1654×2339</td><td>2480×3508</td></tr>
+<tr><td>US Legal (8.5×14")</td><td>612×1008</td><td>1275×2100</td><td>1700×2800</td><td>2550×4200</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:.8rem;color:var(--muted);margin-top:.6rem">PDF pages are measured in points (72 per inch), so rasterizing multiplies by DPI÷72 — 150÷72 ≈ 2.08×. 200 DPI is the sweet spot for most print-shop uploads; 300 DPI is press quality.</p>
+</div>
+
+<div class="content-section">
+<h2>How Flattening Works</h2>
+<p>A "filled" PDF form is two layers: the page, plus a set of interactive field objects floating on top, each holding its current value and a little widget for editing it. Flattening in Forms mode draws each field's value directly into the page content and deletes the field objects — the words you see don't move, but there's nothing left to click, tab into, or accidentally clear. Press mode is blunter: render every page to an image with pdf.js, then assemble a fresh PDF from those images with pdf-lib. Whatever a viewer displays — fields, sticky notes, visible layers — is what the ink becomes, and nothing interactive survives.</p>
+<h3>A worked example</h3>
+<p>Take a one-page form with two fields: a name text box filled with "STUART FLEMING" and an "I agree" checkbox. Forms mode opens it with pdf-lib, flattens, saves — reload the output and the form reports <strong>0 fields</strong> (down from 2), while the name prints in the same spot it occupied before. Press mode at 150 DPI on a US Letter page (612×792 points) renders each page to <strong>1275×1650 pixels</strong> — 612 × 150⁄72 = 1275 — and the rebuilt file's page is still 612×792 points in size, just made of one image instead of text and fields. Either way, the original file on your disk is untouched; you get a new <code>-flattened.pdf</code>.</p>
+<h3>When to use which</h3>
+<ul>
+<li><strong>Signed or filled paperwork going to HR, a court, or an insurer</strong> — Forms mode, so the answers can't be edited but stay searchable and the file stays small.</li>
+<li><strong>Print shop, sticker cutter, or variable-data portal</strong> — Press mode at the DPI they ask for, since anything less than fully inert can break their pipeline.</li>
+<li><strong>Archiving a final version</strong> — Forms mode unless the archive spec says image-only.</li>
+</ul>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What does flattening a PDF actually do?</h3><p>It bakes the editable parts of the document into the page itself. Form fields stop being fields — their current values get drawn as ordinary page content — and in the rasterizing mode, annotations and layers become pixels too. What the reader sees barely changes; what the reader can change is what disappears.</p></div>
+<div class="faq-item"><h3>Why do print shops ask for a flattened PDF?</h3><p>Their imposition and variable-data software re-processes files, and interactive elements are where that pipeline breaks: fields can shift, render differently, or carry data between jobs. A flattened file is inert ink — it prints exactly what's on the page with nothing left to interpret.</p></div>
+<div class="faq-item"><h3>Does flattening delete what I typed into the form?</h3><p>No — that's the opposite of what it's for. Flattening draws your filled values onto the page permanently and then removes the field machinery around them. The words stay; the little boxes you typed them into stop existing. Keep the original if you might need to edit the answers later.</p></div>
+<div class="faq-item"><h3>Can a flattened PDF be un-flattened?</h3><p>No. Flattening is one-way by design — the field structure is removed from the file, not hidden. Treat it like printing: keep the original file with live fields, and flatten a copy for whoever asked for it.</p></div>
+<div class="faq-item"><h3>Which mode should I use?</h3><p>Forms mode when you only need fields baked in — text stays selectable and searchable, and the file stays small. Press mode (rasterize) when a print shop or portal demands a fully flat file: everything becomes an image at 150–300 DPI, nothing is editable or searchable, and the file usually gets bigger.</p></div>
+<div class="faq-item"><h3>Will flattening reduce file size?</h3><p>Forms mode: barely moves — you're swapping field objects for drawn text. Raster mode: usually grows, because each page becomes an image (a US Letter page at 200 DPI is about 1700×2200 pixels). If size is the goal, flatten first, then run the file through a PDF compressor.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/sign-pdf/">✍️ Sign PDF</a>
+<a href="/pdf-add-text/">📝 Add Text to PDF</a>
+<a href="/compress-pdf/">🗜️ Compress PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== Flatten engine: pdf-lib form.flatten() (verified 2 fields -> 0) or
+   pdf.js raster + pdf-lib rebuild (redact-pdf's proven pattern) ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+function el(id){return document.getElementById(id)}
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function loadScript(url){
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+}
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+var origBytes=null,origName='document',nFields=0;
+document.querySelectorAll('input[name=mode]').forEach(function(r){
+  r.addEventListener('change',function(){
+    el('modeForms').classList.toggle('sel',r.value==='forms'&&r.checked);
+    el('modePress').classList.toggle('sel',r.value==='press'&&r.checked);
+    el('dpiRow').style.display=(document.querySelector('input[name=mode]:checked').value==='press')?'flex':'none';
+  });
+});
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Reading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    loadScript(PDFLIB_URL).then(function(){
+      var PDFLib=window.PDFLib;
+      return PDFLib.PDFDocument.load(origBytes.slice(),{ignoreEncryption:true});
+    }).then(function(doc){
+      nFields=doc.getForm().getFields().length;
+      var fc=el('fieldCount');
+      fc.style.display='block';
+      fc.textContent=nFields?('Interactive fields detected: '+nFields+' — Forms mode will bake them into the page.'):'No form fields detected — Press mode still flattens annotations and layers.';
+      el('btnGo').disabled=false;
+      setStatus('Loaded '+doc.getPageCount()+'-page PDF. Pick a mode and flatten.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err')});
+  };
+  fr.readAsArrayBuffer(f);
+});
+function dataURLToBytes(dataUrl){
+  var b64=atob(dataUrl.split(',')[1]);
+  var bytes=new Uint8Array(b64.length);
+  for(var i=0;i<b64.length;i++)bytes[i]=b64.charCodeAt(i);
+  return bytes;
+}
+el('btnGo').addEventListener('click',function(){
+  if(!origBytes)return;
+  el('btnGo').disabled=true;
+  var mode=document.querySelector('input[name=mode]:checked').value;
+  var dpi=parseInt(el('dpi').value,10)||200;
+  if(mode==='forms'){
+    setStatus('Baking form fields into the page …');
+    loadScript(PDFLIB_URL).then(function(){
+      var PDFLib=window.PDFLib;
+      return PDFLib.PDFDocument.load(origBytes.slice(),{ignoreEncryption:true}).then(function(doc){
+        var form=doc.getForm();
+        var n=form.getFields().length;
+        form.flatten();
+        return doc.save().then(function(bytes){return {bytes:bytes,label:n+' field'+(n===1?'':'s')+' baked into the page'}});
+      });
+    }).then(function(r){deliver(r.bytes,r.label)}).catch(function(err){fail(err)});
+  } else {
+    setStatus('Rasterizing pages at '+dpi+' DPI …');
+    Promise.all([loadScript(PDFLIB_URL)]).then(function(){
+      var PDFLib=window.PDFLib;
+      var srcDoc;
+      return pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(d){srcDoc=d;return PDFLib.PDFDocument.create()}).then(function(out){
+        var chain=Promise.resolve();
+        var scale=dpi/72;
+        for(var p=1;p<=srcDoc.numPages;p++){
+          (function(n){
+            chain=chain.then(function(){
+              return srcDoc.getPage(n).then(function(page){
+                var vp=page.getViewport({scale:scale});
+                var c=document.createElement('canvas');
+                c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+                return page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){
+                  var dataUrl=c.toDataURL('image/jpeg',0.92);
+                  return out.embedJpg(dataURLToBytes(dataUrl)).then(function(img){
+                    var w=c.width/scale,h=c.height/scale;
+                    var pg=out.addPage([w,h]);
+                    pg.drawImage(img,{x:0,y:0,width:w,height:h});
+                  });
+                });
+              });
+            });
+          })(p);
+        }
+        return chain.then(function(){return out.save()}).then(function(bytes){
+          return {bytes:bytes,label:srcDoc.numPages+' page'+(srcDoc.numPages>1?'s':'')+' rasterized at '+dpi+' DPI — fully flat'};
+        });
+      });
+    }).then(function(r){deliver(r.bytes,r.label)}).catch(function(err){fail(err)});
+  }
+});
+function deliver(bytes,label){
+  var blob=new Blob([bytes],{type:'application/pdf'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=origName+'-flattened.pdf';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+  setStatus('Downloaded '+origName+'-flattened.pdf — '+label+'. Original untouched; flattening is one-way, so keep it.','ok');
+  el('btnGo').disabled=false;
+}
+function fail(err){
+  setStatus('Flatten failed: '+(err&&err.message||err),'err');
+  el('btnGo').disabled=false;
+}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

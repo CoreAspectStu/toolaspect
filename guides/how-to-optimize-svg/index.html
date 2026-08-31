@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Optimize SVGs Without Breaking Them | ToolAspect</title>
+<meta name="description" content="SVG optimization: editor cruft vs real drawing, coordinate precision, path merging, viewBox rules, and a free in-browser SVGO tool.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-optimize-svg/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Optimize SVG Files","description":"Design tools export SVGs carrying more metadata than drawing. This guide explains the two phases of real optimization — removing invisible weight (editor namespaces, metadata, empty groups, unused defs) and shrinking visible weight (coordinate precision, relative paths, merged shapes) — with verified numbers from a realistic editor export (1,756 bytes to 552, a 68.6 percent cut), why the viewBox must survive while width/height can go, what aggressive mode trades away, and how inline, img, and sprite usage changes the right settings. Includes a free browser-based SVGO tool. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Optimize SVG","item":"https://toolaspect.com/guides/how-to-optimize-svg/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much smaller should an SVG get?","acceptedAnswer":{"@type":"Answer","text":"It depends entirely on how much cruft the export carried. A design-tool export with namespaces, metadata, and six-decimal coordinates commonly drops 60 to 70 percent — our realistic test icon went from 1,756 bytes to 552 with the default SVGO preset. A clean hand-written SVG might only lose 10 to 20 percent, because there's little left to remove. If a tool claims 90 percent, it's usually comparing against a file that was mostly metadata to begin with."}},
+{"@type":"Question","name":"Is it safe to remove the viewBox from an SVG?","acceptedAnswer":{"@type":"Answer","text":"No — the viewBox is the scaling contract. It defines the coordinate system that width and height then display at any size; strip it and the SVG renders at a fixed intrinsic size in some contexts or refuses to scale in others. SVGO disables its removeViewBox plugin by default for exactly this reason. The attributes that can safely go are width and height — once a viewBox exists and CSS or the parent element controls sizing."}},
+{"@type":"Question","name":"What does SVG path precision actually cost?","acceptedAnswer":{"@type":"Answer","text":"Almost nothing visually, a lot in bytes. Six decimals (40.123456) is design-tool output; three decimals (40.123) is the default optimization target and differs by less than a thousandth of a coordinate unit — invisible at icon and illustration sizes. Two decimals is fine for large artwork; one decimal can visibly nudge curves on small detailed icons, so compare a preview before shipping it."}},
+{"@type":"Question","name":"Should I optimize SVGs used inline in HTML?","acceptedAnswer":{"@type":"Answer","text":"Yes, and more aggressively than files loaded via img tags. Inline SVG shares the page's HTTP budget as text, so every byte counts double; dropping width and height (letting the viewBox plus CSS size it) is standard practice inline; and you can go one step further by stripping the xmlns attribute, which HTML parsers don't require in that context. Just keep IDs unique per page when inlining multiple optimized files, since ID minimization can collide across inlined copies."}}
+]}
+</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+</head>
+<body>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="wrap">
+<h1>How to Optimize SVG Files</h1>
+<div class="meta"><span>⚡ Web performance</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">SVG is the format that promises infinite scalability and then ships a 12-kilobyte icon. The gap between promise and payload is almost never the drawing — it's everything the export tool packed around it. Optimization is the discipline of closing that gap without changing a pixel.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Where the bytes actually are</h2>
+<p>Open a design-tool export in a text editor and the picture is immediate. Before the first path, you'll find an XML declaration, a DOCTYPE, generator comments, editor namespaces (inkscape:, sodipodi:, sketch:), a metadata block, and often a namedview element recording the author's zoom level. Inside the drawing: wrapper groups for layers that no longer matter, an empty group or two, unused gradients and clip paths still sitting in defs, and coordinates written to six decimal places. On a realistic export we use for testing — a simple delivery-truck icon — that invisible cargo accounts for the majority of 1,756 bytes. The drawing itself is tiny.</p>
+<p>That's why honest optimization numbers vary so much. The same default SVGO preset that removes 68.6 percent from that editor icon (1,756 → 552 bytes) might remove 15 percent from a cleanly hand-written file. The percentage reflects the export's hygiene, not the optimizer's quality — a claim of "90% smaller!" usually means the input was mostly metadata to begin with.</p>
+<h2>Phase one: remove what nobody renders</h2>
+<p>The safe half of optimization deletes things no renderer uses: XML declarations, comments, editor namespaces and their elements, metadata, empty containers, and unreferenced defs. It's risk-free by construction — if nothing references it, nothing misses it. One nuance: "unused" means unreferenced by ID, so a gradient applied through a style attribute survives even when it looks orphaned to a human. The engine resolves references; you don't have to.</p>
+<h2>Phase two: shrink what remains</h2>
+<p>Then the visible weight. Three moves do most of the work:</p>
+<ul>
+<li><strong>Precision truncation.</strong> <code>40.123456</code> becomes <code>40.123</code>. Three decimals is the sweet spot — the dropped digits are thousandths of a coordinate unit, far below a pixel at icon sizes.</li>
+<li><strong>Absolute to relative.</strong> <code>M 40.123 180.235 L 200.346 180.235</code> becomes <code>M40.123 180.235h160.223</code> — the horizontal run is one number instead of two coordinate pairs.</li>
+<li><strong>Shape merging.</strong> Adjacent paths sharing paint collapse into one path with multiple subpaths; the truck test icon's two rectangles become a single <code>d</code> attribute, saving a whole element's worth of markup.</li>
+</ul>
+<p>The dial that can bite is precision. At one decimal, fine curves on small icons can visibly shift — which is why it's an option next to a preview, not a default. If the before/after previews match, ship it; if they don't, step precision back up.</p>
+<h2>The rules worth memorizing</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Attribute</th><th>Keep or drop</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><code>viewBox</code></td><td>Always keep</td><td>The scaling contract — remove it and responsive sizing breaks</td></tr>
+<tr><td><code>width</code>/<code>height</code></td><td>Droppable</td><td>Redundant once viewBox + CSS sizing exist (safe inline, risky for email)</td></tr>
+<tr><td><code>&lt;title&gt;</code></td><td>Keep</td><td>Accessibility name; screen readers announce it</td></tr>
+<tr><td><code>xmlns</code></td><td>Keep in files</td><td>Required when loaded as an image or opened standalone; droppable inline in HTML</td></tr>
+<tr><td>IDs</td><td>Minimize carefully</td><td>Reference-preserving, but two inlined optimized files can collide on <code>id="a"</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2>Does the usage context change the settings?</h2>
+<p>Yes, and this is where generic advice goes wrong. <strong>Inline in HTML:</strong> optimize aggressively — the bytes ride in the page itself, width/height can go, and even xmlns is droppable. Watch ID collisions when inlining several files. <strong>Via <code>&lt;img&gt;</code> or CSS background:</strong> keep xmlns and standalone validity; scripts inside won't run (browsers isolate img-loaded SVGs). <strong>Sprites (symbol/defs sheets):</strong> optimize each icon first, assemble second — optimizing the sprite afterward can renumber IDs that the use references depend on. <strong>Email:</strong> keep explicit width and height; several clients ignore CSS sizing and render at intrinsic size otherwise.</p>
+<h2>When not to optimize</h2>
+<p>Files under active design revision, for one — re-exporting over optimized files loses nothing but confuses diffs, and editors re-add their cruft anyway, so optimize at build time, not at edit time. Hand-tuned paths for another: an animator's carefully placed coordinates or a font's glyph outlines may rely on precision the optimizer will happily truncate. And remember SVGO is an optimizer, not a sanitizer — it preserves scripts and event handlers, so never inline an SVG from an untrusted source without sanitizing it first, whatever its size.</p>
+<div class="cta-box"><h3>Optimize an SVG right now</h3><p style="color:#fff;opacity:.9">Paste your SVG, pick safe or aggressive, compare the before/after preview, and download the lean version. SVGO runs in your browser; nothing uploads.</p><a href="/svg-optimizer/">SVG Optimizer →</a></div>
+<h2>The bottom line</h2>
+<p>Most SVG bloat is export debris, not drawing. Strip the invisible (metadata, namespaces, empty groups), shrink the visible (precision, relative paths, merged shapes), never touch the viewBox, and match your aggressiveness to the usage context. Our <a href="/svg-optimizer/">SVG Optimizer</a> runs the real SVGO engine in-browser with previews and verified numbers; for adjacent jobs there's the <a href="/image-compressor/">Image Compressor</a> for raster formats and the <a href="/favicon-generator/">Favicon Generator</a> when the icon is destined for a browser tab.</p>
+<div class="related-tools"><a href="/svg-optimizer/">⚡ SVG Optimizer</a><a href="/image-compressor/">🗜️ Image Compressor</a><a href="/favicon-generator/">🏷️ Favicon Generator</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
