@@ -128,6 +128,7 @@
         { label: 'Barcode Generator',  href: '/barcode-generator/' },
         { label: 'XML to JSON', href: '/xml-to-json/' },
         { label: 'SVG to PNG', href: '/svg-to-png-converter/' },
+        { label: 'Image to SVG', href: '/image-to-svg-converter/' },
         { label: 'Color Contrast', href: '/color-contrast-checker/' },
         { label: 'Asset Tag Generator',href: '/asset-tag-generator/' },
       ]
@@ -154,6 +155,7 @@
         { label: 'Watermark PDF', href: '/watermark-pdf/' },
         { label: 'Rotate PDF',      href: '/rotate-pdf/' },
         { label: 'Repair PDF',     href: '/pdf-repair/' },
+        { label: 'OCR PDF',        href: '/ocr-pdf/' },
         { label: 'PDF to Text', href: '/pdf-to-text/' },
         { label: 'Extract PDF Pages', href: '/extract-pdf-pages/' },
         { label: 'Crop PDF', href: '/crop-pdf/' },

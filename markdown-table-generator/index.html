@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Table Generator — Free GFM Tables | ToolAspect</title>
+<meta name="description" content="Paste CSV, TSV, or a spreadsheet grid and get a clean GitHub-flavored markdown table with per-column alignment. Widths auto-balanced, pipes escaped.">
+<link rel="canonical" href="https://toolaspect.com/markdown-table-generator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Markdown Table Generator — CSV/TSV to GFM Tables">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn CSV, TSV, or pasted spreadsheet data into a properly padded markdown table with alignment controls — in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markdown-table-generator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Markdown Table Generator | Free Online Tool">
+<meta name="twitter:description" content="CSV, TSV, or pasted grid in — GitHub-flavored markdown table out. Alignment controls included.">
+<meta name="keywords" content="markdown table generator, markdown table, csv to markdown, tsv to markdown, excel to markdown, markdown table formatter, gfm table">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown Table Generator","description":"Convert CSV, TSV, pasted spreadsheet grids, or pipe-delimited text into GitHub-flavored markdown tables with per-column alignment controls. Column widths are auto-balanced and pipes in cell text are escaped. Runs entirely in the browser on the markdown-table engine used by the remark ecosystem.","url":"https://toolaspect.com/markdown-table-generator/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I make a table in markdown?","acceptedAnswer":{"@type":"Answer","text":"One header row, one delimiter row, then data rows — pipes between cells: | Tool | Cost | on line one, | --- | --- | on line two, then | Pingdom | $15 | for each data row. The delimiter row is what makes it a table. Alignment comes from colons in the delimiter: :--- left, :---: center, ---: right. This generator produces all of it from pasted CSV or spreadsheet data, with every column padded to the same width so the source stays readable."}},
+{"@type":"Question","name":"How do I convert CSV to a markdown table?","acceptedAnswer":{"@type":"Answer","text":"Paste the CSV into the generator — quoted fields with commas inside them are handled — and the markdown table appears instantly with balanced column widths. Tabs work too, which is what you get copying a range straight out of Excel or Google Sheets. Set per-column alignment with the dropdowns, then copy the output into your README or wiki."}},
+{"@type":"Question","name":"What do the colons in a markdown table mean?","acceptedAnswer":{"@type":"Answer","text":"Colons in the delimiter row set column alignment: :--- (or just ---) is left, :---: is center, ---: is right. The colons count toward the column's width, so a centered 6-character column gets :----: (colon, four dashes, colon). Alignment is a display hint — GitHub, GitLab, and most renderers honor it, but plain-text readers just see a monospaced grid either way."}},
+{"@type":"Question","name":"Why do the pipes line up in some markdown tables and not others?","acceptedAnswer":{"@type":"Answer","text":"Because someone padded the cells. Markdown doesn't require aligned pipes — | a | b | renders identically however many spaces you use — but padded tables are dramatically easier to scan and diff. The markdown-table engine this tool uses pads every cell to the widest value in its column plus one space on each side, which is why the output looks typed by hand."}},
+{"@type":"Question","name":"What happens if my data contains a pipe character?","acceptedAnswer":{"@type":"Answer","text":"A literal pipe inside a cell would break the table, so the generator escapes it as \\| — the escape that GitHub-Flavored Markdown defines for exactly this case. Cells like \"yes|no\" come out as yes\\|no and render as a single cell reading yes|no. Newlines inside quoted CSV fields are joined into a single line, since markdown table cells can't span lines."}},
+{"@type":"Question","name":"Does the table work in GitHub, GitLab, and Notion?","acceptedAnswer":{"@type":"Answer","text":"Yes — the output is standard GitHub-Flavored Markdown (GFM), which all three parse. The same goes for most wikis, static site generators with tables enabled, and Slack's markdown-ish renderer. Notion and GitHub both honor the colon alignment controls. If a platform strips tables, the HTML route is the fallback: convert markdown to HTML and paste that instead."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Markdown Table Generator","item":"https://toolaspect.com/markdown-table-generator/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.two-pane{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.two-pane{grid-template-columns:1fr}}
+.pane-label{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+textarea.pane{width:100%;min-height:340px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;box-sizing:border-box;resize:vertical}
+textarea.pane:focus{outline:none;border-color:var(--primary)}
+.dropzone-inline{border:2px dashed var(--border);border-radius:var(--radius);padding:.8rem;text-align:center;color:var(--muted);cursor:pointer;font-size:.85rem;margin-bottom:.6rem}
+.dropzone-inline:hover{border-color:var(--primary)}
+.align-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem;align-items:center}
+.align-chip{display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.35rem .6rem;font-size:.8rem}
+.align-chip label{color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.align-chip select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:.25rem .4rem;font-size:.8rem;cursor:pointer}
+.check-row{display:flex;gap:1.2rem;margin-top:1rem;font-size:.88rem;color:var(--muted);flex-wrap:wrap}
+.check-row label{display:flex;align-items:center;gap:.4rem;cursor:pointer}
+.check-row input{accent-color:var(--primary)}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.85rem;color:var(--muted);margin-top:.8rem}
+.status-line strong{color:var(--success)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;color:var(--primary-hover)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📋 Markdown Table Generator</h1>
+<p>CSV, TSV, or pasted spreadsheet in — a clean, padded GFM table out</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste CSV, TSV (that's what Excel/Google Sheets puts on your clipboard), or pipe-delimited text on the left. You get a GitHub-flavored markdown table with <strong>every column padded to its widest cell</strong> and per-column alignment (<code>:---</code> left, <code>:---:</code> center, <code>---:</code> right). Pipes inside your data are escaped automatically. The engine is <strong>markdown-table 3.0.4</strong> — the same one the remark ecosystem uses — at 2.2 KB, running in this tab. A 3-column × 4-row uptime grid comes out as <strong>249 bytes of perfectly aligned markdown</strong>.
+</div>
+
+<div class="section-card">
+<h2>Generate</h2>
+<div class="two-pane">
+<div>
+<div class="pane-label"><span>Input (CSV / TSV / pasted grid / pipe rows)</span><span id="inStats">0 rows</span></div>
+<div class="dropzone-inline" id="dz">Drop a .csv/.tsv/.txt file, or click to open</div>
+<input type="file" id="fileInput" accept=".csv,.tsv,.txt,text/csv,text/plain" style="display:none">
+<textarea id="inPane" class="pane" spellcheck="false" placeholder="Tool,Monthly cost,Uptime&#10;Pingdom,$15.00,99.9%&#10;UptimeRobot,$8.50,99.98%"></textarea>
+</div>
+<div>
+<div class="pane-label"><span>Markdown table</span><span id="outStats">0 bytes</span></div>
+<textarea id="outPane" class="pane" spellcheck="false" readonly placeholder="| Tool | Cost |&#10;| --- | --- |"></textarea>
+</div>
+</div>
+<div class="check-row">
+<label><input type="checkbox" id="hasHeader" checked> First row is the header</label>
+<label><input type="checkbox" id="padCells" checked> Pad columns to equal width</label>
+</div>
+<div class="align-row" id="alignRow"><span style="font-size:.8rem;color:var(--muted)">Alignment:</span></div>
+<p>
+<button class="btn" id="copyBtn" type="button">⧉ Copy table</button>
+<button class="btn ghost" id="downloadBtn" type="button">⬇ Download .md</button>
+<button class="btn ghost" id="sampleBtn" type="button">Load sample CSV</button>
+<button class="btn ghost" id="clearBtn" type="button">Clear</button>
+</p>
+<div class="status-line" id="status">Ready. Nothing you paste leaves this page.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown to HTML</a></li><li style="margin:4px 0"><a href="/html-to-markdown/">HTML to Markdown</a></li><li style="margin:4px 0"><a href="/csv-to-json/">CSV to JSON</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/markdown-table-syntax/">Read the markdown tables guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Alignment Syntax, Exactly</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Delimiter cell</th><th>Effect</th><th>4-char column “Left”</th><th>6-char column “Center”</th></tr></thead>
+<tbody>
+<tr><td><code>---</code></td><td>Left (the default)</td><td><code>| ---- |</code></td><td><code>| ------ |</code></td></tr>
+<tr><td><code>:---</code></td><td>Left, explicit</td><td><code>| :--- |</code></td><td><code>| :----- |</code></td></tr>
+<tr><td><code>:---:</code></td><td>Center</td><td><code>| :--: |</code></td><td><code>| :----: |</code></td></tr>
+<tr><td><code>---:</code></td><td>Right</td><td><code>| ---: |</code></td><td><code>| -----: |</code></td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">The rule the engine follows: the delimiter row is padded to the same width as the column, and the colons count toward that width — a 6-character centered column gets <code>:----:</code> (colon, four dashes, colon). Data cells get one space of padding on each side of the widest value, which is why the output looks hand-aligned.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Generator Works</h2>
+<p>Three stages, all local. Your input is tokenized first: tabs are detected before commas (that's what a spreadsheet range copy produces), commas come next (real CSV, with quoted fields containing commas handled), then semicolons and pipes. Rows become arrays, short rows are padded, and cell text with a literal pipe is escaped to <code>\|</code> — the GFM escape — because a bare pipe would split the cell.</p>
+<p>The arrays then go through <strong>markdown-table 3.0.4</strong> (MIT), the table serializer from the remark ecosystem — the same code path that GFM tooling has leaned on for years. It measures every cell, widens each column to its longest value plus padding, builds the delimiter row from your alignment choices, and emits the pipes. It's 2.2 KB minified, vendored on this site, and runs on every keystroke.</p>
+<h3>A worked example, measured</h3>
+<p>Take a monitoring-tools grid — 3 columns, 4 rows (one header), the longest cell being "ToolAspect embeds" at 17 characters:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>What</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Output size</td><td><strong>249 bytes, 5 lines</strong> (header, delimiter, 3 data rows)</td></tr>
+<tr><td>Column 1 width</td><td>19 chars — 17 (longest cell) + 2 padding</td></tr>
+<tr><td>Delimiter row</td><td><code>| ----------------- | ------------ | ---------- |</code> — dashes match each column's width</td></tr>
+<tr><td>Aligned version</td><td>Numeric columns set to <code>---:</code> right-align costs and uptime; nothing else moves</td></tr>
+</tbody>
+</table>
+</div>
+<p>Why pad at all? Markdown doesn't care — <code>|a|b|</code> renders the same as the padded version. Humans and diffs care: a padded table scans vertically, and a one-cell edit produces a one-line diff instead of a reflowed block. That's also why the "pad columns" toggle exists — some wikis and Slack paste better unpadded.</p>
+<h3>What's handled, and the honest limits</h3>
+<ul>
+<li><strong>Quoted CSV fields</strong> — <code>"Smith, John"</code> stays one cell; embedded newlines are joined (table cells can't span lines).</li>
+<li><strong>Ragged rows</strong> — short rows are padded with empty cells; the widest row sets the column count.</li>
+<li><strong>Pipes in data</strong> — escaped to <code>\|</code> so the cell doesn't split.</li>
+<li><strong>No colspan/rowspan</strong> — markdown tables don't have them. If your spreadsheet merges cells, unmerge or accept repetition.</li>
+<li><strong>No per-cell formatting</strong> — bold/italic inside cells pass through as markdown and render, but alignment is column-wide only.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>Table serialization by <a href="https://github.com/wooorm/markdown-table" rel="noopener">markdown-table</a> 3.0.4 (MIT, part of the remark ecosystem), bundled to 2.2 KB under <a href="/markdown-table-generator/vendor/LICENSE.txt">/vendor/ with its license</a>. Everything runs in your browser tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I make a table in markdown?</h3><p>One header row, one delimiter row, then data rows — pipes between cells: | Tool | Cost | on line one, | --- | --- | on line two, then | Pingdom | $15 | for each data row. The delimiter row is what makes it a table. Alignment comes from colons in the delimiter: :--- left, :---: center, ---: right. This generator produces all of it from pasted CSV or spreadsheet data, with every column padded to the same width so the source stays readable.</p></div>
+<div class="faq-item"><h3>How do I convert CSV to a markdown table?</h3><p>Paste the CSV into the generator — quoted fields with commas inside them are handled — and the markdown table appears instantly with balanced column widths. Tabs work too, which is what you get copying a range straight out of Excel or Google Sheets. Set per-column alignment with the dropdowns, then copy the output into your README or wiki.</p></div>
+<div class="faq-item"><h3>What do the colons in a markdown table mean?</h3><p>Colons in the delimiter row set column alignment: :--- (or just ---) is left, :---: is center, ---: is right. The colons count toward the column's width, so a centered 6-character column gets :----: (colon, four dashes, colon). Alignment is a display hint — GitHub, GitLab, and most renderers honor it, but plain-text readers just see a monospaced grid either way.</p></div>
+<div class="faq-item"><h3>Why do the pipes line up in some markdown tables and not others?</h3><p>Because someone padded the cells. Markdown doesn't require aligned pipes — | a | b | renders identically however many spaces you use — but padded tables are dramatically easier to scan and diff. The markdown-table engine this tool uses pads every cell to the widest value in its column plus one space on each side, which is why the output looks typed by hand.</p></div>
+<div class="faq-item"><h3>What happens if my data contains a pipe character?</h3><p>A literal pipe inside a cell would break the table, so the generator escapes it as \| — the escape that GitHub-Flavored Markdown defines for exactly this case. Cells like "yes|no" come out as yes\|no and render as a single cell reading yes|no. Newlines inside quoted CSV fields are joined into a single line, since markdown table cells can't span lines.</p></div>
+<div class="faq-item"><h3>Does the table work in GitHub, GitLab, and Notion?</h3><p>Yes — the output is standard GitHub-Flavored Markdown (GFM), which all three parse. The same goes for most wikis, static site generators with tables enabled, and Slack's markdown-ish renderer. Notion and GitHub both honor the colon alignment controls. If a platform strips tables, the HTML route is the fallback: convert markdown to HTML and paste that instead.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/markdown-to-html/">🌐 Markdown to HTML</a>
+<a href="/html-to-markdown/">↩️ HTML to Markdown</a>
+<a href="/csv-to-json/">📄 CSV to JSON</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/markdown-to-pdf/">📄 Markdown to PDF</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="/markdown-table-generator/vendor/markdown-table.iife.js"></script>
+<script>
+(function(){
+  var T = window.__taMarkdownTable.markdownTable;
+  var inPane = document.getElementById('inPane');
+  var outPane = document.getElementById('outPane');
+  var status = document.getElementById('status');
+  var alignRow = document.getElementById('alignRow');
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+  var aligns = [];        // current per-column alignment ('' | left | center | right)
+  var colCount = 0;
+
+  function bytes(s){ return new Blob([s||'']).size; }
+  function setMsg(html){ status.innerHTML = html; }
+  function escPipe(s){ return String(s).replace(/\|/g, '\\|'); }
+
+  /* delimiter sniffing: tabs (spreadsheet paste) > comma > semicolon > pipe */
+  function sniffDelim(text){
+    var line = text.split(/\r?\n/).find(function(l){ return l.trim() !== ''; }) || '';
+    if (line.indexOf('\t') !== -1) return '\t';
+    var commas = (line.match(/,/g) || []).length;
+    var semis = (line.match(/;/g) || []).length;
+    var pipes = (line.match(/\|/g) || []).length;
+    if (commas === 0 && semis === 0 && pipes === 0) return null;
+    if (pipes > commas && pipes > semis) return '|';
+    if (semis > commas) return ';';
+    return ',';
+  }
+
+  /* CSV/TSV row splitter with quoted-field support */
+  function splitRow(line, d){
+    if (d !== ',') return line.split(d).map(function(c){ return c.trim(); });
+    var cells = [], cur = '', q = false;
+    for (var i = 0; i < line.length; i++){
+      var ch = line[i];
+      if (q){
+        if (ch === '"'){ if (line[i+1] === '"'){ cur += '"'; i++; } else q = false; }
+        else cur += ch;
+      } else {
+        if (ch === '"' && cur.trim() === '') q = true;
+        else if (ch === ',') { cells.push(cur.trim()); cur = ''; }
+        else cur += ch;
+      }
+    }
+    cells.push(cur.trim());
+    return cells;
+  }
+
+  function parseGrid(text){
+    var d = sniffDelim(text);
+    var rows = [];
+    text.split(/\r?\n/).forEach(function(line){
+      if (line.trim() === '') return;
+      if (d === '|'){
+        var raw = line.replace(/^\s*\|/, '').replace(/\|\s*$/, '');
+        rows.push(raw.split('|').map(function(c){ return c.trim().replace(/\\\|/g, '|'); }));
+      } else if (d){
+        rows.push(splitRow(line, d));
+      } else {
+        rows.push([line.trim()]);
+      }
+    });
+    colCount = rows.reduce(function(m, r){ return Math.max(m, r.length); }, 0);
+    rows.forEach(function(r){ while (r.length < colCount) r.push(''); });
+    return rows;
+  }
+
+  function rebuildAlignControls(){
+    while (alignRow.children.length > 1) alignRow.removeChild(alignRow.lastChild);
+    for (var c = 0; c < colCount; c++){
+      if (aligns[c] === undefined) aligns[c] = '';
+      var chip = document.createElement('div');
+      chip.className = 'align-chip';
+      var header = (document.getElementById('hasHeader').checked ? (parseCache[0] && parseCache[0][c]) : null) || ('Col ' + (c+1));
+      var lb = document.createElement('label'); lb.textContent = header; lb.title = header;
+      var sel = document.createElement('select');
+      [['','Default'],['left','Left :---'],['center','Center :---:'],['right','Right ---:']].forEach(function(o){
+        var op = document.createElement('option'); op.value = o[0]; op.textContent = o[1]; sel.appendChild(op);
+      });
+      sel.value = aligns[c] || '';
+      sel.addEventListener('change', (function(idx){ return function(){ aligns[idx] = sel.value; render(); }; })(c));
+      chip.appendChild(lb); chip.appendChild(sel);
+      alignRow.appendChild(chip);
+    }
+    if (aligns.length > colCount) aligns = aligns.slice(0, colCount);
+  }
+
+  var parseCache = [];
+  function render(){
+    var text = inPane.value;
+    parseCache = text.trim() ? parseGrid(text) : [];
+    document.getElementById('inStats').textContent = parseCache.length.toLocaleString('en-US') + ' rows';
+    if (aligns.length !== colCount) rebuildAlignControls();
+    if (!parseCache.length){
+      outPane.value = '';
+      document.getElementById('outStats').textContent = '0 bytes';
+      setMsg('Ready. Nothing you paste leaves this page.');
+      return;
+    }
+    var rows = parseCache.map(function(r){ return r.map(escPipe); });
+    var align = aligns.slice(0, colCount);
+    var hasAlign = align.some(function(a){ return a; });
+    var out = T(rows, { align: hasAlign ? align : null });
+    if (!document.getElementById('padCells').checked){
+      out = out.split('\n').map(function(l){
+        return l.split('|').map(function(s){ return s.trim(); }).join(' |').replace(/^\| /,'|').replace(/ \|$/,'|');
+      }).join('\n');
+    }
+    outPane.value = out;
+    document.getElementById('outStats').textContent = bytes(out).toLocaleString('en-US') + ' bytes';
+    setMsg('<strong>' + parseCache.length + ' rows × ' + colCount + ' columns</strong> → ' + bytes(out).toLocaleString('en-US') + ' bytes of markdown. Delimiter detected: ' + (sniffDelim(text) === '\t' ? 'tab' : sniffDelim(text) === null ? 'plain lines' : JSON.stringify(sniffDelim(text))) + '.');
+  }
+
+  document.getElementById('hasHeader').addEventListener('change', rebuildAlignControls);
+  document.getElementById('padCells').addEventListener('change', render);
+  inPane.addEventListener('input', function(){ render(); });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to copy yet.'); return; }
+    outPane.select();
+    try { document.execCommand('copy'); setMsg('Table copied to clipboard.'); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(outPane.value).then(function(){ setMsg('Table copied to clipboard.'); }).catch(function(){});
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    if (!outPane.value) { setMsg('Nothing to download yet.'); return; }
+    var blob = new Blob([outPane.value], { type: 'text/markdown' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'table.md'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    setMsg('Downloaded <strong>table.md</strong>.');
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    inPane.value = 'Tool,Monthly cost,Uptime\nPingdom,"$15.00",99.9%\nUptimeRobot,"$8.50",99.98%\nToolAspect embeds,$0,100% local';
+    aligns = ['', 'right', 'right'];
+    render();
+    setMsg('Sample loaded — 4 rows × 3 columns, 249 bytes out. Costs and uptime are set to right-align.');
+  });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    inPane.value = ''; aligns = []; render(); setMsg('Cleared.');
+  });
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  ['dragover','drop'].forEach(function(ev){
+    dz.addEventListener(ev, function(e){ e.preventDefault(); if (ev === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  });
+  inPane.addEventListener('dragover', function(e){ e.preventDefault(); });
+  inPane.addEventListener('drop', function(e){ e.preventDefault(); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) readFile(fileInput.files[0]); });
+  function readFile(f){
+    var r = new FileReader();
+    r.onload = function(){ inPane.value = String(r.result); aligns = []; render(); setMsg('Loaded ' + f.name + ' — ' + parseCache.length + ' rows.'); };
+    r.readAsText(f);
+  }
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

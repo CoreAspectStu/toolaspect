@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Editor — Free Online Vector Editor | ToolAspect</title>
+<meta name="description" content="Edit SVG files free in your browser: the open-source SVG-Edit engine, unmodified. Draw shapes, paths, and text, then export SVG, PNG, or PDF — nothing uploaded.">
+<link rel="canonical" href="https://toolaspect.com/svg-editor/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="SVG Editor — Free Online Vector Editor">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Open-source SVG-Edit running unmodified in your browser: draw, group, align, and export SVG, PNG, or PDF.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/svg-editor/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SVG Editor | Free Online Vector Tool">
+<meta name="twitter:description" content="Full vector editor in the browser. Nothing uploaded.">
+<meta name="keywords" content="svg editor, edit svg online, svg file editor, open svg, vector editor online, svgedit, draw svg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SVG Editor","description":"Free online vector editor built on the open-source SVG-Edit project, served unmodified from its official CDN release. Draw and edit rectangles, ellipses, paths, polygons, and text; group, align, and layer elements; hand-edit the SVG source; and export as SVG, PNG, or PDF. Everything runs locally in the browser — files are opened and saved directly on your machine.","url":"https://toolaspect.com/svg-editor/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can I edit an SVG file without installing software?","acceptedAnswer":{"@type":"Answer","text":"Yes. This page runs the open-source SVG-Edit engine directly in your browser: open your .svg file, edit with the toolbar or the source view, and save back to your machine. Nothing is uploaded and there is nothing to install."}},
+{"@type":"Question","name":"What can this SVG editor do?","acceptedAnswer":{"@type":"Answer","text":"Draw rectangles, ellipses, lines, polygons, freehand paths, and text; select and move anything; group and align elements; work in layers; edit gradients, strokes, and fills; hand-edit the XML source of the drawing; and export to SVG, PNG, or PDF. It is the same editor the SVG-Edit project ships, unmodified."}},
+{"@type":"Question","name":"Is SVG still worth editing in 2026?","acceptedAnswer":{"@type":"Answer","text":"Very much so. SVG is the native format for icons and logos on the web, it scales to any resolution with tiny file sizes, and cutting machines and plotters take SVG directly. If a graphic needs to look sharp at every size, it is an SVG job."}},
+{"@type":"Question","name":"What export formats does the editor support?","acceptedAnswer":{"@type":"Answer","text":"SVG natively, PNG at your choice of size, and PDF through the bundled jsPDF SVG-to-PDF plugin that ships with SVG-Edit. For crisp icons and logos, export SVG — raster formats defeat the point of vectors unless a target app only accepts images."}},
+{"@type":"Question","name":"Is my artwork private?","acceptedAnswer":{"@type":"Answer","text":"Yes. The editor loads from a CDN but your drawing and files never leave your machine: open, edit, and save happen locally in the browser, with no server round-trip for your work."}},
+{"@type":"Question","name":"What license is this editor under?","acceptedAnswer":{"@type":"Answer","text":"SVG-Edit is MIT-licensed, with one bundled dependency (the jsPDF SVG-to-PDF plugin) under LGPL-3.0-or-later. This page serves the official, unmodified release from the jsDelivr CDN, which keeps both licenses intact."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"SVG Editor","item":"https://toolaspect.com/svg-editor/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:1060px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.editor-shell{margin-top:1rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-height:640px;position:relative}
+#svg-edit-container{width:100%;height:640px}
+.boot-note{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;color:#334155;background:#f8fafc;font-size:.9rem}
+.boot-note.err{color:#b91c1c}
+.license-note{font-size:.78rem;color:var(--muted);margin-top:.8rem;line-height:1.6}
+.license-note a{color:var(--primary-hover)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.content-section pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text)}
+.content-section code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.85em}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>✏️ SVG Editor</h1>
+<p>The open-source SVG-Edit engine, unmodified, running in your browser</p>
+</div>
+
+<div class="aio-answer">An SVG editor lets you draw and edit vector graphics — shapes, paths, text, gradients — and save them as Scalable Vector Graphics files that stay sharp at any size. This page runs the real <strong>SVG-Edit</strong> editor (the MIT-licensed open-source project, served unmodified from its official CDN release): open or create an .svg file, draw with the toolbar, edit the XML source directly, and export <strong>SVG, PNG, or PDF</strong>. Everything happens locally — your files are opened from and saved to your machine, with no upload. For a feel of the format, a 200×100 badge is four lines of SVG: <code>&lt;rect width="200" height="100" rx="12"/&gt;</code>, a circle at cx=160 cy=60 r=20 (spanning x 140–180, y 40–80 — inside the canvas), and a text label.</div>
+
+<div class="section-card">
+<h2>Editor</h2>
+<div class="editor-shell">
+<div id="svg-edit-container"></div>
+<div class="boot-note" id="bootNote"><span>Loading SVG-Edit 7.4.2 (about 2.7 MB, one time)…</span></div>
+</div>
+<div class="license-note">Engine: <a href="https://github.com/SVG-Edit/svgedit" rel="noopener">SVG-Edit</a> 7.4.2, <a href="https://cdn.jsdelivr.net/npm/svgedit@7.4.2/LICENSE-MIT.txt" rel="noopener">MIT license</a>, bundled jsPDF SVG-to-PDF plugin under LGPL-3.0-or-later — the official unmodified build, loaded from jsDelivr. Your drawings stay on your machine.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/gradient-generator/">Gradient Generator</a></li><li style="margin:4px 0"><a href="/box-shadow-generator/">Box Shadow Generator</a></li><li style="margin:4px 0"><a href="/favicon-generator/">Favicon Generator</a></li><li style="margin:4px 0"><a href="/image-color-picker/">Image Color Picker</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-edit-svg-files/">Read the SVG editing guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>SVG Elements Quick Reference</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Element</th><th>Draws</th><th>Key attributes</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;rect&gt;</code></td><td>Rectangle / rounded box</td><td>x, y, width, height, rx (corner radius)</td></tr>
+<tr><td><code>&lt;circle&gt;</code></td><td>Circle</td><td>cx, cy (center), r (radius)</td></tr>
+<tr><td><code>&lt;ellipse&gt;</code></td><td>Oval</td><td>cx, cy, rx, ry</td></tr>
+<tr><td><code>&lt;line&gt;</code></td><td>Straight line</td><td>x1, y1, x2, y2</td></tr>
+<tr><td><code>&lt;polyline&gt;</code></td><td>Connected strokes</td><td>points="x,y x,y …"</td></tr>
+<tr><td><code>&lt;polygon&gt;</code></td><td>Closed shape</td><td>points (last point auto-joins the first)</td></tr>
+<tr><td><code>&lt;path&gt;</code></td><td>Anything: curves, arcs, freeform</td><td>d (M moveto, L lineto, C/Q curves, Z close)</td></tr>
+<tr><td><code>&lt;text&gt;</code></td><td>Text</td><td>x, y (baseline), font-size, font-family</td></tr>
+<tr><td><code>&lt;g&gt;</code></td><td>Group (moves/transforms children together)</td><td>transform (translate, rotate, scale)</td></tr>
+<tr><td><code>&lt;use&gt;</code></td><td>Reuse a defined shape</td><td>href="#id" pointing at a &lt;defs&gt; element</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:.8rem;color:var(--muted);margin-top:.6rem">Every element also takes fill, stroke, stroke-width, opacity, and id. The editor's source panel is the fastest way to learn these — draw a shape, then look at the XML it produced.</p>
+</div>
+
+<div class="section-card">
+<h2>Which SVG Tool Fits the Job</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Tool</th><th>Type</th><th>License / cost</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>This page (SVG-Edit)</td><td>Browser, no install</td><td>MIT, free</td><td>Quick edits, icons, learning SVG source</td></tr>
+<tr><td>Inkscape</td><td>Desktop app</td><td>GPL, free</td><td>Heavy illustration, print layouts, tracing</td></tr>
+<tr><td>Method Draw</td><td>Browser</td><td>Free</td><td>Minimal UI — but development went quiet years ago</td></tr>
+<tr><td>Boxy SVG</td><td>Desktop / web</td><td>Commercial</td><td>Polished desktop-style editing on a Chromebook</td></tr>
+<tr><td>Figma / Illustrator</td><td>Design suites</td><td>Commercial</td><td>Multi-file product design; SVG is an export, not the working format</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How to Use the Editor</h2>
+<p>SVG-Edit works like any drawing app, with one superpower: the <strong>SVG source is always one click away</strong>. The toolbar on the left holds the drawing tools — select, square/rectangle, circle/ellipse, line, path, polygon, text, and zoom. The top bar carries layers, alignment, and the source panel. Open an existing file with the folder icon, save with the disk icon, and export to PNG or PDF from the export menu.</p>
+<h3>Step by step</h3>
+<ul>
+<li>Draw a shape: pick the rectangle or circle tool, drag on the canvas.</li>
+<li>Restyle it: with the shape selected, change fill, stroke, and opacity in the panels above the canvas.</li>
+<li>Nest or align: group related shapes with Ctrl+G, then use the align buttons to line everything up.</li>
+<li>Inspect the XML: open the source panel — every edit you made is right there in plain SVG.</li>
+<li>Export: save as .svg for the web, PNG when an app only accepts images, PDF for print.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Paste this into the editor's source panel and you have a 200×100 badge — the four elements described in the intro in real coordinates:</p>
+<pre>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"&gt;
+  &lt;rect width="200" height="100" rx="12" fill="#2563eb"/&gt;
+  &lt;circle cx="160" cy="60" r="20" fill="#fbbf24"/&gt;
+  &lt;text x="20" y="45" font-size="20" font-weight="bold" fill="#ffffff"&gt;BETA&lt;/text&gt;
+&lt;/svg&gt;</pre>
+<p>The math checks out on sight: the canvas is 200 wide and 100 tall; the circle centered at (160, 60) with radius 20 spans x 140–180 and y 40–80, so it clears the right edge (180 &lt; 200) and the bottom edge (80 &lt; 100); the text baseline sits at y=45, comfortably inside the rounded rect. Change cx to 190 and the circle's right edge (210) would clip past the canvas — the kind of arithmetic the source view makes obvious and the visual canvas makes instant.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Can I edit an SVG file without installing software?</h3><p>Yes. This page runs the open-source SVG-Edit engine directly in your browser: open your .svg file, edit with the toolbar or the source view, and save back to your machine. Nothing is uploaded and there is nothing to install.</p></div>
+<div class="faq-item"><h3>What can this SVG editor do?</h3><p>Draw rectangles, ellipses, lines, polygons, freehand paths, and text; select and move anything; group and align elements; work in layers; edit gradients, strokes, and fills; hand-edit the XML source of the drawing; and export to SVG, PNG, or PDF. It is the same editor the SVG-Edit project ships, unmodified.</p></div>
+<div class="faq-item"><h3>Is SVG still worth editing in 2026?</h3><p>Very much so. SVG is the native format for icons and logos on the web, it scales to any resolution with tiny file sizes, and cutting machines and plotters take SVG directly. If a graphic needs to look sharp at every size, it is an SVG job.</p></div>
+<div class="faq-item"><h3>What export formats does the editor support?</h3><p>SVG natively, PNG at your choice of size, and PDF through the bundled jsPDF SVG-to-PDF plugin that ships with SVG-Edit. For crisp icons and logos, export SVG — raster formats defeat the point of vectors unless a target app only accepts images.</p></div>
+<div class="faq-item"><h3>Is my artwork private?</h3><p>Yes. The editor loads from a CDN but your drawing and files never leave your machine: open, edit, and save happen locally in the browser, with no server round-trip for your work.</p></div>
+<div class="faq-item"><h3>What license is this editor under?</h3><p>SVG-Edit is MIT-licensed, with one bundled dependency (the jsPDF SVG-to-PDF plugin) under LGPL-3.0-or-later. This page serves the official, unmodified release from the jsDelivr CDN, which keeps both licenses intact.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/gradient-generator/">🎨 Gradient Generator</a>
+<a href="/box-shadow-generator/">📦 Box Shadow Generator</a>
+<a href="/favicon-generator/">🖼️ Favicon Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/svgedit@7.4.2/dist/editor/svgedit.css">
+<script type="module">
+/* Boot the UNMODIFIED SVG-Edit 7.4.2 build (MIT) from jsDelivr; point its
+   image + extension lookups at the same pinned CDN release. */
+var V = '7.4.2';
+var CDN = 'https://cdn.jsdelivr.net/npm/svgedit@' + V + '/dist/editor';
+try {
+  const Editor = (await import(CDN + '/Editor.js')).default;
+  const svgEditor = new Editor(document.getElementById('svg-edit-container'));
+  svgEditor.setConfig({
+    allowInitialUserOverride: false,
+    noDefaultExtensions: false,
+    imgPath: CDN + '/images',
+    extPath: CDN + '/extensions'
+  });
+  var note = document.getElementById('bootNote');
+  if (note) note.remove();
+} catch (e) {
+  var note2 = document.getElementById('bootNote');
+  if (note2) {
+    note2.className = 'boot-note err';
+    note2.innerHTML = '<span>The editor failed to load from the CDN — check your connection or an ad blocker, then reload.</span>';
+  }
+  if (window.console) console.error('[svg-editor]', e);
+}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
