@@ -27,7 +27,7 @@ for root, dirs, files in os.walk('.'):
             priority, freq = '0.6', 'monthly'
         elif path.startswith('guides/'):
             priority, freq = '0.8', 'monthly'
-        elif any(path.startswith(p) for p in ['time-zones/','salary-by-state/','gift-ideas/','pet-names/','countdown-to/']):
+        elif any(path.startswith(p) for p in ['time-zones/','salary-by-state/','gift-ideas/','pet-names/','countdown-to/','car-insurance-cost-by-state/','roof-replacement-cost-by-state/','window-replacement-cost-by-state/','fence-cost-by-state/','hvac-replacement-cost-by-state/']):
             priority, freq = '0.5', 'monthly'
         else:
             priority, freq = '0.7', 'weekly'

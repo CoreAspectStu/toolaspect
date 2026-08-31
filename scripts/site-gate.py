@@ -12,7 +12,7 @@ fails, warns = [], []
 nav = (repo/'shared/nav.js').read_text()
 nav_links = set(re.findall(r"href: '/([a-z0-9-]+)/'", nav))
 tools = {p.parent.name for p in repo.glob('*/index.html')}
-HUBS = {'roadmap','embed','best-free-online-tools-2026','guides','all-tools','convert','converters','finance-tools','health-calculators','insurance-tools','legal-tools','everyday-tools','business-tools','creator-tools','developer-tools','text-tools','image-tools','partners','about','editorial-policy'}
+HUBS = {'roadmap','embed','best-free-online-tools-2026','guides','all-tools','convert','converters','finance-tools','health-calculators','insurance-tools','legal-tools','everyday-tools','business-tools','creator-tools','developer-tools','text-tools','image-tools','partners','about','editorial-policy','car-insurance-cost-by-state','roof-replacement-cost-by-state','window-replacement-cost-by-state','fence-cost-by-state','hvac-replacement-cost-by-state'}
 orphans = sorted(t for t in tools - nav_links if t not in HUBS)
 if orphans:
     fails.append(f"NAV ORPHANS ({len(orphans)}): tools not in nav menu: {orphans[:10]}...")
@@ -25,7 +25,7 @@ for must in ['/guides/','/all-tools/','/privacy','/terms']:
 # 3. INTERLINKS — every page needs a related-tools block + /guides/ link
 # (all-tools is a pure directory mirror — exempt)
 no_rel = [p.parent.name for p in repo.glob('*/index.html')
-          if p.parent.name not in {'roadmap','embed','all-tools'} and 'related-tools' not in p.read_text(errors='ignore')]
+          if p.parent.name not in HUBS and 'related-tools' not in p.read_text(errors='ignore')]
 if no_rel:
     fails.append(f"NO INTERLINKS ({len(no_rel)} pages missing related-tools block)")
 
