@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organize PDF — Reorder, Delete, Rotate Pages | ToolAspect</title>
+<meta name="description" content="Organize PDFs free in your browser: drag pages to reorder, delete what you don't need, rotate the rest. Works on 100+ page files, no uploads, no watermark.">
+<link rel="canonical" href="https://toolaspect.com/organize-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Organize PDF — Reorder, Delete, Rotate Pages">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Rearrange PDF pages by dragging thumbnails, delete pages you don't need, rotate the ones that scanned sideways. Free, private, in-browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/organize-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Organize PDF | Free Online Tool">
+<meta name="twitter:description" content="Reorder, delete, and rotate PDF pages by thumbnail. Nothing uploaded.">
+<meta name="keywords" content="organize pdf, rearrange pdf pages, delete pages from pdf, rotate pdf pages, reorder pdf, pdf page organizer, remove pages from pdf">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Organize PDF","description":"Free browser-based PDF organizer. Load a PDF, drag the page thumbnails into a new order, delete pages you don't need, rotate the rest, and download the rebuilt file. Runs on pdf.js thumbnails and pdf-lib page copying; nothing is uploaded.","url":"https://toolaspect.com/organize-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I rearrange pages in a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the file in a thumbnail organizer and drag the pages into the order you want. This tool shows every page as a small preview you can drag, nudge with arrow buttons, delete, or rotate, then rebuilds the PDF in the new order — all in your browser, so the file is never uploaded and there's no watermark or page limit beyond your device's memory."}},
+{"@type":"Question","name":"How do I delete pages from a PDF without Acrobat?","acceptedAnswer":{"@type":"Answer","text":"Load the PDF into a page organizer, click the × on each page you want gone, and download the rebuilt file — the deleted pages are left out of the copy, not hidden in it. Deleted pages stay restorable in the tool until you download, so a mis-click costs nothing."}},
+{"@type":"Question","name":"Does rotating a page here save permanently?","acceptedAnswer":{"@type":"Answer","text":"Yes. The download is a rebuilt PDF in which the rotated pages carry a new /Rotate value, so the fix sticks in every viewer — unlike the temporary rotate button in a reader, which only changes your view until you close the file."}},
+{"@type":"Question","name":"What happens to links, bookmarks, and form fields?","acceptedAnswer":{"@type":"Answer","text":"Page-level content comes through intact, but document-level structure does not: bookmarks that point at specific pages can break or vanish when pages are removed or reordered, and named destinations are not rewritten. If a document's hyperlinks and bookmarks matter, check them in the output before relying on it."}},
+{"@type":"Question","name":"Is organizing the same as splitting or extracting?","acceptedAnswer":{"@type":"Answer","text":"No. Organizing changes the order and set of pages within one file. Splitting bursts one PDF into many files, extracting keeps only a selection into a new file, and merging combines several files into one. If your end goal is several smaller files rather than one reordered file, you want a splitter."}},
+{"@type":"Question","name":"Does my file get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Thumbnails are rendered with pdf.js in the page, and the reorganized PDF is assembled with pdf-lib in the page. It works offline once loaded, and nothing is stored or sent."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Organize PDF","item":"https://toolaspect.com/organize-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn.save{background:var(--success)}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.3rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.92rem;cursor:pointer}
+.file-label input{display:none}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.grid{margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+.pcard{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center;cursor:grab}
+.pcard.dragover{border-color:var(--primary);border-style:dashed}
+.pcard.dragging{opacity:.4}
+.pcard .thumb{background:#fff;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;height:210px}
+.pcard img{max-width:100%;max-height:210px;display:block}
+.pcard .plabel{font-size:.78rem;color:var(--muted);margin:.45rem 0 .35rem}
+.pcard .pctrl{display:flex;gap:4px;justify-content:center}
+.pcard .pctrl button{width:34px;height:28px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:.8rem;line-height:1}
+.pcard .pctrl button:hover{border-color:var(--primary)}
+.pcard .pctrl button.del:hover{border-color:var(--danger);color:var(--danger)}
+.pcard .rot90{font-size:.68rem;color:var(--warn)}
+.delbar{margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;font-size:.8rem;color:var(--muted)}
+.delbar .chip{padding:.25rem .6rem;border:1px dashed var(--border);border-radius:20px;cursor:pointer;color:var(--warn)}
+.delbar .chip:hover{border-color:var(--warn)}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🗂️ Organize PDF</h1>
+<p>Drag to reorder, delete what you don't need, rotate the rest — rebuilt in your browser</p>
+</div>
+
+<div class="aio-answer">To organize a PDF, work page by page: open the file below and every page appears as a draggable thumbnail. Drag pages (or nudge them with the arrow buttons) into the order you want, hit × to delete the ones that don't belong, and rotate any that scanned sideways. Download and you get a rebuilt PDF in exactly that order — pages copied with pdf-lib, rotations baked in, nothing uploaded. A 12-page file where you delete pages 3 and 9 and move page 12 to the front comes out as 10 pages in the order 12, 1, 2, 4, 5, 6, 7, 8, 10, 11.</div>
+
+<div class="section-card">
+<h2>Pages</h2>
+<div class="btn-row">
+<label class="file-label">📂 Open PDF<input type="file" id="fileInput" accept=".pdf,application/pdf"></label>
+<button class="btn ghost" id="btnReset" disabled>↺ Reset</button>
+<button class="btn save" id="btnSave" disabled>💾 Download organized PDF</button>
+</div>
+<div class="status-box" id="status">Open a PDF to begin. The file never leaves your browser.</div>
+<div class="delbar" id="delbar" style="display:none"></div>
+<div class="grid" id="grid"></div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/redact-pdf/">Redact PDF</a></li><li style="margin:4px 0"><a href="/pdf-annotate/">PDF Annotate</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-organize-pdf-pages/">Read the organize PDF guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Organize, Split, Extract, Merge — Which One?</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Operation</th><th>What it does</th><th>Input → output</th><th>Use when</th></tr></thead>
+<tbody>
+<tr><td><strong>Organize</strong> (this tool)</td><td>Reorder, delete, and rotate pages within one file</td><td>1 PDF → 1 PDF</td><td>The right pages exist but are in the wrong order or orientation</td></tr>
+<tr><td>Split</td><td>Bursts a PDF into multiple smaller files</td><td>1 PDF → many PDFs</td><td>You need separate files per chapter, statement, or scan batch</td></tr>
+<tr><td>Extract</td><td>Keeps only a selection of pages as a new file</td><td>1 PDF → 1 smaller PDF</td><td>You want just pages 4–9 and nothing else, original untouched</td></tr>
+<tr><td>Merge</td><td>Combines several PDFs into one</td><td>Many PDFs → 1 PDF</td><td>Scans, attachments, or sections need to become one document</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">Deleting pages inside this organizer overlaps with extracting — the difference is intent: organize means "fix this file," extract means "pull a new one out and keep the original as-is."</p>
+</div>
+
+<div class="content-section">
+<h2>How the PDF Page Organizer Works</h2>
+<p>Reordering pages sounds like it should be a server job, but it doesn't have to be: the page tree of a PDF is just a list, and browsers are good at lists. This tool renders each page to a small thumbnail with pdf.js, lets you shuffle them with drag-and-drop or arrow buttons, and on download asks pdf-lib to copy the surviving pages from the original document, in your order, into a fresh file.</p>
+<h3>The pipeline</h3>
+<p>Open → pdf.js renders a thumbnail per page (rotations re-render the thumbnail so you see the true final orientation) → your edits update a simple page list: order, deleted flags, per-page quarter-turns → Download copies pages in the new sequence with <code>copyPages</code>, applies each page's rotation on top of whatever rotation the original already carried, and saves. Content streams are copied untouched, so text stays selectable and searchable.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the PDF — thumbnails appear in a grid, numbered by their current position.</li>
+<li>Drag any card onto another to reorder (the arrow buttons nudge a page left or right — handy on touch screens).</li>
+<li>⟳ rotates a page 90° clockwise each click; × deletes it. Deleted pages collect in a strip you can restore from until you download.</li>
+<li>Reset puts everything back to the original order.</li>
+<li>Download organized PDF saves <em>-organized.pdf</em> with exactly the pages you kept, in the order shown.</li>
+</ul>
+<h3>A worked example</h3>
+<p>Take a 12-page board report where page 3 is a duplicate agenda, page 9 is a blank scan, page 12 is the executive summary that belongs up front, and page 5 is a landscape table that scanned sideways. Delete 3 and 9, drag page 12 to the first slot, rotate page 5 once. The download has 10 pages in the order 12, 1, 2, 4, 5, 6, 7, 8, 10, 11 — and the page that was originally 5 now carries a 90° rotation that every viewer respects. The original file is untouched on your disk.</p>
+<p>What to double-check afterward: bookmarks. Document-level structure like outlines and named destinations isn't rewritten when pages move or disappear, so a bookmark that pointed at old page 10 can end up somewhere unexpected in the reorganized file. Page content itself — text, images, form fields on the pages you kept — comes through byte-for-byte.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I rearrange pages in a PDF for free?</h3><p>Open the file in a thumbnail organizer and drag the pages into the order you want. This tool shows every page as a small preview you can drag, nudge with arrow buttons, delete, or rotate, then rebuilds the PDF in the new order — all in your browser, so the file is never uploaded and there's no watermark or page limit beyond your device's memory.</p></div>
+<div class="faq-item"><h3>How do I delete pages from a PDF without Acrobat?</h3><p>Load the PDF into a page organizer, click the × on each page you want gone, and download the rebuilt file — the deleted pages are left out of the copy, not hidden in it. Deleted pages stay restorable in the tool until you download, so a mis-click costs nothing.</p></div>
+<div class="faq-item"><h3>Does rotating a page here save permanently?</h3><p>Yes. The download is a rebuilt PDF in which the rotated pages carry a new /Rotate value, so the fix sticks in every viewer — unlike the temporary rotate button in a reader, which only changes your view until you close the file.</p></div>
+<div class="faq-item"><h3>What happens to links, bookmarks, and form fields?</h3><p>Page-level content comes through intact, but document-level structure does not: bookmarks that point at specific pages can break or vanish when pages are removed or reordered, and named destinations are not rewritten. If a document's hyperlinks and bookmarks matter, check them in the output before relying on it.</p></div>
+<div class="faq-item"><h3>Is organizing the same as splitting or extracting?</h3><p>No. Organizing changes the order and set of pages within one file. Splitting bursts one PDF into many files, extracting keeps only a selection into a new file, and merging combines several files into one. If your end goal is several smaller files rather than one reordered file, you want a splitter.</p></div>
+<div class="faq-item"><h3>Does my file get uploaded anywhere?</h3><p>No. Thumbnails are rendered with pdf.js in the page, and the reorganized PDF is assembled with pdf-lib in the page. It works offline once loaded, and nothing is stored or sent.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/delete-pages-from-pdf/">🗑️ Delete Pages from PDF</a>
+<a href="/rearrange-pdf-pages/">🔀 Rearrange PDF Pages</a>
+<a href="/pdf-split/">✂️ PDF Split</a>
+<a href="/pdf-merge/">📎 PDF Merge</a>
+<a href="/redact-pdf/">🔏 Redact PDF</a>
+<a href="/pdf-annotate/">✏️ PDF Annotate</a>
+<a href="/compare-pdf/">🔍 Compare PDFs</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>
+/* ===== Organize PDF engine: pdf.js thumbnails -> pdf-lib copyPages + rotation ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var PDFLIB_URL='https://cdn.jsdelivr.net/npm/@cantoo/pdf-lib@2.5.1/dist/pdf-lib.min.js';
+var THUMB_WIDTH=170;
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function loadScript(url){
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src=url;s.onload=res;s.onerror=function(){rej(new Error('Could not load '+url))};
+    (document.head||document.documentElement).appendChild(s);
+  });
+}
+
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+
+var pdf=null,origBytes=null,origName='document';
+var pages=[]; // {n: original page number, rot: 0/90/180/270, deleted:bool}
+var thumbCache={};
+var dragIdx=-1;
+
+el('fileInput').addEventListener('change',function(e){
+  var f=e.target.files[0];
+  if(!f)return;
+  origName=f.name.replace(/\.pdf$/i,'');
+  setStatus('Loading '+f.name+' …');
+  var fr=new FileReader();
+  fr.onload=function(){
+    origBytes=new Uint8Array(fr.result);
+    pdfjsLib.getDocument({data:origBytes.slice()}).promise.then(function(doc){
+      pdf=doc;
+      pages=[];
+      for(var i=1;i<=doc.numPages;i++)pages.push({n:i,rot:0,deleted:false});
+      thumbCache={};
+      return renderGrid();
+    }).then(function(){
+      el('btnReset').disabled=false;el('btnSave').disabled=false;
+      setStatus('Loaded '+pdf.numPages+' pages. Drag to reorder, × to delete, ⟳ to rotate.','ok');
+    }).catch(function(err){setStatus('Could not open that PDF: '+(err&&err.message||err),'err')});
+  };
+  fr.readAsArrayBuffer(f);
+});
+el('btnReset').addEventListener('click',function(){
+  if(!pdf)return;
+  pages=[];
+  for(var i=1;i<=pdf.numPages;i++)pages.push({n:i,rot:0,deleted:false});
+  renderGrid().then(function(){setStatus('Back to the original '+pdf.numPages+' pages.','ok')});
+});
+function thumbKey(it){return it.n+'-'+it.rot}
+function renderThumb(it){
+  var key=thumbKey(it);
+  if(thumbCache[key])return Promise.resolve(thumbCache[key]);
+  return pdf.getPage(it.n).then(function(page){
+    var base=page.getViewport({scale:1});
+    var scale=THUMB_WIDTH/base.width;
+    var vp=page.getViewport({scale:scale,rotation:(page.rotate+it.rot)%360});
+    var c=document.createElement('canvas');
+    c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+    return page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise.then(function(){
+      thumbCache[key]=c.toDataURL('image/png');
+      return thumbCache[key];
+    });
+  });
+}
+function liveIdx(masterIdx){
+  return pages.slice(0,masterIdx).filter(function(p){return !p.deleted}).length;
+}
+function renderGrid(){
+  var grid=el('grid');
+  grid.innerHTML='';
+  var chain=Promise.resolve();
+  pages.forEach(function(it,i){
+    if(it.deleted)return;
+    (function(item,idx){
+      chain=chain.then(function(){
+        return renderThumb(item).then(function(src){
+          var card=document.createElement('div');
+          card.className='pcard';
+          card.draggable=true;
+          card.innerHTML=''
+            +'<div class="thumb"><img alt="Page '+item.n+'"></div>'
+            +'<div class="plabel">Page '+item.n+(item.rot?' <span class="rot90">('+item.rot+'°)</span>':'')+'</div>'
+            +'<div class="pctrl">'
+            +'<button title="Move left">&#8592;</button>'
+            +'<button title="Move right">&#8594;</button>'
+            +'<button title="Rotate 90&#176; clockwise">&#10227;</button>'
+            +'<button class="del" title="Delete page">&#10005;</button>'
+            +'</div>';
+          card.querySelector('img').src=src;
+          var btns=card.querySelectorAll('.pctrl button');
+          btns[0].addEventListener('click',function(){movePage(idx,-1)});
+          btns[1].addEventListener('click',function(){movePage(idx,1)});
+          btns[2].addEventListener('click',function(){item.rot=(item.rot+90)%360;refreshCard(item,idx,card)});
+          btns[3].addEventListener('click',function(){item.deleted=true;renderGrid().then(renderDelbar);updateStatus()});
+          card.addEventListener('dragstart',function(e){dragIdx=idx;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',String(idx))}catch(_){}});
+          card.addEventListener('dragend',function(){dragIdx=-1;card.classList.remove('dragging')});
+          card.addEventListener('dragover',function(e){e.preventDefault();card.classList.add('dragover')});
+          card.addEventListener('dragleave',function(){card.classList.remove('dragover')});
+          card.addEventListener('drop',function(e){
+            e.preventDefault();card.classList.remove('dragover');
+            if(dragIdx<0||dragIdx===idx)return;
+            var moved=pages.splice(dragIdx,1)[0];
+            pages.splice(idx,0,moved);
+            renderGrid().then(renderDelbar);
+          });
+          grid.appendChild(card);
+        });
+      });
+    })(it,i);
+  });
+  return chain.then(function(){renderDelbar();updateStatus()});
+}
+function refreshCard(item,idx,card){
+  renderThumb(item).then(function(src){
+    card.querySelector('img').src=src;
+    card.querySelector('.plabel').innerHTML='Page '+item.n+(item.rot?' <span class="rot90">('+item.rot+'°)</span>':'');
+  });
+}
+function movePage(masterIdx,dir){
+  // swap with the nearest non-deleted neighbor in dir
+  var target=masterIdx+dir;
+  while(target>=0&&target<pages.length&&pages[target].deleted)target+=dir;
+  if(target<0||target>=pages.length)return;
+  var tmp=pages[masterIdx];
+  pages[masterIdx]=pages[target];
+  pages[target]=tmp;
+  renderGrid().then(renderDelbar);
+}
+function renderDelbar(){
+  var bar=el('delbar');
+  var del=pages.filter(function(p){return p.deleted});
+  if(!del.length){bar.style.display='none';bar.innerHTML='';return}
+  bar.style.display='flex';
+  bar.innerHTML='<span>'+del.length+' deleted:</span>';
+  del.forEach(function(item){
+    var chip=document.createElement('span');
+    chip.className='chip';
+    chip.textContent='restore p'+item.n;
+    chip.addEventListener('click',function(){item.deleted=false;renderGrid()});
+    bar.appendChild(chip);
+  });
+}
+function updateStatus(){
+  var kept=pages.filter(function(p){return !p.deleted}).length;
+  el('btnSave').disabled=!kept;
+  setStatus(kept+' of '+pdf.numPages+' pages will be in the output.','ok');
+}
+el('btnSave').addEventListener('click',function(){
+  var kept=pages.filter(function(p){return !p.deleted});
+  if(!kept.length)return;
+  el('btnSave').disabled=true;
+  setStatus('Rebuilding PDF with '+kept.length+' pages …');
+  loadScript(PDFLIB_URL).then(function(){
+    var PDFLib=window.PDFLib;
+    return PDFLib.PDFDocument.load(origBytes.slice()).then(function(src){
+      return PDFLib.PDFDocument.create().then(function(out){
+        return out.copyPages(src,kept.map(function(p){return p.n-1})).then(function(copied){
+          copied.forEach(function(p,i){
+            var angle=((p.getRotation().angle||0)+kept[i].rot)%360;
+            p.setRotation(PDFLib.degrees(angle));
+            out.addPage(p);
+          });
+          return out.save();
+        });
+      });
+    });
+  }).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=origName+'-organized.pdf';
+    a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href)},4000);
+    setStatus('Downloaded '+origName+'-organized.pdf — '+kept.length+' pages in your order. Original untouched.','ok');
+    el('btnSave').disabled=false;
+  }).catch(function(err){
+    setStatus('Export failed: '+(err&&err.message||err),'err');
+    el('btnSave').disabled=false;
+  });
+});
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

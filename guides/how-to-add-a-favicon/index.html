@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Add a Favicon to Your Website (2026) | ToolAspect</title>
+<meta name="description" content="Add a favicon the modern way: the 4 files you actually need (ico, 180px, 192+512), the exact HTML tags, maskable zones, and the cache that won't update.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-add-a-favicon/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Add a Favicon to Your Website (2026)","description":"Favicons look trivial and collect weird legacy advice. This guide covers the four files a modern site actually needs, the HTML to declare them, how ICO files pack multiple sizes, what maskable icons are and their 40% safe circle, how iOS and Android each consume icons, and why favicons refuse to update when you change them.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"How to Add a Favicon","item":"https://toolaspect.com/guides/how-to-add-a-favicon/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the minimum favicon setup for a website?","acceptedAnswer":{"@type":"Answer","text":"Two files cover the practical minimum: a favicon.ico in the site root (browsers request /favicon.ico automatically even with no HTML tag) and an apple-touch-icon.png at 180×180 for iOS home screens. The full modern set adds 16 and 32px PNGs, 192 and 512px manifest icons, a maskable variant, and site.webmanifest."}},
+{"@type":"Question","name":"Do I still need favicon.ico if I have PNG icons?","acceptedAnswer":{"@type":"Answer","text":"Yes. Browsers and some aggregators still request /favicon.ico by convention, bookmarks and history favor it, and it's the only format some older tooling understands. An ICO with 16, 32, and 48px frames costs a few kilobytes and closes the gaps PNGs leave."}},
+{"@type":"Question","name":"How do I make my favicon work on Android home screens?","acceptedAnswer":{"@type":"Answer","text":"Declare a webmanifest with 192×192 and 512×512 PNG icons and link it with rel=manifest. Android reads the manifest when someone adds your site to the home screen. For the shaped adaptive icons, add a maskable 512 whose artwork fills the square and keeps content inside the centered 40%-radius safe circle."}},
+{"@type":"Question","name":"Why is my favicon not updating?","acceptedAnswer":{"@type":"Answer","text":"Favicon caching is famously stubborn — separate from the page cache. Hard-refresh first; if the old icon persists, open the icon's URL directly and refresh it, or test in a private window. Keep stable icon URLs in production and accept a day of lag for returning visitors; cache-busting query strings are for development only."}},
+{"@type":"Question","name":"Should the favicon background be transparent?","acceptedAnswer":{"@type":"Answer","text":"Transparent works for the ICO and PNG favicons, which sit on browser chrome you don't control — usually fine. Apple-touch-icons should not be transparent: iOS composites them onto a black backdrop when no fill exists, which wrecks dark-on-transparent logos. Bake a solid background into the 180px icon and any maskable variant."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow-x:auto;font-size:.8rem;line-height:1.6;color:var(--text-secondary)}code{font-size:.9em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Add a Favicon to Your Website</h1>
+<div class="meta"><span>💡 30K+ searches/mo</span><span>⏱️ 8 min read</span></div>
+<p class="intro">The favicon is the smallest branding surface you own — 16 by 16 pixels in a browser tab — and the surrounding advice is bizarrely dated: snippets still circulating declare fourteen apple-touch sizes from 2012. Here's the current minimum viable setup, what each file actually does, how the ICO format fits three resolutions in one file, and the caching quirk that makes favicons the last thing on your site to update.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What a favicon set needs in 2026</h2>
+<p>Four pieces, then two optional ones:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>File</th><th>Size</th><th>Who uses it</th></tr></thead>
+<tbody>
+<tr><td><code>favicon.ico</code></td><td>16+32+48 frames in one file</td><td>Browser tabs, bookmarks, history, tools that request /favicon.ico by convention</td></tr>
+<tr><td><code>favicon-32x32.png</code> + <code>favicon-16x16.png</code></td><td>32×32, 16×16</td><td>Modern browsers picking a sharp PNG over the ICO frame</td></tr>
+<tr><td><code>apple-touch-icon.png</code></td><td>180×180</td><td>iOS and iPadOS home screens — a single size scales everywhere now</td></tr>
+<tr><td><code>android-chrome-192x192.png</code> + <code>android-chrome-512x512.png</code></td><td>192, 512</td><td>Android home screen shortcuts and PWA splash/install requirements</td></tr>
+<tr><td><code>maskable-icon-512x512.png</code> (optional)</td><td>512×512</td><td>Android adaptive icons with shaped masks</td></tr>
+<tr><td><code>site.webmanifest</code></td><td>—</td><td>Points Android/PWA at the right icons; also carries name and theme color</td></tr>
+</tbody>
+</table>
+</div>
+<p>The old checklist — apple-touch icons at 57, 60, 72, 76, 114, 120, 144, and 152px, plus a stack of Microsoft tile PNGs — can be deleted. Modern iOS downscales one 180px icon, and Windows tiles read from the manifest path.</p>
+<h2>The HTML: five lines, not fifteen</h2>
+<pre>&lt;link rel="icon" href="/favicon.ico" sizes="48x48"&gt;
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
+&lt;link rel="manifest" href="/site.webmanifest"&gt;</pre>
+<p>Root-relative paths matter: browsers request <code>/favicon.ico</code> from the site root regardless of what HTML says, so host the files there and the tag and the fallback agree. The <a href="/favicon-generator/">favicon generator</a> produces this exact set — ICO, PNGs, maskable, manifest, and the snippet — from one uploaded image, entirely in the browser.</p>
+<h2>How can one ICO hold three sizes?</h2>
+<p>An ICO is a container: a 6-byte file header, a 16-byte directory entry per image, then the image data. For 16, 32, and 48px frames that's 6 + 3×16 = <strong>54 bytes of overhead</strong>, and each directory entry stores its frame's byte length and offset — with 950, 2,100, and 3,400-byte PNG payloads inside, the frames begin at offsets 54, 1,004, and 3,104. Since Windows Vista, frames may be PNG-compressed rather than BMP, which is why every modern generator (and this one) packs PNGs — smaller and simpler than raw pixel data. The browser picks the nearest frame for the context: 16 for a tab, 32 for retina tabs, 48 for taskbar pins.</p>
+<h2>What about maskable icons?</h2>
+<p>Android lets the launcher crop your icon into a circle, squircle, or rounded square — you don't get to pick. A <em>maskable</em> icon is one drawn to survive that: artwork fills the whole square, and anything that must not be cut off lives inside a centered circle with <strong>radius 40% of the icon size</strong>. On a 512px icon that's a circle 410px across — roughly 80% of the width. Practically: your logo at about 60% scale, centered, on a full-bleed background color. Declare it in the manifest with <code>"purpose": "maskable"</code> alongside the regular 512, not instead of it.</p>
+<h2>iOS and Android, specifically</h2>
+<ul>
+<li><strong>iOS home screen:</strong> Safari uses apple-touch-icon at 180×180, rounds the corners itself, and ignores transparency — a transparent icon gets composited onto black. Bake in a background.</li>
+<li><strong>iOS tab / bookmark:</strong> falls back to favicon.ico like everyone else.</li>
+<li><strong>Android:</strong> reads site.webmanifest when the user adds to home screen; without a manifest you get an ugly screenshot-style tile. Include both 192 and 512 — the pair is what makes a site installable as a PWA.</li>
+<li><strong>Desktop PWA install:</strong> requires at least one icon of 192px or larger in the manifest; 512 satisfies splash screens.</li>
+</ul>
+<h2>Why won't my favicon update?</h2>
+<p>Favicon caching is its own genre of pain. The icon outlives the page cache, sometimes for days. In order of escalation: hard-refresh the tab (Ctrl/Cmd+Shift+R); open the icon URL directly and refresh it; test in a private window; wait. During development, add a query string (<code>/favicon.ico?v=3</code>) and strip it for production — stable URLs let returning visitors converge, and the lag is harmless for a logo that changes twice a decade.</p>
+<h2>Designing the mark itself</h2>
+<p>A favicon is a silhouette, not a logo. At 16×16 you have <strong>256 pixels</strong> to work with — 0.098% of a 512×512 master (262,144 pixels). One shape, one or two colors, no text. Test at actual size early: shrink your candidate to 16px and see if it's still <em>your</em> brand. High-contrast marks on simple backgrounds survive; gradients and thin strokes dissolve into tab-bar noise.</p>
+<div class="cta-box"><h3>Generate the whole set at once</h3><p style="color:#fff;opacity:.9">Upload one square image — get favicon.ico, PNGs, apple-touch-icon, maskable 512, webmanifest, and the HTML. All local, nothing uploads.</p><a href="/favicon-generator/">Favicon Generator →</a></div>
+<h2>The bottom line</h2>
+<p>Four files and five lines of HTML: multi-size ICO in the root, a 180px apple-touch-icon with a baked background, 192+512 PNGs declared in a manifest, and optionally a maskable 512 that keeps its content inside the 40% circle. Kill the fourteen-tag legacy snippet, design for 256 pixels, and accept that the tab icon updates on its own schedule. The <a href="/favicon-generator/">favicon generator</a> builds the complete bundle in your browser, the <a href="/meta-tag-generator/">meta tag generator</a> covers the rest of the head, and the <a href="/robots-txt-generator/">robots.txt generator</a> handles crawler rules — the three files every site ships to its root.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the minimum favicon setup for a website?</h3><p>Two files cover the practical minimum: a favicon.ico in the site root (browsers request /favicon.ico automatically even with no HTML tag) and an apple-touch-icon.png at 180×180 for iOS home screens. The full modern set adds 16 and 32px PNGs, 192 and 512px manifest icons, a maskable variant, and site.webmanifest.</p></div>
+<div class="faq-item"><h3>Do I still need favicon.ico if I have PNG icons?</h3><p>Yes. Browsers and some aggregators still request /favicon.ico by convention, bookmarks and history favor it, and it's the only format some older tooling understands. An ICO with 16, 32, and 48px frames costs a few kilobytes and closes the gaps PNGs leave.</p></div>
+<div class="faq-item"><h3>How do I make my favicon work on Android home screens?</h3><p>Declare a webmanifest with 192×192 and 512×512 PNG icons and link it with rel=manifest. Android reads the manifest when someone adds your site to the home screen. For the shaped adaptive icons, add a maskable 512 whose artwork fills the square and keeps content inside the centered 40%-radius safe circle.</p></div>
+<div class="faq-item"><h3>Why is my favicon not updating?</h3><p>Favicon caching is famously stubborn — separate from the page cache. Hard-refresh first; if the old icon persists, open the icon's URL directly and refresh it, or test in a private window. Keep stable icon URLs in production and accept a day of lag for returning visitors; cache-busting query strings are for development only.</p></div>
+<div class="faq-item"><h3>Should the favicon background be transparent?</h3><p>Transparent works for the ICO and PNG favicons, which sit on browser chrome you don't control — usually fine. Apple-touch-icons should not be transparent: iOS composites them onto a black backdrop when no fill exists, which wrecks dark-on-transparent logos. Bake a solid background into the 180px icon and any maskable variant.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/favicon-generator/">Favicon Generator</a>
+<a href="/meta-tag-generator/">Meta Tag Generator</a>
+<a href="/robots-txt-generator/">robots.txt Generator</a>
+<a href="/image-cropper/">Image Cropper</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -167,6 +167,8 @@
       tools: [
         { label: 'Image Tools', href: '/image-tools/' },
         { label: 'ImageWatermark', href: '/image-watermark/' },
+        { label: 'BackgroundRemover', href: '/background-remover/' },
+        { label: 'ImageUpscaler', href: '/image-upscaler/' },
         { label: 'ReverseImageSearch', href: '/reverse-image-search/' },
         { label: 'FaceRecognitionSearch', href: '/face-recognition-search/' },
         { label: 'PimeyesAlternative', href: '/pimeyes-alternative/' },
@@ -620,6 +622,9 @@
       dot: '#818cf8',
       tools: [
         { label: 'InvoiceGenerator', href: '/invoice-generator/' },
+        { label: 'WordToPdf', href: '/word-to-pdf/' },
+        { label: 'HtmlToPdf', href: '/html-to-pdf/' },
+        { label: 'SignPdf', href: '/sign-pdf/' },
         { label: 'QuoteEstimateBuilder', href: '/quote-estimate-builder/' },
         { label: 'ResumeBuilder', href: '/resume-builder/' },
         { label: 'CoverLetterGenerator', href: '/cover-letter-generator/' },

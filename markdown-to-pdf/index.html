@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown to PDF Converter — Free, No Upload | ToolAspect</title>
+<meta name="description" content="Convert markdown to PDF in one click, right in your browser. Letter/A4, real tables and code blocks, clickable links — no upload, no print dialog.">
+<link rel="canonical" href="https://toolaspect.com/markdown-to-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Markdown to PDF Converter — One Click, No Upload">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Turn markdown into a real PDF in your browser: headings, tables, code blocks, clickable links. No print dialog, no upload.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/markdown-to-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Markdown to PDF | Free Online Tool">
+<meta name="twitter:description" content="Markdown in, downloadable PDF out — one click, entirely local.">
+<meta name="keywords" content="markdown to pdf, md to pdf, convert markdown, markdown pdf converter, readme to pdf, markdown export">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown to PDF Converter","description":"Convert markdown to a downloadable PDF in one click, entirely in the browser. Letter, A4, or A5 pages; real headings, tables, code blocks, and clickable links; page numbers. No print dialog, no upload.","url":"https://toolaspect.com/markdown-to-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert a markdown file to PDF?","acceptedAnswer":{"@type":"Answer","text":"Paste or open the markdown on the left, pick a page size, and click Download PDF — one click, no print dialog, no upload. The document is rendered to a real PDF with headings, tables, code blocks, and clickable links. Alternatively, print-to-PDF from any markdown preview works but hands you margins, headers, and filenames chosen by the browser, not you."}},
+{"@type":"Question","name":"How many words fit on a PDF page?","acceptedAnswer":{"@type":"Answer","text":"At 11pt body text with 1-inch margins on Letter paper (a 6.5-inch text column), a page holds roughly 450-550 words of plain paragraphs — 600 words spills onto a second page. Structure eats space fast: a 187-word README with headings, lists, a code block, a table, and a blockquote runs 2 pages at 11pt but squeezes onto 1 page at 10pt."}},
+{"@type":"Question","name":"What's the difference between Letter and A4 paper?","acceptedAnswer":{"@type":"Answer","text":"Letter is 8.5 by 11 inches (612 by 792 points); A4 is 210 by 297 millimeters (595.28 by 841.89 points). A4 is 1.76 cm taller and 0.64 cm narrower. In practice: the same document that fills 2 Letter pages can fit 1 A4 page, because the extra height catches the overflow — worth switching if your last page holds only a few lines."}},
+{"@type":"Question","name":"Is my markdown uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The markdown parser and the PDF engine both ship with this page and run in your browser tab. Nothing is transmitted, which makes this safe for contracts, internal docs, notes, and anything you would not paste into someone else's converter."}},
+{"@type":"Question","name":"Does the PDF keep formatting like tables and links?","acceptedAnswer":{"@type":"Answer","text":"Yes — tables render with header rows and borders, code blocks get a shaded background box, blockquotes indent in gray italics, and links stay clickable in the PDF. Raw HTML inside your markdown is deliberately shown as text rather than rendered, so generated PDFs stay predictable. Images embedded as data URIs are included; remote image URLs become labeled links."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Markdown to PDF","item":"https://toolaspect.com/markdown-to-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:960px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-top:1.25rem;font-size:.95rem;line-height:1.65;color:var(--text)}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.two-pane{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.two-pane{grid-template-columns:1fr}}
+.pane-label{font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+textarea#mdInput{width:100%;min-height:430px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);padding:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55;box-sizing:border-box;resize:vertical}
+textarea#mdInput:focus{outline:none;border-color:var(--primary)}
+.preview-pane{background:#fff;color:#1f2328;border-radius:var(--radius);padding:1rem 1.2rem;min-height:430px;max-height:560px;overflow-y:auto;font-size:.85rem;line-height:1.6}
+.preview-pane h1{font-size:1.3em;color:#1f2328;border-bottom:1px solid #d8dee4;padding-bottom:.2em;margin:.6em 0 .4em}
+.preview-pane h2{font-size:1.15em;color:#1f2328;border-bottom:1px solid #d8dee4;padding-bottom:.2em;margin:.6em 0 .4em}
+.preview-pane h3{font-size:1em;color:#1f2328;margin:.6em 0 .3em}
+.preview-pane a{color:#0969da}
+.preview-pane code{background:#afb8c133;padding:.15em .35em;border-radius:4px;font-size:.88em;font-family:ui-monospace,Menlo,Consolas,monospace}
+.preview-pane pre{background:#f6f8fa;border-radius:8px;padding:.8em;overflow-x:auto}
+.preview-pane pre code{background:none;padding:0}
+.preview-pane blockquote{border-left:3px solid #d0d7de;color:#59636e;padding-left:.9em;margin:.5em 0}
+.preview-pane table{border-collapse:collapse;margin:.6em 0}
+.preview-pane th,.preview-pane td{border:1px solid #d8dee4;padding:.35em .6em;font-size:.92em}
+.preview-pane th{background:#f6f8fa}
+.preview-pane ul,.preview-pane ol{padding-left:1.4em}
+.input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-top:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr 1fr}}
+.input-group{display:flex;flex-direction:column;gap:.3rem}
+.input-group label{font-size:.78rem;color:var(--muted);font-weight:500}
+.input-group select,.input-group input{width:100%;padding:.55rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;box-sizing:border-box;cursor:pointer}
+.btn{display:inline-block;padding:.7rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--primary-hover)}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-line{font-size:.85rem;color:var(--muted);margin-top:.8rem}
+.status-line strong{color:var(--success)}
+.dropzone-inline{border:2px dashed var(--border);border-radius:var(--radius);padding:.8rem;text-align:center;color:var(--muted);cursor:pointer;font-size:.85rem;margin-bottom:.6rem}
+.dropzone-inline:hover{border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>📄 Markdown to PDF</h1>
+<p>Markdown in, a real PDF out — one click, no print dialog, no upload</p>
+</div>
+
+<div class="aio-answer">
+<strong>Quick answer:</strong> paste markdown (or drop a <code>.md</code> file), pick Letter, A4, or A5, and click Download PDF. The document renders locally into a real PDF — headings scaled properly, tables with borders, shaded code blocks, clickable links, page numbers — with no print-dialog detour and no server. Page math is exact: a 187-word README with lists, a table, and a code block runs <strong>2 pages at 11pt on Letter, 1 page at 10pt</strong>, and drops back to 1 page on A4, whose extra 1.76cm of height catches the overflow.
+</div>
+
+<div class="section-card">
+<h2>Convert</h2>
+<div class="two-pane">
+<div>
+<div class="pane-label"><span>Markdown</span><span id="wordCount">0 words</span></div>
+<div class="dropzone-inline" id="dz">Drop a .md file or click to open</div>
+<input type="file" id="fileInput" accept=".md,.markdown,.txt,text/markdown,text/plain" style="display:none">
+<textarea id="mdInput" spellcheck="false" placeholder="# Your markdown here…"></textarea>
+</div>
+<div>
+<div class="pane-label"><span>Live preview</span><span>renders as you type</span></div>
+<div class="preview-pane" id="preview"></div>
+</div>
+</div>
+<div class="input-grid">
+<div class="input-group"><label>Page size</label><select id="pageSize"><option value="LETTER" selected>Letter (US)</option><option value="A4">A4</option><option value="A5">A5</option></select></div>
+<div class="input-group"><label>Body size</label><select id="fontSize"><option value="10">10 pt</option><option value="11" selected>11 pt</option><option value="12">12 pt</option></select></div>
+<div class="input-group"><label>Margins</label><select id="margin"><option value="narrow">Narrow (0.5in)</option><option value="normal" selected>Normal (1in)</option><option value="wide">Wide (1.5in)</option></select></div>
+<div class="input-group"><label>PDF filename</label><input type="text" id="fileName" value="document.pdf"></div>
+</div>
+<p>
+<button class="btn" id="downloadBtn">⬇ Download PDF</button>
+<button class="btn ghost" id="checkBtn">Check page count</button>
+<button class="btn ghost" id="sampleBtn">Load sample</button>
+<button class="btn ghost" id="clearBtn">Clear</button>
+</p>
+<div class="status-line" id="status">Ready. Nothing you type leaves this page.</div>
+</div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/markdown-to-html/">Markdown to HTML</a></li><li style="margin:4px 0"><a href="/html-to-markdown/">HTML to Markdown</a></li><li style="margin:4px 0"><a href="/word-counter/">Word Counter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/convert-markdown-to-pdf/">Read the conversion guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>Paper Sizes, In Points</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Paper</th><th>Inches</th><th>Millimeters</th><th>PDF points</th><th>Text column at 1in margins</th></tr></thead>
+<tbody>
+<tr><td>Letter (US)</td><td>8.5 × 11</td><td>215.9 × 279.4</td><td>612 × 792</td><td>6.50 in (468 pt)</td></tr>
+<tr><td>A4</td><td>8.27 × 11.69</td><td>210 × 297</td><td>595.28 × 841.89</td><td>6.27 in (451.28 pt)</td></tr>
+<tr><td>A5</td><td>5.83 × 8.27</td><td>148 × 210</td><td>419.53 × 595.28</td><td>3.83 in (275.53 pt)</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem">A4 beats Letter by 49.89 points (1.76cm) of height and gives up 16.72 points (0.64cm) of width. Margin presets: narrow 0.5in (36pt), normal 1in (72pt), wide 1.5in (108pt) per side. There are 72 points in an inch — the unit every PDF engine lays out in.</p>
+</div>
+
+<div class="content-section">
+<h2>How the Converter Works</h2>
+<p>Three stages, all local. Your markdown is parsed by <strong>remarkable</strong> into HTML — the same engine the popular open-source md2pdf app uses. The HTML is walked into a structured document definition: headings become scaled text blocks, tables become bordered table layouts, code blocks become shaded boxes, links attach their URLs so they stay clickable in the PDF. Finally <strong>pdfmake</strong> paginates that definition — measuring every line against the real page width — and writes the PDF bytes.</p>
+<p>Because pagination is a real layout pass, the page count you see is the count you get, and the numbers below are verifiable: they were generated by this exact pipeline.</p>
+<h3>A worked example: one README, five settings</h3>
+<p>Load the sample — a 187-word project README with two heading levels, a bullet list, an ordered list, a fenced code block, a blockquote, a 3-column table, and a horizontal rule. On Letter at 11pt with 1-inch margins it renders to <strong>2 pages (29,562 bytes)</strong>. Same document:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Setting</th><th>Result</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Letter, 10pt, normal margins</td><td><strong>1 page</strong></td><td>Smaller type fits the table and code block on page 1</td></tr>
+<tr><td>Letter, 11pt, normal margins</td><td><strong>2 pages</strong> (default)</td><td>Block margins (headings +14pt, code +4/+10pt) push the table over</td></tr>
+<tr><td>Letter, 12pt, normal margins</td><td><strong>2 pages</strong></td><td>Worse overflow, more white on page 2</td></tr>
+<tr><td>A4, 11pt, normal margins</td><td><strong>1 page</strong></td><td>A4's extra 49.89pt of height catches the overflow lines</td></tr>
+<tr><td>Letter, 11pt, narrow margins</td><td><strong>1 page</strong></td><td>Reclaims 72pt of vertical space (0.5in top + bottom)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Three different knobs get you to one page — type size, paper, margins — and the cheapest depends on where the document is going. Emailing a contract? A4 at 11pt keeps readable type. Slide-deck handout? 10pt Letter. This is also the honest answer to "how many words per page": 11pt on Letter holds roughly <strong>450–550 words of plain paragraphs</strong> (600 words spills to 2 pages), but every heading, list, and code block eats lines that words would have used. Structure is the variable, not just word count.</p>
+<h3>What converts, and how</h3>
+<ul>
+<li><strong>Headings</strong> — h1 at 2× body size down to h4 at 1.12×, bold, with consistent spacing.</li>
+<li><strong>Inline styles</strong> — bold, italic, strikethrough, and inline code (tinted).</li>
+<li><strong>Links</strong> — clickable in the PDF, blue and underlined.</li>
+<li><strong>Lists</strong> — bulleted and numbered, nested, with tight spacing.</li>
+<li><strong>Tables</strong> — GFM tables with bold header row, shaded, bordered.</li>
+<li><strong>Code blocks</strong> — shaded box, monospaced-feeling layout, whitespace preserved.</li>
+<li><strong>Blockquotes</strong> — indented, gray, italic.</li>
+<li><strong>Images</strong> — data-URI images embed in the PDF; remote URLs become labeled links (no silent failures).</li>
+<li><strong>Raw HTML</strong> — intentionally rendered as text. Predictable PDFs beat clever ones.</li>
+</ul>
+<h3>Credits and licenses</h3>
+<p>The pipeline adapts <a href="https://github.com/realdennis/md2pdf" rel="noopener">realdennis/md2pdf</a> (MIT) — same markdown engine, same local-first philosophy — with the browser print dialog swapped for a direct <a href="https://github.com/bpampuch/pdfmake" rel="noopener">pdfmake</a> 0.2.20 (MIT) download. <a href="https://github.com/jonschlinkert/remarkable" rel="noopener">remarkable</a> 1.7.4 (MIT) parses. All three are vendored under <a href="/markdown-to-pdf/vendor/">/vendor/</a> with license texts, and nothing executes anywhere but your tab.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert a markdown file to PDF?</h3><p>Paste or open the markdown on the left, pick a page size, and click Download PDF — one click, no print dialog, no upload. The document is rendered to a real PDF with headings, tables, code blocks, and clickable links. Alternatively, print-to-PDF from any markdown preview works but hands you margins, headers, and filenames chosen by the browser, not you.</p></div>
+<div class="faq-item"><h3>How many words fit on a PDF page?</h3><p>At 11pt body text with 1-inch margins on Letter paper (a 6.5-inch text column), a page holds roughly 450-550 words of plain paragraphs — 600 words spills onto a second page. Structure eats space fast: a 187-word README with headings, lists, a code block, a table, and a blockquote runs 2 pages at 11pt but squeezes onto 1 page at 10pt.</p></div>
+<div class="faq-item"><h3>What's the difference between Letter and A4 paper?</h3><p>Letter is 8.5 by 11 inches (612 by 792 points); A4 is 210 by 297 millimeters (595.28 by 841.89 points). A4 is 1.76 cm taller and 0.64 cm narrower. In practice: the same document that fills 2 Letter pages can fit 1 A4 page, because the extra height catches the overflow — worth switching if your last page holds only a few lines.</p></div>
+<div class="faq-item"><h3>Is my markdown uploaded to a server?</h3><p>No. The markdown parser and the PDF engine both ship with this page and run in your browser tab. Nothing is transmitted, which makes this safe for contracts, internal docs, notes, and anything you would not paste into someone else's converter.</p></div>
+<div class="faq-item"><h3>Does the PDF keep formatting like tables and links?</h3><p>Yes — tables render with header rows and borders, code blocks get a shaded background box, blockquotes indent in gray italics, and links stay clickable in the PDF. Raw HTML inside your markdown is deliberately shown as text rather than rendered, so generated PDFs stay predictable. Images embedded as data URIs are included; remote image URLs become labeled links.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/markdown-to-html/">🌐 Markdown to HTML</a>
+<a href="/html-to-markdown/">↩️ HTML to Markdown</a>
+<a href="/word-counter/">🔢 Word Counter</a>
+<a href="/reading-time-calculator/">⏱️ Reading Time</a>
+<a href="/invoice-generator/">🧾 Invoice Generator</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script type="text/markdown" id="sampleMd">
+# Sample README
+
+A tiny project that turns markdown into a PDF entirely in your browser. Paste markdown, click Download PDF, and the file lands in your downloads folder with clickable links, real tables, and code blocks that keep their shape. Nothing is uploaded anywhere.
+
+## Install
+
+- Download the release
+- Unzip it anywhere
+- Double-click `index.html`
+
+### Requirements
+
+1. A modern browser
+2. About 3 MB of disk space
+
+## Usage
+
+Paste markdown on the left, click **Download PDF**, and the file lands in your
+downloads folder. Links like [toolaspect.com](https://toolaspect.com/) stay clickable,
+code blocks keep their shape, and nothing is uploaded anywhere.
+
+```js
+const doc = core.toDocDefinition(markdown, { pageSize: 'LETTER' });
+pdfMake.createPdf(doc).download('readme.pdf');
+```
+
+> Privacy note: the conversion runs locally. Your notes never leave the machine.
+
+## Comparison
+
+| Feature | Print dialog | This tool |
+| --- | :---: | :---: |
+| One click | no | yes |
+| Works offline | no | yes |
+| Exact page count | hidden | shown |
+
+---
+
+Made for people who write markdown and need a PDF **today**, not a build pipeline.
+</script>
+<script src="/markdown-to-pdf/vendor/remarkable.min.js"></script>
+<script src="/markdown-to-pdf/vendor/pdfmake.min.js"></script>
+<script src="/markdown-to-pdf/vendor/vfs_fonts.js"></script>
+<script>
+/*
+ * ToolAspect markdown-to-pdf core.
+ * Pipeline adapted from realdennis/md2pdf (MIT): markdown -> HTML via remarkable,
+ * then HTML -> pdfmake docDefinition -> one-click PDF download (no print dialog).
+ * Vendored deps: remarkable 1.7.4 (MIT), pdfmake 0.2.20 (MIT).
+ * Plain data transformation, no DOM — runs identically in the browser and Node.
+ */
+(function (root) {
+  'use strict';
+
+  var PAGE_SIZES = { LETTER: [612, 792], A4: [595.28, 841.89], A5: [419.53, 595.28] };
+  var MARGINS = { narrow: 36, normal: 72, wide: 108 };
+  var HEAD_SCALE = { 1: 2.0, 2: 1.55, 3: 1.3, 4: 1.12, 5: 1.0, 6: 1.0 };
+
+  function unesc(s) {
+    return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&#x27;/g, "'");
+  }
+
+  /* ---------- tiny parser over remarkable's HTML output ---------- */
+  function tagAt(html, i) {
+    var m = /^<(\w+)((?:[^>"']|"[^"]*"|'[^']*')*)>/.exec(html.slice(i));
+    return m ? { name: m[1].toLowerCase(), attrs: m[2], len: m[0].length } : null;
+  }
+  function findClose(html, contentStart, name) {
+    // close tag of the element whose content starts at `contentStart`; nested same-name elements counted
+    var depth = 0, i = contentStart, t;
+    while (i < html.length) {
+      if (html[i] === '<') {
+        if (html[i + 1] === '/') {
+          t = /^<\/(\w+)\s*>/.exec(html.slice(i));
+          if (t) {
+            var n = t[1].toLowerCase();
+            if (depth === 0 && n === name) return [i, i + t[0].length];
+            if (n === name) depth--;
+            i += t[0].length; continue;
+          }
+        } else {
+          t = tagAt(html, i);
+          if (t) {
+            if (t.name === name && html[i + t.len - 2] !== '/') depth++;
+            i += t.len; continue;
+          }
+        }
+      }
+      i++;
+    }
+    return [html.length, html.length];
+  }
+
+  function parseInline(s) {
+    var out = [];
+    function push(text, extra) {
+      if (text === '' || text == null) return;
+      out.push(extra ? Object.assign({ text: text }, extra) : { text: text });
+    }
+    var i = 0, buf = '', bold = 0, ital = 0, strike = 0, code = false, link = null;
+    function flush() {
+      if (!buf) return;
+      var o = {};
+      if (bold) o.bold = true;
+      if (ital) o.italics = true;
+      if (strike) o.decoration = 'lineThrough';
+      if (code) { o.color = '#953800'; o.background = '#eef1f4'; }
+      if (link) { o.link = link; o.color = '#1155cc'; o.decoration = o.decoration || 'underline'; }
+      push(unesc(buf), Object.keys(o).length ? o : null);
+      buf = '';
+    }
+    while (i < s.length) {
+      if (s[i] === '<') {
+        var m = /^<(\/?)(\w+)((?:[^>"']|"[^"]*"|'[^']*')*)>/.exec(s.slice(i));
+        if (m) {
+          var name = m[2].toLowerCase(), closing = m[1] === '/';
+          if (name === 'strong' || name === 'b') { flush(); bold += closing ? -1 : 1; }
+          else if (name === 'em' || name === 'i') { flush(); ital += closing ? -1 : 1; }
+          else if (name === 'del' || name === 's') { flush(); strike += closing ? -1 : 1; }
+          else if (name === 'code') { flush(); code = !closing; }
+          else if (name === 'a') {
+            flush();
+            if (!closing) { var href = /href="([^"]*)"/.exec(m[3]); link = href ? unesc(href[1]) : null; }
+            else link = null;
+          } else if (name === 'br') {
+            flush(); out.push({ text: '\n' });
+          } else if (name === 'img') {
+            flush();
+            var src = /src="([^"]*)"/.exec(m[3]), alt = /alt="([^"]*)"/.exec(m[3]);
+            if (src && src[1].slice(0, 5) === 'data:') out.push({ image: src[1], fit: [440, 300] });
+            else if (src && /^https?:/.test(src[1])) out.push({ text: (alt ? unesc(alt[1]) + ': ' : '') + src[1], color: '#888888', italics: true });
+            else if (alt) push(unesc(alt[1]), { italics: true });
+          }
+          i += m[0].length; continue;
+        }
+      }
+      buf += s[i]; i++;
+    }
+    flush();
+    if (!out.length) out.push({ text: '' });
+    return out.length === 1 ? out[0] : out;
+  }
+
+  function parseList(inner) {
+    var items = [], i = 0;
+    while (i < inner.length) {
+      if (inner[i] !== '<') { i++; continue; }
+      var t = tagAt(inner, i);
+      if (!t) { i++; continue; }
+      if (t.name !== 'li') { i += t.len; continue; }
+      var close = findClose(inner, i + t.len, 'li');
+      var liHtml = inner.slice(i + t.len, close[0]);
+      var nested = null, m = /<(ul|ol)>/.exec(liHtml), textHtml = liHtml;
+      if (m) {
+        textHtml = liHtml.slice(0, m.index);
+        var nClose = findClose(liHtml, m.index + m[0].length, m[1]);
+        nested = { list: parseList(liHtml.slice(m.index + m[0].length, nClose[0])) };
+      }
+      var flat = textHtml.replace(/<\/p>\s*<p>/g, '\n').replace(/<\/?p>/g, '').trim();
+      var item = [parseInline(flat)];
+      if (nested) item.push(nested);
+      items.push(item.length === 1 ? item[0] : item);
+      i = close[1];
+    }
+    return items;
+  }
+
+  function parseTable(inner) {
+    var rows = [], aligns = [];
+    var i = 0;
+    while (i < inner.length) {
+      if (inner[i] !== '<') { i++; continue; }
+      var t = tagAt(inner, i);
+      if (!t) { i++; continue; }
+      if (t.name === 'th' || t.name === 'td') {
+        var close = findClose(inner, i + t.len, t.name);
+        if (!rows.length) rows.push([]);
+        rows[rows.length - 1].push(parseInline(inner.slice(i + t.len, close[0])));
+        if (t.name === 'th') {
+          var a = /text-align:(\w+)/.exec(t.attrs);
+          aligns.push(a ? a[1] : 'left');
+        }
+        i = close[1]; continue;
+      }
+      if (t.name === 'tr') { rows.push([]); i += t.len; continue; }
+      i += t.len;
+    }
+    if (rows.length && rows[0].length === 0) rows.shift();
+    return { rows: rows, aligns: aligns };
+  }
+
+  function parseBlocks(html) {
+    var blocks = [], i = 0;
+    while (i < html.length) {
+      if (html[i] !== '<') { i++; continue; }
+      if (html.slice(i, i + 4) === '<!--') { i = html.indexOf('-->', i); i = i < 0 ? html.length : i + 3; continue; }
+      var t = tagAt(html, i);
+      if (!t) { i++; continue; }
+      var selfClose = t.attrs.slice(-1) === '/';
+      var close = selfClose ? [i + t.len, i + t.len] : findClose(html, i + t.len, t.name);
+      var inner = html.slice(i + t.len, close[0]);
+      if (/^h[1-6]$/.test(t.name)) blocks.push({ t: 'h', level: +t.name[1], text: parseInline(inner) });
+      else if (t.name === 'p') blocks.push({ t: 'p', text: parseInline(inner) });
+      else if (t.name === 'ul' || t.name === 'ol') blocks.push({ t: t.name, items: parseList(inner) });
+      else if (t.name === 'pre') {
+        var lang = /class="language-([\w#+.-]+)"/.exec(inner);
+        var codeM = /<code[^>]*>([\s\S]*?)<\/code>/.exec(inner);
+        blocks.push({ t: 'code', lang: lang ? lang[1] : '', text: codeM ? codeM[1] : inner });
+      }
+      else if (t.name === 'blockquote') blocks.push({ t: 'quote', blocks: parseBlocks(inner) });
+      else if (t.name === 'table') blocks.push({ t: 'table', table: parseTable(inner) });
+      else if (t.name === 'hr') blocks.push({ t: 'hr' });
+      else blocks.push({ t: 'p', text: parseInline(inner) });
+      i = close[1];
+    }
+    return blocks;
+  }
+
+  /* ---------- blocks -> pdfmake content ---------- */
+  function mapBlocks(blocks, fs, contentWidth) {
+    var out = [];
+    blocks.forEach(function (b) {
+      if (b.t === 'h') {
+        out.push({
+          text: b.text,
+          fontSize: +(fs * HEAD_SCALE[b.level]).toFixed(1),
+          bold: true,
+          margin: b.level <= 2 ? [0, b.level === 1 ? 0 : 14, 0, b.level === 1 ? 10 : 6] : [0, 10, 0, 4],
+          pageBreakBefore: b.level === 1 && out.length > 0 && false
+        });
+      } else if (b.t === 'p') {
+        out.push({ text: b.text, margin: [0, 0, 0, 8], alignment: 'left' });
+      } else if (b.t === 'ul' || b.t === 'ol') {
+        out.push(mapList(b, fs));
+      } else if (b.t === 'code') {
+        out.push({
+          table: {
+            widths: ['*'],
+            body: [[{
+              text: b.text.replace(/\n$/, ''),
+              fontSize: +(fs - 1).toFixed(1),
+              color: '#333333',
+              lineHeight: 1.15,
+              margin: [8, 6, 8, 6]
+            }]]
+          },
+          layout: {
+            fillColor: function () { return '#f6f8fa'; },
+            hLineColor: function () { return '#d0d7de'; },
+            vLineColor: function () { return '#d0d7de'; },
+            paddingLeft: function () { return 0; }, paddingRight: function () { return 0; },
+            paddingTop: function () { return 0; }, paddingBottom: function () { return 0; }
+          },
+          margin: [0, 4, 0, 10]
+        });
+      } else if (b.t === 'quote') {
+        var innerContent = mapBlocks(b.blocks, fs, contentWidth - 16);
+        innerContent.forEach(function (c) {
+          c.color = '#5f6368'; c.italics = c.italics !== undefined ? c.italics : true;
+          c.margin = [14, 0, 0, 6];
+        });
+        out = out.concat(innerContent);
+      } else if (b.t === 'table') {
+        var rows = b.table.rows;
+        if (!rows.length) return;
+        var widths = [];
+        for (var c = 0; c < rows[0].length; c++) widths.push('*');
+        var body = rows.map(function (r, ri) {
+          return r.map(function (cell) {
+            var o = typeof cell === 'object' && cell.text !== undefined ? JSON.parse(JSON.stringify(cell)) : { text: String(cell) };
+            if (ri === 0) o.bold = true;
+            o.fontSize = +(fs - 1).toFixed(1);
+            o.margin = [4, 4, 4, 4];
+            return o;
+          });
+        });
+        out.push({
+          table: { widths: widths, body: body },
+          layout: {
+            fillColor: function (ri) { return ri === 0 ? '#eef1f4' : null; },
+            hLineColor: function () { return '#c9ccd1'; },
+            vLineColor: function () { return '#c9ccd1'; }
+          },
+          margin: [0, 4, 0, 10]
+        });
+      } else if (b.t === 'hr') {
+        out.push({
+          canvas: [{ type: 'line', x1: 0, y1: 4, x2: contentWidth, y2: 4, lineWidth: 0.75, lineColor: '#bbbbbb' }],
+          margin: [0, 8, 0, 12]
+        });
+      }
+    });
+    return out;
+  }
+
+  function mapList(b, fs) {
+    var base = b.t === 'ol'
+      ? { ol: b.items.map(function (it) { return normItem(it, fs); }) }
+      : { ul: b.items.map(function (it) { return normItem(it, fs); }) };
+    base.margin = [0, 0, 0, 8];
+    return base;
+  }
+  function normItem(it, fs) {
+    if (Array.isArray(it)) {
+      // [text, {list:...}] -> stacked content
+      return { stack: it.map(function (part) {
+        return part.list ? normList(part.list, fs) : { text: part.text !== undefined ? part.text : part };
+      }) };
+    }
+    return it;
+  }
+  function normList(items, fs) {
+    return { ul: items.map(function (it) { return normItem(it, fs); }), margin: [12, 2, 0, 4] };
+  }
+
+  /* ---------- public API ---------- */
+  function renderHtml(markdown) {
+    var md = new root.Remarkable('default');
+    md.set({ html: false, linkify: true, breaks: false });
+    return md.render(markdown);
+  }
+
+  function toDocDefinition(markdown, opts) {
+    opts = opts || {};
+    var fs = opts.fontSize || 11;
+    var pageSize = opts.pageSize || 'LETTER';
+    var margin = MARGINS[opts.margin || 'normal'];
+    var size = PAGE_SIZES[pageSize];
+    var contentWidth = size[0] - 2 * margin;
+    var blocks = parseBlocks(renderHtml(markdown));
+    return {
+      pageSize: pageSize,
+      pageMargins: [margin, margin, margin, margin],
+      defaultStyle: { font: 'Roboto', fontSize: fs, lineHeight: 1.25, color: '#222222' },
+      footer: opts.pageNumbers !== false ? function (pg, pages) {
+        return { text: pg + ' / ' + pages, alignment: 'center', fontSize: 9, color: '#888888', margin: [0, 14, 0, 0] };
+      } : undefined,
+      info: { title: opts.title || 'Document', creator: 'ToolAspect Markdown to PDF', producer: 'pdfmake 0.2.20' },
+      content: mapBlocks(blocks, fs, contentWidth)
+    };
+  }
+
+  var api = {
+    PAGE_SIZES: PAGE_SIZES,
+    MARGINS: MARGINS,
+    HEAD_SCALE: HEAD_SCALE,
+    renderHtml: renderHtml,
+    parseBlocks: parseBlocks,
+    toDocDefinition: toDocDefinition
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.ToolAspectMd2Pdf = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+/* ---------- page wiring (ToolAspect) ---------- */
+(function(){
+  var mdInput = document.getElementById('mdInput');
+  var preview = document.getElementById('preview');
+  var status = document.getElementById('status');
+  var dz = document.getElementById('dz');
+  var fileInput = document.getElementById('fileInput');
+
+  var md = new Remarkable('default');
+  md.set({ html: false, linkify: true, breaks: false });
+
+  function wordCount(s){ var m = s.trim().match(/\S+/g); return m ? m.length : 0; }
+  function renderPreview(){
+    var v = mdInput.value;
+    document.getElementById('wordCount').textContent = wordCount(v) + ' words';
+    preview.innerHTML = v.trim() ? md.render(v) : '<p style="color:#8b949e">Preview appears here…</p>';
+  }
+  mdInput.addEventListener('input', renderPreview);
+
+  function opts(){
+    return {
+      pageSize: document.getElementById('pageSize').value,
+      fontSize: parseInt(document.getElementById('fontSize').value, 10),
+      margin: document.getElementById('margin').value,
+      title: (document.getElementById('fileName').value || 'document').replace(/\.pdf$/i, '')
+    };
+  }
+  function setMsg(html){ status.innerHTML = html; }
+
+  function buildPdf(){
+    if (!mdInput.value.trim()) { setMsg('Type or paste some markdown first.'); return null; }
+    return window.pdfMake.createPdf(window.ToolAspectMd2Pdf.toDocDefinition(mdInput.value, opts()));
+  }
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    var pdf = buildPdf();
+    if (!pdf) return;
+    var name = (document.getElementById('fileName').value || 'document.pdf');
+    if (!/\.pdf$/i.test(name)) name += '.pdf';
+    try {
+      pdf.download(name);
+      setMsg('Downloaded <strong>' + name + '</strong>. Check your downloads folder.');
+    } catch (e) {
+      setMsg('PDF generation failed: ' + (e && e.message ? e.message : e));
+    }
+  });
+
+  document.getElementById('checkBtn').addEventListener('click', function(){
+    if (!mdInput.value.trim()) { setMsg('Type or paste some markdown first.'); return; }
+    setMsg('Measuring…');
+    try {
+      var doc = window.pdfMake.createPdf(window.ToolAspectMd2Pdf.toDocDefinition(mdInput.value, opts()));
+      doc.getBlob(function(blob){
+        blob.arrayBuffer().then(function(buf){
+          var bytes = new Uint8Array(buf), s = '', chunk = 8192;
+          for (var i = 0; i < bytes.length; i += chunk) s += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, bytes.length)));
+          var pages = (s.match(/\/Type\s*\/Page[^s]/g) || []).length;
+          setMsg('<strong>' + pages + ' page' + (pages > 1 ? 's' : '') + '</strong>, ' + (blob.size / 1024).toFixed(1) + ' KB at current settings.');
+        });
+      });
+    } catch (e) {
+      setMsg('Could not measure: ' + (e && e.message ? e.message : e));
+    }
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', function(){
+    mdInput.value = document.getElementById('sampleMd').textContent.replace(/^\n/, '');
+    renderPreview();
+    setMsg('Sample loaded — 187 words, 2 pages at the default settings (Letter, 11pt, 1in margins).');
+  });
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    mdInput.value = ''; renderPreview(); setMsg('Cleared.');
+  });
+
+  dz.addEventListener('click', function(){ fileInput.click(); });
+  ['dragover','drop'].forEach(function(ev){
+    dz.addEventListener(ev, function(e){ e.preventDefault(); if (ev === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  });
+  mdInput.addEventListener('dragover', function(e){ e.preventDefault(); });
+  mdInput.addEventListener('drop', function(e){ e.preventDefault(); if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', function(){ if (fileInput.files[0]) readFile(fileInput.files[0]); });
+  function readFile(f){
+    var r = new FileReader();
+    r.onload = function(){
+      mdInput.value = String(r.result);
+      document.getElementById('fileName').value = f.name.replace(/\.(md|markdown|txt)$/i, '') + '.pdf';
+      renderPreview();
+      setMsg('Loaded ' + f.name + ' — ' + wordCount(mdInput.value) + ' words.');
+    };
+    r.readAsText(f);
+  }
+
+  // preload the sample so the page demonstrates itself
+  mdInput.value = document.getElementById('sampleMd').textContent.replace(/^\n/, '');
+  renderPreview();
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

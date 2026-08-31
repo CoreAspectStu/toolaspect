@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare PDFs — Side-by-Side PDF Diff | ToolAspect</title>
+<meta name="description" content="Compare two PDF files free in your browser. Word-level diff on every page pair, side-by-side synced view, added and removed text highlighted. No uploads.">
+<link rel="canonical" href="https://toolaspect.com/compare-pdf/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:title" content="Compare PDFs — Side-by-Side PDF Diff">
+<meta property="og:image" content="https://toolaspect.com/shared/og-image.png">
+<meta property="og:description" content="Diff two PDFs page by page: extracted text compared word-level, additions and deletions highlighted side by side. Runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/compare-pdf/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compare PDFs | Free Online Tool">
+<meta name="twitter:description" content="Side-by-side PDF diff with word-level highlights. Nothing uploaded.">
+<meta name="keywords" content="compare pdf, compare two pdf files, pdf diff, pdf comparison tool, diff pdf files, compare pdf versions">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Compare PDFs","description":"Free browser-based PDF comparison tool. Load two PDFs; every page pair's text is extracted and diffed word by word, shown side by side with additions and deletions highlighted, plus a change summary. Runs on pdf.js and jsdiff entirely in the browser.","url":"https://toolaspect.com/compare-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How can I compare two PDF files?","acceptedAnswer":{"@type":"Answer","text":"Load both files into a PDF diff tool. This one extracts each page's text with pdf.js, compares the pages pairwise word by word, and shows the two versions side by side with removed text struck out on the left and added text highlighted on the right, plus a count of changes per page. Everything runs in your browser, so the documents are never uploaded."}},
+{"@type":"Question","name":"Will it catch formatting-only changes?","acceptedAnswer":{"@type":"Answer","text":"No — this is a text comparison. If version two changes a font, recolors a heading, swaps an image, or nudges a margin without touching the words, the diff shows nothing. That's the honest limit of text-based diffing; it's tuned for contracts, policies, statements, and documentation, where the words are what matter."}},
+{"@type":"Question","name":"What happens with scanned PDFs?","acceptedAnswer":{"@type":"Answer","text":"A scan is a picture of text, and there's often nothing to extract — pages come back with no text layer and the tool says so per page. Run the scans through OCR first if you need to diff them; once a file carries extractable text, the comparison works normally."}},
+{"@type":"Question","name":"How is this different from a text diff checker?","acceptedAnswer":{"@type":"Answer","text":"A text diff tool compares what you paste in; this one walks the PDF itself — page structure, page counts, and the text inside each page — so you see changes page by page and notice structural moves like inserted or dropped pages. If you already have the raw text out of both files, our Diff Checker is the lighter tool for the job."}},
+{"@type":"Question","name":"Why do pages pair up by number?","acceptedAnswer":{"@type":"Answer","text":"Text-based page matching has no anchor beyond position: page 5 of the old file pairs with page 5 of the new one. When one version inserts a page early, later pairs shift and show as large delete-plus-add blocks — the summary's 'pages only in one file' counters are the tell that a structural change happened near the top."}},
+{"@type":"Question","name":"Does my file get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Both files are parsed with pdf.js and compared with jsdiff inside the page; it works offline once loaded. Nothing is sent to a server and nothing is stored."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Compare PDFs","item":"https://toolaspect.com/compare-pdf/"}]}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px}
+.page-container{max-width:980px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.aio-answer{background:var(--surface);border-left:3px solid var(--primary);border-radius:0 var(--radius) var(--radius) 0;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.95rem;line-height:1.7}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.pick-grid{grid-template-columns:1fr}}
+.pick{border:1px dashed var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.pick .fname{font-size:.85rem;color:var(--primary-hover);margin-top:.5rem;word-break:break-all;min-height:1.2em}
+.file-label{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.15rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;cursor:pointer}
+.file-label input{display:none}
+.opt-row{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;align-items:center;font-size:.85rem;color:var(--muted)}
+.opt-row select{padding:.55rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem;cursor:pointer}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.btn{padding:.65rem 1.3rem;border-radius:var(--radius);border:none;background:var(--primary);color:#fff;font-size:.92rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.status-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;font-size:.88rem;color:var(--muted);margin-top:1rem}
+.status-box.err{border-color:var(--danger);color:var(--danger)}
+.status-box.ok{border-color:var(--success);color:var(--success)}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-top:1.5rem}
+.summary-card h3{font-size:1rem;font-weight:600;margin-bottom:.75rem}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem}
+.stat{background:var(--bg);border-radius:var(--radius);padding:.8rem;text-align:center}
+.stat .n{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.stat .l{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+.stat.rem .n{color:var(--danger)}
+.stat.add .n{color:var(--success)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:1.5rem;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+@media(max-width:640px){.pair{grid-template-columns:1fr}}
+.pane{padding:0;min-width:0}
+.pane .phead{background:var(--bg);padding:.45rem .8rem;font-size:.75rem;color:var(--muted);border-bottom:1px solid var(--border)}
+.pane:first-child .phead{border-right:1px solid var(--border)}
+.pane .ptext{padding:.8rem;font-size:.82rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;color:var(--text);max-height:420px;overflow-y:auto}
+.pane .notext{color:var(--muted);font-style:italic}
+del.d{background:rgba(239,68,68,.22);color:#fca5a5;text-decoration:line-through;border-radius:3px;padding:0 1px}
+ins.a{background:rgba(34,197,94,.2);color:#86efac;text-decoration:none;border-radius:3px;padding:0 1px}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem}
+.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg)}
+.data-table td.yes{color:var(--success)}
+.data-table td.no{color:var(--danger)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem}
+</style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>🔍 Compare PDFs</h1>
+<p>Two files in, every changed word highlighted — side by side, page by page</p>
+</div>
+
+<div class="aio-answer">To compare two PDF files, load both below and hit Compare. The tool extracts each page's text with pdf.js, pairs the pages up, and diffs them word by word with jsdiff: removed text struck out on the left, added text highlighted on the right, a change summary on top (words removed, words added, pages only in one file). A contract page where the fee changed from $49.00 to $59.00, the rate from 1.5% to 1.75%, and Friday support became Saturday support shows as 3 removed and 11 added words — 50% churn on a 28-word page. Text-only by design: formatting and image changes don't show, scanned pages without a text layer are flagged. Free, no uploads.</div>
+
+<div class="section-card">
+<h2>Files</h2>
+<div class="pick-grid">
+<div class="pick"><label class="file-label">📄 Original (left)<input type="file" id="fileA" accept=".pdf,application/pdf"></label><div class="fname" id="fnameA"></div></div>
+<div class="pick"><label class="file-label">📄 Revised (right)<input type="file" id="fileB" accept=".pdf,application/pdf"></label><div class="fname" id="fnameB"></div></div>
+</div>
+<div class="opt-row">
+<span>Granularity
+<select id="mode"><option value="words" selected>Words</option><option value="lines">Lines</option></select>
+</span>
+</div>
+<div class="btn-row">
+<button class="btn" id="btnCompare" disabled>🔍 Compare PDFs</button>
+<button class="btn ghost" id="btnReset">Clear</button>
+</div>
+<div class="status-box" id="status">Open both PDFs to begin. Files never leave your browser.</div>
+</div>
+
+<div id="output"></div>
+
+<div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/diff-checker/">Diff Checker</a></li><li style="margin:4px 0"><a href="/json-diff/">JSON Diff</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/how-to-compare-two-pdf-files/">Read the PDF comparison guide</a> · <a href="/all-tools/">Browse all tools</a></p></div>
+<div class="ad-slot">Advertisement</div>
+
+<div class="section-card">
+<h2>What a Text Diff Catches — and What It Doesn't</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Change</th><th>Shows in the diff?</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Changed words, numbers, dates</td><td class="yes">Yes</td><td>Highlighted word-level, per page pair</td></tr>
+<tr><td>Inserted or deleted sentences</td><td class="yes">Yes</td><td>Added text on the right, removed on the left</td></tr>
+<tr><td>Inserted or dropped whole pages</td><td class="yes">Yes</td><td>Counted in "pages only in one file"; later pairs shift</td></tr>
+<tr><td>Formatting-only edits (font, color, spacing)</td><td class="no">No</td><td>Text-based comparison; the words didn't change</td></tr>
+<tr><td>Image or chart changes</td><td class="no">No</td><td>Images carry no text to diff</td></tr>
+<tr><td>Scanned pages without a text layer</td><td class="no">Flagged</td><td>Page reports "no extractable text"; run OCR first</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="content-section">
+<h2>How the PDF Comparison Works</h2>
+<p>Lawyers redline, developers diff, and everyone else squints. This tool brings the diff to PDFs: it's the same word-level comparison our text Diff Checker runs, but fed by a PDF engine that walks page structure instead of a paste box.</p>
+<h3>The pipeline</h3>
+<p>Two files in → pdf.js extracts the text content of every page in each (that's the same text layer copy and search use) → pages pair up by number, page 1 against page 1 → jsdiff compares each pair word by word (or line by line, if you switch granularity) → the left pane renders the original with deletions struck out, the right pane the revision with insertions highlighted → the summary counts words removed, words added, and pages that exist in only one file. Nothing renders as images and nothing is uploaded; the whole pipeline is JavaScript in the page.</p>
+<h3>How to use it</h3>
+<ul>
+<li>Open the original on the left, the revision on the right.</li>
+<li>Compare. Page pairs stack vertically, aligned side by side, so scrolling keeps both versions of a page together.</li>
+<li>Watch the summary first: a big "pages only in one file" number means a structural insert or delete shifted the pairing — read the big red/green blocks as "everything after this point moved," not as hundreds of edits.</li>
+<li>Switch to line granularity when a dense document's word diff gets noisy.</li>
+</ul>
+<h3>A worked example</h3>
+<p>An old and a new service-terms page. The old text: "The quarterly service fee is $49.00 per month, billed on the first business day. Late payments accrue interest at 1.5% per month. Support is available Monday through Friday." The new text changes the fee to $59.00, the rate to 1.75%, and the support window to "Saturday, and phone hours start at 8 a.m."</p>
+<p>The word diff finds exactly three removals — <del style="text-decoration:line-through">49</del>, <del style="text-decoration:line-through">5</del>, <del style="text-decoration:line-through">Friday</del> — and four insertions covering the new fee digits (59), the rate digits (75), and the extended support sentence. Counted as words: 3 removed, 11 added, against 28 words on the original page — a 50% churn figure the summary reports directly. The untouched runs ("...per month, billed on the first business day...") stay plain, so the eye lands only on what changed. That's the whole job: two versions in, every number that moved, out.</p>
+</div>
+
+<div class="content-section">
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How can I compare two PDF files?</h3><p>Load both files into a PDF diff tool. This one extracts each page's text with pdf.js, compares the pages pairwise word by word, and shows the two versions side by side with removed text struck out on the left and added text highlighted on the right, plus a count of changes per page. Everything runs in your browser, so the documents are never uploaded.</p></div>
+<div class="faq-item"><h3>Will it catch formatting-only changes?</h3><p>No — this is a text comparison. If version two changes a font, recolors a heading, swaps an image, or nudges a margin without touching the words, the diff shows nothing. That's the honest limit of text-based diffing; it's tuned for contracts, policies, statements, and documentation, where the words are what matter.</p></div>
+<div class="faq-item"><h3>What happens with scanned PDFs?</h3><p>A scan is a picture of text, and there's often nothing to extract — pages come back with no text layer and the tool says so per page. Run the scans through OCR first if you need to diff them; once a file carries extractable text, the comparison works normally.</p></div>
+<div class="faq-item"><h3>How is this different from a text diff checker?</h3><p>A text diff tool compares what you paste in; this one walks the PDF itself — page structure, page counts, and the text inside each page — so you see changes page by page and notice structural moves like inserted or dropped pages. If you already have the raw text out of both files, our Diff Checker is the lighter tool for the job.</p></div>
+<div class="faq-item"><h3>Why do pages pair up by number?</h3><p>Text-based page matching has no anchor beyond position: page 5 of the old file pairs with page 5 of the new one. When one version inserts a page early, later pairs shift and show as large delete-plus-add blocks — the summary's "pages only in one file" counters are the tell that a structural change happened near the top.</p></div>
+<div class="faq-item"><h3>Does my file get uploaded anywhere?</h3><p>No. Both files are parsed with pdf.js and compared with jsdiff inside the page; it works offline once loaded. Nothing is sent to a server and nothing is stored.</p></div>
+</div>
+
+<div class="related-tools">
+<h2>Related Tools</h2>
+<div class="related-links">
+<a href="/diff-checker/">📝 Diff Checker</a>
+<a href="/json-diff/">🧬 JSON Diff</a>
+<a href="/redact-pdf/">🔏 Redact PDF</a>
+<a href="/organize-pdf/">🗂️ Organize PDF</a>
+<a href="/pdf-annotate/">✏️ PDF Annotate</a>
+</div>
+</div>
+
+<div class="ad-slot">Advertisement</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.js"></script>
+<script>
+/* ===== Compare PDFs engine: pdf.js getTextContent per page + jsdiff ===== */
+var PDFJS_WORKER='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+var el=function(id){return document.getElementById(id)};
+function setStatus(msg,cls){var s=el('status');s.textContent=msg;s.className='status-box'+(cls?' '+cls:'')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+var docs={A:null,B:null};
+function readFile(file,slot,label){
+  var fr=new FileReader();
+  fr.onload=function(){
+    pdfjsLib.getDocument({data:new Uint8Array(fr.result)}).promise.then(function(doc){
+      docs[slot]=doc;
+      el(label).textContent=file.name+' — '+doc.numPages+' page'+(doc.numPages>1?'s':'');
+      updateBtn();
+    }).catch(function(err){
+      docs[slot]=null;el(label).textContent='';
+      setStatus('Could not open '+file.name+': '+(err&&err.message||err),'err');
+      updateBtn();
+    });
+  };
+  fr.readAsArrayBuffer(file);
+}
+function updateBtn(){
+  el('btnCompare').disabled=!(docs.A&&docs.B);
+  if(docs.A&&docs.B)setStatus('Both files loaded. Hit Compare.','ok');
+}
+el('fileA').addEventListener('change',function(e){if(e.target.files[0])readFile(e.target.files[0],'A','fnameA')});
+el('fileB').addEventListener('change',function(e){if(e.target.files[0])readFile(e.target.files[0],'B','fnameB')});
+el('btnReset').addEventListener('click',function(){
+  docs={A:null,B:null};
+  el('fileA').value='';el('fileB').value='';
+  el('fnameA').textContent='';el('fnameB').textContent='';
+  el('output').innerHTML='';
+  el('btnCompare').disabled=true;
+  setStatus('Open both PDFs to begin. Files never leave your browser.');
+});
+function extractPages(doc){
+  var out=[];
+  var chain=Promise.resolve();
+  for(var i=1;i<=doc.numPages;i++){
+    (function(n){chain=chain.then(function(){
+      return doc.getPage(n).then(function(page){
+        return page.getTextContent().then(function(tc){
+          var text='';
+          (tc.items||[]).forEach(function(it){text+=it.str+(it.hasEOL?'\n':'')});
+          out.push(text.replace(/[ \t]+/g,' ').trim());
+        });
+      });
+    })})(i);
+  }
+  return chain.then(function(){return out});
+}
+function wc(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).length:0}
+el('btnCompare').addEventListener('click',function(){
+  el('btnCompare').disabled=true;
+  setStatus('Extracting text …');
+  var pagesA,pagesB;
+  extractPages(docs.A).then(function(p){pagesA=p;return extractPages(docs.B)}).then(function(p){
+    pagesB=p;
+    setStatus('Diffing '+Math.max(pagesA.length,pagesB.length)+' page pairs …');
+    setTimeout(function(){runDiff(pagesA,pagesB)},30);
+  }).catch(function(err){setStatus('Extraction failed: '+(err&&err.message||err),'err');el('btnCompare').disabled=false});
+});
+function runDiff(pagesA,pagesB){
+  var mode=el('mode').value;
+  var differ=mode==='lines'?Diff.diffLines:Diff.diffWords;
+  var totalRem=0,totalAdd=0,onlyA=0,onlyB=0,emptyA=0,emptyB=0,totalWordsA=0;
+  pagesA.forEach(function(t){totalWordsA+=wc(t)});
+  var out=el('output');
+  out.innerHTML='';
+  var pairs=Math.max(pagesA.length,pagesB.length);
+  for(var i=0;i<pairs;i++){
+    var ta=pagesA[i],tb=pagesB[i];
+    var hasA=typeof ta==='string',hasB=typeof tb==='string';
+    var pair=document.createElement('div');
+    pair.className='pair';
+    var leftHtml,rightHtml,lHead,rHead;
+    if(hasA&&!hasB){
+      onlyA++;
+      lHead='Original — Page '+(i+1)+' <span style="color:var(--danger)">(removed in revision)</span>';
+      rHead='Revision — Page '+(i+1)+' <span style="color:var(--muted)">(does not exist)</span>';
+      leftHtml='<del class="d">'+esc(ta)+'</del>';
+      rightHtml='<span class="notext">—</span>';
+      totalRem+=wc(ta);
+    }else if(hasB&&!hasA){
+      onlyB++;
+      lHead='Original — Page '+(i+1)+' <span style="color:var(--muted)">(does not exist)</span>';
+      rHead='Revision — Page '+(i+1)+' <span style="color:var(--success)">(new page)</span>';
+      leftHtml='<span class="notext">—</span>';
+      rightHtml='<ins class="a">'+esc(tb)+'</ins>';
+      totalAdd+=wc(tb);
+    }else{
+      if(!ta)emptyA++;
+      if(!tb)emptyB++;
+      lHead='Original — Page '+(i+1)+(ta?'':' <span style="color:var(--muted)">(no extractable text)</span>');
+      rHead='Revision — Page '+(i+1)+(tb?'':' <span style="color:var(--muted)">(no extractable text)</span>');
+      var parts=differ(ta,tb);
+      var lh='',rh='';
+      parts.forEach(function(p){
+        if(p.added){rh+='<ins class="a">'+esc(p.value)+'</ins>';totalAdd+=wc(p.value)}
+        else if(p.removed){lh+='<del class="d">'+esc(p.value)+'</del>';totalRem+=wc(p.value)}
+        else{lh+=esc(p.value);rh+=esc(p.value)}
+      });
+      leftHtml=lh||'<span class="notext">(empty)</span>';
+      rightHtml=rh||'<span class="notext">(empty)</span>';
+    }
+    pair.innerHTML='<div class="pane"><div class="phead">'+lHead+'</div><div class="ptext">'+leftHtml+'</div></div>'
+      +'<div class="pane"><div class="phead">'+rHead+'</div><div class="ptext">'+rightHtml+'</div></div>';
+    out.appendChild(pair);
+  }
+  var churn=totalWordsA?Math.round((totalRem+totalAdd)/totalWordsA*100):0;
+  var summary=document.createElement('div');
+  summary.className='summary-card';
+  summary.innerHTML='<h3>Comparison summary</h3><div class="stat-grid">'
+    +'<div class="stat rem"><div class="n">'+totalRem+'</div><div class="l">words removed</div></div>'
+    +'<div class="stat add"><div class="n">'+totalAdd+'</div><div class="l">words added</div></div>'
+    +'<div class="stat"><div class="n">'+churn+'%</div><div class="l">of original '+totalWordsA+' words changed</div></div>'
+    +'<div class="stat"><div class="n">'+onlyA+'</div><div class="l">pages only in original</div></div>'
+    +'<div class="stat"><div class="n">'+onlyB+'</div><div class="l">pages only in revision</div></div>'
+    +'</div>';
+  out.insertBefore(summary,out.firstChild);
+  var notes=[];
+  if(emptyA||emptyB)notes.push((emptyA+emptyB)+' page(s) had no extractable text (likely scans — OCR first to diff them)');
+  if(onlyA||onlyB)notes.push('page counts differ ('+pagesA.length+' vs '+pagesB.length+') — pairs after a structural insert/delete will shift');
+  setStatus('Done. '+(notes.length?notes.join('; ')+'.':'No structural notes.'),'ok');
+  el('btnCompare').disabled=false;
+}
+</script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

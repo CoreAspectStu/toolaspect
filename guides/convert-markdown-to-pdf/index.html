@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markdown to PDF: 5 Ways Compared | ToolAspect</title>
+<meta name="description" content="Five ways to turn markdown into a PDF, ranked — browser tools, pandoc, VS Code, print dialog, CI — plus words-per-page math, Letter vs A4.">
+<link rel="canonical" href="https://toolaspect.com/guides/convert-markdown-to-pdf/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Markdown to PDF: Five Ways Compared","description":"Markdown is how documentation gets written; PDF is how it gets read by everyone else. This guide compares the five practical conversion routes — browser tools, pandoc, VS Code extensions, print-to-PDF, and CI pipelines — explains what each preserves (tables, links, code highlighting), and works the real pagination math: how many words fit on a Letter or A4 page, and why a 187-word README can run two pages.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Markdown to PDF: Five Ways","item":"https://toolaspect.com/guides/convert-markdown-to-pdf/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert markdown to PDF without installing anything?","acceptedAnswer":{"@type":"Answer","text":"Use a browser-based converter that runs locally — paste markdown, click download. The good ones parse with a real markdown engine and generate the PDF in the tab, so nothing uploads. The browser's own print-to-PDF works too: preview the markdown anywhere, hit print, choose Save as PDF — at the cost of browser-chosen margins, headers, and footers."}},
+{"@type":"Question","name":"How many words fit on a page of PDF?","acceptedAnswer":{"@type":"Answer","text":"At 11pt with 1-inch margins on Letter (a 6.5-inch column), roughly 450-550 words of plain paragraphs — 600 words spills to a second page. Structure changes everything: a 187-word README with headings, lists, a code block, a table, and a blockquote takes 2 pages at 11pt, because each block adds spacing and the table alone claims a third of a page."}},
+{"@type":"Question","name":"Is pandoc still the best markdown-to-PDF tool?","acceptedAnswer":{"@type":"Answer","text":"For repeated, automated, or bulk conversion, yes — pandoc with a LaTeX engine produces the most polished output and handles citations, cross-references, and templates. It needs a TeX distribution installed (a large dependency) and tuning templates takes YAML patience. For one-off documents, a browser tool is faster than installing a TeX toolchain."}},
+{"@type":"Question","name":"Why does my PDF cut tables in half across pages?","acceptedAnswer":{"@type":"Answer","text":"Because the layout engine broke the table at a page boundary. Real converters handle this by splitting tables at row boundaries with a repeated header row; print-to-PDF often doesn't, and screenshots-in-a-doc approaches never do. Keep wide tables narrow (fewer columns), or set the document to landscape if the table is the point."}},
+{"@type":"Question","name":"Do markdown links stay clickable in a PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes, in any converter that maps links to PDF annotations — browser-based pdfmake pipelines, pandoc, and Chrome's print-to-PDF all do. The link text keeps its position and the URL rides along as metadata. Check the output once: some minimal converters render links as styled text only."}}
+]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{font-size:.9em}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Markdown to PDF: Five Ways Compared</h1>
+<div class="meta"><span>💡 60K+ searches/mo</span><span>⏱️ 8 min read</span></div>
+<p class="intro">Markdown is what the document started as; PDF is what the client, the professor, or the compliance system needs it to become. Between those two states sit five practical routes, and picking the wrong one costs you either an afternoon of LaTeX setup or a PDF with browser-chosen headers on every page. Here's the comparison, plus the pagination math that answers "how many pages will mine be?" before you convert.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>The five routes, ranked</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Route</th><th>Setup</th><th>Quality</th><th>Best for</th></tr></thead>
+<tbody>
+<tr><td>Browser converter (local)</td><td>None</td><td>Good — real tables, code blocks, clickable links</td><td>One-off documents, private material</td></tr>
+<tr><td>Browser print-to-PDF</td><td>None</td><td>Fair — depends on the preview page's CSS</td><td>Quick and dirty, when style doesn't matter</td></tr>
+<tr><td>pandoc + LaTeX</td><td>Heavy (TeX install)</td><td>Excellent — typography, TOC, citations</td><td>Repeated/automated conversion, academic docs</td></tr>
+<tr><td>VS Code extension</td><td>Light</td><td>Good</td><td>Developers already living in the editor</td></tr>
+<tr><td>CI pipeline (pandoc in Docker)</td><td>Once</td><td>Excellent, consistent</td><td>Docs shipped from a repo on every release</td></tr>
+</tbody>
+</table>
+</div>
+<p>The pattern: setup cost buys consistency. If you convert documents once a quarter, a browser tool like our <a href="/markdown-to-pdf/">markdown to PDF converter</a> — which parses and paginates entirely in the tab, nothing uploaded — is the whole answer. If you convert weekly, invest the afternoon in pandoc.</p>
+<h2>What a converter must preserve</h2>
+<p>Markdown looks like plain text until it isn't. The features that separate real converters from naive ones:</p>
+<ul>
+<li><strong>Tables</strong> — GFM pipe tables need bordered layouts with a header row, split cleanly at page boundaries.</li>
+<li><strong>Code blocks</strong> — monospace layout in a shaded box, whitespace intact, no reflowed lines.</li>
+<li><strong>Links</strong> — clickable annotations, not just blue text.</li>
+<li><strong>Lists</strong> — nested bullets and numbered lists with tight spacing.</li>
+<li><strong>Headings hierarchy</strong> — h1 through h6 visibly scaled, since headings are how PDF readers navigate.</li>
+</ul>
+<p>Print-to-PDF inherits whatever the preview page's CSS does, which is why it's the least predictable: the same README looks like a memo in one previewer and a ransom note in another.</p>
+<h2>How many pages will my document be?</h2>
+<p>Pagination is measurable, so let's measure it. A real pipeline — the one behind the <a href="/markdown-to-pdf/">converter</a> — turns a 187-word sample README (two heading levels, a bullet list, an ordered list, a code block, a blockquote, a 3-column table, a rule) into these results:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Setting</th><th>Pages</th><th>Lesson</th></tr></thead>
+<tbody>
+<tr><td>Letter, 11pt, 1in margins</td><td><strong>2</strong></td><td>The default; the table pushes onto page 2</td></tr>
+<tr><td>Letter, 10pt, 1in margins</td><td><strong>1</strong></td><td>One point of body size saves the page</td></tr>
+<tr><td>A4, 11pt, 1in margins</td><td><strong>1</strong></td><td>A4's extra 1.76cm of height catches the overflow</td></tr>
+<tr><td>Letter, 11pt, 0.5in margins</td><td><strong>1</strong></td><td>Narrow margins reclaim 72 points of height</td></tr>
+</tbody>
+</table>
+</div>
+<p>For plain prose, no structure: a Letter page at 11pt with 1-inch margins holds a 6.5-inch column — about 450–550 words. Six hundred words of paragraphs spill onto a second page. Headings, lists, and code blocks each eat lines that words would otherwise use, which is why the 187-word README outgrows the 500-word estimate: the table alone claims roughly a third of a page.</p>
+<h2>Letter or A4?</h2>
+<p>Letter is 8.5 × 11 inches (612 × 792 PDF points); A4 is 210 × 297mm (595.28 × 841.89 points). A4 is 49.89pt — 1.76cm — taller and 0.64cm narrower. The height matters more than the width: a document that ends one paragraph onto a final page on Letter often fits one page on A4. If your audience is outside North America, default to A4; if the last page holds only a signature block, A4 is a legitimate shrink tactic.</p>
+<h2>Privacy: does it matter which tool you use?</h2>
+<p>For anything with personal, client, or employment terms in it, yes. Plenty of "free online converters" are upload services — your document transits their servers, and retention policies vary from "deleted immediately" to unstated. Local options: the browser converter that runs its parser and PDF engine in the tab (like ours, adapted from the open-source md2pdf project), or offline tools like pandoc. The tell is in the tool's description: "runs in your browser," "client-side," "no upload" mean the bytes stay home.</p>
+<div class="cta-box"><h3>Convert one, right now</h3><p style="color:#fff;opacity:.9">Paste markdown, pick Letter or A4, download a real PDF — tables, code blocks, clickable links. Nothing uploads.</p><a href="/markdown-to-pdf/">Markdown to PDF Converter →</a></div>
+<h2>Automating it in a repo</h2>
+<p>Once documents live in version control, convert on release, not by hand:</p>
+<ol>
+<li>Keep manuals and proposals as <code>.md</code> next to code.</li>
+<li>Add a CI job running pandoc inside a Docker image (the <code>pandoc/latex</code> image is standard) — one command produces styled PDFs on every tag.</li>
+<li>Commit the template (margins, fonts, title page) once; every document inherits it.</li>
+<li>For previews between releases, link contributors to the browser converter rather than ad-hoc PDFs that drift from the source.</li>
+</ol>
+<h2>The bottom line</h2>
+<p>Match the tool to the cadence: browser-local for one-offs and private documents, pandoc for polished repeated output, CI for docs that ship with releases. Whatever the route, the quality tests are the same — tables that survive page breaks, code blocks that keep their shape, links that click. The <a href="/markdown-to-pdf/">markdown to PDF converter</a> handles the one-off case locally, the <a href="/markdown-to-html/">markdown to HTML converter</a> covers the web-output sibling, and the <a href="/word-counter/">word counter</a> plus the 450–550 words-per-page rule estimates your page count before you convert.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How do I convert markdown to PDF without installing anything?</h3><p>Use a browser-based converter that runs locally — paste markdown, click download. The good ones parse with a real markdown engine and generate the PDF in the tab, so nothing uploads. The browser's own print-to-PDF works too: preview the markdown anywhere, hit print, choose Save as PDF — at the cost of browser-chosen margins, headers, and footers.</p></div>
+<div class="faq-item"><h3>How many words fit on a page of PDF?</h3><p>At 11pt with 1-inch margins on Letter (a 6.5-inch column), roughly 450-550 words of plain paragraphs — 600 words spills to a second page. Structure changes everything: a 187-word README with headings, lists, a code block, a table, and a blockquote takes 2 pages at 11pt, because each block adds spacing and the table alone claims a third of a page.</p></div>
+<div class="faq-item"><h3>Is pandoc still the best markdown-to-PDF tool?</h3><p>For repeated, automated, or bulk conversion, yes — pandoc with a LaTeX engine produces the most polished output and handles citations, cross-references, and templates. It needs a TeX distribution installed (a large dependency) and tuning templates takes YAML patience. For one-off documents, a browser tool is faster than installing a TeX toolchain.</p></div>
+<div class="faq-item"><h3>Why does my PDF cut tables in half across pages?</h3><p>Because the layout engine broke the table at a page boundary. Real converters handle this by splitting tables at row boundaries with a repeated header row; print-to-PDF often doesn't, and screenshots-in-a-doc approaches never do. Keep wide tables narrow (fewer columns), or set the document to landscape if the table is the point.</p></div>
+<div class="faq-item"><h3>Do markdown links stay clickable in a PDF?</h3><p>Yes, in any converter that maps links to PDF annotations — browser-based pdfmake pipelines, pandoc, and Chrome's print-to-PDF all do. The link text keeps its position and the URL rides along as metadata. Check the output once: some minimal converters render links as styled text only.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/markdown-to-pdf/">Markdown to PDF</a>
+<a href="/markdown-to-html/">Markdown to HTML</a>
+<a href="/html-to-markdown/">HTML to Markdown</a>
+<a href="/word-counter/">Word Counter</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
