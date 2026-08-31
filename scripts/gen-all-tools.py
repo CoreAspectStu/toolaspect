@@ -77,7 +77,7 @@ for c in CAT_ORDER:
 
 guides_cards = "\n".join(
     f'<a class="tc" href="/guides/{g}/">{g.replace("-"," ").title()}</a>'
-    for g in sorted(guides)[:200]
+    for g in sorted(guides)
 )
 
 html = f"""<!DOCTYPE html>

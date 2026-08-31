@@ -149,6 +149,27 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   except low-monetization tail (engagement-rate, average, percentage-change,
   placeholder-image); thin pages still under 900 for a future depth pass:
   home-equity-calculator (810), va-loan-calculator (842).
+- 2026-09-01 batch guides: engagement-rate → guides/what-is-a-good-engagement-rate/;
+  average → guides/mean-vs-median-vs-mode/;
+  percentage-change → guides/how-to-calculate-percentage-increase/
+  (each: 1,367–1,400 words, computed data tables — benchmark tiers + interactions-needed;
+  outlier + decision tables; base-sensitivity + break-even + chaining — FAQ +
+  Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links; all-tools guides section
+  updated 472→475 and gen-all-tools.py [:200] grid cap removed so every guide lists
+  (cap contradicted the FULL-mirror docstring and hid h+-sorted guides); guide
+  backlinks added to all three tool pages' related sections)
+- 2026-09-01 depth passes: home-equity-calculator (787 → 1,310 words, +$10k-lever
+  table (verified: +$8k value vs +$10k principal at 80% LTV) +price-drop/CLTV table
+  (−44% = underwater threshold), +2 FAQs (4→6) with new FAQPage JSON-LD, +how-to-
+  build-home-equity +heloc-vs-cash-out-refi guide links; calculator JS untouched,
+  byte-identical to HEAD);
+  va-loan-calculator (815 → 1,252 words, +VA-vs-FHA-vs-conventional payment table
+  (verified $400k @ 6.25%/30y: VA $2,516 / FHA ~$2,595 / conv ~$2,500-2,625),
+  +2 FAQs (4→6) with new FAQPage JSON-LD, +va-loan-funding-fee guide link; stale
+  "2025 funding fee" copy corrected to current — rates unchanged since 2023-04-07;
+  calculator JS untouched, byte-identical to HEAD)
+  Queue state: high-value queue guides complete except placeholder-image (last
+  low-monetization tail item); no other known queue pages under 900 words.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
