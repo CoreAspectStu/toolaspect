@@ -989,6 +989,7 @@
         '<div class="ta-nav-links">' +
           '<a href="/">Tools</a>' +
           '<a href="/about.html">About</a>' +
+          '<a href="/partners">Partners</a>' +
           '<a href="https://github.com/CoreAspectStu/utility-sites">GitHub</a>' +
         '</div>' +
         '<div class="ta-right">' + authHTML(null) + '</div>' +
@@ -1033,6 +1034,7 @@
       '<p>\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
       '<div class="ta-footer-links">' +
         '<a href="/about.html">About</a>' +
+        '<a href="/partners">Partners</a>' +
         '<a href="/contact.html">Contact</a>' +
         '<a href="/privacy.html">Privacy</a>' +
         '<a href="/terms.html">Terms</a>' +
