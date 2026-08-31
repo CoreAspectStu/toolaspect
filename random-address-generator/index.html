@@ -24,16 +24,6 @@
 {"@context":"https://schema.org","@type":"WebApplication","name":"Random Address Generator","description":"Free browser-based US address generator powered by @faker-js/faker 10.6.0 (MIT). Fictional streets and cities paired with the real 50 state names, ZIP-format codes, reproducible seeds, and CSV/JSON export. Nothing uploads.","url":"https://toolaspect.com/random-address-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"Are these addresses real, deliverable places?","acceptedAnswer":{"@type":"Answer","text":"No, and that's deliberate. Streets and cities are pattern-built fiction — 49049 Pierce Fort in Mervinshire does not exist — while the state names are the real 50 US states and the ZIP codes match the real 5-digit and ZIP+4 formats without matching the state they're printed next to. That combination is what you want for test data: realistic shape, zero chance a mail merge or signup test touches a real household."}},
-{"@type":"Question","name":"Do the ZIP codes match their state?","acceptedAnswer":{"@type":"Answer","text":"No. Faker draws ZIP codes as random digits in the ##### or #####-#### format, independent of the state on the same row. Real ZIP prefixes are geographic — 9 and 8 for the West Coast, 0 and 1 for the Northeast — so a validator that checks state-ZIP consistency will flag these rows. If you need state-consistent ZIPs, generate the state first and fill the ZIP from the real prefix ranges for that state in your own fixtures step."}},
-{"@type":"Question","name":"Why do the city names look made-up?","acceptedAnswer":{"@type":"Answer","text":"Because they are. Faker builds cities from prefixes and suffixes — Mervinshire, East Marcellefort, Joanaboro — out of a pool of 927 city names built from those parts. Some draws resemble real towns (that's the generator doing its job), but the generator never looks up real places. If your tests need real cities, pair this tool's street and ZIP fields with your own city list."}},
-{"@type":"Question","name":"Can I regenerate the exact same addresses later?","acceptedAnswer":{"@type":"Answer","text":"Yes — type a seed. Seed 2026 with count 3 and Apt/Suite set to Always produces 49049 Pierce Fort, Apt. 380, Mervinshire, AK 26291; 56865 Marvin Lock, Apt. 593, East Marcellefort, TX 19040; and 9436 Oxford Road, Suite 196, Fort Kelsi, ME 42711-8728 — on every machine, every day, as long as the locale data and Faker version (10.6.0) stay the same. Store the seed in your test, not the addresses."}},
-{"@type":"Question","name":"Is it safe to use fake addresses on signup forms?","acceptedAnswer":{"@type":"Answer","text":"For QA runs on systems you own or are authorized to test, yes — fictional addresses are the standard way to exercise address validation, shipping calculators, and tax tables. On third-party services, read the terms first: entering fake data on a real storefront can violate them, pollute someone's analytics, or trigger fraud filters, and if a payment step is involved the address must be the cardholder's real billing address. Test where you're allowed to test."}},
-{"@type":"Question","name":"Does the generator include DC, territories, or international addresses?","acceptedAnswer":{"@type":"Answer","text":"Not on this page. Faker's English locale ships exactly 50 state names — Washington, DC and the territories (PR, GU, VI, and the rest) are not in the pool, and country data is a separate module. International testing needs other locales, which double the download; for now, generate US-shaped rows here and handle other countries in your fixtures layer."}}
-]}
-</script>
-<script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Random Address Generator","item":"https://toolaspect.com/random-address-generator/"}]}
 </script>
 <style>
@@ -86,7 +76,7 @@ pre.plain-out{background:var(--bg);border:1px solid var(--border);border-radius:
 .faq-item p{font-size:.88rem}
 </style>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
-<script type="application/ld+json" data-ta-schema="v2">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Random Address Generator — US Test Data", "url": "https://toolaspect.com/random-address-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free random address generator: fictional US streets + real 50 states, seeded and reproducible. CSV/JSON export, no uploads."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the Random Address Generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the Random Address Generator on ToolAspect is completely free, runs in your browser, and requires no signup."}}, {"@type": "Question", "name": "How does the Random Address Generator work?", "acceptedAnswer": {"@type": "Answer", "text": "Enter your values and the Random Address Generator calculates results instantly on your device. Nothing is uploaded to a server."}}]}]}</script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Random Address Generator — US Test Data","url":"https://toolaspect.com/random-address-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free random address generator: fictional US streets + real 50 states, seeded and reproducible. CSV/JSON export, no uploads."}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -216,16 +206,19 @@ function stateAbbrOf(stateName, names, abbrs) {
   return i >= 0 ? abbrs[i] : '';
 }
 function addressRow(faker, names, abbrs, secondary) {
-  var st = faker.location.state();
+  var street = faker.location.streetAddress();
   var sec = faker.location.secondaryAddress();
+  var city = faker.location.city();
+  var st = faker.location.state();
+  var zip = faker.location.zipCode();
   var wantSec = secondary === 'always' ? true : secondary === 'no' ? false : faker.datatype.boolean(0.35);
   return {
-    street: faker.location.streetAddress(),
+    street: street,
     secondary: wantSec ? sec : '',
-    city: faker.location.city(),
+    city: city,
     state: st,
     stateAbbr: stateAbbrOf(st, names, abbrs),
-    zip: faker.location.zipCode()
+    zip: zip
   };
 }
 // ---- browser wiring ----

@@ -112,6 +112,9 @@
         { label: 'Certificate Decoder', href: '/certificate-decoder/' },
         { label: 'Subnet Calculator', href: '/subnet-calculator/' },
         { label: 'LLM Pricing Tracker', href: '/llm-pricing-tracker/', badge: 'New' },
+        { label: 'Fake Name Generator', href: '/fake-name-generator/' },
+        { label: 'Minify JS',           href: '/minify-js/' },
+        { label: 'CSS Minifier',        href: '/css-minifier/' },
       ]
     },
     {
@@ -786,6 +789,12 @@
         { label: 'JsObfuscator', href: '/js-obfuscator/' },
         { label: 'PromptLibrary', href: '/prompt-library/' },
         { label: 'LlmPricingTracker', href: '/llm-pricing-tracker/' },
+        { label: 'FakeNameGenerator', href: '/fake-name-generator/' },
+        { label: 'RandomAddressGenerator', href: '/random-address-generator/' },
+        { label: 'FakeEmailGenerator', href: '/fake-email-generator/' },
+        { label: 'MinifyJs', href: '/minify-js/' },
+        { label: 'CssMinifier', href: '/css-minifier/' },
+        { label: 'MinifyHtml', href: '/minify-html/' },
         { label: 'DeveloperTools', href: '/developer-tools/' },
       ]
     },

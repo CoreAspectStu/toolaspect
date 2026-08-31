@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Minify JavaScript — and What It Saves | ToolAspect</title>
+<meta name="description" content="JavaScript minification with Terser: strip vs compress vs mangle on a measured sample, gzip interaction, Function.prototype.name pitfalls, and a free tool.">
+<link rel="canonical" href="https://toolaspect.com/guides/minify-javascript/">
+<meta property="og:title" content="How to Minify JavaScript (and What It Actually Saves)">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/guides/minify-javascript/">
+<meta property="og:description" content="JavaScript minification with Terser: strip vs compress vs mangle on a measured sample, gzip interaction, Function.prototype.name pitfalls, and a free tool.">
+<meta property="og:site_name" content="ToolAspect">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Minify JavaScript","description":"Minification shrinks JavaScript without changing what it computes — if you pick the right pass. This guide walks through what Terser's three levels actually remove (measured: 20.9%, 27.3%, and 52.6% on the same 823-byte sample), how mangling breaks name-dependent code, why gzip changes the calculus, and what to verify before shipping. Includes a free in-browser Terser tool. Author: ToolAspect.","author":{"@type":"Organization","name":"ToolAspect"},"publisher":{"@type":"Organization","name":"ToolAspect","url":"https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://toolaspect.com/guides/"},{"@type":"ListItem","position":3,"name":"Minify JavaScript","item":"https://toolaspect.com/guides/minify-javascript/"}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}code{background:var(--bg-elevated,var(--surface));padding:1px 6px;border-radius:6px;font-size:.85em}</style>
+<script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"How to Minify JavaScript (and What It Actually Saves)","url":"https://toolaspect.com/guides/minify-javascript/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"JavaScript minification with Terser: strip vs compress vs mangle on a measured sample, gzip interaction, Function.prototype.name pitfalls, and a free tool."}]}</script>
+</head>
+<body>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+<div class="wrap">
+<h1>How to Minify JavaScript (and What It Actually Saves)</h1>
+<div class="meta"><span>⚡ Web performance</span><span>⏱️ 7 min read</span><span>Free tool included</span></div>
+<p class="intro">Minification is the cheapest performance win in front-end work: no architecture change, no new dependency, just the same code with the bytes browsers don't need taken out. The catches are knowing which pass to run, what mangling really renames, and why the gzip column matters as much as the raw one.</p>
+<div class="ad-slot">Advertisement</div>
+<h2>What minification removes, level by level</h2>
+<p>The reference engine here is <strong>Terser</strong> (BSD-2-Clause) — the minifier webpack, Vite, and Parcel all lean on. To make the levels concrete, we ran its exact browser bundle over an 823-byte cart-totals script with comments, a constant, and three functions:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pass</th><th>Removes</th><th>Sample →</th><th>Saved</th></tr></thead>
+<tbody>
+<tr><td>Strip only</td><td>Comments, indentation, newlines</td><td>651 B</td><td>20.9%</td></tr>
+<tr><td>Compress</td><td>Plus dead branches, constant folding, joined declarations</td><td>598 B</td><td>27.3%</td></tr>
+<tr><td>Compress + mangle</td><td>Plus 1–2 character names (<code>TAX_RATE</code> → <code>t</code>)</td><td>390 B</td><td>52.6%</td></tr>
+</tbody>
+</table>
+</div>
+<p>Every pass computed the identical cart result — <code>$68.99</code> subtotal, <code>$5.69</code> tax, <code>$74.68</code> total — which is the standard you should hold any minifier to: same behavior, fewer bytes. Your percentages will differ with your file's comment density and name lengths. Heavily commented source shrinks more; machine-generated bundles, already terse, shrink less.</p>
+<h2>What mangling actually renames</h2>
+<p>Mangling is where the big wins live and the real risks too. It shortens identifiers to one or two characters, scope-aware by default: a variable inside a function gets renamed without disturbing same-named variables elsewhere. Top-level mangling (<code>toplevel: true</code>) also renames globals in the file, which is safe for self-contained scripts and bundles, and wrong for scripts other code calls into by name.</p>
+<p>The breakage cases are consistent:</p>
+<ul>
+<li><strong><code>Function.prototype.name</code></strong> — anything keying on a function's name (dependency-injection containers, some frameworks' component registration) sees <code>t</code> instead of <code>cartTotal</code>.</li>
+<li><strong>Recursion by name after top-level mangling</strong> — inner-scope recursion is fine (the scope-aware rename rewrites call sites too), but cross-file references to renamed globals aren't.</li>
+<li><strong><code>eval</code> and <code>new Function</code> with string identifiers</strong> — the string isn't renamed and now points at nothing.</li>
+<li><strong>Stack traces</strong> — shorter names make traces harder to read; source maps fix this, and they pair naturally with minified builds.</li>
+</ul>
+<h2>Minification and gzip are different jobs</h2>
+<p>A persistent confusion: teams minify, see 50% off, and think that's their network saving. It isn't, because transport compression already handles repetition. The same sample gzips from 393 bytes (raw) to 277 (minified) — a 29.5% wire saving, not 52.6%. Gzip squeezes repeated strings and whitespace that stripping also removes, so the two wins overlap more than they add.</p>
+<p>The correct order is still: minify, then serve with gzip or Brotli. Minification removes what compression can't (identifier names, structural verbosity), compression removes what minification can't (long repeated strings). Measure both columns — our <a href="/minify-js/">Minify JS</a> tool shows raw and gzip side by side for exactly this reason.</p>
+<h2>Picking the pass for the job</h2>
+<p>Use <strong>strip only</strong> when the file must stay debuggable from stack traces and you can't ship source maps — line structure survives, nothing is renamed. Use <strong>compress</strong> for libraries whose exported names must survive and for code where you want dead code gone without renaming risk. Use <strong>compress + mangle</strong> for applications and self-contained bundles, which is why bundlers default there.</p>
+<p>For one-off snippets — analytics blocks, CMS embeds, single-page scripts — a browser-based minifier beats setting up a build chain for one file. Paste, pick a pass, check the byte and gzip columns, copy. Just keep the original somewhere: minified code is a build artifact, not a source of truth.</p>
+<h2>What minification is not</h2>
+<p>Minified code is not protected code. Anyone can pretty-print 390 bytes back to readable form in seconds; minification deters nobody who's actually looking. If the goal is making reverse engineering expensive, that's obfuscation — string arrays, control-flow flattening, the works — a different tool with different trade-offs (ours is the <a href="/js-obfuscator/">JS Obfuscator</a>). And it's not a linter either: Terser will happily minify subtly wrong code that parses. Minify after the code is correct, never as a substitute for making it correct.</p>
+<h2>The bottom line</h2>
+<p>Minify everything you ship, at the strongest pass your naming dependencies allow, and serve it compressed. Verify functional equivalence the boring way — run the minified file against known outputs — and keep raw sources as the artifact of record. To see what each pass buys on your own code without a build chain, run it through the <a href="/minify-js/">Minify JS</a> tool; for the rest of the payload, the <a href="/css-minifier/">CSS Minifier</a> and <a href="/minify-html/">Minify HTML</a> siblings cover the stylesheets and markup around it.</p>
+<div class="cta-box"><h3>Minify your JavaScript now</h3><p style="color:#fff;opacity:.9">Terser 5.51.2 in your browser: strip, compress, or compress + mangle, with byte and gzip columns. No uploads.</p><a href="/minify-js/">Minify JS →</a></div>
+<div class="related-tools"><a href="/minify-js/">⚡ Minify JS</a><a href="/css-minifier/">🎨 CSS Minifier</a><a href="/minify-html/">📄 Minify HTML</a></div>
+<div class="ad-slot">Advertisement</div>
+</div>
+<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
