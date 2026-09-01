@@ -15,13 +15,14 @@ HUBS = {'roadmap','embed','guides','all-tools','convert','converters','best-free
         'account','about','contact','privacy','terms','disclaimer','blog','okf-policy'}
 
 def cat_of(slug):
+    if "watermark" in slug: return "Documents & Images"  # before Health tuple: water- matches watermark
     for k, c in [
         (("bmi","calorie","pregnan","macro","body","bmr","water","weight","due-date","ovulation","health","a1c","heart"),"Health"),
-        (("mortgage","loan","tax","interest","401k","ira","invest","retire","annuity","salary","paycheck","income","debt","credit","budget","saving","compound","amortiz","refinance","escrow","pmi","heloc","social-security","ssdi","alimony","settlement","legal","custody","child-support","injury","workers","umbrella","disability","insurance"),"Finance, Insurance & Legal"),
+        (("mortgage","loan","tax","interest","401k","ira","invest","retire","annuity","salary","paycheck","income","debt","credit","budget","saving","compound","amortiz","refinance","escrow","pmi","heloc","social-security","ssdi","alimony","settlement","legal","custody","copyright","infringement","damages","child-support","injury","workers","umbrella","disability","insurance"),"Finance, Insurance & Legal"),
         (("qr","barcode","invoice","estimate","quote","work-order","oee","mtbf","osha","jha","lockout","maintenance","toolbox","facility","equipment","downtime","depreciation","business","llm","ai-receptionist","recruiting"),"Business & Ops"),
         (("pdf","word-to","docx","excel-to","jpg-to","heic","image","favicon","background-remover","upscale","compress","watermark","crop","color","svg","bates","metadata-remover"),"Documents & Images"),
         (("json","xml","regex","base64","cron","uuid","color-picker","subnet","certificate","htaccess","robots","seo","meta","schema","sitemap","redirect","ssl","dns","header","api","hash","jwt","diff","format","minif","beautif","yaml","toml","csv","markdown","slug","text-case","lorem","word-count","readability","keyword","serp","backlink","utm","og-image","open-graph","twitter-card","llms","obfusc","phone-number","fake-name","fake-email","random-address","mock-data"),"Developer & SEO"),
-        (("engagement","youtube","tiktok","instagram","social","creator","hashtag","thumbnail","aspect-ratio","content","influencer","sponsorship","podcast","newsletter","etsy","shopify","amazon","print-on-demand","kdp","merch","affiliate"),"Creator"),
+        (("engagement","youtube","tiktok","instagram","social","creator","patreon","twitch","spotify","hashtag","thumbnail","aspect-ratio","content","influencer","boosty","rumble","sponsorship","podcast","newsletter","etsy","shopify","amazon","print-on-demand","kdp","merch","affiliate"),"Creator"),
         (("wedding","party","baby","pet","gift","anniversary","vacation","trip","travel","holiday","christmas","halloween","countdown","tdee","gpa","grade","study","homework","college","529","student","exam","sat","act"),"Life & Education"),
         (("auto","car","tire","mpg","fuel","gas","ev","hybrid","engine","vehicle","dealer","vin"),"Auto"),
         (("home","remodel","concrete","asphalt","deck","fence","lawn","garden","paint","roof","solar","hvac","furnace","ac ","water-heat","floor","window","door","insulation","foundation","landscap","gravel","mulch","sod","clean","moving","appliance"),"Home"),
