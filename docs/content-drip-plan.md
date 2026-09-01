@@ -284,6 +284,30 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   (819), retirement-calculator (853), auto-loan-calculator (865); next-thinnest
   low-monetization tools roman-numeral-converter (112), token-counter (183),
   llm-pricing-tracker (232) — depth only if queue idle.
+- 2026-09-02 RECONCILIATION PASS (4th spawned lane — see storm note): the bridge
+  spawned the 09-02 drip slot FOUR times (08:33/08:49/08:52/08:53); lanes 1-3
+  produced batches A/B/C above + the de-doorway sweep (32d56a0b) + overnight
+  va-disability work (b150d251). All landed: local == origin/main, all new URLs
+  200. Lane 4 (this one) verified instead of building an overlapping 4th batch:
+  batch A guides 1,361/1,297/1,225 words w/ full JSON-LD + tool/sibling links,
+  depth JS-containment confirmed (only FAQPage/Breadcrumb LD inserted); batches
+  B/C guides all parse, 3-4 tool links, question-led H2s. Fixes this pass:
+  overtime title 65→58ch, LLC title 65→51ch, annuities title 62→57ch (+og
+  mirrors + headline/breadcrumb), car-loan meta 163→148ch (+og/WebApp mirrors;
+  6.39%/11.43% verified vs Experian Q1 2026 — initial search snippet claiming
+  6.88% was wrong, Experian ask-experian pages confirm the guide's figures),
+  "highest-leverage"→"highest-impact" in car-insurance guide (protocol word
+  list). DE-DOORWAY SWEEP DEFECT FIXED: all 50 salary-by-state tax FAQs answered
+  "How do taxes change take-home pay?" with minimum-wage text — replaced with
+  per-state real answers generated from scripts/state-data/salary-tax-2025.json
+  (graduated lo-hi / flat rate / no-tax wording; 50/50 replaced, 0 non-sequiturs
+  remain). Other 5 state hubs spot-checked: Q/A coherent, no same-class defect.
+  ENGINE FLAG (needs dedicated tool pass, JS untouched today): every
+  salary-by-state page hardcodes stateTax=taxable*.04 — Texas shows a 4% state
+  tax, California ignores its 1-12.3% brackets; correct per-state data already
+  sits in scripts/state-data/salary-tax-2025.json (regime/std_ded/brackets,
+  Tax Foundation 2025). va-lane's doc leftovers (tool-backlog row removal,
+  tool-factory-done entry, roadmap) committed with this pass.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
