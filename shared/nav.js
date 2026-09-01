@@ -604,7 +604,7 @@
         { label: 'AlimonyCalifornia', href: '/alimony-calculator-california/' },
         { label: 'AlimonyTexas', href: '/alimony-calculator-texas/' },
         { label: 'ChildSupport', href: '/child-support-calculator/' },
-        { label: 'CeaseAndDesist', href: '/cease-and-desist-template/', badge: 'New' },
+        { label: 'Cease and Desist Template', href: '/cease-and-desist-template/', badge: 'New' },
       ]
     },
     {
