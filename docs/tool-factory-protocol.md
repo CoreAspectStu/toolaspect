@@ -56,3 +56,9 @@ If deploy fails or any URL 404s after 2 retries — STOP, report failure, don't 
 ## TOPIC-BRIDGE CONSTRAINT (added 2026-09-01, per Floate E1136)
 New tools/guides must be ADJACENT to an existing topical cluster (entity overlap), never a random new vertical. Rule of thumb: a new tool's cluster must already have ≥10 sibling pages OR bridge from one (e.g., finance→tax→insurance OK; finance→gardening NOT — the cautionary weight-loss→gardening case lost most of that site's revenue).
 Allowed expansion = deepen existing hubs first; new verticals need explicit Stu approval.
+
+## KEYWORD INTAKE UPGRADE (added 2026-09-01, per Gotch masterclass)
+New tool/guide ideas must carry TWO extra columns before build approval:
+1. AWARENESS STAGE: most-aware (brand/compare/pricing) / product-aware / best-X / solution-aware / problem-aware. Build order prefers most-aware and best-X — not raw volume.
+2. AIO CHECK: does the query trigger an AI Overview? If yes, only build if a calculator/tool is likely to be CITED by the AIO (calculator queries usually qualify; informational pages usually don't).
+Also: one core topic per page — keyword variants share a page, distinct intents get separate pages.
