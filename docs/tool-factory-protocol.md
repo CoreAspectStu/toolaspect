@@ -52,3 +52,7 @@ Table: tool | URL | status(200) | indexed-submitted | notes. Plus batch totals (
 
 ## Kill switch
 If deploy fails or any URL 404s after 2 retries — STOP, report failure, don't continue the batch.
+
+## TOPIC-BRIDGE CONSTRAINT (added 2026-09-01, per Floate E1136)
+New tools/guides must be ADJACENT to an existing topical cluster (entity overlap), never a random new vertical. Rule of thumb: a new tool's cluster must already have ≥10 sibling pages OR bridge from one (e.g., finance→tax→insurance OK; finance→gardening NOT — the cautionary weight-loss→gardening case lost most of that site's revenue).
+Allowed expansion = deepen existing hubs first; new verticals need explicit Stu approval.
