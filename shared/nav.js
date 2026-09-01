@@ -575,6 +575,7 @@
       label: 'Legal & Settlements',
       dot: '#818cf8',
       tools: [
+        { label: 'DMCA Notice Template', href: '/dmca-notice-template/', badge: 'New' },
         { label: 'CarAccidentSettlement', href: '/car-accident-settlement-calculator/' },
         { label: 'Truck Accident Settlement', href: '/truck-accident-settlement-calculator/', badge: 'New' },
         { label: 'Diminished Value Claim', href: '/diminished-value-claim-calculator/', badge: 'New' },
@@ -603,6 +604,7 @@
         { label: 'AlimonyCalifornia', href: '/alimony-calculator-california/' },
         { label: 'AlimonyTexas', href: '/alimony-calculator-texas/' },
         { label: 'ChildSupport', href: '/child-support-calculator/' },
+        { label: 'CeaseAndDesist', href: '/cease-and-desist-template/', badge: 'New' },
       ]
     },
     {
