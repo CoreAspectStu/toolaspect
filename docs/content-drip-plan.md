@@ -170,6 +170,46 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   calculator JS untouched, byte-identical to HEAD)
   Queue state: high-value queue guides complete except placeholder-image (last
   low-monetization tail item); no other known queue pages under 900 words.
+- 2026-09-02 batch guides: bac → guides/how-long-does-alcohol-stay-in-your-system/;
+  social-security-disability-benefits → guides/how-much-does-ssdi-pay/;
+  placeholder-image → guides/what-size-should-a-placeholder-image-be/
+  (each: 1,225–1,361 words, verified data tables — time-to-zero + drinks-to-0.08
+  by weight + detection windows; SSA-2026 quick figures + PIA-by-AIME bends
+  $1,286/$7,749 cross-checked vs ssa.gov fact sheet + oact/cola; slot sizes +
+  ratio math — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  all-tools guides section 486 via gen-all-tools.py; guide backlinks added to
+  all three tool pages' related sections)
+  Queue note: placeholder-image was the LAST /tmp/guide-priority.json item;
+  queue auto-extended by monetization score → bac (legal/health, DUI-adjacent)
+  and ssdi-benefits (finance/legal; distinct intent from the denial calc's
+  what-happens-after-an-ssdi-denial guide). Priority queue now 48/48 complete.
+- 2026-09-02 depth passes: credit-card-payoff (210 → 914 words, +payment-size
+  payoff table +2026 APR reference table (LendingTree 23.8% new-offer avg,
+  20.2–27.4% range, store cards 30.6%) replacing the false "Average APR: 24.99%
+  (2026)" claim (was the tool's default input, not the market), minimum-payment
+  model rebuilt (interest + 1% principal + $35 floor = 203 mo/$8,824 on $5k),
+  +4 FAQs with new FAQPage JSON-LD + BreadcrumbList, snowball-method guide link,
+  off-topic siblings Pascals-Triangle/Tip-Splitter → credit-card-payoff-calculator/
+  debt-settlement-vs-bankruptcy; calculator JS untouched, byte-identical to HEAD);
+  pmi-calculator (820 → 1,233 words, +HPA exit-milestones table (80%/78%/appraisal/
+  month-180 final) + extra-payment sensitivity table (verified: $0 extra → month 95,
+  $17,985 PMI; $300 extra → month 56, $10,725), +2 FAQs (5→7) with new FAQPage
+  JSON-LD, how-to-get-rid-of-pmi guide link; calculator JS untouched, byte-identical
+  to HEAD)
+- 2026-09-02 out-of-band fixes: bac-calculator "0.08% in all 50 states" corrected
+  (Utah 0.05% since 2018) in prose + effects table; ssdi-benefits tool page static
+  tables 2025→2026 (bend row $1,226–$7,391 → $1,286–$7,749 w/ $2,068.16 slice max,
+  cap $4,018 → $4,152, avg ~$1,580 → $1,630, TWP $1,160 → $1,210). FLAG for next
+  tool pass: that page's calculator JS still runs 2025 constants (BP1=1226,
+  BP2=7391, MAX_BENEFIT=4018, AVG=1580, SGA=1620) so its hero value computes the
+  2025 formula while every static label says 2026; left untouched per no-JS rule.
+  placeholder-image JS-array-in-HTML paragraph repaired to prose (same defect
+  class as the ROI/password pages).
+  Skipped depth pass: refinance-break-even-calculator (856 words — next queue
+  depth candidate, third-thinnest).
+  Queue state: guides done for all 48 priority tools + wave-2; remaining depth
+  candidates: refinance-break-even (856); next guides must come from fresh
+  keyword intake (awareness-stage + AIO-check columns per factory protocol).
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
