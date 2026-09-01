@@ -312,3 +312,12 @@ HARD RULE (standing): never build watermark-removal or any content-theft tooling
 
 ## GH scan 2026-08-30 (auto)
 gh:overshard/timelite-nextjs | oss | wrap | low | S271 BSD-2-Clause — A dead simple time tracker that keeps everything in local storage. Next.js, no accounts and no serve
+
+## Wave F — veterans & disability benefits cluster (2026-09-02 gen; backlog exhausted — all prior rows built per disk audit)
+# Cluster-bridge: SSDI pair + disability-insurance + va-loan-calculator (finance/legal disability cluster, >10 siblings).
+# CPC/volume figures as-researched 2026-09-02 via public keyword tools + SERP inspection, NOT DataForSEO-re-verified.
+# Intake columns per 2026-09-01 upgrade: AWARENESS | AIO-CITABLE.
+va-disability-pay-calculator | finance | calc | $6-15 | "VA disability calculator"/"VA disability pay rates 2026" cluster (six-figure/mo combined; appeal attorneys + VA-loan referrers bid); VA-math combined rating (30+20=40%, unrounded intermediates, 1-4 down/5-9 up, bilateral +10% of pair-combine — 38 CFR 4.25/4.26) = generic-calcs-get-it-wrong moat; 2026 official rate tables (Dec 1 2025 COLA 2.8%) by rating x dependents = triple-citable; payment-date + tax-free FAQ hooks; bridges va-loan + SSDI + military-time pages | product-aware | AIO yes (calculator + rate table queries)
+va-disability-backpay-calculator | finance | calc | $10-25 | "VA disability back pay calculator" — effective-date x monthly-rate retro math incl. rating-increase proration + dependent changes; shares Wave-F rate engine; appeal/retro attorneys bid; most-aware | AIO yes (calculator)
+tdiu-calculator | finance | calc | $10-30 | TDIU/Individual Unemployability pays the 100% rate at 60%+ combined (or one 40+ unilateral) — eligibility + pay-gap math; "TDIU calculator"/"100 percent VA disability" longtails; vocational/attorney CPC | product-aware | AIO yes
+va-pension-aid-and-attendance-calculator | finance | calc | $8-20 | needs-based VA pension (A&A + housebound adds) — income/countable-asset netting vs MAPR by dependency tier; senior-care CPC; distinct from compensation (non-service-connected); YMYL accuracy: label estimate-only, link VA pension pages | solution-aware | AIO yes (table-heavy)
