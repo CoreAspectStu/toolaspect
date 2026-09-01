@@ -149,6 +149,7 @@
         { label: 'XML to JSON', href: '/xml-to-json/' },
         { label: 'Markdown Table', href: '/markdown-table-generator/' },
         { label: 'Slug Generator', href: '/slug-generator/' },
+        { label: 'VA Disability Pay', href: '/va-disability-pay-calculator/' },
         { label: 'Patreon Fees', href: '/patreon-fees-calculator/' },
         { label: 'Minify JS', href: '/minify-js/' },
         { label: 'Minify HTML', href: '/minify-html/' },
