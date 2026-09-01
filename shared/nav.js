@@ -632,6 +632,7 @@
         { label: 'SocialSecurity', href: '/social-security-calculator/' },
         { label: 'SocialSecurityDisabilityBenefits', href: '/social-security-disability-benefits-calculator/' },
         { label: 'SocialSecurityDisabilityDenial', href: '/social-security-disability-denial-calculator/' },
+        { label: 'VA Disability Pay', href: '/va-disability-pay-calculator/' },
         { label: 'Retirement', href: '/retirement-calculator/' },
         { label: '401k Match', href: '/401k-match-calculator/' },
         { label: 'Rmd', href: '/rmd-calculator/' },

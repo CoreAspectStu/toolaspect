@@ -279,9 +279,11 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   have no card in guides/index.html (hub lists 437 of 490).
   Queue state: next auto-extend guide candidates by monetization: salary-by-state,
   rent-calculator (30% rule), ai-receptionist-cost, plus OWED llc-vs-scorp guide;
-  no other queue pages known under 900 words (next-thinnest real tools:
-  roman-numeral-converter 112, token-counter 183, llm-pricing-tracker 232 —
-  low-monetization, depth only if queue idle).
+  remaining thin depth candidates per the concurrent lane's fresh audit (above):
+  percentage-calculator (786), fha-loan-calculator (804), closing-cost-calculator
+  (819), retirement-calculator (853), auto-loan-calculator (865); next-thinnest
+  low-monetization tools roman-numeral-converter (112), token-counter (183),
+  llm-pricing-tracker (232) — depth only if queue idle.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
