@@ -308,6 +308,59 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   sits in scripts/state-data/salary-tax-2025.json (regime/std_ded/brackets,
   Tax Foundation 2025). va-lane's doc leftovers (tool-backlog row removal,
   tool-factory-done entry, roadmap) committed with this pass.
+- 2026-09-03 batch guides: llc-vs-scorp → guides/llc-vs-scorp/ (the OWED
+  guide; links /incorporation-cost-calculator/ as cluster tool because
+  llc-vs-scorp-calculator is backlog-only (row 85) — the two dead
+  /llc-vs-scorp-calculator/ links in the LLC cost guide repointed here);
+  salary-by-state → guides/take-home-pay-by-state/; rent-calculator →
+  guides/how-much-should-i-spend-on-rent/
+  (each: ~1,300-1,400 visible words, computed/verified data tables — S-corp
+  SE-vs-FICA ladder on the 2026 $184,500 wage base, $75k/$150k take-home from
+  scripts/state-data/salary-tax-2025.json + 2025 fed brackets (CA/IL/fed
+  hand-verified), 30%-rule income table + NLIHC 2026 anchors ($34.73/hr
+  housing wage, $24.84 renter wage, $1,806 2BR FMR — internally consistent:
+  34.73×2080/12×0.30=$1,806) — FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; guide backlinks added to incorporation,
+  salary-calculator, rent-calculator related sections)
+- 2026-09-03 depth passes: percentage-calculator (999 → 1,402 words,
+  JS-array-in-HTML paragraph repaired to prose (3 paragraphs, quotes fixed),
+  +percentage-points-vs-relative table +reverse-percentage section, +2 FAQs,
+  new FAQPage (7 Q) + BreadcrumbList LD, 2 guide links in related.
+  ENGINE REPAIR (documented exception to no-JS rule): calc3 was missing a
+  semicolon (''document → SyntaxError) so ALL FOUR calculators were dead on
+  live since the 8-31 defbox wave; single-char fix, node-verified
+  (300→240 = -20.0%, 15% of 200 = 30, $80-20% = save $16/pay $64);
+  fha-loan-calculator (948 → 1,300 words, 2025→2026 limits table
+  $541,287/$1,249,125 per HUD 25-145, MIP table relabeled (rates unchanged
+  since ML 2023-05 — verified), +MIP-lifetime comparison table (3.5% down =
+  ~$55,700 over 30 yrs vs 10% down ~$17,300/11 yrs), +2 FAQs, new FAQPage
+  (7 Q) LD, 2 guide links, stale 2025 meta → current; engine byte-identical
+  to HEAD)
+- 2026-09-03 out-of-band: rent-calculator off-topic related links
+  (Pascals-Triangle/Tip-Splitter — same class as the 9-02 credit-card-payoff
+  fix) → mortgage/budget/renters-insurance; guides hub +3 Money cards
+  (badge 120→123), count claims re-pegged 497 (= dirs with index.html,
+  matches gen-all-tools.py); all-tools regenerated (674 tools, 497 guides).
+  Verified reference data this batch: 2026 SS wage base $184,500 (SSA
+  oact/cola/cbb), QBI permanent + 23% from 2026 below threshold
+  (OBBBA via Tax Foundation), HUD 25-145 2026 limits, NLIHC Out of Reach
+  2026, FHA MIP 0.55% current since ML 2023-05.
+  Queue state: named candidates exhausted except ai-receptionist-cost (next
+  guide); remaining thin depth candidates: closing-cost-calculator (~870),
+  retirement-calculator/auto-loan-calculator borderline ~940-960; then fresh
+  keyword intake (awareness + AIO columns per factory protocol).
+  FLAGS for next pass: (1) PRODUCTION OUTAGE — every HTML path on
+  toolaspect.com returned bare 500 from the ~08:56 deploy ce84d8d5 (assets +
+  robots.txt served 200 from edge cache; that deployment's pages.dev URLs
+  also 500; prior deployment 8dc49c43 = e0ce3ce fully 200; no CF platform
+  incident; today's deploy tests whether a fresh manifest upload restores
+  service — if not, dashboard instant-rollback to 8dc49c43 is the fix, then
+  bisect 5e16fcc5); (2) /salary-by-state/ hub root has NO index.html but is
+  in sitemap.xml (deploy.sh priority list) → 404 class, needs a hub page;
+  (3) three empty guide dirs remain on disk: lift-kit-cost,
+  marriage-green-card-cost, marriage-name-change-cost (owed guides or
+  delete); (4) llc-vs-scorp-calculator still backlog row 85 — when built,
+  link it and the new guide bidirectionally.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
