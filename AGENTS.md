@@ -186,3 +186,23 @@ ToolAspect — 28 free online browser tools (no signup/ads/tracking) at toolaspe
 - Run `dox-validate` after significant changes
 
 <!-- DOX:AUTO-END -->
+
+<!-- pol:artifacts slug=utility-sites -->
+## POL artifacts (outside this repo)
+
+This repo is managed by POL. Planning docs, sprint state, the activity log and
+deploy history live in the POL project folder, **not** in the repo:
+
+`~/.hermes/projects/utility-sites/`
+
+| File | Purpose |
+|---|---|
+| `CONTEXT.md` | project context, status, conventions, key decisions |
+| `config.yaml` | POL config — repo, lanes, routing, bmad state, deploy |
+| `activity.md` | append-only cross-lane event log |
+| `scratchpad.md` | ephemeral notes |
+| `deploy-history.json` | deploy history + current state |
+
+Repo-side BMAD trackers, when present: `_bmad-output/sprint-status.yaml`, `_bmad-output/stories/`.
+Refresh this block: `python3 ~/.hermes/skills/pol/project-command/scripts/repo_links.py utility-sites` (MCP: `pol_link_artifacts`).
+<!-- /pol:artifacts -->
