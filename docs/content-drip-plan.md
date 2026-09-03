@@ -361,6 +361,52 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   marriage-green-card-cost, marriage-name-change-cost (owed guides or
   delete); (4) llc-vs-scorp-calculator still backlog row 85 — when built,
   link it and the new guide bidirectionally.
+- 2026-09-04 batch guides: ai-receptionist-cost → guides/ai-receptionist-cost/
+  (the named next guide; tool live since 9-3); marriage-green-card-cost →
+  guides/marriage-green-card-cost/ and lift-kit-cost → guides/lift-kit-cost/
+  (both were EMPTY owed guide dirs; their own calculators are backlog rows
+  86/84 — per the llc-vs-scorp precedent each links the nearest live cluster
+  tool: marriage-license-cost-calculator / wheel-alignment-cost-calculator
+  as CTA + prenup/marriage-tax-penalty and tire-size/car-maintenance siblings)
+  (each: 1,136–1,399 words, verified data tables — vendor pricing bands
+  (Goodcall $59-79 flat, Smith.ai ~$95/mo per-call entry, Retell $0.07/min,
+  human services $245-292 entry) + computed volume comparison; USCIS 2026
+  fee stack (I-130 $675/$625, I-485 $1,440, I-765 $260, I-131 $630 =
+  $3,005 AOS full package vs $1,235 consular incl DS-260 $325 + $235
+  immigrant fee; H.R. 1 un-bundled EAD/AP effective 2026-02-05, +$890 vs
+  the old bundled I-485) + I-864P $27,050 HH-of-2 floor (eff. 3-1-2026);
+  leveling/body/mild/tall lift bands $250-900/$400-1,000/$1,000-3,500/
+  $3,000-7,000+ by truck class — FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling links; guide backlinks added to ai-receptionist,
+  marriage-license, wheel-alignment tool pages)
+- 2026-09-04 depth passes: closing-cost-calculator (920 → 1,577 words,
+  +shoppable-vs-fixed Loan-Estimate-sections table +seller-concession caps
+  table (conv 3/6/9 by down payment, FHA 6, VA 4, USDA 6) +seller-side
+  section (post-Aug-2024 NAR-settlement commission reality), +2 FAQs (5→7)
+  with new FAQPage JSON-LD, closing-costs-explained guide link in related;
+  calculator JS byte-identical to HEAD);
+  auto-loan-calculator (952 → 1,372 words, +Experian Q1 2026 APR-by-tier
+  table w/ computed $30k/60mo payments ($559.97 super prime vs $729.70 deep
+  subprime = $10,184 interest spread) +node-verified rebate-vs-0.9% table
+  ($2,000 rebate loses by $1,060; break-even ≈ $2,480), +2 FAQs (5→7) with
+  new FAQPage + BreadcrumbList LD, FAQ markup converted to .faq-item divs,
+  funnel-cta/ads scripts moved out of the .related div; calculator JS
+  byte-identical to HEAD)
+- 2026-09-04 hub updates: guides hub +3 cards (More Guides 440→441 incl
+  lift-kit, Money 123→124 incl green-card, Work & Productivity 50→51 incl
+  ai-receptionist), total claims re-pegged 497→500 (= on-disk index.html
+  count incl today's 3); all-tools hub regenerates via gen-all-tools.py on
+  deploy. Prior-batch backlink gap noticed: divorce/bathroom-remodel/deck
+  tool pages have matching guides but no guide link (left for interlink
+  sweep). Queue note: marriage-name-change-cost guide STILL OWED (dir
+  empty, calculator backlog row 87) — last of the 9-02 empty-dir trio.
+  Fresh full-sweep word audit: 62 pages under 900 visible words, dominated
+  by concurrent-lane state stubs (roof/window/fence/hvac/car-insurance
+  -cost-by-state at 69-81 words — sitemap'd, belong to the state-page lanes)
+  and low-monetization utilities (roman-numeral 112, token-counter 183,
+  llm-pricing 232; queue rule: depth only if queue idle); alimony-california
+  (700) / alimony-texas (720) / all-on-4 state pages (552-613) are the
+  thinnest monetizable next candidates for a future depth pass.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
