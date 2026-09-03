@@ -9,6 +9,7 @@
     enabled: false, // ← flip on approval day
     client: 'ca-pub-7079002297203024',
     slotIds: {
+      'tool-top': '',     // above the tool — highest CTR
       'tool-result': '',   // 728x90 / responsive below tool result
       'tool-sidebar': '',  // 300x250 sidebar
       'guide-inline': ''   // in-article responsive
