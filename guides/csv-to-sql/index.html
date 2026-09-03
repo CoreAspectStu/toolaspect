@@ -18,6 +18,8 @@
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"How to Convert CSV to SQL INSERT Statements","url":"https://toolaspect.com/guides/csv-to-sql/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Turn CSV into CREATE TABLE and INSERT statements for MySQL, PostgreSQL, or SQLite: type inference, quoting rules, batch sizes, and what breaks imports."}]}</script>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -28,6 +30,7 @@
 <div class="ad-slot">Advertisement</div>
 <h2>What does converting CSV to SQL actually produce?</h2>
 <p>Two things: a <strong>CREATE TABLE</strong> statement that defines the columns, and one or more <strong>INSERT</strong> statements that load the rows. Take a four-column CSV of employees — id, name, hire date, salary — and the converter scans each column: ids are all whole numbers, so INTEGER; names are text, so VARCHAR sized to the longest value; dates in YYYY-MM-DD shape, so DATE; salaries with decimals, so DECIMAL(p,s) with the precision observed in the data. The header row supplies the column names, and every data row becomes one tuple in a multi-row INSERT.</p>
+<div class="ad-slot" data-slot="guide-inline">Ad</div>
 <p>You can run this by hand for three rows. You shouldn't for three thousand — and that's before the fields containing commas and apostrophes show up. Use the <a href="/csv-to-sql/">CSV to SQL converter</a>, which does the parsing, type inference, and dialect-specific quoting in your browser and hands you a ready-to-run .sql file.</p>
 <h2>How does type inference work?</h2>
 <p>The rule is simple: a column only gets a numeric or date type if <em>every</em> non-empty value in it matches the pattern. All integers → INTEGER (BIGINT if anything crosses 2^31). All numbers with decimal points → DECIMAL, with precision and scale computed from the widest value: a column topping out at 84500.50 gets DECIMAL(7,2). ISO dates → DATE. Lowercase <code>true</code>/<code>false</code> → BOOLEAN. Anything else → VARCHAR sized to the longest entry.</p>

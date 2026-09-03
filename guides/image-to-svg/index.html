@@ -18,6 +18,8 @@
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"When to Vectorize an Image (and When Not To)","url":"https://toolaspect.com/guides/image-to-svg/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"How image-to-SVG tracing works: color quantization, edge following, curve fitting — and why logos trace beautifully while photos turn into poster-art megabytes."}]}</script>
 <script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -27,6 +29,7 @@
 <div class="ad-slot">Advertisement</div>
 <h2>What does image-to-SVG tracing actually do?</h2>
 <p>A tracer runs three stages. First, <strong>color quantization</strong>: the image is reduced to a fixed palette (you choose the size — 2, 8, 16, 64 colors) using a k-means-style clustering pass, the same family of algorithm behind GIF and PNG-8. Second, <strong>edge following</strong>: for each palette color, the algorithm walks the boundary between regions of that color and everything else, recording the boundary as a chain of sample points. Third, <strong>curve fitting</strong>: splines are fitted through those points — with corner detection so hard angles stay hard — and each region is written out as an SVG <code>&lt;path&gt;</code> with a <code>fill</code>. The result is genuine vector geometry you can open and edit in Illustrator, Inkscape, or Figma.</p>
+<div class="ad-slot" data-slot="guide-inline">Ad</div>
 <p>The <a href="/image-to-svg-converter/">Image to SVG Converter</a> on this site exposes exactly those stages: the color count, a speckle filter (pathomit) that drops tiny regions below a size threshold, and presets that bundle curve-fitting behavior. Everything runs locally in your browser.</p>
 <h2>Why do logos trace beautifully and photos don't?</h2>
 <p>File size and fidelity both scale with the number of color transitions, not with pixel dimensions. A flat logo has maybe six colors and large uniform regions: quantization is nearly lossless, boundaries are clean, and the whole thing collapses to a handful of paths — kilobytes that scale to a billboard. A photograph has effectively unlimited colors: quantization snaps every subtle gradient to bands, every boundary is noisy, and the tracer emits thousands of paths trying to follow them. You get poster art and a file bigger than the JPEG you started with.</p>
