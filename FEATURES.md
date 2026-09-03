@@ -1,31 +1,37 @@
 # FEATURES — toolaspect.com
 
-Current as of 2026-08-20. Static HTML site, Cloudflare Pages, no build step. Deploy: `./deploy.sh` (auto-regenerates sitemap).
+Current as of 2026-09-04. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token).
 
 ## Site Structure
-- **1,422 pages** total, all self-contained HTML+JS, dark theme (#0f172a/#1e293b/#60a5fa)
-- **~109 standalone tools** across finance, health, dev, converters, math, everyday
-- **18 contractor calculators** (2026-08-19): concrete, rebar, lumber, paint, drywall, roofing, roof pitch, fencing, decking, brick, tile, siding, insulation, excavation, gravel, asphalt, mulch, electrical load
-- **7 category hubs**: /all-tools/, /finance-tools/, /health-fitness-tools/, /developer-tools/, /converter-tools/, /math-tools/, /everyday-tools/
-- **/contractor-tools/** — contractor vertical hub (Lane 1)
-- **/embed/ (2026-08-19)** — embed widget catalog: 4 white-label JS calculators (concrete, rebar, lumber, paint), light/dark themes, one-line install. Free tier = attribution backlink; white-label = paid upsell CTA. Vision QA 9/10. Outreach kit in docs/seo-offsite/outreach/ (50 targets, 3 templates, 10/week cadence) — sends pending
-- **290+ converter pages** (units, crypto, time-zones)
-- **Programmatic pages**: gift-ideas (~70), time-zones (~60)
+- **3,173 pages** (sitemap URLs), all self-contained HTML+JS, dark theme
+- **~600+ tools** across finance, health, dev, converters, math, everyday, PDF, contractor, and more (categories on /all-tools/)
+- **Contractor vertical**: 18 calculators + /contractor-tools/ hub
+- **/embed/** — white-label JS widget catalog (concrete, rebar, lumber, paint); free tier = attribution backlink, white-label = paid upsell ($9/mo planned). Outreach kit staged, first sends pending
+- **290+ converter pages**; programmatic pages: gift-ideas, time-zones, guides
+- **/all-tools/** auto-gen crawler mirror (regenerated each deploy, no private data); /roadmap/ deindexed
+- **Content drip**: nightly builder queue (guides + depth passes), commit e.g. `38d0827f` (3 guides + 2 depth passes)
+- **Factory**: automated tool-builder lane + toolaspect-factory-watcher cron (backlog tracking)
 
-## Monetization Status
-- **None active.** AdSense application deferred (was "no ads" contradiction — removed 2026-08-19, needs 30d before applying)
-- **Lane 1**: white-label embed widgets — **LIVE (2026-08-19)**, /embed/ catalog + 4 widgets deployed, outreach kit ready, first sends pending. Paid tier planned $9/mo
-- **Lane 2**: directory SEO compounding on autopilot
+## Monetization Status (ACTIVE BUILD-OUT)
+- **AdSense lane (in progress, NOT yet serving ads)**: pub-7079002297203024 verification snippet injected sitewide (`9f7fe5c1`); placeholder `ad-slot` system live (`tool-top`, `tool-result`, `guide-inline` slots, shared/ads.js flag-gated upgrader, ad-slots.css). Ad serving still gated off pending Stu's go
+- Legacy cleanup: 1,756 unstyled "Advertisement" stubs removed (`87fcb548`); nesting fixes on 145 pages (`c9eb8465`, `86bcf049`)
+- **Lane 1**: white-label embed widgets — LIVE, outreach pending
+- **Lane 2**: directory SEO compounding (traffic 512→3,464 PV/day across Aug, ~6.8x)
+
+## Layout/formatting (fresh fixes, Sep 3)
+- Footer: nav.js link container repaired after dedupe-script mangling (`5e96a0bd`), links deduped 18→16 with margins/dividers (`11fe4a43`)
+- 672 pages: .seo block re-wrapped in `.wrap` (was full-bleed) (`9b89f64b`)
+- 1,776 pages: related-tools sections wrapped (`cf3fde3a`)
+- All verified visually at 400px mobile width on prod
 
 ## SEO Infrastructure
-- Sitemap: 1,421 URLs, auto-regen in deploy.sh — NEVER run ad-hoc sitemap scripts
-- IndexNow: daily cron (Yandex ✓, Bing 403)
-- GSC verified + sitemap submitted 2026-08-12
-- Google sandbox ongoing (day 8), YandexBot crawling 30% of PVs
-- Traffic: ~300 real PV/day steady
-- Marketing arsenal staged in docs/seo-offsite/marketing/ (8 Reddit, 6 Quora, 3 Medium, 30 Pinterest) — awaiting auth
+- Canonicals + JSON-LD sitewide; IndexNow pings on deploy
+- **GSC fully connected** (Sep 1): all 11 domain properties, queries+pages flowing — early impressions tiny (1-3/query)
+- **Umami** (analytics.coreaspectai.com) beacon sitewide incl. all-tools/roadmap re-injections; daily traffic cron posts 7-day charts (Sydney clock ranges)
+- FAQ schema stripped sitewide (retired May 2026 per SEO doctrine); compare-page format prioritized
+- Static count claims "2,000+/1,000+" (doctrine: no real counts); site-gate.py allows ≥1000
 
-## Known Issues
-- Content depth: ~100 legacy tool pages are thin (79-349 words) — retrofit planned (docs/seo-offsite/scaling/content-depth-plan.md)
-- AI Overviews CTR risk not yet mitigated ( Lane 1 B2B embeds = hedge)
-- Kill gates set: <10K visits/mo at M6 → stop offsite SEO; M12 revenue <$200/day → exit
+## Known Issues / Open Threads
+- Preview server :3390 (http://100.67.179.30:3390) dies on every gateway restart — needs systemd user unit w/ Restart=always (proposed, not yet done)
+- Ad serving activation awaiting Stu's go (AdSense app was deferred — 30d window from Aug 19 removal of "no ads" contradiction has now elapsed)
+- Embed outreach: kit ready, 0 sends
