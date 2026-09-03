@@ -26,7 +26,6 @@
 <h1>How to Decode a Certificate: PEM, DER, and ASN.1 Explained</h1>
 <div class="meta"><span>🔓 TLS / PKI</span><span>⏱️ 8 min read</span><span>Free tool included</span></div>
 <p class="intro">Certificates look opaque because they're wearing three layers: ASN.1 (the structure), DER (the binary encoding), and PEM (the base64 armor). Peel them in order and every field you care about — expiry, SANs, key size, who signed it — is sitting at a predictable offset in a tagged tree. Here's the full walkthrough, plus the openssl one-liners for people who want the same answers from a terminal.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>What are PEM, DER, and ASN.1, actually?</h2>
 <p>ASN.1 is a notation for structured data: values have types (INTEGER, OID, SEQUENCE, time, strings), and types nest. X.509 certificates are defined in ASN.1 — a certificate is a SEQUENCE containing a TBSCertificate ("to be signed"), the signature algorithm, and the signature.</p>
 <div class="ad-slot" data-slot="guide-inline">Ad</div>
@@ -58,7 +57,6 @@
 <div class="cta-box"><h3>Decode a certificate right now</h3><p style="color:#fff;opacity:.9">Paste any PEM — cert, CSR, or key — and get the full ASN.1 tree plus subject, validity, SANs, key size, and signature algorithm. Free, private, in-browser.</p><a href="/certificate-decoder/">Certificate Decoder →</a></div>
 <h2>The bottom line</h2>
 <p>Tag, length, value — repeated recursively. Once you see that rhythm in the hex, a certificate stops being a mystery blob and becomes a readable document with an expiry date, a hostname list, and a key you can size up. Decode before you deploy, and the worst outages (the expired-cert-on-Saturday kind) never happen.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>What is inside a PEM file?</h3><p>Base64-encoded DER bytes between BEGIN/END markers. Strip the markers and the base64 armor, and what's left is a stream of tag-length-value records — the ASN.1 structure of a certificate, CSR, or key. Multiple BEGIN/END blocks in one file (a chain) are just multiple structures stacked in order.</p></div>
 <div class="faq-item"><h3>How do I check a certificate's expiration date?</h3><p>Decode it and read notAfter in the Validity section — certificates carry both notBefore and notAfter as UTC dates. With openssl: openssl x509 -in cert.pem -noout -enddate. Renew at roughly two-thirds of the lifetime; for a 90-day Let's Encrypt certificate that means starting renewal around day 60, which is exactly what certbot's auto-renewal timer does.</p></div>

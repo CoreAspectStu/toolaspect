@@ -26,7 +26,6 @@
 <h1>How to Decode a SAML Response by Hand</h1>
 <div class="meta"><span>⏱️ 8 min read</span><span>🔐 Pairs with the SAML Decoder</span></div>
 <p class="intro">When single sign-on breaks, the evidence is a wall of base64 squiggles. This guide unwraps a SAML message layer by layer — URL, encoding, compression, XML — and then reads the handful of fields that decide whether the login was ever going to work.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>What you're actually looking at</h2>
 <p>A SAML 2.0 response is an XML assertion — "this person authenticated, here's who they are, here's how long I vouch for them" — sent from an identity provider (IdP) to your service provider (SP). The XML never travels in the clear. It gets wrapped in layers chosen by the binding, and each layer has to come off in order:</p>
 <div class="ad-slot" data-slot="guide-inline">Ad</div>
@@ -81,7 +80,6 @@
 <p>A decoded response is readable, not verified. The <code>ds:Signature</code> block you'll see inside is a claim until it's cryptographically checked against the IdP's X.509 certificate, with the reference digests and wrap-attack checks your SAML library performs. Never make an access decision by eyeballing decoded XML — decode to debug, verify in code. And since assertions carry names, emails, and group memberships, treat captures of production traffic the way you'd treat a password dump from your own HR system.</p>
 <h2>Related debugging tools</h2>
 <p>SAML is one of several "trust artifact" formats you'll end up squinting at. JWTs hide their claims in base64url too — the <a href="/jwt-decoder/">JWT decoder</a> unpacks headers and payloads (also without verifying signatures). And since SAML verification bottoms out in X.509 certificates, the <a href="/certificate-decoder/">certificate decoder</a> is the next stop when the question becomes "is this even the right cert?"</p>
-<div class="ad-slot">Advertisement</div>
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>Why won't base64-decoding alone show my SAML XML?</h3><p>Because the message was probably compressed first. Redirect-binding messages are DEFLATE-compressed before base64url encoding, so decoding gives you a raw DEFLATE stream — binary bytes that don't start with '&lt;'. You have to inflate those bytes (pako.inflateRaw in JavaScript, zlib inflateRawSync in Node) before the XML appears. POST-binding messages skip compression, so plain base64 decoding does show XML.</p></div>
 <div class="faq-item"><h3>How do I capture a SAML response from my browser?</h3><p>Open devtools before clicking login. For POST binding, watch the Network tab for the POST to your ACS URL (often /acs or /saml/acs), then look in the form data for the SAMLResponse field. For redirect binding, copy the full IdP URL with the SAMLRequest or SAMLResponse query parameter. Browser extensions like SAML-tracer automate exactly this capture.</p></div>

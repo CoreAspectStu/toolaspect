@@ -26,7 +26,6 @@
 <h1>XML to JSON: Mapping Rules and Round Trips</h1>
 <div class="meta"><span>💡 37K+ searches/mo</span><span>⏱️ 7 min read</span></div>
 <p class="intro">XML and JSON disagree about the basics: XML has attributes, JSON doesn't. XML repeats elements freely, JSON doesn't repeat keys. Every XML-to-JSON converter has to make policy decisions about those gaps, and if you don't know the policy, your consuming code breaks in ways that only appear in production. Here are the actual rules — with measured byte counts, not vibes.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>The mapping, concretely</h2>
 <p>The convention most converters follow (xml-js's compact mode, and near enough every API wrapper built on it):</p>
 <div class="ad-slot" data-slot="guide-inline">Ad</div>
@@ -70,7 +69,6 @@
 <div class="cta-box"><h3>Convert one right now</h3><p style="color:#fff;opacity:.9">Paste XML, get JSON — flip the toggle to go back. Byte-exact round trips, entirely in your browser.</p><a href="/xml-to-json/">XML to JSON Converter →</a></div>
 <h2>The bottom line</h2>
 <p>XML to JSON is a solved problem with sharp edges. The mapping is mechanical — attributes to <code>_attributes</code>, text to <code>_text</code>, repetition to arrays — and the failure modes are predictable: shape-shifting arrays, namespace ambiguity, and threefold size growth on element-heavy documents. Know the policy your converter uses, normalize repeated fields in consuming code, and verify round trips before trusting them with fixture data. The <a href="/xml-to-json/">two-way converter</a> shows its counts (elements, attributes, text nodes) on every conversion precisely so you can check, not trust.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>How do XML attributes become JSON keys?</h3><p>A converter has to invent a place for attributes, because JSON has no attribute concept. The common convention (used by xml-js) nests them under an _attributes object: &lt;book id="bk101"&gt; becomes {"book":{"_attributes":{"id":"bk101"}}}. Text content gets a sibling _text key. The underscore prefix stops attributes from colliding with child elements that share a name.</p></div>
 <div class="faq-item"><h3>Why did my JSON field change from an object to an array?</h3><p>Because XML repetition maps to JSON arrays. One &lt;book&gt; element produces an object; two or more produce an array of objects. If the feed you consume has zero-or-many entries, the field can disappear entirely (zero), be an object (one), or be an array (many). Defensive consuming code normalizes every such field to an array before reading it.</p></div>

@@ -26,7 +26,6 @@
 <h1>Chmod Explained: What 755, 644 and 600 Actually Mean</h1>
 <div class="meta"><span>💡 40K searches/mo</span><span>💰 CPC: $1</span><span>⏱️ 6 min read</span></div>
 <p class="intro">Every chmod tutorial starts with "read is 4, write is 2, execute is 1" and then abandons you. This one goes the whole way: where the numbers come from, why directories behave differently, what the fourth digit does, and how to stop guessing between 755 and 644 for good.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>Where the numbers come from</h2>
 <p>Unix stores permissions as bits. Read, write, and execute for three audiences — owner (user), group, and others — make nine bits, and octal is just a compact way to write nine bits as three digits. Each digit encodes one audience:</p>
 <div class="ad-slot" data-slot="guide-inline">Ad</div>
@@ -74,7 +73,6 @@
 <li><strong>Shared folder keeps "forgetting" group access</strong> — new files get the creator's group. Setgid (2775) on the directory fixes it permanently.</li>
 </ul>
 <p>For anything beyond these, run the number both directions before you commit it: our <a href="/chmod-calculator/">chmod calculator</a> converts numeric to symbolic and back, including the special bits. And when a task is really about time-based scheduling rather than permissions, the <a href="/cron-generator/">cron expression generator</a> covers the other half of every sysadmin's cheat sheet. Testing the regex that matches those file names? The <a href="/regex-tester/">regex tester</a> runs it live.</p>
-<div class="ad-slot">Advertisement</div>
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>What do the numbers in chmod 755 mean?</h3><p>Each digit is a sum of permissions: read 4, write 2, execute 1. The first digit is the owner, second the group, third everyone else. In 755 the owner gets 4+2+1 (read, write, execute) while group and others get 4+1 (read and execute). Written symbolically that's rwxr-xr-x.</p></div>
 <div class="faq-item"><h3>Why is 644 the default for files but 755 for directories?</h3><p>Directories need the execute bit to be enterable at all, so a usable directory is usually 755. Ordinary files don't need execution, and most files shouldn't be world-writable, so 644 (owner reads and writes, everyone else reads) is the sane default. That's also what a typical umask of 022 produces when files are created.</p></div>
