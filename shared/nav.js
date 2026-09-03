@@ -1071,32 +1071,15 @@
     f.className = 'ta-footer';
     f.innerHTML =
       '<p>\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
-      '<div class="ta-footer-links">' +
-        '<a href="/about.html">About</a>' +
-        '<a href="/partners">Partners</a>' +
-        '<a href="/contact.html">Contact</a>' +
-        '<a href="/privacy.html">Privacy</a>' +
-        '<a href="/terms.html">Terms</a>' +
-        '<a href="/disclaimer.html">Disclaimer</a>' +
-        '<a href="/developer-tools/">Developer</a>' +
-        '<a href="/guides/">Guides</a>' +
-      '<a href="/all-tools/">All Tools</a>' +
-      '<a href="/converters/">Converters</a>' +
-      '<a href="/finance-tools/">Finance</a>' +
-      '<a href="/health-calculators/">Health</a>' +
-      '<a href="/insurance-tools/">Insurance</a>' +
-      '<a href="/legal-tools/">Legal</a>' +
-      '<a href="/convert/">Convert</a>' +
-      '<a href="/all-tools/">All Tools</a>' +
-      '<a href="/finance-tools/">Finance</a>' +
-        '<a href="/text-tools/">Text</a>' +
-      '</div>';
+      '<div class=""<a href="/about.html">About</a><a href="/partners">Partners</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/disclaimer.html">Disclaimer</a><a href="/developer-tools/">Developer</a><a href="/guides/">Guides</a><a href="/all-tools/">All Tools</a><a href="/converters/">Converters</a><a href="/finance-tools/">Finance</a><a href="/health-calculators/">Health</a><a href="/insurance-tools/">Insurance</a><a href="/legal-tools/">Legal</a><a href="/convert/">Convert</a><a href="/text-tools/">Text</a>"';
     var fStyle = document.createElement('style');
     fStyle.textContent =
       '.ta-footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem;position:relative;z-index:1}' +
       '.ta-footer a{color:var(--text-secondary);transition:color .15s}' +
       '.ta-footer a:hover{color:var(--text)}' +
-      '.ta-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.5rem;margin-top:.75rem}';
+      '.ta-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.25rem;margin-top:.75rem;padding:0 1rem}' +
+      '.ta-footer-links a{display:inline-block;margin:0 .6rem .5rem 0;padding-right:.6rem;border-right:1px solid var(--border)}' +
+      '.ta-footer-links a:last-child{border-right:none;margin-right:0}';
     document.head.appendChild(fStyle);
     document.body.appendChild(f);
   }
