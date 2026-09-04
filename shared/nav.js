@@ -303,6 +303,9 @@
         { label: 'Accelerometer Test', href: '/accelerometer-test/' },
         { label: 'GPS Test', href: '/gps-test/' },
         { label: 'Battery Test', href: '/battery-test/' },
+        { label: 'Reaction Time Test', href: '/reaction-time-test/' },
+        { label: 'Hearing Test', href: '/hearing-test/' },
+        { label: 'Color Blindness Test', href: '/color-blindness-test/' },
       ]
     },
     {
