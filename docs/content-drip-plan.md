@@ -407,6 +407,47 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   llm-pricing 232; queue rule: depth only if queue idle); alimony-california
   (700) / alimony-texas (720) / all-on-4 state pages (552-613) are the
   thinnest monetizable next candidates for a future depth pass.
+- 2026-09-05 batch guides (queue auto-extended by monetization + awareness/
+  AIO intake after full re-audit; NOTE: initial slug-keyword grep was
+  unreliable — "ship-a-car"/"charge-an-ev"/"truck-tow" guide dirs escaped
+  'shipping'/'ev-charg'/'towing' patterns; verified via site-wide dangling
+  /guides/ link scan (zero found) + content-level title grep before picking):
+  veterinary-imaging → guides/how-much-does-a-dog-x-ray-cost/
+  (health/pet cost, most-aware; AIO yes — pricing tables; x-ray is the
+  highest-volume imaging query and dog-mri-cost covers only MRI),
+  youtube-earnings → guides/how-much-does-youtube-pay-per-view/
+  (pricing head query; distinct from youtube-rpm-by-country, cross-linked),
+  tiktok-money → guides/how-much-does-tiktok-pay/ (pricing head query,
+  Creator Rewards $0.40-$1.00/1K qualified creator-reported, 1+ min videos)
+  (each: 1,050-1,240 words, verified data tables — clinic-type x-ray bands
+  and modality ladder from the tool's published bands; niche RPM with
+  per-view and 1M-views columns; regional rate table + income-stream table —
+  FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  guide backlinks added to all three tool pages' related sections)
+- 2026-09-05 depth passes: alimony-calculator-california (700 → 1,390 words,
+  +duration-by-marriage-length table +4320-factors section +what-ends-or-
+  changes-support section, +2 FAQs (3→5) with new FAQPage JSON-LD;
+  calculator JS byte-identical to HEAD);
+  alimony-calculator-texas (720 → 1,351 words, +eligibility-route ×
+  duration × cap table, +maintenance-vs-contractual-alimony +what-ends-or-
+  changes sections, +2 FAQs (3→5) with new FAQPage JSON-LD; calculator JS
+  byte-identical to HEAD). Both pages: how-alimony-is-calculated guide link
+  added to related. Verified before/after: marriage-name-change-cost guide
+  was already completed by the 9-04 factory wave (1,206 words, committed
+  6a331651) — 9-04's "STILL OWED" note is stale; calculator backlog row 87
+  also built (1,472 words).
+- 2026-09-05 hub updates: guides hub +3 cards (More Guides 442→445), count
+  claims re-pegged 500→504 (= on-disk dirs with index.html; the old 503
+  `ls guides/` count included AGENTS.md + hub itself). all-tools hub
+  regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: monetization queue fully drained — content-level title scan
+  found no uncovered finance/insurance/legal/health tool without a guide
+  (creator-cluster leftovers youtube-pay + tiktok-pay were the last head
+  queries; twitch-revenue/spotify-royalty/fansly/onlyfans remain uncovered
+  but low-monetization, depth only if queue idle). Remaining thin depth
+  candidates: all-on-4 state pages (552-613), retirement-calculator (982,
+  above 900 now — recheck), low-monetization tail. Next guides must come
+  from fresh keyword intake (awareness + AIO columns per factory protocol).
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
