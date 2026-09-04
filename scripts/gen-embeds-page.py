@@ -95,6 +95,10 @@ pre{{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;font-
 footer{{text-align:center;color:var(--muted);font-size:.85rem;padding-top:32px;border-top:1px solid var(--border);margin-top:40px}}
 footer a{{color:var(--accent);text-decoration:none}}
 </style>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js"></script>
 </head>
 <body>
 <div class="wrap">
