@@ -287,6 +287,19 @@
       ]
     },
     {
+      label: 'Device Tests',
+      dot: '#f472b6',
+      tools: [
+        { label: 'Webcam Test', href: '/webcam-test/' },
+        { label: 'Mic Test', href: '/mic-test/' },
+        { label: 'Speaker Test', href: '/speaker-test/' },
+        { label: 'Keyboard Test', href: '/keyboard-test/' },
+        { label: 'Screen Test', href: '/screen-test/' },
+        { label: 'Browser Test', href: '/browser-test/' },
+        { label: 'All Device Tests', href: '/device-test/' },
+      ]
+    },
+    {
       label: 'Construction',
       dot: '#818cf8',
       tools: [
