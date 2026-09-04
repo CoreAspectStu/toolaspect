@@ -297,6 +297,12 @@
         { label: 'Screen Test', href: '/screen-test/' },
         { label: 'Browser Test', href: '/browser-test/' },
         { label: 'All Device Tests', href: '/device-test/' },
+        { label: 'Touch Test', href: '/touch-test/' },
+        { label: 'Dead Pixel Test', href: '/dead-pixel-test/' },
+        { label: 'Vibration Test', href: '/vibration-test/' },
+        { label: 'Accelerometer Test', href: '/accelerometer-test/' },
+        { label: 'GPS Test', href: '/gps-test/' },
+        { label: 'Battery Test', href: '/battery-test/' },
       ]
     },
     {
