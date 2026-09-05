@@ -448,6 +448,48 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   candidates: all-on-4 state pages (552-613), retirement-calculator (982,
   above 900 now — recheck), low-monetization tail. Next guides must come
   from fresh keyword intake (awareness + AIO columns per factory protocol).
+- 2026-09-06 batch guides (queue auto-extended by monetization + awareness/AIO
+  after the 9-05 drain; all three most-aware pricing head queries, AIO yes —
+  rate tables; creator cluster has 10+ sibling pages so topic-bridge OK):
+  twitch-revenue → guides/how-much-does-twitch-pay/;
+  spotify-royalty → guides/how-much-does-spotify-pay-per-stream/;
+  onlyfans-earnings → guides/how-much-do-onlyfans-creators-make/
+  (each: 1,211–1,327 words, computed/verified data tables — sub-tier × split
+  incl. Plus 60/70%, illustrative monthly bands by channel size; stream
+  milestones × $0.003/$0.004/$0.005 + platform comparison table; income-stream
+  × 80% + subscriber scenarios — FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling tools; guide backlinks added to all three tool pages).
+  Verified reference data: Twitch US Tier 1 $5.99 since July 2024 (T2 $11.99,
+  T3 $29.99), Plus Program 100/300 points → 60/70% ($100k cap removed Jan
+  2024), payout $50 most methods ($100 wire), net-15; Spotify Loud & Clear
+  2026: $11B+ paid for 2025, ~$70B lifetime, 1,000-stream rule since 2024;
+  OnlyFans FY2024 $7.22B gross fan spend / ~$5.8B to creators (80/20), ~4M
+  creators, subs $4.99-$49.99, ~7-day pending + $20 min + 3-5 business days.
+- 2026-09-06 out-of-band fixes: twitch-revenue-calculator prose corrected
+  to current pricing/splits — $4.99/$2.50 → $5.99/$3.00 (T2/T3 table rows
+  added at $11.99/$29.99), "$100 minimum threshold" → $50 most methods
+  ($100 wire) net-15, Plus Program split mention added; calc JS UNTOUCHED
+  (byte-identical to HEAD, md5-verified) — FLAG for next tool pass: calc
+  still multiplies T1/T2/T3 by 4.99/9.99/24.99 so its sub-revenue output
+  runs ~17-20% below current prices; onlyfans related block off-topic
+  youtube-watch-time link swapped for pricing/fansly calculators + guide.
+- 2026-09-06 depth passes: all-on-4-dental-implants-cost-texas (556 → 1,161
+  words) and -florida (600 → 1,175 words): +acrylic-vs-zirconia reference
+  tables, +first-year/visit-schedule sections (snowbird angle on FL),
+  +financing monthly-payment tables (python-computed: $15,000 @ 14.9%/60mo =
+  $356.06/mo → $21,364 total; $15,300 = $363.18/mo → $21,791), +2 FAQs each
+  (TX 3→5, FL 4→6) with new FAQPage JSON-LD; title/og/twitter/schema year
+  2025→2026 (data stays the verified 2025-published national ranges, labeled
+  as such); FL full-mouth national cell corrected $36,000-$70,000 →
+  $30,000-$60,000 (now consistent with TX and the per-arch×2 derivation);
+  neither page carries calculator JS (informational state pages).
+- 2026-09-06 hub updates: guides hub +3 cards (More Guides 445→448), count
+  claims re-pegged 504→507 (= on-disk dirs with index.html); all-tools hub
+  regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: fansly-earnings is the last uncovered creator tool (guide
+  owed or fold into onlyfans cross-links — next batch decision); depth
+  candidate: all-on-4-california (617); no other named guide candidates —
+  fresh keyword intake (awareness + AIO columns) needed for new guides.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
