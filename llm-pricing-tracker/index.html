@@ -5,11 +5,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LLM API Pricing Tracker — Compare AI Model Costs Per Token</title>
-<meta name="description" content="Real-time pricing for GPT-4o, Claude, Gemini, Llama, DeepSeek, Grok and 300+ LLM APIs. Compare cost per 1M tokens, calculate monthly spend, find cheapest models.">
+<meta name="description" content="Live pricing for GPT-4o, Claude, Gemini, Llama, DeepSeek, Grok and 300+ LLM APIs. Compare cost per 1M tokens and calculate monthly spend.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
-<meta name="twitter:title" content="ToolAspect — 28 Free Online Tools">
-<meta name="twitter:description" content="Free online tools that run in your browser. No signup required.">
+<meta name="twitter:title" content="LLM API Pricing Tracker — Compare AI Model Costs Per Token">
+<meta name="twitter:description" content="Live pricing for GPT-4o, Claude, Gemini, Llama, DeepSeek, Grok and 300+ LLM APIs. Compare cost per 1M tokens and calculate monthly spend.">
 <link rel="canonical" href="https://toolaspect.com/llm-pricing-tracker/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toolaspect.com/llm-pricing-tracker/">
@@ -21,6 +21,7 @@
 <meta property="og:description" content="Real-time pricing for 300+ LLM APIs. Compare cost per token, find cheapest models, calculate your monthly spend.">
 <link rel="stylesheet" href="/shared/theme.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"LLM API Pricing Tracker","description":"Real-time pricing comparison for 300+ LLM APIs","url":"https://toolaspect.com/llm-pricing-tracker/","applicationCategory":"DeveloperApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"LLM API Pricing Tracker","item":"https://toolaspect.com/llm-pricing-tracker/"}]}</script>
 <style>
 .page-header{text-align:center;padding:2rem 1rem 1rem}
 .page-header h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:800;margin-bottom:.5rem}
@@ -133,7 +134,59 @@
 <p>LLM APIs charge per <strong>token</strong> — roughly ¾ of a word. A 1,000-word article is about 1,300 tokens. Most providers split pricing into <strong>input tokens</strong> (your prompt) and <strong>output tokens</strong> (the model's response). Output tokens typically cost 3-5× more than input.</p>
 <p>Some providers offer <strong>batch pricing</strong> (50% off for non-real-time requests) and <strong>cached input</strong> discounts (up to 90% off for repeated prompt prefixes). Always check both input and output rates when comparing models — a cheap input price can hide expensive outputs.</p>
 <p>This tracker pulls live pricing from <strong>OpenRouter</strong>, which aggregates 300+ models across all major providers. Prices update automatically.</p>
+<h2>Why do output tokens cost more than input?</h2>
+<p>Every token an LLM emits gets generated one at a time, each one conditioned on everything before it — that's the expensive pass. Input tokens only get processed once. So a model that reads a 50-page contract and returns a two-paragraph summary charges you heavily for the reading and lightly for the writing, while a chatty chatbot that skims a short prompt and writes an essay is mostly paying output rates. The practical consequence: apps that stuff huge context and expect short answers are input-bound, and apps that generate long content are output-bound. Know which one you're building before you shop on price.</p>
+<p>Context length changes the bill too. Several providers now tier their pricing by how much context you use — the same model can quote one rate below a threshold like 200K tokens and a higher rate above it, because long-context requests hit costlier serving paths. If your workload genuinely needs a 1M-token window, compare the long-context rate, not the headline one.</p>
+<h2>What does a typical workload cost per month?</h2>
+<p>The calculator above defaults to 1 million input tokens and 500,000 output tokens a day — a moderate app feature, not a heavy production workload. Here's what that volume costs on the representative models the calculator ships with, at the rates baked into it:</p>
+<div class="table-wrap">
+<table class="pricing-table">
+<thead><tr><th>Model</th><th>Input $/1M</th><th>Output $/1M</th><th>Daily cost</th><th>Monthly cost</th></tr></thead>
+<tbody>
+<tr><td>GPT-4o</td><td>$2.50</td><td>$10.00</td><td>$7.50</td><td>$225</td></tr>
+<tr><td>GPT-5</td><td>$1.25</td><td>$10.00</td><td>$6.25</td><td>$187.50</td></tr>
+<tr><td>Gemini 2.5 Flash</td><td>$0.30</td><td>$2.50</td><td>$1.55</td><td>$46.50</td></tr>
+<tr><td>DeepSeek V4 Flash</td><td>$0.09</td><td>$0.18</td><td>$0.18</td><td>$5.40</td></tr>
+<tr><td>Cheapest tracked tier</td><td>$0.01</td><td>$0.03</td><td>$0.03</td><td>$0.75</td></tr>
+</tbody>
+</table>
 </div>
+<p>Read that spread twice. The identical workload costs $225 on one model and $5.40 on another — a 40× difference — and the cheapest tier handles it for less than a dollar. Rates move constantly (use the live table above for today's numbers), but the shape holds: small-model tiers are effectively free for prototypes, and frontier models are a deliberate purchase. Price your features on the cheap tier first, then upgrade only where quality measurably fails.</p>
+<h2>What discount levers do providers actually offer?</h2>
+<p>Three levers, all stable across the major providers even as list prices move:</p>
+<div class="table-wrap">
+<table class="pricing-table">
+<thead><tr><th>Lever</th><th>Typical discount</th><th>How it works</th></tr></thead>
+<tbody>
+<tr><td>Batch API</td><td>50% off</td><td>Submit non-urgent requests in bulk; results arrive in hours instead of seconds. Perfect for backfills, evaluations, document processing.</td></tr>
+<tr><td>Prompt caching</td><td>50-90% off cached input</td><td>Repeated prompt prefixes (system prompts, RAG context) get served from cache — e.g. GPT-5 cached input at $0.125/1M vs $1.25 list.</td></tr>
+<tr><td>Context-tier pricing</td><td>Pay less under a threshold</td><td>Some models charge a lower rate below a context cutoff (often ~200K); staying under it compounds with the other two.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Caching deserves special attention if your app sends the same system prompt on every call — at 80% cache hit rates, an input-bound workload can cut its input bill by three-quarters without touching a single prompt. And the levers stack: a batch job over cached, short-context requests can run at a small fraction of list price.</p>
+<h2>How do you pick a model without overspending?</h2>
+<p>Match the tier to the job, not the brand:</p>
+<ul>
+<li><strong>Classification, extraction, routing, formatting:</strong> the cheap tier. These jobs don't need frontier reasoning, and they're usually your highest-volume calls.</li>
+<li><strong>Customer-facing chat, summarization, code assist:</strong> the mid tier — flash-class models balance latency, cost, and quality.</li>
+<li><strong>Hard reasoning, long-chain agents, one-shot codegen:</strong> frontier tier, but cap the volume. A little goes a long way, and a router that sends only the hard 5% of requests to the big model keeps the blended rate honest.</li>
+</ul>
+<p>The classic architecture is a cascade: try the cheap model, check the answer, escalate only on failure. You get frontier quality on the hard minority of requests and commodity pricing on everything else. The <a href="/token-counter/">token counter</a> helps you size prompts before they ship, and the <a href="/guides/how-to-write-ai-prompts/">prompt writing guide</a> covers trimming the tokens you're paying for at both ends.</p>
+<h2>Reading your first invoice</h2>
+<p>Provider dashboards all report the same four things, give or take: input tokens, output tokens, cached tokens, and requests. Two habits make bills predictable. First, log your own token counts per feature — when spend jumps, you want to know which feature did it, not just that it happened. Second, watch the input-to-output ratio; a chat app drifting from 3:1 to 10:1 usually means a RAG pipeline started stuffing context, and that's a caching opportunity, not a price hike to eat.</p>
+<p>Beware per-request thinking on high-volume features. A model at $1 per million tokens is cheap per call but not free at ten million calls a month — the calculator above exists so you never have to do that multiplication in your head.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How much does the average LLM API cost per month?</h3><p>It depends entirely on volume. A prototype doing 1M input and 500K output tokens a day runs about $5-$47 a month on flash-class models versus roughly $190-$225 on flagship tiers. Production apps range from tens to thousands of dollars — model choice and volume dominate the bill.</p></div>
+<div class="faq-item"><h3>What is a token worth in dollars?</h3><p>Roughly ¾ of a word. At $1 per million input tokens, a 1,000-word prompt costs about a tenth of a cent. Frontier output tokens at $10-$50 per million cost 1-5 cents per 100 words generated.</p></div>
+<div class="faq-item"><h3>Why is output pricing higher than input pricing?</h3><p>Generation is sequential — every output token requires a full forward pass conditioned on the context so far, while input tokens are processed in parallel once. Providers pass that compute difference through: outputs typically run 3-5× the input rate, and up to 10× on some tiers.</p></div>
+<div class="faq-item"><h3>Do any providers offer free LLM API access?</h3><p>Yes — several models in the live table above list at $0 through OpenRouter, and the major clouds each ship a small free tier (Google's AI Studio has a no-cost quota for its flash models, for instance). Free tiers rate-limit aggressively; fine for testing, not for production.</p></div>
+<div class="faq-item"><h3>How do I cut my LLM bill without switching models?</h3><p>Three levers, in order of payoff: batch your non-urgent jobs (50% off), enable prompt caching for repeated prefixes (50-90% off cached input), and shorten prompts and cap max output tokens. A cascade that escalates only failed requests to a bigger model compounds all three.</p></div>
+</div>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does the average LLM API cost per month?","acceptedAnswer":{"@type":"Answer","text":"It depends entirely on volume. A prototype doing 1M input and 500K output tokens a day runs about $5-$47 a month on flash-class models versus roughly $190-$225 on flagship tiers. Production apps range from tens to thousands of dollars — model choice and volume dominate the bill."}},{"@type":"Question","name":"What is a token worth in dollars?","acceptedAnswer":{"@type":"Answer","text":"Roughly three quarters of a word. At $1 per million input tokens, a 1,000-word prompt costs about a tenth of a cent. Frontier output tokens at $10-$50 per million cost 1-5 cents per 100 words generated."}},{"@type":"Question","name":"Why is output pricing higher than input pricing?","acceptedAnswer":{"@type":"Answer","text":"Generation is sequential — every output token requires a full forward pass conditioned on the context so far, while input tokens are processed in parallel once. Providers pass that compute difference through: outputs typically run 3-5x the input rate, and up to 10x on some tiers."}},{"@type":"Question","name":"Do any providers offer free LLM API access?","acceptedAnswer":{"@type":"Answer","text":"Yes — several models in the live table list at $0 through OpenRouter, and the major clouds each ship a small free tier (Google AI Studio has a no-cost quota for its flash models, for instance). Free tiers rate-limit aggressively; fine for testing, not for production."}},{"@type":"Question","name":"How do I cut my LLM bill without switching models?","acceptedAnswer":{"@type":"Answer","text":"Three levers, in order of payoff: batch your non-urgent jobs (50% off), enable prompt caching for repeated prefixes (50-90% off cached input), and shorten prompts and cap max output tokens. A cascade that escalates only failed requests to a bigger model compounds all three."}}]}
+</script>
+<style>.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}.faq-item p{font-size:.88rem;color:var(--muted);margin:0;line-height:1.7}.content-section h2{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .75rem}.content-section ul{color:var(--muted);font-size:.9rem;line-height:1.8;padding-left:1.5rem;margin-bottom:14px}.content-section li{margin-bottom:4px}</style>
 
 <script>
 var allModels=[];

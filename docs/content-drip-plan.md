@@ -490,6 +490,68 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   owed or fold into onlyfans cross-links — next batch decision); depth
   candidate: all-on-4-california (617); no other named guide candidates —
   fresh keyword intake (awareness + AIO columns) needed for new guides.
+- 2026-09-07 batch guides (fansly was the named queue item; the other two
+  picked by fresh-intake rules — most-aware pricing head queries, AIO yes,
+  href-coverage scan found 90 never-referenced tools and the home-materials
+  calculators were the strongest monetizable gaps with a big construction
+  cluster for the topic bridge):
+  fansly-earnings → guides/how-much-does-fansly-pay/;
+  blow-in-insulation → guides/how-much-does-blow-in-insulation-cost/;
+  drywall → guides/how-much-does-drywall-installation-cost/
+  (each: 1,234–1,386 words, computed/verified data tables — per-sub tier
+  math + payout-method minimums + platform comparison at the 80/20 split;
+  per-sqft source table + attic-size cost/bag table + DOE zone R-targets;
+  per-sqft scope bands + project-size table + finish-levels 0-5 — FAQ +
+  Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling tools; guide
+  backlinks added to all three tool pages' related sections).
+  Verified reference data: Fansly 20% take / 80% payout, 7-day pending,
+  minimums Paxum-Cosmo-ACH $20 / SEPA $50 / wire-crypto $100, Tue-Fri
+  processing cycle w/ 1-3 business day delivery (help.fansly.com payout
+  articles); insulation HomeGuide 2026 $0.60-$2.30/sqft installed
+  cellulose, Homewyse May-2026 $1.67-$2.92, Bob Vila attic $1.00-$1.50,
+  DIY materials $0.30-$0.75; drywall $1.50-$3.50/sqft full install L4,
+  labor-only $1.75-$3.75, hang-only $0.65-$1.90, HomeAdvisor 2,000-sqft
+  house $8,000-$30,000, Thumbtack 1-2 rooms $900-$1,500, panels $12-$20
+  avg $15.
+- 2026-09-07 depth passes: all-on-4-dental-implants-cost-california
+  (609 → 1,329 words) mirroring the 9-06 TX/FL pattern: +acrylic-vs-
+  zirconia table at CA prices, +first-year section (Pacific + Loma Linda
+  school angle), +financing table (python-computed: $18,300 @ 14.9%/60mo
+  = $434/mo → $26,064; $25,000 = $593/mo → $35,606; $36,600 = $869/mo →
+  $52,127), +2 FAQs (4→6) with new FAQPage JSON-LD, title/og/twitter/
+  schema year 2025→2026 (data stays the verified 2025-published national
+  ranges, labeled as such); no calculator JS on the page.
+  llm-pricing-tracker (232 → 1,261 words; queue-idle rule satisfied —
+  monetization queue drained, so the low-mon tail unlocked; picked over
+  roman-numeral/token-counter for AIO reference-table potential):
+  +monthly-cost table at the calculator's own representative models
+  (1M in/500K out/day: GPT-4o $225 → cheapest tier $0.75), +discount-
+  levers table (batch 50%, caching 50-90% w/ GPT-5 $0.125 anchor,
+  context tiers), +output-cost mechanics +model-picker +invoice sections,
+  +5 FAQs with new FAQPage JSON-LD + BreadcrumbList; stale twitter:title
+  "ToolAspect — 28 Free Online Tools" → real title; OpenRouter fetch JS
+  byte-identical to HEAD. Static numbers deliberately anchored to the
+  page's own calculator constants + provider-stable discount structure
+  (live table carries current rates).
+- 2026-09-07 out-of-band fixes: fansly-earnings-calculator broken doctype
+  repaired (stray closing paragraph pasted mid-<!DOCTYPE> — staged-blob
+  collision class; paragraph restored to the payout-mechanics section),
+  two "Veyzi" third-party brand plugs removed from multi-platform
+  sections (foreign-copy drift class), off-topic youtube related links →
+  onlyfans-earnings/loyalfans + fansly guide block at tail (twitch-page
+  pattern); blow-in/drywall related lists gained guide links.
+- 2026-09-07 hub updates: guides hub +3 cards (More Guides 448→451),
+  count claims re-pegged 507→510 (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: no named guide candidates remain — loyalfans is the last
+  uncovered creator-platform tool (brand/pricing query, low volume — next
+  batch decision whether to guide it or leave it linked from fansly/OF
+  cross-links); remaining thin depth candidates: roman-numeral-converter
+  (107), token-counter (173), invoice-generator (581); construction-
+  cluster never-referenced calculators (gutter, shed, topsoil, mulch,
+  lumber, brick, paver, rebar, sod, sonotube, wall-framing, crown-molding,
+  soffit-fascia, concrete-block, excavation, epoxy, aggregate-base) are
+  the next guide-intake pool if the home-cost guides perform.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
