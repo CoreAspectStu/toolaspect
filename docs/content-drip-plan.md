@@ -552,6 +552,53 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   lumber, brick, paver, rebar, sod, sonotube, wall-framing, crown-molding,
   soffit-fascia, concrete-block, excavation, epoxy, aggregate-base) are
   the next guide-intake pool if the home-cost guides perform.
+- 2026-09-08 batch guides (loyalfans was the named queue decision — guided;
+  other two picked from the named construction-cluster intake pool,
+  most-aware pricing head queries, AIO yes — cost tables):
+  loyalfans → guides/how-much-does-loyalfans-pay/;
+  gutter → guides/how-much-do-gutters-cost/;
+  shed → guides/how-much-does-it-cost-to-build-a-shed/
+  (each: 1,209–1,368 visible words, computed/verified data tables —
+  revenue-stream × 80/20 + sub-size math + 5% referral ladder +
+  OF/Fansly/Loyalfans payout comparison (loyalfans.com/payout: $50 min,
+  1st & 16th, 5% lifetime referral); material × $/LF source table
+  (vinyl $6-$11 HomeAdvisor, seamless aluminum $6-$15 / Homewyse 5-2026
+  $6.29-$10.45, steel $12-$25, copper $15-$40, guards $1-$15) +
+  gable/hip whole-house table computed at the calculator's own $9/LF math
+  ($1,026/$1,593); route comparison (DIY $1,500-$3,000 vs prefab
+  $4,000-$7,000 10×12, 2026 avg ~$3,500) + materials-budget table +
+  slab bags-vs-ready-mix table (1.48 yd ≈ $222 vs 67 bags $400-$470) —
+  FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling tools;
+  guide backlinks added to all three tool pages' related sections).
+- 2026-09-08 depth passes: invoice-generator (590 → 1,264 words,
+  +invoice-numbering reference table +unpaid-invoice ladder +late-fee
+  conventions (1.5%/mo) +cash-vs-accrual tax-timing section, +2 FAQs
+  (4→6) with NEW FAQPage JSON-LD (page had none; BreadcrumbList already
+  present); invoice JS byte-identical to HEAD);
+  roman-numeral-converter (112 → 1,075 words, +subtractive-pairs +
+  lookup-numbers + 2020-2030 years reference tables (node-verified
+  against the tool's own algorithm), +greedy-algorithm walkthrough,
+  +3999-limit/vinculum +IIII-on-clocks +no-zero sections, +5 FAQs with
+  new FAQPage JSON-LD + BreadcrumbList; converter JS byte-identical to
+  HEAD, sha-verified).
+- 2026-09-08 out-of-band fixes: loyalfans tool page — one "Veyzi"
+  third-party brand plug removed from the durable-version section
+  (foreign-copy drift class, same as 9-07 fansly fix) and off-topic
+  YouTube related links swapped for fansly/onlyfans/guide links;
+  shed-calculator JS-array-in-HTML paragraph repaired to three prose
+  paragraphs (Anchoring/Floors/Finishing section — same staged-blob
+  collision class as ROI/password/percentage pages).
+- 2026-09-08 hub updates: guides hub +3 cards (More Guides 451→454),
+  count claims re-pegged 510→513 (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: creator cluster now fully covered (loyalfans was the
+  last); remaining thin depth candidate: token-counter (183) — depth
+  only if queue idle (low-monetization); construction-cluster intake
+  pool for next guides (if the gutter/shed/home-cost guides perform):
+  topsoil, mulch, lumber, brick, paver, rebar, sod, sonotube,
+  wall-framing, crown-molding, soffit-fascia, concrete-block,
+  excavation, epoxy, aggregate-base; fresh keyword intake (awareness +
+  AIO columns) for anything beyond those per factory protocol.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A

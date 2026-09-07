@@ -22,6 +22,8 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Roman Numeral Converter","description":"Convert numbers to Roman numerals and back.","url":"https://toolaspect.com/roman-numeral-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Roman Numeral Converter","item":"https://toolaspect.com/roman-numeral-converter/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the Roman numeral for 2026?","acceptedAnswer":{"@type":"Answer","text":"MMXXVI. The thousands are MM, the tens are XX, and the six is VI, added left to right in descending value: 1000 + 1000 + 10 + 10 + 5 + 1."}},{"@type":"Question","name":"Why do Roman numerals stop at 3999?","acceptedAnswer":{"@type":"Answer","text":"Standard notation has no letter larger than M (1,000), and no symbol may repeat more than three times, so 3,999 — MMMCMXCIX — is the largest number you can write in plain symbols. Romans wrote larger values with an overbar (a vinculum) multiplying the marked group by 1,000, but most modern converters skip that convention."}},{"@type":"Question","name":"How do you convert a number to Roman numerals?","acceptedAnswer":{"@type":"Answer","text":"Work greedily from the largest value down: take out the biggest symbol value that fits, repeat while it still fits, and move to the next. For 1987 that's M (1,000), then CM (900), then LXXX (80), then VII (7) — MCMLXXXVII. The converter above does the same walk in code."}},{"@type":"Question","name":"Is IIII ever correct instead of IV?","acceptedAnswer":{"@type":"Answer","text":"On traditional clock faces, yes — IIII is the long-standing convention, including on Big Ben. The Romans themselves were loose about it too; carved inscriptions show both IIII and IV. In modern text, use IV."}},{"@type":"Question","name":"Why is there no zero in Roman numerals?","acceptedAnswer":{"@type":"Answer","text":"Roman numerals record amounts, not positions — the system evolved from a tally, and a tally never needs to write 'nothing.' Medieval scholars occasionally used the word nulla for zero in computational contexts, but the numeral system itself has no symbol for it."}}]}</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
@@ -46,6 +48,10 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 table{width:100%;border-collapse:collapse;margin:12px 0}
 td,th{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
 th{color:var(--muted);font-size:.8rem;text-transform:uppercase}
+.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.faq-item p{font-size:.88rem;margin-bottom:0}
 @media(max-width:640px){.container{padding:1rem}}
 </style>
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Roman Numeral Converter","url":"https://toolaspect.com/roman-numeral-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert numbers to Roman numerals and vice versa. Supports 1-3999. Free online Roman numeral converter."}]}</script>
@@ -92,15 +98,59 @@ th{color:var(--muted);font-size:.8rem;text-transform:uppercase}
       <tr><td>D</td><td>500</td></tr>
       <tr><td>M</td><td>1000</td></tr>
     </table>
-    <h2>Rules</h2>
+    <h2>The Rules, in One Breath</h2>
     <ul>
       <li>Subtractive: IV=4, IX=9, XL=40, XC=90, CD=400, CM=900</li>
       <li>Additive: VI=6, XV=15, LX=60, DC=600</li>
       <li>No symbol repeats more than 3 times (III=3, but 4=IV)</li>
       <li>V, L, D are never repeated</li>
     </ul>
-    <h2>Where Roman Numerals Are Used</h2>
-    <p>Movie sequels (Rocky IV), monarch names (Elizabeth II), Super Bowl numbering, book chapters, clock faces, copyright dates, and building cornerstones.</p>
+    <p>Only six subtractive pairs exist, and that's the whole trick of reading the system: if a smaller symbol sits before a bigger one, subtract it once; otherwise add. Everything else is counting.</p>
+    <table>
+      <tr><th>Number</th><th>Subtractive pair</th><th>Number</th><th>Subtractive pair</th></tr>
+      <tr><td>4</td><td>IV</td><td>90</td><td>XC</td></tr>
+      <tr><td>9</td><td>IX</td><td>400</td><td>CD</td></tr>
+      <tr><td>40</td><td>XL</td><td>900</td><td>CM</td></tr>
+    </table>
+    <h2>How Does the Conversion Actually Work?</h2>
+    <p>The algorithm is greedy: start with the largest value that fits, subtract it, repeat, and move down the list when it no longer fits. Take 1987. M fits (1,000 leaves 987); M doesn't fit again — 987 is below 1,000 — so CM takes 900, leaving 87. L takes 50, leaving 37; X takes 10 three times, leaving 7; V takes 5; I takes the last 1 twice. String the symbols in the order you spent them: MCMLXXXVII.</p>
+    <p>Reading runs the same logic in reverse, right to left. If a symbol is smaller than the one to its right, subtract it; otherwise add and keep the running max. It's how the converter above parses MMXXIV without a lookup table — walk the string once, track the previous value, and the subtractions handle themselves.</p>
+    <h2>Reference Table: Numbers People Actually Look Up</h2>
+    <table>
+      <tr><th>Number</th><th>Roman</th><th>Number</th><th>Roman</th></tr>
+      <tr><td>14</td><td>XIV</td><td>99</td><td>XCIX</td></tr>
+      <tr><td>19</td><td>XIX</td><td>1954</td><td>MCMLIV</td></tr>
+      <tr><td>40</td><td>XL</td><td>1987</td><td>MCMLXXXVII</td></tr>
+      <tr><td>44</td><td>XLIV</td><td>1999</td><td>MCMXCIX</td></tr>
+      <tr><td>50</td><td>L</td><td>2024</td><td>MMXXIV</td></tr>
+      <tr><td>90</td><td>XC</td><td>3999</td><td>MMMCMXCIX</td></tr>
+    </table>
+    <p>A note on the famous awkward ones: 99 is XCIX, not IC — you can only subtract I from V or X, and only in the same decimal family. The rule keeps every family (ones, tens, hundreds) converting independently, which is why the system reads cleanly from left to right.</p>
+    <h2>Recent and Upcoming Years</h2>
+    <p>Years are the most common lookup — Super Bowls, film credits, class rings, building dedications. This decade at a glance:</p>
+    <table>
+      <tr><th>Year</th><th>Roman</th><th>Year</th><th>Roman</th></tr>
+      <tr><td>2020</td><td>MMXX</td><td>2026</td><td>MMXXVI</td></tr>
+      <tr><td>2021</td><td>MMXXI</td><td>2027</td><td>MMXXVII</td></tr>
+      <tr><td>2022</td><td>MMXXII</td><td>2028</td><td>MMXXVIII</td></tr>
+      <tr><td>2023</td><td>MMXXIII</td><td>2029</td><td>MMXXIX</td></tr>
+      <tr><td>2024</td><td>MMXXIV</td><td>2030</td><td>MMXXX</td></tr>
+    </table>
+    <h2>Why Do Roman Numerals Stop at 3999?</h2>
+    <p>Two rules collide. There's no letter above M (1,000), and no symbol may repeat more than three times. Three Ms gets you to 3,000; the remaining 999 is CM XC IX. That makes MMMCMXCIX the ceiling of plain notation, which is why this converter — like nearly every converter — caps at 3,999.</p>
+    <p>The Romans themselves needed bigger numbers and invented workarounds. The vinculum drew a horizontal bar over a group to multiply it by 1,000, so V̄ meant 5,000. An older convention wrapped symbols in apostrophe-like marks, the origin of D (500) and the strange ↀ for 1,000. Medieval writers stacked brackets for millions. All of it is convention rather than grammar, none of it standardized, and modern typography dropped the practice — which is why copyright pages settle for MCMXCIX-style years and why you'll never see a Super Bowl needing it.</p>
+    <h2>Where Roman Numerals Are Still Used</h2>
+    <p>Movie sequels and copyright dates (Rocky IV, © MCMLIV), monarchs and popes (Elizabeth II, Francis), Super Bowl numbering, book chapters and front-matter pagination, clock faces, building cornerstones, chemistry oxidation states, and the outlines your English teacher demanded. Law and medicine lean on lowercase Roman (i, ii, iii) for subsections, and degrees of formality aside, the system survives because it does one job well: it looks permanent.</p>
+    <h2>Why Do Clocks Say IIII Instead of IV?</h2>
+    <p>Tradition, mostly, with several stories attached. Traditional clock and watch faces — Big Ben included — show four as IIII, and have since the medieval tower clocks. Explanations range from visual balance (IIII's four strokes anchor the dial's right side opposite VIII) to a founder's economy (with IIII, a mold casting batches of I, V, and X turns out the whole dial's characters in even lots) to simple inherited habit. The Romans used both spellings themselves; carved inscriptions show IIII on some monuments and IV on others. For anything that isn't a dial, write IV.</p>
+    <h2>Why Is There No Zero?</h2>
+    <p>Roman numerals grew out of a tallying system, and tallies record amounts — you don't carve a notch for nothing. Zero as a number, with its positional power, arrived from Indian mathematics through Arabic numerals, and that's precisely where Roman numerals lose: try long division in M's and C's and you'll appreciate why Europe switched. Medieval scribes computing with Roman numerals occasionally wrote nulla ("none") where a zero would sit, an admission more than a symbol.</p>
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><h3>What is the Roman numeral for 2026?</h3><p>MMXXVI. The thousands are MM, the tens are XX, and the six is VI, added left to right in descending value: 1000 + 1000 + 10 + 10 + 5 + 1.</p></div>
+    <div class="faq-item"><h3>Why do Roman numerals stop at 3999?</h3><p>Standard notation has no letter larger than M (1,000), and no symbol may repeat more than three times, so 3,999 — MMMCMXCIX — is the largest number you can write in plain symbols. Romans wrote larger values with an overbar (a vinculum) multiplying the marked group by 1,000, but most modern converters skip that convention.</p></div>
+    <div class="faq-item"><h3>How do you convert a number to Roman numerals?</h3><p>Work greedily from the largest value down: take out the biggest symbol value that fits, repeat while it still fits, and move to the next. For 1987 that's M (1,000), then CM (900), then LXXX (80), then VII (7) — MCMLXXXVII. The converter above does the same walk in code.</p></div>
+    <div class="faq-item"><h3>Is IIII ever correct instead of IV?</h3><p>On traditional clock faces, yes — IIII is the long-standing convention, including on Big Ben. The Romans themselves were loose about it too; carved inscriptions show both IIII and IV. In modern text, use IV.</p></div>
+    <div class="faq-item"><h3>Why is there no zero in Roman numerals?</h3><p>Roman numerals record amounts, not positions — the system evolved from a tally, and a tally never needs to write "nothing." Medieval scholars occasionally used the word nulla for zero in computational contexts, but the numeral system itself has no symbol for it.</p></div>
   </div>
 
   </div>
