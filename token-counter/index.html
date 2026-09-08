@@ -53,8 +53,11 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 .seo-content ul{margin-left:1.5rem;margin-bottom:12px;color:var(--text-secondary)}
 .seo-content li{margin-bottom:5px;font-size:.9rem}
 @media(max-width:640px){.container{padding:1rem}.stats-grid{grid-template-columns:1fr 1fr}}
+.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.85rem}.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--bg-elevated);color:var(--text)}
 </style>
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Token Counter — GPT, Claude, Gemini Token Estimator","url":"https://toolaspect.com/token-counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Count tokens for GPT-4, Claude, and Gemini AI models. Estimate API costs and token limits. Free online token counter."}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Token Counter","item":"https://toolaspect.com/token-counter/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many words is 1,000 tokens?","acceptedAnswer":{"@type":"Answer","text":"About 750 words of English prose, using the standard rule of thumb that 100 tokens is roughly 75 words. Going the other way, a 1,000-word article costs about 1,300 tokens."}},{"@type":"Question","name":"How many tokens is a 500-word article?","acceptedAnswer":{"@type":"Answer","text":"Roughly 650 tokens for plain English, since a word averages about 1.3 tokens. Code, URLs, or heavy punctuation push the count higher because symbols and unusual character sequences tokenize less efficiently."}},{"@type":"Question","name":"How accurate is a character-based token estimate?","acceptedAnswer":{"@type":"Answer","text":"Within roughly 10-20% for ordinary English prose. Exact counts require the model's own tokenizer — tiktoken for OpenAI models, Claude's tokenizer, SentencePiece-based tokenizers elsewhere — because every vocabulary splits text slightly differently."}},{"@type":"Question","name":"Do all AI models count tokens the same way?","acceptedAnswer":{"@type":"Answer","text":"No. Each model family has its own tokenizer and vocabulary, so the same text tokenizes slightly differently across GPT, Claude, Gemini, and Llama. For English prose the differences are small — a few percent — which is why a single estimate is useful for budgeting across providers."}},{"@type":"Question","name":"Why was I billed for more tokens than I sent?","acceptedAnswer":{"@type":"Answer","text":"API bills count more than your visible prompt. System instructions, conversation history on multi-turn requests, and the model's generated response all count — and output tokens are usually priced higher than input tokens. Many providers also discount repeated input via prompt caching, so itemized usage rarely matches a naive count of your text."}}]}</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js"></script>
@@ -109,11 +112,12 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
   </div>
 
   <div class="ad-slot" data-slot="tool-result">Ad</div>
-<div class="wrap"><div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/regex-tester/">Regex Tester</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li><li style="margin:4px 0"><a href="/cron-generator/">Cron Generator</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
+<div class="wrap"><div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/json-formatter/">Json Formatter</a></li><li style="margin:4px 0"><a href="/regex-tester/">Regex Tester</a></li><li style="margin:4px 0"><a href="/base64-encoder/">Base64 Encoder</a></li><li style="margin:4px 0"><a href="/guides/how-to-write-ai-prompts/">How to Write AI Prompts</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 
   <div class="seo-content">
     <h2>How Token Counting Works</h2>
-    <p>Large Language Models process text in "tokens" — chunks of characters that represent words, parts of words, or punctuation. A general rule: <strong>1 token ≈ 4 characters ≈ 0.75 words</strong> in English.</p>
+    <p>Large Language Models process text in "tokens" — chunks of characters that represent words, parts of words, or punctuation. A general rule: <strong>1 token ≈ 4 characters ≈ 0.75 words</strong> in English. Common words tend to be single tokens ("the", "and", "run"); rarer words split into pieces ("tokenization" becomes something like "token" + "ization"); and every punctuation mark, space pattern, and line break takes its share.</p>
+    <p>That's why two texts of identical word count can tokenize differently. A legal paragraph stuffed with defined terms and citations runs hotter than a chatty email, and a page of JSON or code can double the token count of the plain English describing it.</p>
     <h2>Why Token Counting Matters</h2>
     <ul>
       <li><strong>API costs:</strong> You're billed per token — know your cost before sending</li>
@@ -121,8 +125,59 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
       <li><strong>Prompt engineering:</strong> Optimize prompts to use fewer tokens</li>
       <li><strong>Rate limits:</strong> API tiers are based on tokens per minute</li>
     </ul>
+    <h2>How many tokens is that in words?</h2>
+    <p>For budgeting, convert both directions using the standard ratio of about 1.3 tokens per word (OpenAI's published rule of thumb is 100 tokens ≈ 75 words; this tool uses the equivalent ~4 characters per token, cross-checked against a 1.3× word multiplier):</p>
+    <div class="table-wrap">
+    <table class="data-table"><thead><tr><th>Text</th><th>Est. tokens</th><th>Est. characters</th></tr></thead>
+    <tbody>
+    <tr><td>Sentence (15 words)</td><td>~20</td><td>~80</td></tr>
+    <tr><td>Paragraph (100 words)</td><td>~130</td><td>~520</td></tr>
+    <tr><td>Blog section (250 words)</td><td>~325</td><td>~1,300</td></tr>
+    <tr><td>Article (500 words)</td><td>~650</td><td>~2,600</td></tr>
+    <tr><td>Long article (2,000 words)</td><td>~2,600</td><td>~10,400</td></tr>
+    </tbody></table>
+    </div>
+    <p>Paste the real text into the counter instead of trusting word-count math whenever precision matters — the whole point of a tokenizer estimate is catching the code, URLs, and tables that break the words-only shortcut.</p>
+    <h2>What fits in a context window?</h2>
+    <p>Context windows are quoted in tokens, which means nothing to most humans. The same budget in words and paperback pages (at 275 words per page):</p>
+    <div class="table-wrap">
+    <table class="data-table"><thead><tr><th>Context window</th><th>Approx. words</th><th>Approx. pages</th><th>Feels like</th></tr></thead>
+    <tbody>
+    <tr><td>8K tokens</td><td>6,000</td><td>~22</td><td>A long report</td></tr>
+    <tr><td>32K tokens</td><td>24,000</td><td>~87</td><td>A short book</td></tr>
+    <tr><td>128K tokens</td><td>96,000</td><td>~350</td><td>A thick novel</td></tr>
+    <tr><td>200K tokens</td><td>150,000</td><td>~550</td><td>Two average novels</td></tr>
+    <tr><td>1M tokens</td><td>750,000</td><td>~2,700</td><td>A bookshelf</td></tr>
+    </tbody></table>
+    </div>
+    <p>Remember the window holds input <em>and</em> output. A model that must draft 2,000 tokens of answer has 2,000 fewer tokens of your document to read, and multi-turn chat re-sends the whole conversation every request, which is why long chats get slow or start "forgetting" the earliest messages.</p>
+    <h2>Token efficiency by content type</h2>
+    <p>Not all text tokenizes equally. Approximate characters-per-token by content, from tokenizer behavior across the major model families:</p>
+    <div class="table-wrap">
+    <table class="data-table"><thead><tr><th>Content type</th><th>Chars per token</th><th>Why</th></tr></thead>
+    <tbody>
+    <tr><td>Plain English prose</td><td>~4</td><td>Common words are single tokens</td></tr>
+    <tr><td>Code</td><td>~3 to 3.5</td><td>Underscores, brackets, and rare identifiers split often</td></tr>
+    <tr><td>JSON / URLs</td><td>~2.5 to 3</td><td>Quotes, braces, and long path segments fragment badly</td></tr>
+    <tr><td>Non-Latin scripts</td><td>~1 to 2</td><td>Many scripts fall outside the common token vocabulary</td></tr>
+    </tbody></table>
+    </div>
+    <p>The practical consequence: the same information costs different amounts depending on format. Pretty-printed JSON with indentation can run a third more tokens than the compact equivalent, and translating a prompt from English can double its token count in some languages. If you're piping structured data into prompts, strip what the model doesn't need.</p>
+    <h2>How token billing actually works</h2>
+    <p>Three mechanics explain almost every "why is my bill higher than my estimate" question. First, input and output are priced separately, and output tokens typically cost several times more than input — the answer you receive is the expensive part. Second, everything in the request counts: system instructions, few-shot examples, and the full conversation history on later turns. Third, most providers now discount repeated input through prompt caching, which can cut the cost of a stable system prompt dramatically on high-volume apps. For comparing per-model prices across providers at real volumes, the <a href="/llm-pricing-tracker/">LLM pricing tracker</a> puts current rates side by side, and the <a href="/guides/how-to-write-ai-prompts/">prompt writing guide</a> covers trimming prompt length without losing quality.</p>
     <h2>Token Estimates by Model</h2>
-    <p>Token counts vary slightly between tokenizers (tiktoken for OpenAI, SentencePiece for Claude, etc.). This tool provides a close estimate based on the standard ~4 chars/token ratio.</p>
+    <p>Token counts vary slightly between tokenizers (tiktoken for OpenAI, SentencePiece for Claude, etc.). This tool provides a close estimate based on the standard ~4 chars/token ratio, then shows the result against each model's context window and input price so you can spot a "doesn't fit" before you send it.</p>
+    <h2>Frequently Asked Questions</h2>
+    <p><strong>How many words is 1,000 tokens?</strong></p>
+    <p>About 750 words of English prose, using the standard rule of thumb that 100 tokens is roughly 75 words. Going the other way, a 1,000-word article costs about 1,300 tokens.</p>
+    <p><strong>How many tokens is a 500-word article?</strong></p>
+    <p>Roughly 650 tokens for plain English, since a word averages about 1.3 tokens. Code, URLs, or heavy punctuation push the count higher because symbols and unusual character sequences tokenize less efficiently.</p>
+    <p><strong>How accurate is a character-based token estimate?</strong></p>
+    <p>Within roughly 10-20% for ordinary English prose. Exact counts require the model's own tokenizer — tiktoken for OpenAI models, Claude's tokenizer, SentencePiece-based tokenizers elsewhere — because every vocabulary splits text slightly differently.</p>
+    <p><strong>Do all AI models count tokens the same way?</strong></p>
+    <p>No. Each model family has its own tokenizer and vocabulary, so the same text tokenizes slightly differently across GPT, Claude, Gemini, and Llama. For English prose the differences are small — a few percent — which is why a single estimate is useful for budgeting across providers.</p>
+    <p><strong>Why was I billed for more tokens than I sent?</strong></p>
+    <p>API bills count more than your visible prompt. System instructions, conversation history on multi-turn requests, and the model's generated response all count — and output tokens are usually priced higher than input tokens. Many providers also discount repeated input via prompt caching, so itemized usage rarely matches a naive count of your text.</p>
   </div>
 
   </div>

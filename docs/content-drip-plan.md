@@ -599,6 +599,55 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   wall-framing, crown-molding, soffit-fascia, concrete-block,
   excavation, epoxy, aggregate-base; fresh keyword intake (awareness +
   AIO columns) for anything beyond those per factory protocol.
+- 2026-09-09 batch guides (first three of the named construction-cluster
+  intake pool — topsoil, mulch, lumber — verified no matching guides via
+  content-level grep, all most-aware pricing head queries, AIO yes —
+  cost tables; construction cluster >10 sibling pages for topic bridge):
+  topsoil → guides/how-much-does-topsoil-cost/;
+  mulch → guides/how-much-does-mulch-cost/;
+  lumber → guides/how-much-does-lumber-cost/
+  (each: 1,150–1,267 visible words, computed/verified data tables —
+  type × $/yd bands (topsoil.com $20-$50 screened delivered, blends
+  $40-$80, bags $2-$5 → $72-$180/yd-eq) + project table w/ 10% cushion
+  at $30/yd + $75 delivery; LawnStarter $30-$135/yd bulk, hardwood
+  $30-$50, cedar $45-$80, cypress $44-$68, dyed +$5-$10, rubber
+  $80-$160, stone $25-$60, pine straw $4-$7/bale, bags $3.25-$6.50 →
+  $44-$88/yd-eq, installed $77-$94 + project table at the tool's own
+  $40/yd + $4.50/bag defaults; lumber NAHB/Madison's $521.35/MBF 8-28,
+  TE futures $566.54 9-8 (-2.2%/mo), Gordian installed $915.88 +12.7%
+  YoY, studs Menards $4.25 / HD $4.65 / ~$6 contractor, PT $4.20-$5.00,
+  hardwood oak $5-$6 / maple $6-$9/BF retail + order table computed at
+  $0.80-$1.13/BF — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool +
+  2 sibling tools (topsoil→mulch+sod, mulch→topsoil+gravel,
+  lumber→deck+fence); guide backlinks added to all three tool pages'
+  related lists (4th slot, 9-08 pattern)).
+- 2026-09-09 depth passes: token-counter (173 → 993 words; queue-idle
+  rule — named last thin candidate; +words→tokens +context-window scale
+  (8K/32K/128K/200K/1M → words + 275-word pages) +chars-per-token
+  by content type reference tables, all evergreen — page's JS model
+  constants are 2024-era (GPT-4o/Claude 3.5/Gemini 1.5) so static copy
+  deliberately avoids restating per-model prices to avoid contradicting
+  the live table — +5 FAQs with new FAQPage + BreadcrumbList JSON-LD,
+  cron-generator related slot → how-to-write-ai-prompts guide, prose
+  links llm-pricing-tracker; calculator JS byte-identical to HEAD);
+  pregnancy-weight-gain-calculator-twins (611 → 1,177 words; thinnest
+  health/monetizable page in fresh audit; +where-the-weight-goes
+  composition table (singleton components, fetal side doubled per
+  Johns Hopkins; twins ~5 lb each at birth per BabyCenter; sums to
+  ~42-44 lb = mid-band) +running-over-or-under-the-band section,
+  +2 FAQs (4→6) with new FAQPage JSON-LD, off-topic deductible-vs-copay
+  related link → pregnancy-week-by-week; calculator JS byte-identical
+  to HEAD).
+- 2026-09-09 hub updates: guides hub +3 cards (More Guides 454→457),
+  count claims re-pegged 513→516 (= on-disk dirs with index.html);
+  all-tools regenerated via gen-all-tools.py (694 tools + 516 guides).
+  Queue state: next construction-cluster guide candidates (brick, paver,
+  rebar, sod, sonotube, wall-framing, crown-molding, soffit-fascia,
+  concrete-block, excavation, epoxy, aggregate-base) if home-cost guides
+  perform; remaining thin depth candidates from fresh audit (excluding
+  test-hardware pages): hours-calculator (347), base64-encoder (336),
+  color-picker (536), bar-chart-maker (595), uuid-generator (603),
+  plus-size-pregnancy-weight-gain (766) — depth only if queue idle.
 
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
