@@ -389,7 +389,14 @@ def page(w):
 {{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"}},{{"@type":"ListItem","position":2,"name":"Pregnancy Week by Week","item":"{BASE}/"}},{{"@type":"ListItem","position":3,"name":"Week {w}","item":"{BASE}/week-{w}/"}}]}}
 </script>
 <style>{CSS}</style>
-<script async defer data-website-id="{ANALYTICS}" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>

@@ -223,7 +223,14 @@ function convertFiat(){{var f=parseFloat(document.getElementById('fiatAmount').v
 fetch('https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies={fiat_code}').then(r=>r.json()).then(d=>{{if(d['{coin_id}']&&d['{coin_id}']['{fiat_code}']){{exchangeRate=d['{coin_id}']['{fiat_code}'];convertCrypto();}}}}).catch(()=>{{}});
 </script>
 <script src="/shared/converter-dynamic.js"></script>
-<script async defer data-website-id="{ANALYTICS_ID}" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
 </body>
 </html>'''
 
@@ -324,7 +331,14 @@ function convertFrom(){{var f=parseFloat(document.getElementById('fromAmount').v
 function convertTo(){{var t=parseFloat(document.getElementById('toAmount').value)||0;document.getElementById('fromAmount').value=(t/exchangeRate).toFixed(4);}}
 </script>
 <script src="/shared/converter-dynamic.js"></script>
-<script async defer data-website-id="{ANALYTICS_ID}" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
 </body>
 </html>'''
 
@@ -367,7 +381,14 @@ def generate_convert_index(crypto_pages, fiat_pages):
 {fiat_links}
 </div>
 </div>
-<script async defer data-website-id="{ANALYTICS_ID}" src="https://analytics.coreaspectai.com/script.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
 </body>
 </html>'''
 
