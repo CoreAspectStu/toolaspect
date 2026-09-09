@@ -207,6 +207,7 @@ textarea {
   gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
 </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Base64 Encoder & Decoder", "item": "https://toolaspect.com/base64-encoder/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does Base64 make files bigger?","acceptedAnswer":{"@type":"Answer","text":"Every 3 bytes of input become 4 characters of output, so the text is always about a third longer than the binary it represents, plus up to 2 padding characters. The overhead is the cost of representing 8-bit data with a 6-bit alphabet."}},{"@type":"Question","name":"What does the = at the end of a Base64 string mean?","acceptedAnswer":{"@type":"Answer","text":"It's padding. When the input length isn't a multiple of 3 bytes, the last group is short, and one or two = characters fill the output to a multiple of 4 so the decoder knows how many real bytes to emit. A string ending in == came from input with 1 byte left over; one = means 2 bytes were left over."}},{"@type":"Question","name":"Can Base64 be decoded without a key?","acceptedAnswer":{"@type":"Answer","text":"Always. Base64 is an encoding, not encryption - there is no key and no secret. Anyone with the string can recover the original data, so never treat it as a way to hide passwords or tokens."}},{"@type":"Question","name":"What's the difference between Base64 and Base64url?","acceptedAnswer":{"@type":"Answer","text":"Only two characters. Standard Base64 uses + and / as alphabet values 62 and 63; the URL-safe variant swaps them for - and _ so the output can sit inside a URL without percent-encoding. JWTs use Base64url and usually omit padding."}},{"@type":"Question","name":"Why did my Base64 string fail to decode?","acceptedAnswer":{"@type":"Answer","text":"Usually an invalid character - anything outside the 64-character alphabet (plus = padding) breaks it. Common causes are truncation from copy-paste, URL-decoded + signs turned into spaces, or a hex or ASCII-art string that was never Base64 to begin with. This tool strips whitespace automatically and accepts both alphabets."}}]}</script>
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Base64 Encoder &amp; Decoder — Free Online Tool","url":"https://toolaspect.com/base64-encoder/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free online Base64 encoder and decoder. Encode text or files to Base64, decode Base64 strings with URL-safe mode and UTF-8 support. Runs in your browser."}]}</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
@@ -291,18 +292,75 @@ textarea {
       <li><a href="/unit-converter">📐 Unit Converter</a></li>
       <li><a href="/percentage-calculator">% Percentage Calculator</a></li>
       <li><a href="/age-calculator">🎂 Age Calculator</a></li>
+      <li><a href="/guides/csv-vs-json-when-to-use-each/">CSV vs JSON: When to Use Each</a></li>
     </ul>
   </section>
 
   <section class="seo-content">
     <h2>What is Base64?</h2>
     <p>Base64 is a binary-to-text encoding scheme that converts binary data into a sequence of printable ASCII characters. It uses a 64-character alphabet — uppercase letters (<code>A–Z</code>), lowercase letters (<code>a–z</code>), digits (<code>0–9</code>), and two additional symbols (<code>+</code> and <code>/</code>) — to represent every 6 bits of input as one character. This makes it safe to transmit binary data through text-only channels like email, JSON, URLs, and HTML attributes.</p>
-    <h2>How to Encode and Decode Base64</h2>
-    <p>To <strong>encode</strong>, paste your text into the input field on the left — the Base64 output appears instantly on the right. To <strong>decode</strong>, switch to decode mode and paste your Base64 string. Our tool handles UTF-8 characters (emojis, accented letters, CJK) correctly by encoding the UTF-8 byte sequence, not just the ASCII characters.</p>
+    <p>The scheme dates to 1987, when Privacy-Enhanced Mail (RFC 989) needed a way to move encrypted binary payloads through email systems that only trusted plain ASCII. The modern specification is RFC 4648, and email attachments still work the same way through MIME, the standard that replaced PEM.</p>
+    <h2>How the Encoding Actually Works</h2>
+    <p>Computers store data in 8-bit bytes, but 64 characters can only name 6 bits each (2<sup>6</sup> = 64). Base64 resolves that mismatch by regrouping the bits: every 3 bytes of input (24 bits) become 4 six-bit values, and each value picks a character from the alphabet. A 2.4-kilobyte PDF doesn't compress or obfuscate anything — it just gets re-cut into slices the alphabet can spell.</p>
+    <p>Walk it through with "Hi!": the letters are bytes 72, 105, and 33, or <code>01001000 01101001 00100001</code> in binary. Regrouped into sixes — <code>010010 000110 100100 100001</code> — those are values 18, 6, 36, and 33, which index into the alphabet as <code>S</code>, <code>G</code>, <code>k</code>, <code>h</code>. So <code>SGkh</code> is "Hi!" in Base64. Decoding runs the same table backward.</p>
+    <p>When the input isn't a multiple of 3 bytes, the last group comes up short. Base64 pads with <code>=</code> so the output length stays a multiple of 4 — decoders use the padding to know how many real bytes the final group holds:</p>
+    <div class="table-wrap">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:.88rem">
+    <thead><tr><th style="text-align:left;padding:.5rem .75rem">Input length mod 3</th><th style="text-align:left;padding:.5rem .75rem">Padding added</th><th style="text-align:left;padding:.5rem .75rem">Example</th></tr></thead>
+    <tbody>
+    <tr><td style="padding:.5rem .75rem">0 bytes left over</td><td style="padding:.5rem .75rem">none</td><td style="padding:.5rem .75rem"><code>Hi!</code> (3 bytes) → <code>SGkh</code></td></tr>
+    <tr><td style="padding:.5rem .75rem">1 byte</td><td style="padding:.5rem .75rem"><code>==</code></td><td style="padding:.5rem .75rem"><code>H</code> → <code>SA==</code></td></tr>
+    <tr><td style="padding:.5rem .75rem">2 bytes</td><td style="padding:.5rem .75rem"><code>=</code></td><td style="padding:.5rem .75rem"><code>Hi</code> → <code>SGk=</code></td></tr>
+    </tbody>
+    </table>
+    </div>
+    <h2>How Much Bigger Is Base64?</h2>
+    <p>Encoding always grows the data: 3 bytes become 4 characters, so the size overhead is about 33 percent before padding, and line breaks or quoting can add more. That's the price of safety in text-only channels, and it's why nobody Base64-encodes a video for storage — only for transport:</p>
+    <div class="table-wrap">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:.88rem">
+    <thead><tr><th style="text-align:left;padding:.5rem .75rem">Input size</th><th style="text-align:left;padding:.5rem .75rem">Base64 output</th><th style="text-align:left;padding:.5rem .75rem">Overhead</th></tr></thead>
+    <tbody>
+    <tr><td style="padding:.5rem .75rem">3 bytes</td><td style="padding:.5rem .75rem">4 chars</td><td style="padding:.5rem .75rem">+33%</td></tr>
+    <tr><td style="padding:.5rem .75rem">100 bytes</td><td style="padding:.5rem .75rem">136 chars</td><td style="padding:.5rem .75rem">+36%</td></tr>
+    <tr><td style="padding:.5rem .75rem">1 KB (1,024 B)</td><td style="padding:.5rem .75rem">1,368 chars</td><td style="padding:.5rem .75rem">+34%</td></tr>
+    <tr><td style="padding:.5rem .75rem">1 MB (1,048,576 B)</td><td style="padding:.5rem .75rem">1,398,104 chars</td><td style="padding:.5rem .75rem">+33%</td></tr>
+    </tbody>
+    </table>
+    </div>
+    <p>The percentage wobbles a little on tiny inputs because padding and minimum lengths dominate; past a kilobyte it settles at one third. A data URI in CSS works the same way — an inline Base64 image makes the stylesheet about a third heavier than the equivalent file, which is a fair trade for removing an HTTP request and a poor one for a hero image.</p>
     <h2>What is URL-safe Base64?</h2>
     <p>Standard Base64 uses <code>+</code> and <code>/</code> characters, which have special meanings in URLs. URL-safe Base64 replaces <code>+</code> with <code>-</code> and <code>/</code> with <code>_</code>, making the output safe to embed in URLs, filenames, and query parameters without encoding. Toggle the "URL-safe" checkbox to use this variant.</p>
+    <p>The URL-safe variant is the house style inside JSON Web Tokens: a JWT's three dot-separated segments are Base64url without padding, so the token can travel in a URL header without any character needing percent-encoding.</p>
+    <h2>Where Base64 Shows Up</h2>
+    <div class="table-wrap">
+    <table class="data-table" style="width:100%;border-collapse:collapse;font-size:.88rem">
+    <thead><tr><th style="text-align:left;padding:.5rem .75rem">Context</th><th style="text-align:left;padding:.5rem .75rem">What it's doing</th></tr></thead>
+    <tbody>
+    <tr><td style="padding:.5rem .75rem">Email attachments (MIME)</td><td style="padding:.5rem .75rem">Carries images and documents through servers that only handle text</td></tr>
+    <tr><td style="padding:.5rem .75rem">Data URIs</td><td style="padding:.5rem .75rem">Embeds small images directly in HTML or CSS: <code>data:image/png;base64,...</code></td></tr>
+    <tr><td style="padding:.5rem .75rem">JWTs (JSON Web Tokens)</td><td style="padding:.5rem .75rem">Encodes the header and claims segments in URL-safe Base64</td></tr>
+    <tr><td style="padding:.5rem .75rem">HTTP Basic authentication</td><td style="padding:.5rem .75rem">Sends <code>username:password</code> as a single Base64 blob in the header</td></tr>
+    <tr><td style="padding:.5rem .75rem">Config files and env vars</td><td style="padding:.5rem .75rem">Puts binary secrets into formats that only accept one-line strings</td></tr>
+    </tbody>
+    </table>
+    </div>
+    <h2>Is Base64 Encryption?</h2>
+    <p>No, and this trips people up constantly. Base64 is an encoding, not encryption — there's no key, and anyone can reverse it instantly. Storing a Base64-encoded password is the same as storing it in plain text with extra steps. It solves a character-set problem, not a confidentiality problem.</p>
+    <h2>How to Encode and Decode Base64</h2>
+    <p>To <strong>encode</strong>, paste your text into the input field on the left — the Base64 output appears instantly on the right. To <strong>decode</strong>, switch to decode mode and paste your Base64 string. Our tool handles UTF-8 characters (emojis, accented letters, CJK) correctly by encoding the UTF-8 byte sequence, not just the ASCII characters. It also strips whitespace before decoding, so strings copied from certificates or logs with line breaks still work.</p>
     <h2>Is My Data Safe?</h2>
     <p>Yes. All encoding and decoding happens entirely in your browser using JavaScript. No data is ever sent to a server, stored, or logged. You can even use this tool offline once the page has loaded.</p>
+    <h2>Frequently Asked Questions</h2>
+    <h3>Why does Base64 make files bigger?</h3>
+    <p>Every 3 bytes of input become 4 characters of output, so the text is always about a third longer than the binary it represents, plus up to 2 padding characters. The overhead is the cost of representing 8-bit data with a 6-bit alphabet.</p>
+    <h3>What does the = at the end of a Base64 string mean?</h3>
+    <p>It's padding. When the input length isn't a multiple of 3 bytes, the last group is short, and one or two <code>=</code> characters fill the output to a multiple of 4 so the decoder knows how many real bytes to emit. A string ending in <code>==</code> came from input with 1 byte left over; one <code>=</code> means 2 bytes were left over.</p>
+    <h3>Can Base64 be decoded without a key?</h3>
+    <p>Always. Base64 is an encoding, not encryption — there is no key and no secret. Anyone with the string can recover the original data, so never treat it as a way to hide passwords or tokens.</p>
+    <h3>What's the difference between Base64 and Base64url?</h3>
+    <p>Only two characters. Standard Base64 uses <code>+</code> and <code>/</code> as alphabet values 62 and 63; the URL-safe variant swaps them for <code>-</code> and <code>_</code> so the output can sit inside a URL without percent-encoding. JWTs use Base64url and usually omit padding.</p>
+    <h3>Why did my Base64 string fail to decode?</h3>
+    <p>Usually an invalid character — anything outside the 64-character alphabet (plus <code>=</code> padding) breaks it. Common causes are truncation from copy-paste, URL-decoded <code>+</code> signs turned into spaces, or a hex or ASCII-art string that was never Base64 to begin with. This tool strips whitespace automatically and accepts both alphabets.</p>
   </section>
 
   </main>

@@ -44,6 +44,10 @@ print(f'Sitemap: {len(urls)} URLs')
 
 echo "🚀 Deploying to Cloudflare Pages..."
 source ~/.secrets
-CLOUDFLARE_API_TOKEN="" CLOUDFLARE_ACCOUNT_ID="$CLOUDFLARE_ACCOUNT_ID" npx wrangler pages deploy . --project-name=utility-sites --branch=main
+# Pages deploy token lives in Infisical shared/prod (the ~/.secrets global key was revoked Sep-9).
+# Use env(1) so the gateway-injected D1-scoped CLOUDFLARE_API_TOKEN can't shadow ours.
+exec env CLOUDFLARE_API_TOKEN="$(/home/stu/bin/secret-get.sh shared prod CLOUDFLARE_API_TOKEN)" \
+  CLOUDFLARE_ACCOUNT_ID="$CLOUDFLARE_ACCOUNT_ID" \
+  npx wrangler pages deploy . --project-name=utility-sites --branch=main
 
 echo "✅ Deploy complete"

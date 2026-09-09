@@ -649,6 +649,65 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   color-picker (536), bar-chart-maker (595), uuid-generator (603),
   plus-size-pregnancy-weight-gain (766) — depth only if queue idle.
 
+- 2026-09-10 batch guides (next three of the named construction-cluster intake
+  pool — brick, paver, rebar — verified no matching guides via content-level
+  grep; driveway-paving-cost is adjacent to paver but a different intent —
+  driveway surfaces vs patio material takeoff — so paver guides separately
+  and cross-links):
+  brick → guides/how-much-does-a-brick-wall-cost/;
+  paver → guides/how-much-does-a-paver-patio-cost/;
+  rebar → guides/how-much-does-rebar-cost/
+  (each: 1,322–1,383 visible words, computed/verified data tables — per-1,000
+  → $/sqft conversion ($350→$2.40 … $900→$6.17 at the tool's 6.86/sqft) +
+  wall-size count table (100 sqft = 755 bricks/19 bags/$378 → 500 sqft =
+  3,772/93/$1,886, tool-mirror math incl. 37 bricks/bag); installed $/sqft
+  by material + size totals + 320-sqft piece-count + base-tonnage tables
+  (4×8 = 1,584 pcs; 8.3 t gravel @5 in; 72 lb poly sand); stick-price-by-size
+  + slab takeoff table (10×10@18 #4 = 14 bars/8 sticks/103 lb/$87 → 30×30@24
+  #5 = 50 sticks/1,033 lb/$878) — anchors: HomeGuide 2026 brick $350-$900/
+  1,000 + $300-$800 labor + rebar $0.50-$1.00/lb & $1,300-$2,000/ton,
+  Homewyse May-2026 veneer $38-$51/sqft + brick paver patios $20-$26,
+  HomeGuide/Angi installed walls $10-$45/sqft, HD #3 $5.38 & #4 $14.33
+  ($12.18 @50+) 20-ft sticks — FAQ + Article/Breadcrumb/FAQPage JSON-LD,
+  tool + 2 sibling tools (brick→paver+concrete-block, paver→aggregate-base+
+  concrete, rebar→concrete+sonotube); guide backlinks added to all three
+  tool pages' related lists (4th slot)).
+- 2026-09-10 depth passes: base64-encoder (344 → 1,201 words; queue-idle
+  rule — thinnest pages in the 9-09 audit; +padding-rules +size-overhead
+  (3B→4c/100B→136c/1MiB→1,398,104c) +where-it-shows reference tables,
+  worked SGkh bit walkthrough, encoding-not-encryption section, +5 FAQs with
+  new FAQPage JSON-LD; csv-vs-json guide link in related; encoder/decoder JS
+  untouched); hours-calculator (359 → 1,102 words; +minutes→decimal table
+  with pay impact at the tool's $20/hr default +overtime-bands table (FLSA
+  weekly, CA daily 1.5×/2×, EU 48h) +7-minute-rounding chart, worked shift
+  examples (8:42→18:17 w/ 45-min break = 8.83 h = $176.67; overnight
+  22:15→06:45 = 8.50), +5 FAQs with new FAQPage JSON-LD, overtime/payroll
+  guide links in related; calculator JS untouched).
+- 2026-09-10 out-of-band fixes: paver-calculator + rebar-calculator
+  JS-array-in-HTML paragraphs repaired to prose (same staged-blob collision
+  class as ROI/password/percentage/shed pages); paver static size-table
+  waste column corrected — base counts were shown under the "+10% waste"
+  header (450→495, 1,800→1,980, 267→294, 225→248, 100→110 and 20×20
+  equivalents) with matching example sentence + FAQ fix; calculator JS
+  byte-clean on both (diff contains no script lines).
+- 2026-09-10 hub updates: guides hub +3 cards (More Guides 457→460),
+  count claims re-pegged 516→519 (= on-disk dirs with index.html);
+  all-tools regenerated via gen-all-tools.py in deploy.sh.
+  FLAG for next pass: (1) DEPLOY BLOCKED — wrangler pages deploy failed
+  twice (kill switch engaged); CF API rejects the ~/.secrets legacy
+  CLOUDFLARE_API_KEY/EMAIL pair with 9103 "Unknown X-Auth-Key" (key
+  server-side rotated; worked 9-9 18:23), and both valid tokens on the box
+  (D1, zone-analytics) 403 on Pages. 9-10 batch sits UNCOMMITTED in the
+  working tree (12 modified + 3 new guide dirs); resume = rotate CF key →
+  deploy.sh → indexnow-submit.py → curl-verify 3 new guides → commit.
+  IndexNow deliberately NOT run (would submit 5 not-yet-live URLs).
+  Queue state: construction-cluster intake pool continues (sod, sonotube,
+  wall-framing, crown-molding, soffit-fascia, concrete-block, excavation,
+  epoxy, aggregate-base) if home-cost guides perform; remaining thin depth
+  candidates from the 9-09 audit: color-picker (536), bar-chart-maker (595),
+  uuid-generator (603), plus-size-pregnancy-weight-gain (766) — depth only
+  if queue idle.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)
