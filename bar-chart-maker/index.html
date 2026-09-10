@@ -26,6 +26,9 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Business Tools","item":"https://toolaspect.com/business-tools/"},{"@type":"ListItem","position":3,"name":"Bar Chart Maker","item":"https://toolaspect.com/bar-chart-maker/"}]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"When should I use a bar chart instead of a line chart?","acceptedAnswer":{"@type":"Answer","text":"Use bars when you're comparing categories and a line when you're showing a trend over a continuous sequence, usually time. Months as categories and revenue by region are bar chart work; stock price by minute is line chart work. A quick test: if connecting the points in between your categories would be meaningless, don't use a line."}},{"@type":"Question","name":"Should bars be vertical or horizontal?","acceptedAnswer":{"@type":"Answer","text":"Vertical is the default and reads fastest for short labels and few categories. Horizontal wins when labels are long or there are many categories, because names stay readable down the left edge instead of getting cramped or rotated under the axis."}},{"@type":"Question","name":"Does the y-axis have to start at zero?","acceptedAnswer":{"@type":"Answer","text":"Yes, for bar charts. Bars encode value by length, and chopping the axis changes the lengths, exaggerating small differences into dramatic ones. Truncated axes are only defensible on line charts, where position, not length, carries the value. If a zero baseline makes your differences invisible, that's the chart telling you the differences are small."}},{"@type":"Question","name":"How many bars are too many?","acceptedAnswer":{"@type":"Answer","text":"Around 12 to 15 on one chart before readers stop comparing and start skimming. Past that, sort descending and consider showing only the top N plus an everything-else bar, or split into small multiples. Sorting alone does a lot of work: sorted bars turn a wall of data into a ranking."}},{"@type":"Question","name":"How do I compare two data series side by side?","acceptedAnswer":{"@type":"Answer","text":"That's a grouped bar chart - two bars per category, in two colors. Keep it to two series per chart; at three the pairs become hard to track. With this single-series tool, the practical route is exporting two SVGs with the same sort order and stacking them, so the categories align vertically."}},{"@type":"Question","name":"Can I edit the SVG after downloading it?","acceptedAnswer":{"@type":"Answer","text":"Yes. The file is plain SVG - rectangles for bars, text elements for labels - so it opens in Inkscape, Illustrator, and Figma for restyling, and any text editor works for small tweaks. Because it's vector, it stays sharp at any size in print or on screen."}}]}
+</script>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--radius:10px;--radius-lg:14px}
 .page-container{max-width:1080px;margin:0 auto;padding:0 1rem}
@@ -149,11 +152,40 @@ West, 468000</textarea>
 </div>
 
 <div class="content-section">
+<h2>Bar Chart Rules of Thumb</h2>
+<p>Most bad bar charts break the same handful of rules. This table is the checklist worth running before any chart leaves your desk:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Rule</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td>Start the value axis at zero</td><td>Bars encode value by length; a truncated axis changes the lengths and exaggerates differences</td></tr>
+<tr><td>Sort by value, not alphabet</td><td>Sorted bars turn a comparison into a ranking the eye can walk down; alphabetical order hides the story</td></tr>
+<tr><td>Keep it to 5-10 bars</td><td>Readers compare neighbors well and distant bars poorly; past a dozen, show top N plus "other"</td></tr>
+<tr><td>Label the values on bars</td><td>Removes the axis-reading step for the numbers people actually came for</td></tr>
+<tr><td>State units once, in the title or axis</td><td>One "$K" in the title beats repeating it on every bar; per-bar units multiply visual noise</td></tr>
+<tr><td>Use one color, highlight one bar</td><td>A single accent color says "look here"; rainbow palettes suggest categories that don't exist</td></tr>
+<tr><td>Go horizontal for long labels</td><td>Names stay readable down the left edge instead of rotating into squint territory</td></tr>
+</tbody>
+</table>
+</div>
+<p>The zero-baseline rule deserves its own sentence because it's the one people argue about. There's nothing dishonest about a line chart whose axis starts at 40 — lines encode position. But a bar's job is length, and length only means something when it starts at zero. If zero-based bars make your change look tiny, the honest conclusion is that the change is tiny, and a different chart (or a table) serves you better than a cropped axis.</p>
+</div>
+
+<div class="content-section">
+<h2>Why Download as SVG Instead of a Screenshot?</h2>
+<p>The download button hands you an SVG — a vector file — rather than a picture of the chart. The difference shows up later. A screenshot is a grid of pixels: paste it into a slide and project it, and the labels fuzz. SVG redraws at whatever size the display asks for, so the same file is sharp in a phone mockup, on a conference screen, and in a printed report.</p>
+<p>It's also the editable format. The SVG is plain shapes and text — rectangles for bars, text elements for labels — so it opens in Inkscape, Illustrator, and Figma for restyling, and a text editor handles small tweaks like renaming a bar. File size runs a few kilobytes for a typical chart, an order of magnitude smaller than a PNG screenshot of the same panel.</p>
+<p>One exception worth knowing: email. Gmail and Outlook strip or mangle embedded SVG, so for an email blast, open the SVG in any editor and export a PNG for that one use. Everywhere else — web pages, decks, docs — the SVG is the better artifact.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>When should I use a bar chart instead of a line chart?</h3><p>Use bars when you're comparing categories and a line when you're showing a trend over a continuous sequence, usually time. Months as categories and revenue by region are bar chart work; stock price by minute is line chart work. A quick test: if connecting the points in between your categories would be meaningless, don't use a line.</p></div>
 <div class="faq-item"><h3>Should bars be vertical or horizontal?</h3><p>Vertical is the default and reads fastest for short labels and few categories. Horizontal wins when labels are long or there are many categories, because names stay readable down the left edge instead of getting cramped or rotated under the axis.</p></div>
 <div class="faq-item"><h3>Does the y-axis have to start at zero?</h3><p>Yes, for bar charts. Bars encode value by length, and chopping the axis changes the lengths, exaggerating small differences into dramatic ones. Truncated axes are only defensible on line charts, where position, not length, carries the value. If a zero baseline makes your differences invisible, that's the chart telling you the differences are small.</p></div>
 <div class="faq-item"><h3>How many bars are too many?</h3><p>Around 12 to 15 on one chart before readers stop comparing and start skimming. Past that, sort descending and consider showing only the top N plus an everything-else bar, or split into small multiples. Sorting alone does a lot of work: sorted bars turn a wall of data into a ranking.</p></div>
+<div class="faq-item"><h3>How do I compare two data series side by side?</h3><p>That's a grouped bar chart — two bars per category, in two colors. Keep it to two series per chart; at three the pairs become hard to track. With this single-series tool, the practical route is exporting two SVGs with the same sort order and stacking them, so the categories align vertically.</p></div>
+<div class="faq-item"><h3>Can I edit the SVG after downloading it?</h3><p>Yes. The file is plain SVG — rectangles for bars, text elements for labels — so it opens in Inkscape, Illustrator, and Figma for restyling, and any text editor works for small tweaks. Because it's vector, it stays sharp at any size in print or on screen.</p></div>
 </div>
 
 <div class="related-tools">

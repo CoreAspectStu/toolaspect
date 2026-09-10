@@ -708,6 +708,54 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   uuid-generator (603), plus-size-pregnancy-weight-gain (766) — depth only
   if queue idle.
 
+- 2026-09-11 batch guides (next three of the named construction-cluster
+  intake pool — sod, sonotube, wall-framing — verified no matching guides
+  via content-level grep, all most-aware pricing head queries, AIO yes —
+  cost tables):
+  sod → guides/how-much-does-sod-cost/;
+  sonotube → guides/how-much-does-a-sonotube-pier-cost/;
+  wall-framing → guides/how-much-does-it-cost-to-frame-a-wall/
+  (each: 1,224–1,370 visible words, computed/verified data tables — grass
+  type × $/sqft + $/pallet (fescue $0.35-$0.70/$160-$315, Bermuda
+  $0.35-$0.85/$180-$380, zoysia $0.60-$1.10/$330-$560 per HomeAdvisor/
+  HomeGuide-family 2026; NC State farm-gate Bermuda $0.30-$0.62 avg $0.41,
+  delivered ~$0.99; HD Harmony zoysia 500-sqft pallet ~$559) + lawn-size
+  pallet/roll/cost table incl. acre row ($15,246-$37,026); tube-size ×
+  volume/bags/$ table + per-pier DIY totals ($30/$37/$50 at $6/bag) +
+  bag-vs-readymix crossover table (6/12/20 piers: 35 bags $210 vs $115
+  ready-mix … 116 bags $696 vs $384; Sakrete 12-in × 48-in $13.88 HD,
+  8-in $8.68-$13.98); wall-length stud/plate/sheet/lumber table
+  ($116-$308 at the tool's own $4/$4/$30 defaults) + pro LF table
+  (HomeGuide 2026 $25-$64/LF w/ drywall, framing only $18-$24, Angi
+  interior $20-$30; Angi house $7-$16/sqft → $14k-$32k @ 2,000 sqft) —
+  FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling tools
+  (sod→topsoil+mulch, sonotube→concrete+rebar, wall-framing→drywall+
+  concrete-block); guide backlinks added to all three tool pages'
+  related lists (4th slot)).
+- 2026-09-11 depth passes: color-picker (546 → 1,146 words, +six-format
+  conversion table (node-verified against the page's own conversion
+  functions) + WCAG contrast section (AA 4.5:1/3:1, AAA 7:1, 21:1 max) +
+  shorthand/alpha/148-named-colors section, +2 FAQs (6→8) with new FAQPage
+  JSON-LD; picker/conversion JS untouched); bar-chart-maker (605 → 1,163
+  words, + rules-of-thumb table (7 rules) + zero-baseline argument +
+  why-SVG section (email-clients exception), +2 FAQs (4→6) with new
+  FAQPage JSON-LD; chart JS untouched). Both diffs insertion-only in
+  head/seo sections — grep-verified zero calculator-JS lines.
+- 2026-09-11 out-of-band fixes: sod-calculator JS-array-in-HTML paragraph
+  repaired to three prose paragraphs (staged-blob collision class, same
+  as ROI/password/shed/paver pages); off-topic insulation/electrical
+  related links swapped on all three tool pages (topsoil+mulch /
+  concrete+rebar / drywall+concrete-block); wall-framing "Framaming"
+  typo fixed.
+- 2026-09-11 hub updates: guides hub +3 cards (More Guides 460→463),
+  count claims re-pegged 519→522 (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: construction-cluster intake pool continues (crown-molding,
+  soffit-fascia, concrete-block, excavation, epoxy, aggregate-base) if
+  home-cost guides perform; remaining thin depth candidates from the
+  9-09 audit: uuid-generator (603), plus-size-pregnancy-weight-gain
+  (766) — depth only if queue idle.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)

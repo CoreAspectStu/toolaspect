@@ -46,6 +46,7 @@ input[type="color"]{width:100%;height:60px;border:1px solid var(--border);border
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Color Picker","item":"https://toolaspect.com/color-picker/"}]}</script>
 <script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Color Picker &amp; Converter — Hex, RGB, HSL","url":"https://toolaspect.com/color-picker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free online color picker and converter. Convert between hex, RGB, HSL, and CMYK color formats. Pick colors visually and copy color codes instantly."}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert hex to RGB?","acceptedAnswer":{"@type":"Answer","text":"Split the 6-character hex into three pairs and convert each from hexadecimal to decimal. #FF5733 becomes FF(255), 57(87), 33(51), which is rgb(255, 87, 51)."}},{"@type":"Question","name":"What is the difference between RGB and HSL?","acceptedAnswer":{"@type":"Answer","text":"RGB uses red/green/blue intensities (0-255). HSL uses hue angle, saturation, and lightness percentages. HSL is more intuitive for creating color variations - darken by dropping lightness, mute by dropping saturation."}},{"@type":"Question","name":"Why does my color look different in print?","acceptedAnswer":{"@type":"Answer","text":"Screens use RGB (additive), printers use CMYK (subtractive). RGB has a wider gamut, so some vibrant colors can't be printed. Always test in CMYK for print work."}},{"@type":"Question","name":"What hex code is white?","acceptedAnswer":{"@type":"Answer","text":"Pure white is #FFFFFF. Pure black is #000000."}},{"@type":"Question","name":"How do I find the complementary color?","acceptedAnswer":{"@type":"Answer","text":"Add 180 degrees to the hue in HSL. The complement of hsl(30, 100%, 50%) is hsl(210, 100%, 50%)."}},{"@type":"Question","name":"What is alpha transparency in colors?","acceptedAnswer":{"@type":"Answer","text":"Alpha defines opacity from 0 (transparent) to 1 (opaque). Use rgba() or 8-digit hex (#RRGGBBAA)."}},{"@type":"Question","name":"Can I shorten a hex code like #ffffff?","acceptedAnswer":{"@type":"Answer","text":"Yes, when both digits of each pair match. #ffffff compresses to #fff, #3366ff to #36f. Three-digit hex duplicates each digit once - it cannot express #6366f1 because the pairs differ."}},{"@type":"Question","name":"What contrast ratio does accessible text need?","acceptedAnswer":{"@type":"Answer","text":"WCAG 2.1 Level AA requires 4.5:1 for normal text and 3:1 for large text (18.66px and up, or 14px bold). The scale runs from 1:1 (invisible difference) to 21:1 (black on white), and Level AAA asks 7:1 for body copy."}}]}</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js"></script>
@@ -87,6 +88,29 @@ input[type="color"]{width:100%;height:60px;border:1px solid var(--border);border
 <p>HSL describes colors using hue (0-360 degrees on the color wheel), saturation (0-100% intensity), and lightness (0-100%). It's more intuitive for humans — to make a color darker, decrease lightness; to make it less vivid, decrease saturation. Pure red is hsl(0, 100%, 50%), green is hsl(120, 100%, 50%), blue is hsl(240, 100%, 50%).</p>
 <h3>CMYK (Cyan, Magenta, Yellow, Key/Black)</h3>
 <p>CMYK is a subtractive color model used in printing. Unlike RGB which adds light, CMYK subtracts from white. Percentages range from 0-100% for each channel. Pure black is cmyk(0%, 0%, 0%, 100%). If you're designing for print, convert your colors to CMYK to see how they'll actually appear on paper.</p>
+<h2>Hex, RGB, HSL, and CMYK Side by Side</h2>
+<p>The table below runs six familiar colors through every format this tool outputs, computed with the same conversion functions the page uses. It's a handy sanity check when a conversion of your own looks off:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Color</th><th>HEX</th><th>RGB</th><th>HSL</th><th>CMYK</th></tr></thead>
+<tbody>
+<tr><td>Coral red</td><td>#FF5733</td><td>rgb(255, 87, 51)</td><td>hsl(11, 100%, 60%)</td><td>cmyk(0%, 66%, 80%, 0%)</td></tr>
+<tr><td>Indigo</td><td>#6366F1</td><td>rgb(99, 102, 241)</td><td>hsl(239, 84%, 67%)</td><td>cmyk(59%, 58%, 0%, 5%)</td></tr>
+<tr><td>White</td><td>#FFFFFF</td><td>rgb(255, 255, 255)</td><td>hsl(0, 0%, 100%)</td><td>cmyk(0%, 0%, 0%, 0%)</td></tr>
+<tr><td>Middle gray</td><td>#808080</td><td>rgb(128, 128, 128)</td><td>hsl(0, 0%, 50%)</td><td>cmyk(0%, 0%, 0%, 50%)</td></tr>
+<tr><td>Green</td><td>#008000</td><td>rgb(0, 128, 0)</td><td>hsl(120, 100%, 25%)</td><td>cmyk(100%, 0%, 100%, 50%)</td></tr>
+<tr><td>Pink</td><td>#FFC0CB</td><td>rgb(255, 192, 203)</td><td>hsl(350, 100%, 88%)</td><td>cmyk(0%, 25%, 20%, 0%)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Two rows teach the whole HSL trick. White and middle gray have zero saturation and a meaningless hue, which is why grayscale lives on the lightness axis alone. And the coral red at 100% saturation but 60% lightness shows what lightness does — nudge it toward 50% and the color deepens; push past 60% and it washes toward pink. That knob is the reason designers do their variations in HSL rather than RGB.</p>
+<h2>Contrast and Readable Text</h2>
+<p>Color choice isn't only aesthetic — if text sits on the color, the pair has to pass a contrast test. WCAG 2.1 Level AA, the standard threshold for accessibility, requires a contrast ratio of 4.5:1 for normal text and 3:1 for large text (roughly 18.66px and up, or 14px bold). Level AAA, the stricter tier, asks 7:1 for body copy. The scale runs from 1:1, where text and background are identical, to 21:1, the maximum: black on white.</p>
+<p>Intuition fails here more often than it holds. A brand yellow at hsl(48, 100%, 50%) carries a respectable brightness but almost no contrast against white — white text on it fails outright. Deep navy #1a1a2e passes with white text easily. The practical workflow: pick your brand color here, note its hex, then test text colors against it with a contrast checker before committing. Grays around #767676 are the boundary for white text on a neutral background — lighter than that and white text starts failing.</p>
+<h2>Shorthand Hex, Alpha, and Named Colors</h2>
+<p>Three variations you'll meet in real stylesheets. Shorthand: when both digits of each hex pair match, the code compresses from six characters to three — #ffffff becomes #fff, #3366ff becomes #36f. It only works when the pairs repeat, so #6366f1 has no short form.</p>
+<p>Alpha: modern CSS accepts 8-digit hex, where a fourth pair encodes opacity from 00 (fully transparent) to ff (opaque) — #6366f180 is roughly half-transparent indigo. The rgba() notation expresses the same idea with a 0-to-1 decimal: rgba(99, 102, 241, 0.5).</p>
+<p>Named colors: CSS defines 148 of them, from aliceblue and black through rebeccapurple (added in memory of Rebecca Meyer and standardized in CSS Color Module Level 4). They're fine for prototypes and readable in small doses, but a palette mixes hex codes in practice — names can't express your exact shade, and half the names nobody can picture without looking them up anyway.</p>
 <h2>Common Color Conversion Questions</h2>
 <h3>How do I convert hex to RGB?</h3>
 <p>Split the 6-character hex into three pairs, convert each from hex to decimal. #FF5733 → FF(255), 57(87), 33(51) → rgb(255, 87, 51).</p>
@@ -100,6 +124,10 @@ input[type="color"]{width:100%;height:60px;border:1px solid var(--border);border
 <p>Add 180 degrees to the hue in HSL. The complement of hsl(30, 100%, 50%) is hsl(210, 100%, 50%).</p>
 <h3>What is alpha transparency in colors?</h3>
 <p>Alpha defines opacity from 0 (transparent) to 1 (opaque). Use rgba() or 8-digit hex (#RRGGBBAA).</p>
+<h3>Can I shorten a hex code like #ffffff?</h3>
+<p>Yes, when both digits of each pair match. #ffffff compresses to #fff, #3366ff to #36f. Three-digit hex duplicates each digit once — it cannot express #6366f1 because the pairs differ.</p>
+<h3>What contrast ratio does accessible text need?</h3>
+<p>WCAG 2.1 Level AA requires 4.5:1 for normal text and 3:1 for large text (18.66px and up, or 14px bold). The scale runs from 1:1 (invisible difference) to 21:1 (black on white), and Level AAA asks 7:1 for body copy.</p>
 </div>
 <footer><p>&copy; 2026 ToolAspect &mdash; Free online tools</p></footer>
 </div>
