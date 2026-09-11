@@ -756,6 +756,58 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   9-09 audit: uuid-generator (603), plus-size-pregnancy-weight-gain
   (766) — depth only if queue idle.
 
+- 2026-09-12 batch guides (next three of the named construction-cluster intake
+  pool — crown-molding, soffit-fascia, concrete-block — verified no matching
+  guides via content-level grep, all most-aware pricing head queries, AIO yes —
+  cost tables):
+  crown-molding → guides/how-much-does-crown-molding-cost/;
+  soffit-fascia → guides/how-much-do-soffit-and-fascia-cost/;
+  concrete-block → guides/how-much-does-a-concrete-block-wall-cost/
+  (each: 1,212–1,285 visible words, computed/verified data tables — material ×
+  $/LF × installed (MDF $1-$3, pine $1.35-$4, poly $2-$10, hardwood $5-$15+;
+  HomeGuide 2026 installed $7-$16/LF, avg $1,173; Angi $4-$23) + room-size
+  table at the tool's own perimeter×1.15 waste / 12-ft-stick / $3.50 math;
+  job-type × $/LF (fascia board $5-$12, aluminum wrap $11-$20 per Homewyse
+  May-2026 $11.17-$19.87, vinyl soffit $4-$22, repair ~$10, removal $3-$7) +
+  whole-house footprint table at $6-$22/LF + DIY 180-LF material walk ($1,485);
+  scope × $/sqft ($3-$13 DIY materials, $10-$17 labor-only, $15-$30 turnkey,
+  Homewyse basic $18.87-$24.17) + wall-size block/mortar/cost table at the
+  tool's 1.125 blocks/sqft × 5% waste, $2.25/block, 33 blocks/bag math — FAQ +
+  Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling tools (crown→drywall+
+  wall-framing, soffit→gutter+siding, block→concrete+rebar); guide backlinks
+  added to all three tool pages' related lists, replacing the off-topic
+  insulation/electrical links — 9-11 sod/sonotube fix class).
+- 2026-09-12 depth passes: uuid-generator (612 → 1,320 words; queue-idle rule
+  satisfied — last named thin candidate pair; +UUID version reference table
+  incl. RFC 9562 v6/v7/v8 (May-2024, obsoletes 4122) + birthday-bound collision
+  table (node-verified: 1M → 1 in 1.1e25, 1B → 1 in 1.1e19, 1T → 1 in 1.1e13,
+  2.71 quintillion → 50%, = 86 years at 1B/sec) + formats/storage section
+  (BINARY(16) vs CHAR(36), case-collation trap), pseudo-FAQ h3s formalized
+  into .faq-item block + 2 new FAQs (v4-vs-v7, DB storage), 7-Q FAQPage LD;
+  stale twitter:title "ToolAspect — 28 Free Online Tools" fixed — llm-pricing
+  9-07 class; generator JS untouched, zero diff lines);
+  plus-size-pregnancy-weight-gain (775 → 1,325 words; +full IOM 2009 table —
+  all four BMI classes singleton + twins (28-40/25-35/15-25/11-20 lb; twins
+  37-54/31-50/25-42) with weekly rates + where-the-ranges-come-from prose +
+  above/below-range associations section + postpartum-resolution numbers,
+  +2 FAQs (BMI 35/40 same 11-20 range, faster-than-half-lb/wk trend guidance),
+  6-Q FAQPage LD; off-topic deductible-vs-copay related link →
+  pregnancy-week-by-week — twins-page 9-09 fix class; calculator JS untouched).
+- 2026-09-12 out-of-band: GENERATOR-STRIPS-BREADCRUMB defect fixed — an
+  uncommitted regen (roadmap lane, 9-11) had stripped the af3cbee1 bc1
+  breadcrumb blocks from all-tools + roadmap because gen-all-tools.py /
+  gen-roadmap.py templates predate the breadcrumb wave (same class as the
+  embed-gen-analytics strip). deploy.sh now runs seo-breadcrumbs-wave.py
+  (idempotent) after the three gen-*.py calls so every regen re-restores bc1
+  on the regenerated hubs.
+- 2026-09-12 hub updates: guides hub +3 cards (More Guides 463→466),
+  count claims re-pegged 522→525 (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: construction-cluster intake pool continues (excavation, epoxy,
+  aggregate-base) if home-cost guides perform; no other named thin depth
+  candidates remain — fresh audit next batch; fresh keyword intake (awareness
+  + AIO columns per factory protocol) for anything beyond the pool.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)

@@ -8,8 +8,8 @@
 <meta name="description" content="Free online UUID v4 generator. Create multiple unique identifiers at once. Copy individual or bulk UUIDs. RFC 4122 compliant. No signup required.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://toolaspect.com/shared/og-image.png">
-<meta name="twitter:title" content="ToolAspect — 28 Free Online Tools">
-<meta name="twitter:description" content="Free online tools that run in your browser. No signup required.">
+<meta name="twitter:title" content="UUID Generator — Free Online GUID Generator | ToolAspect">
+<meta name="twitter:description" content="Free online UUID v4 generator. Create multiple unique identifiers at once. No signup required.">
 <link rel="canonical" href="https://toolaspect.com/uuid-generator/">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -36,7 +36,16 @@
 .uuid-row button:hover{border-color:var(--primary);color:var(--text)}
 .checkbox-row{display:flex;gap:16px;flex-wrap:wrap;margin:.75rem 0}
 .checkbox-row label{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+.faq-item{padding:14px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
+.faq-item p{font-size:.88rem;color:var(--muted);line-height:1.7}
+.table-wrap{overflow-x:auto;margin:12px 0}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.data-table th,.data-table td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;color:var(--muted)}
+.data-table th{background:var(--surface);color:var(--text)}
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between UUID and GUID?","acceptedAnswer":{"@type":"Answer","text":"Same thing. UUID is the RFC name, GUID is Microsoft's name from its COM era. Both are 128-bit identifiers with the same format - 32 hex digits in five groups."}},{"@type":"Question","name":"Are UUID v4 collisions possible?","acceptedAnswer":{"@type":"Answer","text":"Theoretically yes, practically no. A v4 UUID carries 122 random bits, so you would need to generate about 2.71 quintillion of them - a billion per second for 86 years - before the odds of any duplicate reach 50 percent. Generate a billion UUIDs and your collision odds are still about 1 in 10 quintillion."}},{"@type":"Question","name":"Should I use UUID as a database primary key?","acceptedAnswer":{"@type":"Answer","text":"Works well for distributed systems. Prevents enumeration and enables merging. Tradeoff: 16 bytes vs 4 for an int, and random v4 values scatter across the B-tree index - which is exactly what UUID v7 was designed to fix. Store them as a 16-byte binary type rather than the 36-character string when index size matters."}},{"@type":"Question","name":"Are UUID v4 truly random?","acceptedAnswer":{"@type":"Answer","text":"This generator uses crypto.getRandomValues() - a cryptographically strong random source. Six bits are fixed (version and variant), leaving 122 random bits. Not suitable as an encryption key by itself, but excellent for identifiers."}},{"@type":"Question","name":"Can I generate UUIDs offline?","acceptedAnswer":{"@type":"Answer","text":"Yes - entirely browser-based using the Web Crypto API. No server calls, safe for sensitive applications."}},{"@type":"Question","name":"What's the difference between UUID v4 and v7?","acceptedAnswer":{"@type":"Answer","text":"v4 is fully random; v7 starts with a millisecond timestamp followed by random bits, so IDs sort in creation order. Databases index v7 efficiently because inserts append instead of scattering. v7 was standardized in RFC 9562 in May 2024 alongside v6 and v8."}},{"@type":"Question","name":"How should I store UUIDs in a database?","acceptedAnswer":{"@type":"Answer","text":"Compact and fast: a 16-byte BINARY(16) column, or your database's native UUID type (PostgreSQL's uuid does this). Human-readable: the 36-character hyphenated string in CHAR(36), which is also what logs and URLs want. Avoid storing UUIDs as VARCHAR in case-insensitive-collation columns - uppercase and lowercase variants of the same UUID will look like different values."}}]}</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
 <script>
@@ -104,16 +113,48 @@
 <p>Uses random numbers for all variable bits. The probability of a collision is astronomically low — you'd need to generate over 2.71 quintillion UUIDs to have a 50% chance of a single duplicate. This makes v4 ideal for almost all use cases.</p>
 <h3>Version 5 (Name-based, SHA-1)</h3>
 <p>Same as v3 but uses SHA-1 hashing instead of MD5. Preferred over v3 for new applications.</p>
-<h3>What is the difference between UUID and GUID?</h3>
-<p>Same thing. UUID is the RFC 4122 name, GUID is Microsoft's name. Both are 128-bit identifiers.</p>
-<h3>Are UUID v4 collisions possible?</h3>
-<p>Theoretically yes, but you'd need 2.71 quintillion UUIDs for a 50% chance of one collision. Practically impossible.</p>
-<h3>Should I use UUID as a database primary key?</h3>
-<p>Works well for distributed systems. Prevents enumeration and enables merging. Tradeoff: 16 bytes vs 4 bytes, potential index fragmentation.</p>
-<h3>Are UUID v4 truly random?</h3>
-<p>Uses crypto.getRandomValues() — cryptographically strong PRNG. Not suitable for crypto keys but excellent for unique IDs.</p>
-<h3>Can I generate UUIDs offline?</h3>
-<p>Yes — entirely browser-based using Web Crypto API. No server calls, safe for sensitive applications.</p>
+<h3>Versions 6, 7, and 8 (RFC 9562, 2024)</h3>
+<p>RFC 9562, published in May 2024, formally obsoleted RFC 4122 and added three versions. The one worth knowing is v7: it leads with a millisecond Unix timestamp followed by random bits, so identifiers sort in creation order. Databases like that — random v4 values land scattered across a B-tree index, while v7 values append at the right edge. v6 is a reordered v1 (timestamp first, no MAC exposure by convention), and v8 is a vendor-defined escape hatch.</p>
+<h2>UUID Versions Reference Table</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Version</th><th>How it's built</th><th>Sorts by time?</th><th>Typical use</th></tr></thead>
+<tbody>
+<tr><td>v1</td><td>Timestamp + MAC address</td><td>Yes, roughly</td><td>Legacy systems; leaks creation time and host</td></tr>
+<tr><td>v3</td><td>MD5 hash of namespace + name</td><td>No</td><td>Deterministic IDs from a name</td></tr>
+<tr><td>v4</td><td>122 random bits</td><td>No</td><td>The default everywhere (this generator)</td></tr>
+<tr><td>v5</td><td>SHA-1 hash of namespace + name</td><td>No</td><td>Same as v3, stronger hash</td></tr>
+<tr><td>v6</td><td>Reordered v1 (time first)</td><td>Yes</td><td>Drop-in fix for v1 systems</td></tr>
+<tr><td>v7</td><td>Millisecond timestamp + random</td><td>Yes</td><td>Database keys, event streams</td></tr>
+<tr><td>v8</td><td>Vendor-defined</td><td>Depends</td><td>Custom layouts, not interoperable</td></tr>
+</tbody>
+</table>
+</div>
+<h2>How Small Are the Collision Odds, Really?</h2>
+<p>A v4 UUID has 122 random bits — the version nibble and two variant bits are fixed. That's 2<sup>122</sup>, about 5.3 × 10<sup>36</sup>, possible values. The right way to reason about duplicates is the birthday bound: it's not "will this UUID match some specific UUID," it's "will any two in my pile match." Even so, the numbers stay absurd:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>UUIDs generated</th><th>Odds of any duplicate</th><th>For scale</th></tr></thead>
+<tbody>
+<tr><td>1 million</td><td>~1 in 11,000,000,000,000,000,000,000,000</td><td>A rounding error on a rounding error</td></tr>
+<tr><td>1 billion</td><td>~1 in 10 quintillion</td><td>A busy system's yearly output, still nothing</td></tr>
+<tr><td>1 trillion</td><td>~1 in 10 trillion</td><td>Large-scale system territory, still negligible</td></tr>
+<tr><td>2.71 quintillion</td><td>50%</td><td>A billion per second, nonstop, for 86 years</td></tr>
+</tbody>
+</table>
+</div>
+<p>Notice the shape of that table: the odds grow with the <em>square</em> of how many you generate, which is why a trillion is a trillion times riskier than a million — and still nothing. In practice, when two systems do see the same UUID twice, it's almost never bad luck; it's a copy-paste, a reseeded PRNG, or a v1 collision on cloned virtual machines.</p>
+<h2>Formats and Storage</h2>
+<p>The canonical form is 36 characters: 32 hex digits with four hyphens (8-4-4-4-12). This generator also emits uppercase, braced, hyphenless, and URN forms because different systems swallow different flavors — Microsoft APIs often expect braces, plenty of URL contexts want the compact 32-character version, and the <code>urn:uuid:</code> prefix is the namespace-safe way to embed a UUID in XML or RDF. Pick one per system and normalize on the way in; mixed-case duplicates are the classic "two different IDs" bug that isn't.</p>
+<p>In a database, the compact representation is 16 bytes as BINARY(16) or a native UUID type, versus 36 bytes for the string. The string is friendlier in logs and debugging, the binary is friendlier to indexes — and with v7 the index penalty of random keys mostly disappears too.</p>
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the difference between UUID and GUID?</h3><p>Same thing. UUID is the RFC name, GUID is Microsoft's name from its COM era. Both are 128-bit identifiers with the same format — 32 hex digits in five groups.</p></div>
+<div class="faq-item"><h3>Are UUID v4 collisions possible?</h3><p>Theoretically yes, practically no. A v4 UUID carries 122 random bits, so you'd need to generate about 2.71 quintillion of them — a billion per second for 86 years — before the odds of any duplicate reach 50%. A billion generated UUIDs still carry roughly 1-in-10-quintillion collision odds.</p></div>
+<div class="faq-item"><h3>Should I use UUID as a database primary key?</h3><p>Works well for distributed systems. Prevents enumeration and enables merging. Tradeoffs: 16 bytes vs 4 for an int, and random v4 values scatter across a B-tree index — which is exactly what UUID v7 fixes. Store them as a 16-byte binary type rather than the 36-character string when index size matters.</p></div>
+<div class="faq-item"><h3>Are UUID v4 truly random?</h3><p>This generator uses crypto.getRandomValues(), a cryptographically strong source — not Math.random(). Six bits are fixed by the spec (version and variant), leaving 122 random bits. Not suitable as an encryption key by itself, but excellent for identifiers.</p></div>
+<div class="faq-item"><h3>Can I generate UUIDs offline?</h3><p>Yes — entirely browser-based using the Web Crypto API. No server calls, safe for sensitive applications.</p></div>
+<div class="faq-item"><h3>What's the difference between UUID v4 and v7?</h3><p>v4 is fully random; v7 starts with a millisecond timestamp followed by random bits, so IDs sort in creation order. Databases index v7 efficiently because inserts append instead of scattering. v7 was standardized in RFC 9562 in May 2024 alongside v6 and v8.</p></div>
+<div class="faq-item"><h3>How should I store UUIDs in a database?</h3><p>Compact and fast: a 16-byte BINARY(16) column, or your database's native UUID type (PostgreSQL's uuid does this). Human-readable: the 36-character hyphenated string in CHAR(36), which is what logs and URLs want. Avoid case-insensitive-collation VARCHAR columns — uppercase and lowercase variants of the same UUID will look like different values.</p></div>
 </div>
 <footer><p>&copy; 2026 ToolAspect &mdash; Free online tools</p></footer>
 </div>

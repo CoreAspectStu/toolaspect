@@ -7,6 +7,10 @@ echo "📋 Regenerating sitemap + llm.txt + roadmap..."
 python3 scripts/gen-llm-txt.py
 python3 scripts/gen-all-tools.py
 python3 scripts/gen-roadmap.py
+# gen-all-tools/gen-roadmap templates predate the breadcrumb wave — their regen
+# strips the bc1 blocks from those hubs. Re-apply the wave (idempotent) right
+# after, so regenerated hubs keep their BreadcrumbList + visible trail.
+python3 scripts/seo-breadcrumbs-wave.py
 python3 -c "
 import os, datetime
 today = datetime.date.today().isoformat()
