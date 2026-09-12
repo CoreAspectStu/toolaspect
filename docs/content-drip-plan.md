@@ -808,6 +808,54 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   candidates remain — fresh audit next batch; fresh keyword intake (awareness
   + AIO columns per factory protocol) for anything beyond the pool.
 
+- 2026-09-13 batch guides (final three of the named construction-cluster
+  intake pool — excavation, epoxy, aggregate-base — verified no matching
+  guides via content-level grep, all most-aware pricing head queries, AIO
+  yes — cost tables):
+  excavation → guides/how-much-does-excavation-cost/;
+  epoxy → guides/how-much-does-an-epoxy-garage-floor-cost/;
+  aggregate-base → guides/how-much-does-road-base-cost/
+  (each: 1,166–1,261 visible words, computed/verified data tables — unit
+  pricing (soil $10-$20/yd³, rock $40-$250, $100-$300/hr w/ operator,
+  Angi $1,658-$6,707 typical project, mini rental $300-$400/day, full-size
+  ~$719/day avg DOZR) + project table at the tool's own swell/truck math
+  (pool 30×12×5 = 66.7 bcy → 83.3 lcy → 6 loads/$900; basement 24×36×8 =
+  22 loads/$3,300); DIY-kit $1-$3/sqft vs pro $4-$10 ($7.78-$12.71 Homewyse
+  May-2026 high-spec, ArmorGarage $1.08-$2.66 DIY material) + garage-size
+  gallons/kits table at the calculator's 160 ft²/gal + 10% waste defaults;
+  product pickup/delivered bands (crusher run $20-$30 pickup, $25-$50
+  delivered, Gravelshop installed $30-$60/ton = $3-$6/sqft, LawnStarter
+  driveway avg $1,500) + tonnage + coverage-per-ton tables (58 ft²@4in,
+  116@2in, 39@6in — tool-mirror math) — FAQ + Article/Breadcrumb/FAQPage
+  JSON-LD, tool + 2 sibling tools (excavation→concrete+sonotube,
+  epoxy→concrete+aggregate-base, aggregate→paver+concrete); guide backlinks
+  added to all three tool pages' related lists, replacing the off-topic
+  insulation/electrical links — 9-11/9-12 fix class).
+- 2026-09-13 depth passes (fresh audit: thinnest monetizable pages, both
+  old longtails with tables but no FAQPage LD): rap-calculator-50000-salary
+  (605 → 920 words, +full RAP-scale reference table node-verified against
+  the page's own engine incl. the $10 floor + exact-bracket $45k=4% quirk,
+  +2 FAQs (5-Q FAQPage JSON-LD added — page had none)); 
+  speeding-ticket-cost-california (747 → 1,165 words, +point-system/
+  negligent-operator reference table (1-pt/2-pt violations, 4-in-12/6-in-24/
+  8-in-36 thresholds, traffic-school masking) + rolling-window prose,
+  +2 FAQs (6-Q FAQPage JSON-LD added)); both diffs insertion-only —
+  calculator JS untouched (0 deleted lines, grep-verified).
+- 2026-09-13 hub updates: guides hub +3 cards (More Guides 466→469),
+  count claims re-pegged 525→528 (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: named construction-cluster intake pool now COMPLETE
+  (gutter, shed, topsoil, mulch, lumber, brick, paver, rebar, sod, sonotube,
+  wall-framing, crown-molding, soffit-fascia, concrete-block, excavation,
+  epoxy, aggregate-base all have guides). Fresh-audit thin depth candidates
+  for next batch (excluding state-lane stubs + test-hardware pages):
+  rap-calculator-30000-salary (641), rap-calculator-80000-salary (684),
+  speeding-ticket-cost-texas (775), speeding-ticket-cost-florida (793),
+  anniversary-gifts pages (506-666), dev-tool tail (slug-generator 802,
+  json-schema-validator 837, epoch-converter 825) — depth only if queue
+  idle; new guides need fresh keyword intake (awareness + AIO columns per
+  factory protocol).
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)
