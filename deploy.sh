@@ -12,6 +12,7 @@ python3 scripts/gen-roadmap.py
 # after, so regenerated hubs keep their BreadcrumbList + visible trail.
 python3 scripts/seo-breadcrumbs-wave.py
 python3 scripts/gen-related-index.py
+python3 scripts/wave6a-internal-links.py
 python3 scripts/gen-og-images.py
 python3 scripts/wire-result-actions-og.py
 python3 -c "
