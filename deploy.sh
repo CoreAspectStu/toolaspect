@@ -30,6 +30,8 @@ for root, dirs, files in os.walk('.'):
         url = 'https://toolaspect.com/' + path + '/'
         if path in ['finance-tools','health-calculators','creator-tools','converters','developer-tools','everyday-tools','all-tools']:
             priority, freq = '0.9', 'weekly'
+        elif path.startswith('reference/'):
+            priority, freq = '0.6', 'monthly'
         elif path.startswith('convert/') or path.startswith('conversion-tables/'):
             priority, freq = '0.6', 'monthly'
         elif path.startswith('guides/'):

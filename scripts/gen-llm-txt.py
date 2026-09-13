@@ -60,8 +60,15 @@ def main():
         for g in guides:
             slug = os.path.basename(os.path.dirname(g))
             lines.append(f"- {BASE}/guides/{slug}/")
+    # reference tables
+    refs = sorted(glob.glob(os.path.join(REPO, "reference", "*", "index.html")))
+    if refs:
+        lines += ["", "## Reference Tables"]
+        for r in refs:
+            slug = os.path.basename(os.path.dirname(r))
+            lines.append(f"- {BASE}/reference/{slug}/")
     open(os.path.join(REPO, "llm.txt"), "w").write("\n".join(lines) + "\n")
-    print(f"llm.txt: {n} tools + {len(guides)} guides written")
+    print(f"llm.txt: {n} tools + {len(guides)} guides + {len(refs)} reference tables written")
 
     # embed coverage report
     embeds = {f[:-3] for f in os.listdir(os.path.join(REPO, "embed")) if f.endswith(".js")}
