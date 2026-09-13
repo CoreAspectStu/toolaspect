@@ -42,3 +42,5 @@
 
 ## 2026-08-20
 - [chat] Docs refresh (md-reminder): FEATURES.md updated — embed system marked LIVE, page count 1422, outreach kit noted. Project otherwise idle: calculators indexed, /embed/ live, outreach kit staged awaiting first sends.
+
+2026-09-13 05:4x [chat] ep001 video fixed (yuv420p) + posted playable; YT consent still pending (Stu); SEO waves 1+2 live; AdSense day 9/14 email-watcher armed
