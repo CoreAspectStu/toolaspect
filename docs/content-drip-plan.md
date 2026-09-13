@@ -856,6 +856,65 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   idle; new guides need fresh keyword intake (awareness + AIO columns per
   factory protocol).
 
+- 2026-09-14 batch guides (named queue + construction pool both drained; fresh
+  intake via the 9-05 href-coverage scan recipe — 78 tools never referenced by
+  any guide, filtered by monetization/awareness/AIO, then content-level title
+  grep to skip covered clusters: pregnancy-weight-gain, anniversary-gifts-by-
+  year, and what-size-dog-crate guides all pre-exist, factoring = math):
+  markup → guides/markup-vs-margin/ (finance pricing, solution-aware, AIO yes
+  — conversion tables);
+  recruiting-screening-roi → guides/how-much-does-a-bad-hire-cost/
+  (most-aware cost query, DOL 30% + SHRM $4,700 anchors);
+  creator-revenue-projections → guides/how-much-do-content-creators-make/
+  (pricing head query, aggregate over the 10+ creator cluster, AIO yes —
+  payout tables)
+  (each: 1,247–1,334 visible words, computed/verified data tables — markup↔
+  margin grid node-verified (50%→33.3%, 40% margin→66.7% markup, keystone,
+  discount-erosion $75−20%→16.7% margin); screening-volume table computed at
+  the calculator's own 100×20min×$35 model ($1,166.67/mo = $14k/yr, half
+  wasted = $7k) + replacement-cost bands hedged "commonly cited" + DOL 30%
+  of $65k = $19,500; platform payout-rules table + 100K-audience table
+  ($299.50 Twitch 100 T1 subs, $800 OF 100@$10×80%) + $3,000/mo ladder
+  (750K YT views @ $4 RPM, 6M TikTok, 750K Spotify, ~1,000 T1 subs, 375 OF
+  subs) — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling tools;
+  guide backlinks added to all three tool pages' related lists).
+- 2026-09-14 depth passes: rap-calculator-30000-salary (670 → 1,155 words,
+  +band-edge table ($25k-$40,001 → % → monthly, node-verified: $30,000=$50.00,
+  $30,001=$75.00, $40,001=$133.34) +what-counts-as-income section (AGI vs
+  salary, pre-tax deductions, recertification timing), +2 FAQs (5-Q FAQPage
+  LD updated), how-the-rap-plan-works guide link);
+  rap-calculator-80000-salary (713 → 1,151 words, +upper-ladder table
+  ($50k-$150k → % → monthly incl. 10% cap rows, node-verified: $100,001=
+  $833.34, $150,000=$1,250.00) +forgiveness-tax section (ARPA exclusion
+  expired 12-31-2025 per the site's tax-bomb calculator, linked) , +2 FAQs
+  (5-Q FAQPage LD updated), tax-bomb + RAP-plan-guide links). Both diffs
+  insertion-only except the FAQ-LD and related-list lines — calculator JS
+  untouched, grep-verified.
+- 2026-09-14 out-of-band fixes: markup-calculator — staged-blob duplicate
+  FAQ section with GRADE-calculator content removed (page had two FAQ H2s;
+  on-topic markup FAQs kept), generic 3-Q FAQPage LD upgraded to the 5 real
+  visible Qs, off-topic Pascals-Triangle/Tip-Splitter related links → ROI/
+  Finance/guide (9-02 credit-card-payoff class); recruiting-screening-roi —
+  staged-blob FAQ section holding HOMEOWNERS-INSURANCE Q&A replaced with 4
+  on-topic screening FAQs + matching 4-Q FAQPage LD, two "Emuu" third-party
+  brand plugs neutralized (Veyzi/foreign-copy drift class, 9-07/9-08); 
+  creator-revenue-projections — broken doctype repaired (stray paragraph
+  pasted mid-<!DOCTYPE, fansly 9-07 class; paragraph moved to the page coda),
+  "Veyzi" plug neutralized.
+- 2026-09-14 hub updates: guides hub +3 cards (More Guides 469→472), count
+  claims re-pegged 528→531 in all 9 places (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: fresh-intake pool from the href-coverage scan still holds
+  follower-growth (creator cluster tail), recruiting-adjacent B2B, and the
+  device-test/privacy cluster (keyboard/mic/webcam/hearing/color-blindness,
+  ai-image-detector/deepfake-detector/face-recognition-search) — test pages
+  belong to the hardware-test lane, so candidate guides need Stu sign-off or
+  fresh keyword intake (awareness + AIO columns per factory protocol).
+  Remaining thin depth candidates from the 9-13 audit: speeding-ticket-cost-
+  texas (775), speeding-ticket-cost-florida (793), anniversary-gifts pages
+  (506-666), dev-tool tail (slug-generator 802, epoch-converter 825,
+  json-schema-validator 837) — depth only if queue idle.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)
