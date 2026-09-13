@@ -38,6 +38,68 @@ def main():
     # cap
     for s in index:
         index[s] = index[s][:CAP]
+
+    # --- Wave-6a: reference tables + convert pair siblings -----------------
+    # reference/<slug> tables relevant to specific tool pages
+    REF_MAP = {
+        'unit-converter': ['common-conversions-cheat-sheet'],
+        'percentage-calculator': ['common-conversions-cheat-sheet',
+                                  'fraction-decimal-percent-chart'],
+        'fraction-calculator': ['fraction-decimal-percent-chart'],
+        'scientific-calculator': ['common-conversions-cheat-sheet',
+                                  'fraction-decimal-percent-chart'],
+        'roman-numeral-converter': ['roman-numerals-chart'],
+        'binary-converter': ['ascii-codes-table'],
+        'curl-converter': ['http-status-codes'],
+    }
+    for slug, refs in REF_MAP.items():
+        if not os.path.isdir(os.path.join(ROOT, slug)):
+            continue
+        existing = index.setdefault(slug, [])
+        for r in refs:
+            p = 'reference/' + r
+            if os.path.isdir(os.path.join(ROOT, p)) and p not in existing:
+                existing.append(p)
+
+    # unit-converter gets every convert/<pair> page as a sibling
+    pairs = []
+    cdir = os.path.join(ROOT, 'convert')
+    if os.path.isdir(cdir):
+        for d in sorted(os.listdir(cdir)):
+            if os.path.isdir(os.path.join(cdir, d)):
+                pairs.append('convert/' + d)
+    if pairs and os.path.isdir(os.path.join(ROOT, 'unit-converter')):
+        existing = index.setdefault('unit-converter', [])
+        keep = existing[:6]  # a few hub siblings, then the convert lane links
+        for p in pairs:
+            if p not in keep:
+                keep.append(p)
+        keep.append('reference/common-conversions-cheat-sheet')
+        index['unit-converter'] = keep
+
+    # each convert/<pair> page gets sibling pairs sharing a unit word
+    if os.path.isdir(cdir):
+        for p in pairs:
+            name = p.split('/', 1)[1]
+            words = set(name.split('-')) - {'to', 'per', 'second'}
+            sibs = []
+            for q in pairs:
+                if q == p:
+                    continue
+                qname = q.split('/', 1)[1]
+                if words & (set(qname.split('-')) - {'to', 'per', 'second'}):
+                    sibs.append(q)
+            idx_p = p
+            entry = index.setdefault(idx_p, [])
+            for s in sibs[:8]:
+                if s not in entry:
+                    entry.append(s)
+            if 'unit-converter' not in entry:
+                entry.append('unit-converter')
+            if 'reference/common-conversions-cheat-sheet' not in entry:
+                entry.append('reference/common-conversions-cheat-sheet')
+    # -----------------------------------------------------------------------
+
     out = os.path.join(ROOT, 'shared', 'related-index.json')
     with open(out, 'w') as f:
         json.dump(index, f, separators=(',', ':'))
