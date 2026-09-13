@@ -11,6 +11,9 @@ python3 scripts/gen-roadmap.py
 # strips the bc1 blocks from those hubs. Re-apply the wave (idempotent) right
 # after, so regenerated hubs keep their BreadcrumbList + visible trail.
 python3 scripts/seo-breadcrumbs-wave.py
+python3 scripts/gen-related-index.py
+python3 scripts/gen-og-images.py
+python3 scripts/wire-result-actions-og.py
 python3 -c "
 import os, datetime
 today = datetime.date.today().isoformat()
