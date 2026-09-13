@@ -47,9 +47,17 @@ def from_strong_qa(src):
             if clean(q) and len(clean(a)) > 30]
 
 # ---- source 3: matched guide -------------------------------------------
+STOP = {'calculator', 'calc', 'tool', 'the', 'a', 'to', 'by', 'of', 'and', 'for', 'cost', 'my'}
+def tokens(slug):
+    return {t for t in slug.split('-') if t not in STOP and len(t) > 2}
+
 def guide_qa(slug):
     m = difflib.get_close_matches(slug, guides, n=1, cutoff=0.55)
     if not m:
+        return []
+    # strict guard: significant token overlap, else the difflib match is bogus
+    ts, gs = tokens(slug), tokens(m[0])
+    if not ts or not gs or len(ts & gs) < max(1, min(len(ts), len(gs)) - 1):
         return []
     try:
         g = open(f'guides/{m[0]}/index.html', encoding='utf-8').read()
