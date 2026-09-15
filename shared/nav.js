@@ -212,6 +212,7 @@
         { label: 'Unit Converter', href: '/unit-converter/' },
         { label: 'Age Calculator', href: '/age-calculator/' },
         { label: 'Epoch Converter', href: '/epoch-converter/' },
+        { label: 'Reference Tables', href: '/reference/' },
       ]
     },
   /* ---- Categories added 2026-08-28 to cover full tool inventory ---- */
