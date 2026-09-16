@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stundenrechner — Stunden & Minuten zwischen Zeiten berechnen | Kostenloses Tool</title>
+<meta name="description" content="Free hours calculator. Calculate hours and minutes between two times, add or subtract time, and convert time formats. Perfect for timesheets and payroll.">
+<link rel="canonical" href="https://toolaspect.com/de/hours-calculator/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:image" content="https://toolaspect.com/og/hours-calculator.png">
+<meta property="og:title" content="Hours Calculator — Calculate Hours Between Times">
+<meta property="og:image" content="https://toolaspect.com/og/hours-calculator.png">
+<meta property="og:description" content="Free hours calculator for timesheets, payroll, and time tracking. Calculate hours between times, add/subtract time.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolaspect.com/hours-calculator/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hours Calculator | Free Online Tool">
+<meta name="twitter:description" content="Calculate hours and minutes between times. Great for timesheets and payroll.">
+<meta name="keywords" content="hours calculator, time calculator, hours between times, timesheet calculator, payroll hours, work hours calculator, time duration">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Hours Calculator","description":"Free hours calculator for time duration, timesheets, and payroll calculations.","url":"https://toolaspect.com/hours-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"browserRequirements":"Requires JavaScript"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Hours Calculator","item":"https://toolaspect.com/hours-calculator/"}]}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you calculate hours between two times?","acceptedAnswer":{"@type":"Answer","text":"Convert both times to 24-hour format, subtract the start from the end, and add 24 hours if the result is negative (an overnight shift). Subtract any unpaid break to get net work hours. 9:00 AM to 5:30 PM with a 30-minute break is 8.0 net hours."}},{"@type":"Question","name":"How do I convert minutes to decimal hours for payroll?","acceptedAnswer":{"@type":"Answer","text":"Divide the minutes by 60: 15 minutes is 0.25 hours, 45 minutes is 0.75, and 7 hours 30 minutes is 7.50 decimal hours. Multiply decimal hours by the hourly rate to get pay - 8.83 hours at $20/hour is $176.67."}},{"@type":"Question","name":"Do breaks count as hours worked?","acceptedAnswer":{"@type":"Answer","text":"Short rest breaks of 5 to 20 minutes are paid time under federal rules; bona fide meal periods of 30 minutes or more can be unpaid if the employee is fully relieved of duty. Subtract unpaid breaks in the calculator's break field so net hours match the paycheck."}},{"@type":"Question","name":"How does overtime work after 40 hours?","acceptedAnswer":{"@type":"Answer","text":"For non-exempt employees, federal law requires at least 1.5x the regular rate for every hour past 40 in a workweek. Some states add daily overtime - California pays 1.5x after 8 hours and 2x after 12 in a day, on top of the weekly rule."}},{"@type":"Question","name":"How do I calculate hours for an overnight shift?","acceptedAnswer":{"@type":"Answer","text":"When the end time is earlier than the start time, the shift crossed midnight: add 24 hours to the raw difference. A 10:15 PM to 6:45 AM shift works out to 8 hours 30 minutes, or 8.50 decimal hours before premiums."}}]}</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--text:#e4e4e7;--muted:#9ca3af;--primary:#6366f1;--primary-hover:#818cf8;--success:#22c55e;--danger:#ef4444;--radius:10px;--radius-lg:14px;--shadow:0 2px 12px rgba(0,0,0,.4)}
+.page-container{max-width:920px;margin:0 auto;padding:0 1rem}
+.page-header{padding:2rem 0 .5rem;text-align:center}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:.3rem}
+.page-header p{color:var(--muted);font-size:.95rem}
+.tabs{display:flex;gap:4px;margin-top:1.25rem;justify-content:center}
+.tab-btn{padding:.6rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;color:var(--muted);cursor:pointer;font-size:.9rem;font-weight:500;transition:all .2s}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.section-card h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:640px){.input-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;gap:.35rem}
+.input-group label{font-size:.85rem;color:var(--muted);font-weight:500}
+.input-group input,.input-group select{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:1rem;box-sizing:border-box;cursor:pointer}
+.input-group input:focus{outline:none;border-color:var(--primary)}
+.result-hero{text-align:center;padding:1.5rem 0}
+.result-hero .label{color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.result-hero .value{font-size:2.5rem;font-weight:800;color:var(--primary);margin-top:.25rem}
+.result-hero .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-item{background:var(--bg);border-radius:var(--radius);padding:1rem;text-align:center}
+.result-item .ri-label{font-size:.8rem;color:var(--muted);margin-bottom:.25rem}
+.result-item .ri-value{font-size:1.2rem;font-weight:700}
+.add-row-btn{background:var(--primary);color:#fff;border:none;padding:.5rem 1rem;border-radius:var(--radius);cursor:pointer;font-size:.85rem;margin:.5rem 0;transition:background .2s}
+.add-row-btn:hover{background:var(--primary-hover)}
+.remove-btn{background:var(--danger);color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.9rem;flex-shrink:0;margin-top:1.3rem}
+.day-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 36px;gap:.5rem;margin-bottom:.5rem;align-items:start}
+@media(max-width:768px){.day-row{grid-template-columns:1fr 1fr;gap:.5rem}}
+.day-row label-mini{font-size:.75rem;color:var(--muted)}
+.day-row input,.day-row select{padding:.5rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;box-sizing:border-box}
+.day-row input:focus{outline:none;border-color:var(--primary)}
+.content-section{margin-top:2.5rem}
+.content-section h2{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.content-section h3{font-size:1.05rem;font-weight:600;margin:1.25rem 0 .5rem;color:var(--primary-hover)}
+.content-section p{color:var(--muted);line-height:1.7;margin-bottom:.75rem;font-size:.95rem}
+.content-section ul{color:var(--muted);line-height:1.7;margin-bottom:.75rem;padding-left:1.5rem}
+.related-tools{margin-top:2.5rem}
+.related-tools h2{font-size:1.2rem;margin-bottom:.75rem}
+.related-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.related-links a{padding:.4rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+.related-links a:hover{border-color:var(--primary)}
+@keyframes valueFadeIn{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+.value-animate{animation:valueFadeIn .35s ease-out}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script type="application/ld+json" data-ta-schema="v2">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Hours Calculator — Calculate Hours &amp; Minutes Between Times | Free Tool","url":"https://toolaspect.com/hours-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free hours calculator. Calculate hours and minutes between two times, add or subtract time, and convert time formats. Perfect for timesheets and payroll."}]}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js"></script>
+<link rel="alternate" hreflang="en" href="https://toolaspect.com/hours-calculator/" />
+<link rel="alternate" hreflang="es" href="https://toolaspect.com/es/hours-calculator/" />
+<link rel="alternate" hreflang="de" href="https://toolaspect.com/de/hours-calculator/" />
+<link rel="alternate" hreflang="pt-br" href="https://toolaspect.com/pt/hours-calculator/" />
+<link rel="alternate" hreflang="x-default" href="https://toolaspect.com/hours-calculator/" />
+</head>
+<body>
+<script src="/shared/nav.js"></script>
+<div class="page-container">
+<div class="page-header">
+<h1>⏰ Stundenrechner</h1>
+<div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
+  <p style="margin:0"><strong>Ergebnis:</strong> <span data-ta-answer-text>Geben Sie Ihre Werte ein, und der ⏰ Stundenrechner liefert das exakte Ergebnis sofort — Formel, durchgerechnetes Beispiel und eine verständliche Erklärung finden Sie unter dem Tool.</span></p>
+</div>
+<div class="ta-share" data-ta-schema="share1" data-ta-slug="hours-calculator" aria-label="Share this tool"></div>
+
+
+<p>Stunden und Minuten zwischen Zeiten berechnen — für Stundenzettel und Lohnbuchhaltung</p>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('duration')">Dauer</button>
+<button class="tab-btn" onclick="switchTab('timesheet')">Stundenzettel</button>
+<button class="tab-btn" onclick="switchTab('addsub')">Addieren / Subtrahieren</button>
+</div>
+
+<!-- Duration Tab -->
+<div id="tab-duration" class="tab-content active">
+<div class="section-card">
+<h2>Zeitdauer-Rechner</h2>
+<div class="input-grid">
+<div class="input-group"><label>Startzeit</label><div class="ad-slot" data-slot="tool-top">Ad</div>
+<input type="time" id="startTime" value="09:00"></div>
+<div class="input-group"><label>Endzeit</label><input type="time" id="endTime" value="17:30"></div>
+<div class="input-group"><label>Pause (Minuten)</label><input type="number" id="breakMin" value="30" min="0" placeholder="30"></div>
+</div>
+</div>
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Gesamtstunden</div>
+<div class="value" id="durHours">0h 0m</div>
+<div class="sub" id="durDecimal">0.00 hours</div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Netto-Arbeitsstunden (nach Pause)</div><div class="ri-value" id="durNet">0h 0m</div></div>
+<div class="result-item"><div class="ri-label">Netto-Stunden (dezimal)</div><div class="ri-value" id="durNetDec">0.00</div></div>
+</div>
+</div>
+</div>
+
+<!-- Timesheet Tab -->
+<div id="tab-timesheet" class="tab-content">
+<div class="section-card">
+<h2>Wochen-Stundenzettel</h2>
+<div id="timesheetRows"></div>
+<button class="add-row-btn" onclick="addTimesheetRow()">+ Zeile hinzufügen</button>
+</div>
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Wochenstunden gesamt</div>
+<div class="value" id="tsTotal">0h 0m</div>
+<div class="sub" id="tsDecimal">0.00 hours</div>
+</div>
+<div class="result-grid">
+<div class="result-item"><div class="ri-label">Bei $20/Std.</div><div class="ri-value" id="tsPay">$0.00</div></div>
+<div class="result-item"><div class="ri-label">Stundensatz</div><div class="input-group" style="margin:0"><input type="number" id="hourlyRate" value="20" min="0" step="0.01" style="padding:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;width:100%;box-sizing:border-box" oninput="calcTimesheet()"></div></div>
+</div>
+</div>
+</div>
+
+<!-- Add/Subtract Tab -->
+<div id="tab-addsub" class="tab-content">
+<div class="section-card">
+<h2>Zeit addieren oder subtrahieren</h2>
+<div class="input-grid">
+<div class="input-group"><label>Hours</label><input type="number" id="addHours" value="2" placeholder="2"></div>
+<div class="input-group"><label>Minuten</label><input type="number" id="addMinutes" value="30" placeholder="30"></div>
+<div class="input-group"><label>Operation</label>
+<select id="addOp">
+<option value="add">Addieren (+)</option>
+<option value="sub">Subtrahieren (−)</option>
+</select>
+</div>
+</div>
+<div class="input-grid" style="margin-top:1rem">
+<div class="input-group"><label>Zu/von Zeit</label><input type="time" id="addBaseTime" value="12:00"></div>
+</div>
+</div>
+<div class="section-card">
+<div class="result-hero">
+<div class="label">Ergebnis</div>
+<div class="value" id="addResult">—</div>
+</div>
+</div>
+</div>
+
+<div class="content-section">
+<h2>Stunden und Minuten berechnen</h2>
+<p>Dieser Stundenrechner ermittelt die Dauer zwischen zwei Zeiten, berechnet wöchentliche Arbeitsstunden für die Lohnbuchhaltung und addiert oder subtrahiert Zeiträume. Verfolgen Sie Arbeitsstunden, planen Sie Schichten oder berechnen Sie abrechenbare Zeit — ohne manuelles Minutenzählen.</p>
+<h3>Zeitdauer berechnen</h3>
+<p>So finden Sie Stunden zwischen zwei Zeiten: Wandeln Sie beide ins 24-Stunden-Format um und subtrahieren Sie den Start vom Ende. Ist das Ergebnis negativ, hat die Schicht Mitternacht überschritten — addieren Sie 24 Stunden. Beispiel: 9:00 bis 17:30 mit 30 Minuten Pause = 8.5 Stunden − 0.5 Stunden = 8.0 Netto-Stunden.</p>
+<h3>Minuten in Dezimalstunden umrechnen</h3>
+<p>Für die Lohnbuchhaltung müssen Minuten in Dezimalstunden umgerechnet werden: Teilen Sie die Minuten durch 60.</p>
+<ul>
+<li>15 minutes = 0.25 hours</li>
+<li>30 minutes = 0.50 hours</li>
+<li>45 minutes = 0.75 hours</li>
+<li>7 hours 30 minutes = 7.50 decimal hours</li>
+</ul>
+<h3>Stundenzettel-Tipps</h3>
+<ul>
+<li>Erfassen Sie die Zeit täglich — versuchen Sie nicht, am Wochenende alles zu rekonstruieren</li>
+<li>Runden Sie auf die nächsten 15 Minuten für saubere Rechnungen (7:53 → 8:00)</li>
+<li>Erfassen Sie Pausen separat, um genaue Netto-Arbeitsstunden zu erhalten</li>
+<li>Für Überstunden: alles über 8 Stunden/Tag oder 40 Stunden/Woche zählen</li>
+<li>Bewahren Sie Stundenzettel mindestens 3 Jahre auf — FLSA-Konformität</li>
+</ul>
+<h3>Fakten zu Arbeitszeiten</h3>
+<ul>
+<li><strong>Vollzeit-Woche</strong>: 40 Stunden (US-Standard)</li>
+<li><strong>Jahresstunden</strong>: ~2,080 Stunden (40 Std. × 52 Wochen)</li>
+<li><strong>Nach Feiertagen</strong>: ~2,000 Stunden (10 Feiertage)</li>
+<li><strong>Überstunden-Schwelle</strong>: >40 Stunden/Woche (US-FLSA)</li>
+<li><strong>EU-Wochenlimit</strong>: max. 48 Stunden (inklusive Überstunden)</li>
+</ul>
+<h2>Referenztabelle: Minuten zu Dezimalstunden</h2>
+<p>Lohnbuchhaltungssysteme multiplizieren Dezimalstunden mit dem Lohnsatz — die Minute-zu-Dezimal-Umrechnung ist also der Punkt, an dem Stundenzettel-Mathematik zu Gehaltsmathematik wird. Die Tabelle zeigt die Umrechnung plus die Dollarwirkung beim Standardsatz von $20/Stunde des Rechners:</p>
+<div style="overflow-x:auto;margin:12px 0">
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<thead><tr><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Minuten</th><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Dezimalstunden</th><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Lohnwirkung bei $20/Std.</th></tr></thead>
+<tbody>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:05</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.08</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$1.67</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:10</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.17</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$3.33</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:15</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.25</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$5.00</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:20</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.33</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$6.67</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:25</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.42</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$8.33</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:30</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.50</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$10.00</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:35</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.58</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$11.67</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:40</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.67</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$13.33</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:45</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.75</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$15.00</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:50</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.83</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$16.67</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:55</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">0.92</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">$18.33</td></tr>
+</tbody>
+</table>
+</div>
+<h2>Durchgerechnete Beispiele: echte Schichten durch den Rechner</h2>
+<p>A split shift with a lunch break: clock in at 8:42 AM, out at 6:17 PM, with a 45-minute unpaid lunch. From 8:42 to 18:17 is 9 hours 35 minutes; subtract 45 minutes for a net 8 hours 50 minutes, which is 8.83 decimal hours. At $20/hour that shift pays $176.67. The duration tab above does all three steps in one pass.</p>
+<p>An overnight shift: 10:15 PM to 6:45 AM. The end time reads smaller than the start, which means the shift crossed midnight — add 24 hours to the difference and you get 8 hours 30 minutes, or 8.50 decimal hours. Night-shift premiums stack on top where employers pay them; the base arithmetic doesn't change.</p>
+<p>Ein Wochenmuster: fünf Tage von 9:00 bis 17:30 mit 30 Minuten Pause ergeben 8.0 Netto-Stunden pro Tag, 40.0 in der Woche — exakt an der bundesstaatlichen Überstundengrenze ohne Spielraum. Kommt ein Samstag derselben Schicht hinzu, steht die Woche bei 48 Stunden, davon 8 Überstunden. Genau diese Zahl summiert der Stundenzettel-Tab für Sie.</p>
+<h2>Wie sich Wochenstunden und Überstunden addieren</h2>
+<div style="overflow-x:auto;margin:12px 0">
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<thead><tr><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Stundenband</th><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Behandlung</th></tr></thead>
+<tbody>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">Bis 40 in einer Woche</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">Normallohn — bundesstaatlicher FLSA-Standard für nicht-freigestellte Mitarbeiter</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">Stunden 41+ in einer Woche</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">Mindestens das 1.5-Fache des regulären Satzes (Bundesebene)</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">Kalifornien: Stunden 9-12 an einem Tag</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">1.5× — tägliche Überstunden unabhängig von der Wochensumme</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">Kalifornien: nach Stunde 12 an einem Tag</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">2× Doppellohn</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">Europäische Union</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">48-Stunden-Durchschnittswochenlimit, Überstunden inklusive</td></tr>
+</tbody>
+</table>
+</div>
+<p>Die meisten Bundesstaaten folgen der bundesweiten Wochenregel; Kalifornien ist der bekannteste Daily-Overtime-Staat. Prüfen Sie den Staat, in dem Sie auszahlen, bevor Sie die Lohntabelle erstellen, und siehe unsere<a href="/guides/how-is-overtime-pay-calculated/">Anleitung zur Überstundenberechnung</a>für die vollständige Multiplikator-Mathematik.</p>
+<h2>Rundungsregeln für Stundenzettel</h2>
+<p>Viele Lohnbuchhaltungssysteme runden noch auf die nächsten Viertelstunde. Die Standard-7-Minuten-Regel rundet in beide Richtungen — so oft zugunsten des Mitarbeiters wie zu seinen Lasten — genau das hält sie vertretbar:</p>
+<div style="overflow-x:auto;margin:12px 0">
+<table style="width:100%;border-collapse:collapse;font-size:.9rem">
+<thead><tr><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Minuten nach der vollen Stunde</th><th style="text-align:left;padding:.5rem .75rem;border:1px solid var(--border)">Rundet auf</th></tr></thead>
+<tbody>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:00 to :07</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">:00</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:08 to :22</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">:15</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:23 to :37</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">:30</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:38 to :52</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">:45</td></tr>
+<tr><td style="padding:.5rem .75rem;border:1px solid var(--border)">:53 to :59</td><td style="padding:.5rem .75rem;border:1px solid var(--border)">next hour :00</td></tr>
+</tbody>
+</table>
+</div>
+<p>Einseitiges Runden — Clock-in immer abwärts, Clock-out immer aufwärts — erfüllt diesen Standard nicht. Verfolgen Sie für einen Streitfall Ihre eigenen Stunden, bewahren Sie die rohen Stempelzeiten und die gerundeten nebeneinander auf.</p>
+<h2>Häufig gestellte Fragen</h2>
+<h3>Wie berechnet man Stunden zwischen zwei Zeiten?</h3>
+<p>Wandeln Sie beide Zeiten ins 24-Stunden-Format um, subtrahieren Sie den Start vom Ende und addieren Sie 24 Stunden, wenn das Ergebnis negativ ist (Nachtschicht). Ziehen Sie unbezahlte Pausen ab, um Netto-Arbeitsstunden zu erhalten. 9:00 bis 17:30 mit 30 Minuten Pause sind 8.0 Netto-Stunden.</p>
+<h3>Wie rechne ich Minuten für die Lohnbuchhaltung in Dezimalstunden um?</h3>
+<p>Teilen Sie die Minuten durch 60: 15 Minuten sind 0.25 Stunden, 45 Minuten 0.75, und 7 Stunden 30 Minuten sind 7.50 Dezimalstunden. Multiplizieren Sie Dezimalstunden mit dem Stundensatz für den Lohn — 8.83 Stunden bei $20/Stunde ergeben $176.67.</p>
+<h3>Zählen Pausen als Arbeitszeit?</h3>
+<p>Kurze Ruhepausen von 5 bis 20 Minuten sind nach Bundesregeln bezahlte Zeit; echte Essenspausen von 30 Minuten oder mehr können unbezahlt sein, wenn der Mitarbeiter vollständig von der Arbeit befreit ist. Ziehen Sie unbezahlte Pausen im Pausenfeld des Rechners ab, damit die Netto-Stunden zum Gehalt passen.</p>
+<h3>Wie funktionieren Überstunden nach 40 Stunden?</h3>
+<p>Für nicht-freigestellte Mitarbeiter verlangt Bundesrecht mindestens das 1.5-Fache des regulären Satzes für jede Stunde über 40 in einer Arbeitswoche. Manche Staaten ergänzen tägliche Überstunden — Kalifornien zahlt 1.5× nach 8 Stunden und 2× nach 12 Stunden an einem Tag, zusätzlich zur Wochenregel.</p>
+<h3>Wie berechne ich Stunden für eine Nachtschicht?</h3>
+<p>Liegt die Endzeit vor der Startzeit, hat die Schicht Mitternacht überschritten: Addieren Sie 24 Stunden zur Rohdifferenz. Eine Schicht von 22:15 bis 6:45 ergibt 8 Stunden 30 Minuten, oder 8.50 Dezimalstunden vor Zuschlägen.</p>
+</div>
+
+<div class="ad-slot" data-slot="tool-result">Ad</div>
+<div class="wrap"><div class="related-tools">
+<h2>Ähnliche Tools</h2>
+<div class="related-links">
+<a href="/age-calculator/">🎂 Altersrechner</a>
+<a href="/percentage-calculator/">％ Prozentrechner</a>
+<a href="/finance-calculator/">💰 Finanzrechner</a>
+<a href="/tip-calculator/">🧮 Trinkgeldrechner</a>
+<a href="/loan-calculator/">🏦 Kreditrechner</a>
+<a href="/mortgage-calculator/">🏠 Hypothekenrechner</a>
+<a href="/guides/how-is-overtime-pay-calculated/">⏱ Wie wird Überstundenlohn berechnet?</a>
+<a href="/guides/how-to-calculate-payroll-taxes/">📋 Wie berechnet man Lohnsteuern?</a>
+</div>
+</div></div>
+</div>
+<script>
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+  event.target.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+/* --- Duration --- */
+function parseTime(t){
+  var parts=t.split(':');return parseInt(parts[0])*60+parseInt(parts[1]);
+}
+function calcDuration(){
+  var start=parseTime(document.getElementById('startTime').value||'00:00');
+  var end=parseTime(document.getElementById('endTime').value||'00:00');
+  var brk=parseInt(document.getElementById('breakMin').value)||0;
+  var diff=end-start;if(diff<0)diff+=1440;
+  var net=Math.max(0,diff-brk);
+  animateValue(document.getElementById('durHours'),fmtMin(diff));
+  document.getElementById('durDecimal').textContent=(diff/60).toFixed(2)+' hours';
+  animateValue(document.getElementById('durNet'),fmtMin(net));
+  animateValue(document.getElementById('durNetDec'),(net/60).toFixed(2));
+}
+function fmtMin(m){
+  var h=Math.floor(m/60);var mm=m%60;return h+'h '+mm+'m';
+}
+function animateValue(el,text){
+  el.textContent=text;
+  el.classList.remove('value-animate');
+  void el.offsetWidth;
+  el.classList.add('value-animate');
+}
+['startTime','endTime','breakMin'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calcDuration);
+});
+calcDuration();
+
+/* --- Timesheet --- */
+var tsRowId=0;
+var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function addTimesheetRow(){
+  tsRowId++;
+  var container=document.getElementById('timesheetRows');
+  var div=document.createElement('div');
+  div.className='day-row';
+  div.id='ts-row-'+tsRowId;
+  div.innerHTML='<select onchange="calcTimesheet()"><option value="">Day</option>'+days.map(function(d){return '<option>'+d+'</option>'}).join('')+'</select><input type="time" value="09:00" oninput="calcTimesheet()" placeholder="Start"><input type="time" value="17:00" oninput="calcTimesheet()" placeholder="End"><input type="number" value="30" min="0" oninput="calcTimesheet()" placeholder="Break"><input type="text" value="" placeholder="Notes" style="color:var(--muted)"><button class="remove-btn" onclick="removeTimesheetRow('+tsRowId+')">×</button>';
+  container.appendChild(div);
+  calcTimesheet();
+}
+function removeTimesheetRow(id){
+  document.getElementById('ts-row-'+id).remove();
+  calcTimesheet();
+}
+function calcTimesheet(){
+  var total=0;
+  document.querySelectorAll('#timesheetRows .day-row').forEach(function(row){
+    var inputs=row.querySelectorAll('input[type="time"]');
+    var brk=row.querySelector('input[type="number"]');
+    if(inputs.length>=2&&inputs[0].value&&inputs[1].value){
+      var start=parseTime(inputs[0].value);
+      var end=parseTime(inputs[1].value);
+      var diff=end-start;if(diff<0)diff+=1440;
+      var breakMin=parseInt(brk.value)||0;
+      total+=Math.max(0,diff-breakMin);
+    }
+  });
+  animateValue(document.getElementById('tsTotal'),fmtMin(total));
+  document.getElementById('tsDecimal').textContent=(total/60).toFixed(2)+' hours';
+  var rate=parseFloat(document.getElementById('hourlyRate').value)||0;
+  animateValue(document.getElementById('tsPay'),'$'+((total/60)*rate).toFixed(2));
+}
+// Init with 5 weekday rows
+for(var i=0;i<5;i++)addTimesheetRow();
+
+/* --- Add/Subtract --- */
+function calcAddSub(){
+  var hours=parseInt(document.getElementById('addHours').value)||0;
+  var minutes=parseInt(document.getElementById('addMinutes').value)||0;
+  var op=document.getElementById('addOp').value;
+  var base=parseTime(document.getElementById('addBaseTime').value||'00:00');
+  var addMin=hours*60+minutes;
+  var result=op==='add'?base+addMin:base-addMin;
+  while(result<0)result+=1440;
+  while(result>=1440)result-=1440;
+  var h=Math.floor(result/60);var m=result%60;
+  var ampm=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;
+  animateValue(document.getElementById('addResult'),h12+':'+(m<10?'0':'')+m+' '+ampm);
+}
+['addHours','addMinutes','addOp','addBaseTime'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el){el.addEventListener('input',calcAddSub);el.addEventListener('change',calcAddSub)}
+});
+calcAddSub();
+</script>
+<script src="/shared/funnel-cta.js"></script>
+<script src="/shared/ads.js"></script>
+
+<script src="/shared/result-actions.js"></script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+<div class="related-tools"><h2>Ähnliche Tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/finance-calculator/">Finanzen</a></li><li style="margin:4px 0"><a href="/currency-converter/">Währungsrechner</a></li><li style="margin:4px 0"><a href="/crypto-converter/">Krypto-Umrechner</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Lesen Sie unsere Anleitungen</a> · <a href="/all-tools/">Alle Tools durchsuchen</a></p></div>
+<script src="/shared/answer-first.js" defer></script>
+<script src="/shared/share.js" defer></script>
+</body>
+</html>
