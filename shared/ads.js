@@ -6,13 +6,13 @@
 (function () {
   var cfg = window.TA_ADS || {};
   var DEFAULTS = {
-    enabled: false, // ← flip on approval day
+    enabled: true, // ← flip on approval day
     client: 'ca-pub-7079002297203024',
     slotIds: {
-      'tool-top': '',     // above the tool — highest CTR
-      'tool-result': '',   // 728x90 / responsive below tool result
-      'tool-sidebar': '',  // 300x250 sidebar
-      'guide-inline': ''   // in-article responsive
+      'tool-top': '9433987485',     // above the tool — highest CTR
+      'tool-result': '9419518928',   // 728x90 / responsive below tool result
+      'tool-sidebar': '1555497463',  // 300x250 sidebar
+      'guide-inline': '9200027071'   // in-article responsive
     }
   };
   for (var k in DEFAULTS) if (!(k in cfg)) cfg[k] = DEFAULTS[k];
