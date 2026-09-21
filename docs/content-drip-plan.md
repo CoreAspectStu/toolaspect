@@ -916,8 +916,8 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   json-schema-validator 837) — depth only if queue idle.
 
 ## Schedule
-- 06:00 tool-factory (10 tools) — bridge session A
-- 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B (parallel OK)
+- 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
+- 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
 - 06:30 gh-repo-scan
 - 08:00 traffic report
 All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), interlinked.
