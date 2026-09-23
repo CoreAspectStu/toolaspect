@@ -1,6 +1,14 @@
 # FEATURES — toolaspect.com
 
-Current as of 2026-09-04. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token).
+Current as of 2026-09-19. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
+
+## NEW since 2026-09-04
+- **i18n L0 pilot**: es/de/pt locale pages (19 each) + hreflang clusters + sitemap +56 URLs (e2f468ec)
+- **SEO waves 4–6c**: FAQPage JSON-LD on all 697 tool pages + visible FAQ accordions; reference-table lane (19 tables + /reference hub); internal-link graph wiring; calc.net-style depth sections on flagship tools; IndexNow key rotated (old 403)
+- **Site-wide slop purge** (f05b3ea54, e8649012a): template answer-chrome removed (112), ~180 off-topic FAQs repaired w/ visible-HTML↔JSON-LD byte-sync, viewport meta fixes (339), partners-page rewrite; slop-scan.py now gates deploys
+- **Ad lane ARMED (Sep-18)**: 4 live AdSense units — tool-top 9433987485 / tool-result 9419518928 / tool-sidebar 1555497463 / guide-inline 9200027071; ads.js include versioned ?v=2; ads.txt live; all 'ad-free' copy purged. Serving awaits Google's automated site review.
+- **GSC status**: fully connected; 2,950 pages Discovered-not-indexed (~90%) = top bottleneck
+- **Ops**: BATTLE-PLAN.md growth engine; daily-commander cron 9:30am; toolaspect-ops-playbook.service :3180 (tailnet); ep001 video live (yuv420p)
 
 ## Site Structure
 - **3,173 pages** (sitemap URLs), all self-contained HTML+JS, dark theme
