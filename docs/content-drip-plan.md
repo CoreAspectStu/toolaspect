@@ -956,6 +956,42 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   left: anniversary-gifts pages (506-666), slug-generator (826),
   epoch-converter (850), json-schema-validator (862).
 
+- 2026-09-24 batch guides (href-coverage pool, next three after 9-23;
+  content-calendar-planner SKIPPED — covered by guides/content-calendar;
+  device-test cluster still awaiting Stu sign-off):
+  factoring → guides/how-to-find-prime-factorization/ (solution-aware how-to,
+  AIO yes — factorization + divisibility + GCF/LCM tables);
+  fraction → guides/how-to-add-fractions-with-different-denominators/ (high-
+  volume PAA how-to, AIO yes — LCD-vs-product + operations tables);
+  link-in-bio → guides/what-to-put-in-your-link-in-bio/ (creator-cluster tail,
+  best-X/solution-aware — platform link-limit table: IG 5 (Apr-2023), YT 14,
+  Threads 5 (2025), TikTok 1,000 followers or business acct, web-verified)
+  (each: 1,257–1,406 visible words, all math Python-verified (360 = 2³·3²·5,
+  24 divisors; 48/180 GCF 12 LCM 720; 7/12+5/18 = 31/36; 3 5/16 + 1 7/8 =
+  5 3/16) — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  guide backlinks added to the related lists of factoring-calculator,
+  fraction-calculator (off-topic finance/unit links → math siblings), link-in-bio).
+- 2026-09-24 depth passes: 1st-anniversary-gifts (533 → 1,077 words, +origin
+  section + years-1-5 table (matches anniversary-gifts-by-year) + lead-time/
+  price table, +2 FAQs (3→5) with FAQPage LD update);
+  5th-anniversary-gifts (574 → 1,110 words, +wood-species table (Janka:
+  walnut 1,010, hard maple 1,450, cherry 950, white oak 1,350, red oak 1,220
+  lbf) + personalization + sterling-vs-18/10 section, +2 FAQs (4→6) with
+  FAQPage LD update); both link guides/anniversary-gifts-by-year. No JS on
+  either page touched.
+- 2026-09-24 hub updates: guides hub +3 cards (More Guides 475→478), count
+  claims re-pegged 534→537 in all 9 places (= on-disk dirs with index.html);
+  all-tools regenerated (537 guides).
+  NOTE (unfixed, flagged): link-in-bio, custom-content-price, churn-rate,
+  onlyfans-price, onlyfans-earnings, youtube-sponsorship still carry "Veyzi"
+  plugs — 9-14 neutralized two; confirm with Stu whether Veyzi is ours before
+  stripping the rest.
+  Queue state: href-coverage pool remaining = content-calendar-planner (covered),
+  device-test/privacy cluster (sign-off). Thin depth candidates left:
+  25th-anniversary-gifts (658), 50th-anniversary-gifts (693), slug-generator
+  (826), epoch-converter (850), json-schema-validator (862). New guides need
+  fresh keyword intake next batch.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
