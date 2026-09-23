@@ -915,6 +915,47 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   (506-666), dev-tool tail (slug-generator 802, epoch-converter 825,
   json-schema-validator 837) — depth only if queue idle.
 
+- 2026-09-23 batch guides (fresh intake via the 9-05 href-coverage scan: 75
+  tools never referenced by any guide; all-on-4 skipped — covered by
+  how-much-do-dental-implants-cost; hvac/window/roof/fence by-state skipped —
+  guides exist; device-test cluster still awaiting Stu sign-off):
+  follower-growth → guides/what-is-a-good-follower-growth-rate/ (named queue
+  item, creator-cluster tail; solution-aware, AIO yes — rate tables);
+  llm-pricing-tracker + token-counter → guides/how-much-does-it-cost-to-run-an-ai-chatbot/
+  (most-aware pricing query; covers both unreferenced AI-cluster tools);
+  number-to-words → guides/how-to-write-a-check/ (finance bridge, high-volume
+  how-to, AIO yes — amounts-in-words table)
+  (each: 1,344–1,462 visible words, computed/verified tables — doubling-time
+  grid + churn-ceiling table (600/mo inflow, 1% churn → 15,681 @12mo, 60k cap);
+  per-model chat cost at list rates (Gemini 2.5 Flash $0.30/$2.50, Haiku 4.5
+  $1/$5, GPT-5 $1.25/$10, Sonnet 5 $2/$10, GPT-4o $2.50/$10): 6-turn chat =
+  10,800 in/1,500 out tokens = $0.0070–$0.0420, 20-turn = 5.6× the 6-turn cost,
+  system-prompt caching −24–30%; check-parts + amounts-in-words tables, UCC
+  §3-114 words-over-numbers, §4-401 postdating — FAQ + Article/Breadcrumb/
+  FAQPage JSON-LD, tool + 2 sibling links; guide backlinks added to the related
+  lists of follower-growth-calculator, llm-pricing-tracker, token-counter,
+  number-to-words).
+- 2026-09-23 depth passes: speeding-ticket-cost-texas (801 → 1,183 words,
+  +defensive-driving eligibility section (CCP Art. 45.0511: 25+ over, CDL,
+  12-month bars) + premium-vs-dismissal reference table ($1,500–$3,000 at 24%
+  × 3 yr), +2 FAQs (4→6) with FAQPage LD update);
+  speeding-ticket-cost-florida (815 → 1,160 words, +§322.27 suspension-
+  threshold table + dangerous-excessive-speeding (50+ over/100+ mph) prose,
+  +2 FAQs (4→6) with FAQPage LD update; FIXED two statute errors: "18 points
+  in 24 months" → 18 in 18, and 15-over points 4 → 3 (statute: 3 pts ≤15 over,
+  4 pts >15) in table, prose, visible FAQ, and LD). Calculator JS untouched on
+  both (diff = content + FAQ-LD lines only). UNVERIFIED, left as-is: FL traffic-
+  school cap reads "five lifetime" in prose/FAQ but "5 per 10 yr" in the table —
+  check §318.14(9) next pass.
+- 2026-09-23 hub updates: guides hub +3 cards (More Guides 472→475), count
+  claims re-pegged 531→534 in all 9 places (= on-disk dirs with index.html);
+  all-tools hub regenerates via gen-all-tools.py in deploy.sh.
+  Queue state: href-coverage pool remaining = device-test/privacy cluster
+  (sign-off needed), factoring/fraction (math, low monetization),
+  content-calendar-planner/link-in-bio (creator tail). Thin depth candidates
+  left: anniversary-gifts pages (506-666), slug-generator (826),
+  epoch-converter (850), json-schema-validator (862).
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
