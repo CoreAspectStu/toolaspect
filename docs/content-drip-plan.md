@@ -992,6 +992,46 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   (826), epoch-converter (850), json-schema-validator (862). New guides need
   fresh keyword intake next batch.
 
+- 2026-09-25 batch guides (fresh intake via the 9-05 href-coverage scan: 67
+  never-referenced dirs, mostly hubs/device-tests; car-insurance-cost-by-state
+  SKIPPED — covered by how-much-does-car-insurance-cost + 3 siblings; device-
+  test cluster still awaiting Stu sign-off; math/probability tail picked since
+  factoring/fraction (9-24) give the cluster its topic bridge):
+  roman-numeral-converter → guides/how-to-read-roman-numerals/ (high-volume
+  how-to, AIO yes — symbols/pairs/1-100/years tables);
+  pascals-triangle → guides/how-does-pascals-triangle-work/ (solution-aware,
+  AIO yes — rows 0-10 + diagonals + row-10 odds tables);
+  coin-flip + dice-roller + random-number-generator → guides/odds-of-flipping-
+  heads-in-a-row/ (PAA query, covers three unreferenced tools — streak, run-in-
+  N-flips, two-dice tables)
+  (prose 1,122–1,329 words excl. tables, 1,250–1,542 incl.; all numbers Python-
+  verified: roman() for every table row (1994 MCMXCIV, 2026 MMXXVI, 3999
+  MMMCMXCIX); C(n,k) rows 0-10, 11⁵ = 161,051, C(10,5)/1024 = 24.61%; streak
+  DP: ≥5 heads in 100 flips 81.0%, ≥6 54.6%, ≥6 either side 80.7%; 2023
+  Bartoš et al. 350,757 flips / 50.8% same-side — FAQ + Article/Breadcrumb/
+  FAQPage JSON-LD, tool + 2 sibling links; guide backlinks added to roman-
+  numeral-converter, pascals-triangle, coin-flip, dice-roller, probability-
+  calculator. Out-of-band: coin-flip / dice-roller / pascals-triangle related-
+  links were off-topic finance/percentage/unit (9-02 class) → math siblings).
+- 2026-09-25 depth passes: 25th-anniversary-gifts (658 → 1,218 words, +silver-
+  purity table (.999/.958/.925/.900/plated/nickel-silver) + tarnish-care +
+  20th-40th milestone table, +2 FAQs (4→6) with FAQPage LD update);
+  50th-anniversary-gifts (693 → 1,258 words, +karat table (24k 99.9% … 10k
+  41.7%) + plated/gold-filled/vermeil (FTC guides: GF ≥1/20 by weight, vermeil
+  ≥10k ≥2.5µm over sterling) + 55th-75th table + family-gifts section, +2 FAQs;
+  FAQPage LD 4→7 — also synced the pre-existing visible "50th or 60th diamond"
+  Q that was missing from LD). Both link guides/anniversary-gifts-by-year. No
+  JS on either page.
+- 2026-09-25 hub updates: guides hub +3 cards (More Guides 478→481), count
+  claims re-pegged 537→540 in all 9 places (= on-disk dirs with index.html);
+  all-tools regenerated (540 guides).
+  Queue state: href-coverage pool now = device-test/privacy cluster (sign-off),
+  word-unscrambler/lorem-ipsum/stopwatch/word-search-maker (low monetization),
+  dog-crate breed pages (covered by what-size-dog-crate — add backlinks next
+  pass). Thin depth candidates left: slug-generator (826), epoch-converter
+  (850), json-schema-validator (862), *-cost-by-state stubs (262-362, state
+  lanes). New guides need fresh keyword intake next batch.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
