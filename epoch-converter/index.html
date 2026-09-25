@@ -92,7 +92,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the Unix epoch?","acceptedAnswer":{"@type":"Answer","text":"The Unix epoch is 00:00:00 UTC on January 1, 1970. Unix time counts the seconds elapsed since that moment, so epoch 0 is midnight 1970-01-01, epoch 1000000000 is 2001-09-09 01:46:40 UTC, and timestamps before 1970 are negative numbers."}},{"@type":"Question","name":"How do I convert epoch to date?","acceptedAnswer":{"@type":"Answer","text":"Divide milliseconds-since-epoch by 1000 if needed, then treat the result as an offset from 1970-01-01 00:00:00 UTC. Example: 1735689600 seconds is 55 years plus 14 leap days (20,089 days), landing on 2025-01-01 00:00:00 UTC, a Wednesday. The converter above does it in either direction, in seconds or milliseconds."}},{"@type":"Question","name":"Is epoch time in seconds or milliseconds?","acceptedAnswer":{"@type":"Answer","text":"Depends on the system. Unix time proper is seconds. JavaScript's Date.now() and Java's System.currentTimeMillis() return milliseconds, so a 13-digit timestamp means milliseconds and a 10-digit one (today) means seconds. As a rule of thumb: 10 digits = seconds, 13 = milliseconds."}},{"@type":"Question","name":"What is the Y2038 problem?","acceptedAnswer":{"@type":"Answer","text":"Systems that store Unix time as a 32-bit signed integer max out at 2147483647, which is 03:14:07 UTC on January 19, 2038. After that the counter wraps negative and reads 1901. Most 64-bit systems already use 64-bit time and are unaffected, but embedded systems are the worry."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the Unix epoch?","acceptedAnswer":{"@type":"Answer","text":"The Unix epoch is 00:00:00 UTC on January 1, 1970. Unix time counts the seconds elapsed since that moment, so epoch 0 is midnight 1970-01-01, epoch 1000000000 is 2001-09-09 01:46:40 UTC, and timestamps before 1970 are negative numbers."}},{"@type":"Question","name":"How do I convert epoch to date?","acceptedAnswer":{"@type":"Answer","text":"Divide milliseconds-since-epoch by 1000 if needed, then treat the result as an offset from 1970-01-01 00:00:00 UTC. Example: 1735689600 seconds is 55 years plus 14 leap days (20,089 days), landing on 2025-01-01 00:00:00 UTC, a Wednesday. The converter above does it in either direction, in seconds or milliseconds."}},{"@type":"Question","name":"Is epoch time in seconds or milliseconds?","acceptedAnswer":{"@type":"Answer","text":"Depends on the system. Unix time proper is seconds. JavaScript's Date.now() and Java's System.currentTimeMillis() return milliseconds, so a 13-digit timestamp means milliseconds and a 10-digit one (today) means seconds. As a rule of thumb: 10 digits = seconds, 13 = milliseconds."}},{"@type":"Question","name":"What is the Y2038 problem?","acceptedAnswer":{"@type":"Answer","text":"Systems that store Unix time as a 32-bit signed integer max out at 2147483647, which is 03:14:07 UTC on January 19, 2038. After that the counter wraps negative and reads 1901. Most 64-bit systems already use 64-bit time and are unaffected, but embedded systems are the worry."}},{"@type":"Question","name":"Why does JavaScript use milliseconds?","acceptedAnswer":{"@type":"Answer","text":"Historical API design: JavaScript's Date object shipped with millisecond resolution in 1995, and changing it later would have broken the web. So new Date(1735689600) parses the number as milliseconds (January 21, 1970); you need new Date(1735689600 * 1000) for seconds."}},{"@type":"Question","name":"Do Unix timestamps count leap seconds?","acceptedAnswer":{"@type":"Answer","text":"No. Unix (POSIX) time treats every day as exactly 86,400 seconds, so the 27 leap seconds added to UTC since 1972 aren't counted. During a leap second the clock repeats or smears a second, which is why Unix time isn't a perfect count of elapsed SI seconds."}},{"@type":"Question","name":"Is a Unix timestamp the same in every time zone?","acceptedAnswer":{"@type":"Answer","text":"Yes. A Unix timestamp is always measured from 1970-01-01 00:00:00 UTC, so the same instant has the same number in Tokyo, London and New York. Time zones only come into play when you format that number as a local date and time."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -156,7 +156,7 @@
 </div>
 
 <div class="ad-slot" data-slot="tool-result">Ad</div>
-<div class="wrap"><div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/cron-generator/">Cron Generator</a></li><li style="margin:4px 0"><a href="/jwt-decoder/">JWT Decoder</a></li><li style="margin:4px 0"><a href="/time-zone-converter/">Time Zone Converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
+<div class="wrap"><div class="related-tools"><h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/cron-generator/">Cron Generator</a></li><li style="margin:4px 0"><a href="/jwt-decoder/">JWT Decoder</a></li><li style="margin:4px 0"><a href="/time-zone-converter/">Time Zone Converter</a></li><li style="margin:4px 0"><a href="/date-difference-calculator/">Date Difference Calculator</a></li><li style="margin:4px 0"><a href="/uuid-generator/">UUID Generator</a></li><li style="margin:4px 0"><a href="/json-formatter/">JSON Formatter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 
 <div class="section-card">
 <h2>Landmark Epoch Timestamps</h2>
@@ -196,6 +196,22 @@
 </div>
 </div>
 
+<div class="section-card">
+<h2>Seconds vs Milliseconds vs Microseconds</h2>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Unit</th><th>Digits today</th><th>2026-01-01 00:00:00 UTC</th><th>Where you'll see it</th></tr></thead>
+<tbody>
+<tr><td>Seconds</td><td>10</td><td>1767225600</td><td>Unix/POSIX time, <code>date +%s</code>, MySQL <code>UNIX_TIMESTAMP()</code>, Go <code>Unix()</code></td></tr>
+<tr><td>Seconds (float)</td><td>10 + decimals</td><td>1767225600.0</td><td>Python <code>time.time()</code>, PostgreSQL <code>extract(epoch from now())</code></td></tr>
+<tr><td>Milliseconds</td><td>13</td><td>1767225600000</td><td>JavaScript <code>Date.now()</code>, Java <code>System.currentTimeMillis()</code></td></tr>
+<tr><td>Microseconds</td><td>16</td><td>1767225600000000</td><td>PostgreSQL internal timestamps, many tracing and logging tools</td></tr>
+<tr><td>Nanoseconds</td><td>19</td><td>1767225600000000000</td><td>Python <code>time.time_ns()</code>, Go <code>UnixNano()</code>, GNU <code>date +%s%N</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
 <div class="content-section">
 <h2>How the Epoch Converter Works</h2>
 <p>Unix time is a single monotonic count of seconds since 00:00:00 UTC on January 1, 1970 — no timezones, no daylight saving, no calendar math stored. Every timezone conversion happens at display time, which is exactly what this converter does: the timestamp is interpreted against UTC, then rendered in both UTC and your device's local zone.</p>
@@ -208,12 +224,33 @@
 </div>
 
 <div class="content-section">
+<h2>What Is the Year 2038 Problem?</h2>
+<p>Older C code often stores time in a signed 32-bit <code>time_t</code>. Its maximum, 2,147,483,647, is 03:14:07 UTC on January 19, 2038. One second later the value overflows to −2,147,483,648, read as 20:45:52 UTC on December 13, 1901. Expiry checks and scheduled jobs break.</p>
+<p>64-bit platforms use a 64-bit <code>time_t</code> that lasts about 292 billion years, and Linux 5.6 plus glibc 2.34 (<code>_TIME_BITS=64</code>) fixed 32-bit Linux. The leftovers are embedded devices, old file formats and database columns: MySQL's <code>TIMESTAMP</code> type still stops at 2038-01-19 03:14:07 UTC, so long-lived dates belong in <code>DATETIME</code>.</p>
+
+<h2>How Do You Tell Seconds From Milliseconds?</h2>
+<p>Count the digits. Every seconds timestamp between September 9, 2001 and November 20, 2286 has exactly 10 digits, so any 10-digit number you see in a log is almost certainly seconds. Thirteen digits means milliseconds, 16 means microseconds and 19 means nanoseconds.</p>
+<p>Mistakes are easy to spot. Seconds read as milliseconds land in January 1970, while milliseconds read as seconds point tens of thousands of years ahead. If a date is stuck in 1970 or absurdly far off, it's a unit mismatch, not bad data.</p>
+
+<h2>Do Unix Timestamps Count Leap Seconds?</h2>
+<p>No. POSIX time pretends every day is exactly 86,400 seconds long. Since 1972, 27 leap seconds have been added to UTC (the last on December 31, 2016), and Unix time simply ignores all of them. That's why you can get a date from a timestamp with plain division: days = timestamp ÷ 86,400, no lookup table required.</p>
+<p>The catch: during a leap second the clock usually repeats a second, so two real instants can share one timestamp. Google and AWS "smear" the extra second over several hours instead. And in 2022, timekeepers voted to stop adding leap seconds by 2035.</p>
+
+<h2>How to Get the Current Timestamp in Common Languages</h2>
+<p><strong>SQL:</strong> in MySQL, <code>SELECT UNIX_TIMESTAMP();</code> returns whole seconds. PostgreSQL's <code>SELECT extract(epoch FROM now());</code> returns fractional seconds; wrap it in <code>floor()</code> for an integer. SQLite uses <code>SELECT strftime('%s','now');</code>, or <code>unixepoch()</code> from version 3.38 on.</p>
+<p><strong>Python:</strong> <code>time.time()</code> gives a float in seconds; <code>time.time_ns()</code> gives an integer in nanoseconds. Prefer <code>datetime.fromtimestamp(ts, tz=timezone.utc)</code> over <code>utcfromtimestamp()</code>, which is deprecated as of Python 3.12.</p>
+<p><strong>Bash:</strong> <code>date +%s</code> works on Linux and macOS. On GNU systems, <code>date +%s%3N</code> prints milliseconds.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>What is the Unix epoch?</h3><p>The Unix epoch is 00:00:00 UTC on January 1, 1970. Unix time counts the seconds elapsed since that moment, so epoch 0 is midnight 1970-01-01, epoch 1000000000 is 2001-09-09 01:46:40 UTC, and timestamps before 1970 are negative numbers.</p></div>
 <div class="faq-item"><h3>How do I convert epoch to date?</h3><p>Divide milliseconds-since-epoch by 1000 if needed, then treat the result as an offset from 1970-01-01 00:00:00 UTC. Example: 1735689600 seconds is 55 years plus 14 leap days (20,089 days), landing on 2025-01-01 00:00:00 UTC, a Wednesday. The converter above does it in either direction, in seconds or milliseconds.</p></div>
 <div class="faq-item"><h3>Is epoch time in seconds or milliseconds?</h3><p>Depends on the system. Unix time proper is seconds. JavaScript's Date.now() and Java's System.currentTimeMillis() return milliseconds, so a 13-digit timestamp means milliseconds and a 10-digit one (today) means seconds. As a rule of thumb: 10 digits = seconds, 13 = milliseconds.</p></div>
 <div class="faq-item"><h3>What is the Y2038 problem?</h3><p>Systems that store Unix time as a 32-bit signed integer max out at 2147483647, which is 03:14:07 UTC on January 19, 2038. After that the counter wraps negative and reads 1901. Most 64-bit systems already use 64-bit time and are unaffected, but embedded systems are the worry.</p></div>
 <div class="faq-item"><h3>Why does JavaScript use milliseconds?</h3><p>Historical API design: JavaScript's Date object shipped with millisecond resolution in 1995, and changing it later would have broken the web. So new Date(1735689600) parses the number as milliseconds (January 21, 1970); you need new Date(1735689600 * 1000) for seconds.</p></div>
+<div class="faq-item"><h3>Do Unix timestamps count leap seconds?</h3><p>No. Unix (POSIX) time treats every day as exactly 86,400 seconds, so the 27 leap seconds added to UTC since 1972 aren't counted. During a leap second the clock repeats or smears a second, which is why Unix time isn't a perfect count of elapsed SI seconds.</p></div>
+<div class="faq-item"><h3>Is a Unix timestamp the same in every time zone?</h3><p>Yes. A Unix timestamp is always measured from 1970-01-01 00:00:00 UTC, so the same instant has the same number in Tokyo, London and New York. Time zones only come into play when you format that number as a local date and time.</p></div>
 </div>
 
 <div class="related-tools">
@@ -223,6 +260,8 @@
 <a href="/jwt-decoder/">🔐 JWT Decoder</a>
 <a href="/time-zone-converter/">🌍 Time Zone Converter</a>
 <a href="/date-difference-calculator/">📅 Date Difference Calculator</a>
+<a href="/uuid-generator/">🆔 UUID Generator</a>
+<a href="/json-formatter/">🧹 JSON Formatter</a>
 </div>
 </div>
 
