@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Find Duplicate &amp; Similar Photos | ToolAspect</title>
+<meta name="description" content="Find exact duplicate photos with a file hash and near-duplicates with image hashing. We tested 10 edits: resizes still match, mirrors and rotations don't.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-find-duplicate-photos/">
+<meta property="og:title" content="How to Find Duplicate Photos (and Near-Duplicates)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/how-to-find-duplicate-photos/">
+<meta property="og:description" content="Find exact duplicate photos with a file hash and near-duplicates with image hashing. We tested 10 edits: resizes still match, mirrors and rotations don't.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to Find Duplicate Photos (and Near-Duplicates)">
+<meta name="twitter:description" content="Find exact duplicate photos with a file hash and near-duplicates with image hashing. We tested 10 edits: resizes still match, mirrors and rotations don't.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Find Duplicate Photos (and Near-Duplicates)", "description": "Find exact duplicate photos with a file hash and near-duplicates with image hashing. We tested 10 edits: resizes still match, mirrors and rotations don't.", "datePublished": "2026-09-27", "dateModified": "2026-09-27", "mainEntityOfPage": "https://toolaspect.com/guides/how-to-find-duplicate-photos/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "How to Find Duplicate Photos (and Near-Duplicates)", "item": "https://toolaspect.com/guides/how-to-find-duplicate-photos/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the fastest way to find duplicate photos?", "acceptedAnswer": {"@type": "Answer", "text": "For exact copies, compare file hashes: identical files give identical MD5 or SHA-256 values. For photos that were resized, re-saved or lightly edited, use a perceptual hash tool that compares what the images look like."}}, {"@type": "Question", "name": "Why doesn't a resized copy have the same file hash?", "acceptedAnswer": {"@type": "Answer", "text": "A file hash like MD5 changes completely if a single byte changes. Resizing, re-saving as JPEG or stripping metadata rewrites the bytes, so the hash no longer matches even though the picture looks the same."}}, {"@type": "Question", "name": "What Hamming distance counts as a duplicate?", "acceptedAnswer": {"@type": "Answer", "text": "Our tool treats two 64-bit average hashes as a match at 10 differing bits or fewer. As a rough rule, 0 to 5 is almost always the same picture, 6 to 10 is usually an edited copy, and above 20 is usually a different photo. It's a heuristic, so review each group."}}, {"@type": "Question", "name": "Can a duplicate photo finder detect mirrored or rotated images?", "acceptedAnswer": {"@type": "Answer", "text": "A simple average hash can't. In our test a horizontal mirror scored 26 bits apart and a 90 degree rotation scored 32, both far past the threshold of 10."}}, {"@type": "Question", "name": "Does iPhone find duplicate photos automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Since iOS 16, the Photos app lists detected duplicates under Collections, Utilities, Duplicates, and you can merge them. Apple says indexing can take up to a few days and runs while the phone is locked and charging. Mac Photos gained the same Duplicates collection in macOS Ventura."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Find Duplicate Photos (and Near-Duplicates)</h1>
+<div class="meta"><span>⏱️ 7 min read</span><span>Updated September 27, 2026</span></div>
+<p class="intro">To find exact duplicate photos, compare file hashes: two files with the same MD5 or SHA-256 are byte-for-byte copies. To find near-duplicates (the same shot resized, re-saved or lightly edited), use an image hash that fingerprints what the picture looks like and count how many bits differ. We ran ten common edits on one photo to show which copies each method catches.</p>
+<h2>How do you find duplicate photos?</h2>
+<p>First decide what you're hunting. The same folder copied onto two drives gives exact duplicates, and a file hash finds them in seconds. A photo exported for Instagram, emailed smaller and screenshotted gives near-duplicates, and a file hash misses all of them. A practical order:</p>
+<ol>
+<li>Back up the folder first. Deleting is the only step you can't undo.</li>
+<li>Run a near-duplicate scan with the <a href="/duplicate-image-finder/">Duplicate Image Finder</a>. Select the images, and it groups the ones that look alike.</li>
+<li>Open each group and pick the keeper: usually the largest file with the most detail.</li>
+<li>For anything you're unsure about, check exact identity with the <a href="/hash-generator/">hash generator</a>. Matching hashes mean the files are identical.</li>
+</ol>
+<p>Our tool runs in your browser. Each image is drawn to a canvas no wider than 400 pixels, fingerprinted and compared. Nothing is uploaded.</p>
+<h2>What counts as a duplicate (exact vs near-duplicate)?</h2>
+<p>An exact duplicate is the same file twice: same bytes, same hash, often a name like IMG_2041 (1).jpg. A near-duplicate shows the same picture in a different file. Resizing, re-compression, a brightness tweak or stripped metadata all rewrite the bytes, so to a file hash they're strangers.</p>
+<p>Then there are similar photos: five burst shots of a kid blowing out candles, taken a fraction of a second apart. They're not copies, and which ones to keep is your call.</p>
+<h2>How does image hashing work?</h2>
+<p>The method our tool uses is called average hash, or aHash. It's simple enough to explain in four steps:</p>
+<ol>
+<li>Shrink the image to 8x8 pixels, which throws away almost all detail and keeps the broad light and dark shapes.</li>
+<li>Turn each of the 64 pixels into a single gray value by averaging its red, green and blue.</li>
+<li>Work out the mean of those 64 grays.</li>
+<li>Write a 1 for every pixel brighter than the mean and a 0 for every one that isn't. That's a 64-bit fingerprint.</li>
+</ol>
+<p>Two images are compared by counting how many of the 64 bits differ. That count is the Hamming distance. Our tool puts two images in the same group when the distance is 10 or less.</p>
+<p>Resizing and compression barely move the fingerprint. A flip or rotation moves the bright and dark regions and scrambles it.</p>
+<h2>What does each edit do to the hash? (our test)</h2>
+<p>We took one 640x427 JPEG of a temple roof, made ten versions, and computed MD5 plus the same 8x8 aHash our tool uses (in Python with Pillow). The last row is an unrelated control photo.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Edit</th><th>MD5 match?</th><th>aHash distance (measured)</th><th>Caught by our tool at ≤10?</th></tr></thead><tbody>
+<tr><td>Exact file copy</td><td>Yes</td><td>0</td><td>Yes</td></tr>
+<tr><td>Resized to 50%</td><td>No</td><td>0</td><td>Yes</td></tr>
+<tr><td>JPEG re-save at quality 70</td><td>No</td><td>0</td><td>Yes</td></tr>
+<tr><td>Brightness +10%</td><td>No</td><td>0</td><td>Yes</td></tr>
+<tr><td>Converted to grayscale</td><td>No</td><td>0</td><td>Yes</td></tr>
+<tr><td>Cropped 5% off every edge</td><td>No</td><td>2</td><td>Yes</td></tr>
+<tr><td>Cropped 10% off right and bottom</td><td>No</td><td>5</td><td>Yes</td></tr>
+<tr><td>Small text watermark in a corner</td><td>No</td><td>0</td><td>Yes</td></tr>
+<tr><td>Horizontal mirror</td><td>No</td><td>26</td><td>No</td></tr>
+<tr><td>Rotated 90°</td><td>No</td><td>32</td><td>No</td></tr>
+<tr><td>A different photo (control)</td><td>No</td><td>36</td><td>No</td></tr>
+</tbody></table></div>
+<p>These numbers come from one test image, so results will vary. Browsers also shrink images a bit differently; switching Pillow's resize filter moved the edge crop from 5 to 4 bits and the mirror from 26 to 22. MD5 caught only the untouched copy. The image hash caught every edit that kept the picture the right way round and missed both the mirror and the rotation.</p>
+<p>Grayscale scored 0 because aHash already averages the color channels. A big, bold watermark would score higher than our small corner text.</p>
+<div class="cta-box"><h3>Find duplicate and near-duplicate photos in your browser</h3><p style="color:#fff;opacity:.9">Select a batch of images and get groups of lookalikes by filename. Nothing leaves your device.</p><a href="/duplicate-image-finder/">Duplicate Image Finder →</a></div>
+<h2>What Hamming distance means a match?</h2>
+<p>There's no official cut-off; ours is fixed at 10 of 64. Here's how we'd read the bands, as a heuristic rather than a standard.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Distance (of 64 bits)</th><th>Usual meaning (heuristic)</th></tr></thead><tbody>
+<tr><td>0</td><td>Looks identical at 8x8: a copy, resize or re-save</td></tr>
+<tr><td>1 to 5</td><td>Same photo with a light crop, filter or compression</td></tr>
+<tr><td>6 to 10</td><td>Probably an edited copy; review before deleting</td></tr>
+<tr><td>11 to 20</td><td>Similar scene, burst shot or heavy edit; rarely a true duplicate</td></tr>
+<tr><td>21 to 32</td><td>Mostly unrelated, or a flipped or rotated copy</td></tr>
+<tr><td>Above 32</td><td>Different photos (unrelated images tend to land near 32)</td></tr>
+</tbody></table></div>
+<p>Unrelated photos hover around 32 because each bit is roughly a coin flip. Plain images, like product shots on white, can land closer than they should.</p>
+<h2>Does your phone already find duplicates?</h2>
+<p>Often, yes. Since iOS 16, the iPhone Photos app has a Duplicates collection under Collections, then Utilities. Tap Merge and Photos keeps one copy, combining the best quality version with the relevant data from the others, and moves the rest to Recently Deleted. Apple says the scan needs the phone locked and on power and can take up to a few days on a big library. Macs got the same Duplicates collection in macOS Ventura, and deleted items stay recoverable for 30 days.</p>
+<p>Google Photos checks for exact copies when you back up, so uploading the same unchanged file twice shouldn't give you two copies. It doesn't search your existing library for near-duplicates, though, and an edited, resized or re-dated copy counts as a new file.</p>
+<p>On Windows, third-party guides say newer versions of Microsoft Photos flag exact duplicates, but we couldn't confirm that from Microsoft.</p>
+<h2>What should you check before deleting?</h2>
+<ul>
+<li><strong>Keep the biggest version.</strong> A group often holds the original plus smaller copies. Check dimensions and file size, and keep the largest one.</li>
+<li><strong>Watch for metadata.</strong> A resized copy may have lost its date, GPS and camera data. The <a href="/exif-viewer/">EXIF viewer</a> shows which file still has it.</li>
+<li><strong>Look at burst shots yourself.</strong> Near-identical frames can fall inside the threshold, and one of them has the eyes open.</li>
+<li><strong>Remember what the hash can't see.</strong> Mirrored and rotated copies, heavy crops and collages won't group. Sort by date or use <a href="/reverse-image-search/">reverse image search</a> for those.</li>
+</ul>
+<p>Saving space? Run the keepers through an <a href="/image-compressor/">image compressor</a> too.</p>
+<h2>The bottom line</h2>
+<p>Use a file hash for proof two files are identical, and an image hash to find the same picture in different clothes. Scan, review each group, keep the best copy, and wait a week before emptying the trash.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>What is the fastest way to find duplicate photos?</h3><p>For exact copies, compare file hashes: identical files give identical MD5 or SHA-256 values. For photos that were resized, re-saved or lightly edited, use a perceptual hash tool that compares what the images look like.</p></div>
+<div class="faq-item"><h3>Why doesn&#x27;t a resized copy have the same file hash?</h3><p>A file hash like MD5 changes completely if a single byte changes. Resizing, re-saving as JPEG or stripping metadata rewrites the bytes, so the hash no longer matches even though the picture looks the same.</p></div>
+<div class="faq-item"><h3>What Hamming distance counts as a duplicate?</h3><p>Our tool treats two 64-bit average hashes as a match at 10 differing bits or fewer. As a rough rule, 0 to 5 is almost always the same picture, 6 to 10 is usually an edited copy, and above 20 is usually a different photo. It&#x27;s a heuristic, so review each group.</p></div>
+<div class="faq-item"><h3>Can a duplicate photo finder detect mirrored or rotated images?</h3><p>A simple average hash can&#x27;t. In our test a horizontal mirror scored 26 bits apart and a 90 degree rotation scored 32, both far past the threshold of 10.</p></div>
+<div class="faq-item"><h3>Does iPhone find duplicate photos automatically?</h3><p>Yes. Since iOS 16, the Photos app lists detected duplicates under Collections, Utilities, Duplicates, and you can merge them. Apple says indexing can take up to a few days and runs while the phone is locked and charging. Mac Photos gained the same Duplicates collection in macOS Ventura.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/duplicate-image-finder/">Duplicate Image Finder</a>
+<a href="/hash-generator/">Hash Generator</a>
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/reverse-image-search/">Reverse Image Search</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>

@@ -1073,6 +1073,39 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   Thin depth candidates left: json-schema-validator (862), *-cost-by-state
   stubs (262-362), dog-crate breed pages (823-887).
 
+- 2026-09-27 batch guides (href-coverage pool: lorem-ipsum, stopwatch,
+  duplicate-image-finder; notepad left in pool, weakest intent):
+  lorem-ipsum → guides/what-does-lorem-ipsum-mean/ (high-volume PAA, AIO yes —
+  Latin fragment→Cicero table + placeholder-length table; Cicero De finibus
+  1.10.32-33, Rackham 1914, McClintock/Before & After 1994 web-verified;
+  "since the 1500s" framed as folklore, PageMaker-shipped-it hedged);
+  stopwatch → guides/lap-vs-split-time/ (PAA, AIO yes — 4x400 m lap/split/mile-
+  pace table (1:32/1:35/1:37/1:30 → 6:14), 400 m lap→pace table, minutes→
+  decimal hours table; hand-timing round-up + 0.24 s stat convention, Chrome
+  88 background-tab throttling web-verified);
+  duplicate-image-finder → guides/how-to-find-duplicate-photos/ (solution-aware,
+  AIO yes — MEASURED aHash distances on one test image (resize/JPEG70/bright/
+  grayscale/watermark 0, crops 2-5, mirror 26, rot90 32, other photo 36) +
+  Hamming-band table; iOS 16/Ventura Duplicates album via Apple support docs)
+  (~1,395 visible words each, FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool
+  + 2 sibling links; guide backlinks added to all three tools' related lists.)
+- 2026-09-27 depth passes: json-schema-validator (862 → 1,652 words, +Ajv
+  8.17.1 error-message table (messages captured by running Ajv in node) +
+  "Common mistakes" section (allOf+additionalProperties → unevaluatedProperties,
+  required-in-property, 1.0 is integer, format annotation-only); FIXED wrong
+  dialect row (tuples: draft-07/2019-09 items[]+additionalItems, 2020-12
+  prefixItems); FAQ visible 6→8, LD 4→8 (synced 2 missing));
+  dog-crate-size-for-german-shepherd (823 → 1,595 words, +measuring section,
+  crate-types table, crate-time-by-age table (Humane World for Animals crate
+  training 101: months+1 h, ≤3-4 h under 6 mo, adults 4-5 h daytime), FAQ 4→6).
+  JS byte-identical to HEAD on both; syntax-gate 0 broken.
+- 2026-09-27 hub updates: guides hub +3 cards (More Guides 484→487), count
+  claims re-pegged 543→546 in all 9 places (= on-disk dirs); all-tools regen.
+  Queue state: href-coverage pool left = notepad (low) + device-test cluster
+  (sign-off). Thin depth candidates left: dog-crate-size-for-french-bulldog
+  (840), -golden-retriever (887), *-cost-by-state stubs (262-362). New guides
+  need fresh keyword intake next batch.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
