@@ -1106,6 +1106,44 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   (840), -golden-retriever (887), *-cost-by-state stubs (262-362). New guides
   need fresh keyword intake next batch.
 
+- 2026-09-28 batch guides (fresh intake: href-coverage pool drained, so new
+  recipe = tool pages whose slug tokens match no guide slug/title, then
+  per-candidate check of which guides link the tool. Found the home cluster's
+  three biggest "how much X do I need" tools had NO dedicated guide, only a
+  bathroom-remodel mention):
+  paint-calculator → guides/how-much-paint-do-i-need/ (solution-aware, AIO yes
+  — gallons-by-room table (8 ft walls, 21 sq ft door / 15 sq ft window, matching
+  the tool page), coverage-by-texture table (400/350/300/250 → 2.00/2.29/2.67/
+  3.20 gal), ceiling table);
+  tile-calculator → guides/how-many-tiles-do-i-need/ (solution-aware, AIO yes —
+  tiles per 100 sq ft by size w/ 10%/15% waste, waste-by-layout table, grout
+  coverage per 25 lb bag from the calculator's own formula, thinset bands;
+  ANSI A108 80% dry / 95% wet coverage, LFT = any side ≥15 in);
+  flooring-calculator → guides/how-much-flooring-do-i-need/ (solution-aware,
+  AIO yes — waste-by-layout, 180 sq ft waste-sensitivity table (5-20% → 8/9/9/
+  10 boxes), room-size box/cost/underlayment table)
+  (1,241–1,367 words excl. tables, 1,431–1,609 visible; every table number run
+  through the tool's own JS math in node — incl. rounding (1.825 → 1.82, $38.50
+  → $39) — FAQ + Article/Breadcrumb/FAQPage JSON-LD, tool + 2 sibling links;
+  guide backlinks added to all three tool pages' related paragraph, JS
+  untouched.) TILE BUG FOUND (JS untouched per drip rule): the 4.25 × 4.25 in
+  option has value="4.5", so it computes 20.25 sq in/tile vs real 18.06 and
+  undercounts ~11% (guide table uses the true 18.06). Needs Stu go-ahead.
+  Next intake candidates (same recipe, no dedicated guide yet): stair-
+  calculator (rise/run), siding-calculator (squares), countertop-calculator.
+- 2026-09-28 depth passes: dog-crate-size-for-french-bulldog (830 → 1,672 body
+  words, +3-measurement section (width test), crate-types table (airflow for
+  brachycephalic), heat-safety section, crate-time-by-age table (Humane World
+  crate training 101), FAQ 4→6 w/ LD synced); dog-crate-size-for-golden-
+  retriever (877 → 1,703, +measuring section, crate-types table, what-to-put-
+  in-the-crate section, crate-time table, FAQ 4→6 w/ LD). No JS on either page.
+- 2026-09-28 hub updates: guides hub +3 cards (More Guides 487→490), count
+  claims re-pegged 546→549 in all 9 places (= on-disk dirs); all-tools regen
+  (549 guides); syntax-gate 1,358 blocks, 0 broken.
+  Queue state: next guides = stair / siding / countertop (above). Thin depth
+  candidates left: *-cost-by-state stubs (262-362, state lanes), other dog-crate
+  breed pages (check word counts next batch).
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
