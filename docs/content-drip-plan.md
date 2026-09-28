@@ -1144,6 +1144,52 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
   candidates left: *-cost-by-state stubs (262-362, state lanes), other dog-crate
   breed pages (check word counts next batch).
 
+- 2026-09-29 batch guides (next intake from 9-28 list: stair / siding /
+  countertop, all verified: no dedicated guide, only remodel-guide mentions):
+  stair-calculator → guides/how-to-calculate-stairs/ (solution-aware how-to,
+  AIO yes — risers/treads/run/stringer/angle table for 36-132 in rises run
+  through the tool's own JS (Math.round risers, 7.25 target, 10.5 tread;
+  108 in → 15 @ 7.20, 147 in run, 182.4 in stringer), IRC R311.7 code table
+  (7¾ riser, 10 tread, ⅜ var, 36 width, 6'8" headroom, 151 in flight, nosing,
+  handrail 4+ risers 34-38 in), IBC 7/11, DCA 6 5 in throat);
+  siding-calculator → guides/how-much-siding-do-i-need/ (solution-aware, AIO yes
+  — gable area by width/pitch table, squares for 5 house shapes (2-story
+  30×50 = 2,805 sq ft → 28.05 sq → 32 @ 12%), waste-sensitivity table
+  5/10/15/20% → 30/31/33/34 squares; VSI 16 in nail spacing, Hardie 6 in
+  grade / 1-2 in roof clearance);
+  countertop-calculator → guides/how-to-measure-countertops/ (solution-aware,
+  AIO yes — 6-layout sq ft/backsplash/waste/slab/edge table via the tool's JS
+  (18 ft L = 50.9 sq ft w/ waste → 2 slabs), L-corner double-count 4.5 sq ft,
+  waste-by-material table, NKBA 24 in/seat + 15 in knee space at 36 in)
+  (1,257-1,430 words excl. tables, FAQ 5 each + Article/Breadcrumb/FAQPage
+  JSON-LD, tool + 2+ sibling links; guide backlinks added to all three tool
+  pages' related paragraph, JS untouched.)
+  BUGS FOUND (JS untouched per drip rule — need Stu go-ahead):
+  (1) stair-calculator: JS rounds riser count to NEAREST (Math.round) while page
+  copy + FAQ say "round up"; page also says it returns stair angle, JS doesn't.
+  (2) siding-calculator: nails-per-square map {vinyl:2000,…} is ~20x too high
+  (page copy itself says ~1 nail/sq ft = ~100/square), and wrap rolls =
+  ceil(squares/3) (~300 sq ft/roll) contradicts the page's 1,000 sq ft/roll
+  table. Guide avoids both outputs.
+- 2026-09-29 depth passes (dog-crate breed pages exhausted — only 3 exist, all
+  done; picked from fresh <900-word scan): schema-generator (384 → 1,318
+  words, +"which types still get rich results" table (FAQ gone May 2026, HowTo
+  Sep 2023, June 2025 seven-feature phase-out incl. Course Info, mobile
+  breadcrumbs dropped Jan 2025 — web-verified), worked example, mistakes
+  section; boilerplate 2 FAQs → 6 real FAQs w/ LD synced; "25+ types" → 24
+  (actual count in SCHEMA_TYPES); removed unsourced "+30% CTR" claim);
+  delete-pages-from-pdf (705 → 1,097 words, +"what carries over" table
+  (bookmarks/metadata dropped since output is PDFDocument.create()+copyPages),
+  +when-not-to-use links, FAQ 4→6 w/ LD synced; fixed copy: download suffix
+  is -trimmed not -organized, bookmark row corrected). JS byte-identical on both.
+- 2026-09-29 hub updates: guides hub +3 cards (More Guides 490→493), count
+  claims re-pegged 549→552 in all 9 places (= on-disk dirs); all-tools regen.
+  Queue state: next guide intake candidates = run slug-token recipe again
+  (contractor cluster: roofing, drywall, concrete, gravel, mulch — check for
+  existing guides first). Thin depth candidates (<900): test-grade-calculator
+  (875), mtbf-calculator (887), rearrange-pdf-pages (697), xml-to-json (852),
+  css-minifier (741), minify-js (762); device-test pages need sign-off.
+
 ## Schedule
 - 06:00 tool-factory (10 tools) — bridge session A (**Anthropic/Opus provider only** — GLM via bridge FAILS with z.ai 400 [1213] on large content prompts, proven Sep 22)
 - 06:15 content-drip (3 guides + 2 depth + longtails) — bridge session B, parallel OK, **same rule: provider "anthropic"** (or run in-session as Hermes subagent — never GLM bridge for content payloads)
