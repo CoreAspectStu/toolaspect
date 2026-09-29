@@ -1196,3 +1196,45 @@ password-generator, image-compressor, csv-to-json, prompt-library) follow in wav
 - 06:30 gh-repo-scan
 - 08:00 traffic report
 All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), interlinked.
+
+- 2026-09-30 batch guides (queue: contractor cluster roofing/drywall/concrete/gravel/
+  mulch; SKIPPED as covered: roofing (how-much-does-a-new-roof-cost has squares
+  section), drywall (how-much-does-drywall-installation-cost has sheets section),
+  mulch (how-much-does-mulch-cost has quantity section). Third slot filled per
+  drip-rebalance-2026-09-29 privacy/security weighting):
+  concrete-calculator → guides/how-much-concrete-do-i-need/ (solution-aware, AIO yes
+  — per-100 sq ft by thickness table, 8-project yards/80 lb/60 lb bags table, tube
+  table; all via the tool's JS (10% waste, 0.6 cu ft/80 lb bag, ceil) — 10×10×4 in
+  = 1.36 yd³ / 62 bags; 20 ft 16×8 footing = 0.72 yd³ / 33 bags);
+  gravel-calculator → guides/how-much-gravel-do-i-need/ (solution-aware, AIO yes —
+  density table 1.4/1.5/1.35/1.7 t/yd³ from the tool's dropdown, sq ft per ton by
+  depth, 9-project tons table (12×50 ft @ 4 in = 10.37 t pea/#57));
+  ai-image-detector → guides/how-to-tell-if-an-image-is-ai-generated/ (problem-aware,
+  AIO yes — signal reliability table + "what you find → what it means" table; C2PA
+  (OpenAI help center), IPTC trainedAlgorithmicMedia (IPTC/Meta), SynthID Detector
+  portal + OpenAI SynthID dual-layer web-verified; honest that our tool reads
+  EXIF/XMP only, no C2PA/SynthID)
+  (1,261–1,398 words excl. tables, FAQ 5 each + Article/Breadcrumb/FAQPage LD, tool +
+  3 sibling links; guide backlinks on all three tool pages; concrete/gravel off-topic
+  related links (insulation) swapped for gravel/rebar and concrete/mulch.)
+  OUT-OF-BAND FIX: ai-image-detector FAQ (visible + faq1 LD) held 4 SVG-tracing
+  Q&As (image-to-svg paste) → 4 real detector FAQs. JS untouched.
+- 2026-09-30 depth passes (directive: PDF cluster + niche calc): rearrange-pdf-pages
+  (697 → 1,291 words, +duplex-scan page-map table (fronts then reversed backs →
+  1,N,2,N-1…, verified by hand for 4/6/8/10), +"what carries over" table, tool-choice
+  links, FAQ 4→6 w/ LD rebuilt from visible; FIXED copy: download suffix is
+  -reordered (JS) not -organized; bookmark FAQ "possibly" → "don't carry over"
+  (output is PDFDocument.create()+copyPages)); test-grade-calculator (875 → 1,339,
+  +points-needed-per-grade table for 10–100 pt tests via the JS's ceil(min/100*t),
+  +one-test-vs-class-grade worked example, FAQ 5→7, LD 4→7 (synced missing
+  "70 percent C or C-")). JS byte-identical on both.
+- 2026-09-30 hub updates: guides hub +3 cards (More Guides 493→496), count claims
+  552→555 in all 9 places (= on-disk dirs); all-tools patched by hand (555).
+  NOTE: scripts/gen-all-tools.py output drops the bc1 breadcrumb LD/nav, og:image and
+  result-actions.js that later scripts injected — don't commit its raw output.
+  Queue state: contractor cluster quantity guides now covered except asphalt, brick,
+  paver, topsoil (check). Per 9-29 directive, next intake should lean PDF/document
+  (50%) — most PDF tools already have how-to guides, so consider "best free PDF
+  tools 2026" listicle + privacy "X alternatives — compared" guides. Thin depth
+  candidates left: mtbf-calculator (887), xml-to-json (852), css-minifier (741),
+  minify-js (762).

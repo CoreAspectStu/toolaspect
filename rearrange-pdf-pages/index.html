@@ -92,7 +92,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I rearrange pages in a PDF?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a thumbnail organizer and drag each page card to its new position — or nudge pages with the left/right arrow buttons, which is easier on touch screens. The download is rebuilt with the pages copied in exactly the order shown, so what you see in the grid is what you get in the file."}},{"@type":"Question","name":"Does reordering pages change the pages themselves?","acceptedAnswer":{"@type":"Answer","text":"No. The exporter copies each page's content stream untouched into a new document — text stays selectable, images stay sharp — and only the sequence changes. Rotation applied here is written as the page's rotation value, not a re-render."}},{"@type":"Question","name":"Why is the last page first after I scan a document?","acceptedAnswer":{"@type":"Answer","text":"Duplex scans often do this: single-sided originals fed through a feeder come out reversed, or odd/even passes stack in opposite directions. A thumbnail reorder fixes it in seconds — drag (or arrow) the pages into reading order and download."}},{"@type":"Question","name":"Will reordering break the document's bookmarks?","acceptedAnswer":{"@type":"Answer","text":"Possibly. Bookmarks and named destinations point at page locations, and a rebuilt file doesn't rewrite them to follow moved pages. If the outline matters, open the output and check that each bookmark still lands where you expect before relying on it."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I rearrange pages in a PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Open the PDF in a thumbnail organizer and drag each page card to its new position — or nudge pages with the left/right arrow buttons, which is easier on touch screens. The download is rebuilt with the pages copied in exactly the order shown, so what you see in the grid is what you get in the file."}}, {"@type": "Question", "name": "Does reordering pages change the pages themselves?", "acceptedAnswer": {"@type": "Answer", "text": "No. The exporter copies each page's content stream untouched into a new document — text stays selectable, images stay sharp — and only the sequence changes. Rotation applied here is written as the page's rotation value, not a re-render."}}, {"@type": "Question", "name": "Why is the last page first after I scan a document?", "acceptedAnswer": {"@type": "Answer", "text": "Duplex scans often do this: single-sided originals fed through a feeder come out reversed, or odd/even passes stack in opposite directions. A thumbnail reorder fixes it in seconds — drag (or arrow) the pages into reading order and download."}}, {"@type": "Question", "name": "Will reordering break the document's bookmarks?", "acceptedAnswer": {"@type": "Answer", "text": "Bookmarks don't carry over at all. The download is a brand-new PDF built from copies of your pages, and bookmarks belong to the original document rather than to any page. If readers rely on the outline, re-add it in a desktop editor after reordering."}}, {"@type": "Question", "name": "Can I rearrange pages in a password-protected PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Usually not. An encrypted PDF has to be unlocked before its pages can be copied into a new file, so the export fails. Open it with the password in your PDF reader, save or print an unprotected copy, and reorder that instead."}}, {"@type": "Question", "name": "Is my PDF uploaded to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. Thumbnails are rendered and the new file is built in your browser with JavaScript, so the document never leaves your device. That makes it safe for contracts, medical forms and anything else you wouldn't want on someone else's server."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -152,10 +152,52 @@
 <li>Open the PDF; thumbnails appear numbered by original page.</li>
 <li>Drag a card onto another card to move it there. Use ← → for one-slot nudges.</li>
 <li>⟳ rotates a page a quarter-turn if something scanned sideways; × deletes a page you don't need.</li>
-<li>Reset restores the original order; Download saves the file with <em>-organized</em> appended.</li>
+<li>Reset restores the original order; Download saves the file with <em>-reordered</em> appended.</li>
 </ul>
 <h3>A worked example</h3>
 <p>An 8-page contract goes out with the signature page last, but legal wants it right after the cover. Open the file, drag the page-8 thumbnail onto the page-2 card, and the grid reads 1, 8, 2, 3, 4, 5, 6, 7. Download and the output is those 8 pages in that order — the signature page is now output page 2, cover still first, nothing re-rendered. The classic duplex-scan case works the same way: a 20-page two-sided original that scanned odds-then-evens needs a dozen drags (or arrow presses) to become reading order.</p>
+</div>
+
+<div class="content-section">
+<h2>Fixing a Duplex Scan: the Page Map</h2>
+<p>The most common reason people need this tool is a two-sided document fed through a one-sided scanner. You scan the fronts, flip the stack, scan the backs, and the backs come out in reverse. For a 10-page original, the scanned file holds pages 1, 3, 5, 7, 9, then 10, 8, 6, 4, 2.</p>
+<p>The fix follows a pattern: take the first file page, then the last, then the second, then the second-to-last, and keep alternating inward. Here's the order to drag the thumbnails into, using the numbers the tool shows on each card:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Pages in original</th><th>How the scan comes out</th><th>Drag thumbnails into this order</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>1, 3, 4, 2</td><td>1, 4, 2, 3</td></tr>
+<tr><td>6</td><td>1, 3, 5, 6, 4, 2</td><td>1, 6, 2, 5, 3, 4</td></tr>
+<tr><td>8</td><td>1, 3, 5, 7, 8, 6, 4, 2</td><td>1, 8, 2, 7, 3, 6, 4, 5</td></tr>
+<tr><td>10</td><td>1, 3, 5, 7, 9, 10, 8, 6, 4, 2</td><td>1, 10, 2, 9, 3, 8, 4, 7, 5, 6</td></tr>
+</tbody>
+</table>
+</div>
+<p>If your scanner outputs the backs in forward order instead, it's a simple interleave: 1, 6, 2, 7, 3, 8 and so on for a 10-page file. Check the first two pages of the output before you send it anywhere. If page 2 is wrong, you've got the other pattern.</p>
+<p>A blank back page is still a page in the scan. Delete it with × after reordering, not before, or the pattern above shifts by one.</p>
+</div>
+
+<div class="content-section">
+<h2>What Carries Over to the Reordered File</h2>
+<p>The tool doesn't edit your PDF in place. It creates a new, empty PDF and copies each page into it in the order you set. Anything that lives on a page travels with it. Anything that belongs to the document as a whole stays behind.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Part of the PDF</th><th>In the reordered copy?</th></tr></thead>
+<tbody>
+<tr><td>Text, images, fonts, vector graphics</td><td>Yes, unchanged. Text stays selectable and nothing is re-rendered</td></tr>
+<tr><td>Page size and rotation</td><td>Yes, plus any quarter-turns you apply with ⟳</td></tr>
+<tr><td>Comments, highlights, stamps</td><td>Yes, on the pages they were attached to</td></tr>
+<tr><td>Web links</td><td>Yes</td></tr>
+<tr><td>Links that jump to another page</td><td>Can break, since the target page may have moved</td></tr>
+<tr><td>Fillable form fields</td><td>Can stop being fillable. Test the form before sending it</td></tr>
+<tr><td>Bookmarks (outline panel)</td><td>No</td></tr>
+<tr><td>Title, author and other document properties</td><td>No. The copy gets fresh properties</td></tr>
+</tbody>
+</table>
+</div>
+<p>For most jobs, like scans, contracts and handouts, none of the "no" rows matter. If you're reordering a long report with a table of contents built from bookmarks, plan to rebuild the outline afterward.</p>
+<h3>Which PDF page tool do you need?</h3>
+<p>This tool is for order, with rotate and delete as extras. If you mainly want pages gone, <a href="/delete-pages-from-pdf/">Delete Pages from PDF</a> is faster. To pull a few pages out into their own file, use <a href="/extract-pdf-pages/">Extract PDF Pages</a>. And to combine several files before sorting their pages, start with <a href="/pdf-merge/">Merge PDF</a>, then bring the merged file back here.</p>
 </div>
 
 <div class="content-section">
@@ -163,7 +205,9 @@
 <div class="faq-item"><h3>How do I rearrange pages in a PDF?</h3><p>Open the PDF in a thumbnail organizer and drag each page card to its new position — or nudge pages with the left/right arrow buttons, which is easier on touch screens. The download is rebuilt with the pages copied in exactly the order shown, so what you see in the grid is what you get in the file.</p></div>
 <div class="faq-item"><h3>Does reordering pages change the pages themselves?</h3><p>No. The exporter copies each page's content stream untouched into a new document — text stays selectable, images stay sharp — and only the sequence changes. Rotation applied here is written as the page's rotation value, not a re-render.</p></div>
 <div class="faq-item"><h3>Why is the last page first after I scan a document?</h3><p>Duplex scans often do this: single-sided originals fed through a feeder come out reversed, or odd/even passes stack in opposite directions. A thumbnail reorder fixes it in seconds — drag (or arrow) the pages into reading order and download.</p></div>
-<div class="faq-item"><h3>Will reordering break the document's bookmarks?</h3><p>Possibly. Bookmarks and named destinations point at page locations, and a rebuilt file doesn't rewrite them to follow moved pages. If the outline matters, open the output and check that each bookmark still lands where you expect before relying on it.</p></div>
+<div class="faq-item"><h3>Will reordering break the document's bookmarks?</h3><p>Bookmarks don't carry over at all. The download is a brand-new PDF built from copies of your pages, and bookmarks belong to the original document rather than to any page. If readers rely on the outline, re-add it in a desktop editor after reordering.</p></div>
+<div class="faq-item"><h3>Can I rearrange pages in a password-protected PDF?</h3><p>Usually not. An encrypted PDF has to be unlocked before its pages can be copied into a new file, so the export fails. Open it with the password in your PDF reader, save or print an unprotected copy, and reorder that instead.</p></div>
+<div class="faq-item"><h3>Is my PDF uploaded to a server?</h3><p>No. Thumbnails are rendered and the new file is built in your browser with JavaScript, so the document never leaves your device. That makes it safe for contracts, medical forms and anything else you wouldn't want on someone else's server.</p></div>
 </div>
 
 <div class="related-tools">
