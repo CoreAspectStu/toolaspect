@@ -1238,3 +1238,105 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   tools 2026" listicle + privacy "X alternatives — compared" guides. Thin depth
   candidates left: mtbf-calculator (887), xml-to-json (852), css-minifier (741),
   minify-js (762).
+
+- 2026-10-01 batch guides (queue from 9-30 notes: contractor leftovers asphalt/brick/
+  paver/topsoil + PDF listicle + privacy per drip-rebalance-2026-09-29; SKIPPED as
+  covered: brick (how-much-does-a-brick-wall-cost has bricks+mortar section), paver
+  (how-much-does-a-paver-patio-cost has pavers+base section), topsoil (how-much-does-
+  topsoil-cost has quantity section)):
+  asphalt-calculator → guides/how-much-asphalt-do-i-need/ (solution-aware, AIO yes —
+  coverage per ton at 2/3/4/6 in (82.8/55.2/41.4/27.6 sq ft), 11-row project table via
+  the tool's JS (145 lb/ft³, ceil(t×1.05×10)/10, 20 t loads, $130/t): 12×50 @ 3 in =
+  10.88 t exact / 11.5 order / $1,495; 60×100 @ 4 in = 152.3 t / 8 loads);
+  image-metadata-remover → guides/how-to-remove-location-from-photos/ (problem-aware,
+  privacy cluster — GPS decimal-places precision table, sharing-route survives/stripped
+  table, method table; iPhone/Android/Windows/Mac/browser steps; honest that our tool
+  always outputs JPEG @ 0.92, orientation baked into pixels);
+  PDF cluster → guides/best-free-pdf-tools/ ("best free X 2026" listicle per directive —
+  31-tool master table with a real detail per tool, privacy-check table, ItemList LD)
+  (1,120–1,397 words prose excl. tables, FAQ 5 each + Article/Breadcrumb/FAQPage LD,
+  tool + sibling links; guide backlinks on asphalt-calculator, image-metadata-remover,
+  pdf-merge. JS untouched.)
+  COPY BUGS FIXED (no JS): asphalt-calculator coverage-per-ton FAQ/LD/table was 3× low
+  (said 27.6 sq ft/t at 2 in — that's the 6 in figure; real 82.8) + "0.018.1 tons" →
+  0.054; image-metadata-remover FAQ (visible+LD held an age-calculator Q + boilerplate)
+  → 4 real Q&As, false "PNG lossless/pixel-identical" and "keeps orientation flag"
+  claims corrected; pdf-merge "local copy of pdf-lib" → loads from CDN wording.
+  SITE BUG FIXED: 6 pages started with "<!D" + stray closing paragraph + "OCTYPE html>"
+  (broken doctype → quirks mode): image-metadata-remover, churn-rate-calculator,
+  custom-content-price-calculator, onlyfans-price-calculator, qr-code-with-logo,
+  qr-code-batch — doctype restored, paragraphs moved above the FAQ section.
+  NEED STU GO-AHEAD (JS): image-metadata-remover "Keep orientation flag" dropdown is a
+  no-op; PNG input exported as JPEG (transparency lost). Also flagged: exif-viewer FAQ
+  is boilerplate; pdf-metadata-editor meta promises "strip all" but only edits Info
+  dict (not XMP); ads.js?v=2 loaded twice on most tool pages.
+- 2026-10-01 depth passes: mtbf-calculator (895 → 1,763 words, +R(t)=e^(−t/MTBF)
+  table, +λ/FIT conversion table, MTBF vs MTTF vs MTTR + availability section, FAQ 5→9
+  visible / LD 4→9 synced; FIXED pump example availability 98.7% → 99.6% (2920 ÷
+  2932.67) and boilerplate answer box); xml-to-json (861 → 1,510, +10-row edge-case
+  table run through vendor/xml-js in node, JSON→XML pitfalls, FAQ 3→6 synced; FIXED
+  false claims: DOM parser → xml-js/sax, "@" prefix → _attributes, comments/PIs kept
+  not lost, order not preserved in compact mode). JS byte-identical on both.
+- 2026-10-01 hub updates: guides hub +3 cards (More Guides 496→499), count claims
+  555→558 in all 9 places (= on-disk dirs); all-tools patched by hand (558).
+  Queue state: contractor quantity guides now complete. Next intake per directive:
+  privacy "X alternatives — compared" guides (pattern of pimeyes-alternative), more PDF
+  depth (check <900-word PDF tool pages), niche calc guides (dealer doc fee, MACRS,
+  totaled car value — check for existing guides). Thin depth candidates left:
+  css-minifier (750), minify-js (771), exif-viewer (boilerplate FAQ).
+
+- 2026-10-02 batch guides (intake per 10-01 notes + drip-rebalance-2026-09-29: "X
+  alternatives — compared" pattern, 2× PDF + 1× privacy; niche-calc intake checked
+  and SKIPPED as covered: dealer-doc-fee (guides/dealer-doc-fees), totaled-car
+  (how-insurance-determines-a-totaled-car-value), MACRS (equipment-depreciation-guide),
+  section-179 vehicle, every pet/auto calc already has a guide):
+  PDF cluster → guides/smallpdf-alternatives/ (most-aware — 9-option table: where the
+  file goes / free limit / account / best for; Smallpdf-task → free-swap table (11
+  rows); web-verified: Smallpdf free = 2 tasks/day per 2026 reviews (hedged), Sejda 3
+  tasks/hr + 200 pp/50 MB, PDF24 EU servers + 1-hr deletion + Creator free for
+  business);
+  PDF cluster → guides/free-adobe-acrobat-alternatives/ (most-aware — Adobe US
+  pricing table from adobe.com/acrobat/pricing.html Oct 2026: Std $14.99/$24.99, Pro
+  $19.99/$29.99, Studio $24.99/$34.99 (annual-billed-monthly / month-to-month);
+  Reader free = view/print/search/comment/fill/sign; 13-row paid-feature → free-swap
+  table incl. bates-numbering);
+  reverse-image-search → guides/tineye-alternatives/ (privacy cluster, most-aware —
+  engine comparison + job → engine tables; TinEye facts from help.tineye.com: free
+  non-commercial 100/day + 300/week, uploads not saved, no face matching, 5 sort
+  modes; Google Lens no biometric face matching; Yandex face quality hedged by region)
+  (1,057–1,180 words prose excl. tables, 1,229–1,466 incl.; FAQ 5 each +
+  Article/Breadcrumb/FAQPage LD; 0 em dashes in body.) Guide backlinks added on
+  compress-pdf, pdf-merge, ocr-pdf, reverse-image-search, pimeyes-alternative and
+  guides/best-free-pdf-tools.
+  FAQ REPAIRS (no JS): reverse-image-search FAQ (visible + LD) held 5 background-
+  removal/matting Q&As → 5 real reverse-search Q&As; answer box said "Upload a photo
+  ... Google, Bing and Yandex" → public URL, 4 engines incl. TinEye.
+  pimeyes-alternative (#2 real-engagement page) + face-recognition-search FAQs were
+  "How do I use the … / Is it free / How accurate" boilerplate → 5 + 4 real Q&As.
+- 2026-10-02 depth passes: css-minifier (751 → 1,513 words; +11-row "what csso
+  changes" table — every row real csso 5.0.5 output in node; +keep vs restructure,
+  silent-drop of broken CSS, gzip section; FAQ 3→5 LD synced). FIXED false copy:
+  shorthand folding (24px×4 → 24px, 0 0 8px 0 → 0 0 8px) is Restructure-only, not
+  Keep structure (table row + worked example); "errors surface csso's parse message
+  with a line reference" — csso is tolerant and silently drops unparseable rules
+  (".a{color:red;.b{margin:0}" → ".a{color:red}"); "byte-for-byte equivalent" →
+  functionally equivalent; answer box "Paste CSS above" → below.
+  minify-js (772 → 1,526; +6-row preset-behavior table from terser 5.51.2 in node;
+  +"why is my output empty" section: the default Compress + mangle preset uses
+  toplevel:true, which DELETES top-level functions only called from HTML onclick
+  (output "") and renames globals — fixes: Compress preset / window.fn = fn (verified
+  survives) / modules; +license-comment section (strip/compress drop /*! headers,
+  full keeps them); +gzip section (strip 17.3% / full 29.5% after gzip); FAQ 3→5 LD
+  synced; boilerplate HowTo LD ("enter your values… minify css guide") rewritten to
+  real steps; copy said "Strip only is the safe default" but the page defaults to
+  Compress + mangle → clarified). JS byte-identical on both (script-block md5).
+- 2026-10-02 hub updates: guides hub +3 cards (More Guides 499→502), count claims
+  558→561 in all 9 places (= on-disk dirs); all-tools Guides (561), patched by hand.
+  NOTE: the 10-01 batch was deployed but never committed — it ships in today's commit.
+  Queue state: "alternatives" intake next candidates: iLovePDF alternatives (verify
+  limits first, sources conflict), ExifTool/EXIF-viewer alternatives, DocuSign
+  free alternatives (only if sign-pdf honesty re: audit trail is kept). Thin depth
+  candidates left: exif-viewer (boilerplate FAQ), compress-pdf/pdf-merge/ocr-pdf have
+  6 visible FAQ items vs 4 in LD (check sync). NEED STU GO-AHEAD (JS): minify-js
+  default preset (toplevel:true) silently deletes onclick handlers — consider
+  defaulting to Compress or toplevel:false.

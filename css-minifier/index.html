@@ -88,7 +88,7 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does a CSS minifier actually remove?","acceptedAnswer":{"@type":"Answer","text":"It strips comments, whitespace, trailing semicolons, and safe-to-remove formatting, and can shorten colors, zero values, and font-weight keywords where equivalent. The result is byte-for-byte equivalent CSS that browsers parse identically. Nothing that affects the cascade or specificity is changed."}},{"@type":"Question","name":"How much smaller does minified CSS get?","acceptedAnswer":{"@type":"Answer","text":"Typical stylesheets shrink 20–40%, more when the original is comment-heavy and generously formatted. Savings compound on large sites where CSS is fetched on every page load. Note that gzip already compresses whitespace well, so the post-gzip gain is smaller than the raw byte reduction."}},{"@type":"Question","name":"Why minify CSS in the browser instead of a build step?","acceptedAnswer":{"@type":"Answer","text":"An in-browser minifier using CSSO needs no Node toolchain, config, or command line — paste, click, copy. It is ideal for one-off files, quick patches, or environments where you cannot install build tools. For recurring production builds, a bundler pipeline is still the better long-term setup."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does a CSS minifier actually remove?", "acceptedAnswer": {"@type": "Answer", "text": "It strips comments, whitespace, trailing semicolons, and safe-to-remove formatting, and can shorten colors, zero values, and font-weight keywords where equivalent. The result is functionally equivalent CSS that browsers render the same way. The Restructure pass goes further and merges rules, but only where csso can prove the cascade and specificity come out unchanged."}}, {"@type": "Question", "name": "How much smaller does minified CSS get?", "acceptedAnswer": {"@type": "Answer", "text": "Typical stylesheets shrink 20–40%, more when the original is comment-heavy and generously formatted. Savings compound on large sites where CSS is fetched on every page load. Note that gzip already compresses whitespace well, so the post-gzip gain is smaller than the raw byte reduction."}}, {"@type": "Question", "name": "Why minify CSS in the browser instead of a build step?", "acceptedAnswer": {"@type": "Answer", "text": "An in-browser minifier using CSSO needs no Node toolchain, config, or command line — paste, click, copy. It is ideal for one-off files, quick patches, or environments where you cannot install build tools. For recurring production builds, a bundler pipeline is still the better long-term setup."}}, {"@type": "Question", "name": "Why is my minified CSS missing rules or empty?", "acceptedAnswer": {"@type": "Answer", "text": "csso is a forgiving parser, like browsers. When it hits CSS it can't parse, such as a missing closing brace, it drops that part and carries on instead of showing an error. If the output looks too short, check your input for unclosed braces or stray characters."}}, {"@type": "Question", "name": "Does csso change CSS custom properties or calc()?", "acceptedAnswer": {"@type": "Answer", "text": "Barely. It trims the spaces around custom property values but leaves the values themselves alone, so --surface: #ffffff stays six digits. Inside calc(), the spaces around plus and minus signs are kept because CSS requires them."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -99,7 +99,7 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 <div class="page-header">
 <h1>🎨 CSS Minifier</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Paste CSS above — comments and whitespace are stripped instantly and the minified output is ready to copy, fully client-side.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Paste CSS into the box below. csso strips comments and whitespace as you type, and the Restructure preset also merges rules, all in your browser.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="css-minifier" aria-label="Share this tool"></div>
 
@@ -141,8 +141,8 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 <table class="data-table">
 <thead><tr><th>Preset</th><th>What it does</th><th>772-B sample →</th><th>Saved</th></tr></thead>
 <tbody>
-<tr><td>Keep structure</td><td>Deletes comments, whitespace, trailing semicolons; value shorthand folds (<code>24px 24px 24px 24px</code> → <code>24px</code>)</td><td>572 B</td><td>200 B (25.9%)</td></tr>
-<tr><td>Restructure</td><td>…plus merges duplicate selectors, drops overridden declarations, reorders safely</td><td>555 B</td><td>217 B (28.1%)</td></tr>
+<tr><td>Keep structure</td><td>Deletes comments, whitespace and trailing semicolons; shortens colors, zero units and font-weight keywords</td><td>572 B</td><td>200 B (25.9%)</td></tr>
+<tr><td>Restructure</td><td>…plus folds shorthands (<code>24px 24px 24px 24px</code> → <code>24px</code>), merges rules that share declarations, drops overridden declarations</td><td>555 B</td><td>217 B (28.1%)</td></tr>
 <tr><td>Restructured, gzipped</td><td>Transport compression on top</td><td>321 B</td><td>vs 326 B for keep-structure</td></tr>
 </tbody>
 </table>
@@ -152,19 +152,59 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 
 <div class="content-section">
 <h2>How the CSS Minifier Works</h2>
-<p>This is <strong>csso 5.0.5</strong> (MIT), the CSS optimizer CSS-OSS toolchains have trusted for a decade, loaded from a CDN and running entirely in your tab. It's not a regex cruncher: csso parses your stylesheet into an AST, rewrites it, and regenerates clean CSS, which is why the output is valid even when the input had quirks a naive tool would mangle.</p>
+<p>This is <strong>csso 5.0.5</strong> (MIT), a long-running CSS optimizer that also handles style minification inside SVGO. It loads from a CDN and runs entirely in your tab. It's not a regex cruncher: csso parses your stylesheet into an AST, rewrites it, and regenerates clean CSS, which is why the output is valid even when the input had quirks a naive tool would mangle.</p>
 <h3>The math</h3>
 <p>Bytes saved = input − output; percent = (input − output) ÷ input × 100. The tool counts UTF-8 bytes, and when your browser supports CompressionStream it shows gzip sizes too — the honest number for anything served over HTTP, since text/html+css compresses well and raw savings overstate the network win.</p>
 <h3>How to use it</h3>
-<p>Paste a stylesheet (the Sample button loads ours), pick a preset, and the output updates as you type. <em>Keep structure</em> is the choice when you want byte-predictable output that still mirrors your source order. <em>Restructure</em> squeezes further by merging rules with identical selectors and discarding declarations that later rules override. Copy or download when you're happy; errors surface csso's own parse message with a line reference.</p>
+<p>Paste a stylesheet (the Sample button loads ours), pick a preset, and the output updates as you type. <em>Keep structure</em> is the choice when you want byte-predictable output that still mirrors your source order. <em>Restructure</em> squeezes further by merging rules with identical selectors and discarding declarations that later rules override. Copy or download when you're happy. One thing to watch: csso is forgiving and won't stop on broken CSS, so a rule it can't parse can silently disappear from the output. More on that below.</p>
 <h3>A worked example</h3>
-<p>The Sample button loads a 772-byte product-card stylesheet: a <code>:root</code> block of custom properties, three rules, a hover state, and a <code>@media (max-width: 640px)</code> override. Keeping structure takes it to 572 bytes — the comment goes, <code>"Helvetica Neue", Arial, sans-serif</code> keeps its quotes, <code>24px 24px 24px 24px</code> folds to <code>24px</code>, and <code>0px 0px 8px 0px</code> trims to <code>0 0 8px</code>. Restructuring reaches 555 bytes. Gzipped, that's 321 bytes across the wire — on a 772-byte file the gzip win (391 → 321) is smaller than the minify win, which is exactly why both columns are shown: minify first, then let transport compression do its job.</p>
+<p>The Sample button loads a 772-byte product-card stylesheet: a <code>:root</code> block of custom properties, three rules, a hover state, and a <code>@media (max-width: 640px)</code> override. Keeping structure takes it to 572 bytes. The comment goes, <code>"Helvetica Neue", Arial, sans-serif</code> keeps its quotes, <code>0px 4px 12px</code> becomes <code>0 4px 12px</code>, and <code>rgba(0, 0, 0, 0.10)</code> tightens to <code>rgba(0,0,0,.1)</code>. Restructuring reaches 555 bytes, because that pass also folds <code>24px 24px 24px 24px</code> to <code>24px</code> and trims <code>0 0 8px 0</code> to <code>0 0 8px</code>. Gzipped, that's 321 bytes across the wire — on a 772-byte file the gzip win (391 → 321) is smaller than the minify win, which is exactly why both columns are shown: minify first, then let transport compression do its job.</p>
 <p>Custom properties and media queries ride through untouched in both passes — they're declarations and at-rules like any other, and csso merges only what the spec guarantees equivalent.</p>
 </div>
 
 <div class="content-section">
+<h2>What csso Changes, Line by Line</h2>
+<p>Every row below is real output from csso 5.0.5, the same version this page loads. It's a handy way to see which tricks belong to which preset.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Input</th><th>Keep structure</th><th>Restructure</th></tr></thead>
+<tbody>
+<tr><td><code>color: #ffffff</code></td><td><code>color:#fff</code></td><td><code>color:#fff</code></td></tr>
+<tr><td><code>background: rgba(0, 0, 0, 1)</code></td><td><code>background:#000</code></td><td><code>background:#000</code></td></tr>
+<tr><td><code>border-color: #FF0000</code></td><td><code>border-color:red</code></td><td><code>border-color:red</code></td></tr>
+<tr><td><code>font-weight: bold</code></td><td><code>font-weight:700</code></td><td><code>font-weight:700</code></td></tr>
+<tr><td><code>padding: 0.50em</code></td><td><code>padding:.5em</code></td><td><code>padding:.5em</code></td></tr>
+<tr><td><code>margin: 0px 0px 0px 0px</code></td><td><code>margin:0 0 0 0</code></td><td><code>margin:0</code></td></tr>
+<tr><td><code>.btn { color: #fff } .link { color: #fff }</code></td><td>Two rules</td><td><code>.btn,.link{color:#fff}</code></td></tr>
+<tr><td><code>.c { color: red; color: blue }</code></td><td><code>.c{color:red;color:#00f}</code></td><td><code>.c{color:#00f}</code></td></tr>
+<tr><td><code>/*! Theme v2 | MIT */</code></td><td>Kept</td><td>Kept</td></tr>
+<tr><td><code>--gap:  16px ;</code></td><td><code>--gap:16px</code></td><td><code>--gap:16px</code></td></tr>
+<tr><td><code>calc( 100% - 20px )</code></td><td><code>calc(100% - 20px)</code></td><td><code>calc(100% - 20px)</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Two details stand out. Comments that start with <code>/*!</code> survive both passes, which is the convention for license headers, while ordinary comments are dropped. And csso leaves the values of custom properties alone apart from trimming spaces. In the sample, <code>--surface: #ffffff</code> stays six digits, because csso can't know where that variable will end up. The spaces around the minus sign inside <code>calc()</code> stay too, since CSS needs them.</p>
+</div>
+
+<div class="content-section">
+<h2>Keep Structure or Restructure?</h2>
+<p>Restructure is the default here and it's safe for most stylesheets. csso only merges or drops declarations when it can prove the result renders the same. In the table above, the doubled <code>color</code> loses the overridden red, and two rules with identical bodies become one selector list. It also understands <code>!important</code>: given <code>.p{color:red!important}.p{color:blue}</code>, it drops the blue declaration, since it could never win.</p>
+<p>Choose <em>Keep structure</em> when you need the output to line up with your source. That helps if you're diffing minified files in version control, debugging a production stylesheet without a source map, or handing CSS to a tool that expects rules in their original order. You give up a few percent of savings. On our sample it's 572 bytes against 555.</p>
+
+<h3>Why is part of my CSS missing from the output?</h3>
+<p>csso is a forgiving parser. Browsers skip invalid CSS without complaint, and csso does the same. When it meets something it can't make sense of, it drops that part and keeps going rather than stopping with an error. We tested a stylesheet with a missing closing brace: <code>.a { color: red; .b { margin: 0 }</code> came out as just <code>.a{color:red}</code>, and the <code>.b</code> rule disappeared without a warning. A badly broken file can even come out empty.</p>
+<p>So if the Saved figure looks too good to be true, or the output is suspiciously short, check your input for an unclosed brace or a stray semicolon. Running the stylesheet through a linter or your editor's CSS checker first catches these in seconds.</p>
+</div>
+
+<div class="content-section">
+<h2>Is Minifying Still Worth It With Gzip or Brotli?</h2>
+<p>Yes, but expect a smaller gain on the wire than the raw number suggests. Compression is very good at squeezing out repeated whitespace, so some of what minification removes would have been compressed away anyway. On our sample, minifying cuts the raw file by 28.1% (772 to 555 bytes). Gzipped, the drop is 391 to 321 bytes, or 17.9%. That's still a real saving on a stylesheet that every page loads, and the browser has less text to parse once it arrives.</p>
+<p>The best results come from doing both. Minify at build time or with this tool, then let your server or CDN compress the file. If you ship SVG icons with inline styles, the <a href="/svg-optimizer/">SVG Optimizer</a> trims those too, and the <a href="/minify-js/">JS minifier</a> does the same job for your scripts. Our <a href="/guides/minify-css/">guide to minifying CSS</a> covers build-tool setups.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
-<div class="faq-item"><h3>What does a CSS minifier actually remove?</h3><p>It strips comments, whitespace, trailing semicolons, and safe-to-remove formatting, and can shorten colors, zero values, and font-weight keywords where equivalent. The result is byte-for-byte equivalent CSS that browsers parse identically. Nothing that affects the cascade or specificity is changed.</p></div><div class="faq-item"><h3>How much smaller does minified CSS get?</h3><p>Typical stylesheets shrink 20–40%, more when the original is comment-heavy and generously formatted. Savings compound on large sites where CSS is fetched on every page load. Note that gzip already compresses whitespace well, so the post-gzip gain is smaller than the raw byte reduction.</p></div><div class="faq-item"><h3>Why minify CSS in the browser instead of a build step?</h3><p>An in-browser minifier using CSSO needs no Node toolchain, config, or command line — paste, click, copy. It is ideal for one-off files, quick patches, or environments where you cannot install build tools. For recurring production builds, a bundler pipeline is still the better long-term setup.</p></div></div>
+<div class="faq-item"><h3>What does a CSS minifier actually remove?</h3><p>It strips comments, whitespace, trailing semicolons, and safe-to-remove formatting, and can shorten colors, zero values, and font-weight keywords where equivalent. The result is functionally equivalent CSS that browsers render the same way. The Restructure pass goes further and merges rules, but only where csso can prove the cascade and specificity come out unchanged.</p></div><div class="faq-item"><h3>How much smaller does minified CSS get?</h3><p>Typical stylesheets shrink 20–40%, more when the original is comment-heavy and generously formatted. Savings compound on large sites where CSS is fetched on every page load. Note that gzip already compresses whitespace well, so the post-gzip gain is smaller than the raw byte reduction.</p></div><div class="faq-item"><h3>Why minify CSS in the browser instead of a build step?</h3><p>An in-browser minifier using CSSO needs no Node toolchain, config, or command line — paste, click, copy. It is ideal for one-off files, quick patches, or environments where you cannot install build tools. For recurring production builds, a bundler pipeline is still the better long-term setup.</p></div><div class="faq-item"><h3>Why is my minified CSS missing rules or empty?</h3><p>csso is a forgiving parser, like browsers. When it hits CSS it can't parse, such as a missing closing brace, it drops that part and carries on instead of showing an error. If the output looks too short, check your input for unclosed braces or stray characters.</p></div><div class="faq-item"><h3>Does csso change CSS custom properties or calc()?</h3><p>Barely. It trims the spaces around custom property values but leaves the values themselves alone, so --surface: #ffffff stays six digits. Inside calc(), the spaces around plus and minus signs are kept because CSS requires them.</p></div></div>
 
 <div class="related-tools">
 <h2>Related Tools</h2>
