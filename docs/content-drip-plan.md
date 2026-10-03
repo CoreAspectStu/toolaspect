@@ -1340,3 +1340,62 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   6 visible FAQ items vs 4 in LD (check sync). NEED STU GO-AHEAD (JS): minify-js
   default preset (toplevel:true) silently deletes onclick handlers — consider
   defaulting to Compress or toplevel:false.
+
+- 2026-10-03 batch guides (intake from 10-02 queue notes, "X alternatives — compared"
+  pattern per drip-rebalance-2026-09-29: 2× PDF/document + 1× privacy; none had an
+  existing guide):
+  pdf-merge (PDF cluster) → guides/ilovepdf-alternatives/ (most-aware — 9-option table
+  + 13-row iLovePDF-tool → free-swap table; ilovepdf.com/pricing Oct 2026: Basic free
+  = 25 files/merge vs 500 Premium, 15–200 MB per-tool caps vs 4 GB, OCR/desktop/AI
+  Premium-only, EU page €9/mo or €60/yr (quoted in EUR, US price varies — hedged);
+  iLovePDF blog: uploads deleted within 2 h);
+  sign-pdf → guides/free-docusign-alternatives/ (most-aware — free e-sign options table +
+  situation → choice table; DocuSign pricing page: no free tier, 30-day trial no card,
+  Personal 5 envelopes/mo, Standard/Business Pro 100 envelopes/user/yr; US price
+  hedged "$10–15/mo"; Dropbox Sign help center: 3 requests/mo renewing every 30 days
+  from signup, unlimited self-sign, audit trail on requests; signwell.com/pricing:
+  free 3 docs/mo, 1 template, 1 sender; ESIGN/UETA/eIDAS framed as general info);
+  exif-viewer (privacy cluster) → guides/exiftool-alternatives/ (most-aware — 10-tool
+  table (type/platform/reads/edits/uploads) + "what a phone photo reveals" table;
+  exiftool.org: Phil Harvey, Perl, tens of thousands of tags, same terms as Perl;
+  ExifCleaner + Jeffrey's viewer both built on ExifTool (latter uploads); HONEST about
+  our viewer: exifr parse() defaults = IFD0/EXIF/GPS only, no XMP/IPTC/maker notes,
+  JPEG/HEIC/AVIF/TIFF/PNG)
+  (1,204–1,255 words excl. tables, 1,448–1,600 incl.; FAQ 5 each + Article/Breadcrumb/
+  FAQPage LD; 0 em dashes; 0 broken internal links.) Guide backlinks added on
+  pdf-merge, sign-pdf, exif-viewer, image-metadata-remover, guides/smallpdf-alternatives.
+- 2026-10-03 depth passes (queue's named candidates were all already >1,000 words —
+  exif-viewer 1,119, compress-pdf 1,167, pdf-merge 1,055, ocr-pdf 1,218 — so picked the
+  document-cluster pages from a fresh <900 scan; device-test pages still need sign-off):
+  resume-builder (832 → 1,394 words; +template-choice table (Classic Georgia serif /
+  Modern Arial navy band / Minimal Arial no rules, from the page CSS), +print-dialog
+  settings table, +duty→result bullet table; FAQ 6→8, LD 4→8 synced). FIXED copy:
+  "the two templates" → three; "letter-size PDF" → paper size follows print settings
+  (no @page rule); boilerplate answer box rewritten. CSS-ONLY FIX: Modern template's
+  navy header band wasn't printed by default (Chrome "Background graphics" off) →
+  white name/contact text vanished on the PDF; added print-color-adjust:exact on
+  .modern .rs-head-wrap inside @media print.
+  cover-letter-generator (875 → 1,422; +"what each tone changes" table quoting the
+  JS's real openers, +pre-send checklist, +"what hiring managers skim for" table;
+  FAQ 5→7, LD 4→7 synced). FIXED copy: "you can edit the output directly" (#letter
+  is not contenteditable) → copy into Word/Docs; unsourced "fewer than half of
+  postings" / "a majority read letters" softened; boilerplate answer box rewritten.
+  JS byte-identical on both (script-block md5).
+  NEED STU GO-AHEAD (JS): cover-letter-generator lowercases the first letter of the
+  "why" sentence, which then STARTS paragraph 4 (output paragraph begins lowercase)
+  and also lowercases proper nouns at the start of achievement/why; word-count note
+  says "right in the 250–400 word range" for 200–249 words. Page copy now tells users
+  to fix capitals by hand.
+  SITE-WIDE FINDING: 116 tool pages still carry the boilerplate answer box "The X
+  produces your output instantly from the input you provide…" (data-ta-answer-text) —
+  candidate for a sweep.
+- 2026-10-03 hub updates: guides hub +3 cards (More Guides 502→505), count claims
+  561→564 in all 9 guides-hub places + roadmap stat (= 564 on-disk dirs); all-tools
+  Guides (564) + 3 links, patched by hand.
+  Queue state: next "alternatives" intake candidates: Adobe Scan / CamScanner
+  alternatives (scan-to-PDF), PDFescape alternatives, Photopea/remove.bg (image —
+  check cluster fit), "best free privacy tools 2026" listicle. Thin depth candidates
+  (<900, non-device): flowchart-maker (866), org-chart-maker (867), er-diagram-maker
+  (893), jq-playground (893), honeymoon-registry-fee-calculator (874), online-vet-cost-
+  comparison (882), wedding-hashtag-generator (853); by-state cost pages (262–362) need
+  sourced data before expanding.
