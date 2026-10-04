@@ -1399,3 +1399,55 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   (893), jq-playground (893), honeymoon-registry-fee-calculator (874), online-vet-cost-
   comparison (882), wedding-hashtag-generator (853); by-state cost pages (262–362) need
   sourced data before expanding.
+
+- 2026-10-05 batch guides (intake from 10-03 queue notes, per drip-rebalance-2026-09-29:
+  2× PDF/document "alternatives" + 1× "best free [category] tools 2026" listicle; none had
+  an existing guide; Photopea/remove.bg skipped, as remove-image-background guide exists):
+  jpg-to-pdf (PDF cluster) → guides/camscanner-alternatives/ (most-aware. 8-option table
+  incl. Microsoft Lens retirement: pulled from stores Feb 9 2026, scanning stopped Mar 9
+  2026, MS points to OneDrive scan; CamScanner free = watermark + ads, Premium listed
+  $4.99/mo or $49.99/yr on Capterra (hedged); Kaspersky Aug 2019 Necro dropper in ad
+  library + Play removal; India ban June 2020; computed phone-camera → DPI table
+  (12 MP Letter page at 80% of frame = 285 DPI); honest that JPG to PDF has no
+  edge-detect/deskew and OCR PDF gives a transcript, not a searchable PDF);
+  pdf-add-text (PDF cluster) → guides/pdfescape-alternatives/ (most-aware. Free/Premium/
+  Ultimate table from pdfescape.com/signup Oct 2026: Premium $2.99/mo yearly or $5.99
+  monthly, Ultimate $5.99/$8.99, free 10 MB upload + 10 files/7 days vs 40 MB + 100/30
+  days; merge/compress/edit-text Premium, redaction/digital signatures Ultimate; 100-page
+  free cap only in third-party listings → hedged; feature → free-swap table, 9 rows);
+  image-metadata-remover (privacy cluster) → guides/best-free-privacy-tools/ ("best free
+  X 2026" listicle per directive. 15-tool table with an honest catch per tool, "what
+  hidden data your files carry" table, ItemList LD; outside picks Bitwarden / HIBP
+  k-anonymity / uBlock Origin (Lite on Chrome) / Signal)
+  (897–1,031 words prose excl. tables, 1,538–1,746 incl. tables + FAQ; FAQ 5 each +
+  Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal links.) Guide backlinks
+  added on jpg-to-pdf, pdf-add-text, image-metadata-remover.
+  COPY BUGS FIXED (no JS): OCR PDF outputs a .txt transcript (no pdf-lib, no text layer)
+  but 3 guides said it makes PDFs searchable / "adds a selectable text layer":
+  ilovepdf-alternatives (FAQ visible + LD + swap table), free-adobe-acrobat-alternatives
+  (×2), smallpdf-alternatives (FAQ visible + LD + body). Wording now says transcript.
+- 2026-10-05 depth passes (queue's named thin candidates; fresh <900 scan of PDF/doc/
+  privacy pages found none apart from the text-tools hub):
+  flowchart-maker (866 → 1,470 words; +syntax cheat-sheet table, +"mistakes that break the
+  chart" list, +chart-height table computed from the JS layout constants (74 px per step,
+  102 per decision, 440 px wide); FAQ 5→7, LD 4→7 synced). FIXED copy: loop FAQ claimed
+  the No branch arrows back to an earlier step. The JS only searches later steps (j>i), and
+  backward/unmatched targets render a "No → X" stub label. Symbols table lists document +
+  connector shapes that the tool doesn't draw → note added. Boilerplate answer box rewritten.
+  org-chart-maker (867 → 1,329; +formatting-rules table (separator regex, hyphenated names,
+  tabs, multiple top-level lines create a "Root" box), +SVG size table (170 px per leaf,
+  108 px per level); FAQ 5→7, LD 4→7 synced). FIXED copy: "boxes wrap at about twenty
+  characters" → names truncated at 20, titles at 24 (no wrap); worked example said VP Eng's
+  span is "inside the healthy range" → 2 direct reports, noted as thin. Answer box rewritten.
+  JS byte-identical on both (script-block md5).
+  NEED STU GO-AHEAD (JS): flowchart-maker can't draw backward No arrows (retry loops);
+  org-chart-maker truncates names/titles with no ellipsis and shows a "Root" box when
+  there's more than one top-level line; "Reset zoom" button only scrolls (no zoom exists).
+- 2026-10-05 hub updates: guides hub +3 cards (More Guides 505→508), count claims 564→567
+  in all 9 guides-hub places (= 567 on-disk dirs); all-tools Guides (567) + 3 links.
+  Queue state: next "alternatives" intake candidates: Adobe Scan is covered inside the
+  camscanner guide. Next: "Sejda alternatives", "PDF24 alternatives", "Have I Been Pwned
+  alternatives / how to check if your email was leaked" (privacy), "best free image tools
+  2026" listicle. Thin depth candidates left (<900): er-diagram-maker (893),
+  jq-playground (893), honeymoon-registry-fee-calculator (874), online-vet-cost-
+  comparison (882), wedding-hashtag-generator (853), text-tools hub (332).
