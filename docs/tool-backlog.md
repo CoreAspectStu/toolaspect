@@ -91,3 +91,6 @@ va-pension-aid-and-attendance-calculator | finance | calc | $8-20 | needs-based 
 
 ## GH scan 2026-09-13 (auto)
 gh:reactive-resume/reactive-resume | oss | wrap | low | S42539 MIT — A one-of-a-kind resume builder that keeps your privacy in mind. Completely secure, customizable, por
+
+## GH scan 2026-10-05 (auto)
+gh:The-Vibe-Company/quivr | oss | wrap | low | S39578 MIT — An open-source engine that turns continuous content streams into search and monitoring. Durable inge
