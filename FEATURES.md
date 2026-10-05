@@ -1,6 +1,9 @@
 # FEATURES — toolaspect.com
 
-Current as of 2026-09-19. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
+Current as of 2026-10-05. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
+
+## 2026-10-05 refresh (was stale 16d)
+Since Sep-19: content-drip engine matured into daily cadence — guide hubs 549→567 (~18 new guides + 12 tool depth passes; f69f1f805, d9ae2169e, 4786ff06e, 0d4eaf8f1, fd8ea7697). Drip topics steered by GA4 real-user engagement (d7f1f6541: PDF / privacy / niche-calc focus). Calculator accuracy fixes (siding nail count 20x over, stair-calculator rounding copy, 09c09ffed). Sitemap ~3,326 URLs. Traffic 7d ~24.9K PV / ~11.1K visitors. Ad lane: 4 AdSense units live, serving gated on Google automated site review. GSC crawl-budget bottleneck remains #1 issue (2,950 discovered-not-indexed). gh-repo-scan backlog: quivr (Oct-5) pending review.
 
 ## NEW since 2026-09-04
 - **i18n L0 pilot**: es/de/pt locale pages (19 each) + hreflang clusters + sitemap +56 URLs (e2f468ec)
