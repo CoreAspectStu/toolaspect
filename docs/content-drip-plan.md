@@ -1451,3 +1451,48 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   2026" listicle. Thin depth candidates left (<900): er-diagram-maker (893),
   jq-playground (893), honeymoon-registry-fee-calculator (874), online-vet-cost-
   comparison (882), wedding-hashtag-generator (853), text-tools hub (332).
+
+- 2026-10-07 batch guides (intake from 10-05 queue notes, per drip-rebalance-2026-09-29:
+  2× PDF "alternatives" + 1× privacy; none had an existing guide):
+  pdf-merge / pdf-split (PDF cluster) → guides/sejda-alternatives/ (most-aware. Sejda
+  free vs paid table: web 3 tasks/hour, desktop 3/day, 200 pages or 50 MB (pricing page
+  only says "page and hourly limits", numbers from reviews, hedged); paid from
+  sejda.com/pricing Oct 2026: Web Week Pass €5.50/7 days, Web Monthly €8.50, Desktop+Web
+  Annual €71, uploads to 500 MB, OCR to 100 pages; 8-option table + 10-row job → free
+  pick table; honest that our tools don't edit existing text → LibreOffice Draw);
+  organize-pdf / pdf-password-tools (PDF cluster) → guides/pdf24-alternatives/ (most-aware.
+  pdf24 FAQ: free for all incl. companies, ad-funded, EU servers, online uploads deleted
+  after 1 hour, Creator = Windows only, Mac users pointed to online tools; Geek Software
+  GmbH; platform table (Win/Mac/Linux/uploads) + 10-row PDF24 tool → in-browser pick);
+  password tools (privacy cluster) → guides/have-i-been-pwned-alternatives/ (most-aware +
+  problem-aware "how to check if your email was leaked". HIBP homepage Oct 2026:
+  17,837,635,527 accounts / 1,039 sites (written as "17 billion+ / over 1,000"); API v3
+  docs: Pwned Passwords range API free, no key, first 5 SHA-1 chars; breachedaccount needs
+  paid key; Google dark web report: scans stopped Jan 15 2026, reports off Feb 16 2026;
+  Bitwarden breach report free / exposed-passwords report Premium; worked k-anonymity
+  example SHA1("password") → 5BAA6, 16^5 = 1,048,576 prefixes; what-leaked → what-to-do table)
+  (1,134–1,235 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤58 chars.) Guide backlinks added on
+  pdf-merge, pdf-split, organize-pdf, pdf-password-tools, password-strength-checker,
+  password-generator, guides/best-free-pdf-tools, guides/best-free-privacy-tools.
+- 2026-10-07 depth passes (queue's named thin candidates, dev-tools cluster):
+  er-diagram-maker (893 → 1,571 words; +crow's-foot cheat-sheet table, +relationship-type
+  table (1:1, 1:N, M:N join table, self-reference), +CREATE TABLE → entity section,
+  +"why won't it render" list; every syntax example parse-tested against mermaid 11.17.2
+  in node (missing relationship label = parse error; decimal(10,2), "PK, FK", quoted
+  comments, `..` dashed lines all OK); FAQ 5→7, LD synced). FIXED copy: worked example
+  quoted `PRODUCT ||--o{ CATEGORY : "sorted into"` and a `LINE_ITEM }o--|| PRODUCT` chain
+  that aren't in the default diagram → now matches DEFAULT (CATEGORY ||--o{ PRODUCT :
+  "sorts into"). Boilerplate answer box rewritten.
+  jq-playground (893 → 1,458; +11-row cheat-sheet table, every output verified with real
+  jq on the sample order; +"how is this different from the CLI" section from the page JS:
+  input goes through JSON.parse, so NDJSON fails, ints > 2^53 lose precision (verified in
+  node: 12345678901234567890 → ...7000), 129.00 → 129, no --slurp/--arg; FAQ 3→5, LD synced).
+  JS byte-identical on both (script-block md5).
+- 2026-10-07 hub updates: guides hub +3 cards (More Guides 508→511), count claims 567→570
+  in all 9 guides-hub places (= 570 on-disk dirs); all-tools Guides (570) + 3 links.
+  Queue state: next "alternatives" intake: "best free image tools 2026" listicle, then
+  Stirling-PDF / Adobe Scan already covered; candidates: "Mozilla Monitor alternatives"
+  (skip, overlaps HIBP guide), "Photopea alternatives" (check cluster fit). Thin depth
+  candidates left (<900): honeymoon-registry-fee-calculator (874), online-vet-cost-
+  comparison (882), wedding-hashtag-generator (853), text-tools hub (332).
