@@ -675,6 +675,7 @@
       dot: '#818cf8',
       tools: [
         { label: 'Pascals Triangle', href: '/pascals-triangle/' },
+        { label: 'Home Repair Costs by State', href: '/home-repair-costs-by-state/' },
         { label: 'Tip Splitter', href: '/tip-splitter/' },
         { label: 'Annuity', href: '/annuity-calculator/' },
         { label: 'NetWorth', href: '/net-worth-calculator/' },
@@ -874,7 +875,7 @@
         { label: 'Stopwatch', href: '/stopwatch/' },
         { label: 'PomodoroTimer', href: '/pomodoro-timer/' },
         { label: 'Notepad', href: '/notepad/' },
-        { label: 'TextTools', href: '/text-tools/' },
+        
         { label: 'EverydayTools', href: '/everyday-tools/' },
         { label: 'BestFreeTools2026', href: '/best-free-online-tools-2026/' },
       ]
@@ -1097,7 +1098,7 @@
     f.className = 'ta-footer';
     f.innerHTML =
       '<p>\u00A9 ' + new Date().getFullYear() + ' ToolAspect \u2014 All tools run in your browser, no data collected.</p>' +
-      '<div class="ta-footer-links"><a href="/about/">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/disclaimer.html">Disclaimer</a><a href="/developer-tools/">Developer</a><a href="/guides/">Guides</a><a href="/all-tools/">All Tools</a><a href="/converters/">Converters</a><a href="/finance-tools/">Finance</a><a href="/health-calculators/">Health</a><a href="/insurance-tools/">Insurance</a><a href="/legal-tools/">Legal</a><a href="/convert/">Convert</a><a href="/text-tools/">Text</a>"';
+      '<div class="ta-footer-links"><a href="/about/">About</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/disclaimer.html">Disclaimer</a><a href="/developer-tools/">Developer</a><a href="/guides/">Guides</a><a href="/all-tools/">All Tools</a><a href="/converters/">Converters</a><a href="/finance-tools/">Finance</a><a href="/health-calculators/">Health</a><a href="/insurance-tools/">Insurance</a><a href="/legal-tools/">Legal</a><a href="/convert/">Convert</a>"';
     var fStyle = document.createElement('style');
     fStyle.textContent =
       '.ta-footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem;position:relative;z-index:1}' +
