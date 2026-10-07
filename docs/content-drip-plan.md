@@ -1496,3 +1496,49 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   (skip, overlaps HIBP guide), "Photopea alternatives" (check cluster fit). Thin depth
   candidates left (<900): honeymoon-registry-fee-calculator (874), online-vet-cost-
   comparison (882), wedding-hashtag-generator (853), text-tools hub (332).
+
+- 2026-10-08 batch guides (intake from 10-07 queue notes; image cluster, bridges to the
+  privacy cluster via no-upload angle; none had an existing guide):
+  "best free image tools 2026" listicle → guides/best-free-image-tools/ (best-X. 15-tool
+  job → tool → catch table with ItemList LD, every catch checked against the page JS:
+  compressor single-file + lossless PNG, upscaler 2,000/1,200 px input caps, MODNet portrait
+  model, reverse search needs a public URL; computed resize table 4,032 px → 1,200 px = 9% of
+  pixels; GIMP / Photopea / Inkscape as the honest "use an editor" picks);
+  image-compressor → guides/tinypng-alternatives/ (most-aware; substitutes for "Photopea
+  alternatives", skipped as poor cluster fit: we have no layered editor. TinyPNG free web from
+  tinypng.com Oct 2026: 20 images, 5 MB each, 3 conversions/session, 48 h retention; Pro 75 MB /
+  Ultra 150 MB from tinify.com/pricing/web; Pro ~$39/yr from third-party listings (hedged);
+  API 500 free/month. Honest that our PNG→PNG is lossless, so convert to WebP or use
+  pngquant/Squoosh palette reduction; Caesium Linux = build from source; XnConvert free for
+  private/educational use only);
+  background-remover → guides/remove-bg-alternatives/ (most-aware + privacy. remove.bg help:
+  free up to 0.25 MP; API docs: 1 credit full-res up to 50 MP, 50 free API calls/month at preview;
+  subs ~$9/mo for 40 credits from third-party trackers (hedged); computed 0.25 MP sizes per
+  aspect ratio (3:2 = 612×408, ~1% of a 24 MP photo); Apple Lift Subject / Win11 Paint /
+  rembg / Adobe Express (free "at time of writing", hedged) / Canva Pro / GIMP)
+  (1,072–1,316 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤52 chars.) Guide backlinks added on
+  image-compressor, background-remover, image-upscaler.
+- 2026-10-08 depth passes (queue's named thin candidates, niche-calc cluster):
+  honeymoon-registry-fee-calculator (865 → 1,415 words; +fund-size fee table and
+  gift-count sensitivity table, both computed from the page's own PLATFORMS model
+  ($5,000 / 10 → 200 gifts on Honeyfund card: $180.90 → $293), +"cut the fees" list; FAQ
+  visible 5 / LD 4 → 7 / 7 (LD was missing one visible FAQ, now synced); 2026 gift-tax
+  annual exclusion $19,000). Boilerplate answer box rewritten.
+  online-vet-cost-comparison (875 → 1,447; +subscription break-even table computed from the
+  page JS defaults (Pawp beats Chewy video from visit 2, Airvet from visit 9), +"what can an
+  online vet handle" triage table incl. ASPCA APCC (888) 426-4435; FAQ 3→5, LD synced).
+  FIXED copy: answer box said the tool compares "clinic prices by treatment type". It
+  compares online vet subscriptions vs per-visit, now rewritten.
+  JS byte-identical on both (script-block md5).
+  NEED STU GO-AHEAD (JS / data): honeymoon PLATFORMS labels Honeyfund card as "3.5% + $0.59";
+  third-party summaries disagree (some say 2.8% + $0.30 card, 3.5% + $0.59 bank). Traveler's
+  Joy may also add a guest-side 2.95% + $0.99. Verify against live checkouts before editing JS.
+  online-vet note text says "a single subscription year still costs less than paying per visit"
+  for any visits < 5, which is false at 1 visit/yr (Chewy $49.99 < Pawp $99).
+- 2026-10-08 hub updates: guides hub +3 cards (More Guides 511→514), count claims 570→573
+  in all 9 guides-hub places (= 573 on-disk dirs); all-tools Guides (573) regenerated.
+  Queue state: next image-cluster intake: "Squoosh alternatives" (skip, overlaps TinyPNG
+  guide), "iLoveIMG alternatives" (most-aware, image + PDF bridge), "Canva free vs Pro"
+  (check fit). Thin depth candidates left (<900): wedding-hashtag-generator (853),
+  text-tools hub (332); run a fresh <900 scan next batch.
