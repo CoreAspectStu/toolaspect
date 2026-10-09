@@ -98,7 +98,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does this free form builder work?","acceptedAnswer":{"@type":"Answer","text":"You design fields visually — labels, input types, placeholders, required flags — and the builder generates clean standalone HTML you can copy into any website. The output is a plain HTML form with optional inline styles, so it works with any backend or static host. Everything is generated in your browser with no account or upload."}},{"@type":"Question","name":"Can an HTML form generator connect to my backend?","acceptedAnswer":{"@type":"Answer","text":"Yes — the generated form is standard HTML, so you point its action attribute at your own endpoint or wire it to a handler with JavaScript. Common approaches are a POST to your server, a serverless function, or a form service. The builder just produces the markup; submission handling stays under your control."}},{"@type":"Question","name":"What input types can I add with a form builder?","acceptedAnswer":{"@type":"Answer","text":"All the standard HTML input types: text, email, password, number, date, checkbox, radio, dropdown select, textarea, file upload, and hidden fields. HTML5 types like email and number also give you free browser-side validation. Generated markup uses proper label associations so forms stay accessible."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does this free form builder work?","acceptedAnswer":{"@type":"Answer","text":"You design fields visually — labels, input types, placeholders, required flags — and the builder generates clean standalone HTML you can copy into any website. The output is a plain HTML form with no inline styles or CSS, so it picks up your site's own stylesheet and works with any backend or static host. Everything is generated in your browser with no account or upload."}},{"@type":"Question","name":"Can an HTML form generator connect to my backend?","acceptedAnswer":{"@type":"Answer","text":"Yes — the generated form is standard HTML, so you point its action attribute at your own endpoint or wire it to a handler with JavaScript. Common approaches are a POST to your server, a serverless function, or a form service. The builder just produces the markup; submission handling stays under your control."}},{"@type":"Question","name":"What input types can I add with a form builder?","acceptedAnswer":{"@type":"Answer","text":"Nine: short text, email, number, password, date, long text (textarea), dropdown, radio group and checkbox. File upload, hidden, tel and url fields aren't in the palette, so add a short text field and change its type in the exported HTML. Email and number fields give you free browser-side validation. Generated markup uses proper label associations so forms stay accessible."}},{"@type":"Question","name":"Why doesn't my required dropdown stop the form submitting?","acceptedAnswer":{"@type":"Answer","text":"When you tick Required on a dropdown, the builder removes the blank Choose option, so the first real option is already selected and the browser counts the field as answered. Add <option value=\"\">Choose…</option> as the first option in the exported HTML and the browser will ask visitors to pick one."}},{"@type":"Question","name":"Is the JSON export a standard JSON Schema?","acceptedAnswer":{"@type":"Answer","text":"No. It's a simple field list in the builder's own format: the form's action and method, then each field's type, label, name, required flag, placeholder and options. That makes it easy to read and to loop over in code, but it won't validate as a JSON Schema document without converting it."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -109,7 +109,7 @@
 <div class="page-header">
 <h1>🧱 Form Builder</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>The Form Builder produces your output instantly from the input you provide — everything runs in your browser, free, with no signup required.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Click field types to add them, set each label, name and required flag, then copy the form as plain HTML or as a JSON field list. The sample contact form exports as 16 lines and 929 bytes of HTML, with no CSS or JavaScript attached.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="form-builder" aria-label="Share this tool"></div>
 
@@ -176,7 +176,7 @@
 <tr><td><code>email</code></td><td>Email addresses</td><td>Format check, mobile @ keyboard</td></tr>
 <tr><td><code>number</code></td><td>Quantities, prices, ages</td><td>Numeric only, min/max/step</td></tr>
 <tr><td><code>tel</code></td><td>Phone numbers</td><td>Numeric keypad on mobile</td></tr>
-<tr><td><code>date</td><td>Birthdays, appointments</td><td>Native picker, no typos like 31/31</td></tr>
+<tr><td><code>date</code></td><td>Birthdays, appointments</td><td>Native picker, no typos like 31/31</td></tr>
 <tr><td><code>url</code></td><td>Website links</td><td>Must be a valid URL</td></tr>
 <tr><td><code>password</code></td><td>Secrets</td><td>Masking; pair with HTTPS always</td></tr>
 <tr><td><code>checkbox</code></td><td>Yes/no consent, opt-ins</td><td>Checked/unchecked state</td></tr>
@@ -184,7 +184,7 @@
 </tbody>
 </table>
 </div>
-<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">Rule of thumb: the more you lean on the right input type, the less JavaScript you write. Browsers have validated email formats and date ranges since 2013.</p>
+<p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">Rule of thumb: the more you lean on the right input type, the less JavaScript you write. The builder's palette doesn't include <code>tel</code> or <code>url</code>; add a Short text field and change <code>type="text"</code> in the export. Every current browser checks email formats and shows a native date picker, though desktop Safari only added one in 2021.</p>
 </div>
 
 <div class="content-section">
@@ -193,12 +193,35 @@
 <h3>How to use it</h3>
 <p>Build top to bottom in the order you want visitors to answer. Use radio buttons under five options and a dropdown above five, since a dropdown hides choices behind a click. Keep required fields to the minimum you can honestly justify, because every extra required field costs completions. When the form looks right, copy the HTML and paste it into any page, or grab the JSON schema if you're feeding a backend or a no-code tool.</p>
 <h3>A worked example</h3>
-<p>A contact form usually needs five fields: name (text, required), email (email, required), topic (dropdown with 3–4 options), message (long text, required), and a consent checkbox where privacy rules require one. That form exports as about 20 lines of HTML, weighs under a kilobyte, renders instantly, and validates in the browser with zero JavaScript.</p>
+<p>A contact form usually needs five fields: name (text, required), email (email, required), topic (dropdown with 3–4 options), message (long text, required), and a consent checkbox where privacy rules require one. That's the sample the Load a contact form button gives you, with the dropdown left optional. It exports as 16 lines and 929 bytes of HTML, renders instantly, and the browser checks the required fields and the email format before it submits, with no JavaScript.</p>
+</div>
+
+<div class="content-section">
+<h2>What Does the Exported HTML Need Before It Goes Live?</h2>
+<p>The export is deliberately bare, which is good for pasting into any site but means a few things are left for you. Here's what the builder outputs and what to change.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>What the export does</th><th>What happens</th><th>What to change</th></tr></thead>
+<tbody>
+<tr><td><code>action="#"</code></td><td>The form posts back to the same page and the data goes nowhere</td><td>Point it at your endpoint or a form service URL</td></tr>
+<tr><td>Checkbox has no <code>value</code></td><td>A ticked box sends <code>newsletter=on</code>; an unticked one sends nothing</td><td>Add <code>value="yes"</code> if your backend expects one, and treat a missing field as no</td></tr>
+<tr><td>Required dropdown has no blank option</td><td>The first real option is preselected, so the browser never asks for a choice</td><td>Add <code>&lt;option value=""&gt;Choose…&lt;/option&gt;</code> as the first option</td></tr>
+<tr><td>Radio group label uses <code>for</code> with no matching id</td><td>Screen readers don't announce the question with the options</td><td>Wrap the radios in <code>&lt;fieldset&gt;</code> with the question as the <code>&lt;legend&gt;</code></td></tr>
+<tr><td>No required marker</td><td>The preview shows a red asterisk, the export doesn't</td><td>Add "(required)" or an asterisk to the label text</td></tr>
+<tr><td>No CSS</td><td>Labels and inputs sit inline and run together</td><td>Start with <code>label{display:block;margin-top:1rem}</code></td></tr>
+<tr><td>No spam protection</td><td>Bots will find a public form within days</td><td>Add a hidden honeypot field or your form service's captcha</td></tr>
+</tbody>
+</table>
+</div>
+<h3>How do you collect submissions without a server?</h3>
+<p>Use a form backend. Services like Formspree give you a URL to paste into the <code>action</code> attribute, and they email you each submission. If your site is on Netlify, adding <code>data-netlify="true"</code> to the form tag does the same job. Avoid <code>action="mailto:..."</code>, which depends on the visitor having a mail app set up and fails quietly when they don't.</p>
+<h3>What is the JSON export for?</h3>
+<p>The JSON tab lists the form's action and method plus every field with its type, label, name, required flag, placeholder and options. The sample form comes out at 46 lines. It's handy for saving a form design, feeding a script that renders forms, or handing a field list to a developer. Need to tidy or check it? Paste it into the <a href="/json-formatter/">JSON Formatter</a>. If the form lives on a page you want found in search, the <a href="/meta-tag-generator/">Meta Tag Generator</a> handles the rest of the page head.</p>
 </div>
 
 <div class="content-section">
 <h2>Frequently Asked Questions</h2>
-<div class="faq-item"><h3>How does this free form builder work?</h3><p>You design fields visually — labels, input types, placeholders, required flags — and the builder generates clean standalone HTML you can copy into any website. The output is a plain HTML form with optional inline styles, so it works with any backend or static host. Everything is generated in your browser with no account or upload.</p></div><div class="faq-item"><h3>Can an HTML form generator connect to my backend?</h3><p>Yes — the generated form is standard HTML, so you point its action attribute at your own endpoint or wire it to a handler with JavaScript. Common approaches are a POST to your server, a serverless function, or a form service. The builder just produces the markup; submission handling stays under your control.</p></div><div class="faq-item"><h3>What input types can I add with a form builder?</h3><p>All the standard HTML input types: text, email, password, number, date, checkbox, radio, dropdown select, textarea, file upload, and hidden fields. HTML5 types like email and number also give you free browser-side validation. Generated markup uses proper label associations so forms stay accessible.</p></div></div>
+<div class="faq-item"><h3>How does this free form builder work?</h3><p>You design fields visually — labels, input types, placeholders, required flags — and the builder generates clean standalone HTML you can copy into any website. The output is a plain HTML form with no inline styles or CSS, so it picks up your site's own stylesheet and works with any backend or static host. Everything is generated in your browser with no account or upload.</p></div><div class="faq-item"><h3>Can an HTML form generator connect to my backend?</h3><p>Yes — the generated form is standard HTML, so you point its action attribute at your own endpoint or wire it to a handler with JavaScript. Common approaches are a POST to your server, a serverless function, or a form service. The builder just produces the markup; submission handling stays under your control.</p></div><div class="faq-item"><h3>What input types can I add with a form builder?</h3><p>Nine: short text, email, number, password, date, long text (textarea), dropdown, radio group and checkbox. File upload, hidden, tel and url fields aren't in the palette, so add a short text field and change its type in the exported HTML. Email and number fields give you free browser-side validation. Generated markup uses proper label associations so forms stay accessible.</p></div><div class="faq-item"><h3>Why doesn't my required dropdown stop the form submitting?</h3><p>When you tick Required on a dropdown, the builder removes the blank Choose option, so the first real option is already selected and the browser counts the field as answered. Add &lt;option value=""&gt;Choose…&lt;/option&gt; as the first option in the exported HTML and the browser will ask visitors to pick one.</p></div><div class="faq-item"><h3>Is the JSON export a standard JSON Schema?</h3><p>No. It's a simple field list in the builder's own format: the form's action and method, then each field's type, label, name, required flag, placeholder and options. That makes it easy to read and to loop over in code, but it won't validate as a JSON Schema document without converting it.</p></div></div>
 
 <div class="related-tools">
 <h2>Related Tools</h2>

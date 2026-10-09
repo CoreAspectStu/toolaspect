@@ -1542,3 +1542,54 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   guide), "iLoveIMG alternatives" (most-aware, image + PDF bridge), "Canva free vs Pro"
   (check fit). Thin depth candidates left (<900): wedding-hashtag-generator (853),
   text-tools hub (332); run a fresh <900 scan next batch.
+
+- 2026-10-09 batch guides (intake from 10-08 queue notes + rebalance weighting: image/PDF
+  bridge, PDF+privacy, PDF; none had an existing guide):
+  image tools → guides/iloveimg-alternatives/ (most-aware. iloveimg.com/pricing Oct 2026:
+  free 30 images/task + 200 MB for compress/resize/convert/rotate/watermark, crop 1/90 MB,
+  blur face 10/100 MB, remove bg 3/6 MB, upscale 1/6 MB; Premium €5/mo yearly (€60) or €9
+  monthly, 120 images/4 GB, bg/upscale stay 6 MB; security page: deleted within 2 h, ISO 27001.
+  Computed 400 photos / 30 = 14 tasks. 10-row iLoveIMG tool → no-upload swap table, honest
+  that we have no face-blur tool (Photopea/GIMP); Network-tab + Wi-Fi upload checks);
+  PDF + privacy → guides/is-it-safe-to-upload-pdfs-online/ (problem-aware. Retention table
+  from vendor pages: iLovePDF/iLoveIMG 2 h (signed docs up to 5 yrs), Smallpdf 1 h (shared/
+  eSign 14 days, account storage until deleted; from Smallpdf blog), PDF24 1 h EU, Sejda
+  "after processing" no window, TinyPNG 48 h; document risk table; HIPAA BAA note; metadata +
+  fake-redaction sections → document-metadata-remover / redact-pdf);
+  pdf-add-text / sign-pdf / flatten-pdf → guides/pdffiller-alternatives/ (most-aware. Prices
+  from pdfFiller's own blog 2026: Basic $8 / Plus $12 / Premium $15 per month billed yearly;
+  monthly ~$20/$30/$40 from third-party reviews (hedged); 30-day trial needs a card, cancel
+  ≥24 h before end per pdfFiller's cancel guide; honest that Add Text doesn't fill AcroForm
+  fields → browser viewer / Preview / Acrobat Reader; job → free route table)
+  (1,174–1,243 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤51 chars.) SKIPPED as intake: FaceCheck.ID
+  alternatives (official site has no readable pricing/free-search terms; third-party data
+  conflicts; revisit only with verifiable facts). Guide backlinks added on image-compressor,
+  image-cropper, image-watermark, pdf-add-text, sign-pdf, flatten-pdf, redact-pdf,
+  document-metadata-remover, compress-pdf, pdf-merge, guides/best-free-pdf-tools,
+  guides/best-free-image-tools, guides/ilovepdf-alternatives, guides/pdfescape-alternatives.
+- 2026-10-09 depth passes (fresh <900 scan; device-test pages still need sign-off):
+  wedding-hashtag-generator (845 → 1,350 words; +pun-by-surname-ending table with real
+  outputs run through the page JS in node (39 rules / 32 endings, not "40-odd"), +pre-print
+  hashtag check table; FAQ visible 5 / LD 4 → 7 / 7 synced). FIXED copy: worked example
+  claimed #AlexAndJordanForever in round 1. Real round 1 (sorted shortest-first) has no
+  first-name tags → rewritten with the actual 12; "a second click surfaces deeper cuts" →
+  each click after the first slides the list by ONE tag. Answer box rewritten.
+  form-builder (606 → 1,197; +"what the export needs before going live" table, +form-backend
+  section, +JSON export section (sample = 16 lines / 929 bytes HTML, 46 lines JSON, verified
+  in node); FAQ 3→5, LD synced). FIXED copy: FAQ said "optional inline styles" (none exist)
+  and listed file/hidden types (palette has 9 types, no file/hidden/tel/url); "browsers have
+  validated dates since 2013" (desktop Safari 2021); broken <code>date</td> markup. Answer
+  box rewritten. JS byte-identical on both (script-block md5).
+  NEED STU GO-AHEAD (JS): wedding-hashtag clean() strips non-ASCII (García → Garca) and cap()
+  lowercases the rest (McDonald → Mcdonald); same-surname couples get #LeeLeeHitched /
+  #MeetTheLeeLees; "fresh set" button label vs 1-tag rotation. form-builder: Required on a
+  dropdown removes the blank option so `required` can never fail; group label for= points at
+  no id on radio groups (should be fieldset/legend); export lacks newline after <form>.
+- 2026-10-09 hub updates: guides hub +3 cards (More Guides 514→517), count claims 573→576
+  in all 9 guides-hub places (= 576 on-disk dirs); all-tools Guides (576) regenerated.
+  Queue state: next intake candidates: "Canva free vs Pro" (fit still doubtful), "PDF Candy
+  alternatives" / "Xodo alternatives" (PDF, most-aware, verify limits first), FaceCheck.ID
+  (blocked on facts). Thin depth candidates left (<900, non-device): gantt-chart-maker (755),
+  kanban-board (762), mind-map-maker (777), class-diagram-maker (848), mermaid-diagram-suite
+  (887), molar-mass-calculator (892), html-to-markdown (895), words-per-minute-test (898).
