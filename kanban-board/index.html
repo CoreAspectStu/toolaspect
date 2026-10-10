@@ -91,7 +91,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the rules of a kanban board?","acceptedAnswer":{"@type":"Answer","text":"Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top."}},{"@type":"Question","name":"What columns should a kanban board have?","acceptedAnswer":{"@type":"Answer","text":"Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly."}},{"@type":"Question","name":"What is a WIP limit and what number should I pick?","acceptedAnswer":{"@type":"Answer","text":"A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck."}},{"@type":"Question","name":"Is my board private?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it, so export anything you need to keep."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the rules of a kanban board?","acceptedAnswer":{"@type":"Answer","text":"Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top."}},{"@type":"Question","name":"What columns should a kanban board have?","acceptedAnswer":{"@type":"Answer","text":"Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly."}},{"@type":"Question","name":"What is a WIP limit and what number should I pick?","acceptedAnswer":{"@type":"Answer","text":"A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck."}},{"@type":"Question","name":"Is my board private?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it. There's no export button, so copy anything you need to keep into a note or document."}},{"@type":"Question","name":"What's the difference between kanban and a to-do list?","acceptedAnswer":{"@type":"Answer","text":"A to-do list answers \"what could I do\"; a kanban board answers \"what am I doing right now and how much of it\". The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix."}},{"@type":"Question","name":"Can I reorder cards within a column?","acceptedAnswer":{"@type":"Answer","text":"No. Cards stack in the order they arrived, with the oldest at the top, and dragging within a column does nothing. If something needs to go first, move it from To Do into In Progress before the others. The oldest card in In Progress is usually the one that's stuck."}},{"@type":"Question","name":"What happens if I lower the WIP limit below the number of cards in progress?","acceptedAnswer":{"@type":"Answer","text":"Nothing is moved out. The counter on the In Progress column turns red and shows something like 5 / 3, and the board refuses new cards until you finish or move enough to get under the limit. That's a gentle way to shrink a bloated column without losing track of anything."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -102,7 +102,7 @@
 <div class="page-header">
 <h1>📋 Kanban Board</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Add tasks above — drag cards across To Do, Doing and Done; your board persists locally in the browser.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Type a task, pick a column and click Add, then drag cards (or tap the arrows) from To Do to In Progress to Done. The In Progress column holds 3 cards by default, and the board saves in this browser with no account.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="kanban-board" aria-label="Share this tool"></div>
 
@@ -171,12 +171,53 @@
 </div>
 
 <div class="content-section">
+<h2>What Exactly Does the Board Do When You Click?</h2>
+<p>The board is deliberately small, so it's worth knowing its rules before you trust it with a week of work. Here's what happens for each action.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>You do this</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>Add a task</td><td>It goes to the column in the dropdown, which is In Progress by default. If that column is at its limit, you get a message and the card lands in To Do instead.</td></tr>
+<tr><td>Drag a card, or tap an arrow</td><td>The card moves to the bottom of the next column. Arrows move one column at a time; dragging can jump from To Do straight to Done.</td></tr>
+<tr><td>Move a card into a full In Progress</td><td>Blocked with a reminder to finish something first. This applies to cards dragged back from Done too.</td></tr>
+<tr><td>Lower the WIP limit below the current count</td><td>Nothing gets bumped. The counter turns red and new cards can't come in until you're under the limit.</td></tr>
+<tr><td>Set the WIP limit to 0</td><td>The limit turns off and the button reads "off".</td></tr>
+<tr><td>Change a card's wording</td><td>Not possible. Delete the card and add it again.</td></tr>
+<tr><td>Reorder cards in a column</td><td>Not possible. Cards stack in the order they arrived, oldest at the top.</td></tr>
+<tr><td>Click Clear Done</td><td>Every Done card is deleted at once, with no confirmation and no undo.</td></tr>
+<tr><td>Close the tab</td><td>The board stays in this browser's local storage. A private window's storage is wiped when you close it.</td></tr>
+</tbody>
+</table>
+</div>
+<p>The oldest-at-the-top rule is quietly useful. If a card has sat at the top of In Progress while everything below it moved, that's your stuck item. Before you hit Clear Done on a Friday, copy the Done list somewhere first if you want a record of the week.</p>
+
+<h2>How Does a WIP Limit Change How Long Tasks Take?</h2>
+<p>There's a well-known rule from queueing theory, Little's Law, that ties the three numbers on a board together: on average, the time a task spends in progress equals the number of tasks in progress divided by how many you finish per day. If you finish about one card a day and keep five open, each card takes around five working days from start to done. Keep two open at the same pace and it's two days.</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Cards in progress (WIP)</th><th>Finishing 5 per week</th><th>Finishing 10 per week</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>1 working day</td><td>0.5 working days</td></tr>
+<tr><td>2</td><td>2 working days</td><td>1 working day</td></tr>
+<tr><td>3</td><td>3 working days</td><td>1.5 working days</td></tr>
+<tr><td>5</td><td>5 working days</td><td>2.5 working days</td></tr>
+<tr><td>8</td><td>8 working days</td><td>4 working days</td></tr>
+</tbody>
+</table>
+</div>
+<p>Average cycle time = WIP ÷ throughput, using a five-day week. It's an average over a stable stretch, not a promise for any single card. The point isn't that a lower limit makes you faster at the work itself. It's that the same output arrives sooner and with less half-finished stuff hanging around. If cutting your limit from 5 to 3 doesn't lower your weekly count, every card finishes days earlier.</p>
+
+<h3>Kanban, Gantt or a timer?</h3>
+<p>A kanban board shows what's happening now. If you need to show when things will happen, with dates and overlaps, use the <a href="/gantt-chart-maker/">Gantt Chart Maker</a>. If the problem is starting the card at all, pair the board with the <a href="/pomodoro-timer/">Pomodoro Timer</a>: pull one card into In Progress, then work it in 25-minute blocks. Our guide on <a href="/guides/how-to-use-a-kanban-board/">how to use a kanban board</a> goes further into columns and limits for teams.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>What are the rules of a kanban board?</h3><p>Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top.</p></div>
 <div class="faq-item"><h3>What columns should a kanban board have?</h3><p>Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly.</p></div>
 <div class="faq-item"><h3>What is a WIP limit and what number should I pick?</h3><p>A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck.</p></div>
-<div class="faq-item"><h3>Is my board private?</h3><p>Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it, so export anything you need to keep.</p></div>
-<div class="faq-item"><h3>What's the difference between kanban and a to-do list?</h3><p>A to-do list answers "what could I do"; a kanban board answers "what am I doing right now and how much of it". The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix.</p></div>
+<div class="faq-item"><h3>Is my board private?</h3><p>Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it. There's no export button, so copy anything you need to keep into a note or document.</p></div>
+<div class="faq-item"><h3>What's the difference between kanban and a to-do list?</h3><p>A to-do list answers "what could I do"; a kanban board answers "what am I doing right now and how much of it". The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix.</p></div><div class="faq-item"><h3>Can I reorder cards within a column?</h3><p>No. Cards stack in the order they arrived, with the oldest at the top, and dragging within a column does nothing. If something needs to go first, move it from To Do into In Progress before the others. The oldest card in In Progress is usually the one that's stuck.</p></div><div class="faq-item"><h3>What happens if I lower the WIP limit below the number of cards in progress?</h3><p>Nothing is moved out. The counter on the In Progress column turns red and shows something like 5 / 3, and the board refuses new cards until you finish or move enough to get under the limit. That's a gentle way to shrink a bloated column without losing track of anything.</p></div>
 </div>
 
 <div class="related-tools">
@@ -186,6 +227,7 @@
 <a href="/mind-map-maker/">🧠 Mind Map Maker</a>
 <a href="/countdown-timer/">⏱️ Countdown Timer</a>
 <a href="/pomodoro-timer/">🍅 Pomodoro Timer</a>
+<a href="/guides/how-to-use-a-kanban-board/">📖 How to Use a Kanban Board</a>
 </div>
 </div>
 

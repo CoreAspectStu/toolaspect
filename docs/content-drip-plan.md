@@ -1593,3 +1593,53 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   (blocked on facts). Thin depth candidates left (<900, non-device): gantt-chart-maker (755),
   kanban-board (762), mind-map-maker (777), class-diagram-maker (848), mermaid-diagram-suite
   (887), molar-mass-calculator (892), html-to-markdown (895), words-per-minute-test (898).
+
+- 2026-10-10 batch guides (intake from 10-09 queue notes + rebalance weighting: 2× PDF
+  most-aware + 1× privacy/AI-detection; none had an existing guide):
+  PDF → guides/pdf-candy-alternatives/ (most-aware. pdfcandy.com/pricing Oct 2026: free =
+  "page and hourly restrictions", no batch, limited file size, no ads, no account to start
+  (numbers NOT published; "~1 task/hour" from TechRadar/PCWorld, hedged); Web €6/mo,
+  Desktop+Web yearly €4/mo, Lifetime €99, paid up to 500 MB/task; currency appears geo-based.
+  Security page: AES-256 transit + rest, EU + USA servers, deleted within 2 h; owner Icecream
+  Apps (Cyprus); Desktop is Windows only. 8-option table + 11-row swap table);
+  PDF → guides/xodo-alternatives/ (most-aware. xodo.com/pricing: 1 free web action/day,
+  free compress = Low only; Web $7.99/mo ($95.88/yr), Desktop/PDF Studio $9.99/mo ($119.88/yr)
+  or $240 perpetual, Suite $8.99/mo ($107.93/yr, sale price); 3-day trials need a card; mobile
+  free plan watermarks edits (Xodo plans article); free Xodo PDF Reader Win/Mac/Linux kept as
+  an honest pick; compress page: deleted after 1 h, server region not stated);
+  privacy/AI → guides/ai-or-not-alternatives/ (most-aware. aiornot.com/pricing: free 20 image
+  checks/mo, Pro $5 (500), Business $100 (6,600); privacy policy silent on upload retention/
+  training. Hive free Chrome ext + API $6/1k; Illuminarty free (no published cap) / $10 / $30;
+  Sightengine 2,000 ops/mo (500/day) / $29; Content Credentials Verify; SynthID Detector opened
+  globally 2026-10-07 per Google blog (partners OpenAI/NVIDIA/Kakao; ~10 checks/day + sign-in
+  from press only, hedged). Honest that our ai-image-detector is metadata-only (exifr), not a
+  pixel classifier. Situation × check-type table; accuracy caveats cite arXiv 2505.12335 and
+  "Fake or JPEG?" 2403.17608)
+  (1,049–1,282 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤46 chars.) Dropped from drafts as unverifiable:
+  "40+ tools" claim for PDF Candy, PDF Candy free-watermark FAQ. Guide backlinks added on
+  compress-pdf, pdf-merge, pdf-split, pdf-annotate, ai-image-detector, guides/best-free-pdf-
+  tools, guides/how-to-tell-if-an-image-is-ai-generated.
+- 2026-10-10 depth passes (queue's named thin candidates, top two of the 10-09 list):
+  gantt-chart-maker (750 → 1,593 words; +sample-project breakdown table (start/days/done-by
+  computed from the page's sample T array), +working-days → calendar-days table (computed in
+  node, Mon vs Wed start), +"what saves / what resets" section; FAQ visible 5 / LD 4 → 7 / 7
+  synced). FIXED copy: worked example said the tasks' straight sum would be "60" days, real sum
+  is 83; "content and build share two weeks" → content runs entirely inside frontend build;
+  explained chart caption's 49 days (grid padded to whole weeks: ceil((42+2)/7)*7). Answer box
+  rewritten.
+  kanban-board (763 → 1,498; +"what each click does" behaviour table read from the JS, +Little's
+  Law WIP → cycle-time table; FAQ visible 5 / LD 4 → 7 / 7 synced). FIXED copy: privacy FAQ told
+  users to "export" the board, but there's no export button. Answer box rewritten.
+  JS byte-identical on both (script-block md5).
+  NEED STU GO-AHEAD (JS): gantt start date/project name/zoom aren't persisted (date resets to
+  today on load and the whole saved chart shifts); task labels truncate at 24 chars; Days are
+  calendar days (no working-day option). kanban: no export, no card edit, no in-column reorder,
+  Clear Done has no confirm.
+- 2026-10-10 hub updates: guides hub +3 cards (More Guides 517→520), count claims 576→579
+  in all 9 guides-hub places (= 579 on-disk dirs); all-tools Guides (579) regenerated.
+  Queue state: next intake candidates: "Canva free vs Pro" (fit still doubtful), FaceCheck.ID
+  (blocked on facts), "Hive AI detector" (now covered inside ai-or-not guide, skip), "Foxit
+  free alternatives" / "PDFgear vs" (PDF, most-aware, verify limits first). Thin depth candidates
+  left (<900, non-device): mind-map-maker (777), class-diagram-maker (848), mermaid-diagram-suite
+  (887), molar-mass-calculator (892), html-to-markdown (895), words-per-minute-test (898).
