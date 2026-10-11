@@ -1643,3 +1643,62 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   free alternatives" / "PDFgear vs" (PDF, most-aware, verify limits first). Thin depth candidates
   left (<900, non-device): mind-map-maker (777), class-diagram-maker (848), mermaid-diagram-suite
   (887), molar-mass-calculator (892), html-to-markdown (895), words-per-minute-test (898).
+
+- 2026-10-12 batch guides (intake from 10-10 queue notes + rebalance weighting: 2× PDF + 1×
+  privacy/security; none had an existing guide). Intake triage: PDFSimpli, Soda PDF, PDF2Go
+  all DROPPED (pricing pages render prices client-side / show none, unverifiable); PDFgear
+  DROPPED (fully free, weak alternatives intent); "Smallpdf vs iLovePDF" DROPPED (Smallpdf
+  prices JS-rendered; own blog 2026-08-03 confirms only 7-day trial + yearly 25% cheaper).
+  PDF → guides/foxit-alternatives/ (most-aware. foxit.com/pdf-editor/pricing Oct 2026: Editor
+  $129.99/user/yr, Editor+ $159.99/user/yr, paid-in-full or billed monthly, FAQ "monthly from
+  $10.99" (plan unnamed, hedged); perpetual Editor 14 $209.99; AI Assistant $49.99/yr (2,000
+  credits/mo; 300 free/mo on every account); volume 30+ up to 30% off; 14-day trial, NO card.
+  Reader free, personal + business, Win/macOS/iOS/Android/web, AcroForm + XFA filling. Online
+  merge "max 20MB each" (title says 10MB, noted), compress 150 MB, no account, "deleted after
+  processing", server region unstated. 3-yr cost table computed: 389.97 / 479.97 vs 209.99);
+  PDF → guides/how-to-fill-out-a-pdf-form/ (problem-aware. form-type table, app × form-type
+  matrix: Firefox AcroForm since 83 / XFA since 93 (Oct 2021 release notes); Edge XFA
+  unsupported by default, PDFXFAEnabled policy (learn.microsoft.com); "Please wait..." = XFA
+  (UMich KB / Adobe community); box height → text size table at 60% rule (72 pt/in);
+  ESIGN 2000 + UETA; links pdf-add-text / sign-pdf / flatten-pdf (Forms mode, field count));
+  privacy/security → guides/is-it-safe-to-paste-a-jwt-online/ (problem-aware, developer
+  cluster. RFC 7519 claims table w/ sensitivity, JWE RFC 7516 five-part tell, RFC 8725;
+  jwt.io (Auth0/Okta) home page silent on client-side processing (checked Oct 2026, hedged);
+  Python one-liner decode tested; Unix timestamp reference table computed in Python; honest
+  that our decoder's VALID badge only checks exp, never the signature)
+  (1,314–1,365 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em
+  dashes; 0 broken internal links; titles ≤49 chars.) Guide backlinks added on jwt-decoder,
+  flatten-pdf, pdf-add-text, sign-pdf (+foxit), guides/best-free-pdf-tools (+foxit, +form).
+- 2026-10-12 depth passes (queue's named thin candidates, top two of the 10-10 list):
+  mind-map-maker (772 → 1,673 words; +"what the map does with your text" behaviour table read
+  from the JS (one sub-level only, # and blank lines ignored, label caps 24/22/26 chars, colors
+  repeat after 8), +SVG size table computed from the layout formula (max(rows)×34+80, first
+  ceil(n/2) branches right), +clean-output section; FAQ visible 5 / LD 4 → 8 / 8 synced).
+  FIXED copy: worked example said "read clockwise from the top right" but both sides render
+  top-to-bottom (clockwise order would be Format, Guests, Growth, Production); rules FAQ
+  implied 2–3 sub-levels, tool draws one. Answer box rewritten.
+  class-diagram-maker (920 → 1,736; +"which arrow do I need" decision table, +modifiers &
+  generics table (Mermaid docs: * abstract, $ static, ~T~ generics, no comma generics),
+  +SVG vs PNG export table read from the JS (PNG 2×, #0f1117 bg; SVG no bg; nothing saved
+  on reload); FAQ visible 5 / LD 4 → 8 / 8 synced; "Related Calculators" → "Related Tools").
+  FIXED copy: worked example said two dotted arrows reach PaymentMethod, it's three (the
+  Order ..> dependency too); abstract FAQ claimed an italic stereotype tag (it's abstract
+  *members* that italicize, via trailing *). Answer box rewritten.
+  JS byte-identical on both (script-block md5 a79b951e… / a421ac47…).
+  NEED STU GO-AHEAD (JS) — URGENT: pdf-add-text font bug. fontFor() does
+  PDFLib.StandardFonts[name] with option values "Helvetica-Bold" (the DEFAULT) and
+  "Times-Roman"; the enum keys are HelveticaBold / TimesRoman, so embedFont(undefined) throws
+  and the download fails on the default font (reproduced with pdf-lib 1.17.1 in node:
+  Helvetica ok, Courier ok, Helvetica-Bold FAIL, Times-Roman FAIL). One-line fix: change the
+  option values to HelveticaBold / TimesRoman. jwt-decoder: VALID badge is exp-only (label
+  could say "not expired"); atob() mangles non-ASCII (UTF-8) claims; pl.iss is concatenated
+  into innerHTML unescaped (self-XSS only). mind-map: no third level, no PNG export.
+  class-diagram: no persistence (localStorage would be cheap).
+- 2026-10-12 hub updates: guides hub +3 cards (More Guides 520→523), count claims 579→582
+  in all 9 guides-hub places (= 582 on-disk dirs); all-tools Guides (582) regenerated (sorted
+  insert, 2026-10-12 stamp).
+  Queue state: next intake candidates: "Canva free vs Pro" (fit still doubtful), FaceCheck.ID
+  (blocked on facts), Smallpdf vs iLovePDF (needs a browser-rendered Smallpdf price),
+  "how to fill XFA form on Mac" (could fold into form guide instead). Thin depth candidates
+  left (<900, non-device): mermaid-diagram-suite (887), molar-mass-calculator (892),
+  html-to-markdown (895), words-per-minute-test (898).

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Is It Safe to Paste a JWT Online? | ToolAspect</title>
+<meta name="description" content="A live JWT is a login credential. How to check if a decoder uploads your token, what the payload reveals, and what to do if you pasted one.">
+<link rel="canonical" href="https://toolaspect.com/guides/is-it-safe-to-paste-a-jwt-online/">
+<meta property="og:title" content="Is It Safe to Paste a JWT Into an Online Decoder?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/is-it-safe-to-paste-a-jwt-online/">
+<meta property="og:description" content="A live JWT is a login credential. How to check if a decoder uploads your token, what the payload reveals, and what to do if you pasted one.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Is It Safe to Paste a JWT Into an Online Decoder?">
+<meta name="twitter:description" content="A live JWT is a login credential. How to check if a decoder uploads your token, what the payload reveals, and what to do if you pasted one.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Is It Safe to Paste a JWT Into an Online Decoder?", "description": "A live JWT is a login credential. How to check if a decoder uploads your token, what the payload reveals, and what to do if you pasted one.", "datePublished": "2026-10-12", "dateModified": "2026-10-12", "mainEntityOfPage": "https://toolaspect.com/guides/is-it-safe-to-paste-a-jwt-online/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Is It Safe to Paste a JWT Into an Online Decoder?", "item": "https://toolaspect.com/guides/is-it-safe-to-paste-a-jwt-online/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it safe to paste a JWT into jwt.io?", "acceptedAnswer": {"@type": "Answer", "text": "For expired or test tokens, yes. For live production tokens, check first: open developer tools, watch the Network tab and paste a test token to see whether it's sent anywhere. In October 2026 jwt.io's home page didn't say whether decoding happens in the browser, so the network check is the reliable way to know."}}, {"@type": "Question", "name": "Can someone use my JWT if they see it?", "acceptedAnswer": {"@type": "Answer", "text": "Usually, yes, until it expires. Most JWTs are bearer tokens, so the server accepts them from whoever presents them as long as the signature is valid and the exp time hasn't passed."}}, {"@type": "Question", "name": "Is a JWT payload encrypted?", "acceptedAnswer": {"@type": "Answer", "text": "Not in a normal signed JWT. The header and payload are base64url-encoded, which anyone can decode. Only JSON Web Encryption tokens, which have five dot-separated parts instead of three, hide the payload."}}, {"@type": "Question", "name": "Does decoding a JWT verify it?", "acceptedAnswer": {"@type": "Answer", "text": "No. Decoding just reads the header and payload. Verification checks the signature with the issuer's secret or public key. A decoder that labels a token valid based only on the exp claim hasn't checked the signature."}}, {"@type": "Question", "name": "What should I do if I leaked a JWT?", "acceptedAnswer": {"@type": "Answer", "text": "Sign out or revoke the session so the refresh token stops working, and note when the access token's exp claim runs out. If a signing secret leaked, rotate it right away so tokens signed with it are rejected."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Is It Safe to Paste a JWT Into an Online Decoder?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 12, 2026</span></div>
+<p class="intro">It's safe if the decoder runs entirely in your browser and the token is expired or from a test system. It's risky if you paste a live production token into a site that sends it to a server. A JWT isn't just data about a login. It often <em>is</em> the login, and whoever holds it can use it until it expires. Our <a href="/jwt-decoder/">JWT Decoder</a> splits and decodes the token on your device with no network request. Below is how to check any other decoder, what's actually inside a token, and what to do if you've already pasted one somewhere you shouldn't have.</p>
+
+<h2>Why is pasting a JWT different from pasting other text?</h2>
+<p>Most JWTs are bearer tokens. The server that issued one doesn't check who's presenting it. It checks the signature and the expiry, and if both pass, the request goes through. So a valid access token copied from your browser's dev tools works just as well from somebody else's laptop.</p>
+<p>That's the real risk with online decoders. Decoding itself is harmless, because the payload was never secret. The danger is a copy of a still-valid credential ending up in someone's server logs, analytics or error reports.</p>
+
+<h2>Is the data inside a JWT encrypted?</h2>
+<p>No, not in the usual kind. A JWT, defined in RFC 7519, is three base64url-encoded segments joined by dots: header, payload and signature. Base64url is an encoding, not encryption, so anyone with the token can read every claim in it. The signature only proves the token hasn't been changed since the issuer signed it. It doesn't hide anything.</p>
+<p>There is an encrypted variant, JSON Web Encryption (RFC 7516), and you can spot it by counting dots. A signed token has three parts. An encrypted one has five, and its payload decodes to gibberish without the key.</p>
+
+<h2>What can someone learn from a decoded JWT?</h2>
+<p>The standard claims, listed in RFC 7519 section 4.1, are mostly harmless on their own. The custom claims that apps add are where personal data turns up.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Claim</th><th>Meaning</th><th>Sensitive?</th></tr></thead><tbody>
+<tr><td>iss</td><td>Who issued the token</td><td>Low. Reveals your identity provider or domain</td></tr>
+<tr><td>sub</td><td>The user or account ID</td><td>Medium. A stable ID that can link activity</td></tr>
+<tr><td>aud</td><td>Which API the token is for</td><td>Low</td></tr>
+<tr><td>exp</td><td>Expiry time, in Unix seconds</td><td>No, but tells an attacker how long it works</td></tr>
+<tr><td>nbf / iat</td><td>Not-before and issued-at times</td><td>No</td></tr>
+<tr><td>jti</td><td>A unique token ID</td><td>No</td></tr>
+<tr><td>email, name, roles, tenant</td><td>Custom claims added by the app</td><td>Often high. Personal data and permissions</td></tr>
+</tbody></table></div>
+
+<h2>How do I check whether a decoder sends my token anywhere?</h2>
+<ol>
+<li>Open the decoder page and press F12 (or Cmd+Option+I on a Mac) to open developer tools.</li>
+<li>Click the Network tab and clear it so it's empty.</li>
+<li>Paste a token. A test one is fine.</li>
+<li>Watch the list. A client-side decoder adds nothing, or only ad and analytics requests that don't contain the token. If you see a request carrying your token in its URL or body, the site is sending it to a server.</li>
+</ol>
+<p>Don't rely on a "we never store your token" line alone. When we checked in October 2026, jwt.io, the best-known decoder (run by Auth0, part of Okta), didn't state on its home page whether processing happens in the browser. It may well be client-side, but the network tab is how you'd know for sure.</p>
+
+<h2>Can I decode a JWT without any website?</h2>
+<p>Yes, and for production tokens that's the safest route. With Python installed, this prints the payload:</p>
+<p><code>python3 -c "import base64,json,sys; p=sys.argv[1].split('.')[1]; print(json.loads(base64.urlsafe_b64decode(p+'='*(-len(p)%4))))" YOUR_TOKEN</code></p>
+<p>The <code>'='*(-len(p)%4)</code> part restores the padding that base64url strips off. Plain <code>base64 -d</code> in a terminal usually prints the payload but complains about that missing padding, which is why the Python version is tidier. You can also run any base64url segment through our <a href="/base64-encoder/">Base64 Encoder</a> with URL-safe mode on, and tidy the result with the <a href="/json-formatter/">JSON Formatter</a>. Both run locally too.</p>
+
+<h2>What do the exp and iat numbers mean?</h2>
+<p>They're Unix timestamps: seconds since January 1, 1970, UTC. Our decoder converts them to your local time. Here are some reference points if you're reading one by hand:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Timestamp</th><th>Date and time (UTC)</th></tr></thead><tbody>
+<tr><td>1700000000</td><td>November 14, 2023, 22:13</td></tr>
+<tr><td>1735689600</td><td>January 1, 2025, 00:00</td></tr>
+<tr><td>1767225600</td><td>January 1, 2026, 00:00</td></tr>
+<tr><td>1800000000</td><td>January 15, 2027, 08:00</td></tr>
+<tr><td>2000000000</td><td>May 18, 2033, 03:33</td></tr>
+<tr><td>2147483647</td><td>January 19, 2038, 03:14 (the 32-bit limit)</td></tr>
+</tbody></table></div>
+<p>Subtract <code>iat</code> from <code>exp</code> to get the token's lifetime in seconds. 3600 is one hour and 86400 is one day. A long-lived access token is a bigger problem if it leaks, which is worth raising with whoever runs the API.</p>
+
+<h2>Does decoding a JWT tell me it's valid?</h2>
+<p>No. Decoding reads the claims, and validating means checking the signature against the issuer's key. Our decoder shows a green "VALID" or red "EXPIRED" badge, but that badge only compares <code>exp</code> to your clock. It doesn't check the signature, and a forged token with a future expiry would show green too. RFC 8725, the JWT best-practices document, warns servers never to trust a token's own <code>alg</code> header without checking it against an allowed list. That rule exists because of exactly this kind of confusion.</p>
+<p>Signature checks are where pasting gets riskier. To verify an HS256 token, a tool needs the shared secret, and that secret can mint new tokens for every user. Never paste a production HMAC secret into a website. RS256 and ES256 tokens verify with a public key, which is fine to share.</p>
+
+<h2>What should I do if I pasted a live token online?</h2>
+<ul>
+<li>Check the exp claim. If the token expires in a few minutes, the window is small.</li>
+<li>Sign out of the app, or revoke the session in its security settings. On many systems that kills the refresh token, so no new access tokens can be issued.</li>
+<li>Know that a signed access token often keeps working until it expires, even after sign-out, unless the server keeps a revocation list.</li>
+<li>If you pasted a signing secret, rotate it now. Every token signed with the old one should then fail.</li>
+<li>For work systems, tell your security team. It's a quick conversation, and they'd rather hear it from you.</li>
+</ul>
+<p>Hashing is a different job from signing, but if you're comparing secrets or fingerprints, our <a href="/hash-generator/">Hash Generator</a> also runs offline. For more no-upload tools, see <a href="/guides/best-free-privacy-tools/">the best free privacy tools</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Is it safe to paste a JWT into jwt.io?</h3><p>For expired or test tokens, yes. For live production tokens, check first: open developer tools, watch the Network tab and paste a test token to see whether it&#x27;s sent anywhere. In October 2026 jwt.io&#x27;s home page didn&#x27;t say whether decoding happens in the browser, so the network check is the reliable way to know.</p></div>
+<div class="faq-item"><h3>Can someone use my JWT if they see it?</h3><p>Usually, yes, until it expires. Most JWTs are bearer tokens, so the server accepts them from whoever presents them as long as the signature is valid and the exp time hasn&#x27;t passed.</p></div>
+<div class="faq-item"><h3>Is a JWT payload encrypted?</h3><p>Not in a normal signed JWT. The header and payload are base64url-encoded, which anyone can decode. Only JSON Web Encryption tokens, which have five dot-separated parts instead of three, hide the payload.</p></div>
+<div class="faq-item"><h3>Does decoding a JWT verify it?</h3><p>No. Decoding just reads the header and payload. Verification checks the signature with the issuer&#x27;s secret or public key. A decoder that labels a token valid based only on the exp claim hasn&#x27;t checked the signature.</p></div>
+<div class="faq-item"><h3>What should I do if I leaked a JWT?</h3><p>Sign out or revoke the session so the refresh token stops working, and note when the access token&#x27;s exp claim runs out. If a signing secret leaked, rotate it right away so tokens signed with it are rejected.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/jwt-decoder/">JWT Decoder</a>
+<a href="/base64-encoder/">Base64 Encoder</a>
+<a href="/json-formatter/">JSON Formatter</a>
+<a href="/hash-generator/">Hash Generator</a>
+<a href="/guides/best-free-privacy-tools/">Best Free Privacy Tools</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
