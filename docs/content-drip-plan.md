@@ -1702,3 +1702,69 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   "how to fill XFA form on Mac" (could fold into form guide instead). Thin depth candidates
   left (<900, non-device): mermaid-diagram-suite (887), molar-mass-calculator (892),
   html-to-markdown (895), words-per-minute-test (898).
+
+- 2026-10-13 batch guides (intake from 10-12 queue notes: all four named candidates still
+  blocked/doubtful, so fresh intake. Slug-token + href-coverage rescan: every tool already has
+  a guide linking it (only device-test/hub/crate longtails at 0). PDF intake triage: Nitro
+  (pricing JS-rendered, no prices in HTML), PDF Expert (EUR-only server-side, €84.99/yr /
+  €149.99 lifetime, USD unverifiable), PDFelement (pricing URL 404, third-party prices only),
+  all DROPPED; PDF how-to intents saturated (delete/organize/extract/password all covered).
+  So weighting swung to the under-served lanes this batch: 1× privacy/security + 2× niche
+  calc (niche calc 25% lane had gone unserved since 10-02). None had an existing guide):
+  privacy → guides/is-it-safe-to-upload-files-to-virustotal/ (problem-aware. VT 2021 terms,
+  now archived as "historic" on virustotal.readme.io after move to Google Cloud SecOps terms:
+  samples "immediately shared for review by the Service's Partners", "ONLY UPLOAD SAMPLES THAT
+  YOU WISH TO PUBLICLY SHARE", no confidential/personal data, contributed samples "generally
+  will not be removed"; API docs list "Download a file" (paid); public API = hash lookup only,
+  4 req/min, non-commercial; Private Scanning docs (2026-07-03): org-only, ~24 h retention,
+  no AV verdicts. Submission × exposure table + OS hash-command table (Get-FileHash / certutil
+  / shasum -a 256 / sha256sum). Honest that our hash-generator reads files as TEXT);
+  niche calc → guides/do-employers-have-to-reimburse-mileage/ (solution-aware. FLSA no duty,
+  29 CFR 531.35 kickback; state table CA 2802 / IL 820 ILCS 115/9.5 / IA 91A.3(6) / NH RSA
+  275:57 / MT-ND-SD Field Code / MA 454 CMR 27.04(4) / DC narrow, cross-checked vs Clockspot
+  2026 tracker, hedged; IRS 2026 72.5¢ Jan–Jun → 76¢ Jul–Dec (Ann. 2026-11, matches our
+  irs-mileage-rates-2026 guide); miles × rate table computed; min-wage worked example
+  $8×40 − 100 mi×$0.76 = $244 → $6.10/hr; DOL FOH vs opinion letter vs 6th Cir. 2024 hedged;
+  OBBBA made §67(g) suspension permanent, Form 2106 exceptions);
+  niche calc (Social Security = #3 GA4 page) → guides/can-you-work-while-collecting-social-
+  security/ (problem-aware. SSA 2026 RET: $24,480 ($1/$2) / $65,160 ($1/$3), monthly
+  $2,040 / $5,430 (computed /12); 2025 = $23,400 / $62,160; 2027 figures due with COLA
+  2026-10-14 (refresh then!). Withholding-by-income table computed; whole-check withholding
+  example ($1,800/mo, $5,000 → Jan–Mar held, $400 refunded); FRA recalculation; benefit
+  taxation thresholds 25k/32k, 34k/44k + OBBBA $6,000 senior deduction 2025–2028)
+  (1,238–1,347 words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em
+  dashes; 0 broken internal links; titles ≤54 chars.) Guide backlinks added on hash-generator,
+  mileage-reimbursement-calculator, social-security-calculator, guides/when-to-take-social-
+  security, guides/irs-mileage-rates-2026, guides/best-free-privacy-tools.
+- 2026-10-13 depth passes (queue's named thin candidates, top two of the 10-12 list):
+  mermaid-diagram-suite (910 → 1,980 words; +syntax table per diagram type (Mermaid docs),
+  +"what each button does" behaviour table read from the JS (400 ms re-render, error keeps
+  last good render, example overwrites editor, nothing saved on reload), +SVG vs PNG section;
+  FAQ visible 5 / LD 4 → 9 / 9 synced). FIXED copy: answer box claimed a gantt example (none
+  in dropdown); "exact parse error with character position" → line number + pointer; FAQ
+  listed "org charts" (not a Mermaid type) → git graphs; generic calculator HowTo LD rewritten.
+  molar-mass-calculator (919 → 1,962; +K4Fe(CN)6 element × count × AW breakdown table, +20
+  more compounds table run through the page's own parser/AW table in node, +percent
+  composition section, +"what the parser accepts/rejects" section; FAQ visible 5 / LD 4 → 9 /
+  9 synced). FIXED copy: generic answer box; "molar mass vs molecular weight diverge for salts".
+  JS byte-identical on both (inline-script md5 f4c6e35a… / 4b20b847…).
+  URGENT, LIVE REGRESSION (found by syntax-gate.py 10-13): word-unscrambler inline script
+  fails to parse since 41f141931 (10-11): canMake() ends "...return true}return true}", an
+  extra "return true}", so the whole tool is dead on prod. One-token fix: delete the
+  duplicate. NOT fixed here (drip rule: no tool JS without Stu's go-ahead).
+  NEED STU GO-AHEAD (JS): hash-generator handleFile() uses readAsText, so binary files
+  (exe/zip/pdf/docx) hash WRONG vs sha256sum (should be readAsArrayBuffer + hash bytes).
+  molar-mass: "CaSO4·0.5H2O" → 136.134 (0.5 read as dot + ×0), decimal subscripts garbage
+  (Fe0.95O → 1519.9), chained hydrate dots carry the multiplier forward, leading coefficient
+  multiplies the hydrate part. mermaid: status says "Renderer ready." before the library loads,
+  PNG export has no try/catch around canvas (tainted-canvas on Safari, untested), example
+  picker overwrites without confirm. STILL OPEN from 10-12: pdf-add-text default font
+  (Helvetica-Bold) fails to download.
+- 2026-10-13 hub updates: guides hub +3 cards (More Guides 523→526), count claims 582→585
+  in all 9 guides-hub places (= 585 on-disk dirs); all-tools Guides (585) sorted insert,
+  2026-10-13 stamp.
+  Queue state: next intake candidates: refresh SS guide + calculator copy with 2027 RET limits
+  once SSA publishes (10-14); "Canva free vs Pro" (fit doubtful); FaceCheck.ID (blocked);
+  Smallpdf vs iLovePDF (needs browser-rendered price); PDF "alternatives" pool needs a
+  browser-rendered price check (Nitro, PDF Expert USD, PDFelement). Thin depth candidates left
+  (<900, non-device): html-to-markdown (895), words-per-minute-test (898).
