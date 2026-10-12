@@ -1,5 +1,26 @@
 # ToolAspect Activity Log
 
+## 2026-10-13
+- **08:30 [chat]** word-unscrambler live-fix: duplicated `return true}` in canMake() broke the tool since Oct-11 (41f14193) — surgical fix d6af9b8c3, verified live
+- **08:00 [chat]** content-drip 10-13 deployed: 3 guides (virustotal-upload-safety / mileage-reimbursement / social-security-work) + mermaid-suite/molar-mass depth passes; hubs 582→585; all 6 URLs 200, indexing submitted
+- **08:30 [chat]** md-reminder: activity.md refreshed (repo copy was 29d stale)
+
+## 2026-10-12
+- **[chat]** GSC Chrome session expired — impressions/queries trend wiring BLOCKED pending Stu sign-in ("open it" trigger)
+- **[chat]** Post-prune traffic analysis: visitors ~1,150–1,250/day vs ~1,290 pre-prune; floor recovering (1.48k→1.58k→1.85k last 3 days). 7d ~19.3K views / 11.6K visitors
+- **[chat]** content-drip 10-12: 3 guides + mind-map/class-diagram depth passes; hubs 579→582
+
+## 2026-10-10/11
+- **[chat]** content-drip 10-10: 3 guides + gantt/kanban depth passes; hubs 576→579
+- **[chat]** word-unscrambler dictionary fix: full ENABLE dict (172,823 words) as cached words.js, O(n) canMake — was truncated at 'bisexed' (41f141931)
+
+## 2026-10-05..09
+- **[chat]** Daily content-drip engine (10-05→10-09: 15 guides + 10 depth passes; hubs 564→576)
+- **[chat]** Purge wave executed Oct-5: thin pages + stub hub indexes removed, 301s + sitemap, /home-repair-costs-by-state consolidated with real 50-state data (66a39577b, cbcfc84c9); docs/purge-log-2026-10-05.md
+- **[chat]** Entity/SEO: Organization JSON-LD + llms.txt refresh + nav cleanup (579270800); directory submission wave started — 2 live submissions (c240cc148); reddit launch pack (d56adf69b)
+- **[chat]** tradies keyword validation: AU pilot shortlist (34kw, $0.09) (701536db7)
+- **[chat]** hub count at Oct-5 refresh: 582 guides→585 by Oct-13
+
 ## 2026-08-19
 - **12:00 [chat]** BMAD party mode adversarial review: 2 reviewers converged — original $1K/day plan scored 4/10, RPM assumptions destroyed, timeline corrected to M30-48
 - **12:30 [chat]** Revised plan adopted: Lane 1 (contractor vertical + white-label embeds) + Lane 2 (directory autopilot)
