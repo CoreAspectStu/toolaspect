@@ -1768,3 +1768,68 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   Smallpdf vs iLovePDF (needs browser-rendered price); PDF "alternatives" pool needs a
   browser-rendered price check (Nitro, PDF Expert USD, PDFelement). Thin depth candidates left
   (<900, non-device): html-to-markdown (895), words-per-minute-test (898).
+
+- 2026-10-14 batch guides (intake from 10-13 queue notes: all named candidates still
+  blocked/doubtful; SSA 2027 COLA/RET release is today but ssa.gov returns 403 to our
+  fetchers and press figures are still projections ($25,200 / $67,200), so the SS earnings-
+  test refresh is DEFERRED until the official numbers can be verified. Fresh intake, weighted
+  toward PDF + privacy (owed after 10-13's 2× niche calc). None had an existing guide):
+  PDF/document → guides/email-attachment-size-limits/ (problem-aware. Official help pages Oct
+  2026: Gmail 25 MB personal, auto Drive link above (support.google.com/mail/answer/6584);
+  Yahoo 25 MB in+out (SLN5673); Outlook.com 20 MB incl. message text, Exchange default 10 MB
+  (MS "send large files with Outlook"); iCloud 20 MB, Mail Drop 5 GB (support.apple.com
+  102198); Proton 25 MB / 100 files (EN support page; localized pages say 50 MB incoming,
+  so incoming NOT claimed). Base64 headroom table computed: limit ÷ (4/3 × 78/76) = ÷1.368 →
+  10/20/25/35/50 MB fit 7.3/14.6/18.3/25.6/36.5 MB; Exchange Online 150 MB cap + ~33% encoding
+  note hedged);
+  PDF + privacy/security → guides/can-a-pdf-contain-a-virus/ (problem-aware. PDF keyword
+  risk table (/JS /OpenAction /AA /Launch /EmbeddedFile /URI /AcroForm /XFA /JBIG2Decode);
+  ESET 2018 CVE-2018-4990 + CVE-2018-8120 chain; CVE-2024-4367 PDF.js (Firefox 126 fix);
+  MEASURED table: built a PDF with every active feature and ran it through @cantoo/pdf-lib
+  2.9.1 copyPages (what pdf-split/pdf-merge do) in node: OpenAction, Names-tree JS, embedded
+  files REMOVED; page /AA JS, /Launch link, /URI links KEPT; rasterize removes all. Hash step
+  points at OS commands, NOT our hash-generator (still hashes binary files as text). Honest
+  that no web tool, ours included, should be used to open a hostile PDF → Dangerzone/VM);
+  niche calc (SS = #3 GA4 page) → guides/how-do-spousal-social-security-benefits-work/
+  (solution-aware. Reduction table FRA 67 computed: spousal 25/36 of 1% × 36 + 5/12 of 1%
+  beyond → 32.5/35/37.5/41.7/45.8/50%, own 70/75/80/86.7/93.3/100/108/124%; $2,400 PIA →
+  $780…$1,200; own+excess worked example $800 own + $400 excess → $1,200 at FRA, $820 at 62
+  (560 + 260); deemed filing (born ≥ 1954-01-02, 2015 BBA); divorced 10-yr / 2-yr
+  independent rule; spousal vs survivor table; GPO/WEP repealed by SSFA signed 2025-01-05)
+  (1,289–1,379 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤54 chars.) Guide backlinks added on
+  compress-pdf, pdf-split (email), pdf-merge (virus), social-security-calculator,
+  guides/when-to-take-social-security (spousal), guides/is-it-safe-to-upload-files-to-
+  virustotal, guides/best-free-privacy-tools (virus).
+- 2026-10-14 depth passes (the two named thin candidates left in the 10-13 list):
+  html-to-markdown (905 → 1,827 words; +17-row "what this converter actually outputs"
+  edge-case table, every row produced by running the page's own inline converter in node +
+  jsdom (no vendored lib, ~100 lines custom), +"prepping HTML" section; FAQ visible 6 / LD 4
+  → 9 / 9 synced). FIXED copy: task-list checkbox claim (bare checkbox in li is dropped),
+  block-level images produce nothing, <br> only works inside paragraphs, privacy FAQ claimed
+  no third-party requests (page loads GA/AdSense/CF analytics).
+  words-per-minute-test (926 → 1,929; +passage-runs-out table (449-461 char passages → 2-min
+  test ends early above ~45 WPM), +WPM→CPM table, +net-vs-word-per-error penalty table,
+  +result-label bands table read from the JS (27/45/60/80 net); FAQ visible 6 / LD 4 → 9 / 9
+  synced). FIXED copy: Brysbaert reading-speed citation 2014 → 2019; "quote on a resume"
+  overclaim. JS byte-identical on both (inline-script md5 vs HEAD).
+  NEED STU GO-AHEAD (JS): html-to-markdown drops bare li checkboxes + block-level img, splits
+  loose div text/loses top-level b/a, SKIP.SVG never matches (tagName is lowercase svg),
+  nested tables duplicate rows, no backtick-aware code fences, no Markdown escaping.
+  wpm-test: label uses unrounded net (44.6 shows "45 WPM" labelled average), only 3 passages.
+  URGENT SECURITY (JS, found while researching the PDF-virus guide): 15 tool pages load
+  pdfjs-dist@3.11.174 with isEvalSupported left at its default (true), which is affected by
+  CVE-2024-4367 (arbitrary JS in our origin from a crafted PDF; fixed in 4.2.67): compare-pdf,
+  compress-pdf, crop-pdf, delete-pages-from-pdf, flatten-pdf, ocr-pdf, organize-pdf,
+  pdf-add-text, pdf-annotate, pdf-metadata-editor, pdf-to-jpg, pdf-to-text, rearrange-pdf-
+  pages, redact-pdf, rotate-pdf. Quick fix: pass isEvalSupported:false to every getDocument()
+  call; proper fix: move to pdfjs-dist 4.2.67+ (sign-pdf already on 6.3.289). STILL OPEN:
+  pdf-add-text default font, hash-generator readAsText, molar-mass hydrate parsing.
+- 2026-10-14 hub updates: guides hub +3 cards (More Guides 526→529), count claims 585→588
+  in all 9 guides-hub places (= 588 on-disk dirs); all-tools Guides (588) sorted insert,
+  2026-10-14 stamp; syntax-gate 1,348 blocks, 0 broken.
+  Queue state: SS 2027 RET/COLA refresh (calculator + work-while-collecting guide) once SSA
+  figures are verifiable; thin depth pool (<900, non-device) now EMPTY: run a fresh word-
+  count scan next batch (device-test pages still need sign-off). Guide intake ideas: "how
+  to send large files" (fold into email guide?), "PDF/A explained" (no tool yet, weak),
+  survivor benefits guide (SS cluster, verify rules first).
