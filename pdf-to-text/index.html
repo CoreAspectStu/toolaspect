@@ -86,7 +86,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I extract text from a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a browser-based extractor and export. This tool reads the PDF's text layer with pdf.js on your own machine — pick pages if you only need a section, then copy the result or download it as .txt or .md. No account, no upload, no watermark."}},{"@type":"Question","name":"Why does my scanned PDF come out empty?","acceptedAnswer":{"@type":"Answer","text":"A scan is usually just a photograph of the page with no text layer, and text extraction only reads real text. If the extraction returns nothing or gibberish, the document needs OCR first — optical character recognition turns the page image into text before anything can be extracted."}},{"@type":"Question","name":"Does the extraction keep formatting?","acceptedAnswer":{"@type":"Answer","text":"Reading order and paragraphs survive; fonts, columns, and exact layout do not. Markdown mode goes furthest — lines noticeably larger than the body text become ## and ### headings, hyphenated line breaks rejoin, and paragraph gaps are preserved from the spacing in the file."}},{"@type":"Question","name":"Can I extract text from specific pages only?","acceptedAnswer":{"@type":"Answer","text":"Yes. Type a page spec like 1-3, 5 or use the shortcuts all, odd, and even. The extractor reads only those pages, which matters for long reports where you want chapter 2 and not 180 pages of appendices."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I extract text from a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in a browser-based extractor and export. This tool reads the PDF's text layer with pdf.js on your own machine — pick pages if you only need a section, then copy the result or download it as .txt or .md. No account, no upload, no watermark."}},{"@type":"Question","name":"Why does my scanned PDF come out empty?","acceptedAnswer":{"@type":"Answer","text":"A scan is usually just a photograph of the page with no text layer, and text extraction only reads real text. If the extraction returns nothing or gibberish, the document needs OCR first — optical character recognition turns the page image into text before anything can be extracted."}},{"@type":"Question","name":"Does the extraction keep formatting?","acceptedAnswer":{"@type":"Answer","text":"Reading order and paragraphs survive; fonts, columns, and exact layout do not. Markdown mode goes furthest — lines noticeably larger than the body text become ## and ### headings, hyphenated line breaks rejoin, and paragraph gaps are preserved from the spacing in the file."}},{"@type":"Question","name":"Can I extract text from specific pages only?","acceptedAnswer":{"@type":"Answer","text":"Yes. Type a page spec like 1-3, 5 or use the shortcuts all, odd, and even. The extractor reads only those pages, which matters for long reports where you want chapter 2 and not 180 pages of appendices."}},{"@type":"Question","name":"Why does the text come out in a strange order?","acceptedAnswer":{"@type":"Answer","text":"Extraction follows the PDF's internal text objects, which usually match visual order but don't have to — some generators emit text in drawing order rather than reading order. Multi-column layouts are the classic case. Reading a few lines tells you which kind of file you have."}},{"@type":"Question","name":"Is there a file size or page limit?","acceptedAnswer":{"@type":"Answer","text":"No artificial limit. Because processing happens locally, the ceiling is your device's memory — reports of a few hundred pages extract in seconds. Password-protected files must be unlocked first, since the text layer can't be read while encrypted."}},{"@type":"Question","name":"Why does text from a two-column PDF come out mixed together?","acceptedAnswer":{"@type":"Answer","text":"The extractor joins text that sits at the same height into one line across the full page width, so line one of the left column is followed by line one of the right column. The words are all there, and searchable, but the prose needs editing before it reads properly."}},{"@type":"Question","name":"Why are some words glued together or spaced out?","acceptedAnswer":{"@type":"Answer","text":"Glued words come from hyphen rejoining. Any line ending in a hyphen joins the next line with no space, so well-known split across lines becomes wellknown. Set line-end hyphens to Keep as-is to stop it. Spaced-out letters such as H e l l o mean the PDF stores each letter as a separate piece of text, and the extractor puts a space between pieces."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -97,7 +97,7 @@
 <div class="page-header">
 <h1>📄 PDF to Text Converter</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>The PDF to Text Converter produces your output instantly from the input you provide — everything runs in your browser, free, with no signup required.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Open a PDF and this tool pulls out its text layer in your browser, without uploading it, and exports .txt or .md. Pick pages with specs like 1-3, 5 or odd. Scanned PDFs have no text layer and come out empty, so OCR them first.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="pdf-to-text" aria-label="Share this tool"></div>
 
@@ -154,7 +154,48 @@
 <p>The pages box accepts <code>all</code>, <code>odd</code>, <code>even</code>, single pages like <code>7</code>, and ranges like <code>1-3</code>, mixed freely: <code>1-3, 5, 9-7</code> extracts pages 1, 2, 3, 5, 7, 8, 9 (reversed ranges flip automatically). Out-of-range numbers are rejected with the page count, so typos don't silently drop content.</p>
 <h3>A worked example</h3>
 <p>Take a one-page report with a 22pt title "Quarterly Report", two body lines at 12pt set 18 points apart ("The quick brown fox jumps over" / "the lazy dog near the riverbank."), and a closing line 36 points below the second. The pipeline sees three body baselines plus one title: the 22pt line is 1.83× body size, so Markdown mode emits <code>## Quarterly Report</code>. The 18pt gap matches the page's line spacing, so the two body lines reflow into one sentence; the 36pt gap is exactly twice the spacing, so a paragraph break lands before "2026 results were strong." The output is 18 words in three blocks, and with de-hyphenation on, a line ending "quarte-" followed by "rly results" rejoins into "quarterly results" with no space.</p>
-<p>Plain mode skips the heading markers and keeps one line per PDF line, which is what you want for logs, invoices, and anything you'll grep.</p>
+<p>Plain mode runs the same paragraph rebuild but skips the heading markers and puts a single line break between blocks instead of a blank line. It doesn't keep one line per PDF line: wrapped body lines still join into sentences. For logs and invoices that's usually what you want, since a search for a phrase won't miss it because it happened to wrap.</p>
+</div>
+
+<div class="content-section">
+<h2>What Happens With Tricky Layouts</h2>
+<p>The rebuild works from position and font size alone, so it does well on ordinary documents and makes predictable mistakes on unusual ones. We ran the page's own extraction code in Node.js against small test layouts. Each row below is real output from the default settings (plain text, hyphens rejoined), not a description of what should happen:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>What's in the PDF</th><th>What you get</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Two wrapped body lines, then a wider gap and a new paragraph</td><td>One joined sentence, a line break, then the next paragraph</td><td>Gaps up to 1.4× the page's usual line spacing join; wider gaps split</td></tr>
+<tr><td>Two columns side by side</td><td><code>Left column line one Right column line one Left column line two…</code></td><td>Text within 2 points of the same height is treated as one line, across the whole page width</td></tr>
+<tr><td>A table row: Item / Qty / Price</td><td><code>Item Qty Price Widget 4 $9.50</code></td><td>Cells become words separated by spaces; column structure isn't kept</td></tr>
+<tr><td>"co-" at a line end, "operate" on the next</td><td><code>cooperate</code></td><td>Any line ending in a hyphen is rejoined without a space</td></tr>
+<tr><td>"well-" at a line end, "known" on the next</td><td><code>wellknown</code></td><td>Same rule; it can't tell a real compound from a word break</td></tr>
+<tr><td>"2024-" at a line end, "2025" on the next</td><td><code>20242025</code></td><td>Same rule; switch "Line-end hyphens" to Keep for number-heavy files</td></tr>
+<tr><td>A word stored one letter at a time</td><td><code>H e l l o</code></td><td>Each separately placed piece of text is joined with a space</td></tr>
+<tr><td>A footnote number raised 4 points above the line</td><td><code>1 Revenue grew 12%</code></td><td>It sorts as a higher line, so it lands at the start</td></tr>
+<tr><td>Heading 15%+ larger than body text (Markdown mode)</td><td><code>### Section title</code>, or <code>##</code> at 1.6× and up</td><td>Size is the only signal used</td></tr>
+<tr><td>Bold heading at body size (Markdown mode)</td><td>A plain paragraph</td><td>Bold isn't read, only size</td></tr>
+<tr><td>A scanned page with no text layer</td><td>Nothing</td><td>There's no text to read; OCR it first</td></tr>
+</tbody>
+</table>
+</div>
+<p>The two failures people hit most are columns and hyphens. For a two-column paper, extract it anyway and use it for searching or word counts, but don't expect readable prose without editing. For spreadsheets, price lists or anything full of ranges like 2024-2025, set line-end hyphens to "Keep as-is". You'll get <code>co- operate</code> in prose, but no numbers get glued together.</p>
+
+<h3>Plain text vs Markdown output</h3>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Setting</th><th>Plain text (.txt)</th><th>Markdown (.md)</th></tr></thead>
+<tbody>
+<tr><td>Headings</td><td>Kept as ordinary lines</td><td><code>##</code> or <code>###</code> added by size</td></tr>
+<tr><td>Between paragraphs</td><td>One line break</td><td>A blank line</td></tr>
+<tr><td>Wrapped lines inside a paragraph</td><td>Joined</td><td>Joined</td></tr>
+<tr><td>Page markers (when on)</td><td><code>--- Page 1 ---</code></td><td><code>&lt;!-- page 1 --&gt;</code>, invisible when rendered</td></tr>
+<tr><td>Best for</td><td>Pasting into email, search, word counts</td><td>Notes apps, wikis, feeding text to an AI tool</td></tr>
+</tbody>
+</table>
+</div>
+<p>One detail on page markers: they count the pages you extracted, in order, not the original page numbers. Extract pages 5 and 9 and the markers read Page 1 and Page 2. If you need to cite the source page, extract one page at a time or note the range you used.</p>
+<p>Page specs are always output in document order. <code>9-7, odd</code> on a 10-page file reads pages 1, 3, 5, 7, 8 and 9, top to bottom. A range past the end, such as <code>1-12</code> on a 10-page file, is rejected with "Page out of range 1-10" rather than silently trimmed, and anything that isn't a number, range or keyword, like <code>1to3</code>, gets "Cannot read page spec".</p>
+<p>Once you have the text, the <a href="/word-counter/">word counter</a> gives you a count and reading time, and <a href="/compare-pdf/">Compare PDFs</a> will show what changed between two versions. If the output came back empty, the file is a scan. Run it through <a href="/ocr-pdf/">OCR PDF</a> first, then extract.</p>
 </div>
 
 <div class="content-section">
@@ -165,6 +206,8 @@
 <div class="faq-item"><h3>Can I extract text from specific pages only?</h3><p>Yes. Type a page spec like 1-3, 5 or use the shortcuts all, odd, and even. The extractor reads only those pages, which matters for long reports where you want chapter 2 and not 180 pages of appendices.</p></div>
 <div class="faq-item"><h3>Why does the text come out in a strange order?</h3><p>Extraction follows the PDF's internal text objects, which usually match visual order but don't have to — some generators emit text in drawing order rather than reading order. Multi-column layouts are the classic case. Reading a few lines tells you which kind of file you have.</p></div>
 <div class="faq-item"><h3>Is there a file size or page limit?</h3><p>No artificial limit. Because processing happens locally, the ceiling is your device's memory — reports of a few hundred pages extract in seconds. Password-protected files must be unlocked first, since the text layer can't be read while encrypted.</p></div>
+<div class="faq-item"><h3>Why does text from a two-column PDF come out mixed together?</h3><p>The extractor joins text that sits at the same height into one line across the full page width, so line one of the left column is followed by line one of the right column. The words are all there, and searchable, but the prose needs editing before it reads properly.</p></div>
+<div class="faq-item"><h3>Why are some words glued together or spaced out?</h3><p>Glued words come from hyphen rejoining. Any line ending in a hyphen joins the next line with no space, so well-known split across lines becomes wellknown. Set line-end hyphens to Keep as-is to stop it. Spaced-out letters such as H e l l o mean the PDF stores each letter as a separate piece of text, and the extractor puts a space between pieces.</p></div>
 </div>
 
 <div class="related-tools">

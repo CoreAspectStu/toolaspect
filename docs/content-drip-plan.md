@@ -1833,3 +1833,64 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   count scan next batch (device-test pages still need sign-off). Guide intake ideas: "how
   to send large files" (fold into email guide?), "PDF/A explained" (no tool yet, weak),
   survivor benefits guide (SS cluster, verify rules first).
+
+- 2026-10-15 batch guides (fresh intake: the 10-14 queue named no ready candidates, so
+  picked tools with no dedicated guide, weighted PDF + privacy + niche calc. Dedupe: no
+  guide slug/title matched; delete-pages-from-pdf was only linked from best-free-pdf-tools /
+  extract / organize guides):
+  PDF → guides/how-to-delete-pages-from-a-pdf/ (solution-aware, AIO likely cites tools.
+  Method table: our tool / Preview / Chrome-Edge Save as PDF / MS Print to PDF / iOS Files /
+  Acrobat (Reader can't). MEASURED in node with @cantoo/pdf-lib 2.5.1 (= the tool's exact
+  version, copyPages into new doc): deleted page text GONE (all streams inflated + searched);
+  links on kept pages KEPT; filled field's widget stays but AcroForm dropped (0 fields);
+  outlines + Title/Author DROPPED (producer → pdf-lib); deleted page's image GONE normally but
+  KEPT (hidden, extractable) when pages share one /Resources dict; shared-res output 6,666 B
+  vs 6,457 B input. Points sensitive pages to redact-pdf / flatten-pdf);
+  privacy/security → guides/are-qr-codes-safe-to-scan/ (problem-aware. Payload-type table
+  (https/WIFI:/SMSTO:/tel:/mailto:/VCARD/bitcoin:/otpauth://); FBI IC3 PSA Jan 2022, FTC
+  alert Dec 2023, Austin pay-station stickers early 2022, iOS 11 camera preview bug fixed 11.3;
+  lookalike-URL table where every "site you'd visit" was produced by WHATWG new URL() in node
+  (subdomain trick, user@host trick, Cyrillic а → xn--pypal-4ve.com, shortener). Honest that
+  our qr-code-scanner decodes locally, only offers Open for http(s), and does NO reputation
+  check);
+  niche calc (SS = #3 GA4 page) → guides/how-do-social-security-survivor-benefits-work/
+  (solution-aware. Survivor FRA 67 for 1962+ (66+8m 1960, 66+10m 1961), 84 months, .339%/mo
+  → 71.5/75.6/79.6/83.7/87.8/91.9/95.9/100% computed on $2,000; family table 100/71.5/71.5
+  disabled 50-59/75 child-in-care/75 child/82.5 one parent/75 two parents; family max 150-
+  180%; RIB-LIM worked example $1,400 at 62 → $1,650 floor reached ~62y9m; DRCs carry over
+  ($2,480); no deemed filing → switch strategies; remarriage ≥60 (≥50 disabled); 9-month
+  marriage rule; $255 lump sum; GPO repealed SSFA Jan 2025. ssa.gov 403 to fetchers again;
+  survivor FRA/reduction rows cross-checked via search snippets of SSA's survivorchartred
+  page + SSA handbook §406)
+  (1,343–1,413 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤53 chars.) Guide backlinks added on
+  delete-pages-from-pdf, qr-code-scanner, social-security-calculator, guides/when-to-take-
+  social-security, guides/how-do-spousal-social-security-benefits-work.
+- 2026-10-15 depth passes (fresh <900 scan, own counter excl. script/style/nav/header/footer:
+  only non-device page under 900 = boosty; second pick = pdf-to-text at 904, PDF lane):
+  boosty (883 → 1,545 words; +net-by-gross table, +subscribers-needed-by-price table,
+  +commission-sensitivity table (10/11.7/13/15/20%), every number from the page's own calc()
+  formula in node; +fixed-payout-fee guidance (box is once/month, weekly payouts = 4×);
+  FAQ visible 5 / LD 5 → 7 / 7). FIXED copy: generic answer box → real answer.
+  pdf-to-text (904 → 1,709; +11-row "tricky layouts" table, every row real output of the
+  page's own buildText() run in node, +plain-vs-markdown table, +page-spec behaviour; FAQ
+  visible 6 / LD 4 → 8 / 8 synced). FIXED copy: "plain mode keeps one line per PDF line"
+  (false: plain mode reflows paragraphs too); generic answer box → real answer.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy); syntax-gate 0 broken.
+  NEED STU GO-AHEAD (JS): pdf-to-text page markers number the EXTRACTED pages 1..n, not
+  the source page numbers (extract 5,9 → "Page 1", "Page 2") — fix: pass `wanted` into
+  buildText and label with wanted[i]; dehyphenation glues "well-"+"known" → wellknown and
+  "2024-"+"2025" → 20242025 (only rejoin when next line starts lowercase); same-baseline
+  merge spans the full page width (two columns interleave); per-glyph text items join with
+  spaces ("H e l l o"). STILL OPEN: pdfjs-dist 3.11.174 CVE-2024-4367 on 15 PDF pages
+  (incl. delete-pages-from-pdf + pdf-to-text), pdf-add-text default font, hash-generator
+  readAsText, molar-mass hydrate parsing.
+- 2026-10-15 hub updates: guides hub +3 cards (More Guides 529→532), count claims 588→591
+  in all 9 guides-hub places (= 591 on-disk dirs); all-tools Guides (591) sorted insert,
+  2026-10-15 stamp.
+  Queue state: SS 2027 COLA/RET refresh still pending verifiable SSA figures. Thin pool
+  (<900, non-device) now EMPTY again; next depth candidates from the 900-1000 band:
+  baby-shower-cost-calculator (903), cgpa-to-gpa-converter (905), rotate-pdf (939),
+  extract-pdf-pages (947), pdf-split (969). Guide intake ideas: "how to send large files"
+  (fold into email guide?), "how to remove a password from a PDF" (check overlap with
+  password-protect-a-pdf), SS disability → retirement conversion at FRA (SSDI cluster).
