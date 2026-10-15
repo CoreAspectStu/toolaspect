@@ -1894,3 +1894,61 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   extract-pdf-pages (947), pdf-split (969). Guide intake ideas: "how to send large files"
   (fold into email guide?), "how to remove a password from a PDF" (check overlap with
   password-protect-a-pdf), SS disability → retirement conversion at FRA (SSDI cluster).
+
+- 2026-10-16 batch guides (10-15 queue named intake ideas only; all 675 tool dirs are already
+  linked from >=1 guide, so picked by lane + no dedicated guide. Dedupe: password removal
+  already in password-protect-a-pdf (skipped); how-much-does-ssdi-pay only mentions FRA
+  conversion in passing; no SS-taxation guide existed):
+  niche calc (SS cluster) → guides/what-happens-to-ssdi-at-full-retirement-age/ (solution-
+  aware; tool social-security-disability-benefits-calculator. Automatic DIB→RIB conversion at
+  FRA, same PIA; FRA-by-birth-year table with conversion years (1959 cohort converting 2025-26,
+  1960+ at 67 from 2027); before/after rules table (SGA $1,690 / blind $2,830 2026 from SSA
+  sga page, CDRs stop, Medicare continues, suspension for DRCs at FRA per SSA KA-01160);
+  suspension worked example $1,800 → $2,232 at 70, $64,800 forgone, break-even 150 months;
+  early-RIB-then-DIB onset-date caveat hedged; SSI doesn't convert; private LTD offset note);
+  PDF/privacy (problem-aware; intake idea from 10-14/10-15) → guides/how-to-send-large-files/
+  (tool compress-pdf + image-compressor + pdf-split. Free-limit table: Gmail 25 MB→Drive,
+  Outlook.com 20 MB, Drive 15 GB, OneDrive 5 GB, Mail Drop 5 GB/30 days, WeTransfer free 3 GB
+  + 10 transfers per rolling 30 days (help.wetransfer.com, Dec 2024 plans), Dropbox Transfer
+  Basic 2 GB / 7-day expiry (help.dropbox.com; older 100 MB figure is stale), Signal 100 MB,
+  FAT32 4 GB/file. Upload-time table computed (MB×8÷Mbps). MEASURED zip table: zlib level 9
+  (= .zip deflate) on real files: sitemap.xml 95.5%, JSON 84.2%, HTML 69.1%, PNG median 14.9%,
+  PDFs (21) median 4.0%, EXIF camera JPEGs (17) median 1.3%, MP4 (25) median 0.3%. NOTE our own
+  stock-media JPEGs zip 37-68% smaller (flat-colour charts at high quality → they're oversized;
+  worth a recompress pass for page weight). WhatsApp/Telegram limits NOT claimed (sources conflict));
+  niche calc (SS cluster) → guides/is-social-security-taxable/ (solution-aware; tool
+  social-security-calculator. Thresholds $25k/$34k single, $32k/$44k joint, MFS-living-together
+  from $0, never indexed (1983/1993); taxable-amount tables computed with the Pub 915 worksheet
+  for $24k single ($0 → $20,400 cap) and $40k joint; worked example $30k other → $11,300; OBBBA
+  senior deduction $6,000/person 2025-2028, 6% phase-out from $75k/$150k, gone at $175k/$250k,
+  SS formula unchanged; 2026 state list = CO CT MN MT NM RI UT VT (WV phase-out complete
+  2026-01-01, HB 4880); W-4V 7/10/12/22%; SSA-1099; lump-sum election for SSDI back pay)
+  (1,261–1,399 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤59 chars, descs ≤155.) Guide backlinks added
+  on social-security-calculator (taxable), social-security-disability-benefits-calculator
+  (FRA), image-compressor (large files), guides/how-much-does-ssdi-pay (FRA), guides/when-to-
+  take-social-security (taxable), guides/email-attachment-size-limits (large files).
+  compress-pdf NOT touched (carries someone's uncommitted pdfjs isEvalSupported fix).
+- 2026-10-16 depth passes (first two of the 10-15 900-1000 band list):
+  baby-shower-cost-calculator (920 → 1,481 words by own counter; +cost-by-guest-count table
+  (10/15/25/40/60 × 3 presets, fixed + per-guest decomposition from the page's own PRESETS:
+  backyard $190 + $15/g, typical $595 + $23/g, brunch $945 + $35/g), +where-to-cut table (6
+  levers off the $1,170 typical, all six → $510), +co-host split section; FAQ visible 5 / LD 4
+  → 7 / 7 synced). FIXED: generic answer box → real answer.
+  cgpa-to-gpa-converter (956 → 1,521; +three-percentage-conventions table 6.0-10.0 with the
+  page's own indianClass bands (7.5 CGPA = Distinction under ×10 only; ×10 vs technical always
+  7.5 pts apart), +reverse GPA-minimum → CGPA table (2.5-3.85), +why-linear-misleads section;
+  FAQ visible 6 / LD 4 → 8 / 8 synced). FIXED: generic answer box → real answer.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy); syntax-gate 1,348 blocks,
+  0 broken.
+- 2026-10-16 hub updates: guides hub +3 cards (More Guides 532→535), count claims 591→594 in
+  all 9 guides-hub places (= 594 on-disk dirs); all-tools Guides (594) sorted insert,
+  2026-10-16 stamp.
+  Queue state: next depth candidates from the 900-1000 band: rotate-pdf (939; wait until the
+  uncommitted pdfjs fix is committed), extract-pdf-pages (947), pdf-split (969). Guide intake
+  ideas: SSDI → Medicare (24-month wait, ALS/ESRD exceptions), "how to remove a password from
+  a PDF" stays folded into password-protect-a-pdf, stock-media JPEG recompress (page weight).
+  STILL OPEN (JS, need Stu): pdfjs-dist 3.11.174 CVE-2024-4367 proper upgrade (quick
+  isEvalSupported:false fix is in the working tree uncommitted on all 15 pages as of 10-16),
+  pdf-to-text page markers/dehyphenation, pdf-add-text default font, hash-generator
+  readAsText, molar-mass hydrate parsing.
