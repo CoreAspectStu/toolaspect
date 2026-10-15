@@ -236,7 +236,7 @@ status('Reading '+f.name+'…');
 try{
 pdfBytes=new Uint8Array(await f.arrayBuffer());
 var pdfjs=await ensurePdfJs();
-var doc=await pdfjs.getDocument({data:pdfBytes.slice(0)}).promise;
+var doc=await pdfjs.getDocument({isEvalSupported:false,data:pdfBytes.slice(0)}).promise;
 numPages=doc.numPages;
 var p1=await doc.getPage(1);
 var vp=p1.getViewport({scale:1});
@@ -261,7 +261,7 @@ var ext=fmt==='png'?'png':'jpg';
 try{
 status('Loading renderer…');
 var pdfjs=await ensurePdfJs();
-var doc=await pdfjs.getDocument({data:pdfBytes.slice(0)}).promise;
+var doc=await pdfjs.getDocument({isEvalSupported:false,data:pdfBytes.slice(0)}).promise;
 var targets=pages||[];
 if(!targets.length)for(var i=1;i<=doc.numPages;i++)targets.push(i);
 var results=[],tbody=document.querySelector('#tbl tbody');
