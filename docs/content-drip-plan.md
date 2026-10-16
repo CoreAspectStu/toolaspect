@@ -1952,3 +1952,64 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   isEvalSupported:false fix is in the working tree uncommitted on all 15 pages as of 10-16),
   pdf-to-text page markers/dehyphenation, pdf-add-text default font, hash-generator
   readAsText, molar-mass hydrate parsing.
+
+- 2026-10-17 batch guides (10-16 queue's named intake idea first, then lane-weighted fresh
+  intake; dedupe: Medicare-on-SSDI only existed as one FAQ answer in how-much-does-ssdi-pay;
+  no screenshot-metadata or "can't edit PDF" guide existed):
+  niche calc (SS cluster) → guides/when-does-medicare-start-on-ssdi/ (solution-aware; tool
+  social-security-disability-benefits-calculator. 25th month of entitlement = ~29 months from
+  onset; onset → entitlement → Medicare table computed (mid-Mar 2024 → Sep 2024 → Sep 2026 …
+  mid-Jan 2026 → Jul 2026 → Jul 2028); prior months count if back within 5 yrs; 12-month
+  retro entitlement can put long-appeal cases past month 24 at approval; ALS (same month,
+  2020 law removed 5-month wait) / ESRD (4th month of dialysis, 1st month home training,
+  transplant admission month) / SSI→Medicaid table; 2026 CMS: Part B $202.90/mo, $283 ded,
+  Part A ded $1,736, Part D OOP cap $2,100; $1,500 check → $1,297.10; Part B late penalty
+  resets at 65; Medigap under 65 state-dependent (hedged); COBRA 18→29 mo disability
+  extension at up to 150%; EPMC 93 months after TWP; SGA $1,690);
+  privacy → guides/do-screenshots-have-metadata/ (problem-aware; tools image-metadata-
+  remover + exif-viewer + redact-pdf. Photo-vs-screenshot metadata table; screenshot-a-photo
+  strips GPS but keeps ~8.5% of pixels (4032×3024 → 1179×884 on a 1179-wide iPhone);
+  visible-leak table (status bar, notifications, URL tokens, file names, weak redaction,
+  aCropalypse); aCropalypse CVE-2023-21036 Pixel Markup + CVE-2023-28303 Snipping Tool /
+  Snip & Sketch, both patched Mar 2023, Aarons & Buchanan; pixelation reversible (hedged).
+  NOT measured on real phone screenshots (none on disk), so device-specific claims kept
+  general: no GPS by default, Apple "screenshot" label);
+  PDF → guides/why-cant-i-edit-my-pdf/ (problem-aware; tools pdf-add-text + ocr-pdf +
+  pdf-password-tools + pdf-annotate. Symptom → cause → fix table (8 rows: scan, permissions
+  pw, open pw, flattened form, XFA, signed/certified, subset fonts, viewer-only); job → tool
+  table (7 rows); no cracking advice)
+  (1,196–1,392 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤59 chars, descs ≤155.) Guide backlinks added
+  on social-security-disability-benefits-calculator, image-metadata-remover, pdf-add-text,
+  guides/how-much-does-ssdi-pay, guides/what-happens-to-ssdi-at-full-retirement-age,
+  guides/how-to-remove-location-from-photos, guides/how-to-fill-out-a-pdf-form.
+- 2026-10-17 depth passes (10-16 queue's 900-1000 band, first two; rotate-pdf unblocked now
+  that the pdfjs isEvalSupported fix is committed in 7fa194926):
+  rotate-pdf (939 → ~1,600 words; MEASURED with @cantoo/pdf-lib 2.9.1 in node, same
+  load → setRotation → save path as the page: page 1 turned 90° on 30 real PDFs, size
+  change −1.3% … +21.2%, median +3.5% (6-row sample table); bookmarks kept on 21/21, AcroForm
+  kept, encrypted file → save throws "is encrypted" (owner-only pw still previews in pdf.js);
+  +landscape-vs-rotated section; FAQ visible 6 / LD 4 → 8 / 8 synced). FIXED copy: "file
+  grows by a handful of bytes" / "only a few bytes of metadata change" (false: whole file is
+  re-saved) → measured median; generic answer box → real answer.
+  extract-pdf-pages (947 → ~1,650; MEASURED copyPages on 11 real PDFs: page 1 alone keeps
+  79% of a 12-page text report (shared fonts) vs 0.5% of a 148-page image-heavy guide;
+  first-half extracts 24–95%; links kept (14/14), bookmarks DROPPED on 7/7, AcroForm DROPPED;
+  +what-comes-along table, +extract vs delete vs split; FAQ visible 6 / LD 4 → 8 / 8
+  synced). FIXED copy: "forms and annotations ... travel with them" (forms don't); generic
+  answer box → real answer.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy).
+  NEED STU GO-AHEAD (JS): extract-pdf-pages (and anything else using copyPages with
+  ignoreEncryption:true) silently writes a BROKEN PDF from an encrypted source, even a
+  permissions-only one (reproduced: 3-page owner-pw file → pdftotext "Unknown compression
+  method in flate stream"). Fix: detect doc.isEncrypted after load and stop with "remove the
+  password first" (copy now warns users). Check pdf-split / delete-pages / organize-pdf /
+  pdf-merge for the same pattern.
+- 2026-10-17 hub updates: guides hub +3 cards (More Guides 535→538), count claims 594→597 in
+  all 9 guides-hub places (= 597 on-disk dirs); all-tools Guides (597) sorted insert,
+  2026-10-17 stamp.
+  Queue state: next depth candidate pdf-split (969), then re-scan the 900-1000 band. Guide
+  intake ideas: SSDI back pay / how far back (SS cluster), "PDF opens blank" (PDF), stock-
+  media JPEG recompress (page weight, not a guide). STILL OPEN (JS, need Stu): copyPages-on-
+  encrypted (above), pdfjs-dist 3.11.174 proper upgrade, pdf-to-text page markers/
+  dehyphenation, pdf-add-text default font, hash-generator readAsText, molar-mass hydrate.

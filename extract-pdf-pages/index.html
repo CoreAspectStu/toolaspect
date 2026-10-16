@@ -84,7 +84,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I extract pages from a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in an extractor, type the pages you want — single numbers, comma-separated lists, and ranges like 5-7 all work, and \"end\" means the last page — then download the new file it builds. This tool runs in your browser, so there's no upload, no account, and no watermark."}},{"@type":"Question","name":"What does typing 2,5-7 into the box do?","acceptedAnswer":{"@type":"Answer","text":"It extracts pages 2, 5, 6, and 7 into a new PDF. Commas separate entries, and a hyphen range is inclusive on both ends. The status line always shows the exact resolved list — here 4 pages — before you download anything."}},{"@type":"Question","name":"What is the difference between extracting and splitting a PDF?","acceptedAnswer":{"@type":"Answer","text":"Extracting keeps one subset as a single new file: 24 pages in, pages 2,5-7,20 out, one PDF. Splitting cuts the document into multiple files by range, chunk size, or one file per page. If you want exactly one smaller document, extract; if you want many outputs, split."}},{"@type":"Question","name":"Can I extract pages in a different order than the original?","acceptedAnswer":{"@type":"Answer","text":"Yes. By default the output follows the order you typed — 20,5-7,2 produces a PDF whose pages run 20, 5, 6, 7, 2. If you'd rather keep the document's own order, tick \"keep document order\" and any selection comes out sorted."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I extract pages from a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF in an extractor, type the pages you want — single numbers, comma-separated lists, and ranges like 5-7 all work, and \"end\" means the last page — then download the new file it builds. This tool runs in your browser, so there's no upload, no account, and no watermark."}},{"@type":"Question","name":"What does typing 2,5-7 into the box do?","acceptedAnswer":{"@type":"Answer","text":"It extracts pages 2, 5, 6, and 7 into a new PDF. Commas separate entries, and a hyphen range is inclusive on both ends. The status line always shows the exact resolved list — here 4 pages — before you download anything."}},{"@type":"Question","name":"What is the difference between extracting and splitting a PDF?","acceptedAnswer":{"@type":"Answer","text":"Extracting keeps one subset as a single new file: 24 pages in, pages 2,5-7,20 out, one PDF. Splitting cuts the document into multiple files by range, chunk size, or one file per page. If you want exactly one smaller document, extract; if you want many outputs, split."}},{"@type":"Question","name":"Can I extract pages in a different order than the original?","acceptedAnswer":{"@type":"Answer","text":"Yes. By default the output follows the order you typed — 20,5-7,2 produces a PDF whose pages run 20, 5, 6, 7, 2. If you'd rather keep the document's own order, tick \"keep document order\" and any selection comes out sorted."}},{"@type":"Question","name":"Does extracting pages change my original PDF?","acceptedAnswer":{"@type":"Answer","text":"No. The pages you chose are copied into a brand-new document and downloaded alongside the original, which stays on your disk untouched. The extracted text stays selectable and searchable — pages are copied, not re-rendered."}},{"@type":"Question","name":"Can I repeat a page in the output?","acceptedAnswer":{"@type":"Answer","text":"Deliberate repeats are collapsed (1,1-3 resolves to 1, 2, 3) to protect you from accidental double-typed entries. If you genuinely need a page twice — say a cover at front and back — run the extractor once for the body and then prepend the cover with a merge tool."}},{"@type":"Question","name":"Why is my extracted page almost as big as the original PDF?","acceptedAnswer":{"@type":"Answer","text":"Pages share embedded fonts and images, and each extracted page needs the full font files it uses. In our tests a single page of a 12-page text report kept 79% of the file size, while one page of an image-heavy 148-page guide was 0.5%."}},{"@type":"Question","name":"Why is my extracted PDF blank or broken?","acceptedAnswer":{"@type":"Answer","text":"The original file is probably password-protected, even if it opens without a password. Its pages are copied still encrypted, so the new file can't be read. Remove the password from the original first, then extract again."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -95,7 +95,7 @@
 <div class="page-header">
 <h1>📄 Extract PDF Pages</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Upload a PDF above, select the pages you need — just those pages are extracted into a new file, entirely locally.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Open the PDF, type the pages you want, like 2,5-7 or 4-end, and download a new file with just those pages in your chosen order. Pages are copied, not redrawn, so text stays searchable. Bookmarks don't come along.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="extract-pdf-pages" aria-label="Share this tool"></div>
 
@@ -146,7 +146,7 @@
 
 <div class="content-section">
 <h2>How Page Extraction Works</h2>
-<p>Extracting is the polite sibling of splitting: you point at a set of pages, and the tool builds one new document that contains copies of those pages and nothing else. Under the hood it parses your selection into an exact page list, copies the chosen page objects into a fresh PDF with pdf-lib, and hands you the result. Because pages are copied rather than re-rendered, text stays selectable, images keep their resolution, and forms and annotations on the chosen pages travel with them.</p>
+<p>Extracting is the polite sibling of splitting: you point at a set of pages, and the tool builds one new document that contains copies of those pages and nothing else. Under the hood it parses your selection into an exact page list, copies the chosen page objects into a fresh PDF with pdf-lib, and hands you the result. Because pages are copied rather than re-rendered, text stays selectable, images keep their resolution, and links and comments on the chosen pages travel with them. Bookmarks and form logic don't, as the tests below show.</p>
 <h3>The parser</h3>
 <p>Your input is split on commas; each entry is a number, a range like <code>5-7</code>, or a range ending in <code>end</code>. Ranges are inclusive, duplicates collapse, and the validator rejects the three classics before any work happens: pages before 1, pages past the end of the document, and backwards ranges like <code>7-5</code>. If the box says <code>25</code> on a 24-page file, you'll see exactly that error — not a wrong download.</p>
 <h3>How to use it</h3>
@@ -157,6 +157,46 @@
 </div>
 
 <div class="content-section">
+<h2>Why Is My Extracted PDF Still So Big?</h2>
+<p>You'd expect one page out of twelve to be about a twelfth of the size. Often it isn't. Pages share resources, mostly embedded fonts and sometimes a logo or background image, and every page that uses a font needs the whole font file copied with it. We ran this page's copy method over real PDFs and measured the output against the original:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Document</th><th>Original</th><th>Page 1 alone</th><th>First half of the pages</th></tr></thead>
+<tbody>
+<tr><td>12-page text report</td><td>154 KB</td><td>79%</td><td>88%</td></tr>
+<tr><td>14-page PDF guide</td><td>69 KB</td><td>48%</td><td>76%</td></tr>
+<tr><td>66-page playbook</td><td>429 KB</td><td>69%</td><td>84%</td></tr>
+<tr><td>49-page spec</td><td>228 KB</td><td>9%</td><td>30%</td></tr>
+<tr><td>48-page product manual</td><td>4.3 MB</td><td>3%</td><td>54%</td></tr>
+<tr><td>148-page brand guide</td><td>5.0 MB</td><td>0.5%</td><td>67%</td></tr>
+<tr><td>206-page web archive</td><td>2.7 MB</td><td>4%</td><td>81%</td></tr>
+</tbody>
+</table>
+</div>
+<p>Text-heavy documents with a few embedded fonts keep most of their weight even as a single page: page 1 of the 12-page report still came out at 79% of the full file. Image-heavy files behave the way you'd hope, because each picture belongs to one page. Page 1 of the 148-page brand guide was 23 KB out of 5.0 MB.</p>
+<p>So if you're extracting pages to get under an email attachment limit, check the size before you send. When it's still too big, run the extract through the <a href="/compress-pdf/">PDF compressor</a>, or for scans, through its rerender mode.</p>
+<h3>What comes along with the pages</h3>
+<p>Extraction builds a brand-new document and copies page objects into it. Anything stored on a page travels with it. Anything stored at the document level stays behind. We checked each item on the output files:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Part of the PDF</th><th>In the extract</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Text and images</td><td>Copied</td><td>Pages aren't re-rendered, so quality is unchanged</td></tr>
+<tr><td>Links on the page</td><td>Copied (14 of 14 on our test page)</td><td>They belong to the page</td></tr>
+<tr><td>Comments and highlights</td><td>Copied</td><td>Also stored on the page</td></tr>
+<tr><td>Bookmarks</td><td>Dropped on all 7 test files that had them</td><td>They belong to the document, not the pages</td></tr>
+<tr><td>Fillable form</td><td>Form dictionary dropped</td><td>Fill or flatten the form before extracting</td></tr>
+<tr><td>Password-protected source</td><td>Output comes out broken</td><td>Remove the password first</td></tr>
+</tbody>
+</table>
+</div>
+<p>The form row matters if you're pulling one page out of a long application. The field boxes still show, but the extracted file doesn't carry the document-level form, so in our test it no longer registered as fillable. Fill the form first, or <a href="/flatten-pdf/">flatten it</a> so the answers become part of the page, then extract.</p>
+<p>The password row is a real trap. A file with only a permissions password opens normally here, and the page count and selection work as usual, but the copied pages come out encrypted-yet-unreadable and other apps report errors or blank pages. We reproduced it with a 3-page test file. If your source has any password, remove it with the <a href="/pdf-password-tools/">PDF password tool</a> before extracting.</p>
+<h3>Extract, delete or split?</h3>
+<p>They all produce smaller files, and the choice is about how you'd rather describe the job. If you can name the pages you want, extract. If it's easier to name the ones to throw away (say, every page but the blank separators), <a href="/delete-pages-from-pdf/">delete pages</a> instead. If you want several output files, one per chapter or one per invoice, <a href="/pdf-split/">split the PDF</a>. All three copy pages the same way, so the size and bookmark notes above apply to each.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>How do I extract pages from a PDF for free?</h3><p>Open the PDF in an extractor, type the pages you want — single numbers, comma-separated lists, and ranges like 5-7 all work, and "end" means the last page — then download the new file it builds. This tool runs in your browser, so there's no upload, no account, and no watermark.</p></div>
 <div class="faq-item"><h3>What does typing 2,5-7 into the box do?</h3><p>It extracts pages 2, 5, 6, and 7 into a new PDF. Commas separate entries, and a hyphen range is inclusive on both ends. The status line always shows the exact resolved list — here 4 pages — before you download anything.</p></div>
@@ -164,6 +204,8 @@
 <div class="faq-item"><h3>Can I extract pages in a different order than the original?</h3><p>Yes. By default the output follows the order you typed — 20,5-7,2 produces a PDF whose pages run 20, 5, 6, 7, 2. If you'd rather keep the document's own order, tick "keep document order" and any selection comes out sorted.</p></div>
 <div class="faq-item"><h3>Does extracting pages change my original PDF?</h3><p>No. The pages you chose are copied into a brand-new document and downloaded alongside the original, which stays on your disk untouched. The extracted text stays selectable and searchable — pages are copied, not re-rendered.</p></div>
 <div class="faq-item"><h3>Can I repeat a page in the output?</h3><p>Deliberate repeats are collapsed (1,1-3 resolves to 1, 2, 3) to protect you from accidental double-typed entries. If you genuinely need a page twice — say a cover at front and back — run the extractor once for the body and then prepend the cover with a merge tool.</p></div>
+<div class="faq-item"><h3>Why is my extracted page almost as big as the original PDF?</h3><p>Pages share embedded fonts and images, and each extracted page needs the full font files it uses. In our tests a single page of a 12-page text report kept 79% of the file size, while one page of an image-heavy 148-page guide was 0.5%.</p></div>
+<div class="faq-item"><h3>Why is my extracted PDF blank or broken?</h3><p>The original file is probably password-protected, even if it opens without a password. Its pages are copied still encrypted, so the new file can't be read. Remove the password from the original first, then extract again.</p></div>
 </div>
 
 <div class="related-tools">

@@ -91,7 +91,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why doesn't the rotate button in my PDF viewer stick?","acceptedAnswer":{"@type":"Answer","text":"Most viewers rotate your view of the page for that session only and throw the setting away when the file closes. A permanent rotation has to change the page's stored rotation value inside the file — which is what this tool writes — so every viewer, printer, and phone honors the turn from then on."}},{"@type":"Question","name":"Does rotating a page re-render it or hurt quality?","acceptedAnswer":{"@type":"Answer","text":"No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves because only a few bytes of metadata change."}},{"@type":"Question","name":"How do I rotate only some pages in a PDF?","acceptedAnswer":{"@type":"Answer","text":"Type a page spec: single pages (7), ranges (1-3), or a mix (1-3, 5), plus the shortcuts all, odd, and even for duplex scans. Each rotate press adds another quarter-turn to exactly those pages, so a page already at 90 that gets another 90 lands at 180."}},{"@type":"Question","name":"How do I fix a duplex scan where every other page is sideways?","acceptedAnswer":{"@type":"Answer","text":"Use the odd or even shortcut. Two-sided documents fed through a sheet feeder often scan one side rotated, so selecting odd (or even) and applying a single 90-degree turn fixes the whole file in two clicks — then reset and try the other parity if the first guess was wrong."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why doesn't the rotate button in my PDF viewer stick?","acceptedAnswer":{"@type":"Answer","text":"Most viewers rotate your view of the page for that session only and throw the setting away when the file closes. A permanent rotation has to change the page's stored rotation value inside the file — which is what this tool writes — so every viewer, printer, and phone honors the turn from then on."}},{"@type":"Question","name":"Does rotating a page re-render it or hurt quality?","acceptedAnswer":{"@type":"Answer","text":"No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves. Across 30 real PDFs we tested, the median change was +3.5%, from re-saving the file rather than redrawing anything."}},{"@type":"Question","name":"How do I rotate only some pages in a PDF?","acceptedAnswer":{"@type":"Answer","text":"Type a page spec: single pages (7), ranges (1-3), or a mix (1-3, 5), plus the shortcuts all, odd, and even for duplex scans. Each rotate press adds another quarter-turn to exactly those pages, so a page already at 90 that gets another 90 lands at 180."}},{"@type":"Question","name":"How do I fix a duplex scan where every other page is sideways?","acceptedAnswer":{"@type":"Answer","text":"Use the odd or even shortcut. Two-sided documents fed through a sheet feeder often scan one side rotated, so selecting odd (or even) and applying a single 90-degree turn fixes the whole file in two clicks — then reset and try the other parity if the first guess was wrong."}},{"@type":"Question","name":"Will rotating pages break anything else in the document?","acceptedAnswer":{"@type":"Answer","text":"Rotation is one of the safest edits possible: the page contents, links, and form fields are untouched. Bookmarks keep pointing at the same pages. The only thing to check is landscape tables that were already rotated by the author — they may now double-turn past upright."}},{"@type":"Question","name":"What's the difference between rotating pages and saving with a viewer?","acceptedAnswer":{"@type":"Answer","text":"A viewer's File > Save after a view-rotation either discards the rotation or, in some apps, prompts to save pages — inconsistently across apps. A dedicated rotation tool writes the intended final angle for each page and hands you a clean download, which is why print shops ask for it rather than trusting viewer saves."}},{"@type":"Question","name":"Does rotating a PDF make the file bigger?","acceptedAnswer":{"@type":"Answer","text":"Only slightly. The rotation value itself is a few bytes, but the download is a re-saved copy of the whole file. In our test of 30 real PDFs the size changed by −1.3% to +21.2%, with a median of +3.5%."}},{"@type":"Question","name":"Can I rotate a password-protected PDF?","acceptedAnswer":{"@type":"Answer","text":"Not directly. The page previews load, but the download fails because the tool can't write an encrypted file. Remove the password with a PDF password tool (you'll need to know it), rotate the pages, then protect the file again."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -102,7 +102,7 @@
 <div class="page-header">
 <h1>🔄 Rotate PDF Pages</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Rotate individual pages or whole PDFs by 90, 180 or 270 degrees and save the corrected orientation.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Type the pages you want (all, odd, even or ranges like 2-3, 5), press 90° clockwise, counterclockwise or 180°, and download. The turn is written into each page, so it sticks in every viewer, and text and images aren't redrawn.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="rotate-pdf" aria-label="Share this tool"></div>
 
@@ -169,20 +169,61 @@
 
 <div class="content-section">
 <h2>How Permanent Rotation Works</h2>
-<p>Every page in a PDF carries a rotation value — one of 0, 90, 180, or 270 — that tells viewers how far to turn the page's content when displaying and printing it. Your PDF reader's rotate button changes a session view and discards it on close; a permanent fix writes a new value into the file itself. That's the whole trick, and it's why rotation is the safest edit in PDF-land: the content stream is never touched, so text stays selectable, images keep their exact pixels, and the file grows by a handful of bytes.</p>
+<p>Every page in a PDF carries a rotation value — one of 0, 90, 180, or 270 — that tells viewers how far to turn the page's content when displaying and printing it. Your PDF reader's rotate button changes a session view and discards it on close; a permanent fix writes a new value into the file itself. That's the whole trick, and it's why rotation is the safest edit in PDF-land: the content stream is never touched, so text stays selectable, images keep their exact pixels, and the file size moves only a few percent either way (measured below).</p>
 <p>This tool renders thumbnails with pdf.js so you can see which pages are sideways, tracks each page's extra turns, and writes the final angles with pdf-lib on download. Pages you never touch keep their original stored value exactly.</p>
 <h3>A worked example</h3>
 <p>A 5-page scanned contract comes in with pages 2, 3, and 5 sideways. Open it, type <code>2-3, 5</code>, press ⟳ 90° CW once, and the pages' stored values go from 0, 0, 0, 0, 0 to <strong>0, 90, 90, 0, 90</strong>. If page 3 was actually authored already rotated (stored 90) and you add another quarter-turn, it lands at 180 — one press of ⟲ on its card walks it back to 90. A duplex-scan job where every even page is sideways is the two-click case: type <code>even</code>, press ⟳ once, download. The math is plain modulo-360 addition, which is exactly what the exporter writes per page.</p>
 </div>
 
 <div class="content-section">
+<h2>What Happens to the Rest of the File?</h2>
+<p>Rotation itself is a single number per page, but the download is a re-saved copy of the whole document. We ran the same library this page uses, pdf-lib, over 30 real PDFs from our own files: reports, manuals, brand books and research papers. We turned page 1 a quarter-turn and saved. Here's a sample of what happened to file size:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Document</th><th>Original size</th><th>Size change after rotating</th></tr></thead>
+<tbody>
+<tr><td>1-page letter</td><td>43 KB</td><td>+1.6%</td></tr>
+<tr><td>12-page text report</td><td>154 KB</td><td>+4.4%</td></tr>
+<tr><td>49-page spec with bookmarks</td><td>228 KB</td><td>+21.2%</td></tr>
+<tr><td>47-page research paper</td><td>3.2 MB</td><td>0.0%</td></tr>
+<tr><td>48-page product manual</td><td>4.3 MB</td><td>−0.7%</td></tr>
+<tr><td>148-page brand guide with a form</td><td>5.0 MB</td><td>+3.2%</td></tr>
+</tbody>
+</table>
+</div>
+<p>Across all 30 the change ran from −1.3% to +21.2%, with a median of +3.5%. Small text-only files moved the most in percentage terms. Big image-heavy files barely moved, because the images are copied as they are. If you're right at an email limit, the <a href="/compress-pdf/">PDF compressor</a> will claw back more than rotation adds.</p>
+<h3>What's kept and what isn't</h3>
+<p>Because the tool opens your file, changes the rotation values and saves the same document, almost everything else rides along. We checked each item on the re-saved files:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>Part of the PDF</th><th>After rotating</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Text</td><td>Kept, still selectable and searchable</td><td>Page content is never redrawn</td></tr>
+<tr><td>Images</td><td>Kept, pixel for pixel</td><td>No recompression</td></tr>
+<tr><td>Bookmarks</td><td>Kept on all 21 files that had them</td><td>Same document re-saved, not rebuilt</td></tr>
+<tr><td>Form fields</td><td>Kept (tested on a 148-page file with a form)</td><td>Fields turn with their page</td></tr>
+<tr><td>Links and comments</td><td>Kept</td><td>They belong to the page</td></tr>
+<tr><td>Untouched pages</td><td>Exact original rotation value</td><td>Only pages you turned are rewritten</td></tr>
+<tr><td>Password-protected PDFs</td><td>Download fails with an "encrypted" error</td><td>Remove the password first, then rotate</td></tr>
+</tbody>
+</table>
+</div>
+<p>That last row catches people out. If the file only has a permissions password, the thumbnails still appear and you can turn pages, but the save step refuses to write an encrypted document. A file that needs a password just to open won't load at all. If it's your file and you know the password, remove it with the <a href="/pdf-password-tools/">PDF password tool</a>, rotate, and add the password back afterwards.</p>
+<h3>Landscape pages versus rotated pages</h3>
+<p>A PDF page can be landscape in two ways. It can simply be wider than it is tall, which is how most spreadsheets and slide decks export. Or it can be a portrait page with a rotation of 90 or 270, which is how many scanners store a sideways sheet. Both look the same on screen, which is why one file can hold a mix of stored values. When a page is upright on screen, it's right, whatever its stored number. The thumbnails show each page as viewers will display it, so trust the picture, not the number, and turn only what looks wrong.</p>
+<p>If what you actually need is to move pages around or drop a few, <a href="/organize-pdf/">Organize PDF</a> does rotation, reordering and deletion in one pass. To pull the pages out into their own file, use <a href="/extract-pdf-pages/">Extract PDF Pages</a>.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item"><h3>Why doesn't the rotate button in my PDF viewer stick?</h3><p>Most viewers rotate your view of the page for that session only and throw the setting away when the file closes. A permanent rotation has to change the page's stored rotation value inside the file — which is what this tool writes — so every viewer, printer, and phone honors the turn from then on.</p></div>
-<div class="faq-item"><h3>Does rotating a page re-render it or hurt quality?</h3><p>No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves because only a few bytes of metadata change.</p></div>
+<div class="faq-item"><h3>Does rotating a page re-render it or hurt quality?</h3><p>No. Rotation is stored as a number on the page object — 0, 90, 180, or 270 — and viewers simply display the same content turned. Nothing is re-rendered, nothing is recompressed: text stays selectable, images stay pixel-identical, and file size barely moves. Across 30 real PDFs we tested, the median change was +3.5%, from re-saving the file rather than redrawing anything.</p></div>
 <div class="faq-item"><h3>How do I rotate only some pages in a PDF?</h3><p>Type a page spec: single pages (7), ranges (1-3), or a mix (1-3, 5), plus the shortcuts all, odd, and even for duplex scans. Each rotate press adds another quarter-turn to exactly those pages, so a page already at 90 that gets another 90 lands at 180.</p></div>
 <div class="faq-item"><h3>How do I fix a duplex scan where every other page is sideways?</h3><p>Use the odd or even shortcut. Two-sided documents fed through a sheet feeder often scan one side rotated, so selecting odd (or even) and applying a single 90-degree turn fixes the whole file in two clicks — then reset and try the other parity if the first guess was wrong.</p></div>
 <div class="faq-item"><h3>Will rotating pages break anything else in the document?</h3><p>Rotation is one of the safest edits possible: the page contents, links, and form fields are untouched. Bookmarks keep pointing at the same pages. The only thing to check is landscape tables that were already rotated by the author — they may now double-turn past upright.</p></div>
 <div class="faq-item"><h3>What's the difference between rotating pages and saving with a viewer?</h3><p>A viewer's File &gt; Save after a view-rotation either discards the rotation or, in some apps, prompts to save pages — inconsistently across apps. A dedicated rotation tool writes the intended final angle for each page and hands you a clean download, which is why print shops ask for it rather than trusting viewer saves.</p></div>
+<div class="faq-item"><h3>Does rotating a PDF make the file bigger?</h3><p>Only slightly. The rotation value itself is a few bytes, but the download is a re-saved copy of the whole file. In our test of 30 real PDFs the size changed by −1.3% to +21.2%, with a median of +3.5%.</p></div>
+<div class="faq-item"><h3>Can I rotate a password-protected PDF?</h3><p>Not directly. The page previews load, but the download fails because the tool can't write an encrypted file. Remove the password with a PDF password tool (you'll need to know it), rotate the pages, then protect the file again.</p></div>
 </div>
 
 <div class="related-tools">
