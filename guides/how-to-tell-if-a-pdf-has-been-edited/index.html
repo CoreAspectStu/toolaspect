@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Tell If a PDF Has Been Edited | ToolAspect</title>
+<meta name="description" content="Check a PDF&#x27;s producer, dates, XMP data, incremental saves and signatures to spot edits. What we found testing 37 real PDFs, and why metadata isn&#x27;t proof.">
+<link rel="canonical" href="https://toolaspect.com/guides/how-to-tell-if-a-pdf-has-been-edited/">
+<meta property="og:title" content="How to Tell If a PDF Has Been Edited">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/how-to-tell-if-a-pdf-has-been-edited/">
+<meta property="og:description" content="Check a PDF&#x27;s producer, dates, XMP data, incremental saves and signatures to spot edits. What we found testing 37 real PDFs, and why metadata isn&#x27;t proof.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How to Tell If a PDF Has Been Edited">
+<meta name="twitter:description" content="Check a PDF&#x27;s producer, dates, XMP data, incremental saves and signatures to spot edits. What we found testing 37 real PDFs, and why metadata isn&#x27;t proof.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Tell If a PDF Has Been Edited", "description": "Check a PDF's producer, dates, XMP data, incremental saves and signatures to spot edits. What we found testing 37 real PDFs, and why metadata isn't proof.", "datePublished": "2026-10-18", "dateModified": "2026-10-18", "mainEntityOfPage": "https://toolaspect.com/guides/how-to-tell-if-a-pdf-has-been-edited/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "How to Tell If a PDF Has Been Edited", "item": "https://toolaspect.com/guides/how-to-tell-if-a-pdf-has-been-edited/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How can I tell if a PDF has been altered?", "acceptedAnswer": {"@type": "Answer", "text": "Check the document properties for the producer and dates, compare them with the XMP metadata, look for more than one %%EOF marker, and zoom in for mismatched fonts or spacing. If the file is digitally signed, the signature panel in Acrobat Reader shows whether it changed after signing. None of these clues is proof on its own."}}, {"@type": "Question", "name": "Does editing a PDF change its modification date?", "acceptedAnswer": {"@type": "Answer", "text": "Usually. When we edited PDFs with pdf-lib, the modification date updated and the Producer changed to pdf-lib. But the date is easy to set by hand, and many PDFs have no dates at all."}}, {"@type": "Question", "name": "Can you see the edit history of a PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Only in part. Some programs record saves in the XMP metadata, and files saved with incremental updates keep earlier versions inside. Most browser editors rewrite the whole file and leave no history."}}, {"@type": "Question", "name": "Can PDF metadata be faked?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The author, software and dates can be changed in any metadata editor, so they're clues, not evidence. A digital signature is the only built-in way to show a file hasn't changed."}}, {"@type": "Question", "name": "Does a missing modification date mean a PDF wasn't edited?", "acceptedAnswer": {"@type": "Answer", "text": "No. In our check of 37 PDFs, 18 had no dates at all, because the software that made them doesn't write them. A missing date tells you very little."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>How to Tell If a PDF Has Been Edited</h1>
+<div class="meta"><span>📄 7 min read</span><span>Updated October 18, 2026</span></div>
+<p class="intro">You can often tell if a PDF has been edited by checking its producer and dates, comparing two sets of metadata, looking for saved earlier versions inside the file, and checking any digital signature. But most of these clues can be faked or simply missing, so only a signature comes close to proof. Here's where each clue lives and what we found when we tested real files.</p>
+<h2>Can you tell if a PDF has been edited?</h2>
+<p>Sometimes. A PDF can carry several kinds of evidence about its history, but none of them is guaranteed to be there, and most can be changed by anyone who knows where to look. Treat what you find as clues rather than proof. Here's what to check, roughly from easiest to most reliable:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Where to look</th><th>What it can tell you</th><th>Limits</th></tr></thead><tbody>
+<tr><td>Producer and Creator</td><td>The program that made the file, and the one that last saved it</td><td>Easy to change; blank on many PDFs</td></tr>
+<tr><td>Creation and modification dates</td><td>When the file was made and last saved</td><td>Editable in any metadata tool, including ours</td></tr>
+<tr><td>XMP metadata</td><td>A second copy of the dates and producer, plus a save history in some apps</td><td>Only written by some programs; can disagree with the first set</td></tr>
+<tr><td>Incremental updates</td><td>Changes appended to the end of the file, with the older version still inside</td><td>Only if the editor appended instead of rewriting</td></tr>
+<tr><td>Digital signature</td><td>Whether anything changed after signing</td><td>Only exists on signed files</td></tr>
+<tr><td>What you can see</td><td>Mismatched fonts, uneven spacing, white boxes, text that won't select like the rest</td><td>Needs a careful look, and a clean edit can hide it</td></tr>
+</tbody></table></div>
+<p>The only clue that's built to be trusted is a digital signature. Everything else tells you what a file says about itself.</p>
+
+<h2>What does the PDF metadata show?</h2>
+<p>Every PDF can have a small information block with a title, author, the creating program ("Creator"), the program that wrote the PDF ("Producer"), and creation and modification dates. You can see it in Acrobat under File, then Properties, or by loading the file into our <a href="/pdf-metadata-editor/">PDF metadata editor</a>, which also flags whether an XMP block is present.</p>
+<p>The useful question is whether the fields fit the story you've been told. A bank statement whose producer is a free online editor, or a contract "signed in March" with a modification date in June, deserves a closer look. To see what editing does, we added one line of text to two PDFs with pdf-lib, the open-source library behind many browser PDF tools, including several of ours. Both times the Producer changed to "pdf-lib" and the modification date jumped to the moment we saved. The Creator and the creation date stayed the same.</p>
+<p>Then the giveaway. One file was a brand guide made in InDesign, and its XMP block, the second copy of the metadata, still said "Adobe PDF Library 16.0.3" with a 2022 modify date. The two sets of metadata now disagreed by four years. Tools that update one block and forget the other leave exactly this kind of mismatch, so compare both.</p>
+
+<h2>How common is PDF metadata, really?</h2>
+<p>Less common than people assume, which is why missing data proves nothing. We checked 37 unique PDFs from our own files: reports, manuals, brand books and exported documents.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>What we found</th><th>Files</th></tr></thead><tbody>
+<tr><td>Had no creation or modification date at all</td><td>18 of 37</td></tr>
+<tr><td>Had a creation date</td><td>19 of 37</td></tr>
+<tr><td>Modification date different from creation date</td><td>5 of 37</td></tr>
+<tr><td>Had an XMP modify date</td><td>5 of 37</td></tr>
+<tr><td>More than one end-of-file marker</td><td>4 of 37</td></tr>
+<tr><td>...of which were only "fast web view" files</td><td>3 of 4</td></tr>
+<tr><td>...of which held a real later edit</td><td>1 of 4</td></tr>
+</tbody></table></div>
+<p>Nearly half had no dates at all, because the program that made them doesn't write any by default. So a missing modification date isn't suspicious on its own, and a matching one isn't a clean bill of health. Our <a href="/pdf-metadata-editor/">metadata editor</a> will let you type any date you like, and so will plenty of other tools. That's the point: dates are a label, not a lock.</p>
+
+<h2>Can you see the earlier version of an edited PDF?</h2>
+<p>Sometimes, yes. PDF lets a program save changes by tacking them onto the end of the file instead of rewriting it. The original stays inside, followed by the update. Every saved version ends with a <code>%%EOF</code> marker, so a file with more than one may hold an earlier version.</p>
+<p>Be careful with that rule, though. In our sample, 3 of the 4 files with two markers were just "optimized for fast web view," a layout that always uses two. Only one had a real later edit. It was a 12-page product brochure with 5.8 KB appended to the end, saved two minutes after the first version. When we cut the file back at its earlier marker, the earlier version opened fine, and the difference showed: the back cover with the print details had been page 1. The update moved it to the end.</p>
+<p>Tools that rewrite the whole file, as most browser editors do, leave no older version behind. So one end marker doesn't mean a file was never edited.</p>
+
+<h2>How do digital signatures show edits?</h2>
+<p>A digital signature locks a fingerprint of the file as it was at signing. Open a signed PDF in Acrobat Reader and the signature panel tells you whether the document has been changed since. If later changes were allowed, such as filling in a form or adding another signature, it lists them as revisions, and you can open the version that was actually signed.</p>
+<p>That only works for real certificate-based signatures. A picture of a signature pasted onto a page proves nothing about edits. Our guide to <a href="/guides/sign-a-pdf-online/">signing a PDF online</a> explains the difference.</p>
+
+<h2>What visual signs give away an edited PDF?</h2>
+<p>Look at the document itself, zoomed in. Fonts that are slightly different in one line, numbers that don't sit on the same baseline, uneven spacing, or a white box with text on top of it all point to a patch. Try selecting the text. If one figure selects separately from the line around it, it may have been added later. If the page is an image but one number is selectable text, that's a strong sign too.</p>
+<p>When you have the version you were originally sent, the quickest test is to <a href="/compare-pdf/">compare the two PDFs</a> side by side. Any changed word or moved line shows up immediately. Our guide on <a href="/guides/how-to-compare-two-pdf-files/">comparing two PDF files</a> covers text and visual diffs.</p>
+<p>And if you're the one sending a PDF, remember the same clues work against you. Clear out the author, software and dates with the <a href="/document-metadata-remover/">document metadata remover</a> before you share.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>How can I tell if a PDF has been altered?</h3><p>Check the document properties for the producer and dates, compare them with the XMP metadata, look for more than one %%EOF marker, and zoom in for mismatched fonts or spacing. If the file is digitally signed, the signature panel in Acrobat Reader shows whether it changed after signing. None of these clues is proof on its own.</p></div>
+<div class="faq-item"><h3>Does editing a PDF change its modification date?</h3><p>Usually. When we edited PDFs with pdf-lib, the modification date updated and the Producer changed to pdf-lib. But the date is easy to set by hand, and many PDFs have no dates at all.</p></div>
+<div class="faq-item"><h3>Can you see the edit history of a PDF?</h3><p>Only in part. Some programs record saves in the XMP metadata, and files saved with incremental updates keep earlier versions inside. Most browser editors rewrite the whole file and leave no history.</p></div>
+<div class="faq-item"><h3>Can PDF metadata be faked?</h3><p>Yes. The author, software and dates can be changed in any metadata editor, so they're clues, not evidence. A digital signature is the only built-in way to show a file hasn't changed.</p></div>
+<div class="faq-item"><h3>Does a missing modification date mean a PDF wasn&#x27;t edited?</h3><p>No. In our check of 37 PDFs, 18 had no dates at all, because the software that made them doesn't write them. A missing date tells you very little.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/pdf-metadata-editor/">PDF Metadata Editor</a>
+<a href="/compare-pdf/">Compare PDFs</a>
+<a href="/sign-pdf/">Sign PDF</a>
+<a href="/document-metadata-remover/">Document Metadata Remover</a>
+<a href="/guides/how-to-edit-pdf-metadata/">How to Edit PDF Metadata</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>

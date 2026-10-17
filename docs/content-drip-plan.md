@@ -2013,3 +2013,71 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   media JPEG recompress (page weight, not a guide). STILL OPEN (JS, need Stu): copyPages-on-
   encrypted (above), pdfjs-dist 3.11.174 proper upgrade, pdf-to-text page markers/
   dehyphenation, pdf-add-text default font, hash-generator readAsText, molar-mass hydrate.
+
+- 2026-10-18 batch guides (10-17 queue's two named intake ideas first, then one lane-weighted
+  fresh pick; dedupe: back pay only existed as one section of what-happens-after-an-ssdi-denial,
+  blank PDFs only as one pdf-repair FAQ; no "has this PDF been edited" guide existed. Checksum
+  guide SKIPPED on purpose: hash-generator readAsText bug still open, would send users to a
+  wrong file hash):
+  niche calc (SS cluster) → guides/how-far-back-does-ssdi-back-pay-go/ (solution-aware; tool
+  social-security-disability-denial-calculator. Rules table (5 full waiting months, 12-month
+  retro limit, established onset, through month before decision); scenario table run through
+  the denial calculator's own JS (onset 3/15/2025, applied 4/2025, $1,630: initial 11/2025 → 2
+  mo $3,260; recon 4/2026 → 7 mo $11,410; ALJ 10/2026 → 13 mo $21,190; applied 1/2025 after 1/2023
+  onset → 33 mo $53,790, 25% = $13,448 → $9,200 cap (decisions on/after 11/30/2024, no 2026 change
+  found)); windfall offset, back Part B premiums, WC/PDB 80% offset; SSI table (no retro, 2026 FBR
+  $994 → installments at $2,982+, 3 payments 6 months apart, 9-month resource exclusion);
+  lump-sum election → is-social-security-taxable);
+  PDF → guides/why-is-my-pdf-blank/ (problem-aware; tools pdf-repair + pdf-to-jpg + ocr-pdf +
+  flatten-pdf. 7-row symptom → cause → fix table (XFA "Please wait" text, truncation, not-a-PDF,
+  viewer, Portfolio, layers, color override); XFA: Chrome/Edge/Safari/Preview no, Firefox partial
+  since 2021, dropped in PDF 2.0. MEASURED truncation with Poppler on a 47-page 3.1 MB pdfTeX
+  paper: cut 1% / 5% / 50% → all 47 pages open but near-blank, text 22,700 → 445 words (fonts
+  at file end); cut 75% → won't open; 7 of 8 other PDFs cut 5% wouldn't open at all);
+  PDF/privacy → guides/how-to-tell-if-a-pdf-has-been-edited/ (problem-aware; tools pdf-metadata-
+  editor + compare-pdf + sign-pdf + document-metadata-remover. MEASURED: pdf-lib edit on 2 files →
+  Producer "pdf-lib (...)" + ModDate = save time, Creator/CreationDate kept, XMP untouched (InDesign
+  brand guide's XMP still "Adobe PDF Library 16.0.3" / 2022 → 4-year Info/XMP mismatch); corpus of
+  37 unique PDFs: 18 no dates, 19 creation date, 5 ModDate≠CreationDate, 5 XMP ModifyDate,
+  4 with >1 %%EOF of which 3 just linearized and 1 real incremental update (12-page brochure,
+  5.8 KB appended 2 min later; cutting at the earlier %%EOF restored the earlier page order,
+  back cover moved from p1 to p12))
+  (1,379–1,400 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles ≤50 chars, descs ≤154.) Guide backlinks added
+  on social-security-disability-denial-calculator, pdf-repair, pdf-metadata-editor,
+  guides/what-happens-after-an-ssdi-denial, guides/how-to-repair-a-corrupt-pdf,
+  guides/how-to-edit-pdf-metadata.
+- 2026-10-18 depth passes (10-17 queue's named pdf-split, then the 900-1000 band re-scan:
+  dog-pregnancy-calendar 924, credit-card-payoff 929, rap-calculator-50000-salary 941, pet-tools
+  954, credit-card-payoff-calculator 956, honeymoon-budget 956, words-to-pages 958, json-to-yaml
+  959, oil-change-cost 963, pregnancy-due-date 968, money-factor 970, dog-dna-test 972,
+  car-payment 974, tire-size 984, crypto-converter 985, workers-comp 991, amortization-schedule
+  992, bathroom-remodel 994; <900 = device-test pages + about/editorial only):
+  pdf-split (993 → 1,554 words; MEASURED this page's split path (@cantoo/pdf-lib 2.9.1 create +
+  copyPages) on 25 real PDFs: two halves total median 154% of original (56–196%), burst median
+  621% (105–4,547%); image-heavy >2 MB median burst 153% (7 files), text-heavy <300 KB 682% (16);
+  +what-carries-over table (links kept, bookmarks/AcroForm/metadata dropped, encrypted refused at
+  load); FAQ visible 6 / LD 4 → 8 / 8 synced). FIXED copy: "slightly more total disk space" (false,
+  up to 45×) → measured; output names "part-1.pdf" / "page-1.pdf by default" (false: prefix
+  defaults to the source file name) → report-1.pdf; generic answer box → real answer. pdf-split
+  load() has NO ignoreEncryption, so it is NOT affected by the copyPages-on-encrypted bug.
+  car-payment-calculator (974 → 1,600; +payment-per-$1,000 table 0-18% APR × 36/48/60/72 with the
+  page's own formula (7%/60 = $19.80 → 27 × 19.80 = $534.60 vs $534.63), +max-loan-by-payment
+  table at 7%, +rolled-in tax/fees ($2,500 → $584.14, +$470 interest) and negative equity ($4,000
+  → $613.84, +$752), +extra-payment section ($50/mo → 54 months, −$527; $100 → 50, −$954); FAQ
+  visible 4 / LD 4 → 6 / 6 synced). FIXED: generic answer box → real answer.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy); syntax-gate 1,348 blocks, 0 broken.
+- 2026-10-18 hub updates: guides hub +3 cards (More Guides 538→541), count claims 597→600 in
+  all 9 guides-hub places (= 600 on-disk dirs); all-tools Guides (600) sorted insert,
+  2026-10-18 stamp.
+  Queue state: next depth candidates from the 900-1000 band (lane order): credit-card-payoff-
+  calculator (956; check credit-card-payoff 929 is a true duplicate first, both self-canonical),
+  money-factor-converter (970), workers-comp-calculator (991), amortization-schedule (992). Guide
+  intake ideas: SSDI onset date / "how SSA decides when your disability began" (SS), "PDF prints
+  blank or missing text" (PDF), file checksum guide once hash-generator readAsText is fixed.
+  STILL OPEN (JS, need Stu): copyPages-on-encrypted in extract-pdf-pages (pdf-split cleared;
+  still check delete-pages / organize-pdf / pdf-merge), pdfjs-dist 3.11.174 proper upgrade,
+  pdf-to-text page markers/dehyphenation, pdf-add-text default font, hash-generator readAsText,
+  molar-mass hydrate. NEW minor bug (edge case): denial calculator assumes onset is never on
+  the 1st (ent = onsetM+6); onset on the 1st should give onsetM+5. Copy in the new guide states
+  the rule; calculator is off by one month in that edge case. Needs Stu go-ahead to change JS.
