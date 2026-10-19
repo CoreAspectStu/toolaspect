@@ -2140,3 +2140,63 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   organize-pdf / pdf-merge), pdfjs-dist 3.11.174 upgrade, pdf-to-text page markers/dehyphenation,
   pdf-add-text default font (ships unembedded base-14 Helvetica; fine for printing, noted in today's
   guide), hash-generator readAsText, molar-mass hydrate, denial calculator onset-on-the-1st off-by-one.
+
+- 2026-10-20 batch guides (10-19 queue's three named intake ideas, in order; dedupe: trial work
+  period only existed as one sentence in how-much-does-ssdi-pay, can-you-work-while-collecting-
+  social-security covers the RETIREMENT earnings test only; no gibberish/ToUnicode guide (how-to-
+  extract-text-from-a-pdf covers columns/OCR, not encoding); no capture-date guide. Checksum guide
+  still SKIPPED: hash-generator readAsText bug open):
+  SS cluster → guides/can-you-work-while-on-ssdi/ (solution-aware; tools social-security-disability-
+  benefits-calculator + social-security-disability-denial-calculator + social-security-calculator.
+  2026 figures VERIFIED vs ssa.gov/redbook/newfor2026: TWP $1,210 (or >80 hrs self-employed), SGA
+  $1,690 / blind $2,830; earnings table incl. IRWE ($1,900 − $300 = $1,600 countable); timeline for
+  $1,630 benefit + $2,000/mo job from 1/2026: TWP Jan–Sep, cessation Oct + grace Nov/Dec, EPE to
+  9/2029, first 12 months $19,560 SSDI + $24,000 wages; EXR 5 yrs / 6 months provisional; Medicare
+  ≥93 months after TWP (→ mid-2034); SSI $65+$20 then $1 per $2, 2026 FBR $994: $1,000 wages →
+  $536.50, zero at $2,073; 1619(b); Ticket to Work CDR protection; report by the 10th);
+  PDF → guides/why-does-pdf-text-copy-as-gibberish/ (problem-aware; tools pdf-to-text + ocr-pdf +
+  pdf-repair + pdf-to-jpg. 6-row symptom → cause → fix table; MEASURED pdffonts + pdftotext over 41
+  unique local PDFs: 35 all fonts with ToUnicode, all clean; 6 with ≥1 font lacking it, of which
+  3 clean, 2 with stray control chars (2/22,700 and 5/18,276 words), 1 94-page UK gov white paper
+  (344/357 font entries unmapped) clean body but all 37 contents-page dot leaders → runs of U+FFFD;
+  2 image-only. Point made: missing ToUnicode is often survivable, extractor fallbacks differ);
+  privacy → guides/how-to-find-when-a-photo-was-taken/ (problem-aware; tools exif-viewer +
+  image-metadata-remover + reverse-image-search. 7-row date-field table (DateTimeOriginal /
+  OffsetTimeOriginal / Digitized / ModifyDate / GPSDateStamp / file dates / filename); MEASURED 228
+  unique JPEGs: 25 EXIF, 12 DateTimeOriginal, 7 OffsetTimeOriginal (+10/+11), 0 GPS date, file mtime
+  matched capture 0/12 (later by 142 days to 4 yrs 4 mo); copy test on Canon EOS R6 file: EXIF date
+  2022-04-04 kept, mtime = copy time; PIL default re-save → 0 EXIF tags)
+  (1,265–1,274 visible words incl. tables + FAQ; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles 47–56 chars, descs 145–150.) Guide backlinks added
+  on social-security-disability-benefits-calculator, pdf-to-text, ocr-pdf, exif-viewer,
+  guides/how-much-does-ssdi-pay, guides/when-does-medicare-start-on-ssdi, guides/how-to-extract-
+  text-from-a-pdf, guides/how-to-tell-if-a-photo-has-been-edited, guides/do-screenshots-have-metadata.
+- 2026-10-20 depth passes (10-19 queue's lane order: workers-comp-calculator, amortization-schedule):
+  workers-comp-calculator (1,000 → 1,754 words; all figures from the page's own formula: +cost per
+  $45,000 employee by class ($67.50 clerical … $6,750 roofing; $0.03–$3.24 per hour worked), +e-mod
+  table on $300k plumbing ($12,600 base; 0.80 → $10,080, 1.50 → $18,900), +payroll audit section
+  (restaurant est. $400k / actual $480k → +$1,440; $60k uninsured roofing sub → +$9,000); guide
+  links how-much-does-workers-comp-cost + how-workers-comp-settlements-are-calculated (first inbound
+  from this page); FAQ visible 5 / LD 4 → 7 / 7 synced). FIXED: generic answer box → real answer.
+  amortization-schedule (997 → 1,714; +loan-type table from the page's loop (car/personal/student/
+  15-yr/30-yr: payment, total interest, interest share of payment 1, crossover payment: 30-yr 6.5% =
+  payment 233, 15-yr = 53, car/personal = 1), +prepayment comparison ($100/$200/$500 extra, biweekly
+  ≈ $131.68/mo extra → ~5 yr 10 mo / ~$72,700, $10k lump at payment 12/60/120 → $49,273/$36,754/
+  $24,541), +recast vs refinance; +auto-loan related link, +how-does-loan-amortization-work link;
+  FAQ visible 4 / LD 4 → 6 / 6 synced). FIXED copy: "$100 extra → about 4½ years early, ~$58,000"
+  (actual 56 months = 4 yr 8 mo, $58,860) in body + FAQ; crossover "between year 15 and 20" →
+  "payment 233, in year 20"; generic answer box → real answer.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy).
+- 2026-10-20 hub updates: guides hub +3 cards, count claims 603→606 in all 9 places (= 606 on-disk
+  dirs), More Guides badge 541→544 (NOTE: badges don't match card counts: More Guides has 379
+  cards, total 552 cards vs 606 dirs; pre-existing, worth a hub regen); all-tools Guides section
+  regenerated by deploy.sh (gen-all-tools.py).
+  Queue state: next depth candidates (900-1000 band, lane order): crypto-converter (985), tire-size
+  (984), then re-scan. Guide intake ideas: "SSDI overpayment: what to do" (SS; pairs with today's
+  reporting section), "how to make a scanned PDF searchable" (PDF; check ocr-pdf guide first),
+  "does WhatsApp/iMessage strip photo metadata" (privacy; check do-screenshots-have-metadata),
+  file checksum guide once hash-generator readAsText is fixed.
+  STILL OPEN (need Stu): credit-card-payoff vs credit-card-payoff-calculator cannibalization pair;
+  JS: copyPages-on-encrypted (extract-pdf-pages; check delete-pages/organize-pdf/pdf-merge),
+  pdfjs-dist 3.11.174 upgrade, pdf-to-text page markers/dehyphenation, pdf-add-text default font,
+  hash-generator readAsText, molar-mass hydrate, denial calculator onset-on-the-1st off-by-one.
