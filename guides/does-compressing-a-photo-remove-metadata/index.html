@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does Compressing a Photo Remove Metadata? | ToolAspect</title>
+<meta name="description" content="Sometimes. ImageMagick kept GPS through compression, resizing and PNG; Pillow and browser canvas removed it. Test results and how to strip it for sure.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-compressing-a-photo-remove-metadata/">
+<meta property="og:title" content="Does Compressing a Photo Remove Its Metadata? We Tested 10 Ways">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-compressing-a-photo-remove-metadata/">
+<meta property="og:description" content="Sometimes. ImageMagick kept GPS through compression, resizing and PNG; Pillow and browser canvas removed it. Test results and how to strip it for sure.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does Compressing a Photo Remove Its Metadata? We Tested 10 Ways">
+<meta name="twitter:description" content="Sometimes. ImageMagick kept GPS through compression, resizing and PNG; Pillow and browser canvas removed it. Test results and how to strip it for sure.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does Compressing a Photo Remove Its Metadata? We Tested 10 Ways", "description": "Sometimes. ImageMagick kept GPS through compression, resizing and PNG; Pillow and browser canvas removed it. Test results and how to strip it for sure.", "datePublished": "2026-10-21", "dateModified": "2026-10-21", "mainEntityOfPage": "https://toolaspect.com/guides/does-compressing-a-photo-remove-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does Compressing a Photo Remove Its Metadata? We Tested 10 Ways", "item": "https://toolaspect.com/guides/does-compressing-a-photo-remove-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does compressing a JPEG remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Only if the tool is built to. In our test, ImageMagick compressed a photo by 62% and kept its EXIF and GPS location, while Python's Pillow and browser-based compressors removed it. Check the compressed file in an EXIF viewer before you share it."}}, {"@type": "Question", "name": "Do online image compressors remove GPS data?", "acceptedAnswer": {"@type": "Answer", "text": "Browser-based ones that redraw the image on a canvas remove it, because a canvas export carries no EXIF. Compressors that process the file on a server may keep or remove it depending on their software, so check the downloaded file."}}, {"@type": "Question", "name": "Does removing EXIF data reduce file size?", "acceptedAnswer": {"@type": "Answer", "text": "Only slightly. In our test, stripping all metadata saved about 4 KB, or 0.6% of the compressed file. Phone photos with an embedded preview image save a little more. Reducing quality or dimensions is what actually shrinks a photo."}}, {"@type": "Question", "name": "Does converting a photo to PNG or WebP remove EXIF?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. Both formats can store EXIF, and ImageMagick carried the GPS location into both in our test. Browser canvas conversions dropped it. The format doesn't decide; the tool does."}}, {"@type": "Question", "name": "Does compressing a photo change its quality?", "acceptedAnswer": {"@type": "Answer", "text": "Lossy compression does. Every JPEG or WebP re-save throws away some detail, which is hard to see at high quality settings but adds up over repeated saves. Keep your original and compress a copy for sharing."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does Compressing a Photo Remove Its Metadata? We Tested 10 Ways</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 21, 2026</span></div>
+<p class="intro">Compressing a photo doesn't reliably remove its metadata. Whether your location and camera details survive depends entirely on the tool. We ran one GPS-tagged photo through ten common compression and conversion routes and checked what was left. Here's what we found and how to make sure a shared photo is clean.</p>
+<h2>Does compressing an image remove EXIF data?</h2>
+<p>Not by itself. Compression shrinks the pixel data; metadata sits in a separate block at the front of the file, and a compressor can copy it across or leave it behind. Some tools copy it by default, some drop it by default, and very few tell you which. So the honest answer is "it depends on the tool," and the only way to be sure is to check the output.</p>
+<p>We tested that directly. We took a 4717 × 3145 JPEG from a Canon EOS R6, with its camera details, capture date and color profile, added GPS coordinates to it, and ran it through common compression routes. Then we read every output file back to see what survived:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Method</th><th>Output size</th><th>EXIF</th><th>GPS location</th><th>Date taken</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>Original test photo</td><td>1.81 MB</td><td>Yes (12 tags)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ImageMagick, quality 70</td><td>0.69 MB</td><td>Kept</td><td>Kept</td><td>Kept</td><td>Kept</td></tr>
+<tr><td>ImageMagick, resized to 50%, quality 70</td><td>0.17 MB</td><td>Kept</td><td>Kept</td><td>Kept</td><td>Kept</td></tr>
+<tr><td>ImageMagick, converted to WebP</td><td>0.40 MB</td><td>Kept</td><td>Kept</td><td>Kept</td><td>Kept</td></tr>
+<tr><td>ImageMagick, converted to PNG</td><td>6.55 MB</td><td>Kept</td><td>Kept</td><td>Kept</td><td>Removed</td></tr>
+<tr><td>ImageMagick with -strip</td><td>0.69 MB</td><td>Removed</td><td>Removed</td><td>Removed</td><td>Removed</td></tr>
+<tr><td>Pillow (Python), default save at quality 70</td><td>0.77 MB</td><td>Removed</td><td>Removed</td><td>Removed</td><td>Removed</td></tr>
+<tr><td>Pillow, quality 70, EXIF passed through</td><td>0.77 MB</td><td>Kept</td><td>Kept</td><td>Kept</td><td>Removed</td></tr>
+<tr><td>Browser canvas, JPEG at 0.7 (how our compressor works)</td><td>0.69 MB</td><td>Removed</td><td>Removed</td><td>Removed</td><td>Replaced with a generic sRGB one</td></tr>
+<tr><td>Browser canvas, WebP at 0.7</td><td>0.39 MB</td><td>Removed</td><td>Removed</td><td>Removed</td><td>Replaced with a generic sRGB one</td></tr>
+</tbody></table></div>
+
+<h2>Which tools keep metadata when they compress?</h2>
+<p>ImageMagick, the engine behind a lot of servers, scripts and desktop apps, kept everything. Compressing to quality 70 cut the file by 62% and left the GPS coordinates intact. Halving the dimensions, converting to WebP and even converting to PNG all carried the location along. You'd have to add the -strip option to lose it. Many command-line optimizers and photo editors behave the same way, because keeping metadata is the polite default for photographers.</p>
+<p>Pillow, the Python imaging library, did the opposite. A plain save threw away all the EXIF, location included, unless the code explicitly passed it through. Same input, same quality setting, opposite privacy result. That's why a site or app's behavior depends on what it was built with, and why "I compressed it" isn't the same as "I cleaned it."</p>
+
+<h2>Do browser-based compressors strip metadata?</h2>
+<p>Most do, as a side effect. Tools that work in the browser, including our <a href="/image-compressor/">image compressor</a>, draw the photo onto a canvas and export a new file from it. A canvas only holds pixels, so the export has no EXIF, no GPS and no capture date. In our test both the JPEG and WebP canvas exports had zero EXIF tags. Chrome added a small 456-byte standard color profile, which says nothing about you or your camera.</p>
+<p>Two side effects are worth knowing. The orientation tag goes too, but modern browsers apply it while drawing, so portrait photos still come out upright. And a canvas export is a second lossy save, which is fine for sharing but a reason to keep your original.</p>
+<p>Online compressors that upload your photo to a server could be using anything on the back end, so don't assume. Run the result through an <a href="/exif-viewer/">EXIF viewer</a>; it takes a few seconds.</p>
+
+<h2>Does removing metadata make the file smaller?</h2>
+<p>Barely. In our test, the ImageMagick file with all its metadata was 694,991 bytes and the stripped version was 690,847. That's about 4 KB, or 0.6%, and most of it was the color profile rather than the EXIF. Metadata can be bigger on some phone photos, which embed a small preview image, but it's never where the megabytes are. If you want a much smaller file, lower the quality or the dimensions. If you want a private file, strip the metadata. They're two different jobs.</p>
+
+<h2>Does resizing or converting a photo remove its location?</h2>
+<p>Again, only if the tool chooses to. Our resized and converted ImageMagick files kept the GPS. Screenshots are a different matter: a screenshot is a brand-new image, so the original photo's metadata never comes along; see <a href="/guides/do-screenshots-have-metadata/">do screenshots have metadata</a>. Messaging apps usually re-compress photos sent the normal way, which is why they often lose their metadata, while sending a photo "as a file" or "as a document" usually passes the original through untouched.</p>
+
+<h2>What's the reliable way to remove location before sharing?</h2>
+<ul>
+<li><strong>Strip it on purpose.</strong> The <a href="/image-metadata-remover/">image metadata remover</a> re-encodes a clean copy in your browser, without uploading the photo, and removes EXIF, GPS, XMP and IPTC in one pass.</li>
+<li><strong>Check the result.</strong> Open the file you're about to send in the EXIF viewer. No GPS section means no location.</li>
+<li><strong>Turn it off at the source.</strong> If you never want location in your photos, switch off location access for your camera app. Platform-by-platform steps are in <a href="/guides/how-to-remove-location-from-photos/">how to remove location from photos</a>.</li>
+<li><strong>Keep the original private.</strong> Edits, crops and compression all make copies. The file that leaks is usually the one you forgot about, uploaded to a shared folder in full.</li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Does compressing a JPEG remove metadata?</h3><p>Only if the tool is built to. In our test, ImageMagick compressed a photo by 62% and kept its EXIF and GPS location, while Python's Pillow and browser-based compressors removed it. Check the compressed file in an EXIF viewer before you share it.</p></div>
+<div class="faq-item"><h3>Do online image compressors remove GPS data?</h3><p>Browser-based ones that redraw the image on a canvas remove it, because a canvas export carries no EXIF. Compressors that process the file on a server may keep or remove it depending on their software, so check the downloaded file.</p></div>
+<div class="faq-item"><h3>Does removing EXIF data reduce file size?</h3><p>Only slightly. In our test, stripping all metadata saved about 4 KB, or 0.6% of the compressed file. Phone photos with an embedded preview image save a little more. Reducing quality or dimensions is what actually shrinks a photo.</p></div>
+<div class="faq-item"><h3>Does converting a photo to PNG or WebP remove EXIF?</h3><p>Not necessarily. Both formats can store EXIF, and ImageMagick carried the GPS location into both in our test. Browser canvas conversions dropped it. The format doesn't decide; the tool does.</p></div>
+<div class="faq-item"><h3>Does compressing a photo change its quality?</h3><p>Lossy compression does. Every JPEG or WebP re-save throws away some detail, which is hard to see at high quality settings but adds up over repeated saves. Keep your original and compress a copy for sharing.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/guides/how-to-remove-location-from-photos/">How to Remove Location From Photos</a>
+<a href="/guides/do-screenshots-have-metadata/">Do Screenshots Have Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
