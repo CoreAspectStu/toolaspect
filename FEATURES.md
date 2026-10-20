@@ -1,6 +1,12 @@
 # FEATURES — toolaspect.com
 
-Current as of 2026-10-05. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
+Current as of 2026-10-21. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
+
+## 2026-10-21 refresh (was stale 16d)
+- Content drip steady Oct-13→21: 3 guides/day + 2 tool depth passes/day (SSDI/Social-Security cluster, PDF how-to cluster, photo-metadata cluster; hubs 585→609). Head `053f98a12` (10-21).
+- **pdfjs CVE-2024-4367 mitigation** `7fa194926`: `isEvalSupported:false` on all 15 pdf.js getDocument call sites (deployed Oct-15 as working-tree-only, committed later).
+- i18n QA sweep `4c78755d2`: EN metadata localized on all 57 es/de/pt pages (meta/og/twitter + ld+json name/description).
+- Traffic ~2.7-5.4K PV/day; Oct-19 record day 5,428 PV (daily cron).
 
 ## 2026-10-05 refresh (was stale 16d)
 Since Sep-19: content-drip engine matured into daily cadence — guide hubs 549→567 (~18 new guides + 12 tool depth passes; f69f1f805, d9ae2169e, 4786ff06e, 0d4eaf8f1, fd8ea7697). Drip topics steered by GA4 real-user engagement (d7f1f6541: PDF / privacy / niche-calc focus). Calculator accuracy fixes (siding nail count 20x over, stair-calculator rounding copy, 09c09ffed). Sitemap ~3,326 URLs. Traffic 7d ~24.9K PV / ~11.1K visitors. Ad lane: 4 AdSense units live, serving gated on Google automated site review. GSC crawl-budget bottleneck remains #1 issue (2,950 discovered-not-indexed). gh-repo-scan backlog: quivr (Oct-5) pending review.
