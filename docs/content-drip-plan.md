@@ -2259,3 +2259,67 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   delete-pages/organize-pdf/pdf-merge), pdfjs-dist 3.11.174 upgrade, pdf-to-text page markers/
   dehyphenation, pdf-add-text default font, hash-generator readAsText, molar-mass hydrate, denial
   calculator onset-on-the-1st off-by-one.
+
+- 2026-10-22 batch guides (10-21 queue intake ideas, all three taken; dedupe: CDR not covered by
+  what-happens-after-an-ssdi-denial (0 CDR mentions) or any SS guide; no page-size guide among 40 PDF
+  guides; convert-heic-to-jpg only links exif-viewer/metadata-remover, never tests what survives):
+  SS cluster → guides/what-happens-at-an-ssdi-continuing-disability-review/ (problem-aware; tools
+  social-security-disability-benefits-calculator + -denial-calculator + social-security-calculator.
+  VERIFIED vs eCFR 20 CFR 404.1590: MIE 6–18 mo, MIP ≥ every 3 yr, MINE every 5–7 yr; triggers (b);
+  (h) no medical CDR while using a ticket; (i) work alone can't start a CDR after 24 months on SSDI;
+  404.914 disability hearing at cessation reconsideration; 404.1597a/POMS DI 12027: continuation
+  election within 10 days of receipt (15 from notice date), through the ALJ decision, repay if lost
+  (waiver if good faith). Worked deadlines for a March 2 notice: Mar 17 / May 6.);
+  PDF → guides/why-are-my-pdf-pages-different-sizes/ (problem-aware; tools pdf-merge + crop-pdf +
+  rotate-pdf. MEASURED: merged Letter/A4/16:9/Legal/597×845 one-pagers with @cantoo/pdf-lib 2.9.1
+  copyPages (= pdf-merge's code path) → pdfinfo shows every size unchanged. Fit table computed
+  min(W/w,H/h): A4→Letter 94.1%, Letter→A4 97.3%, Legal 78.6/83.5, Tabloid 64.7/68.8, A3 66.5/70.7,
+  slide 82.5/87.7 landscape. Reused 10-21 pdfinfo scan: 39 PDFs, 0 mixing A4+Letter (the 10-21
+  "1 mixed" was a 0×0 pdfinfo read artifact on t50.pdf, not a real mix). crop-pdf = setCropBox only.);
+  privacy → guides/does-converting-heic-to-jpg-keep-metadata/ (problem-aware; tools heic-to-jpg-
+  converter + exif-viewer + image-metadata-remover. MEASURED: 4717×3145 HEIC with 45-tag EXIF + GPS
+  written by pillow-heif 1.8.1 (no iPhone original on disk; ImageMagick's own HEIC writer drops
+  EXIF, so it couldn't make the test file). Our tool's vendor heic-to.js heicTo() in headless
+  Chromium → JPG and PNG 0 EXIF tags (canvas.toBlob; sRGB ICC added); ImageMagick JPG 45 / PNG 44
+  tags incl GPS; Pillow default 0, exif= passed 45.)
+  (1,255–1,444 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD;
+  0 em dashes; 0 broken internal links; titles 50–57 chars, descs 151–154.) Guide backlinks added
+  on heic-to-jpg-converter, social-security-disability-benefits-calculator, pdf-merge, and guides/
+  what-to-do-about-an-ssdi-overpayment, how-to-print-an-a4-pdf-on-letter-paper, does-compressing-a-
+  photo-remove-metadata.
+- 2026-10-22 depth passes (re-scan of the 900–1000 band, visible words excl. script/style/nav/
+  footer: dog-pregnancy-calendar 933, credit-card-payoff 942 (skipped: cannibalization pair open),
+  rap-calculator-50000-salary 949, pet-tools 958 (hub), honeymoon-budget 965, json-to-yaml 968,
+  words-to-pages 968, oil-change-cost 973, pregnancy-due-date-calculator 974, dog-dna 979):
+  pregnancy-due-date-calculator (974 → 1,656; all dates from the page's formula LMP+280+(cycle−28):
+  +LMP-on-the-1st → due date table for 2026 (Jan 1 → Oct 8 … Dec 1 → Sep 7 2027), +cycle 21–35 days
+  shift table (Jan 1 LMP: Oct 1 … Oct 15), +tests-by-week table (dating US, NIPT, NT, anatomy 18–22,
+  glucose 24–28, Tdap 27–36, GBS 36–37); FAQ 4 / LD 4 → 6 / 6 synced). FIXED: generic answer box
+  → real answer.
+  json-to-yaml (968 → 1,623; +16-row YAML→JSON edge-case table, every row real yaml@2.9.0 output
+  in node (1.10 → 1.1, 01234 → 1234, 0o755 → 493, .inf → null, << merge key kept literal,
+  DUPLICATE_KEY / TAB_AS_INDENT / MULTIPLE_DOCS errors), +"Norway problem" table: this converter's
+  YAML 1.2 output leaves no/yes/on/off/12:30/dates unquoted and PyYAML 6.0.3 reads them as
+  False / True key / False / 750 / date; FAQ 3 / LD 3 → 5 / 5 synced). FIXED: generic answer box.
+  JS byte-identical on both (inline-script md5 vs pre-edit copy).
+  BUGS FOUND (JS untouched per drip rule — need Stu go-ahead):
+  (1) pregnancy-due-date-calculator: new Date("YYYY-MM-DD") parses as UTC midnight, then
+  toLocaleDateString renders in local time → every date shows ONE DAY EARLY for users west of UTC
+  (all US visitors): LMP Mar 10 shows due Dec 14 vs the copy's Dec 15. Fix: parse as local
+  (new Date(y, m-1, d)). Also trimester cutoffs (weeks<13 / <27) vs the page's table (1–13 / 14–27
+  / 28+): week 13 shows Second, week 27 shows Third.
+  (2) json-to-yaml: consider YAML.stringify(value, {version:'1.1'}) or a "quote YAML 1.1 booleans"
+  option — verified it quotes "no"/"on"/"yes"/"off"/"12:30"/dates, avoiding the Norway problem.
+- 2026-10-22 hub updates: guides hub +3 cards, count claims 609→612 in all 9 places (= 612 on-disk
+  dirs), More Guides badge 547→550 (badge/card mismatch from 10-20 still stands); all-tools Guides
+  section regenerated by deploy.sh (gen-all-tools.py).
+  Queue state: next depth candidates (900–1000 band): oil-change-cost-calculator (973), words-to-
+  pages-calculator (968), honeymoon-budget-calculator (965), dog-pregnancy-calendar (933); skip
+  credit-card-payoff until the cannibalization call. Guide intake ideas: "how to appeal an SSDI
+  cessation" only if CDR guide's section proves too thin (else "SSDI and Ticket to Work"), "how to
+  make all PDF pages the same size" is now covered in today's guide (don't duplicate) → instead
+  "why is my PDF so large" (check how-to-compress-a-pdf first), "does AirDrop keep photo metadata"
+  (privacy; only if testable, else hedge-free alternative like "what EXIF data does a phone photo
+  contain").
+  STILL OPEN (need Stu): as 10-21 list, minus crypto-converter "polygon" id (fixed in 738aa8925),
+  plus the two JS items above.

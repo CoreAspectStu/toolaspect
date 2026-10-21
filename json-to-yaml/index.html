@@ -90,7 +90,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
-<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert JSON to YAML online?","acceptedAnswer":{"@type":"Answer","text":"Paste your JSON into the converter and it parses and re-serializes it as YAML entirely in your browser — no upload to any server. The conversion preserves nested objects, arrays, and scalar types exactly. Invalid JSON is flagged with a parse error so you can fix it before converting."}},{"@type":"Question","name":"Is YAML always more compact than JSON?","acceptedAnswer":{"@type":"Answer","text":"Usually yes, because YAML drops quotes, braces, and commas in favor of indentation, but not always. Very short values, deeply nested single-item arrays, and strings containing special characters can make YAML as long or longer than JSON. YAML also permits multiple equivalent renderings (flow vs block style) of the same data."}},{"@type":"Question","name":"What JSON features have no clean YAML equivalent?","acceptedAnswer":{"@type":"Answer","text":"Everything in JSON maps to YAML cleanly except duplicate keys and certain edge-case numbers like leading-plus exponents, which YAML parsers may reject or normalize differently. YAML 1.1 vs 1.2 spec differences can also change how things like booleans (on/off/yes/no) are typed on round-trip. For config files this rarely matters, but strict round-tripping is not guaranteed."}}]}</script>
+<script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert JSON to YAML online?","acceptedAnswer":{"@type":"Answer","text":"Paste your JSON into the converter and it parses and re-serializes it as YAML entirely in your browser — no upload to any server. The conversion preserves nested objects, arrays, and scalar types exactly. Invalid JSON is flagged with a parse error so you can fix it before converting."}},{"@type":"Question","name":"Is YAML always more compact than JSON?","acceptedAnswer":{"@type":"Answer","text":"Usually yes, because YAML drops quotes, braces, and commas in favor of indentation, but not always. Very short values, deeply nested single-item arrays, and strings containing special characters can make YAML as long or longer than JSON. YAML also permits multiple equivalent renderings (flow vs block style) of the same data."}},{"@type":"Question","name":"What JSON features have no clean YAML equivalent?","acceptedAnswer":{"@type":"Answer","text":"Everything in JSON maps to YAML cleanly except duplicate keys and certain edge-case numbers like leading-plus exponents, which YAML parsers may reject or normalize differently. YAML 1.1 vs 1.2 spec differences can also change how things like booleans (on/off/yes/no) are typed on round-trip. For config files this rarely matters, but strict round-tripping is not guaranteed."}},{"@type":"Question","name":"Why did my version number 1.10 turn into 1.1?","acceptedAnswer":{"@type":"Answer","text":"Because unquoted 1.10 in YAML is a number, and numbers don't keep trailing zeros. The same happens to leading zeros, so 01234 becomes 1234. Quote the value in your YAML, version: \"1.10\", and it converts as the string \"1.10\"."}},{"@type":"Question","name":"Why does no or yes become false or true in my YAML?","acceptedAnswer":{"@type":"Answer","text":"YAML 1.1 parsers such as PyYAML treat yes, no, on and off as booleans. This converter writes YAML 1.2, where they're strings, so it leaves them unquoted. If an older parser will read the file, put those values in quotes."}}]}</script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -101,7 +101,7 @@
 <div class="page-header">
 <h1>🔁 JSON ⇄ YAML</h1>
 <div class="ta-answer" data-ta-schema="answer1" style="background:var(--surface,#f8fafc);border:1px solid var(--border,#e2e8f0);border-left:3px solid var(--primary,#6366f1);border-radius:10px;padding:12px 16px;margin:0 0 14px;font-size:.95rem;line-height:1.55">
-  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>The JSON ⇄ YAML on ToolAspect gives you the answer instantly — free, no signup, and it runs entirely in your browser.</span></p>
+  <p style="margin:0"><strong>Answer:</strong> <span data-ta-answer-text>Paste JSON and hit Convert. Objects become indented maps and arrays become dash lists, so {"name":"api","ports":[80,443]} turns into name: api, then ports: with - 80 and - 443 on their own lines. It runs in your browser on the yaml 2.9 engine and checks that the output parses back to the same data.</span></p>
 </div>
 <div class="ta-share" data-ta-schema="share1" data-ta-slug="json-to-yaml" aria-label="Share this tool"></div>
 
@@ -179,8 +179,58 @@
 </div>
 
 <div class="content-section">
+<h2>YAML to JSON: What Happens to Tricky Values</h2>
+<p>Going from YAML to JSON is where surprises happen, because YAML guesses types from how values look. We ran these through the same yaml 2.9 engine this page uses. The left column is the YAML you paste; the middle is what comes out in JSON:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>YAML input</th><th>JSON output</th><th>What to know</th></tr></thead>
+<tbody>
+<tr><td><code>country: no</code></td><td><code>"no"</code></td><td>String. YAML 1.2 dropped yes/no/on/off booleans</td></tr>
+<tr><td><code>on: push</code></td><td><code>"on"</code> key</td><td>String key, which is what GitHub Actions expects</td></tr>
+<tr><td><code>version: 1.10</code></td><td><code>1.1</code></td><td>A number, so the trailing zero is gone. Quote it</td></tr>
+<tr><td><code>zip: 01234</code></td><td><code>1234</code></td><td>Leading zero lost. Quote codes and IDs</td></tr>
+<tr><td><code>mode: 0o755</code></td><td><code>493</code></td><td>Octal read as a number; plain <code>0755</code> is decimal 755</td></tr>
+<tr><td><code>date: 2026-10-22</code></td><td><code>"2026-10-22"</code></td><td>Stays a string; no date type in the default schema</td></tr>
+<tr><td><code>time: 12:30</code></td><td><code>"12:30"</code></td><td>String (YAML 1.1 parsers read 750)</td></tr>
+<tr><td><code>big: 12345678901234567890</code></td><td><code>12345678901234567000</code></td><td>Beyond JavaScript number precision</td></tr>
+<tr><td><code>empty:</code> or <code>tilde: ~</code></td><td><code>null</code></td><td>Both are null</td></tr>
+<tr><td><code>x: .inf</code></td><td><code>null</code></td><td>JSON has no Infinity, so it serializes as null</td></tr>
+<tr><td><code>&amp;anchor</code> / <code>*alias</code></td><td>Copied values</td><td>Aliases are expanded into full copies</td></tr>
+<tr><td><code>&lt;&lt;: *base</code> merge key</td><td>A literal <code>"&lt;&lt;"</code> key</td><td>Merge keys are YAML 1.1; not merged by default</td></tr>
+<tr><td>Duplicate key</td><td>Error: <code>DUPLICATE_KEY</code></td><td>Map keys must be unique</td></tr>
+<tr><td>Tab used to indent</td><td>Error: <code>TAB_AS_INDENT</code></td><td>YAML indentation is spaces only</td></tr>
+<tr><td>Two documents split by <code>---</code></td><td>Error: <code>MULTIPLE_DOCS</code></td><td>Convert one document at a time</td></tr>
+<tr><td><code># comments</code></td><td>Dropped</td><td>JSON has nowhere to keep them</td></tr>
+</tbody>
+</table>
+</div>
+<p>The three to watch are version numbers, leading zeros and anything that looks like a number but isn't one: ZIP codes, phone numbers, account IDs, git SHAs made of digits. YAML reads them as numbers and the formatting is lost before JSON ever sees it. Put them in quotes in the YAML and they come through as strings.</p>
+<p>Comments are the other casualty. JSON has no comment syntax, so a round trip from YAML to JSON and back loses every one of them. Keep the YAML file as your source of truth and generate JSON from it, not the other way round.</p>
+
+<h2>The Norway Problem: When the YAML Goes to an Older Parser</h2>
+<p>This converter writes YAML 1.2, where <code>no</code>, <code>yes</code>, <code>on</code> and <code>off</code> are ordinary strings, so it leaves them unquoted. Many tools still read YAML 1.1, where those words are booleans. We converted JSON with those values and loaded the output in PyYAML 6.0.3, the parser Python projects and Ansible use:</p>
+<div class="table-wrap">
+<table class="data-table">
+<thead><tr><th>JSON in</th><th>YAML out (this converter)</th><th>What PyYAML reads</th></tr></thead>
+<tbody>
+<tr><td><code>{"country": "no"}</code></td><td><code>country: no</code></td><td><code>False</code></td></tr>
+<tr><td><code>{"on": "yes"}</code></td><td><code>on: yes</code></td><td><code>{True: True}</code></td></tr>
+<tr><td><code>{"o": "off"}</code></td><td><code>o: off</code></td><td><code>False</code></td></tr>
+<tr><td><code>{"t": "12:30"}</code></td><td><code>t: 12:30</code></td><td><code>750</code> (base-60 number)</td></tr>
+<tr><td><code>{"d": "2026-10-22"}</code></td><td><code>d: 2026-10-22</code></td><td>A date object, not a string</td></tr>
+<tr><td><code>{"v": "1.10"}</code></td><td><code>v: "1.10"</code></td><td><code>"1.10"</code> (correct, already quoted)</td></tr>
+</tbody>
+</table>
+</div>
+<p>The name comes from country lists, where Norway's code <code>NO</code> turned into <code>false</code>. If the file will be read by Python, Ansible or another YAML 1.1 tool, put quotes around any value that's yes, no, on, off, y, n, a time like 12:30 or a date you need as text. The <a href="/yaml-validator/">YAML validator</a> shows how a file parses, and the <a href="/json-formatter/">JSON formatter</a> is handy for checking the JSON side before you convert.</p>
+</div>
+
+<div class="content-section">
 <h2>Frequently Asked Questions</h2>
-<div class="faq-item"><h3>How do I convert JSON to YAML online?</h3><p>Paste your JSON into the converter and it parses and re-serializes it as YAML entirely in your browser — no upload to any server. The conversion preserves nested objects, arrays, and scalar types exactly. Invalid JSON is flagged with a parse error so you can fix it before converting.</p></div><div class="faq-item"><h3>Is YAML always more compact than JSON?</h3><p>Usually yes, because YAML drops quotes, braces, and commas in favor of indentation, but not always. Very short values, deeply nested single-item arrays, and strings containing special characters can make YAML as long or longer than JSON. YAML also permits multiple equivalent renderings (flow vs block style) of the same data.</p></div><div class="faq-item"><h3>What JSON features have no clean YAML equivalent?</h3><p>Everything in JSON maps to YAML cleanly except duplicate keys and certain edge-case numbers like leading-plus exponents, which YAML parsers may reject or normalize differently. YAML 1.1 vs 1.2 spec differences can also change how things like booleans (on/off/yes/no) are typed on round-trip. For config files this rarely matters, but strict round-tripping is not guaranteed.</p></div></div>
+<div class="faq-item"><h3>How do I convert JSON to YAML online?</h3><p>Paste your JSON into the converter and it parses and re-serializes it as YAML entirely in your browser — no upload to any server. The conversion preserves nested objects, arrays, and scalar types exactly. Invalid JSON is flagged with a parse error so you can fix it before converting.</p></div><div class="faq-item"><h3>Is YAML always more compact than JSON?</h3><p>Usually yes, because YAML drops quotes, braces, and commas in favor of indentation, but not always. Very short values, deeply nested single-item arrays, and strings containing special characters can make YAML as long or longer than JSON. YAML also permits multiple equivalent renderings (flow vs block style) of the same data.</p></div><div class="faq-item"><h3>What JSON features have no clean YAML equivalent?</h3><p>Everything in JSON maps to YAML cleanly except duplicate keys and certain edge-case numbers like leading-plus exponents, which YAML parsers may reject or normalize differently. YAML 1.1 vs 1.2 spec differences can also change how things like booleans (on/off/yes/no) are typed on round-trip. For config files this rarely matters, but strict round-tripping is not guaranteed.</p></div>
+<div class="faq-item"><h3>Why did my version number 1.10 turn into 1.1?</h3><p>Because unquoted 1.10 in YAML is a number, and numbers don't keep trailing zeros. The same happens to leading zeros, so 01234 becomes 1234. Quote the value in your YAML, version: "1.10", and it converts as the string "1.10".</p></div>
+<div class="faq-item"><h3>Why does no or yes become false or true in my YAML?</h3><p>YAML 1.1 parsers such as PyYAML treat yes, no, on and off as booleans. This converter writes YAML 1.2, where they're strings, so it leaves them unquoted. If an older parser will read the file, put those values in quotes.</p></div>
+</div>
 
 <div class="related-tools">
 <h2>Related Tools</h2>
