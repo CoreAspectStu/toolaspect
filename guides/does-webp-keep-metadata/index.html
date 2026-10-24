@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does WebP Keep Metadata? We Tested 8 Routes | ToolAspect</title>
+<meta name="description" content="WebP can hold EXIF, GPS and XMP. We tested 8 ways to convert one: ImageMagick kept the location, the browser removed it. How to check and strip yours.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-webp-keep-metadata/">
+<meta property="og:title" content="Does WebP Keep Metadata? What Survives Conversion">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-webp-keep-metadata/">
+<meta property="og:description" content="WebP can hold EXIF, GPS and XMP. We tested 8 ways to convert one: ImageMagick kept the location, the browser removed it. How to check and strip yours.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does WebP Keep Metadata? What Survives Conversion">
+<meta name="twitter:description" content="WebP can hold EXIF, GPS and XMP. We tested 8 ways to convert one: ImageMagick kept the location, the browser removed it. How to check and strip yours.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does WebP Keep Metadata? What Survives Conversion", "description": "WebP can hold EXIF, GPS and XMP. We tested 8 ways to convert one: ImageMagick kept the location, the browser removed it. How to check and strip yours.", "datePublished": "2026-10-25", "dateModified": "2026-10-25", "mainEntityOfPage": "https://toolaspect.com/guides/does-webp-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does WebP Keep Metadata? What Survives Conversion", "item": "https://toolaspect.com/guides/does-webp-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does WebP support EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The extended WebP format has dedicated chunks for EXIF, XMP and a color profile, so a WebP can carry camera details, dates, author names and GPS coordinates just like a JPEG. Many WebPs on the web have none, because the sites that create them strip it."}}, {"@type": "Question", "name": "Does converting JPG to WebP remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Not always. In our tests ImageMagick kept EXIF and GPS when it wrote a WebP, while Python's Pillow and browser-based converters dropped it. Check the converted file with ExifTool or webpmux if location data matters."}}, {"@type": "Question", "name": "Can a WebP image contain GPS location?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, inside its EXIF chunk. We made a WebP with GPS coordinates and ImageMagick carried them through a WebP to WebP and a WebP to PNG conversion. Re-encoding through a browser canvas removed them."}}, {"@type": "Question", "name": "How do I strip metadata from a WebP file?", "acceptedAnswer": {"@type": "Answer", "text": "Re-encode it through a browser canvas, for example with an image compressor set to WebP output, or run exiftool -all= on the file. With ImageMagick, add -strip, because a plain conversion kept the metadata in our test."}}, {"@type": "Question", "name": "Is lossless WebP different for metadata?", "acceptedAnswer": {"@type": "Answer", "text": "No. Lossless and lossy WebP use the same container, so both can hold EXIF and XMP. Our lossless test file kept its full EXIF block, the same as the lossy one."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does WebP Keep Metadata? What Survives Conversion</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 25, 2026</span></div>
+<p class="intro">Yes, WebP files can keep metadata, including camera details, the date and GPS coordinates. Whether yours does depends on the tool that made it. We built a WebP with location data and ran it through eight common routes: some carried everything through, some dropped it all, and one hid it in a block most readers can't see. Here's what we found, and how to check and clean a WebP.</p>
+<h2>Can WebP files contain metadata?</h2>
+<p>Yes. WebP is built on the same RIFF container used by WAV audio, and an "extended" WebP can hold separate chunks for EXIF, XMP and a color profile alongside the image. The format was designed to carry the same metadata as a JPEG, so anything a camera writes, including GPS coordinates, can travel along when a photo is converted.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Chunk</th><th>What it holds</th><th>Where you'll see it</th></tr></thead><tbody>
+<tr><td>VP8X</td><td>Header that says which extras the file has</td><td>Every WebP with metadata or transparency</td></tr>
+<tr><td>EXIF</td><td>Camera, date, author, software, GPS</td><td>Converted photos, some editors</td></tr>
+<tr><td>XMP</td><td>Creator, copyright, editing history, keywords</td><td>Adobe apps, stock and asset tools</td></tr>
+<tr><td>ICCP</td><td>Color profile</td><td>Most converted photos</td></tr>
+<tr><td>VP8 or VP8L</td><td>The image itself (lossy or lossless)</td><td>Every WebP</td></tr>
+</tbody></table></div>
+<p>That said, plenty of WebPs carry nothing. Most come from websites that convert images automatically, and many of those pipelines throw the metadata away. A WebP you made yourself from a phone photo is the case to worry about. Lossless WebP can hold it too; our lossless test file kept the full EXIF block.</p>
+
+<h2>Does converting to WebP keep metadata?</h2>
+<p>It depends entirely on the tool. We built a test WebP with a camera make and model, an author name, the time it was taken, GPS coordinates, XMP and a color profile, then ran it through common routes and checked what came out:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>EXIF (camera, author, date)</th><th>GPS</th><th>XMP</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>Our original test file</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ImageMagick, WebP to WebP</td><td>Yes</td><td>Yes</td><td>No*</td><td>Yes</td></tr>
+<tr><td>ImageMagick, WebP to PNG</td><td>Yes</td><td>Yes</td><td>No*</td><td>Yes</td></tr>
+<tr><td>ImageMagick, WebP to JPG</td><td>Written, but in a broken block</td><td>Hidden in that block</td><td>No*</td><td>Yes</td></tr>
+<tr><td>ImageMagick with -strip</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Python Pillow, default save</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Pillow, passing the metadata through</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Browser canvas to WebP (our image compressor)</td><td>No</td><td>No</td><td>No</td><td>sRGB only</td></tr>
+<tr><td>Browser canvas to JPG (our metadata remover)</td><td>No</td><td>No</td><td>No</td><td>sRGB only</td></tr>
+</tbody></table></div>
+<p>*ImageMagick 6.9.11 complained that our hand-made XMP block was invalid before dropping it, so treat that column as "unclear" rather than proof it always drops XMP.</p>
+<p>A few results are worth spelling out. ImageMagick kept the location in WebP and PNG output. Its JPG output was stranger: it wrote the EXIF data without the header readers look for, so Pillow and our viewer's library both reported zero tags, yet the author's name was still sitting in the file's bytes. A "clean" result in one viewer doesn't prove anything is gone. Pillow, the Python imaging library, drops everything on a plain save unless you pass the metadata through on purpose. The browser canvas route, which is how our tools work, kept nothing but a generic sRGB color profile. The test file was one we made, not a real phone photo, so read this as a check on each tool's behavior.</p>
+
+<h2>How do I check a WebP for metadata?</h2>
+<p>Here we need to be straight with you: our <a href="/exif-viewer/">EXIF viewer</a> can't read WebP yet. The library it uses rejected every WebP we tried with "unknown file format," even ones with a full EXIF block. It handles JPG, PNG, HEIC and TIFF, so it's still the quick check after you convert. For a WebP itself, use one of these:</p>
+<ul>
+<li><strong>ExifTool:</strong> <code>exiftool photo.webp</code> lists every EXIF and XMP field, GPS included. Our <a href="/guides/exiftool-alternatives/">ExifTool alternatives</a> guide has gentler options.</li>
+<li><strong>webpmux</strong>, from Google's WebP tools: <code>webpmux -info photo.webp</code> shows which chunks are present and how big they are. An EXIF chunk of a few hundred bytes or more is worth a closer look.</li>
+</ul>
+
+<h2>How do I remove metadata from a WebP?</h2>
+<ul>
+<li><strong>In the browser:</strong> run the file through our <a href="/image-compressor/">image compressor</a> with WebP as the output format. It redraws the image on a canvas and saves a fresh file; in our test that removed the EXIF, the GPS and the XMP. Our <a href="/image-metadata-remover/">image metadata remover</a> is built for JPG and PNG, and it always saves a JPG.</li>
+<li><strong>Command line:</strong> <code>exiftool -all= photo.webp</code>, or <code>convert photo.webp -strip clean.webp</code> with ImageMagick. Without <code>-strip</code>, ImageMagick kept the GPS in our test.</li>
+<li><strong>Check afterwards.</strong> Use ExifTool or webpmux on the WebP, or convert a copy to PNG and drop it into the EXIF viewer.</li>
+</ul>
+<p>The same pattern runs through every format we've tested: tools that redraw the pixels drop metadata, and tools that convert files often carry it along. If you're working with other formats, see <a href="/guides/do-png-files-have-metadata/">do PNG files have metadata</a> and <a href="/guides/does-converting-heic-to-jpg-keep-metadata/">does converting HEIC to JPG keep metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Does WebP support EXIF data?</h3><p>Yes. The extended WebP format has dedicated chunks for EXIF, XMP and a color profile, so a WebP can carry camera details, dates, author names and GPS coordinates just like a JPEG. Many WebPs on the web have none, because the sites that create them strip it.</p></div>
+<div class="faq-item"><h3>Does converting JPG to WebP remove metadata?</h3><p>Not always. In our tests ImageMagick kept EXIF and GPS when it wrote a WebP, while Python's Pillow and browser-based converters dropped it. Check the converted file with ExifTool or webpmux if location data matters.</p></div>
+<div class="faq-item"><h3>Can a WebP image contain GPS location?</h3><p>Yes, inside its EXIF chunk. We made a WebP with GPS coordinates and ImageMagick carried them through a WebP to WebP and a WebP to PNG conversion. Re-encoding through a browser canvas removed them.</p></div>
+<div class="faq-item"><h3>How do I strip metadata from a WebP file?</h3><p>Re-encode it through a browser canvas, for example with an image compressor set to WebP output, or run exiftool -all= on the file. With ImageMagick, add -strip, because a plain conversion kept the metadata in our test.</p></div>
+<div class="faq-item"><h3>Is lossless WebP different for metadata?</h3><p>No. Lossless and lossy WebP use the same container, so both can hold EXIF and XMP. Our lossless test file kept its full EXIF block, the same as the lossy one.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/guides/do-png-files-have-metadata/">Do PNG Files Have Metadata?</a>
+<a href="/guides/does-compressing-a-photo-remove-metadata/">Does Compressing a Photo Remove Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
