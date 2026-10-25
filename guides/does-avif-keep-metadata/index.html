@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does AVIF Keep Metadata? We Tested 8 Routes | ToolAspect</title>
+<meta name="description" content="AVIF can carry EXIF, GPS and XMP. We tested 8 conversion routes: ImageMagick copied the location into JPG, PNG and WebP, and browser canvas removed it.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-avif-keep-metadata/">
+<meta property="og:title" content="Does AVIF Keep Metadata? What We Found in 8 Tests">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-avif-keep-metadata/">
+<meta property="og:description" content="AVIF can carry EXIF, GPS and XMP. We tested 8 conversion routes: ImageMagick copied the location into JPG, PNG and WebP, and browser canvas removed it.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does AVIF Keep Metadata? What We Found in 8 Tests">
+<meta name="twitter:description" content="AVIF can carry EXIF, GPS and XMP. We tested 8 conversion routes: ImageMagick copied the location into JPG, PNG and WebP, and browser canvas removed it.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does AVIF Keep Metadata? What We Found in 8 Tests", "description": "AVIF can carry EXIF, GPS and XMP. We tested 8 conversion routes: ImageMagick copied the location into JPG, PNG and WebP, and browser canvas removed it.", "datePublished": "2026-10-26", "dateModified": "2026-10-26", "mainEntityOfPage": "https://toolaspect.com/guides/does-avif-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does AVIF Keep Metadata? What We Found in 8 Tests", "item": "https://toolaspect.com/guides/does-avif-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does AVIF store EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. AVIF can hold EXIF and XMP metadata as separate items next to the image, including GPS coordinates. Whether a particular AVIF has any depends on the camera, app or converter that made it."}}, {"@type": "Question", "name": "Does converting AVIF to JPG remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the tool. ImageMagick 6 kept the camera details and GPS location when converting our test AVIF to JPG, PNG and WebP. Pillow's default save and browser canvas conversion removed them."}}, {"@type": "Question", "name": "Can I see the GPS location in an AVIF?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, if it's there. A browser-based EXIF viewer that supports AVIF will show the latitude and longitude. In our test the EXIF viewer read the exact coordinates we embedded."}}, {"@type": "Question", "name": "How do I strip metadata from an AVIF without uploading it?", "acceptedAnswer": {"@type": "Answer", "text": "Re-encode it in the browser. Converting an AVIF to WebP or JPG with a canvas-based image compressor removed all EXIF, GPS and XMP in our test, leaving only a standard color profile. The output won't be AVIF, though."}}, {"@type": "Question", "name": "Can browsers save images as AVIF?", "acceptedAnswer": {"@type": "Answer", "text": "Not through the standard canvas method. Chrome 145 can display AVIF, but when asked to export a canvas as AVIF it returned a PNG instead. Sites that output AVIF use their own encoder or a server."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does AVIF Keep Metadata? What We Found in 8 Tests</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 26, 2026</span></div>
+<p class="intro">Yes, AVIF files can carry EXIF and XMP metadata, including GPS coordinates. Whether conversion removes it depends entirely on the tool. We built a test AVIF with a location, an author name and a color profile, then ran it through ImageMagick, Python's Pillow and Chrome. ImageMagick copied the GPS location into JPG, PNG and WebP, while the browser removed it every time.</p>
+<h2>Can AVIF files contain metadata?</h2>
+<p>Yes. AVIF uses the same container format as HEIC, which stores everything as numbered items and boxes. The photo is one item, and EXIF and XMP metadata are separate items stored alongside it. That's all they need to carry the same location data a phone JPEG does.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Part of the file</th><th>What it holds</th><th>Where you'll see it</th></tr></thead><tbody>
+<tr><td>av01 item</td><td>The image itself (AV1-compressed)</td><td>Every AVIF</td></tr>
+<tr><td>Exif item</td><td>Camera, date, author, software, GPS</td><td>Converted photos, some phones and editors</td></tr>
+<tr><td>mime item (XMP)</td><td>Creator, copyright, keywords, edit history</td><td>Adobe apps, asset tools</td></tr>
+<tr><td>colr box</td><td>Color profile, or a short color-space code</td><td>Almost every AVIF</td></tr>
+</tbody></table></div>
+<p>To test this, we made a 1600 × 1200 AVIF with Python's Pillow library containing a camera make and model, an author name, a capture date, GPS coordinates, an XMP creator field and an sRGB color profile. The file came to 189 KB, of which the EXIF block was under 300 bytes. Then we ran it through the tools people actually use.</p>
+
+<h2>Does converting an AVIF keep the metadata?</h2>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>EXIF (camera, author, date)</th><th>GPS</th><th>XMP</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>Our original test file</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ImageMagick 6, AVIF to AVIF</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>ImageMagick 6, AVIF to JPG</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>ImageMagick 6, AVIF to PNG</td><td>Yes</td><td>Yes, twice</td><td>No</td><td>No</td></tr>
+<tr><td>ImageMagick 6, AVIF to WebP</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>Python Pillow, default save (any format)</td><td>No</td><td>No</td><td>No</td><td>AVIF and PNG only</td></tr>
+<tr><td>Pillow, passing the metadata through</td><td>Yes</td><td>Yes</td><td>Not tested</td><td>Yes</td></tr>
+<tr><td>Browser canvas to WebP (our image compressor)</td><td>No</td><td>No</td><td>No</td><td>sRGB only</td></tr>
+<tr><td>Browser canvas to JPG</td><td>No</td><td>No</td><td>No</td><td>sRGB only</td></tr>
+</tbody></table></div>
+<p>The results don't follow any obvious logic, which is the useful lesson here. ImageMagick 6 carried the GPS location into every other format, and in the PNG it wrote the coordinates twice: once as a binary EXIF block and again as plain-text notes anyone can read in a text editor. Yet re-saving the same AVIF as AVIF threw away everything, including the color profile. Our ImageMagick build read only the EXIF part of the file, so the XMP and color profile never made it out on any route. Newer ImageMagick 7 builds may behave differently, so check rather than assume.</p>
+<p>Pillow, the library behind a lot of Python scripts and web apps, dropped EXIF and XMP on a default save in every format we tried. It only keeps them when the code passes them through on purpose.</p>
+
+<h2>Does converting a photo to AVIF strip its metadata?</h2>
+<p>Not reliably. A converter can copy the EXIF block straight in, and Pillow does exactly that when it's asked to. Whether a given app or website does depends on how it was written. If you're converting photos to AVIF to post or send, check the output, don't assume.</p>
+<p>Browser-based converters are a special case. Chrome can display AVIF but can't create it from a web page's canvas: when we asked for an AVIF, it silently handed back a PNG. So a site that claims to make AVIF in your browser is either using its own encoder or uploading your file to a server.</p>
+
+<h2>How do I check an AVIF for location data?</h2>
+<p>Open it in the <a href="/exif-viewer/">EXIF viewer</a>. It reads AVIF files in the browser and shows the camera, date and GPS fields when they're there; in our test it found the exact coordinates we embedded. It doesn't show XMP, which is where editing apps keep creator and copyright details, so a clean result means no EXIF location, not necessarily no metadata at all.</p>
+<p>On a computer, Windows File Explorer's Properties, Details tab and the Mac Finder's Get Info panel may or may not read AVIF depending on your system version, so a browser tool is the more consistent check.</p>
+
+<h2>How do I remove metadata from an AVIF?</h2>
+<p>The easiest way is to re-encode it in the browser. Drop the AVIF into the <a href="/image-compressor/">image compressor</a> and save it as WebP or JPG: in our test, both outputs had no EXIF, no GPS and no XMP, only a standard sRGB color profile. The file never leaves your device. The catch is that you end up with WebP or JPG rather than AVIF, because browsers can't encode AVIF.</p>
+<p>If you need to stay in AVIF, use a desktop tool that can write AVIF and strip metadata, then check the result. ImageMagick's AVIF-to-AVIF route stripped everything in our test, but that's a side effect of how our build handles AVIF, not a documented feature. Our <a href="/image-metadata-remover/">metadata remover</a> only accepts JPG and PNG, so convert first if you want to use it.</p>
+<p>For the same tests on other formats, see <a href="/guides/does-webp-keep-metadata/">does WebP keep metadata</a> and <a href="/guides/does-converting-heic-to-jpg-keep-metadata/">does converting HEIC to JPG keep metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Does AVIF store EXIF data?</h3><p>Yes. AVIF can hold EXIF and XMP metadata as separate items next to the image, including GPS coordinates. Whether a particular AVIF has any depends on the camera, app or converter that made it.</p></div>
+<div class="faq-item"><h3>Does converting AVIF to JPG remove metadata?</h3><p>It depends on the tool. ImageMagick 6 kept the camera details and GPS location when converting our test AVIF to JPG, PNG and WebP. Pillow's default save and browser canvas conversion removed them.</p></div>
+<div class="faq-item"><h3>Can I see the GPS location in an AVIF?</h3><p>Yes, if it's there. A browser-based EXIF viewer that supports AVIF will show the latitude and longitude. In our test the EXIF viewer read the exact coordinates we embedded.</p></div>
+<div class="faq-item"><h3>How do I strip metadata from an AVIF without uploading it?</h3><p>Re-encode it in the browser. Converting an AVIF to WebP or JPG with a canvas-based image compressor removed all EXIF, GPS and XMP in our test, leaving only a standard color profile. The output won't be AVIF, though.</p></div>
+<div class="faq-item"><h3>Can browsers save images as AVIF?</h3><p>Not through the standard canvas method. Chrome 145 can display AVIF, but when asked to export a canvas as AVIF it returned a PNG instead. Sites that output AVIF use their own encoder or a server.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/heic-to-jpg-converter/">HEIC to JPG Converter</a>
+<a href="/guides/does-webp-keep-metadata/">Does WebP Keep Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>

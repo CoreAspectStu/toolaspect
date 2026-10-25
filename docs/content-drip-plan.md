@@ -2412,3 +2412,56 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   so slowly" only if distinct, else "how to print a PDF without margins"; "does AVIF keep metadata" (privacy; same harness,
   check Pillow AVIF support first).
   STILL OPEN (need Stu): as 10-23 list minus pregnancy-due-date (fixed in 25470422c), plus exif-viewer WebP and bmi load error.
+
+- 2026-10-26 batch guides (10-25 intake ideas; dedupe: ssdi-vs-ssi has two sentences on resources only; "why is my PDF printing
+  so slowly" DROPPED, why-wont-my-pdf-print already covers spool size → took the fallback "print a PDF without margins" (the A4
+  guide only mentions margins in a scaling context; how-to-crop-a-pdf is about the file, not the print dialog); Pillow 13 has AVIF):
+  SS cluster → guides/ssi-asset-limit/ (problem/solution-aware; tools social-security-disability-benefits-calculator +
+  net-worth-calculator + -denial-calculator. VERIFIED: eCFR 20 CFR 416.1205 limit table (1985 $1,600 … 1989 $2,000/$3,000),
+  416.1207 first moment of month, 416.1212/1216/1218/1230/1231/1233/1242/1202; SSA "Understanding SSI - Resources" 2026 via
+  archive.org (ssa.gov 403s curl): digital wallets count, tax refunds/EITC 12 mo, ABLE $100k; SSA ABLE spotlight 2026: onset
+  before 46 from 2026-01-01, contribution limit $20,000 (NOT $19,000; some secondary sites are stale), ABLE to Work +$15,960
+  continental, over $100k → SSI suspended, Medicaid continues; POMS SI 01150.111 TN 60: months = value ÷ (FBR + fed-admin state
+  supp), 2 dp, round down, cap 36 (eCFR 416.1246 still says 24 mo; statute/POMS govern). SSA SSIamts: FBR 1989 $368 → 2026 $994
+  (limit at FBR pace ≈ $5,402); 2027 FBR $1,029 / $1,544 (3.6% COLA), so update transfer-penalty table in January.);
+  PDF → guides/how-to-print-a-pdf-without-margins/ (problem-aware; tools crop-pdf + rotate-pdf + compress-pdf. COMPUTED: Fit
+  scale on a full-bleed page = min((W−2h)/W,(H−2h)/H): 3 / 4.2 / 6.35 mm edge → Letter 97.2/96.1/94.1%, A4 97.1/96.0/94.0%;
+  crop-then-fit with crop-pdf's default 12 pt padding into an 8.0×10.5 in printable area: 0.5/0.75/1/1.25/1.5 in margins →
+  102/107/112/119/126% (11 pt → 12.4 pt at 1 in), height-limited.);
+  privacy → guides/does-avif-keep-metadata/ (problem-aware; tools image-compressor + exif-viewer + image-metadata-remover.
+  MEASURED /tmp/drip26/avif: Pillow 13 AVIF with EXIF+GPS, XMP (mime item), ICC (colr prof). ImageMagick 6.9.11 / libheif 1.15.1
+  reads EXIF only: avif→avif and -strip drop EVERYTHING; →jpg/→webp keep EXIF+GPS; →png keeps eXIf AND writes 13 tEXt chunks with
+  GPS in plain text; XMP + ICC lost on every IM route. Pillow default save drops EXIF/XMP in all formats (AVIF/PNG keep ICC).
+  Chromium 145: decodes AVIF; canvas toBlob('image/avif') silently returns image/png; canvas webp/jpeg → sRGB ICC only. Real
+  exif-viewer page (local, after fix below) reads AVIF EXIF + GPS; no XMP.)
+  (1,095–1,414 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 55–58 chars, descs 151–155.) Guide backlinks added on social-security-disability-benefits-calculator, crop-pdf,
+  image-compressor, and guides/ssdi-vs-ssi, how-to-print-an-a4-pdf-on-letter-paper, does-webp-keep-metadata.
+  FIXED (script src only, same library + version): exif-viewer AND ai-image-detector loaded
+  cdn.jsdelivr.net/npm/exifr@7.1.3/full.umd.js, which is a 404 (real path /dist/full.umd.js), so `exifr` was undefined and both
+  tools were dead on prod since 7a371dc26 (2026-08-28). Earlier guides' "exif-viewer" measurements used a local copy of the
+  library, not the live page. Playwright on the fixed local page: AVIF + WebP originals show Make/Artist/GPS; canvas-stripped → none.
+  BUG FOUND (not fixed, needs Stu: version swap, not a path fix): qr-code-with-logo and qr-code-batch load
+  qrcode@1.5.3/build/qrcode.min.js → 404 (1.5.x ships no build/; 1.4.4/build/qrcode.min.js is 200). Sitewide jsdelivr audit of
+  59 URLs: only these + exifr were real 404s (esrgan-slim base path and svgedit are dynamic, not broken).
+  Note: every tool page throws pageerror "Y" ×2–4 under local headless (also untouched pages like mpg-calculator); likely an
+  ad/analytics script on localhost. Check on prod before chasing.
+- 2026-10-26 depth passes (900–1000 band re-scan with /tmp/drip26/wc.py, which reads ~3% lower than earlier counts; picked
+  the lowest real calculator + highest-CPC page, skipping credit-card-payoff (cannibalization), pet-tools (hub), rap-…-50000
+  (longtail)):
+  slope-calculator (928 → 1,530; +real-life specs table (ADA 1:12 ramp / 1:48 cross slope, IPC 704.1 drain ¼ and ⅛ in/ft, IRC
+  7¾/10 stairs, 4/12 and 12/12 pitch → m / % / °), +degrees→slope table 1–60° with rise per 12 in, +common mistakes; FAQ 6 / LD 4
+  → 8 / 8 synced). FIXED: generic answer box → real answer.
+  pain-and-suffering-calculator (984 → 1,526; +fault table on the page-default $45,000 claim under pure / 50% bar / 51% bar /
+  contributory (FL 51% since HB 837, 2023), +take-home table 33⅓% vs 40% fee, $1,500 costs, $12,000 liens → $16,500 / $13,500,
+  policy-limit note (CA min BI $30k, FL no BI requirement); FAQ 5 / LD 4 → 7 / 7 synced; guide link added in related).
+  FIXED: generic answer box. JS byte-identical on both (inline-script md5 asserted).
+- 2026-10-26 hub updates: guides hub +3 cards, count claims 618→621 in all 9 places (= 621 on-disk dirs), More Guides badge
+  556→559; all-tools Guides section regenerated by deploy.sh.
+  Queue state: next depth candidates (my counter): dog-dna-test-cost-comparison (933), oee-calculator (943),
+  quinceanera-cost-calculator (956), mpg-calculator (970), vet-visit-cost-calculator (970). Guide intake ideas: "how much
+  can you have in the bank on SSI" NO (covered today) → "SSI and inheritance: what happens" (check ssi-asset-limit overlap; only if
+  it can go deeper on disclaimers = transfers, special needs trusts); "how to print a PDF as a booklet" (check organize-pdf);
+  "does JPEG XL keep metadata" only if Pillow/IM here support JXL, else "do Google Photos downloads keep metadata" (hedge-free only
+  if testable).
+  STILL OPEN (need Stu): as 10-25 list minus exif-viewer WebP (fixed in 11f40ea9f), plus qrcode@1.5.3 404 on 2 QR tools.
