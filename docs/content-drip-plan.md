@@ -2465,3 +2465,57 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   "does JPEG XL keep metadata" only if Pillow/IM here support JXL, else "do Google Photos downloads keep metadata" (hedge-free only
   if testable).
   STILL OPEN (need Stu): as 10-25 list minus exif-viewer WebP (fixed in 11f40ea9f), plus qrcode@1.5.3 404 on 2 QR tools.
+
+- 2026-10-27 batch guides (10-26 intake ideas, all three taken; dedupe: no SSI guide mentions inheritance; "booklet" only appears in
+  passing on crop-pdf/word-to-pdf; JXL testable via pillow-jxl-plugin 1.3.8 on Pillow 13, IM 6.9.11 has no JXL):
+  SS cluster → guides/inheriting-money-on-ssi/ (problem-aware; tools social-security-disability-benefits-calculator +
+  net-worth-calculator + social-security-calculator. VERIFIED secure.ssa.gov POMS today: SI 00830.550 (12/16/2025) inheritance =
+  death benefit, income in the first month it has value and can be used, date = earlier of alleged receipt or estate closing,
+  inherited house lived in → PMV; SI 00830.545 death benefits count only above last-illness + burial costs the person paid (list
+  incl. funeral clothes, food for visiting relatives, taxi fare); SI 01120.215 resource from the next month, co-heirs refusing
+  consent → not a resource until probate; SI 01150.110 refusing an inheritance = transfer ("constructively received"), as is
+  transferring income in the month of receipt; SI 01150.007 spend-down at FMV OK; SI 01120.203 SNT under 65 + payback, self-
+  established since 12/13/2016; SI 02301.205 12 consecutive months suspension → termination; 20 CFR 416.420(a) 2-month lag.
+  Example: $30,000 − $4,000 funeral = $26,000 counted; refuse → 26 months (26.16). PMV 2026 $351.33.);
+  PDF → guides/how-to-print-a-pdf-as-a-booklet/ (solution-aware; tools extract-pdf-pages (keeps typed order when "Keep document
+  order" unticked; parsePageSpec dedups, fine for imposition) + pdf-merge (pad with blank-page PDF; no tool here inserts blanks) +
+  pdf-page-numbers. VERIFIED Adobe KB "Print booklets in Acrobat Reader" (archive.org 2026-10-07): Booklet subset Both / Front only
+  / Back only, Sheets from auto (16 pp → sheets 1–4), Binding Left/Right/Left (Tall)/Right (Tall). COMPUTED imposition orders
+  6–24 pp (front N−2s,1+2s / back 2+2s,N−1−2s) and best-case scale = min(cell/page): Letter→Letter 64.7% (12 pt → 7.8),
+  A4→A4 70.7%, Legal 77.3%, Tabloid 100%, A3 for A4 100%.);
+  privacy → guides/does-jpeg-xl-keep-metadata/ (problem-aware; tools exif-viewer + image-metadata-remover + image-compressor.
+  MEASURED /tmp/drip27/jxl: src.jpg 294,340 B with EXIF+GPS+XMP+ICC; plugin-default lossless transcode 228,751 B (−22.3%) keeps
+  EXIF+GPS+XMP in brob (Brotli) boxes, "Jane Doe" NOT greppable, decodes to a byte-identical JPEG (md5 match); pixel re-encode q90
+  201,356 B keeps Exif box (plugin copies EXIF by default), drops XMP; JXL→JXL re-save same; Pillow default → JPG/PNG/WebP strips
+  all (PNG keeps ICC); manual exif pass-through from pixel JXL → malformed APP1 (name still in bytes). Chromium 145.0.7632.6
+  DECODES JXL (img.decode OK); canvas webp/jpeg → no EXIF/GPS/XMP, sRGB ICC; toBlob('image/jxl') → image/png.)
+  (1,147–1,391 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 55–58, descs 145–156.) Guide backlinks on social-security-disability-benefits-calculator, extract-pdf-pages,
+  exif-viewer, and guides/ssi-asset-limit, how-to-print-a-pdf-without-margins, does-avif-keep-metadata.
+  BUG FOUND (JS untouched, needs Stu): exif-viewer says "No EXIF metadata found" on a JXL WITH full EXIF+GPS (exifr 7.1.3 has no
+  JXL parser) → false all-clear on a privacy tool; the guide says so plainly. Fix = JXL box walker like the WebP one (Exif box:
+  skip 4-byte offset → TIFF), but brob-compressed boxes need Brotli in the browser, so at minimum show "JPEG XL not supported yet".
+  Also image-compressor rejects JXL (type whitelist) although Chromium 145 decodes it: adding 'image/jxl' (+ '.jxl' in accept)
+  would make it a working in-browser JXL metadata stripper.
+- 2026-10-27 depth passes (first two from the 10-26 candidate list):
+  oee-calculator (943 → 1,482; +six big losses table (Nakajima TPM: breakdowns/setup → A, minor stops/reduced speed → P,
+  defects/startup → Q) with first fixes, +what-each-OEE-point-is-worth table on the page's own 480 min / 1.5 min shift (320 cap;
+  3.2 parts/shift/pt = 1,600/yr at 500 shifts; 60→77.5% = +56/shift), note that the JS caps P at 100%; FAQ 6 / LD 4 → 8 / 8 synced
+  (LD was already out of sync: 6 visible vs 4 LD)). FIXED: generic answer box → real answer.
+  dog-dna-test-cost-comparison (933 → 1,465; +multi-dog cost table from the page's KITS array (typical = (sale+list)/2, Math.round
+  like money()), +clear/carrier/at-risk results table, +recessive breeding odds table (carrier×carrier 25/50/25), +MDR1 paragraph;
+  FAQ 6 / LD 6 → 8 / 8 synced). FIXED: generic answer box. No new vendor price claims (page prices still "late 2025": re-verify
+  vendor prices on the next pass). JS byte-identical on both (inline-script md5 asserted).
+- 2026-10-27 hub updates: guides hub +3 cards, count claims 621→624 in all 9 places (= 624 on-disk dirs), More Guides badge
+  559→562; all-tools Guides section regenerated by deploy.sh.
+  NOTE: the Hermes gateway's quality-wave job ran `git add -A` at 06:28 while this batch was mid-flight, so today's guides, depth
+  passes and hub edits landed inside a4b132251 ("deploy.sh: sitemap generator skips noindex pages"), not a content-drip commit.
+  Queue state: next depth candidates: quinceanera-cost-calculator (956), mpg-calculator (970), vet-visit-cost-calculator (970),
+  bathroom-remodel-cost-calculator (971) (skip credit-card-payoff (cannibalization), pet-tools (hub), rap-…-50000 (longtail),
+  minify-html/csv-to-excel only if nothing else). Guide intake ideas: "SSI and life insurance" NO (covered in inheriting-money-
+  on-ssi) → "can you have a savings account on SSI" only if it beats ssi-asset-limit on a distinct intent, else "SSI overpayment
+  waiver" (check what-to-do-about-an-ssdi-overpayment overlap); "how to print a PDF double-sided" (check why-wont-my-pdf-print);
+  "does HEIF/HEIC from Android keep metadata" only if testable here, else "do screenshots on iPhone have location" (check
+  do-screenshots-have-metadata).
+  STILL OPEN (need Stu): as 10-26 list minus the qrcode 404 (fixed in cde4e5ae5), plus exif-viewer JXL false negative and
+  image-compressor JXL whitelist.
