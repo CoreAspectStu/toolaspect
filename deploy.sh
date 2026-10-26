@@ -24,6 +24,9 @@ for root, dirs, files in os.walk('.'):
     if 'index.html' not in files: continue
     path = root.replace('./', '').replace('.', '')
     if path == 'roadmap': continue  # internal build plan — not for crawlers/competitors
+    # skip pages carrying a noindex meta (quality wave Oct-26: thin /convert/ + /gift-ideas/)
+    html = open(os.path.join(root, 'index.html'), encoding='utf-8', errors='replace').read(4000)
+    if 'noindex' in html: continue
     if not path:
         url = 'https://toolaspect.com/'
         priority, freq = '1.0', 'daily'

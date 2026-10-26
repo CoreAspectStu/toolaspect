@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does JPEG XL Keep Metadata? What We Tested | ToolAspect</title>
+<meta name="description" content="JPEG XL keeps EXIF, GPS and XMP, often Brotli-compressed so a text search misses it. A lossless JPG-to-JXL conversion kept all of it in our test.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-jpeg-xl-keep-metadata/">
+<meta property="og:title" content="Does JPEG XL Keep Metadata? What Our Tests Found">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-jpeg-xl-keep-metadata/">
+<meta property="og:description" content="JPEG XL keeps EXIF, GPS and XMP, often Brotli-compressed so a text search misses it. A lossless JPG-to-JXL conversion kept all of it in our test.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does JPEG XL Keep Metadata? What Our Tests Found">
+<meta name="twitter:description" content="JPEG XL keeps EXIF, GPS and XMP, often Brotli-compressed so a text search misses it. A lossless JPG-to-JXL conversion kept all of it in our test.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does JPEG XL Keep Metadata? What Our Tests Found", "description": "JPEG XL keeps EXIF, GPS and XMP, often Brotli-compressed so a text search misses it. A lossless JPG-to-JXL conversion kept all of it in our test.", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "mainEntityOfPage": "https://toolaspect.com/guides/does-jpeg-xl-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does JPEG XL Keep Metadata? What Our Tests Found", "item": "https://toolaspect.com/guides/does-jpeg-xl-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does JPEG XL keep EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. JPEG XL stores EXIF and XMP in separate boxes next to the image, sometimes Brotli-compressed. A lossless JPG-to-JXL conversion kept the camera details, author, date, GPS and XMP in our test."}}, {"@type": "Question", "name": "Does converting JPG to JXL remove GPS location?", "acceptedAnswer": {"@type": "Answer", "text": "Not with the default lossless transcode. It kept the GPS coordinates and turned back into a byte-for-byte copy of the original JPEG. Re-encoding the pixels also kept GPS, because the encoder copied EXIF by default."}}, {"@type": "Question", "name": "Why can't I find metadata when I search a JXL file?", "acceptedAnswer": {"@type": "Answer", "text": "JPEG XL can compress its metadata with Brotli. In our lossless conversion the EXIF and XMP were stored compressed, so a text search for the author name found nothing, even though a JXL-aware reader showed it."}}, {"@type": "Question", "name": "Can browsers open JPEG XL files?", "acceptedAnswer": {"@type": "Answer", "text": "Safari has supported JPEG XL since version 17, and Chromium 145 decoded our test files. Firefox doesn't by default. Browsers can't create JXL through the canvas: asking for one returned a PNG."}}, {"@type": "Question", "name": "How do I remove metadata from a JPEG XL?", "acceptedAnswer": {"@type": "Answer", "text": "Convert it to JPG or PNG with a tool that strips on export, then check the result. Browser canvas conversion and Pillow's default save both removed EXIF, GPS and XMP in our test. Or strip the original JPEG before converting."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does JPEG XL Keep Metadata? What Our Tests Found</h1>
+<div class="meta"><span>📄 5 min read</span><span>Updated October 27, 2026</span></div>
+<p class="intro">Yes, JPEG XL keeps metadata. In our tests a lossless JPG-to-JXL conversion kept the camera details, author name, GPS location and XMP, and turned back into a byte-for-byte copy of the original JPEG. The catch is that JXL can compress that metadata, so a quick text search of the file finds nothing, and some EXIF viewers, including ours, can't read JXL yet.</p>
+<h2>Can JPEG XL files hold metadata?</h2>
+<p>Yes. A JPEG XL file can be a bare image stream with nothing else in it, or a container made of boxes, and the boxes can carry the same EXIF and XMP data a phone JPEG does:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Box</th><th>What it holds</th><th>Where you'll see it</th></tr></thead><tbody>
+<tr><td>jxlc / jxlp</td><td>The image itself</td><td>Every JXL (a bare JXL is just this)</td></tr>
+<tr><td>Exif</td><td>Camera, date, author, software, GPS</td><td>Converted phone photos, cameras, editors</td></tr>
+<tr><td>xml </td><td>XMP: creator, copyright, keywords, edit history</td><td>Adobe apps, asset managers</td></tr>
+<tr><td>jbrd</td><td>Data to rebuild the original JPEG byte for byte</td><td>Lossless JPEG conversions</td></tr>
+<tr><td>brob</td><td>Any of the above, Brotli-compressed</td><td>Encoders that compress metadata</td></tr>
+</tbody></table></div>
+<p>The last row is the one to know about. JPEG XL can Brotli-compress its metadata, and when it does, the GPS coordinates and your name aren't stored as readable text anymore. Searching the file for a name, which finds it instantly in a JPEG, comes up empty, even though any JXL-aware reader will show it.</p>
+<p>To test this, we made a 1600 × 1200 JPEG with a camera make and model, an author name, a capture date, GPS coordinates, an XMP block and an sRGB color profile. Then we converted it with Python's Pillow library and the pillow-jxl plugin (which wraps libjxl, the reference JPEG XL library) and opened the results in Chromium 145.</p>
+
+<h2>Does converting a JPG to JPEG XL keep the metadata?</h2>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>EXIF (camera, author, date)</th><th>GPS</th><th>XMP</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>JPG to JXL, lossless transcode (the usual default)</td><td>Yes, compressed</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>JXL back to the original JPG</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>JPG to JXL, re-encoded pixels</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+<tr><td>JXL re-saved as JXL</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+<tr><td>JXL to JPG, PNG or WebP (Pillow default)</td><td>No</td><td>No</td><td>No</td><td>PNG only</td></tr>
+<tr><td>Browser canvas to JPG or WebP</td><td>No</td><td>No</td><td>No</td><td>sRGB only</td></tr>
+</tbody></table></div>
+<p>The default way to turn a JPEG into a JXL is a lossless transcode, and it keeps everything. In our test the JXL came out 22% smaller, and decoding it gave back a JPEG that was identical to the original, down to the last byte, GPS included. That's the whole point of the feature: you can convert an archive of JPEGs and get the originals back later. It also means converting to JXL is not a way to clean a photo.</p>
+<p>Re-encoding the pixels instead of transcoding made a smaller file but still carried the EXIF block and GPS across, because the plugin copies EXIF by default. Only the XMP was dropped. ImageMagick 6, which we used for our WebP and AVIF tests, couldn't open JPEG XL at all.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>File</th><th>Bytes</th><th>Size vs. original</th><th>Metadata inside</th></tr></thead><tbody>
+<tr><td>Original JPEG</td><td>294,340</td><td>100%</td><td>Full EXIF, GPS, XMP, color profile</td></tr>
+<tr><td>Lossless JPEG transcode to JXL</td><td>228,751</td><td>77.7%</td><td>Everything, compressed</td></tr>
+<tr><td>JXL from the pixels, quality 90</td><td>201,356</td><td>68.4%</td><td>EXIF and GPS, no XMP</td></tr>
+</tbody></table></div>
+
+<h2>Does converting JPEG XL to JPG or PNG strip it?</h2>
+<p>It depends on the tool, and the results were the reverse of the transcode. Pillow's default save dropped all EXIF, GPS and XMP when writing JPG, PNG and WebP from a JXL. Copying the EXIF across by hand worked when the JXL had been made from a JPEG, but from a pixel-encoded JXL it wrote the data into the JPG in a form most viewers can't parse, while the author name was still sitting in the file. If you're writing code, check the output, don't assume.</p>
+
+<h2>Can I open JPEG XL in a browser?</h2>
+<p>Safari has displayed JPEG XL since version 17, and the Chromium 145 build we tested decoded all of our test files. Firefox doesn't support it by default. When we drew a JXL onto a browser canvas and exported it as JPG or WebP, the result had no EXIF, no GPS and no XMP, just a standard sRGB color profile. Asking the canvas for a JXL silently returned a PNG, so browsers can show JPEG XL but can't make it.</p>
+
+<h2>How do I check a JPEG XL for location data?</h2>
+<p>This is where JXL is awkward right now. Our <a href="/exif-viewer/">EXIF viewer</a> uses a parsing library that doesn't understand JPEG XL, and in our test it reported "No EXIF metadata found" for a JXL with full GPS coordinates. Don't treat a clean result on a JXL as proof. Until more tools catch up, use ExifTool on a computer, which supports JPEG XL, or check the original JPEG before converting it.</p>
+<p>To remove the metadata, convert the JXL to JPG or PNG with a tool that strips on export, then confirm the result in the EXIF viewer, which does read JPG and PNG. Our <a href="/image-metadata-remover/">image metadata remover</a> cleans JPG and PNG files in your browser. If you're starting from a JPEG, strip it before converting to JXL; that way there's nothing to carry over.</p>
+<p>We ran the same tests on <a href="/guides/does-avif-keep-metadata/">AVIF</a> and <a href="/guides/does-webp-keep-metadata/">WebP</a>, and every format behaved differently. If you're converting photos to shrink them for the web, the <a href="/image-compressor/">image compressor</a> outputs JPG, PNG and WebP with the metadata removed.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Does JPEG XL keep EXIF data?</h3><p>Yes. JPEG XL stores EXIF and XMP in separate boxes next to the image, sometimes Brotli-compressed. A lossless JPG-to-JXL conversion kept the camera details, author, date, GPS and XMP in our test.</p></div>
+<div class="faq-item"><h3>Does converting JPG to JXL remove GPS location?</h3><p>Not with the default lossless transcode. It kept the GPS coordinates and turned back into a byte-for-byte copy of the original JPEG. Re-encoding the pixels also kept GPS, because the encoder copied EXIF by default.</p></div>
+<div class="faq-item"><h3>Why can&#x27;t I find metadata when I search a JXL file?</h3><p>JPEG XL can compress its metadata with Brotli. In our lossless conversion the EXIF and XMP were stored compressed, so a text search for the author name found nothing, even though a JXL-aware reader showed it.</p></div>
+<div class="faq-item"><h3>Can browsers open JPEG XL files?</h3><p>Safari has supported JPEG XL since version 17, and Chromium 145 decoded our test files. Firefox doesn't by default. Browsers can't create JXL through the canvas: asking for one returned a PNG.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from a JPEG XL?</h3><p>Convert it to JPG or PNG with a tool that strips on export, then check the result. Browser canvas conversion and Pillow's default save both removed EXIF, GPS and XMP in our test. Or strip the original JPEG before converting.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/guides/does-avif-keep-metadata/">Does AVIF Keep Metadata?</a>
+<a href="/guides/does-webp-keep-metadata/">Does WebP Keep Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
