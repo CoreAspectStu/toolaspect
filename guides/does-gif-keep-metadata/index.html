@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does GIF Keep Metadata? We Tested It | ToolAspect</title>
+<meta name="description" content="GIFs have no EXIF, but they can hold comments, XMP with GPS and a color profile. We tested Pillow, ImageMagick and a browser canvas. What survives?">
+<link rel="canonical" href="https://toolaspect.com/guides/does-gif-keep-metadata/">
+<meta property="og:title" content="Does GIF Keep Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-gif-keep-metadata/">
+<meta property="og:description" content="GIFs have no EXIF, but they can hold comments, XMP with GPS and a color profile. We tested Pillow, ImageMagick and a browser canvas. What survives?">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does GIF Keep Metadata?">
+<meta name="twitter:description" content="GIFs have no EXIF, but they can hold comments, XMP with GPS and a color profile. We tested Pillow, ImageMagick and a browser canvas. What survives?">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does GIF Keep Metadata?", "description": "GIFs have no EXIF, but they can hold comments, XMP with GPS and a color profile. We tested Pillow, ImageMagick and a browser canvas. What survives?", "datePublished": "2026-10-28", "dateModified": "2026-10-28", "mainEntityOfPage": "https://toolaspect.com/guides/does-gif-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does GIF Keep Metadata?", "item": "https://toolaspect.com/guides/does-gif-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do GIFs have EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "No. The GIF format has no EXIF block, so camera details and GPS from a photo are dropped when it's converted to GIF. GIFs can still carry comments, an XMP block and a color profile."}}, {"@type": "Question", "name": "Can a GIF contain location data?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, inside an XMP block, though no converter we tested added one on its own. Tools like ExifTool can write XMP with GPS coordinates into a GIF, and ImageMagick kept that XMP when converting GIF to GIF."}}, {"@type": "Question", "name": "Does converting a JPG to GIF remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Mostly. In our tests Pillow dropped everything, even when the metadata was passed in, and ImageMagick dropped EXIF, GPS and XMP but kept the color profile. Either tool can still add a text comment if asked."}}, {"@type": "Question", "name": "How do I remove metadata from an animated GIF without losing the animation?", "acceptedAnswer": {"@type": "Answer", "text": "Use ImageMagick: convert in.gif -strip out.gif. On our test file it kept all 12 frames and the loop setting and removed the comment. Browser-based compressors usually output a single still frame."}}, {"@type": "Question", "name": "How can I check a GIF for hidden metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Open it in a plain text editor and search for xmpmeta, GPS or your name. GIF comments and XMP are stored uncompressed, so they show up as readable text. EXIF viewers often skip XMP in GIFs."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does GIF Keep Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 28, 2026</span></div>
+<p class="intro">GIF has no EXIF block, so the camera details and GPS from a photo don't survive conversion. That isn't the whole story, though. GIFs can still carry comments, a color profile and XMP, and XMP can hold a location. We ran a GPS-tagged photo and a hand-built XMP GIF through Pillow, ImageMagick and a browser to see what each one keeps.</p>
+<h2>Do GIF files have EXIF data?</h2>
+<p>No. The GIF format has no place to store EXIF, the block where cameras and phones write the make, model, date and GPS coordinates. When you turn a photo into a GIF, the EXIF block has nowhere to go and gets dropped. We confirmed that with every converter we tried.</p>
+<p>That doesn't mean a GIF is clean. GIF has extension blocks, and three of them can carry information about you or your software:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Where it hides</th><th>What it can hold</th><th>Who can read it</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Comment extension</td><td>Free text: a name, a tool, a note</td><td>Anyone who opens the file in a text editor</td><td>Some editors fill it in by default</td></tr>
+<tr><td>XMP application extension</td><td>Author, rights, edit history, even GPS coordinates</td><td>XMP-aware software, or a text search</td><td>Plain, uncompressed XML</td></tr>
+<tr><td>ICC profile extension</td><td>The color profile</td><td>Color-managed apps</td><td>Can name the device or software</td></tr>
+<tr><td>NETSCAPE2.0 extension</td><td>Loop count for animation</td><td>Every browser</td><td>Harmless</td></tr>
+<tr><td>EXIF</td><td>Does not exist in GIF</td><td>No standard place for it</td><td>Camera EXIF is dropped on conversion</td></tr>
+</tbody></table></div>
+<p>The XMP block is the one to watch. XMP can hold anything a JPEG's metadata can, including location, and in a GIF it's stored as plain XML.</p>
+
+<h2>Does converting a photo to GIF remove its location?</h2>
+<p>In our tests, yes. We made a phone-style JPEG with EXIF (camera, an author name and GPS coordinates), XMP and a color profile, then converted it to GIF several ways. We read every block of each output with a script that walks the GIF structure.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>Size</th><th>EXIF/GPS</th><th>XMP</th><th>Color profile</th><th>Author name findable?</th></tr></thead><tbody>
+<tr><td>Original JPEG (phone-style)</td><td>294 KB</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+<tr><td>Pillow 13, default save</td><td>610 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Pillow 13, EXIF/XMP/ICC passed in</td><td>610 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>ImageMagick 6.9, plain convert</td><td>1,213 KB</td><td>No</td><td>No</td><td>Yes</td><td>No</td></tr>
+<tr><td>ImageMagick 6.9 with -strip</td><td>1,212 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Browser canvas (our image compressor)</td><td>PNG/WebP out</td><td>No</td><td>No</td><td>sRGB only (WebP)</td><td>No</td></tr>
+</tbody></table></div>
+<p>Pillow, the Python imaging library behind many web apps, wrote nothing, even when we passed the EXIF, XMP and profile in explicitly. ImageMagick kept only the color profile. Neither carried over the location or the author name. The one exception is a comment: both tools write one if you ask, and Pillow wrote ours as readable text.</p>
+<p>Notice the sizes, too. The GIF came out two to four times bigger than the JPEG it came from, and limited to 256 colors. Converting a photo to GIF to strip its metadata is a bad trade. It's easier to remove the metadata from the JPEG and keep it a JPEG.</p>
+
+<h2>Can a GIF still carry GPS coordinates?</h2>
+<p>Yes, through XMP. Metadata tools like ExifTool can write an XMP block into a GIF. To see what happens to one, we built a GIF with an XMP block holding an author name and GPS coordinates, then ran it through the usual routes.</p>
+<ul>
+<li><strong>GIF to GIF with ImageMagick:</strong> the XMP survived, coordinates and all. ImageMagick even rewrote the block's ID in lowercase, but the data was still there as plain text.</li>
+<li><strong>GIF to JPG or PNG with ImageMagick:</strong> the XMP was dropped.</li>
+<li><strong>ImageMagick with <code>-strip</code>:</strong> removed.</li>
+<li><strong>Our image compressor (browser canvas):</strong> removed. The output is PNG, JPEG or WebP, since browsers can't encode GIF.</li>
+</ul>
+<p>One thing to know about our own <a href="/exif-viewer/">EXIF viewer</a>: on that GIF it reported "No EXIF metadata found" and "No GPS data present." The EXIF part is accurate, since there's no EXIF, but the location was sitting in the XMP block and the viewer doesn't read XMP in GIFs. Until that's fixed, the quickest check is a text editor. Open the GIF and search for <code>xmpmeta</code>, <code>GPS</code> or your name. Because GIF's XMP and comments aren't compressed, a hit means it's there.</p>
+
+<h2>What about animated GIFs?</h2>
+<p>Animated GIFs carry the same extension blocks, plus the loop setting. The catch is that most simple strip tools ruin the animation. When we put a 12-frame animated GIF through our <a href="/image-compressor/">image compressor</a>, it came out as a single still frame. That's how browser canvas works: it draws one frame at a time. The metadata was gone, and so was the animation.</p>
+<p>To clean an animated GIF and keep it moving, use ImageMagick with <code>-strip</code>. On our test file it kept all 12 frames and the loop setting and removed the comment, cutting the file from 4,983 to 4,013 bytes. ExifTool can also delete the comment and XMP blocks without re-encoding anything.</p>
+
+<h2>How do I remove metadata from a GIF?</h2>
+<p>Pick the route that matches what you care about:</p>
+<ul>
+<li><strong>Still GIF, don't need GIF:</strong> convert it to PNG or WebP in the image compressor. Everything is stripped, and PNG keeps sharp edges on graphics.</li>
+<li><strong>Animated GIF:</strong> <code>convert in.gif -strip out.gif</code> with ImageMagick keeps the frames and drops comments, XMP and the color profile.</li>
+<li><strong>A photo you were going to turn into a GIF:</strong> don't. Strip the JPEG with our <a href="/image-metadata-remover/">image metadata remover</a> (it takes JPEG and PNG) and share it as a JPEG.</li>
+</ul>
+<p>Afterwards, check the result the same way: open it in a text editor and search for <code>xmpmeta</code>, <code>GPS</code> and your name. For other formats, see whether <a href="/guides/do-png-files-have-metadata/">PNG files have metadata</a> and <a href="/guides/does-webp-keep-metadata/">WebP keeps metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do GIFs have EXIF data?</h3><p>No. The GIF format has no EXIF block, so camera details and GPS from a photo are dropped when it's converted to GIF. GIFs can still carry comments, an XMP block and a color profile.</p></div>
+<div class="faq-item"><h3>Can a GIF contain location data?</h3><p>Yes, inside an XMP block, though no converter we tested added one on its own. Tools like ExifTool can write XMP with GPS coordinates into a GIF, and ImageMagick kept that XMP when converting GIF to GIF.</p></div>
+<div class="faq-item"><h3>Does converting a JPG to GIF remove metadata?</h3><p>Mostly. In our tests Pillow dropped everything, even when the metadata was passed in, and ImageMagick dropped EXIF, GPS and XMP but kept the color profile. Either tool can still add a text comment if asked.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from an animated GIF without losing the animation?</h3><p>Use ImageMagick: convert in.gif -strip out.gif. On our test file it kept all 12 frames and the loop setting and removed the comment. Browser-based compressors usually output a single still frame.</p></div>
+<div class="faq-item"><h3>How can I check a GIF for hidden metadata?</h3><p>Open it in a plain text editor and search for xmpmeta, GPS or your name. GIF comments and XMP are stored uncompressed, so they show up as readable text. EXIF viewers often skip XMP in GIFs.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/guides/do-png-files-have-metadata/">Do PNG Files Have Metadata?</a>
+<a href="/guides/does-webp-keep-metadata/">Does WebP Keep Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>

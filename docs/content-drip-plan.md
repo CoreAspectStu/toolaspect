@@ -2519,3 +2519,55 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   do-screenshots-have-metadata).
   STILL OPEN (need Stu): as 10-26 list minus the qrcode 404 (fixed in cde4e5ae5), plus exif-viewer JXL false negative and
   image-compressor JXL whitelist.
+
+- 2026-10-28 batch guides (10-27 intake ideas; dedupe: "savings account on SSI" DROPPED, ssi-asset-limit already answers it
+  (bank accounts count, first-of-month rule) → took the fallback "SSI overpayment waiver" (what-to-do-about-an-ssdi-overpayment
+  is Title II: 50% default, only 2 SSI sentences); why-wont-my-pdf-print has 0 duplex mentions; "do iPhone screenshots have
+  location" DROPPED, do-screenshots-have-metadata already answers it, and Android HEIC isn't testable here → took a measurable
+  privacy format: GIF):
+  SS cluster → guides/ssi-overpayment-waiver/ (problem-aware; tools social-security-disability-benefits-calculator +
+  net-worth-calculator + social-security-calculator. VERIFIED eCFR today: 20 CFR 416.550 (without fault + defeat purpose /
+  equity / small amount), .551 (partial waiver $390/$260/$130), .552 (SSA fault alone ≠ without fault; limitations considered),
+  .553(b) (current recipients pass if income ≤ FBR + $20 + $65 + state supp → $1,014 / $1,079 in 2026), .554, .555 (no $ figure
+  in reg, so none stated), .556 ($50-or-less excess resources → waived unless willful), .557 (personal conference, file review
+  ≥5 days before, in person/phone/video), .570 (dedicated account can't repay), .571 (lesser of payment or 10% of total income;
+  not for fraud/concealment), .573 (CPR 10% of Title II). POMS SI 02220.016, SI 02220.026 (10/03/2024: withholding starts 60 days
+  after notice if no response in 30; negotiate 12 mo, else 60, SSA-634 beyond), SI 02220.020 (CPR criteria incl. no pending
+  waiver/recon). 10% of $994 = $99.40; repay table $500–$10,000. SI 02260.* (waiver chapter) 404s on secure.ssa.gov and
+  policy.ssa.gov today, so regs were the source.);
+  PDF → guides/how-to-print-a-pdf-double-sided/ (problem/solution-aware; tools extract-pdf-pages (typed order, "Keep document
+  order" unticked → reversed evens e.g. 10,8,6,4,2) + organize-pdf + pdf-merge (blank page pad). VERIFIED CUPS options doc
+  (openprinting.github.io): sides=two-sided-long-edge (portrait) / short-edge (landscape), outputorder=reverse; page-set is NOT
+  in the current doc so not used. Adobe duplex KB 403/404 via curl + archive (429), so Acrobat labels kept to the long-stable
+  ones (Print on both sides of paper; More Options → Odd or Even Pages; Reverse pages). COMPUTED sheet table 7–250 pp.);
+  privacy → guides/does-gif-keep-metadata/ (problem-aware; tools exif-viewer + image-metadata-remover + image-compressor.
+  MEASURED /tmp/drip28/gif with a GIF block walker: src.jpg 294,340 B EXIF+GPS+XMP+ICC → Pillow 13 GIF 610,325 B writes NOTHING
+  even with exif=/xmp=/icc_profile= passed (only comment=); IM 6.9.11 1,212,530 B keeps ICC (ICCRGBG1) only, -strip nothing.
+  Hand-built "XMP DataXMP" GIF with GPS: IM gif→gif keeps it (ID rewritten lowercase), →jpg/png drops, -strip removes. Animated
+  12-frame GIF: IM -strip keeps 12 frames + loop, drops comment (4,983 → 4,013 B). Chromium 145 local: image-compressor GIF →
+  1-frame PNG/WebP, no metadata; canvas toBlob('image/gif') → image/png.)
+  (1,184–1,394 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 44–57, descs 147–149.) Guide backlinks on social-security-disability-benefits-calculator, organize-pdf,
+  extract-pdf-pages, exif-viewer, image-metadata-remover, and guides/what-to-do-about-an-ssdi-overpayment, ssi-asset-limit,
+  how-to-print-a-pdf-as-a-booklet, why-wont-my-pdf-print, does-webp-keep-metadata, do-png-files-have-metadata.
+  BUG FOUND (JS untouched, needs Stu): exif-viewer on a GIF whose XMP holds GPS says "No EXIF metadata found" AND "No GPS data
+  present in this file" → second false all-clear after JXL (exifr has no GIF parser). Guide says so and gives the text-editor
+  check. Minimal fix: for image/gif (and jxl) show "this format isn't fully checked" instead of "No GPS data present".
+- 2026-10-28 depth passes (first two from the 10-27 candidate list):
+  quinceanera-cost-calculator (956 → 1,725; +cost-by-guest-count table from the page's PRESETS (budget $4,750 fixed + $21.75/guest,
+  classic $9,650 + $32, grand $19,100 + $53; 100–300 guests), +where-to-cut table on classic/175 (each swap alone; all at 150
+  guests → $7,950), +padrino sponsorship → calculator-line table, +20% catering service-charge note (conditional, no new vendor
+  prices); FAQ 6 / LD 4 → 8 / 8 synced (LD was out of sync)). FIXED: generic answer box → real answer.
+  mpg-calculator (970 → 1,591; +pump-shutoff error table on the page's 312 mi / 11.9 gal (±0.3 gal = ±2.5% one tank, ±0.8% over
+  three; full-to-full error only in first/last fill), +odometer/tire and E10 (~3% less energy) notes, +MPG-illusion table at
+  page defaults 13,500 mi / $3.45 (10→12 = 225 gal = $776/yr vs 30→40 = 112 gal = $388; Larrick & Soll, Science 2008); FAQ 5 /
+  LD 4 → 7 / 7 synced). FIXED: generic answer box. JS byte-identical on both (inline-script md5 asserted); headless: $15,250 and
+  26.2 mpg.
+- 2026-10-28 hub updates: guides hub +3 cards, count claims 624→627 in all 9 places (= 627 on-disk dirs), More Guides badge
+  562→565; all-tools Guides section regenerated by deploy.sh (gen-all-tools.py).
+  Queue state: next depth candidates: vet-visit-cost-calculator (970), bathroom-remodel-cost-calculator (971), then re-scan the
+  970–1000 band (skip credit-card-payoff (cannibalization), pet-tools (hub), rap-…-50000 (longtail)). Guide intake ideas: "SSI
+  overpayment from a bank account over the limit: what to do" NO (covered today) → "SSI and marriage: what changes" (check
+  ssdi-vs-ssi overlap; couple rate $1,491, deeming); "how to print a PDF in black and white" (check why-wont-my-pdf-print);
+  "does TIFF keep metadata" (testable with Pillow/IM; check what reads it).
+  STILL OPEN (need Stu): as 10-27 list, plus exif-viewer GIF/XMP false "No GPS data present".
