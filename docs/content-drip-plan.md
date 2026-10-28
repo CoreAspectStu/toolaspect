@@ -2571,3 +2571,56 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   ssdi-vs-ssi overlap; couple rate $1,491, deeming); "how to print a PDF in black and white" (check why-wont-my-pdf-print);
   "does TIFF keep metadata" (testable with Pillow/IM; check what reads it).
   STILL OPEN (need Stu): as 10-27 list, plus exif-viewer GIF/XMP false "No GPS data present".
+
+- 2026-10-29 batch guides (10-28 intake ideas, all deduped: ssdi-vs-ssi / ssi-asset-limit only state the $1,491 couple rate and
+  $3,000 limit, no deeming or holding-out; why-wont-my-pdf-print + the 4 print guides have 0 grayscale/black-and-white mentions;
+  TIFF only appears in passing in does-webp-keep-metadata / exiftool-alternatives):
+  SS cluster → guides/ssi-and-marriage/ (problem-aware; tools social-security-disability-benefits-calculator + net-worth-calculator
+  + marriage-tax-penalty-calculator. VERIFIED eCFR title 20 (versioner API, current to 2026-10-26): 416.1802 (ineligible vs
+  eligible spouse; (d)(1) status fixed at start of month, marry on the 1st = single until next month), 416.1806 (legal marriage,
+  spouse-benefit entitlement, or living together + holding out), 416.1163 (child allocation = couple FBR − individual FBR = $497,
+  reduced by child's income; no deeming if spouse's remainder ≤ $497; else couple computation with $20 + $65 + ½ exclusions
+  vs $1,491; lesser-of rule (e)(2); second-prior-month income (e)(1); deeming stops the month after separation/divorce/death),
+  416.1202(a) (ineligible spouse's IRA/work pension/Keogh excluded), 416.1205(c) ($2,000 / $3,000 since 1989). COMPUTED:
+  two singles $1,988 vs couple $1,491 = −$497/mo, −$5,964/yr; spouse wages table $800–$3,000 (cut starts > $1,079, zero at
+  $3,067; $1,600 → $733.50, with one child → $982); spouse SSDI/retirement table $500–$1,630 (cut starts > $517, zero at $1,511,
+  so avg SSDI $1,630 ends federal SSI). ISM food exclusion from 2024-09-30 stated; no state-supplement figures.);
+  PDF → guides/how-to-print-a-pdf-in-black-and-white/ (problem/solution-aware; tools extract-pdf-pages (color pages "3,7,12-14"
+  vs rest "1-2,4-6,8-11,15-40") + pdf-split + pdf-merge. VERIFIED: CUPS source (OpenPrinting/cups cups/ppd-cache.c) uses IPP
+  print-color-mode=monochrome (falls back to process-monochrome); it is NOT in the CUPS options doc, so lpoptions -l is given for
+  driver names. Ghostscript VectorDevices doc: -sColorConversionStrategy=Gray converts all colors to DeviceGray, no
+  ProcessColorModel needed since 9.11. Acrobat "Print in grayscale (black and white)", Chrome Color menu hidden for printers that
+  don't report color, Preview Quartz Filter Black & White / Gray Tone. Ink claims hedged ("many inkjets").);
+  privacy → guides/does-tiff-keep-metadata/ (problem-aware; tools exif-viewer + image-metadata-remover + image-compressor.
+  MEASURED /tmp/drip29/tiff with a TIFF IFD walker (tiffwalk.py): src.jpg 294,340 B EXIF+GPS+XMP+ICC → Pillow 11.3 default TIFF
+  5,760,740 B ICC only; exif= passed → Make/Model/Software/Artist/ExifIFD/GPS + ICC, no XMP; LZW 6,760,096 B (> raw).
+  IM 6.9.11-60 jpg→tif keeps XMP (creator name) + ICC, DROPS EXIF/GPS; zip 2,436,501 B / jpeg 486,423 B same tags; -strip none;
+  3-page tif -strip keeps 3 pages. Re-save TIFF(EXIF+GPS) → IM and Pillow keep ICC only; TIFF→JPG drops EXIF (Pillow keeps
+  with exif=); IM XMP-TIFF → JPG keeps XMP. Chromium 145.0.7632.6: exif-viewer reads TIFF EXIF + GPS (warning shown) but does
+  not surface XMP; img.decode() on TIFF → EncodingError, so image-compressor can't take TIFF (silently does nothing).)
+  (1,193–1,399 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 50–53, descs 143–153.) Guide backlinks on social-security-disability-benefits-calculator,
+  marriage-tax-penalty-calculator, extract-pdf-pages, exif-viewer, image-metadata-remover, and guides/ssi-asset-limit, ssdi-vs-ssi,
+  ssi-overpayment-waiver, how-to-print-a-pdf-double-sided, why-wont-my-pdf-print, does-gif-keep-metadata,
+  do-png-files-have-metadata.
+- 2026-10-29 depth passes (the two from the 10-28 candidate list):
+  vet-visit-cost-calculator (970 → 1,617; +annual-visit-by-region table from the page's ROUTINE/EMERGENCY arrays × region factors
+  (dog $189/$210/$241/$273, cat $149/$165/$190/$215, ER workup $585/$650/$747/$845; JS Math.round semantics), +GP-vs-ER line-item
+  table (exam +177%, bloodwork +47%, X-rays +43% w/ the views caveat), +hospital-nights table 1–4 nights on exam+blood+X-ray+IV
+  ($1,670 / $2,570 / $3,470 / $4,370 typical); FAQ 6 / LD 4 → 9 / 9 synced (LD was out of sync)). FIXED: generic answer box.
+  bathroom-remodel-cost-calculator (971 → 1,626; +size × level table 25–100 sq ft from BATH_RATE, +budget → sq ft table
+  ($10k = 14 sq ft midrange → cosmetic-refresh money), +move-plumbing 8% table (applies to sf×rate only, not add-ons), +flat
+  add-on note (40 sq ft midrange + all 4 upgrades = $40,200 = $1,005/sq ft); FAQ 6 / LD 4 → 9 / 9 synced). FIXED: generic answer
+  box. JS byte-identical on both (inline-script md5 asserted); headless defaults $210 and $28,000. No new vendor price claims
+  (vet page footnote still says "late 2025": re-verify on a later pass).
+- 2026-10-29 hub updates: guides hub +3 cards, count claims 627→630 in all 9 places (= 630 on-disk dirs), More Guides badge
+  565→568; all-tools Guides section regenerated by deploy.sh.
+  Queue state: next depth candidates: re-scan the 970–1000 band with /tmp/drip29/wc.py (skip credit-card-payoff
+  (cannibalization), pet-tools (hub), rap-…-50000 (longtail)). Guide intake ideas: "SSI and living with family" (in-kind support /
+  one-third reduction; check ssi-and-marriage + ssi-asset-limit overlap), "how to print a PDF without color on a Mac" NO (covered
+  today) → "how to print multiple pages on one sheet of a PDF" (check how-to-print-a-pdf-as-a-booklet), "does BMP keep
+  metadata" (testable; likely short → maybe "does HEIC keep metadata when converted to JPG" if Pillow-heif is available).
+  BUG FOUND (pre-existing, JS untouched, needs Stu): bmi-calculator throws TypeError "Cannot read properties of null (reading
+  'value')" in calc() on page load (headless Chromium 145, local). Also image-compressor silently ignores TIFF (accept image/*
+  lets it through, browser can't decode) → should say "TIFF isn't supported in this browser".
+  STILL OPEN (need Stu): as 10-28 list (exif-viewer JXL/GIF false negatives, image-compressor JXL whitelist, dog-dna prices).

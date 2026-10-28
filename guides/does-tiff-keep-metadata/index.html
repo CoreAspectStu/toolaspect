@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does TIFF Keep Metadata? We Tested It | ToolAspect</title>
+<meta name="description" content="TIFF can hold EXIF, GPS, XMP and IPTC. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and how to check and strip it.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-tiff-keep-metadata/">
+<meta property="og:title" content="Does TIFF Keep Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-tiff-keep-metadata/">
+<meta property="og:description" content="TIFF can hold EXIF, GPS, XMP and IPTC. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and how to check and strip it.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does TIFF Keep Metadata?">
+<meta name="twitter:description" content="TIFF can hold EXIF, GPS, XMP and IPTC. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and how to check and strip it.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does TIFF Keep Metadata?", "description": "TIFF can hold EXIF, GPS, XMP and IPTC. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and how to check and strip it.", "datePublished": "2026-10-29", "dateModified": "2026-10-29", "mainEntityOfPage": "https://toolaspect.com/guides/does-tiff-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does TIFF Keep Metadata?", "item": "https://toolaspect.com/guides/does-tiff-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do TIFF files contain EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "They can. EXIF is built on TIFF's own tag structure, so a TIFF can hold camera details, dates, GPS coordinates, XMP, IPTC and a color profile. Whether a particular TIFF has them depends on the camera, scanner or converter that made it."}}, {"@type": "Question", "name": "Does converting a JPG to TIFF remove GPS data?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the software. In our tests ImageMagick 6.9 dropped EXIF and GPS but kept XMP, and Pillow dropped everything except the color profile unless the EXIF was passed in, in which case it kept the GPS."}}, {"@type": "Question", "name": "How do I remove metadata from a TIFF file?", "acceptedAnswer": {"@type": "Answer", "text": "Run convert in.tif -strip out.tif with ImageMagick, or exiftool -all= in.tif. Both remove EXIF, GPS, XMP and the color profile. ImageMagick kept every page of a multi-page TIFF in our test."}}, {"@type": "Question", "name": "Can I view TIFF metadata in a browser?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A browser-based EXIF viewer can read TIFF tags, including GPS, even though Chrome and Firefox can't display TIFF images. XMP may not show up, so search the file for xmpmeta in a text editor as well."}}, {"@type": "Question", "name": "Do scanned TIFFs have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Usually some. Scanners and scanning apps typically write the device make and model, software, resolution and date, and some add an artist name from the computer's user account. Scans rarely include GPS."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does TIFF Keep Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 29, 2026</span></div>
+<p class="intro">TIFF is the format EXIF was built on, so it can hold more metadata than almost anything else: camera details, GPS, XMP, IPTC and a color profile. What actually survives a conversion depends on the software. We ran a GPS-tagged photo through Pillow and ImageMagick, read every tag in the results, and found they keep very different things.</p>
+<h2>Do TIFF files have metadata?</h2>
+<p>Yes, and more room for it than almost any other image format. EXIF, the metadata block cameras write into JPEGs, is itself built on TIFF's tag structure. In a TIFF file, those tags sit right in the main header. A TIFF can carry the full set: EXIF, GPS, XMP, IPTC and a color profile.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Tag</th><th>Tag number</th><th>What it can reveal</th></tr></thead><tbody>
+<tr><td>Make, Model, Software</td><td>271, 272, 305</td><td>Camera, scanner or editing app</td></tr>
+<tr><td>Artist, Copyright</td><td>315, 33432</td><td>A person's name, often filled in by the camera or scanner software</td></tr>
+<tr><td>DateTime</td><td>306</td><td>When the file was created or last saved</td></tr>
+<tr><td>EXIF sub-IFD</td><td>34665</td><td>Exposure, lens, original capture date</td></tr>
+<tr><td>GPS sub-IFD</td><td>34853</td><td>Latitude, longitude, altitude</td></tr>
+<tr><td>XMP</td><td>700</td><td>Author, rights, edit history, keywords, sometimes location</td></tr>
+<tr><td>IPTC</td><td>33723</td><td>Caption, byline, credit (news and stock photos)</td></tr>
+<tr><td>ICC profile</td><td>34675</td><td>Color profile; can name the device or software</td></tr>
+</tbody></table></div>
+<p>Scanners usually fill in make, model, software and resolution, and some scanning apps add an artist name from your computer's user account. Cameras that save TIFF, and raw formats built on TIFF like DNG and Nikon's NEF, carry full EXIF including GPS if location was on.</p>
+
+<h2>Does converting a photo to TIFF keep the GPS location?</h2>
+<p>It depends on the software, and the results are less predictable than you'd think. We took a phone-style JPEG with EXIF (camera, an author name and GPS coordinates), an XMP block and a color profile, converted it to TIFF several ways, and read every tag in each output with a script that walks the TIFF structure.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>Size</th><th>Camera EXIF</th><th>GPS</th><th>XMP (author name)</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>Original JPEG (phone-style)</td><td>294 KB</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Pillow 11.3, default save</td><td>5,761 KB</td><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>Pillow 11.3, EXIF passed in</td><td>5,761 KB</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+<tr><td>ImageMagick 6.9, plain convert</td><td>5,761 KB</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ImageMagick 6.9, ZIP or JPEG compression</td><td>2,437 KB / 486 KB</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ImageMagick 6.9 with -strip</td><td>5,760 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+</tbody></table></div>
+<p>Two things stand out. Pillow, the Python library behind a lot of web converters, drops EXIF and GPS unless the code passes them in on purpose, but then it keeps them completely. ImageMagick did the reverse on our version: it dropped the EXIF and GPS but kept the XMP, so the author name was still in the file. Neither tool kept everything, and neither removed everything without being told to.</p>
+<p>The compression type made no difference to metadata. ZIP and JPEG-compressed TIFFs kept the same tags as the uncompressed one. It just changed the size.</p>
+
+<h2>Does saving a TIFF again remove its metadata?</h2>
+<p>Sometimes. A TIFF with full EXIF and GPS, re-saved by ImageMagick as TIFF, came out with only its color profile. Re-saving or rotating it in Pillow did the same. Converting that TIFF to JPEG dropped the EXIF in both tools unless we told Pillow to copy it, and then the GPS came straight across.</p>
+<p>The catch runs the other way with XMP. When we converted ImageMagick's TIFF to JPEG, the XMP and the author name went along with it. "I converted it, so it's clean" isn't safe with TIFF. What survives depends on which block the data is in and which program does the converting. Check the output instead of trusting the route.</p>
+
+<h2>What about multi-page TIFFs?</h2>
+<p>Each page in a multi-page TIFF has its own set of tags, so metadata can sit on any page, not just the first. Fax software and document scanners make a lot of these. In our test, a 3-page ImageMagick TIFF kept the XMP and color profile, and <code>-strip</code> removed them and kept all three pages. Some converters only keep the first page when they convert, so count the pages afterwards.</p>
+
+<h2>How do I check a TIFF for hidden metadata?</h2>
+<p>Our <a href="/exif-viewer/">EXIF viewer</a> reads TIFF files in your browser. On our Pillow TIFF it showed the camera, the author name and the GPS coordinates, along with a location warning. It lists the TIFF structure tags too (strip offsets, bits per sample), which you can ignore.</p>
+<p>It doesn't show XMP. On the ImageMagick TIFF it found no EXIF or GPS, which was correct, but it didn't surface the author name sitting in the XMP block. For that, open the TIFF in a text editor and search for <code>xmpmeta</code> or your name. XMP is stored as plain text, so a hit means it's there. ExifTool reads every block, including XMP and IPTC, if you want the full list.</p>
+
+<h2>How do I remove metadata from a TIFF?</h2>
+<ul>
+<li><strong>Keep it as TIFF:</strong> <code>convert in.tif -strip out.tif</code> with ImageMagick removed everything in our tests, including the color profile, and kept all pages. ExifTool's <code>-all=</code> does the same without re-encoding the image.</li>
+<li><strong>Don't need TIFF:</strong> most people sharing a TIFF online don't. Convert it to JPEG or PNG with -strip, then confirm with the EXIF viewer. Our <a href="/image-metadata-remover/">image metadata remover</a> takes JPEG and PNG.</li>
+<li><strong>Want it smaller too:</strong> TIFFs are huge. Our test photo went from 294 KB as a JPEG to 5.8 MB as an uncompressed TIFF. Chrome and Firefox can't open TIFFs (Safari can), so browser tools, including our <a href="/image-compressor/">image compressor</a>, can't read one directly. Convert to PNG or JPEG first, then compress.</li>
+</ul>
+<p>For how other formats compare, see <a href="/guides/does-gif-keep-metadata/">does GIF keep metadata</a> and <a href="/guides/do-png-files-have-metadata/">do PNG files have metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do TIFF files contain EXIF data?</h3><p>They can. EXIF is built on TIFF's own tag structure, so a TIFF can hold camera details, dates, GPS coordinates, XMP, IPTC and a color profile. Whether a particular TIFF has them depends on the camera, scanner or converter that made it.</p></div>
+<div class="faq-item"><h3>Does converting a JPG to TIFF remove GPS data?</h3><p>It depends on the software. In our tests ImageMagick 6.9 dropped EXIF and GPS but kept XMP, and Pillow dropped everything except the color profile unless the EXIF was passed in, in which case it kept the GPS.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from a TIFF file?</h3><p>Run convert in.tif -strip out.tif with ImageMagick, or exiftool -all= in.tif. Both remove EXIF, GPS, XMP and the color profile. ImageMagick kept every page of a multi-page TIFF in our test.</p></div>
+<div class="faq-item"><h3>Can I view TIFF metadata in a browser?</h3><p>Yes. A browser-based EXIF viewer can read TIFF tags, including GPS, even though Chrome and Firefox can't display TIFF images. XMP may not show up, so search the file for xmpmeta in a text editor as well.</p></div>
+<div class="faq-item"><h3>Do scanned TIFFs have metadata?</h3><p>Usually some. Scanners and scanning apps typically write the device make and model, software, resolution and date, and some add an artist name from the computer's user account. Scans rarely include GPS.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/guides/does-gif-keep-metadata/">Does GIF Keep Metadata?</a>
+<a href="/guides/do-png-files-have-metadata/">Do PNG Files Have Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
