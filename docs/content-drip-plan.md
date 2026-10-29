@@ -2624,3 +2624,55 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   'value')" in calc() on page load (headless Chromium 145, local). Also image-compressor silently ignores TIFF (accept image/*
   lets it through, browser can't decode) → should say "TIFF isn't supported in this browser".
   STILL OPEN (need Stu): as 10-28 list (exif-viewer JXL/GIF false negatives, image-compressor JXL whitelist, dog-dna prices).
+
+- 2026-10-30 batch guides (10-29 intake ideas, all deduped: ssi-and-marriage has one ISM sentence, ssi-asset-limit none, so no
+  VTR/PMV/pro-rata/business-arrangement coverage; how-to-print-a-pdf-as-a-booklet only mentions "2 per sheet" as a booklet step;
+  BMP appears only in passing in 4 guides; HEIC→JPG metadata already covered by does-converting-heic-to-jpg-keep-metadata):
+  SS cluster → guides/ssi-and-living-with-family/ (problem-aware; tools social-security-disability-benefits-calculator +
+  rent-calculator + net-worth-calculator. VERIFIED eCFR title 20 (versioner API, current to 2026-10-26, text in /tmp/drip30/cfr):
+  416.1130(b)(1) (ISM = shelter only; business arrangement = required rent ≥ PMV, else ISM = PMV or CMRV − rent), 416.1131 (VTR
+  needs another's household + shelter + ALL meals; all-or-nothing; no exclusions on it), 416.1132 (own household if owner/life
+  estate/liable on lease/pro rata/public-assistance HH; parent of minor = deeming not ISM), 416.1133 (pro rata = HH operating
+  expenses / people regardless of age, 12-mo avg), 416.1140 (PMV = ⅓ FBR + $20; can rebut with actual value), 416.1142 (public
+  assistance HH = SSI + ≥1 other member on SNAP/TANF/SSI/need-based VA/state aid → no ISM from HH). COMPUTED 2026: VTR $331.33 →
+  $662.67; PMV $351.33 (with $20 GIE, max cut also $331.33 when no other income); rent table $0–$352 by "all meals" vs "own
+  food" ($100 → $662.67 vs $762.67); with $500 SSDI: none $514 / VTR $182.67 / PMV $162.67 / PMV+$200 rent $362.67.);
+  PDF → guides/how-to-print-multiple-pages-on-one-sheet-pdf/ (solution-aware; tools pdf-merge (n-up restarts per job → merge
+  first) + extract-pdf-pages + organize-pdf. Where-it-lives table (Acrobat Multiple, Chrome/Edge/Firefox More settings, Preview
+  Layout, Windows driver, CUPS lp -o number-up/number-up-layout/page-border). COMPUTED scale of a portrait Letter page in an
+  N-up cell on Letter, margins ignored, 2/6-up landscape: 65/50/39/33/25% → 12 pt = 7.8/6.0/4.6/4.0/3.0 pt; 40-page sheet
+  counts.);
+  privacy → guides/does-bmp-keep-metadata/ (problem-aware; tools exif-viewer + image-compressor + image-metadata-remover.
+  MEASURED /tmp/drip30/bmp with a BMP header walker (bmpwalk.py) on the drip29 src.jpg (EXIF+GPS+XMP+588 B ICC): Pillow 11.3
+  BMP 5,760,054 B, 40-byte header, 96 dpi stamped, nothing else; exif=/icc_profile= silently ignored (identical bytes). IM
+  6.9.11-60 default V5 5,760,726 B with the embedded 588 B ICC (== source); -strip V5 sRGB no profile; BMP3 40-byte header but
+  ICC still appended after the pixels (offset 5,760,054). IM BMP→JPG keeps ICC, no EXIF. Chromium 145: exif-viewer "No EXIF /
+  No GPS" (correct for BMP); image-compressor q80 on the BMP: WebP 92.92 KB (−98.3%) / JPEG 227.51 KB / PNG 3.3 MB, no EXIF;
+  JPEG/WebP get Chrome's own 456 B sRGB profile.)
+  (1,186–1,398 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 49–57, descs 135–150.) Guide backlinks on social-security-disability-benefits-calculator, rent-calculator,
+  pdf-merge, organize-pdf, exif-viewer, image-compressor, and guides/ssi-and-marriage, ssi-asset-limit, ssi-overpayment-waiver,
+  how-to-print-a-pdf-as-a-booklet, how-to-print-a-pdf-double-sided, how-to-print-a-pdf-in-black-and-white,
+  does-tiff-keep-metadata, do-screenshots-have-metadata, do-png-files-have-metadata.
+- 2026-10-30 depth passes (from the 970–1000 re-scan with wc.py):
+  driveway-paving-cost-calculator (983 → 1,705; +size table 200–1,200 sq ft at $10/$12 with $7–13 / $8–18 ranges, +horizon
+  table 5–30 yrs on the page's own seal/replacement logic with break-even concrete price ($10.35 → $11.40 up to 20 yrs, jumps to
+  $21.40 once asphalt needs replacing), +seal interval × rate grid at 20 yrs (3-yr at ≥$0.35 beats concrete's $7,200), +honest
+  note that the JS only schedules seals in the first asphalt life; FAQ 5 / LD → 7 / 7 synced). FIXED: generic answer box.
+  window-replacement-cost-calculator (992 → 1,518; +frame × glass per-window grid (vinyl clear $523 → wood triple $1,141),
+  +retrofit/full-frame/2-story table for 10 vinyl vs fiberglass (+32% / +14% / +45% on vinyl), +window-count budget table 6–20
+  (vinyl range, fiberglass, wood; volume discount not in calc, stated); FAQ 6 / LD → 8 / 8 synced). FIXED: generic answer box.
+  JS byte-identical on both (inline-script md5 asserted); headless: $6,000 vs $7,200 and $5,500. No new vendor price claims.
+- 2026-10-30 hub updates: guides hub +3 cards, count claims 630→633 in all 9 places (= 633 on-disk dirs), More Guides badge
+  568→571; all-tools Guides section regenerated by deploy.sh.
+  Queue state: next depth candidates: kitchen-remodel-cost-calculator (1,000), wedding-transportation-cost-calculator (996),
+  wedding-invitation-cost-calculator (984), corporate-event-budget-calculator (982) (skip credit-card-payoff (cannibalization),
+  pet-tools (hub), rap-…-50000 (longtail); dev tools in the band are lower value). Guide intake ideas: "SSI and living in
+  someone else's home: how to write a rental agreement" NO (covered today) → "SSI and room and board in a group home" (check
+  416.1141(c)/1144 coverage) or "can you get SSI and SNAP at the same time"; "how to print a PDF poster on multiple pages
+  (tiling)" (check how-to-print-a-pdf-without-margins); "does ICO keep metadata" is too thin → "does DNG keep metadata"
+  (Pillow can't write DNG; check what's testable) or "does screenshot on Mac include metadata" (check do-screenshots-have-metadata).
+  NOTE (pre-existing, JS untouched): headless Chromium logs pageerror Error('Y') on load of driveway/window/image-compressor
+  pages, identical on the pre-edit file; likely an offline third-party script. Not caused by this batch.
+  STILL OPEN (need Stu): as 10-29 list (bmi-calculator calc() TypeError, image-compressor silent TIFF, exif-viewer JXL/GIF
+  false negatives, image-metadata-remover JXL whitelist, dog-dna prices).

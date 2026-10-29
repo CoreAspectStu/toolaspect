@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does BMP Keep Metadata? We Tested It | ToolAspect</title>
+<meta name="description" content="BMP has no slot for EXIF, GPS or XMP. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and what a BMP can still hold.">
+<link rel="canonical" href="https://toolaspect.com/guides/does-bmp-keep-metadata/">
+<meta property="og:title" content="Does BMP Keep Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/does-bmp-keep-metadata/">
+<meta property="og:description" content="BMP has no slot for EXIF, GPS or XMP. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and what a BMP can still hold.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Does BMP Keep Metadata?">
+<meta name="twitter:description" content="BMP has no slot for EXIF, GPS or XMP. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and what a BMP can still hold.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Does BMP Keep Metadata?", "description": "BMP has no slot for EXIF, GPS or XMP. We converted a GPS-tagged photo with Pillow and ImageMagick to see what survives, and what a BMP can still hold.", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "mainEntityOfPage": "https://toolaspect.com/guides/does-bmp-keep-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Does BMP Keep Metadata?", "item": "https://toolaspect.com/guides/does-bmp-keep-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does BMP store EXIF or GPS data?", "acceptedAnswer": {"@type": "Answer", "text": "No. The BMP format has no field for EXIF, GPS, XMP or IPTC. Its header only holds the image size, color depth, compression, print resolution and, in the V4 and V5 versions, color space and an optional ICC color profile."}}, {"@type": "Question", "name": "Does converting a JPG to BMP remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, for camera details and location. In our tests Pillow 11.3 and ImageMagick 6.9 both dropped EXIF, GPS and XMP when converting to BMP. ImageMagick kept the color profile unless -strip was used."}}, {"@type": "Question", "name": "Can a BMP file contain hidden data?", "acceptedAnswer": {"@type": "Answer", "text": "Rarely. A V5 BMP can embed a color profile or link to one by file name, and extra bytes can be added after the pixel data. Normal apps don't put personal information there, but what's visible in the image itself can reveal a lot."}}, {"@type": "Question", "name": "Why is a BMP file so large?", "acceptedAnswer": {"@type": "Answer", "text": "BMP is almost always uncompressed, so it stores every pixel at full size. A 1600 x 1200 photo is about 5.8 MB as a 24-bit BMP. The same image was 93 KB as WebP and 228 KB as JPEG in our test."}}, {"@type": "Question", "name": "Is BMP safer than JPG for privacy?", "acceptedAnswer": {"@type": "Answer", "text": "For metadata, yes, because it can't carry EXIF or GPS. But BMP files are huge and few sites accept them, so a JPG or PNG with the metadata stripped is usually the better choice for sharing."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Does BMP Keep Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 30, 2026</span></div>
+<p class="intro">BMP is about as plain as image formats get. There's no place in the file for EXIF, GPS or XMP, so a photo converted to BMP loses its camera details and location. We tested that with Pillow and ImageMagick, and found the one thing that does slip through, plus why you probably don't want to share a BMP anyway.</p>
+<h2>Do BMP files have EXIF data?</h2>
+<p>No. BMP has no slot for EXIF, GPS, XMP or IPTC, and no general-purpose way to add one. A BMP file is a small header followed by the pixels. The header has fixed fields: size, color depth, compression, print resolution and, in newer versions, color space information. That's the whole list.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Header field</th><th>Which BMP versions</th><th>What it can tell someone</th></tr></thead><tbody>
+<tr><td>Width, height, bits per pixel</td><td>Every version</td><td>Image size and color depth</td></tr>
+<tr><td>Horizontal and vertical resolution</td><td>40-byte header and newer</td><td>Print DPI, often 0, 72 or 96</td></tr>
+<tr><td>Compression type</td><td>40-byte header and newer</td><td>Usually none; RLE for some 8-bit images</td></tr>
+<tr><td>Color space and gamma</td><td>V4 (108-byte header) and V5</td><td>Technical color settings</td></tr>
+<tr><td>ICC color profile</td><td>V5 (124-byte header) only</td><td>Embedded profile, or a linked file name</td></tr>
+</tbody></table></div>
+<p>None of that says where or when a photo was taken, or what camera took it. Of all the common image formats, BMP is one of the least likely to give anything away.</p>
+
+<h2>Does converting a photo to BMP remove the GPS location?</h2>
+<p>In our test, yes, every time. We took a phone-style JPEG with full EXIF (camera make and model, an author name and GPS coordinates), an XMP block and a color profile. Then we converted it to BMP with Pillow and ImageMagick and read every byte of the headers with a small script.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Route</th><th>Size</th><th>Camera EXIF</th><th>GPS</th><th>Author name</th><th>Color profile</th></tr></thead><tbody>
+<tr><td>Original JPEG</td><td>294 KB</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Pillow 11.3, default save</td><td>5,760 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Pillow 11.3, EXIF and profile passed in</td><td>5,760 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>ImageMagick 6.9, plain convert</td><td>5,761 KB</td><td>No</td><td>No</td><td>No</td><td>Yes (in the header)</td></tr>
+<tr><td>ImageMagick 6.9, BMP3 format</td><td>5,761 KB</td><td>No</td><td>No</td><td>No</td><td>Yes (stuck on the end)</td></tr>
+<tr><td>ImageMagick 6.9 with -strip</td><td>5,760 KB</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+</tbody></table></div>
+<p>Nothing identifying survived any route. We even handed Pillow the EXIF and profile on purpose, and it ignored both and wrote the same 5,760,054 bytes. That's exactly 1600 &times; 1200 pixels at 3 bytes each, plus a 54-byte header. Pillow did stamp a resolution of 96 DPI, which wasn't in the original. It's harmless, but it shows the header isn't a copy of anything.</p>
+<p>ImageMagick kept the color profile. By default it writes the newest header version (V5), which can embed one. The odd result was BMP3, the old format with no profile field. ImageMagick still wrote the 588-byte profile to the end of the file, after the pixels, where no viewer looks for it. Here the profile was a generic "sRGB built-in" with nothing personal in it. With a custom profile from a calibrated monitor or a scanner, it could name the device.</p>
+
+<h2>Can a BMP file contain anything hidden?</h2>
+<p>A few things worth knowing, though none of them are common:</p>
+<ul>
+<li><strong>Linked color profiles.</strong> A V5 header can point to a profile file on disk instead of embedding one, and stores the file name. A Windows path like <code>C:\Users\yourname\...</code> would show a user name. Normal apps rarely do this.</li>
+<li><strong>Data after the pixels.</strong> As ImageMagick showed, extra bytes can sit at the end of the file. Most viewers ignore them, and so do most metadata tools.</li>
+<li><strong>What's in the picture.</strong> A screenshot saved as BMP has no metadata, but it can show your desktop, file names, tabs and notifications. That's usually the bigger leak. See <a href="/guides/do-screenshots-have-metadata/">do screenshots have metadata</a>.</li>
+</ul>
+
+<h2>Does converting BMP back to JPG add metadata?</h2>
+<p>Not personal metadata. A BMP can't pass on EXIF it doesn't have, so a JPG made from a BMP starts clean. ImageMagick did carry the color profile from its V5 BMP into the JPG, and the Pillow BMP produced a JPG with no profile at all. Neither had any EXIF.</p>
+<p>The one thing to watch is the app doing the converting. Some photo apps and phones add their own EXIF when they save, such as the date, the software name, or even location if it's switched on. Check the result in our <a href="/exif-viewer/">EXIF viewer</a>. On both of our BMPs it correctly reported no EXIF and no GPS.</p>
+
+<h2>Why are BMP files so big, and should I convert them?</h2>
+<p>Because almost all BMPs are uncompressed. Our 294 KB JPEG became a 5.8 MB BMP, 20 times bigger, with no gain in quality, since the pixels came from the JPEG in the first place. BMP sticks around partly because older Windows software, some industrial cameras and certain embedded systems still use it.</p>
+<p>For sharing, convert it. We ran the ImageMagick BMP through our <a href="/image-compressor/">image compressor</a> at its default quality of 80:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Output format</th><th>File size</th><th>Smaller by</th></tr></thead><tbody>
+<tr><td>WebP</td><td>92.9 KB</td><td>98.3%</td></tr>
+<tr><td>JPEG</td><td>227.5 KB</td><td>96.0%</td></tr>
+<tr><td>PNG</td><td>3.3 MB</td><td>40.0%</td></tr>
+</tbody></table></div>
+<p>None of the outputs had EXIF. The JPEG and WebP files did get a small sRGB profile, but that's one Chrome writes on every image it encodes, not anything from the original. PNG is lossless, so it's the pick for screenshots and diagrams. Use JPEG or WebP for photos.</p>
+
+<h2>How do I remove metadata from a BMP?</h2>
+<p>Usually there's nothing to remove. If you want to be thorough, <code>convert in.bmp -strip out.bmp</code> drops the color profile, and so does saving through Pillow. If you're converting to JPEG or PNG anyway, our <a href="/image-metadata-remover/">image metadata remover</a> cleans those formats, which is the step that matters if a phone app has added EXIF along the way.</p>
+<p>For other formats, see <a href="/guides/does-tiff-keep-metadata/">does TIFF keep metadata</a>, where the results were very different, and <a href="/guides/do-png-files-have-metadata/">do PNG files have metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Does BMP store EXIF or GPS data?</h3><p>No. The BMP format has no field for EXIF, GPS, XMP or IPTC. Its header only holds the image size, color depth, compression, print resolution and, in the V4 and V5 versions, color space and an optional ICC color profile.</p></div>
+<div class="faq-item"><h3>Does converting a JPG to BMP remove metadata?</h3><p>Yes, for camera details and location. In our tests Pillow 11.3 and ImageMagick 6.9 both dropped EXIF, GPS and XMP when converting to BMP. ImageMagick kept the color profile unless -strip was used.</p></div>
+<div class="faq-item"><h3>Can a BMP file contain hidden data?</h3><p>Rarely. A V5 BMP can embed a color profile or link to one by file name, and extra bytes can be added after the pixel data. Normal apps don't put personal information there, but what's visible in the image itself can reveal a lot.</p></div>
+<div class="faq-item"><h3>Why is a BMP file so large?</h3><p>BMP is almost always uncompressed, so it stores every pixel at full size. A 1600 x 1200 photo is about 5.8 MB as a 24-bit BMP. The same image was 93 KB as WebP and 228 KB as JPEG in our test.</p></div>
+<div class="faq-item"><h3>Is BMP safer than JPG for privacy?</h3><p>For metadata, yes, because it can't carry EXIF or GPS. But BMP files are huge and few sites accept them, so a JPG or PNG with the metadata stripped is usually the better choice for sharing.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/image-compressor/">Image Compressor</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/guides/does-tiff-keep-metadata/">Does TIFF Keep Metadata?</a>
+<a href="/guides/do-screenshots-have-metadata/">Do Screenshots Have Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
