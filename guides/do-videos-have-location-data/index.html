@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Do Videos Have Location Data? We Tested It | ToolAspect</title>
+<meta name="description" content="Phone videos store GPS too, and converting often keeps it. Our ffmpeg tests: MP4 and WebM kept location, -map_metadata -1 and our browser tool removed it.">
+<link rel="canonical" href="https://toolaspect.com/guides/do-videos-have-location-data/">
+<meta property="og:title" content="Do Videos Have Location Data?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/do-videos-have-location-data/">
+<meta property="og:description" content="Phone videos store GPS too, and converting often keeps it. Our ffmpeg tests: MP4 and WebM kept location, -map_metadata -1 and our browser tool removed it.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Do Videos Have Location Data?">
+<meta name="twitter:description" content="Phone videos store GPS too, and converting often keeps it. Our ffmpeg tests: MP4 and WebM kept location, -map_metadata -1 and our browser tool removed it.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Do Videos Have Location Data?", "description": "Phone videos store GPS too, and converting often keeps it. Our ffmpeg tests: MP4 and WebM kept location, -map_metadata -1 and our browser tool removed it.", "datePublished": "2026-10-31", "dateModified": "2026-10-31", "mainEntityOfPage": "https://toolaspect.com/guides/do-videos-have-location-data/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Do Videos Have Location Data?", "item": "https://toolaspect.com/guides/do-videos-have-location-data/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do videos have location data?", "acceptedAnswer": {"@type": "Answer", "text": "Usually, if location access was on for the camera. Phones store GPS coordinates in the video file, along with the recording date and often the make and model, in metadata boxes rather than EXIF."}}, {"@type": "Question", "name": "Does converting a video to MP4 remove the location?", "acceptedAnswer": {"@type": "Answer", "text": "Not by default. In our tests with ffmpeg 5.1, both a straight copy into MP4 and a full re-encode kept the GPS location. A WebM conversion kept it too, plus the phone model. Only -map_metadata -1 removed it."}}, {"@type": "Question", "name": "How do I remove metadata from a video without re-encoding?", "acceptedAnswer": {"@type": "Answer", "text": "Run ffmpeg -i in.mp4 -c copy -map_metadata -1 out.mp4. It copies the video and audio streams unchanged and drops all file-level tags, including location, so there's no quality loss."}}, {"@type": "Question", "name": "Can I see where a video was recorded on my iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Open it in Photos and swipe up. A map means the location is stored in the file. To share without it, tap Options in the share sheet and turn Location off."}}, {"@type": "Question", "name": "Does a browser-recorded video have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Very little. A WebM made with our video watermark tool in Chrome had no location, no device name and no date. Its only tag was the encoder, \"Chrome.\""}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Do Videos Have Location Data?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated October 31, 2026</span></div>
+<p class="intro">Yes, most phone videos carry the GPS location where they were recorded. Converting the file doesn't reliably remove it, either. We tested common ffmpeg conversions and our own browser tool to see which ones keep your location and which drop it, and how to check and strip it yourself.</p>
+<h2>Do videos store GPS location?</h2>
+<p>Usually, yes. If location access is on for the camera app, phones write the coordinates into the video file itself, the same way they do for photos. In the file it's stored as a plain string like <code>+40.7484-073.9857/</code>, which is latitude and longitude in a standard format called ISO 6709. That's precise enough to point at a single building.</p>
+<p>Videos don't use EXIF, which is why photo tools often miss it. MP4 and MOV files keep it in a metadata box near the start or end of the file. iPhones use a QuickTime metadata key, and many Android phones use a box called &copy;xyz. Videos also carry a recording date and, often, the phone's make and model.</p>
+
+<h2>Does converting or compressing a video remove its location?</h2>
+<p>Often not, which surprised us. We made a 5-second 1080p test clip, tagged it with a location, a make and model ("Apple", "iPhone 15") and a recording date, then pushed it through common conversions with ffmpeg 5.1. ffmpeg is the engine behind HandBrake, VLC's converter and many online converters. We checked each output with ffprobe and searched the raw bytes.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>What we did</th><th>Location</th><th>Make and model</th><th>Recording date</th></tr></thead><tbody>
+<tr><td>Original (.mov, phone-style tags)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>ffmpeg, copy into MP4 (<code>-c copy</code>)</td><td><strong>Yes</strong></td><td>No</td><td>No</td></tr>
+<tr><td>ffmpeg, re-encode to MP4 (defaults)</td><td><strong>Yes</strong></td><td>No</td><td>No</td></tr>
+<tr><td>ffmpeg, convert to WebM (VP9)</td><td><strong>Yes</strong></td><td><strong>Yes</strong></td><td>No</td></tr>
+<tr><td>ffmpeg with <code>-map_metadata -1</code></td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Our video watermark tool (WebM out)</td><td>No</td><td>No</td><td>No</td></tr>
+</tbody></table></div>
+<p>Plain conversions kept the location every time, even a full re-encode to a different codec and container. ffmpeg copies the file-level tags across by default, and the MP4 writer re-stores the coordinates in its own location box. The WebM conversion kept even more, including the phone model. Only <code>-map_metadata -1</code>, which tells ffmpeg to drop all tags, removed everything.</p>
+<p>The recording date disappeared in every output, but don't count on that. Other apps and settings behave differently, and it's the location that matters most.</p>
+
+<h2>How do I check if my video has location data?</h2>
+<p>On an iPhone, open the video in Photos and swipe up. If there's a map, the location is in the file. On a computer, the free MediaInfo app shows it under the general section. With ffmpeg installed, this prints only the tags that matter:</p>
+<p><code>ffprobe -v error -show_entries format_tags -of default=nw=1 video.mp4</code></p>
+<p>Look for a <code>location</code> line. Searching the file for the numbers isn't reliable. In our MP4s the coordinates were stored in a binary form, so a text search found nothing even when the location was there.</p>
+<p>Our <a href="/exif-viewer/">EXIF viewer</a> is built for photos and won't read video files. For pictures, it's the quickest way to see GPS.</p>
+
+<h2>How do I remove location from a video?</h2>
+<p>Pick whichever fits how you work:</p>
+<ul>
+<li><strong>Before you record.</strong> Turn off location for the Camera app (on iPhone: Settings &rarr; Privacy &amp; Security &rarr; Location Services &rarr; Camera). New videos won't have it.</li>
+<li><strong>When you share from an iPhone.</strong> In the share sheet, tap Options at the top and switch Location off. That works for videos as well as photos.</li>
+<li><strong>With ffmpeg, no quality loss.</strong> <code>ffmpeg -i in.mp4 -c copy -map_metadata -1 out.mp4</code> copies the video and audio untouched and drops every tag. It takes seconds, even on long files.</li>
+<li><strong>In your browser.</strong> Our <a href="/video-watermark/">video watermark</a> tool re-records the video in the browser and saves a new WebM file. In our test, the output had no location, no make or model and no date. The only tag was "encoder: Chrome." It isn't lossless, but nothing is uploaded.</li>
+</ul>
+
+<h2>Do social media sites remove location from videos?</h2>
+<p>The big platforms re-encode what you upload, and what other people stream isn't your original file. But we haven't tested every platform, and their behavior can change. The safer assumption is that anything sent as a file keeps its metadata. That includes email attachments, cloud share links, AirDrop and the "send as file" or "document" mode in chat apps. Strip it first if it matters.</p>
+<p>Also look at what's in the frame. A street sign, a house number or the view from a window can give away more than the metadata ever would. For photos, see <a href="/guides/how-to-remove-location-from-photos/">how to remove location from photos</a> and our <a href="/image-metadata-remover/">image metadata remover</a>. For screenshots, see <a href="/guides/do-screenshots-have-metadata/">do screenshots have metadata</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do videos have location data?</h3><p>Usually, if location access was on for the camera. Phones store GPS coordinates in the video file, along with the recording date and often the make and model, in metadata boxes rather than EXIF.</p></div>
+<div class="faq-item"><h3>Does converting a video to MP4 remove the location?</h3><p>Not by default. In our tests with ffmpeg 5.1, both a straight copy into MP4 and a full re-encode kept the GPS location. A WebM conversion kept it too, plus the phone model. Only -map_metadata -1 removed it.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from a video without re-encoding?</h3><p>Run ffmpeg -i in.mp4 -c copy -map_metadata -1 out.mp4. It copies the video and audio streams unchanged and drops all file-level tags, including location, so there's no quality loss.</p></div>
+<div class="faq-item"><h3>Can I see where a video was recorded on my iPhone?</h3><p>Yes. Open it in Photos and swipe up. A map means the location is stored in the file. To share without it, tap Options in the share sheet and turn Location off.</p></div>
+<div class="faq-item"><h3>Does a browser-recorded video have metadata?</h3><p>Very little. A WebM made with our video watermark tool in Chrome had no location, no device name and no date. Its only tag was the encoder, "Chrome."</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/video-watermark/">Video Watermark</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/guides/how-to-remove-location-from-photos/">Remove Location From Photos</a>
+<a href="/guides/do-screenshots-have-metadata/">Do Screenshots Have Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
