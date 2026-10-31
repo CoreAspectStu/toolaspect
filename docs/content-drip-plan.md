@@ -2720,3 +2720,59 @@ All content: SEO titles/meta, JSON-LD, humanized, indexed (sitemap+IndexNow), in
   testable; check do-videos-have-location-data overlap).
   STILL OPEN (need Stu): as 10-30 list (bmi-calculator calc() TypeError, image-compressor silent TIFF, exif-viewer JXL/GIF
   false negatives, image-metadata-remover JXL whitelist, dog-dna prices) + wedding-transportation fmt() comma.
+
+- 2026-11-01 batch guides (10-31 intake ideas, all deduped: "group home" / 416.1141 / 416.1144 appear in no SSI guide; "tabloid" /
+  "11x17" only in passing in 3 PDF guides; no audio-metadata guide in the privacy cluster; "voice memo" nowhere):
+  SS cluster → guides/ssi-in-a-group-home/ (problem-aware; tools social-security-disability-benefits-calculator + net-worth-calculator
+  + rent-calculator. VERIFIED eCFR title 20 (versioner API now needs curl --compressed; current to 2026-10-26; text in /tmp/drip32/cfr):
+  416.201 (institution = 4+ unrelated + services; public institution excludes publicly operated community residence ≤16; medical
+  treatment facility), 416.211 (no SSI for a full month in a public institution, 14-day absence rule; (b) Medicaid >50% → reduced
+  rate; (c) ≤16-bed community residence eligible, not if next to a large institution / school / jail / medical; (d) emergency shelter
+  6 months in any 9), 416.212 (up to 3 full months at the full rate: physician certifies ≤90 days + home expenses, evidence by
+  discharge or day 90), 416.414 ($30 / $60 couple), 416.1140 (PMV = ⅓ FBR + $20, rebuttable), 416.1141(c) (PMV in nonmedical
+  institutions), 416.1143 (agency placement: pay the established rate = no ISM), 416.1144 (nonprofit: express obligation; lump-sum
+  lifetime prepayment ≠ current payment; no ISM if no obligation and no payment / paid by another nonprofit), 416.1145 (for-profit:
+  pay or legally indebted = no ISM). COMPUTED 2026: PMV $351.33 (couple $517.00); someone else pays the fee → $662.67; with $200 /
+  $300 / $500 / $600 other income → $462.67 / $362.67 / $162.67 / $62.67; $0 at ≥ $662.67. No state-supplement figures.);
+  PDF → guides/how-to-print-a-pdf-on-11x17-paper/ (solution-aware; tools rotate-pdf + crop-pdf + pdf-merge. COMPUTED + TESTED with
+  PyMuPDF 1.27.2 (/tmp/drip32/tab; gs/qpdf not installed, CUPS inactive): Letter→Tabloid fit 129.4% (width-limited, 2.76 in blank
+  top+bottom), Tabloid→Letter 64.7% (1.38 in side), Tabloid→Legal 77.3%, Tabloid→A3 97.3%, A3→Tabloid 94.1%, A4→A3 141.4%; 12 pt →
+  15.5 / 7.8 pt; two Letter pages on 17×11 = exactly 100%; Tabloid 279.4×431.8 mm vs A3 297×420 (A3 17.6 mm wider, 11.8 mm shorter).
+  App-settings table (Acrobat Page Setup / "Choose paper source by PDF page size", Chrome/Edge/Firefox More settings → Paper size,
+  Preview Paper Size + Scale to Fit, Windows driver, CUPS lp -o media=Tabloid -o fit-to-page) from product knowledge, not run.);
+  privacy → guides/do-audio-files-have-metadata/ (problem-aware; tools document-metadata-remover + image-metadata-remover +
+  exif-viewer; NO audio tool exists, the guide says so and points to ffmpeg. MEASURED /tmp/drip32/aud with ffmpeg 5.1
+  (Lavf59.27.100) + mutagen 1.46 on a 10 s tagged tone: WAV 882,170 B with RIFF INFO (INAM/IART/ICMT/ICRD/ISFT; mutagen reads none,
+  ffprobe does); MP3 161,126 B ID3v2.4 (location only as TXXX; tags = 168 B; 1,079 B PNG cover → +1,123 B, written as v2.3); M4A
+  83,353 B ilst ©nam/©ART/©day/©cmt/©too + binary loci (grep for the digits: 0 hits); FLAC / Opus / Vorbis LOCATION= plain text
+  (1 hit). -c copy keeps everything; M4A→MP3 keeps everything incl. location as TXXX:location text (2 grep hits); MP3→M4A and
+  MP3→WAV keep title/artist/album/comment/date; -map_metadata -1 leaves only encoder=Lavf; + -fflags +bitexact leaves nothing.
+  Apple Voice Memos "location-based naming" cited as a documented title option; whether phone apps write a GPS atom is hedged.)
+  (1,310–1,391 words incl. tables + FAQ + related; FAQ 5 each + Article/Breadcrumb/FAQPage LD; 0 em dashes; 0 broken internal
+  links; titles 51–59, descs 152–154.) Guide backlinks on social-security-disability-benefits-calculator, net-worth-calculator,
+  rotate-pdf, crop-pdf, document-metadata-remover, exif-viewer, and guides/ssi-and-living-with-family, ssi-asset-limit,
+  ssi-and-marriage, how-to-print-a-pdf-poster-on-multiple-pages, how-to-print-an-a4-pdf-on-letter-paper,
+  why-are-my-pdf-pages-different-sizes, do-videos-have-location-data, how-to-remove-location-from-photos, do-screenshots-have-metadata.
+- 2026-11-01 depth passes (the two from the 10-31 candidate list):
+  wedding-invitation-cost-calculator (984 → 1,456; +households × tier grid 50–200 at the defaults (details card, 2 oz rectangle,
+  stamped RSVP, postcard save-the-dates; 100 std = $707), +postage-per-100 table (5 setups, $82–$271), +save-the-date table
+  ($0 / $140 / $207); FAQ 5 / LD 4 → 7 / 7 synced). FIXED: generic answer box. FIXED (content, pre-existing): the budget worked
+  example said "order 80 = $120 … Total $181.50 … 80% smaller" but the JS does Math.round(75 × 1.10) = 83 sets → $124.50, $186,
+  74% smaller; prose corrected to match the calculator.
+  corporate-event-budget-calculator (982 → 1,454; +headcount × type grid 25–500 at 10% contingency from the MODES sums (160 / 115 /
+  290 / 1,950 / 465), +market-tier per-head table (only flagged lines scale: holiday 88 of 160 → $147 / $160 / $173; offsite
+  → $2,243 major), +contingency 0–20% table on the $19,200 default; FAQ 5 / LD 4 → 7 / 7 synced). FIXED: generic answer box.
+  JS byte-identical on both (inline-script md5 asserted); headless defaults $707 and $21,120. Pre-existing pageerror 'Y' on both
+  (same offline third-party script as the 10-30 note).
+- 2026-11-01 hub updates: guides hub +3 cards, count claims 636→639 in all 9 places (= 639 on-disk dirs), More Guides badge
+  574→577; all-tools Guides 636→639 (gen-all-tools.py, also re-run by deploy.sh); llm.txt 639 guides. Deploy OK first try
+  (sitemap 2,022 URLs, 26 files uploaded).
+  Queue state: next depth candidates: re-scan the 970–1000 band with /tmp/drip32/wc.py (skip credit-card-payoff (cannibalization),
+  pet-tools (hub), rap-…-50000 (longtail), dev tools). Guide intake ideas: "SSI after jail or prison" (416.211(c)(5)(iii) + the
+  prerelease procedure; check ssi-overpayment-waiver / ssdi-vs-ssi overlap), "how to print a PDF on legal paper (8.5 × 14)" (check
+  today's 11x17 guide + how-to-print-an-a4-pdf-on-letter-paper; Tabloid→Legal 77.3% already computed), "do PDF files have metadata"
+  (check pdf-metadata-editor tool page + document-metadata-remover + which-pdf guides first).
+  NOTE (pre-existing, JS untouched): wedding-invitation fmt() has the same no-thousands-separator branch as wedding-transportation
+  when cents are non-zero (toFixed path), e.g. 150 luxury households would print "$1980.50"-style figures.
+  STILL OPEN (need Stu): as 10-31 list (bmi-calculator calc() TypeError, image-compressor silent TIFF, exif-viewer JXL/GIF false
+  negatives, image-metadata-remover JXL whitelist, dog-dna prices, wedding-transportation fmt() comma) + wedding-invitation fmt().

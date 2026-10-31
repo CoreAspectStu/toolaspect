@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Do Audio Files Have Metadata? 6 Formats Tested | ToolAspect</title>
+<meta name="description" content="Yes. MP3, M4A, WAV, FLAC and Opus carry tags, and M4A can hold GPS coordinates. We tested which conversions keep them and the one command that strips all.">
+<link rel="canonical" href="https://toolaspect.com/guides/do-audio-files-have-metadata/">
+<meta property="og:title" content="Do Audio Files Have Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/do-audio-files-have-metadata/">
+<meta property="og:description" content="Yes. MP3, M4A, WAV, FLAC and Opus carry tags, and M4A can hold GPS coordinates. We tested which conversions keep them and the one command that strips all.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Do Audio Files Have Metadata?">
+<meta name="twitter:description" content="Yes. MP3, M4A, WAV, FLAC and Opus carry tags, and M4A can hold GPS coordinates. We tested which conversions keep them and the one command that strips all.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Do Audio Files Have Metadata?", "description": "Yes. MP3, M4A, WAV, FLAC and Opus carry tags, and M4A can hold GPS coordinates. We tested which conversions keep them and the one command that strips all.", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": "https://toolaspect.com/guides/do-audio-files-have-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Do Audio Files Have Metadata?", "item": "https://toolaspect.com/guides/do-audio-files-have-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do MP3 files have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. MP3 files carry ID3 tags: title, artist, album, year, comment, encoder and embedded cover art. There's no standard field for GPS location, but apps can store one in a free-form TXXX frame, and a file converted from M4A will have the location moved there as plain text."}}, {"@type": "Question", "name": "Do voice memos have location data?", "acceptedAnswer": {"@type": "Answer", "text": "They can. M4A files have a \"loci\" atom for coordinates, the same one video files use, and our test file kept it through an ffmpeg copy. Whether your app writes it varies. Apple's Voice Memos can also put the place name in the recording's title when location-based naming is on. Check with ffprobe or VLC."}}, {"@type": "Question", "name": "Does converting audio remove metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Not by default. ffmpeg and apps built on it copy the tags to the new file and translate them to the new format. In our tests M4A to MP3 kept everything including the location. Only an explicit metadata-stripping option (-map_metadata -1 in ffmpeg) removed them."}}, {"@type": "Question", "name": "How do I remove metadata from an audio file?", "acceptedAnswer": {"@type": "Answer", "text": "Run ffmpeg -i in.m4a -map_metadata -1 -fflags +bitexact -c copy out.m4a. The audio is copied unchanged and every tag is dropped. Without the bitexact flag, one encoder tag naming ffmpeg remains. A tag editor that lets you delete all fields works for MP3 too."}}, {"@type": "Question", "name": "Do WAV files have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Usually very little. WAV can hold a RIFF INFO chunk with a name, artist, date and comment, and ffmpeg writes one if you supply tags, but most recorders don't. There's no standard location field or cover art. Some tag libraries, including mutagen, skip the INFO chunk entirely, so use ffprobe to be sure."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Do Audio Files Have Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated November 1, 2026</span></div>
+<p class="intro">Yes. Every common audio format carries tags such as title, date, comment and the encoding software, and M4A can hold a GPS location in the same binary atom video files use. We tagged a test recording, converted it six ways and found the location survived every conversion except a deliberate strip. Here's what each format stores and how to check and clean your own files.</p>
+<h2>Do audio files have metadata?</h2>
+<p>Yes. Every common audio format has a place for text about the recording: a title, who made it, when, a comment, and the name of the software that encoded it. Music files use these for track names and album art. Voice recordings use the same slots, and that's where the surprises live, because a recorder app can write the date, the device and sometimes the place into a file you then email to someone.</p>
+<p>We built a 10-second test tone with ffmpeg, tagged it, saved it in five formats and read the files back with ffprobe and the mutagen library. Here's what each format can hold:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Format</th><th>Where the tags live</th><th>Typical fields</th><th>Location field?</th></tr></thead><tbody>
+<tr><td>MP3</td><td>ID3v2 tags (v2.4 by default from ffmpeg)</td><td>Title, artist, album, date, comment, encoder, cover art</td><td>No standard frame; apps use a free-form TXXX field</td></tr>
+<tr><td>M4A / AAC (iPhone Voice Memos, iTunes)</td><td>MP4 "ilst" atoms</td><td>Title, artist, date, comment, encoder tool</td><td>Yes, a binary "loci" atom, same as video files</td></tr>
+<tr><td>WAV</td><td>RIFF INFO chunk</td><td>Name, artist, creation date, comment, software</td><td>No field; often no tags at all</td></tr>
+<tr><td>FLAC</td><td>Vorbis comments</td><td>Any text field you like</td><td>Yes, as plain text (LOCATION=)</td></tr>
+<tr><td>OGG / Opus (WhatsApp voice notes)</td><td>Vorbis comments</td><td>Any text field you like</td><td>Yes, as plain text</td></tr>
+</tbody></table></div>
+<p>MP3 is the odd one out on location. ID3 has no GPS frame, so apps that want to store one invent a free-form TXXX field, and ours did exactly that. WAV from most recorders has no tags at all, though ffmpeg adds an INFO chunk when you give it tags.</p>
+
+<h2>Can a voice recording reveal where it was made?</h2>
+<p>It can, if the app writes it. Our M4A test file carried a location of 40.7128, -74.0060 in the same "loci" atom that video files use. Two things about that atom matter. It survived an ffmpeg copy untouched. And it's stored as binary, so searching the file for the digits found nothing. A file can carry coordinates that a text search won't show you.</p>
+<p>Whether your phone's recorder stores coordinates depends on the app, and we couldn't test every one. Apple's Voice Memos documents a "location-based naming" option that titles recordings after the place you were, so the place name can sit in the title field even when there's no GPS atom. Check with the steps below rather than assuming.</p>
+<p>Photos are a different story, and a more common one. If you're worried about pictures, our guide on <a href="/guides/how-to-remove-location-from-photos/">removing location from photos</a> and the <a href="/image-metadata-remover/">image metadata remover</a> deal with those.</p>
+
+<h2>Does converting an audio file remove the metadata?</h2>
+<p>Mostly no. ffmpeg, and the many apps built on it, copy the global tags from input to output by default, mapping each field to the nearest one in the new format. We converted our tagged files back and forth and checked each result:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Conversion</th><th>What survived</th><th>Location still present?</th></tr></thead><tbody>
+<tr><td>M4A, copied without re-encoding (<code>-c copy</code>)</td><td>Everything, including the location</td><td>Yes</td></tr>
+<tr><td>M4A &rarr; MP3</td><td>Everything; the location moved into a text TXXX field</td><td>Yes, now searchable as text</td></tr>
+<tr><td>MP3 &rarr; M4A</td><td>Title, artist, album, date, comment</td><td>No (nothing to carry)</td></tr>
+<tr><td>MP3 &rarr; WAV</td><td>Title, artist, album, date, comment, as an INFO chunk</td><td>No</td></tr>
+<tr><td>Any &rarr; any with <code>-map_metadata -1</code></td><td>Only an "encoder" tag naming ffmpeg</td><td>No</td></tr>
+<tr><td>Same, plus <code>-fflags +bitexact</code></td><td>Nothing</td><td>No</td></tr>
+</tbody></table></div>
+<p>The M4A to MP3 result is the one to remember. The location didn't just survive, it became a plain-text TXXX field, so a conversion meant to "clean up" a file made the coordinates easier to find. Only an explicit instruction to drop metadata removed them.</p>
+
+<h2>How do I see what's in an audio file?</h2>
+<ul>
+<li><strong>VLC</strong> (Windows, Mac, Linux): open the file, then Tools &rarr; Media Information. The Codec tab lists the stream details and the Metadata tab the tags.</li>
+<li><strong>Windows</strong>: right-click &rarr; Properties &rarr; Details shows title, artists, album and year for MP3 and M4A. It doesn't show custom fields or location.</li>
+<li><strong>Command line</strong>: <code>ffprobe file.m4a</code> prints every tag it understands, location included. <code>mutagen-inspect file.mp3</code> lists the raw frames, which is how we saw the TXXX fields.</li>
+</ul>
+<p>Two gaps we hit. mutagen read nothing from our WAV even though ffprobe listed five INFO fields, so a "no metadata" answer from one tool isn't proof. And neither tool decodes the loci atom into readable coordinates in its default listing; ffprobe showed it, mutagen's default dump didn't.</p>
+
+<h2>How do I remove metadata from an audio file?</h2>
+<p>The reliable way is a copy with the metadata map cleared. The audio isn't re-encoded, so the sound is byte-for-byte the same and the file loses only its tags:</p>
+<pre><code>ffmpeg -i memo.m4a -map_metadata -1 -fflags +bitexact -c copy clean.m4a</code></pre>
+<p>Without the bitexact flag, ffmpeg writes one tag of its own naming the encoder library, which is harmless but tells a recipient what you used. For MP3 you can also open the file in a tag editor and delete every field, or re-save it with cover art removed. Our browser tools handle images and office documents rather than audio, so the <a href="/document-metadata-remover/">document metadata remover</a> is the right stop for a Word transcript of the recording, not the recording itself.</p>
+<p>Stripping is nearly free in size terms. The tags on our MP3 were 168 bytes, and a cover image adds roughly its own size plus a small header:</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>File</th><th>Size</th><th>Difference</th></tr></thead><tbody>
+<tr><td>MP3, tagged (title, artist, album, date, comment, location)</td><td>161,126 B</td><td>168 B of tags</td></tr>
+<tr><td>MP3, metadata stripped</td><td>160,958 B</td><td>baseline</td></tr>
+<tr><td>MP3, tagged plus a 1,079 B cover image</td><td>162,249 B</td><td>+1,291 B</td></tr>
+<tr><td>M4A, tagged with location</td><td>83,353 B</td><td>186 B of tags</td></tr>
+<tr><td>M4A, metadata stripped</td><td>83,167 B</td><td>baseline</td></tr>
+</tbody></table></div>
+
+<h2>Which audio format carries the least metadata?</h2>
+<p>WAV, in practice. Most recorders and editors write a bare RIFF header with no INFO chunk, and there's no room for cover art or a location field. The cost is size: our 10-second mono file was 882,170 bytes as WAV against 83,353 as M4A. If you need a small file with no history, convert to M4A or MP3 with the stripping command above, then check it with ffprobe before you send it. For images, the <a href="/exif-viewer/">EXIF viewer</a> does that check in the browser.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do MP3 files have metadata?</h3><p>Yes. MP3 files carry ID3 tags: title, artist, album, year, comment, encoder and embedded cover art. There's no standard field for GPS location, but apps can store one in a free-form TXXX frame, and a file converted from M4A will have the location moved there as plain text.</p></div>
+<div class="faq-item"><h3>Do voice memos have location data?</h3><p>They can. M4A files have a "loci" atom for coordinates, the same one video files use, and our test file kept it through an ffmpeg copy. Whether your app writes it varies. Apple's Voice Memos can also put the place name in the recording's title when location-based naming is on. Check with ffprobe or VLC.</p></div>
+<div class="faq-item"><h3>Does converting audio remove metadata?</h3><p>Not by default. ffmpeg and apps built on it copy the tags to the new file and translate them to the new format. In our tests M4A to MP3 kept everything including the location. Only an explicit metadata-stripping option (-map_metadata -1 in ffmpeg) removed them.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from an audio file?</h3><p>Run ffmpeg -i in.m4a -map_metadata -1 -fflags +bitexact -c copy out.m4a. The audio is copied unchanged and every tag is dropped. Without the bitexact flag, one encoder tag naming ffmpeg remains. A tag editor that lets you delete all fields works for MP3 too.</p></div>
+<div class="faq-item"><h3>Do WAV files have metadata?</h3><p>Usually very little. WAV can hold a RIFF INFO chunk with a name, artist, date and comment, and ffmpeg writes one if you supply tags, but most recorders don't. There's no standard location field or cover art. Some tag libraries, including mutagen, skip the INFO chunk entirely, so use ffprobe to be sure.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/document-metadata-remover/">Document Metadata Remover</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/guides/do-videos-have-location-data/">Do Videos Have Location Data?</a>
+<a href="/guides/how-to-remove-location-from-photos/">Remove Location From Photos</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
