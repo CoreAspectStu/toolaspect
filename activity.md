@@ -64,4 +64,4 @@
 ## 2026-08-20
 - [chat] Docs refresh (md-reminder): FEATURES.md updated — embed system marked LIVE, page count 1422, outreach kit noted. Project otherwise idle: calculators indexed, /embed/ live, outreach kit staged awaiting first sends.
 
-2026-09-13 05:4x [chat] ep001 video fixed (yuv420p) + posted playable; YT consent still pending (Stu); SEO waves 1+2 live; AdSense day 9/14 email-watcher armed
+2026-09-13 05:4x [chat] ep001 video fixed (yuv420p) + posted playable; YT consent still pending (Stu); SEO waves 1+2 live; AdSense day 9/14 email-watcher armed2026-10-29 09:35 [chat] md-reminder refresh: quality wave noindex 708 thin pages (sitemap 3158→2450); content-drip daily to hubs 630 (Oct-29); bugfixes qrcode/exifr/WebP/due-date/CoinGecko. See lane activity.md for detail.
