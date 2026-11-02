@@ -287,6 +287,7 @@ el('btnConvert').addEventListener('click',function(){
       var tpl=document.createElement('template');
       tpl.innerHTML=html;
       var table=tpl.content.querySelector('table');
+      table.querySelectorAll('[id]').forEach(function(el){el.removeAttribute('id')}); // strip sjs-* ids: pdfmake throws on duplicate ids across sheets
       if(!table)return;
       var nodes=htmlToPdfmake(table.outerHTML,{tableAutoSize:true,defaultStyle:{fontSize:fontSize}});
       applyGrid(nodes);
