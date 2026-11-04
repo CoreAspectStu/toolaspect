@@ -3,10 +3,10 @@
 Current as of 2026-11-05. Static HTML site, Cloudflare (direct wrangler upload via `./deploy.sh`, auto-regenerates sitemap; CI deploy.yml removed — was broken/empty token). BUILD FREEZE since Sep-5 — no new tools/converters; focus: monetization, quality, indexing.
 
 ## 2026-11-05 refresh (was stale 15d)
-- Content drip steady Oct-21→Nov-5: 3 guides/day + 2 depth passes/day; guide hubs 609→651 (SSI/Social-Security, PDF how-to, photo-metadata clusters). Head `2d9c65ea3` (Nov-5).
-- **Quality wave Oct-27:** noindexed 708 thin non-interactive /convert/ + /gift-ideas/ pages — sitemap 3158→2450 (scaled-content risk mitigation); deploy.sh durably skips noindex pages at sitemap regen.
-- **Bugfixes since Oct-21:** exif-viewer JXL/GIF false all-clear (unparseable ≠ clean, + ExifTool pointer), excel-to-pdf multi-sheet duplicate-id throw, bmi-calculator init TypeError, fmt() thousands-separator on wedding calcs, premium-vs-regular-gas verdict correction.
-- **Traffic:** 7d ~23.8K PV / ~13K visitors; **Oct-29 record 6,556 PV**; baseline ~2.4-3.3K PV/day, slight uptick Nov 2-3.
+- Content drip steady Oct-21→Nov-5: hubs 609→651 (3 guides + 2 depth passes/day; SSDI/housing, PDF-print-sizes, file-metadata clusters). Head `2d9c65ea3`.
+- **Oct-26/27 quality wave (owner-approved)**: 708 thin pages noindexed (628 `/convert/` + 80 `/gift-ideas/`); sitemap 3158→2007; deploy.sh skips noindex pages at regen. No traffic dip after — record weeks followed.
+- **Record traffic**: 7d ~23.7-24.5K PV; Oct-29 best day on record 6,556 PV.
+- Tool fixes from drip QA flags: qr-code CDN 404 (pin qrcode@1.5.0), exif-viewer WebP support + JXL/GIF false all-clear fix, exifr CDN path 404, pregnancy-due-date LMP UTC off-by-one, bmi-calculator TypeError on load, excel-to-pdf 2+ sheet crash, fmt() separator on 2 wedding calcs, premium-vs-regular-gas prose align.
 
 ## 2026-10-21 refresh (was stale 16d)
 - Content drip steady Oct-13→21: 3 guides/day + 2 tool depth passes/day (SSDI/Social-Security cluster, PDF how-to cluster, photo-metadata cluster; hubs 585→609). Head `053f98a12` (10-21).
