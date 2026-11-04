@@ -160,8 +160,8 @@
 <li>Check the result: File > Info > Properties in Word, or right-click > Properties > Details, should now be empty. Keep the original until you have verified it.</li>
 </ul>
 <h3>A worked example</h3>
-<p>A performance-review .docx built with realistic fields came in at 8,185 bytes. Before cleaning, it exposed 18 items: the author (Jane Q. Author), last modified by, two timestamps, revision 7, title, subject, keywords and description in core.xml; Company (Acme Corp Legal Dept), Manager, Template, HyperlinkBase and 184 minutes of TotalTime in app.xml; 3 custom properties including a sensitivity label and a client name; and a preview thumbnail. After cleaning: 7,262 bytes, zero identity fields, the package manifest valid, and the body text untouched. The same run on a PDF with an 8-field Info dictionary (title, author, subject, keywords, creator, producer, two dates) produced a 903-byte file with an empty Info dictionary, no XMP stream, and not even a producer fingerprint left behind.</p>
-<p>That last part deserves emphasis: many "cleaners" leave the producer field showing which tool did the cleaning. This one writes nothing in place of what it removes, so the cleaned file doesn't advertise how it was made.</p>
+<p>A performance-review .docx built with realistic fields came in at 8,185 bytes. Before cleaning, it exposed 18 items: the author (Jane Q. Author), last modified by, two timestamps, revision 7, title, subject, keywords and description in core.xml; Company (Acme Corp Legal Dept), Manager, Template, HyperlinkBase and 184 minutes of TotalTime in app.xml; 3 custom properties including a sensitivity label and a client name; and a preview thumbnail. After cleaning: 7,262 bytes, zero identity fields, the package manifest valid, and the body text untouched. The same run on a PDF with an 8-field Info dictionary (title, author, subject, keywords, creator, producer, two dates) produced a 903-byte file with an empty Info dictionary and no XMP stream anywhere in its bytes — the author's name does not survive a raw byte search. The only fingerprint is the library name in the Producer slot.</p>
+<p>A note on fingerprints: the PDF path writes its library's name into the empty Producer slot, so a cleaned PDF says which tool scrubbed it — but nothing about you. Names, dates, custom properties and XMP data are gone, and in testing the cleaned file's raw bytes no longer contain the original author's name anywhere.</p>
 </div>
 
 <div class="content-section">
@@ -221,6 +221,12 @@ async function scrubPdfBytes(PDFLib,buf){
   if(info){var ks=[...info.keys()];ks.forEach(function(k){info.delete(k);removed++;});}
   if(doc.catalog.dict.has(PDFLib.PDFName.of('Metadata'))){doc.catalog.dict.delete(PDFLib.PDFName.of('Metadata'));removed++;}
   doc.getPages().forEach(function(p){if(p.node.dict.has(PDFLib.PDFName.of('Metadata'))){p.node.dict.delete(PDFLib.PDFName.of('Metadata'));removed++;}});
+  /* deleting the catalog/pages references alone leaves the orphaned XMP stream object in the file
+     (the author name survives a byte search). Actually delete the objects from the context too. */
+  doc.context.enumerateIndirectObjects().forEach(function(pair){
+    var ref=pair[0],obj=pair[1];
+    if(PDFLib.PDFRawStream&&obj instanceof PDFLib.PDFRawStream&&obj.dict&&obj.dict.get(PDFLib.PDFName.of('Type'))===PDFLib.PDFName.of('Metadata')){doc.context.delete(ref);removed++;}
+  });
   var out=await doc.save();
   return {out:new Uint8Array(out),removed:removed};
 }
