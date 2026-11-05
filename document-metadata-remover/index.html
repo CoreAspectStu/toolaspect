@@ -213,6 +213,26 @@ function scrubOfficeZip(zip){
     }):Promise.resolve()
   ]).then(function(){return {dropped:dropped};});
 }
+/* GC: pdf-lib save() writes every object in the context, referenced or not. macOS PDFs store
+   Info values as separate indirect string objects, and pdf-lib's own setters orphan the originals
+   at load time, so key-deletion alone can't reach them. Collect referenced object numbers and
+   delete any unreferenced indirect string objects (the old author/producer strings). */
+function gcOrphanStrings(lib,doc){
+  var referenced=new Set();
+  function walk(o,depth){
+    if(!o||depth>8)return;
+    if(o instanceof lib.PDFRef){referenced.add(o.objectNumber);return;}
+    if(o instanceof lib.PDFDict){o.entries().forEach(function(e){walk(e[1],depth+1);});return;}
+    if(o instanceof lib.PDFArray){for(var i=0;i<o.size();i++)walk(o.get(i),depth+1);return;}
+    if(o.dict)walk(o.dict,depth+1);
+  }
+  doc.context.enumerateIndirectObjects().forEach(function(pair){walk(pair[1],0);});
+  if(doc.context.trailerInfo)walk(doc.context.trailerInfo.Info,0);
+  doc.context.enumerateIndirectObjects().forEach(function(pair){
+    var r=pair[0],o=pair[1];
+    if((o instanceof lib.PDFString||o instanceof lib.PDFHexString)&&!referenced.has(r.objectNumber)){doc.context.delete(r);}
+  });
+}
 async function scrubPdfBytes(PDFLib,buf){
   var doc=await PDFLib.PDFDocument.load(buf,{updateMetadata:false});
   var removed=0;
@@ -227,6 +247,7 @@ async function scrubPdfBytes(PDFLib,buf){
     var ref=pair[0],obj=pair[1];
     if(PDFLib.PDFRawStream&&obj instanceof PDFLib.PDFRawStream&&obj.dict&&obj.dict.get(PDFLib.PDFName.of('Type'))===PDFLib.PDFName.of('Metadata')){doc.context.delete(ref);removed++;}
   });
+  gcOrphanStrings(PDFLib,doc);
   var out=await doc.save();
   return {out:new Uint8Array(out),removed:removed};
 }
