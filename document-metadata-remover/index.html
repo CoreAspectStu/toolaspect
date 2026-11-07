@@ -335,8 +335,13 @@ el('btnGo').addEventListener('click',async function(){
       renderReport(res);
     }
     window.__cleanResults=results;
-    setStatus('Done — cleaned '+results.filter(function(r){return !r.error}).length+' of '+results.length+' files. Download below.','ok');
-    addDownloads(results);
+    var goodN=results.filter(function(r){return !r.error}).length;
+    if(goodN===0){
+      setStatus('Done — 0 of '+results.length+' files could be cleaned. No download: drop a .docx / .xlsx / .pptx / .pdf file instead of the formats listed above.','err');
+    }else{
+      setStatus('Done — cleaned '+goodN+' of '+results.length+' files. Download below.','ok');
+      addDownloads(results);
+    }
   }catch(err){
     setStatus('Cleaning failed: '+((err&&err.message)||err),'err');
   }
