@@ -4,11 +4,11 @@
 
 | Check | Pass | Rate |
 |---|---|---|
-| kw_in_title | 578/695 | 83.2% |
-| kw_in_h1 | 613/695 | 88.2% |
+| kw_in_title | 695/695 | 100.0% |
+| kw_in_h1 | 694/695 | 99.9% |
 | h1_equals_title | 0/695 | 0.0% |
 | kw_in_body_para | 692/695 | 99.6% |
-| h2_coverage | 420/695 | 60.4% |
+| h2_coverage | 421/695 | 60.6% |
 | h3_coverage | 126/695 | 18.1% |
 
 Flagged pages: **695**
@@ -16,36 +16,35 @@ Flagged pages: **695**
 | Flag | Count |
 |---|---|
 | h1!=title | 695 |
-| title-missing-kw | 117 |
-| h1-missing-kw | 82 |
 | thin-content<300w | 5 |
 | body-missing-kw | 3 |
+| h1-missing-kw | 1 |
 | overopt-density>3% | 1 |
 
 ## Flagged pages (fix queue)
 
 - `1st-anniversary-gifts` — h1!=title
 - `25th-anniversary-gifts` — h1!=title
-- `401k-match-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `401k-match-calculator` — h1!=title
 - `50th-anniversary-gifts` — h1!=title
 - `529-college-savings-calculator` — h1!=title
-- `529-qualified-expense-checker` — title-missing-kw, h1!=title
+- `529-qualified-expense-checker` — h1!=title
 - `529-to-roth-rollover-calculator` — h1!=title
 - `5th-anniversary-gifts` — h1!=title
 - `about` — h1!=title
 - `accelerometer-test` — h1!=title
 - `act-score-calculator` — h1!=title
-- `actual-vs-standard-mileage-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `actual-vs-standard-mileage-calculator` — h1!=title
 - `age-calculator` — h1!=title
 - `aggregate-base-calculator` — h1!=title
 - `ai-image-detector` — h1!=title
 - `ai-receptionist-cost-calculator` — h1!=title
 - `alimony-calculator` — h1!=title
-- `alimony-calculator-california` — title-missing-kw, h1-missing-kw, h1!=title
-- `alimony-calculator-texas` — title-missing-kw, h1-missing-kw, h1!=title
-- `all-on-4-dental-implants-cost-california` — title-missing-kw, h1-missing-kw, h1!=title
-- `all-on-4-dental-implants-cost-florida` — title-missing-kw, h1-missing-kw, h1!=title
-- `all-on-4-dental-implants-cost-texas` — title-missing-kw, h1-missing-kw, h1!=title
+- `alimony-calculator-california` — h1!=title
+- `alimony-calculator-texas` — h1!=title
+- `all-on-4-dental-implants-cost-california` — h1!=title
+- `all-on-4-dental-implants-cost-florida` — h1!=title
+- `all-on-4-dental-implants-cost-texas` — h1!=title
 - `all-tools` — h1!=title, body-missing-kw, thin-content<300w
 - `amortization-schedule` — h1!=title
 - `anniversary-gifts-by-year` — h1!=title
@@ -55,16 +54,16 @@ Flagged pages: **695**
 - `asset-tag-generator` — h1!=title
 - `auto-loan-calculator` — h1!=title
 - `auto-refinance-calculator` — h1!=title
-- `auto-tools` — title-missing-kw, h1-missing-kw, h1!=title
+- `auto-tools` — h1!=title
 - `average-calculator` — h1!=title
 - `baby-name-generator` — h1!=title
 - `baby-shower-cost-calculator` — h1!=title
 - `bac-calculator` — h1!=title
 - `bachelorette-party-cost-calculator` — h1!=title
 - `background-remover` — h1!=title
-- `backyard-wedding-cost-calculator` — title-missing-kw, h1!=title
+- `backyard-wedding-cost-calculator` — h1!=title
 - `bar-chart-maker` — h1!=title
-- `bar-mitzvah-cost-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `bar-mitzvah-cost-calculator` — h1!=title
 - `barcode-generator` — h1!=title
 - `bartender-cost-calculator` — h1!=title
 - `base64-encoder` — h1!=title
@@ -73,9 +72,9 @@ Flagged pages: **695**
 - `battery-test` — h1!=title
 - `best-free-online-tools-2026` — h1!=title
 - `bill-of-sale-generator` — h1!=title
-- `binary-converter` — title-missing-kw, h1-missing-kw, h1!=title
+- `binary-converter` — h1!=title
 - `birthday-party-cost-calculator` — h1!=title
-- `blow-in-insulation-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `blow-in-insulation-calculator` — h1!=title
 - `bmi-calculator` — h1!=title
 - `bmr-calculator` — h1!=title
 - `boat-insurance-cost-calculator` — h1!=title
@@ -83,23 +82,23 @@ Flagged pages: **695**
 - `bolt-pattern-calculator` — h1!=title
 - `boosty` — h1!=title
 - `bootcamp-roi-calculator` — h1!=title
-- `bounce-house-rental-cost-calculator` — title-missing-kw, h1!=title
+- `bounce-house-rental-cost-calculator` — h1!=title
 - `box-shadow-generator` — h1!=title
 - `brake-replacement-cost-calculator` — h1!=title
 - `brick-calculator` — h1!=title
-- `bridal-hair-makeup-cost-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `bridal-hair-makeup-cost-calculator` — h1!=title
 - `bright-futures-calculator` — h1!=title
 - `browser-test` — h1!=title
 - `bumper-repair-cost-calculator` — h1!=title
 - `business-card-qr-generator` — h1!=title
-- `business-tools` — title-missing-kw, h1-missing-kw, h1!=title
+- `business-tools` — h1!=title
 - `calorie-calculator` — h1!=title
 - `calorie-deficit-calculator` — h1!=title
 - `capital-gains-tax-calculator` — h1!=title
 - `car-ac-repair-cost-calculator` — h1!=title
 - `car-accident-settlement-calculator` — h1!=title
-- `car-affordability-calculator` — title-missing-kw, h1!=title
-- `car-audio-installation-cost-calculator` — title-missing-kw, h1!=title
+- `car-affordability-calculator` — h1!=title
+- `car-audio-installation-cost-calculator` — h1!=title
 - `car-battery-replacement-cost-calculator` — h1!=title
 - `car-cost-of-ownership-calculator` — h1!=title
 - `car-depreciation-calculator` — h1!=title
@@ -121,14 +120,14 @@ Flagged pages: **695**
 - `cat-life-expectancy-calculator` — h1!=title
 - `cat-litter-cost-calculator` — h1!=title
 - `catalytic-converter-replacement-cost-calculator` — h1!=title
-- `catering-cost-per-person-calculator` — title-missing-kw, h1!=title
+- `catering-cost-per-person-calculator` — h1!=title
 - `cease-and-desist-template` — h1!=title
 - `ceramic-coating-cost-calculator` — h1!=title
 - `certificate-decoder` — h1!=title
 - `cgpa-to-gpa-converter` — h1!=title
 - `child-support-calculator` — h1!=title
 - `chmod-calculator` — h1!=title
-- `churn-rate-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `churn-rate-calculator` — h1!=title
 - `citation-generator` — h1!=title
 - `class-diagram-maker` — h1!=title
 - `closing-cost-calculator` — h1!=title
@@ -147,15 +146,15 @@ Flagged pages: **695**
 - `concrete-calculator` — h1!=title
 - `content-calendar-planner` — h1!=title
 - `content-calendar-template` — h1!=title
-- `contractor-tools` — title-missing-kw, h1-missing-kw, h1!=title
+- `contractor-tools` — h1!=title
 - `convert` — h1-missing-kw, h1!=title, body-missing-kw, thin-content<300w
 - `converters` — h1!=title
 - `copyright-infringement-damages` — h1!=title
 - `corporate-event-budget-calculator` — h1!=title
 - `cost-of-owning-a-cat-calculator` — h1!=title
-- `cost-of-owning-a-dog-calculator` — title-missing-kw, h1!=title
+- `cost-of-owning-a-dog-calculator` — h1!=title
 - `countdown-timer` — h1!=title
-- `countertop-calculator` — title-missing-kw, h1!=title
+- `countertop-calculator` — h1!=title
 - `cover-letter-generator` — h1!=title
 - `creator-earnings-calculator` — h1!=title
 - `creator-revenue-projections` — h1!=title
@@ -164,7 +163,7 @@ Flagged pages: **695**
 - `credit-card-payoff-calculator` — h1!=title
 - `credit-card-validator` — h1!=title
 - `cron-explainer` — h1!=title
-- `cron-generator` — title-missing-kw, h1-missing-kw, h1!=title
+- `cron-generator` — h1!=title
 - `crop-pdf` — h1!=title
 - `crown-molding-calculator` — h1!=title
 - `crypto-converter` — h1!=title
@@ -175,10 +174,10 @@ Flagged pages: **695**
 - `curl-converter` — h1!=title
 - `currency-converter` — h1!=title
 - `custom-content-price-calculator` — h1!=title
-- `date-difference-calculator` — title-missing-kw, h1!=title
+- `date-difference-calculator` — h1!=title
 - `dead-pixel-test` — h1!=title
 - `dealer-doc-fee-calculator` — h1!=title
-- `debt-settlement-vs-bankruptcy-calculator` — title-missing-kw, h1!=title
+- `debt-settlement-vs-bankruptcy-calculator` — h1!=title
 - `deck-calculator` — h1!=title
 - `deck-cost-calculator` — h1!=title
 - `deductible-vs-copay-calculator` — h1!=title
@@ -186,7 +185,7 @@ Flagged pages: **695**
 - `delete-pages-from-pdf` — h1!=title
 - `dent-repair-cost-calculator` — h1!=title
 - `dental-implant-cost-calculator` — h1!=title
-- `destination-wedding-cost-calculator` — title-missing-kw, h1!=title
+- `destination-wedding-cost-calculator` — h1!=title
 - `developer-tools` — h1!=title
 - `device-test` — h1!=title
 - `dice-roller` — h1!=title
@@ -204,31 +203,31 @@ Flagged pages: **695**
 - `dog-allergy-treatment-cost-calculator` — h1!=title
 - `dog-bite-settlement-calculator` — h1!=title
 - `dog-boarding-cost-calculator` — h1!=title
-- `dog-breed-selector-quiz` — title-missing-kw, h1!=title
+- `dog-breed-selector-quiz` — h1!=title
 - `dog-chocolate-toxicity-calculator` — h1!=title
 - `dog-crate-size-calculator` — h1!=title
-- `dog-crate-size-for-french-bulldog` — title-missing-kw, h1-missing-kw, h1!=title
-- `dog-crate-size-for-german-shepherd` — title-missing-kw, h1-missing-kw, h1!=title
-- `dog-crate-size-for-golden-retriever` — title-missing-kw, h1-missing-kw, h1!=title
+- `dog-crate-size-for-french-bulldog` — h1!=title
+- `dog-crate-size-for-german-shepherd` — h1!=title
+- `dog-crate-size-for-golden-retriever` — h1!=title
 - `dog-daycare-cost-calculator` — h1!=title
 - `dog-dental-cleaning-cost-calculator` — h1!=title
 - `dog-dna-test-cost-comparison` — h1!=title
 - `dog-exercise-needs-calculator` — h1!=title
 - `dog-food-calculator` — h1!=title
-- `dog-food-cost-comparison-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `dog-food-cost-comparison-calculator` — h1!=title
 - `dog-grooming-cost-calculator` — h1!=title
 - `dog-harness-size-calculator` — h1!=title
 - `dog-heat-cycle-calculator` — h1!=title
 - `dog-ideal-weight-calculator` — h1!=title
-- `dog-life-expectancy-calculator` — title-missing-kw, h1!=title
+- `dog-life-expectancy-calculator` — h1!=title
 - `dog-pregnancy-calendar` — h1!=title
 - `dog-surgery-cost-calculator` — h1!=title
 - `dog-training-cost-calculator` — h1!=title
 - `dog-walking-cost-calculator` — h1!=title
 - `dog-water-intake-calculator` — h1!=title
-- `driveway-paving-cost-calculator` — title-missing-kw, h1!=title
+- `driveway-paving-cost-calculator` — h1!=title
 - `drywall-calculator` — h1!=title
-- `dti-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `dti-calculator` — h1!=title
 - `due-date-calculator` — h1!=title
 - `duplicate-image-finder` — h1!=title
 - `earthquake-insurance-calculator` — h1!=title
@@ -237,7 +236,7 @@ Flagged pages: **695**
 - `electric-dog-fence-cost-calculator` — h1!=title
 - `electrical-load-calculator` — h1!=title
 - `elopement-cost-calculator` — h1!=title
-- `embed` — h1-missing-kw, h1!=title
+- `embed` — h1!=title
 - `engagement-rate-calculator` — h1!=title
 - `engagement-ring-budget-calculator` — h1!=title
 - `engine-replacement-cost-calculator` — h1!=title
@@ -272,13 +271,13 @@ Flagged pages: **695**
 - `fence-cost-calculator` — h1!=title
 - `fha-loan-calculator` — h1!=title
 - `final-grade-calculator` — h1!=title
-- `finance-calculator` — title-missing-kw, h1-missing-kw, h1!=title
-- `finance-tools` — title-missing-kw, h1-missing-kw, h1!=title
-- `financial-aid-award-letter-comparison-calculator` — title-missing-kw, h1!=title
+- `finance-calculator` — h1!=title
+- `finance-tools` — h1!=title
+- `financial-aid-award-letter-comparison-calculator` — h1!=title
 - `flat-tow-setup-cost-calculator` — h1!=title
 - `flatten-pdf` — h1!=title
-- `flesch-kincaid-readability-calculator` — title-missing-kw, h1-missing-kw, h1!=title
-- `flood-insurance-cost-calculator` — title-missing-kw, h1!=title
+- `flesch-kincaid-readability-calculator` — h1!=title
+- `flood-insurance-cost-calculator` — h1!=title
 - `flooring-calculator` — h1!=title
 - `flowchart-maker` — h1!=title
 - `follower-growth-calculator` — h1!=title
@@ -290,7 +289,7 @@ Flagged pages: **695**
 - `gap-insurance-cost-calculator` — h1!=title
 - `gender-reveal-party-cost-calculator` — h1!=title
 - `gitignore-generator` — h1!=title
-- `glucose-a1c-converter` — title-missing-kw, h1-missing-kw, h1!=title
+- `glucose-a1c-converter` — h1!=title
 - `google-review-qr-generator` — h1!=title
 - `gpa-calculator` — h1!=title
 - `gpa-scale-converter` — h1!=title
@@ -303,22 +302,22 @@ Flagged pages: **695**
 - `gutter-calculator` — h1!=title
 - `hash-generator` — h1!=title
 - `hashtag-generator` — h1!=title
-- `health-calculators` — title-missing-kw, h1-missing-kw, h1!=title
+- `health-calculators` — h1!=title
 - `hearing-test` — h1!=title
 - `heart-rate-zone-calculator` — h1!=title
 - `heic-to-jpg-converter` — h1!=title
 - `heloc-payment-calculator` — h1!=title
-- `heloc-vs-cash-out-refi-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `heloc-vs-cash-out-refi-calculator` — h1!=title
 - `hmac-generator` — h1!=title
 - `home-equity-calculator` — h1!=title
 - `home-repair-costs-by-state` — h1!=title, thin-content<300w
-- `homeowners-dwelling-coverage-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `homeowners-dwelling-coverage-calculator` — h1!=title
 - `honeymoon-budget-calculator` — h1!=title
 - `honeymoon-registry-fee-calculator` — h1!=title
 - `horse-age-calculator` — h1!=title
 - `horse-board-cost-calculator` — h1!=title
 - `horse-cost-of-ownership-calculator` — h1!=title
-- `horse-insurance-cost-calculator` — title-missing-kw, h1!=title
+- `horse-insurance-cost-calculator` — h1!=title
 - `horse-trailer-cost-calculator` — h1!=title
 - `hotel-room-block-calculator` — h1!=title
 - `hourly-to-salary-calculator` — h1!=title
@@ -331,14 +330,14 @@ Flagged pages: **695**
 - `html-to-word` — h1!=title
 - `hvac-replacement-cost-calculator` — h1!=title
 - `hybrid-battery-replacement-cost-calculator` — h1!=title
-- `hybrid-vs-gas-payback-calculator` — title-missing-kw, h1!=title
-- `hydration-needs-by-weight` — title-missing-kw, h1-missing-kw, h1!=title
+- `hybrid-vs-gas-payback-calculator` — h1!=title
+- `hydration-needs-by-weight` — h1!=title
 - `iban-validator` — h1!=title
-- `ideal-protein-intake-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `ideal-protein-intake-calculator` — h1!=title
 - `ideal-weight-calculator` — h1!=title
-- `identity-theft-protection-calculator` — title-missing-kw, h1!=title
+- `identity-theft-protection-calculator` — h1!=title
 - `ielts-band-score-calculator` — h1!=title
-- `ignition-interlock-cost-calculator` — title-missing-kw, h1!=title
+- `ignition-interlock-cost-calculator` — h1!=title
 - `image-color-picker` — h1!=title
 - `image-compressor` — h1!=title
 - `image-cropper` — h1!=title
@@ -349,10 +348,10 @@ Flagged pages: **695**
 - `image-upscaler` — h1!=title
 - `image-watermark` — h1!=title
 - `income-tax-calculator` — h1!=title
-- `incorporation-cost-calculator` — title-missing-kw, h1!=title
-- `influencer-calculator` — title-missing-kw, h1-missing-kw, h1!=title
+- `incorporation-cost-calculator` — h1!=title
+- `influencer-calculator` — h1!=title
 - `insulation-calculator` — h1!=title
-- `insurance-tools` — title-missing-kw, h1-missing-kw, h1!=title
+- `insurance-tools` — h1!=title
 - `invisalign-cost-calculator` — h1!=title
 - `invoice-generator` — h1!=title
 - `irmaa-calculator` — h1!=title
@@ -360,12 +359,12 @@ Flagged pages: **695**
 - `job-hazard-analysis-builder` — h1!=title
 - `jpg-to-pdf` — h1!=title
 - `jq-playground` — h1!=title
-- `js-obfuscator` — title-missing-kw, h1-missing-kw, h1!=title
+- `js-obfuscator` — h1!=title
 - `json-diff` — h1!=title
 - `json-formatter` — h1!=title
 - `json-schema-validator` — h1!=title
 - `json-to-typescript` — h1!=title
-- `json-to-yaml` — h1-missing-kw, h1!=title
+- `json-to-yaml` — h1!=title
 - `json-viewer` — h1!=title
 - `junk-car-value-calculator` — h1!=title
 - `jwt-decoder` — h1!=title
@@ -377,14 +376,14 @@ Flagged pages: **695**
 - `lease-buyout-calculator` — h1!=title
 - `lease-payment-calculator` — h1!=title
 - `lease-vs-buy-car-calculator` — h1!=title
-- `legal-tools` — title-missing-kw, h1-missing-kw, h1!=title
+- `legal-tools` — h1!=title
 - `life-insurance-needs-calculator` — h1!=title
 - `lift-kit-cost-calculator` — h1!=title
 - `link-in-bio` — h1!=title
-- `llc-vs-scorp-calculator` — title-missing-kw, h1-missing-kw, h1!=title
-- `llm-pricing-tracker` — title-missing-kw, h1-missing-kw, h1!=title
+- `llc-vs-scorp-calculator` — h1!=title
+- `llm-pricing-tracker` — h1!=title
 - `loan-calculator` — h1!=title
-- `lockout-tagout-builder` — h1-missing-kw, h1!=title
+- `lockout-tagout-builder` — h1!=title
 - `lorem-ipsum` — h1!=title
 - `loyalfans` — h1!=title
 - `lumber-calculator` — h1!=title
@@ -407,7 +406,7 @@ Flagged pages: **695**
 - `mermaid-diagram-suite` — h1!=title
 - `mesothelioma-settlement-calculator` — h1!=title
 - `meta-tag-generator` — h1!=title
-- `mic-test` — title-missing-kw, h1-missing-kw, h1!=title
+- `mic-test` — h1!=title
 - `mileage-reimbursement-calculator` — h1!=title
 - `military-time-converter` — h1!=title
 - `mind-map-maker` — h1!=title
@@ -417,7 +416,7 @@ Flagged pages: **695**
 - `money-factor-converter` — h1!=title
 - `mortgage-calculator` — h1!=title
 - `motorcycle-accident-settlement-calculator` — h1!=title
-- `motorcycle-insurance-cost-calculator` — title-missing-kw, h1!=title
+- `motorcycle-insurance-cost-calculator` — h1!=title
 - `mpg-calculator` — h1!=title
 - `mtbf-calculator` — h1!=title
 - `mulch-calculator` — h1!=title
