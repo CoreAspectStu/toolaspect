@@ -4,10 +4,10 @@
 
 | Check | Pass | Rate |
 |---|---|---|
-| kw_in_title | 695/695 | 100.0% |
-| kw_in_h1 | 694/695 | 99.9% |
+| kw_in_title | 694/695 | 99.9% |
+| kw_in_h1 | 693/695 | 99.7% |
 | h1_equals_title | 0/695 | 0.0% |
-| kw_in_body_para | 692/695 | 99.6% |
+| kw_in_body_para | 691/695 | 99.4% |
 | h2_coverage | 421/695 | 60.6% |
 | h3_coverage | 126/695 | 18.1% |
 
@@ -17,9 +17,10 @@ Flagged pages: **695**
 |---|---|
 | h1!=title | 695 |
 | thin-content<300w | 5 |
-| body-missing-kw | 3 |
-| h1-missing-kw | 1 |
+| body-missing-kw | 4 |
+| h1-missing-kw | 2 |
 | overopt-density>3% | 1 |
+| title-missing-kw | 1 |
 
 ## Flagged pages (fix queue)
 
@@ -380,7 +381,7 @@ Flagged pages: **695**
 - `life-insurance-needs-calculator` — h1!=title
 - `lift-kit-cost-calculator` — h1!=title
 - `link-in-bio` — h1!=title
-- `llc-vs-scorp-calculator` — h1!=title
+- `llc-vs-scorp-calculator` — title-missing-kw, h1-missing-kw, h1!=title
 - `llm-pricing-tracker` — h1!=title
 - `loan-calculator` — h1!=title
 - `lockout-tagout-builder` — h1!=title
