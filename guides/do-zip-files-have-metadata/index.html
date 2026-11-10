@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Do ZIP Files Have Metadata? What We Measured | ToolAspect</title>
+<meta name="description" content="We built ZIP files with 3 tools and read the bytes. Folder paths, timestamps, user IDs and comments ride along, and a password doesn&#x27;t hide file names.">
+<link rel="canonical" href="https://toolaspect.com/guides/do-zip-files-have-metadata/">
+<meta property="og:title" content="Do ZIP Files Have Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/do-zip-files-have-metadata/">
+<meta property="og:description" content="We built ZIP files with 3 tools and read the bytes. Folder paths, timestamps, user IDs and comments ride along, and a password doesn&#x27;t hide file names.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Do ZIP Files Have Metadata?">
+<meta name="twitter:description" content="We built ZIP files with 3 tools and read the bytes. Folder paths, timestamps, user IDs and comments ride along, and a password doesn&#x27;t hide file names.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Do ZIP Files Have Metadata?", "description": "We built ZIP files with 3 tools and read the bytes. Folder paths, timestamps, user IDs and comments ride along, and a password doesn't hide file names.", "datePublished": "2026-11-11", "dateModified": "2026-11-11", "mainEntityOfPage": "https://toolaspect.com/guides/do-zip-files-have-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Do ZIP Files Have Metadata?", "item": "https://toolaspect.com/guides/do-zip-files-have-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do ZIP files have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every entry has a name with its folder path, a modified time, a size and a checksum. Some tools add UTC and last-opened times, a numeric user ID, permissions and comments."}}, {"@type": "Question", "name": "Does a password-protected ZIP hide file names?", "acceptedAnswer": {"@type": "Answer", "text": "No. In our test, unzip listed every file name, size and date without the password. A 7-Zip .7z archive made with -mhe=on did hide its file list."}}, {"@type": "Question", "name": "Does zipping a photo remove its EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "No. The photo we pulled out of every test archive was identical to the original, GPS position included. Strip the photo first, then zip it."}}, {"@type": "Question", "name": "How do I remove metadata from a ZIP file?", "acceptedAnswer": {"@type": "Answer", "text": "Rebuild it. Copy the files to a clean folder, set one date on all of them, and run zip with -X from inside that folder. Running -X on a finished archive changed nothing in our test."}}, {"@type": "Question", "name": "What is the __MACOSX folder in a ZIP?", "acceptedAnswer": {"@type": "Answer", "text": "It's where a Mac puts each file's extra attributes. In the sample we read, it held a hidden file with an access list and account names. Deleting it left the real file intact."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Do ZIP Files Have Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated November 11, 2026</span></div>
+<p class="intro">Yes. A ZIP archive records more than the files you put in it: folder paths, modified times, and with some tools a numeric user ID, file permissions and the time each file was last opened. A password doesn't hide the file names, either. We built archives with three tools, read the bytes, and tested five ways to clean them up.</p>
+<h2>What metadata does a ZIP file store?</h2>
+<p>A ZIP keeps a small record for every file and folder inside it, and anyone can read those records without unpacking a thing. We built the same test folder (a text note, a .docx and a photo) with three tools on a Debian 12 machine: Info-ZIP zip 3.0, Python 3.11.2's zipfile module and 7-Zip 26.02. Then we read the raw bytes and checked our parser against <code>zipinfo -v</code>.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Field</th><th>Which tools stored it</th><th>What it gave away</th></tr></thead><tbody>
+<tr><td>File names and folder paths</td><td>Every tool</td><td>Zipped by absolute path, each name began <code>home/jsmith/Documents/tax-2025/</code></td></tr>
+<tr><td>Modified time (basic DOS field)</td><td>Every tool</td><td>The zipper's local clock time in 2-second steps, no time zone</td></tr>
+<tr><td>Modified and last-opened time in UTC (UT field)</td><td>zip by default; Mac samples use an older version</td><td>The exact second in UTC, plus when the file was last read</td></tr>
+<tr><td>High-precision times (NTFS field)</td><td>7-Zip here; WinRAR, WinZip and 7-Zip in the Windows samples</td><td>Sub-second times. The Windows samples added accessed and created times</td></tr>
+<tr><td>User and group ID (ux field)</td><td>zip by default; Mac samples</td><td>Numbers, not names: 1000 and 1000 on our Linux box, 501 and 20 on the Mac samples</td></tr>
+<tr><td>File permissions</td><td>zip, Python and 7-Zip</td><td>A file set to owner-only (0600) arrived marked that way</td></tr>
+<tr><td>Made-by byte</td><td>Every tool</td><td>Unix, plus version 3.0 for zip, 2.0 for Python, 6.3 for 7-Zip. Most Windows samples said FAT</td></tr>
+<tr><td>Comments</td><td>Only if someone adds one</td><td>Plain readable text, per archive or per file</td></tr>
+</tbody></table></div>
+<p>Python wrote the least. zip wrote the most: its extra fields cost 52 bytes per entry, and they're on by default.</p>
+
+<h2>Can a ZIP file show your username or folder names?</h2>
+<p>Yes, if you zip by full path. We ran <code>zip -r out.zip /home/jsmith/Documents/tax-2025</code> from a test account, and every entry name began with <code>home/jsmith/</code>. zip dropped the leading slash and kept the rest. Change into the folder first and names start where you want them to.</p>
+<p>The user ID is a number. We found no account name in any extra field.</p>
+
+<h2>How exact are the timestamps, and do they show your time zone?</h2>
+<p>The basic time field holds even seconds only, in local time. Our note was last saved at 09:26:53 UTC. zip and 7-Zip stored 20:26:54, the Sydney clock time rounded up. Python stored 20:26:52.</p>
+<p>With the clock set to New York, then Tokyo, the same file got 05:26:54 and 18:26:54. The field follows the zipper's clock.</p>
+<p>Default zip output gives away more, because it stores local time and UTC side by side: 20:26:54 and 09:26:53. Subtract, and you know the sender's clock ran 11 hours ahead of UTC. The same record held the moment each file was last opened.</p>
+
+<h2>Does a password hide the file names in a ZIP?</h2>
+<p>No. A ZIP password scrambles each file's contents and leaves the list of files readable. We locked the test folder three ways and tried to list each archive without the password.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Archive</th><th>Names, sizes and dates readable?</th><th>Notes</th></tr></thead><tbody>
+<tr><td>zip with a password (classic ZIP encryption)</td><td>Yes, all 5 entries</td><td>User IDs and a checksum of each file were readable too</td></tr>
+<tr><td>7-Zip .zip with AES-256</td><td>Yes, all 5 entries</td><td>The checksum was blanked</td></tr>
+<tr><td>7-Zip .7z with <code>-mhe=on</code></td><td>No</td><td>It wouldn't open without the password</td></tr>
+</tbody></table></div>
+<p><code>unzip -l</code> printed every name, size and date from the first two, and extracting failed, as it should. If the names are the secret, a .zip won't keep it.</p>
+
+<h2>What do Mac and Windows add?</h2>
+<p>We couldn't make these ourselves, so we read public samples: a test file from the libarchive project and several from the Go source tree, each labeled with the tool that made it.</p>
+<p>The libarchive Mac sample held one 8-byte file plus two extras, a <code>__MACOSX/</code> folder and a 287-byte <code>._file3</code> inside it. That hidden twin carried the file's access list, with account names in readable text. All three Mac samples stored user ID 501 and a last-opened time.</p>
+<p>The Windows 7 and Windows XP samples held names, local times and basic file attributes. The WinRAR, WinZip and 7-Zip ones added modified, accessed and created times at sub-second precision.</p>
+<p>We didn't measure Windows 11, a current Mac or current WinRAR and WinZip. No sample had a <code>.DS_Store</code> file, so we can't describe one.</p>
+
+<h2>How do you strip metadata from a ZIP archive?</h2>
+<p>Build it clean, because fixing a finished one mostly didn't work. We tried five things and re-read the bytes after each.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Method</th><th>Before</th><th>After</th></tr></thead><tbody>
+<tr><td><code>zip -rX</code> when you create it</td><td>UTC times, last-opened times and user IDs on all 5 entries</td><td>All gone, 260 bytes smaller. Names, local times, permissions and the Unix byte stay</td></tr>
+<tr><td><code>zip -X old.zip --out new.zip</code> on a finished archive</td><td>The same extras</td><td>No change. Same size, same fields</td></tr>
+<tr><td>Copy to a clean folder, <code>chmod 644</code>, <code>touch</code> one date, then <code>TZ=UTC zip -X -D</code> from inside it</td><td>Home path, real dates, 0600 permissions</td><td>Bare file names, one identical date, 0644, no folder entries</td></tr>
+<tr><td><code>zip -z</code> with empty input</td><td>An archive comment and a per-file comment</td><td>Archive comment gone. The per-file comment stayed</td></tr>
+<tr><td><code>7z a -tzip -mtm=off</code></td><td>High-precision time field</td><td>Field gone, and the date reads 1980-01-01 00:00:00</td></tr>
+</tbody></table></div>
+<p>The third row is the one to copy. Row two is the trap: <code>-X</code> only applies to files being added. On the Mac sample, <code>zip -d file.zip "__MACOSX/*"</code> removed both extras, but the real file kept its user ID and times.</p>
+
+<h2>Does cleaning the ZIP clean the files inside?</h2>
+<p>No. Files came out byte for byte identical from every archive we made, cleaned ones included. Our test photo still had its GPS position and artist name. The .docx still said who wrote it.</p>
+<p>So clean the contents first. None of our tools cleans a ZIP's own records, and our <a href="/document-metadata-remover/">Document Metadata Remover</a> turned away a .zip when we tried one. It takes .docx, .xlsx, .pptx and .pdf. For photos, look with the <a href="/exif-viewer/">EXIF viewer</a>, then strip with the <a href="/image-metadata-remover/">Image Metadata Remover</a>, which takes JPEG and PNG. PDFs can also go through the <a href="/pdf-metadata-editor/">PDF metadata editor</a>.</p>
+<p>Clean several documents at once and our remover hands them back as a ZIP. We inspected it: two file names and one timestamp, the moment of cleaning in UTC. No extra fields, IDs or permissions.</p>
+<p>Office files are ZIPs themselves. After our remover cleared a .docx's author fields, 12 of its 18 internal parts still carried their original save time. Our guides on <a href="/guides/remove-metadata-from-word-documents/">Word</a>, <a href="/guides/do-excel-files-have-metadata/">Excel</a> and <a href="/guides/do-pdf-files-have-metadata/">PDF metadata</a> cover what's inside each type.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do ZIP files have metadata?</h3><p>Yes. Every entry has a name with its folder path, a modified time, a size and a checksum. Some tools add UTC and last-opened times, a numeric user ID, permissions and comments.</p></div>
+<div class="faq-item"><h3>Does a password-protected ZIP hide file names?</h3><p>No. In our test, unzip listed every file name, size and date without the password. A 7-Zip .7z archive made with -mhe=on did hide its file list.</p></div>
+<div class="faq-item"><h3>Does zipping a photo remove its EXIF data?</h3><p>No. The photo we pulled out of every test archive was identical to the original, GPS position included. Strip the photo first, then zip it.</p></div>
+<div class="faq-item"><h3>How do I remove metadata from a ZIP file?</h3><p>Rebuild it. Copy the files to a clean folder, set one date on all of them, and run zip with -X from inside that folder. Running -X on a finished archive changed nothing in our test.</p></div>
+<div class="faq-item"><h3>What is the __MACOSX folder in a ZIP?</h3><p>It's where a Mac puts each file's extra attributes. In the sample we read, it held a hidden file with an access list and account names. Deleting it left the real file intact.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/document-metadata-remover/">Document Metadata Remover</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/guides/remove-metadata-from-word-documents/">Remove Metadata from Word Documents</a>
+<a href="/guides/do-excel-files-have-metadata/">Do Excel Files Have Metadata?</a>
+<a href="/guides/do-pdf-files-have-metadata/">Do PDF Files Have Metadata?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
