@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/shared/domain-redirect.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Do 7z, RAR and tar Files Have Metadata? | ToolAspect</title>
+<meta name="description" content="We built tar, tar.gz and 7z archives and read the bytes. tar stores your login name, 7z doesn&#x27;t, and RAR can go either way. Cleanup commands included.">
+<link rel="canonical" href="https://toolaspect.com/guides/do-7z-rar-and-tar-files-have-metadata/">
+<meta property="og:title" content="Do 7z, RAR and tar Files Have Metadata?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://toolaspect.com/guides/do-7z-rar-and-tar-files-have-metadata/">
+<meta property="og:description" content="We built tar, tar.gz and 7z archives and read the bytes. tar stores your login name, 7z doesn&#x27;t, and RAR can go either way. Cleanup commands included.">
+<meta property="og:site_name" content="ToolAspect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Do 7z, RAR and tar Files Have Metadata?">
+<meta name="twitter:description" content="We built tar, tar.gz and 7z archives and read the bytes. tar stores your login name, 7z doesn&#x27;t, and RAR can go either way. Cleanup commands included.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Do 7z, RAR and tar Files Have Metadata?", "description": "We built tar, tar.gz and 7z archives and read the bytes. tar stores your login name, 7z doesn't, and RAR can go either way. Cleanup commands included.", "datePublished": "2026-11-12", "dateModified": "2026-11-12", "mainEntityOfPage": "https://toolaspect.com/guides/do-7z-rar-and-tar-files-have-metadata/", "author": {"@type": "Organization", "name": "ToolAspect"}, "publisher": {"@type": "Organization", "name": "ToolAspect", "url": "https://toolaspect.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://toolaspect.com/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://toolaspect.com/guides/"}, {"@type": "ListItem", "position": 3, "name": "Do 7z, RAR and tar Files Have Metadata?", "item": "https://toolaspect.com/guides/do-7z-rar-and-tar-files-have-metadata/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do tar files store your username?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every tar we built with GNU tar held the login name and group name of the account that made it, plus numeric IDs. Adding --owner=0 --group=0 --numeric-owner left the names empty."}}, {"@type": "Question", "name": "Does a password-protected 7z file hide the file names?", "acceptedAnswer": {"@type": "Answer", "text": "Only if it was made with -mhe=on. With a plain password, 7-Zip listed every name, size and date without it."}}, {"@type": "Question", "name": "Do RAR files have metadata?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The format stores each file's name, modified time and attributes, with optional records for other times and the owner's user and group name. That's from RARLAB's format note and public samples. We didn't create one."}}, {"@type": "Question", "name": "Does a .tar.gz file store the original file name?", "acceptedAnswer": {"@type": "Answer", "text": "It depends how it was made. tar -czf stored no name and a zero time in the gzip header. Running gzip on a finished .tar stored its name and modified time. gzip -n left both out."}}, {"@type": "Question", "name": "Does putting a photo in a 7z or tar archive remove its EXIF data?", "acceptedAnswer": {"@type": "Answer", "text": "No. Files extracted from 13 test archives matched the originals' SHA-256 hashes, and the photo still had its GPS position. Strip it first, then archive it."}}]}</script>
+<script src="/shared/nav.js"></script>
+<style>.wrap{max-width:760px;margin:0 auto;padding:2rem 1.5rem;position:relative;z-index:1}h1{font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.3}.meta{color:var(--muted);font-size:.82rem;margin-bottom:24px;display:flex;gap:1rem;flex-wrap:wrap}.intro{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:24px;padding:16px;background:var(--surface);border-left:3px solid var(--primary);border-radius:0 12px 12px 0}h2{font-size:1.2rem;font-weight:600;margin:28px 0 12px}p{color:var(--text-secondary);font-size:.92rem;margin-bottom:14px;line-height:1.8}ul,ol{color:var(--text-secondary);font-size:.92rem;line-height:1.9;padding-left:1.5rem;margin-bottom:14px}li{margin-bottom:4px}.cta-box{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:14px;padding:24px;text-align:center;margin:24px 0}.cta-box h3{font-size:1.1rem;font-weight:600;margin-bottom:8px}.cta-box a{display:inline-block;padding:10px 24px;background:#fff;color:var(--primary);border-radius:10px;font-weight:600;text-decoration:none;margin-top:8px}.faq-item{padding:16px 0;border-bottom:1px solid var(--border)}.faq-item:last-child{border-bottom:none}.faq-item h3{font-size:.95rem;font-weight:600;margin-bottom:6px}.faq-item p{font-size:.88rem}.related-tools{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:16px}.related-tools a{padding:.5rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.85rem;color:var(--text);text-decoration:none;font-weight:500}.ad-slot{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;margin:20px 0}.table-wrap{overflow-x:auto;margin:12px 0}.data-table{width:100%;border-collapse:collapse;font-size:.88rem}.data-table th,.data-table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;color:var(--text-secondary)}.data-table th{background:var(--surface);color:var(--text)}</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-20E2JPEZ4Z', { 'anonymize_ip': true });
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7079002297203024" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/shared/ad-slots.css">
+<script defer src="/shared/ads.js?v=2"></script>
+</head>
+<body>
+<div class="wrap">
+<h1>Do 7z, RAR and tar Files Have Metadata?</h1>
+<div class="meta"><span>📄 6 min read</span><span>Updated November 12, 2026</span></div>
+<p class="intro">Yes, all three do, and tar stores the most. Every tar archive we built carried our login name and group name as plain text, next to numeric IDs, permissions and a timestamp for each file. 7z kept names, times and permissions but no owner. RAR can go either way. We measured tar, tar.gz and 7z ourselves. The RAR part comes from documentation and public sample files.</p>
+<h2>Which archive format stores the most metadata?</h2>
+<p>tar does. We built archives from the same test folder as our <a href="/guides/do-zip-files-have-metadata/">ZIP guide</a> (a note, a .docx and a photo) on a Debian 12 machine, using GNU tar 1.34, gzip 1.12, Python 3.11.2 and 7-Zip 26.02. Then we read the raw headers.</p>
+<p>The tar and 7z columns are our measurements. ZIP repeats that guide. RAR comes from RARLAB's RAR 5.0 format note, the rar 7.00 manual page and 13 sample files from the libarchive project's test suite, listed with 7-Zip. "Manual" marks documented behavior we couldn't run.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th></th><th>ZIP</th><th>7z</th><th>RAR</th><th>tar and tar.gz</th></tr></thead><tbody>
+<tr><td>Timestamps</td><td>Modified time always. zip adds UTC and last-opened times</td><td>Modified time, sub-second. Created and accessed only on request</td><td>Modified time only in the 6 RAR5 samples. <code>-ts</code> adds the others (manual)</td><td>Modified time in whole seconds. pax adds last-read and last-changed times</td></tr>
+<tr><td>Owner</td><td>Numeric IDs with zip's defaults. No names</td><td>None that we could find</td><td>Optional, via <code>-ow</code> (manual). One sample held names as text</td><td>Numeric IDs plus user and group names as text</td></tr>
+<tr><td>Folder paths</td><td>As typed, full path included</td><td>From the folder you named down</td><td><code>-ep</code> drops them, <code>-ep2</code> stores full ones (manual)</td><td>As typed, minus the leading slash</td></tr>
+<tr><td>Permissions</td><td>Yes with zip, Python and 7-Zip</td><td>Yes, Unix permission bits</td><td>Yes in the Unix-made samples</td><td>Yes, always</td></tr>
+<tr><td>Can the file list be encrypted?</td><td>No</td><td>Yes, with <code>-mhe=on</code></td><td>Yes, with <code>-hp</code> (manual)</td><td>No encryption of its own</td></tr>
+</tbody></table></div>
+
+<h2>Does a tar file contain your username?</h2>
+<p>Yes. In all three modern header formats (GNU, ustar and pax), each of the 5 entries had two text fields holding the login name and group name of the account that ran tar. Next to them sat the numeric IDs, 1000 and 1000 here.</p>
+<p>Python's tarfile module wrote the same fields. 7-Zip was the exception: asked to write a .tar, it set both IDs to 0 and left both names blank.</p>
+
+<h2>What else does tar record?</h2>
+<p>Permissions, for a start. Our note was set to owner-only (0600) and every tar said so.</p>
+<p>The modified time is whole seconds in UTC, with no hint of the packer's time zone. The pax format goes further. It added a last-read and a last-changed time to all 5 entries, each to the nanosecond, and the file grew from 51,200 to 61,440 bytes.</p>
+<p>Paths go in as typed. Given the folder's full path, tar put every parent folder in every name, <code>jsmith/Documents/</code> included. It removed only the leading slash, and <code>-P</code> kept that too.</p>
+<p>Links are the sneaky one. We archived a symbolic link pointing at <code>/home/jsmith/Dropbox/clients/acme/2025-return.pdf</code>. The file wasn't in the archive. Its full path was.</p>
+
+<h2>Does a .tar.gz add anything on top?</h2>
+<p>It can. The gzip wrapper has its own header with room for an original file name and a timestamp.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>How we made the .tar.gz</th><th>Name in the gzip header</th><th>Time in the gzip header</th></tr></thead><tbody>
+<tr><td><code>tar -czf</code></td><td>Nothing</td><td>Zero</td></tr>
+<tr><td><code>gzip file.tar</code></td><td>The .tar's file name</td><td>The .tar's modified time</td></tr>
+<tr><td><code>gzip -n file.tar</code></td><td>Nothing</td><td>Zero</td></tr>
+<tr><td>Python's tarfile module, <code>w:gz</code> mode</td><td>The archive's name minus .gz</td><td>The second we built it</td></tr>
+</tbody></table></div>
+<p>Renaming doesn't help: we renamed one to <code>holiday-photos.tar.gz</code>, and <code>gzip -dN</code> still restored the old name.</p>
+
+<h2>What does a 7z archive store?</h2>
+<p>Less. By default 7-Zip kept each name, size, modified time and permission bits. <code>7z l -slt</code> showed no user or group field at all.</p>
+<p>The modified time is finer than tar's: 20:26:53.5890000 for our note, seven decimal places. It's kept in UTC. Listed with the clock set to UTC and then Tokyo, the same entry read 09:26:53 and 18:26:53, so you see the reader's clock, not the packer's.</p>
+<p>Created and accessed times were absent until we added <code>-mtc=on -mta=on</code>. And given the folder's full path, 7-Zip stored names starting at <code>tax-2025</code>. It took <code>-spf</code> to keep the parents.</p>
+<p>A plain <code>-p</code> password doesn't hide the list. 7-Zip printed every name, size and date without asking for it. Only <code>-mhe=on</code> changed that: without the right password, the archive wouldn't open.</p>
+
+<h2>What about RAR files?</h2>
+<p>We didn't create one. That takes RARLAB's own program, which isn't on our machine.</p>
+<p>The format note says each file header holds a name, a modified time, attributes and a flag for Windows or Unix. Optional records can add creation and last-access times, the owner's user name, group name and numeric IDs, and link targets.</p>
+<p>The samples matched. One had owner records, and the names <code>root</code>, <code>wheel</code>, <code>nobody</code> and <code>nogroup</code> were readable in its raw bytes. All 6 RAR5 samples held a modified time only. Two older-format samples from 2011 held created and accessed times as well.</p>
+<p>A sample with only its file data encrypted listed both names, sizes and dates. One with encrypted headers wouldn't open. The manual says <code>-hp</code> encrypts "both file data and headers."</p>
+<p>The samples are other people's files, some from 2011. They show what the format can hold, not what today's WinRAR writes by default. We also tested nothing on Windows or a Mac: no WinRAR, no macOS Archive Utility, no bsdtar.</p>
+
+<h2>How do you make a cleaner archive?</h2>
+<p>Each command ran here, and we re-read the result.</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Command</th><th>What the archive held afterward</th></tr></thead><tbody>
+<tr><td><code>tar --format=ustar --sort=name --owner=0 --group=0 --numeric-owner --mtime='2026-01-01 00:00:00Z' --mode='u=rwX,go=rX' -cf out.tar tax-2025</code></td><td>IDs 0 and 0, empty name fields, one date, files 0644, folders 0755, name order</td></tr>
+<tr><td>The same with <code>-cf - tax-2025 | gzip -n &gt; out.tar.gz</code></td><td>The same, in a gzip wrapper with no name and a zero time</td></tr>
+<tr><td><code>7z a -mtm=off -mtr=off out.7z notes.txt letter-to-accountant.docx IMG_4021.jpg</code></td><td>Three bare names and sizes. No dates, no permissions</td></tr>
+<tr><td><code>7z a -mhe=on -pPASSWORD out.7z tax-2025</code></td><td>Nothing lists without the password</td></tr>
+</tbody></table></div>
+<p>Don't drop <code>--numeric-owner</code>. With <code>--owner=0 --group=0</code> alone, tar wrote <code>root</code> in both name fields. And files extracted from the dateless .7z took the archive file's own date.</p>
+
+<h2>Does cleaning the archive clean the files inside?</h2>
+<p>No. We extracted 13 test archives, cleaned ones included. All three files matched the originals' SHA-256 hashes every time. The photo still had its GPS position, and the .docx still named its author.</p>
+<p>So clean first, pack second. Check photos in the <a href="/exif-viewer/">EXIF viewer</a> and strip them with the <a href="/image-metadata-remover/">Image Metadata Remover</a>. Office files and PDFs go through the <a href="/document-metadata-remover/">Document Metadata Remover</a> or the <a href="/pdf-metadata-editor/">PDF metadata editor</a>. Our <a href="/guides/remove-metadata-from-word-documents/">Word</a> and <a href="/guides/do-pdf-files-have-metadata/">PDF metadata</a> guides show what's in each. Before you scan an archive online, read <a href="/guides/is-it-safe-to-upload-files-to-virustotal/">what VirusTotal does with uploads</a>.</p>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item"><h3>Do tar files store your username?</h3><p>Yes. Every tar we built with GNU tar held the login name and group name of the account that made it, plus numeric IDs. Adding --owner=0 --group=0 --numeric-owner left the names empty.</p></div>
+<div class="faq-item"><h3>Does a password-protected 7z file hide the file names?</h3><p>Only if it was made with -mhe=on. With a plain password, 7-Zip listed every name, size and date without it.</p></div>
+<div class="faq-item"><h3>Do RAR files have metadata?</h3><p>Yes. The format stores each file's name, modified time and attributes, with optional records for other times and the owner's user and group name. That's from RARLAB's format note and public samples. We didn't create one.</p></div>
+<div class="faq-item"><h3>Does a .tar.gz file store the original file name?</h3><p>It depends how it was made. tar -czf stored no name and a zero time in the gzip header. Running gzip on a finished .tar stored its name and modified time. gzip -n left both out.</p></div>
+<div class="faq-item"><h3>Does putting a photo in a 7z or tar archive remove its EXIF data?</h3><p>No. Files extracted from 13 test archives matched the originals' SHA-256 hashes, and the photo still had its GPS position. Strip it first, then archive it.</p></div>
+<h2>Related Tools</h2>
+<div class="related-tools">
+<a href="/document-metadata-remover/">Document Metadata Remover</a>
+<a href="/image-metadata-remover/">Image Metadata Remover</a>
+<a href="/exif-viewer/">EXIF Viewer</a>
+<a href="/guides/do-zip-files-have-metadata/">Do ZIP Files Have Metadata?</a>
+<a href="/guides/do-pdf-files-have-metadata/">Do PDF Files Have Metadata?</a>
+<a href="/guides/is-it-safe-to-upload-files-to-virustotal/">Is It Safe to Upload Files to VirusTotal?</a>
+</div>
+</div>
+<script src="/shared/funnel-cta.js"></script>
+</body>
+</html>
