@@ -76,6 +76,7 @@ h1{font-size:1.75rem;font-weight:700;text-align:center;margin-bottom:8px}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I use these prompts with Claude, Gemini, or other AI tools?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every prompt is plain-language instructions with no ChatGPT-specific syntax, so they paste into Claude, Gemini, Copilot, or any chat assistant. Beginner and intermediate prompts run well on smaller models; the advanced ones (schema markup, system architecture reviews) benefit from a stronger model."}},{"@type":"Question","name":"Are the prompts free to use for client and commercial work?","acceptedAnswer":{"@type":"Answer","text":"Yes. Copy them, adapt the placeholders, and fold them into your own or your clients' workflows with no attribution required. The library is a static page — nothing is submitted anywhere and no account is involved."}},{"@type":"Question","name":"How do I make a prompt more specific?","acceptedAnswer":{"@type":"Answer","text":"Add constraints you can actually check: a length, a format, an audience, a tone, a number of items. If you can't verify whether the output met the instruction, the model couldn't either. Concrete boundaries beat extra paragraphs of vague direction every time."}},{"@type":"Question","name":"What's the difference between a system prompt and a user prompt?","acceptedAnswer":{"@type":"Answer","text":"A system prompt sets standing behavior — role, rules, format — that applies across a whole conversation or workspace. A user prompt is each individual request. In ChatGPT the system layer lives in custom instructions; in the Claude API it's the system field. Most everyday work needs only well-built user prompts."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -326,5 +327,28 @@ render();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

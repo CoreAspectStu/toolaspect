@@ -63,6 +63,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Stopwatch","item":"https://toolaspect.com/stopwatch/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How accurate is this online stopwatch?","acceptedAnswer":{"@type":"Answer","text":"It uses your browser's high-resolution clock, which keeps time with sub-millisecond precision. In practice, accuracy is limited by human reaction time — roughly 0.2 to 0.25 seconds — so measured intervals are typically accurate to within a quarter second, far better than counting seconds aloud but not a substitute for certified timing equipment."}},{"@type":"Question","name":"What is the difference between a stopwatch and a timer?","acceptedAnswer":{"@type":"Answer","text":"A stopwatch counts upward from zero to measure how long something takes. A timer counts downward from a value you set and alerts you when time runs out. Use a stopwatch to measure duration and a timer to enforce a limit."}},{"@type":"Question","name":"Does the stopwatch work offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. Once the page has loaded, all timing runs locally on your device using its internal clock, so connection speed does not affect the measurement."}},{"@type":"Question","name":"Why do stopwatches show hundredths of a second?","acceptedAnswer":{"@type":"Answer","text":"Hundredths (two decimal places) match the precision World Athletics requires for fully automatic race timing. Finer readings exist — the underlying clock is more precise — but hundredths reflect the smallest unit that is meaningful when a human presses the buttons."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Stopwatch</span></nav>
@@ -172,5 +173,28 @@ function resetTimer(){clearInterval(timerInt);running=false;elapsed=0;lastLap=0;
 <h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/number-to-words/">Number To Words</a></li><li style="margin:4px 0"><a href="/roman-numeral-converter/">Roman Numeral Converter</a></li><li style="margin:4px 0"><a href="/military-time-converter/">Military Time Converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

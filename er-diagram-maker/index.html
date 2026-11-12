@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I generate an ER diagram from my SQL schema automatically?","acceptedAnswer":{"@type":"Answer","text":"Not in this tool. There's no SQL import, so you type the entities yourself. It's quick, though: each CREATE TABLE becomes an entity block, each column becomes a line like int customer_id FK, and each REFERENCES clause becomes one relationship line. A 10-table schema usually takes a few minutes, and you end up with a text file you can keep next to your migrations."}},{"@type":"Question","name":"What do the PNG and SVG exports look like?","acceptedAnswer":{"@type":"Answer","text":"Both use the dark theme you see in the preview. The PNG is drawn at twice the diagram's size on a dark background, so it stays sharp on slides and high-resolution screens. The SVG scales to any size and drops straight into Confluence, Notion, GitHub READMEs and most design docs. If you need a light version, paste the code into any Mermaid editor set to the default theme."}},{"@type":"Question","name":"How do I draw an ER diagram for free?","acceptedAnswer":{"@type":"Answer","text":"Start the first line with erDiagram, define each entity as a block listing its attributes with key markers (int id PK, string email UK), then connect entities with relationship lines like CUSTOMER ||--o{ ORDER : places. This maker renders live in your browser with crow's-foot notation and exports SVG or PNG — free, no signup, nothing uploaded."}},{"@type":"Question","name":"What does ||--o{ mean in an ER diagram?","acceptedAnswer":{"@type":"Answer","text":"It is crow's-foot cardinality read left to right: || means exactly one, o{ means zero-or-more. So CUSTOMER ||--o{ ORDER : places says each customer places zero or more orders, and each order belongs to exactly one customer. Other endings: |{ one-or-more, || exactly one, o| zero-or-one. The two halves sit on either side of the double dash, one for each direction."}},{"@type":"Question","name":"How do I mark primary keys and foreign keys?","acceptedAnswer":{"@type":"Answer","text":"Put the key marker after the attribute name inside the entity block: int id PK for primary key, int customer_id FK for foreign key, string email UK for a unique (alternate) key. Mermaid renders the marker as a small badge on that attribute row. Composite keys list PK on two lines."}},{"@type":"Question","name":"What attribute types can I write?","acceptedAnswer":{"@type":"Answer","text":"The type is free-form text before the attribute name — string, int, float, bool, date, or anything your stack calls it (varchar(255), uuid, decimal(10,2) all render fine). Mermaid does not validate types; it prints them exactly as written, so use the names your actual database uses to keep the diagram honest."}},{"@type":"Question","name":"How is an ER diagram different from a class diagram?","acceptedAnswer":{"@type":"Answer","text":"An ER diagram models persisted data: tables or entities, their attributes, and the cardinality of the links between them. A class diagram models code: classes with behavior (methods) and object relationships like inheritance. Overlap exists — a Customer appears in both — but methods belong to class diagrams and PK/FK badges belong to ER diagrams."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -284,5 +285,28 @@ loadLib(doRender);
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

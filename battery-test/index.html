@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Battery Test","item":"https://toolaspect.com/battery-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I test my battery health online?","acceptedAnswer":{"@type":"Answer","text":"The Battery Status API (where your browser supports it) reports charge level, charging state, and estimated charge/discharge times, which this page displays live. Watching the drain rate during a timed idle period gives a rough indication of whether runtime has degraded versus the device's original spec. No app installation is required."}},{"@type":"Question","name":"Why is my battery draining so fast?","acceptedAnswer":{"@type":"Answer","text":"Common causes are high screen brightness, poor cellular signal forcing the radio to work harder, background apps and syncing, and cold weather, which temporarily reduces lithium-ion capacity. A battery that drained quickly even in airplane mode with the screen dimmed suggests age-related wear. Battery health below about 80% of design capacity is the usual threshold for replacement."}},{"@type":"Question","name":"How long do phone batteries last before wearing out?","acceptedAnswer":{"@type":"Answer","text":"Most lithium-ion phone batteries are rated for 500–1000 full charge cycles before dropping to roughly 80% of original capacity, which for typical users means two to three years. Heat and habitually holding the charge at 100% accelerate wear. Keeping the battery between roughly 20% and 80% when practical slows degradation."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Battery Test</span></nav><div class="wrap">
@@ -187,5 +188,28 @@ $('noMsg').textContent=/Firefox/.test(ua)?'You are on Firefox, which removed the
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

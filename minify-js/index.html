@@ -90,6 +90,7 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="howto1">{"@context": "https://schema.org", "@type": "HowTo", "name": "How to minify JavaScript with Terser in your browser", "description": "Minify a JavaScript file with Terser 5.51.2 on ToolAspect without uploading it.", "totalTime": "PT1M", "step": [{"@type": "HowToStep", "position": 1, "name": "Paste your code", "text": "Paste JavaScript into the input box, or click Sample to load the cart-totals example."}, {"@type": "HowToStep", "position": 2, "name": "Pick a preset", "text": "Choose Strip only, Compress, or Compress + mangle. Use Compress if other scripts or HTML onclick attributes call your top-level functions."}, {"@type": "HowToStep", "position": 3, "name": "Check the sizes", "text": "Read the input, output, saved and gzip sizes. The output updates as you type."}, {"@type": "HowToStep", "position": 4, "name": "Copy or download", "text": "Click Copy output or Download .js to save the minified file."}]}</script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does minifying JavaScript remove?", "acceptedAnswer": {"@type": "Answer", "text": "A minifier like Terser removes comments and whitespace, shortens local variable names, folds constants, drops unreachable code, and applies safe syntax transforms. The output is functionally identical JavaScript that parses to the same behavior. Unsafe assumptions, like relying on Function.prototype.toString, can break, so test after minifying."}}, {"@type": "Question", "name": "How much smaller is minified JavaScript?", "acceptedAnswer": {"@type": "Answer", "text": "Hand-written JS typically shrinks 30–50% raw, and applying gzip on top commonly cuts 70–80% from the original size. Variable-name mangling contributes most of the raw savings in large files. For production sites this directly improves time-to-interactive on slower connections."}}, {"@type": "Question", "name": "Is Terser still the right choice for ES6+ code?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — Terser was forked specifically to handle modern ECMAScript syntax that the older UglifyJS could not parse. It fully supports ES6 through current syntax like optional chaining and nullish coalescing. Running it in your browser means no Node install is needed for quick one-file minification."}}, {"@type": "Question", "name": "Why did minifying my JavaScript remove my functions?", "acceptedAnswer": {"@type": "Answer", "text": "The Compress + mangle preset treats the file as self-contained, so top-level functions that nothing inside the file calls are removed as dead code, and top-level names are shortened. Functions called from HTML onclick attributes or other scripts disappear. Use the Compress preset, or assign the function to window so it stays public."}}, {"@type": "Question", "name": "Does minifying JavaScript keep license comments?", "acceptedAnswer": {"@type": "Answer", "text": "Only with the Compress + mangle preset, which keeps comments starting with /*! or containing @license or @preserve. The Strip only and Compress presets remove every comment, so paste any required license header back in afterwards."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -267,5 +268,28 @@ if (typeof module !== 'undefined') {
 <script src="/shared/ratings.js" defer></script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

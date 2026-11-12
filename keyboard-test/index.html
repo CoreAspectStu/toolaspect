@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Keyboard Test","item":"https://toolaspect.com/keyboard-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does the online keyboard test work?","acceptedAnswer":{"@type":"Answer","text":"Press any key and it lights up on the on-screen layout along with its event code and location, so dead or intermittent keys are immediately obvious. Everything runs locally in the browser with nothing to install. It works for laptops, external mechanical keyboards, and anything else your operating system recognizes."}},{"@type":"Question","name":"Which keys can this keyboard test check?","acceptedAnswer":{"@type":"Answer","text":"All of them: letters, numbers, modifiers (Shift, Ctrl, Alt, OS keys), the function row, and punctuation. You can also hold several keys at once to probe rollover behavior on gaming keyboards. Keys that fail to light up consistently are the ones to investigate."}},{"@type":"Question","name":"A key doesn't light up in the keyboard test — is my keyboard broken?","acceptedAnswer":{"@type":"Answer","text":"Not necessarily. First rule out software: test in a different browser or app, and disable key-remapping utilities (AutoHotkey, vendor software, or keyboard modes like Mac/Windows swapping) that can swallow events. If the key stays dead everywhere, the switch or membrane is likely faulty."}},{"@type":"Question","name":"Can I use the keyboard test to diagnose a laptop keyboard?","acceptedAnswer":{"@type":"Answer","text":"Yes — laptop keyboards report key events the same way external ones do, so the test is identical. Because laptop keys are harder to replace, confirm the failure in a second browser and after a reboot before concluding it is hardware. Sticky or double-firing keys usually point to a physical switch problem."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Keyboard Test</span></nav><div class="wrap">
@@ -117,5 +118,28 @@ pressKey(e.keyCode,key);
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

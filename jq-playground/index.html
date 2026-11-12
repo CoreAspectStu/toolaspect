@@ -88,6 +88,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does my filter print each result on its own line instead of an array?","acceptedAnswer":{"@type":"Answer","text":"Because jq works on streams. A filter like .order.items[] | .sku produces three separate outputs, and jq prints each one on its own line. Wrap the whole thing in square brackets, as in [.order.items[] | .sku], to collect them into one array. Use the bare stream when a shell loop reads the output line by line, and the array when you need valid JSON."}},{"@type":"Question","name":"How do I get plain text without quotes from jq?","acceptedAnswer":{"@type":"Answer","text":"Tick the -r box, which matches jq's --raw-output flag. Strings then print without their surrounding quotes, so \"Desk Mat\" becomes Desk Mat, which is what you want when the output goes into a shell variable or a CSV. Numbers, objects and arrays look the same either way. The report-lines example turns -r on for you."}},{"@type":"Question","name":"What is a jq playground good for?","acceptedAnswer":{"@type":"Answer","text":"It lets you test jq filters against sample JSON instantly, showing output and errors side by side without installing jq locally. This is the fastest way to learn filter syntax or debug a filter before putting it in a script. Everything runs in your browser, so your data never leaves the machine."}},{"@type":"Question","name":"Do all jq filters work in a browser jq playground?","acceptedAnswer":{"@type":"Answer","text":"Most core filters — selection, projection, iteration, arithmetic, string interpolation, and common builtins — behave the same as the command-line tool. Features that need the filesystem or network, such as --slurpfile or curl-fed inputs, are naturally absent. Edge cases in newer jq versions may differ depending on the bundled build."}},{"@type":"Question","name":"Why use jq in the playground instead of a Python script for JSON?","acceptedAnswer":{"@type":"Answer","text":"jq is a declarative language purpose-built for JSON transformation, so common operations are one-liners compared to several lines of Python parsing and error handling. A Python script is better when the task needs state, external libraries, or non-JSON logic. Many pipelines use jq for the shaping step and a script only when logic gets complex."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -323,5 +324,28 @@ filterIn.addEventListener('input', debounced);
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

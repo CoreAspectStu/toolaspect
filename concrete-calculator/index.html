@@ -59,6 +59,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Concrete Calculator","item":"https://toolaspect.com/concrete-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many cubic feet are in a cubic yard of concrete?","acceptedAnswer":{"@type":"Answer","text":"27. One cubic yard is 3 ft × 3 ft × 3 ft. Divide your volume in cubic feet by 27 to get cubic yards."}},{"@type":"Question","name":"How many 80-lb bags of concrete make a cubic yard?","acceptedAnswer":{"@type":"Answer","text":"An 80-lb bag yields about 0.60 cubic feet of mixed concrete, so a full cubic yard takes about 45 bags (27 ÷ 0.60)."}},{"@type":"Question","name":"How thick should a concrete slab be?","acceptedAnswer":{"@type":"Answer","text":"Common practice: 4 inches for patios and walkways, 6 inches for residential driveways carrying vehicles. Your local building code sets the actual minimum for your structure."}},{"@type":"Question","name":"How much extra concrete should I order?","acceptedAnswer":{"@type":"Answer","text":"Add 5–10% for spillage and uneven subgrade. For small slabs, round up to the nearest quarter or half yard since suppliers batch in increments."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -197,5 +198,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

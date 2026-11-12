@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
   <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I check if an IBAN is valid?","acceptedAnswer":{"@type":"Answer","text":"Check the country code against the 97-country IBAN registry, the length against that country's rule, the BBAN against the country's letter/digit structure, and compute the mod-97 checksum — it must leave remainder 1. A free in-browser validator such as ToolAspect's runs all four checks locally and handles batches, one IBAN per line, without uploading anything."}},{"@type":"Question","name":"Does a valid IBAN mean the account exists?","acceptedAnswer":{"@type":"Answer","text":"No. Valid means well-formed: right country, right length, right structure, checksum passes. It catches typos before money moves, but only the receiving bank can confirm an account is open — usually when the payment is attempted. Your bank may also run an IBAN-name check (the EU's Verification of Payee service arrives in 2025-2027) which a format validator cannot replace."}},{"@type":"Question","name":"Why does the US not use IBANs?","acceptedAnswer":{"@type":"Answer","text":"The US chose not to join the IBAN registry, along with Canada, Australia, Japan, China, India, and Mexico. American accounts keep their domestic form — a 9-digit routing number plus an account number — and cross-border wires to them are routed by SWIFT/BIC code instead. Any \"US IBAN\" you see is not a real IBAN and will fail country validation."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -92,5 +93,28 @@
 </div>
 <script src="/shared/funnel-cta.js"></script>
 <script src="/shared/ads.js?v=2"></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\\/[^\\/]/.test(a.getAttribute('href')) && !/^(\\/guides\\/|\\/all-tools\\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

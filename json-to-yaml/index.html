@@ -91,6 +91,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert JSON to YAML online?","acceptedAnswer":{"@type":"Answer","text":"Paste your JSON into the converter and it parses and re-serializes it as YAML entirely in your browser — no upload to any server. The conversion preserves nested objects, arrays, and scalar types exactly. Invalid JSON is flagged with a parse error so you can fix it before converting."}},{"@type":"Question","name":"Is YAML always more compact than JSON?","acceptedAnswer":{"@type":"Answer","text":"Usually yes, because YAML drops quotes, braces, and commas in favor of indentation, but not always. Very short values, deeply nested single-item arrays, and strings containing special characters can make YAML as long or longer than JSON. YAML also permits multiple equivalent renderings (flow vs block style) of the same data."}},{"@type":"Question","name":"What JSON features have no clean YAML equivalent?","acceptedAnswer":{"@type":"Answer","text":"Everything in JSON maps to YAML cleanly except duplicate keys and certain edge-case numbers like leading-plus exponents, which YAML parsers may reject or normalize differently. YAML 1.1 vs 1.2 spec differences can also change how things like booleans (on/off/yes/no) are typed on round-trip. For config files this rarely matters, but strict round-tripping is not guaranteed."}},{"@type":"Question","name":"Why did my version number 1.10 turn into 1.1?","acceptedAnswer":{"@type":"Answer","text":"Because unquoted 1.10 in YAML is a number, and numbers don't keep trailing zeros. The same happens to leading zeros, so 01234 becomes 1234. Quote the value in your YAML, version: \"1.10\", and it converts as the string \"1.10\"."}},{"@type":"Question","name":"Why does no or yes become false or true in my YAML?","acceptedAnswer":{"@type":"Answer","text":"YAML 1.1 parsers such as PyYAML treat yes, no, on and off as booleans. This converter writes YAML 1.2, where they're strings, so it leaves them unquoted. If an older parser will read the file, put those values in quotes."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -323,5 +324,28 @@ el('btnDl').addEventListener('click',function(){
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

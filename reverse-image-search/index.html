@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Reverse Image Search","item":"https://toolaspect.com/reverse-image-search/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does reverse image search work?", "acceptedAnswer": {"@type": "Answer", "text": "Instead of typing words, you give a search engine a picture. It builds a visual fingerprint of the image and looks for matching or similar images in its index, then lists the pages where they appear. Each engine has its own index, so results differ between Google Lens, Bing, TinEye and Yandex."}}, {"@type": "Question", "name": "Why does this tool need an image URL?", "acceptedAnswer": {"@type": "Answer", "text": "It builds a search link for each engine from a public image address and opens them in new tabs, so your browser talks to the engines directly and nothing passes through ToolAspect. For a photo that's only on your device, open each engine and use its own upload button."}}, {"@type": "Question", "name": "Which reverse image search engine is best?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the job. TinEye is best for tracking copies of one image and finding the oldest version. Google Lens has the broadest index and identifies objects and products. Yandex is strong on lookalikes and edited variants. Running two or more catches far more than any single engine."}}, {"@type": "Question", "name": "Why did only one search tab open?", "acceptedAnswer": {"@type": "Answer", "text": "Many browsers treat several new tabs opened at once as pop-ups and block all but the first. Allow pop-ups for toolaspect.com and click Open all engines again, or click each engine's card to open it yourself."}}, {"@type": "Question", "name": "Is reverse image search private?", "acceptedAnswer": {"@type": "Answer", "text": "This tool never sees your image. It only builds links. TinEye says it deletes uploaded images right after a search and doesn't add them to its index. Google, Bing and Yandex handle uploads under their own privacy policies, so read those before uploading a personal photo."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -144,5 +145,28 @@ document.getElementById('e-yand').href='https://yandex.com/images/search?rpt=ima
 <script src="/shared/result-actions.js"></script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

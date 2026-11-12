@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Device Tests","item":"https://toolaspect.com/device-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What devices can I test on this page?","acceptedAnswer":{"@type":"Answer","text":"You can test your webcam, microphone, speakers or headphones, keyboard, screen for dead pixels, touch input, GPS, accelerometer, and browser capabilities. Each test runs locally in your browser with nothing uploaded."}},{"@type":"Question","name":"Why does my camera test show a black screen?","acceptedAnswer":{"@type":"Answer","text":"A black camera preview usually means another app is using the camera, permission was denied, or a privacy shutter is closed. Close other video apps (Zoom, Teams, browser tabs), re-grant camera permission from the address bar, and reload the page."}},{"@type":"Question","name":"How do I test my microphone is actually working?","acceptedAnswer":{"@type":"Answer","text":"Allow microphone access, then speak — the live level meter should bounce with your voice. Record a short clip and play it back through your speakers to confirm both capture and output. If the meter stays flat, check that the correct input device is selected in your OS sound settings."}},{"@type":"Question","name":"Do these tests work on phones and tablets?","acceptedAnswer":{"@type":"Answer","text":"Yes. Camera, microphone, speaker, touch, GPS, and accelerometer tests all work on modern mobile browsers. Keyboard testing is most useful on laptops and external keyboards; screen dead-pixel tests benefit from full-screen mode on any device."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Device Tests</span></nav><div class="wrap">
@@ -122,5 +123,28 @@ class="related-tools">
 <script src="/shared/result-actions.js"></script></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

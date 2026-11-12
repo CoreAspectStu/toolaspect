@@ -56,6 +56,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Window Rough Opening Calculator","item":"https://toolaspect.com/window-rough-opening-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the rule for rough opening size?","acceptedAnswer":{"@type":"Answer","text":"Rough opening = unit size plus ½ inch in each dimension (about ¼\" shim space per side) is the traditional default. Always confirm against the manufacturer's installation sheet — some units specify different allowances."}},{"@type":"Question","name":"What does a 3050 window mean?","acceptedAnswer":{"@type":"Answer","text":"Nominal 3 feet 0 inches wide by 5 feet 0 inches high. First two digits are feet of width, second pair is feet and inches of height: 3060 is 3'-0\" × 6'-0\". Rough opening at the ½\" rule is 36½\" × 60½\"."}},{"@type":"Question","name":"How much bearing does a window header need?","acceptedAnswer":{"@type":"Answer","text":"Commonly 1½ inches on each jack stud (the thickness of a 2x). Header size itself depends on span and load — use your plans or code tables for anything beyond standard openings."}},{"@type":"Question","name":"How tall can a bedroom window sill be?","acceptedAnswer":{"@type":"Answer","text":"For emergency escape and rescue (egress) windows in bedrooms, the IRC caps the clear sill height at 44 inches above the finished floor, with minimum clear openings of 5.7 sq ft, 24\" high, and 20\" wide."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -179,5 +180,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

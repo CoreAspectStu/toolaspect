@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I use the Body Fat Calculator?","acceptedAnswer":{"@type":"Answer","text":"Enter your values in the input fields and the result updates instantly — no signup or download required. The Body Fat Calculator runs entirely in your browser."}},{"@type":"Question","name":"Is the Body Fat Calculator free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the Body Fat Calculator on ToolAspect is completely free to use, with no limits, accounts, or watermarks."}},{"@type":"Question","name":"How accurate are the results from the Body Fat Calculator?","acceptedAnswer":{"@type":"Answer","text":"The Body Fat Calculator uses standard formulas applied to the numbers you enter. Results are as accurate as your inputs — double-check critical decisions against a professional source."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body><div class="wrap">
 <h1>Body Fat Calculator</h1>
@@ -138,5 +139,28 @@ var cat=male?(bf<6?"Essential":bf<14?"Athletes":bf<18?"Fitness":bf<25?"Average":
 document.getElementById("bf").textContent=bf+"%";document.getElementById("cat").textContent=cat;document.getElementById("fatMass").textContent="--";document.getElementById("leanMass").textContent="--";document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

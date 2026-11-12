@@ -94,6 +94,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does an A1c of 7 mean in average glucose?", "acceptedAnswer": {"@type": "Answer", "text": "An A1c of 7% corresponds to an estimated average glucose of 154 mg/dL (8.6 mmol/L) using the ADAG formula: 28.7 × 7 − 46.7. Each 1% change in A1c moves the average by about 29 mg/dL."}}, {"@type": "Question", "name": "What is the formula to convert A1c to average glucose?", "acceptedAnswer": {"@type": "Answer", "text": "eAG (mg/dL) = 28.7 × A1c − 46.7. To go the other way, A1c (%) = (eAG + 46.7) ÷ 28.7. For mmol/L, divide the mg/dL value by 18. The formula comes from the A1c-Derived Average Glucose study of roughly 500 people published in Diabetes Care in 2008."}}, {"@type": "Question", "name": "What A1c level is considered diabetic?", "acceptedAnswer": {"@type": "Answer", "text": "An A1c of 6.5% or higher meets the ADA criterion for diabetes when confirmed by a second test. Prediabetes is 5.7% to 6.4%, and anything below 5.7% falls in the normal range. A1c of 6.5% works out to an eAG of 140 mg/dL."}}, {"@type": "Question", "name": "Why doesn't my meter's average match my eAG?", "acceptedAnswer": {"@type": "Answer", "text": "Meter averages only include the moments you actually tested, so they skew toward fasting mornings if that's when you check. eAG is a weighted 3-month average that includes overnight and post-meal hours you never test. If you check mostly before breakfast, expect your meter average to run lower than eAG."}}, {"@type": "Question", "name": "How much does A1c drop if average glucose drops 30 mg/dL?", "acceptedAnswer": {"@type": "Answer", "text": "Roughly one full point. Since each 1% of A1c equals about 29 mg/dL of average glucose, a 30 mg/dL drop moves an A1c of 8% (183 mg/dL) down to about 7% (154 mg/dL) over the red blood cell lifespan of around 3 months."}}, {"@type": "Question", "name": "Is eAG the same as fasting glucose?", "acceptedAnswer": {"@type": "Answer", "text": "No. eAG is a 24-hour weighted average over about 3 months, while fasting glucose is a single morning reading. Diagnostic cutoffs differ too: diabetes is eAG-equivalent 140 mg/dL at an A1c of 6.5%, but fasting glucose only needs to hit 126 mg/dL to cross the same line."}}, {"@type": "Question", "name": "What is 53 mmol/mol as a percentage?", "acceptedAnswer": {"@type": "Answer", "text": "It's 7%. To convert, multiply the IFCC number by 0.09148 and add 2.152. So 53 mmol/mol is 0.09148 × 53 + 2.152, or about 7.0%, which is an estimated average glucose of 154 mg/dL. Going the other way, 6.5% is 48 mmol/mol and 5.7% is 39 mmol/mol."}}, {"@type": "Question", "name": "Is GMI the same as A1c?", "acceptedAnswer": {"@type": "Answer", "text": "No. GMI is an estimate calculated from CGM readings, usually over the last 14 days or more, while A1c is a lab measure of hemoglobin. They can differ by several tenths of a point or more, so GMI doesn't replace lab testing, and it's not used to diagnose diabetes."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -321,5 +322,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

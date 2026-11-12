@@ -81,6 +81,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the standard flowchart symbols?","acceptedAnswer":{"@type":"Answer","text":"Five cover almost everything: a rounded terminator for start and end, a rectangle for a process or action, a diamond for a decision, a parallelogram for input or output, and an arrow for flow direction. Document, database, and connector symbols exist for specialized diagrams, but mixing in too many shapes is the fastest way to make a chart nobody reads."}},{"@type":"Question","name":"How do I write the steps for this tool?","acceptedAnswer":{"@type":"Answer","text":"One step per line. Plain lines become process rectangles. Start a line with start: or end: for terminators, with ? for a decision diamond (the next line is the yes path), and with > for input or output. Add | Target step after a decision to point the no branch at a later step by name. Lines starting with # are ignored."}},{"@type":"Question","name":"What makes a good flowchart?","acceptedAnswer":{"@type":"Answer","text":"One clear start, decisions that always have two labeled exits, verbs in every box, and no more than around 15 steps on one page. If the chart needs a legend longer than the chart, split it into a main flow plus sub-flows. Test it by walking a real example through every branch with your finger."}},{"@type":"Question","name":"When should I use a flowchart instead of a checklist?","acceptedAnswer":{"@type":"Answer","text":"When the order of operations can change based on conditions. A checklist assumes every step happens every time in sequence; a flowchart earns its keep the moment someone asks \"but what if it fails validation?\" If your process has no branches, a checklist is honestly the better tool."}},{"@type":"Question","name":"Can I show a loop or retry in the chart?","acceptedAnswer":{"@type":"Answer","text":"Yes, that's what the decision branch is for. Partly. The no branch can only draw an arrow to a step further down the list. So ? Form valid? | Fix errors works when a .Fix errors line comes later. If the target is earlier, or the name doesn't match, the chart shows a short red \"No → Fix errors\" label instead of an arrow, which still reads as a loop back. Every retry loop should have an obvious exit."}},{"@type":"Question","name":"Can I export the flowchart as a PNG or open it in Visio?","acceptedAnswer":{"@type":"Answer","text":"The download is an SVG file. Word, PowerPoint, Google Docs, Confluence and most browsers display SVG directly, and it stays sharp at any size. If you need a PNG, open the SVG in a browser and take a screenshot, or open it in any image editor that reads SVG and export from there. The SVG isn't a native Visio or draw.io diagram, so it can't be edited shape by shape in those tools."}},{"@type":"Question","name":"Is my flowchart saved?","acceptedAnswer":{"@type":"Answer","text":"Your step list is saved in this browser's local storage, so it's still there when you come back on the same device. Nothing is sent to a server, so it won't appear on another computer, and clearing your browser data removes it. Keep a copy of the text somewhere if the chart matters, because the text is all you need to redraw it."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -347,5 +348,28 @@ end: Denial sent</textarea>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

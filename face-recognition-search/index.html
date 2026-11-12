@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Image Tools","item":"https://toolaspect.com/image-tools/"},{"@type":"ListItem","position":3,"name":"Face Recognition Search Guide","item":"https://toolaspect.com/face-recognition-search/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does face recognition search work?", "acceptedAnswer": {"@type": "Answer", "text": "A face search engine detects the face in your photo and turns it into a numeric description of its structure, called an embedding. It compares that against embeddings from images it has indexed and returns the closest matches, so different photos of the same person can still be found."}}, {"@type": "Question", "name": "Does no result mean my photo isn't online?", "acceptedAnswer": {"@type": "Answer", "text": "No. Search engines only cover the parts of the public web they've crawled. Private accounts, chats, paid sites and recently posted images are usually missing. Treat a clean result as reassuring but incomplete, and search again later."}}, {"@type": "Question", "name": "Which free search engine is best for faces?", "acceptedAnswer": {"@type": "Answer", "text": "Yandex Images has historically been the strongest free option for matching faces, though users report its results are best for Russian and Eastern European sites. Google Lens doesn't use facial recognition, and TinEye only finds copies of the same image."}}, {"@type": "Question", "name": "Why do people who look like me show up in the results?", "acceptedAnswer": {"@type": "Answer", "text": "Face search measures similarity, not identity. Lookalikes with similar face structure can score close to your own photos. Check each match yourself before acting on it, especially before filing a report or takedown."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -124,5 +125,28 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 
 <script src="/shared/result-actions.js"></script><script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -37,6 +37,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Creator Tools","item":"https://toolaspect.com/creator-tools/"},{"@type":"ListItem","position":3,"name":"Follower Growth Calculator","item":"https://toolaspect.com/follower-growth-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does it take to double my followers?","acceptedAnswer":{"@type":"Answer","text":"At 5% monthly compound growth, about 14.2 months — ln(2) ÷ ln(1.05). At 3% it takes 23.4 months; at 8% only 9. The exact number depends on holding the rate, which gets harder as the audience grows."}},{"@type":"Question","name":"How many followers will I have in a year?","acceptedAnswer":{"@type":"Answer","text":"followers₁₂ = current × (1 + r)^12. At 5,000 followers and 5% monthly: 5,000 × 1.796 ≈ 9,000 in 12 months. Compute it precisely with the calculator — small rate changes compound dramatically over a year."}},{"@type":"Question","name":"What follower growth rate is realistic?","acceptedAnswer":{"@type":"Answer","text":"Established accounts commonly grow 1–5% per month. New accounts can sustain 10%+ early because the base is small, but percentage growth tends to compress as the audience grows unless output scales with it."}},{"@type":"Question","name":"Why does the same follower gain feel smaller over time?","acceptedAnswer":{"@type":"Answer","text":"Because growth compounds on a bigger base. Adding 50 followers to 500 is 10% growth; adding 50 to 1,500 is 3.3%. To hold a constant percentage, absolute gains must accelerate — 5% monthly at 10,000 followers means 500 new followers a month."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/creator-tools/" style="color:inherit;text-decoration:none">Creator Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Follower Growth Calculator</span></nav><div class="wrap">
@@ -109,5 +110,28 @@
 <script>function calc(){var curr=+document.getElementById("current").value;var growth=+document.getElementById("growth").value;var unfollows=+document.getElementById("unfollows").value;var months=+document.getElementById("months").value;var model=document.getElementById("model").value;var net=growth-unfollows;var projected=curr;if(model==="compound"){var rate=net/curr;for(var i=0;i<months;i++)projected=projected*(1+rate);}else{projected=curr+net*months;}var timeTo100k=net>0?Math.ceil((100000-curr)/net):Infinity;document.getElementById("netGrowth").textContent="+"+net+"/mo";document.getElementById("projected").textContent=Math.round(projected).toLocaleString();document.getElementById("rate").textContent=(net/curr*100).toFixed(1)+"%/mo";document.getElementById("milestone").textContent=timeTo100k===Infinity?"Never (negative growth)":timeTo100k+" months";document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -92,6 +92,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the rules of a kanban board?","acceptedAnswer":{"@type":"Answer","text":"Visualize the work, limit work in progress, and manage flow. In practice: every task gets a card, cards move left to right through a few named columns, and you finish work before starting more. That's the whole method at personal scale; everything fancier is optimization on top."}},{"@type":"Question","name":"What columns should a kanban board have?","acceptedAnswer":{"@type":"Answer","text":"Start with three: To Do, In Progress, Done. Add a fourth only when a real bottleneck demands it, like Waiting on Review or Blocked. Boards accumulate columns the way closets accumulate boxes; every extra column costs scanning time, so add them reluctantly and remove them eagerly."}},{"@type":"Question","name":"What is a WIP limit and what number should I pick?","acceptedAnswer":{"@type":"Answer","text":"A work-in-progress limit caps how many cards can sit in a column at once, forcing finish-before-start. For a solo board, 3 is the classic personal-kanban number. For a team column, use the number of people who touch that column, plus one. If the column is always full, the limit is doing its job: it's exposing a bottleneck."}},{"@type":"Question","name":"Is my board private?","acceptedAnswer":{"@type":"Answer","text":"Yes, completely. The board saves to your browser's local storage on your device; there is no account, no server, and no sync. Two practical consequences: nobody else can see your board, and clearing your browser data erases it. There's no export button, so copy anything you need to keep into a note or document."}},{"@type":"Question","name":"What's the difference between kanban and a to-do list?","acceptedAnswer":{"@type":"Answer","text":"A to-do list answers \"what could I do\"; a kanban board answers \"what am I doing right now and how much of it\". The WIP limit is the real difference: it turns the list into a system that finishes things. If your to-do list has 40 open items and nothing ever crosses off, that's the problem a kanban board exists to fix."}},{"@type":"Question","name":"Can I reorder cards within a column?","acceptedAnswer":{"@type":"Answer","text":"No. Cards stack in the order they arrived, with the oldest at the top, and dragging within a column does nothing. If something needs to go first, move it from To Do into In Progress before the others. The oldest card in In Progress is usually the one that's stuck."}},{"@type":"Question","name":"What happens if I lower the WIP limit below the number of cards in progress?","acceptedAnswer":{"@type":"Answer","text":"Nothing is moved out. The counter on the In Progress column turns red and shows something like 5 / 3, and the board refuses new cards until you finish or move enough to get under the limit. That's a gentle way to shrink a bloated column without losing track of anything."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -328,5 +329,28 @@
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -40,6 +40,7 @@
 <link rel="alternate" hreflang="de" href="https://toolaspect.com/de/bmr-calculator/" />
 <link rel="alternate" hreflang="pt-br" href="https://toolaspect.com/pt/bmr-calculator/" />
 <link rel="alternate" hreflang="x-default" href="https://toolaspect.com/bmr-calculator/" />
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body><div class="wrap">
 
@@ -132,5 +133,28 @@
 <script>function calc(){var male=document.getElementById("gender").value==="male";var age=+document.getElementById("age").value;var w=+document.getElementById("weight").value;var h=+document.getElementById("height").value;var bmr=male?(10*w+6.25*h-5*age+5):(10*w+6.25*h-5*age-161);document.getElementById("bmr").textContent=Math.round(bmr)+" cal/day";document.getElementById("sed").textContent=Math.round(bmr*1.2)+" cal/day";document.getElementById("mod").textContent=Math.round(bmr*1.55)+" cal/day";document.getElementById("act").textContent=Math.round(bmr*1.9)+" cal/day";document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

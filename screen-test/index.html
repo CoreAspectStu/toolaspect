@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Screen Test","item":"https://toolaspect.com/screen-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How accurate is the screen test — dead pixel & color test online?","acceptedAnswer":{"@type":"Answer","text":"Results depend on your device and environment — run the screen test — dead pixel & color test online a few times and treat the median as your true figure rather than any single reading."}},{"@type":"Question","name":"How do I use the Screen Test — Dead Pixel & Color Test Online?","acceptedAnswer":{"@type":"Answer","text":"Enter your values in the input fields and the result updates instantly — no signup or download required. The Screen Test — Dead Pixel & Color Test Online runs entirely in your browser."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Screen Test</span></nav><div class="wrap">
@@ -128,5 +129,28 @@ document.addEventListener('fullscreenchange',function(){if(!document.fullscreenE
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

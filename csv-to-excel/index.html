@@ -98,6 +98,7 @@ textarea:focus{outline:none;border-color:var(--primary)}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert a CSV file to Excel?","acceptedAnswer":{"@type":"Answer","text":"Paste the CSV text (or choose the file) above, pick a delimiter or leave it on auto-detect, and press Convert to Excel. You get a real .xlsx workbook with typed number cells. Excel itself can also do this via Data > From Text/CSV, which opens an import wizard for the same result."}},{"@type":"Question","name":"Why does Excel destroy my leading zeros when I open a CSV?","acceptedAnswer":{"@type":"Answer","text":"Excel guesses types when opening a CSV directly and turns 00712 into 712, or 1-2 into a date. This converter writes ZIP codes and ID strings as text cells and only true numbers as numbers, so 00712 stays 00712. If you must open the CSV in Excel directly, rename it to .txt first and use the import wizard, which lets you mark columns as text."}},{"@type":"Question","name":"Does this converter upload my file anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and workbook generation run entirely in your browser with ExcelJS, and the download link is created from a local blob. Nothing is sent to a server, which matters for customer lists, financial exports, and anything else you wouldn't paste into a random web form."}},{"@type":"Question","name":"How do I convert a semicolon-delimited CSV from Excel?","acceptedAnswer":{"@type":"Answer","text":"European locales often export CSV with semicolons because the comma is the decimal separator. The auto-detect here counts delimiters in the first line and picks the winner, so a semicolon file just works; you can also force ;, tab, or pipe manually."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -384,5 +385,28 @@ status('Downloaded '+sheetName+'.xlsx — '+(rows.length).toLocaleString()+' row
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

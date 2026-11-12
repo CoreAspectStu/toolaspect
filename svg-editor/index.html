@@ -78,6 +78,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I edit an SVG file without installing software?","acceptedAnswer":{"@type":"Answer","text":"Yes. This page runs the open-source SVG-Edit engine directly in your browser: open your .svg file, edit with the toolbar or the source view, and save back to your machine. Nothing is uploaded and there is nothing to install."}},{"@type":"Question","name":"What can this SVG editor do?","acceptedAnswer":{"@type":"Answer","text":"Draw rectangles, ellipses, lines, polygons, freehand paths, and text; select and move anything; group and align elements; work in layers; edit gradients, strokes, and fills; hand-edit the XML source of the drawing; and export to SVG, PNG, or PDF. It is the same editor the SVG-Edit project ships, unmodified."}},{"@type":"Question","name":"Is SVG still worth editing in 2026?","acceptedAnswer":{"@type":"Answer","text":"Very much so. SVG is the native format for icons and logos on the web, it scales to any resolution with tiny file sizes, and cutting machines and plotters take SVG directly. If a graphic needs to look sharp at every size, it is an SVG job."}},{"@type":"Question","name":"What export formats does the editor support?","acceptedAnswer":{"@type":"Answer","text":"SVG natively, PNG at your choice of size, and PDF through the bundled jsPDF SVG-to-PDF plugin that ships with SVG-Edit. For crisp icons and logos, export SVG — raster formats defeat the point of vectors unless a target app only accepts images."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -218,5 +219,28 @@ try {
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

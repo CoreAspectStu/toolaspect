@@ -59,6 +59,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Insulation Calculator","item":"https://toolaspect.com/insulation-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What R-value do I need?","acceptedAnswer":{"@type":"Answer","text":"Typical code minimums are R-13–15 for 2×4 walls, R-19–21 for 2×6 walls, R-30 for floors, and R-38–60 for attics depending on climate zone. Your local building department's amendment is the controlling number."}},{"@type":"Question","name":"Can I layer two layers of insulation?","acceptedAnswer":{"@type":"Answer","text":"Yes — R-values simply add, so R-19 over R-30 gives R-49. In attics, run the second layer perpendicular to the joists to reduce thermal bridging, and use unfaced material on top."}},{"@type":"Question","name":"Does compressing batts hurt R-value?","acceptedAnswer":{"@type":"Answer","text":"Yes. R-value depends on thickness and trapped air; squeezing a 6.25-inch R-19 batt into a 3.5-inch cavity loses roughly a third of its rating. Buy batts sized to the cavity depth."}},{"@type":"Question","name":"How much waste should I add?","acceptedAnswer":{"@type":"Answer","text":"5–10% for open attics and regular framing; 12–15% for walls crowded with outlets, windows, and odd cavities where offcuts pile up."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -206,5 +207,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

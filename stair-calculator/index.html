@@ -58,6 +58,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Stair Calculator","item":"https://toolaspect.com/stair-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the ideal riser height for stairs?","acceptedAnswer":{"@type":"Answer","text":"Between 6½ and 7¼ inches for residential comfort. Code allows up to 7¾ inches (IRC), but stairs near the maximum feel steeper, especially for children and older adults."}},{"@type":"Question","name":"How do I calculate the number of steps?","acceptedAnswer":{"@type":"Answer","text":"Divide total rise (finished floor to finished floor) by your target riser height and round to the nearest whole number. Divide total rise by that count to get the exact riser — every riser must be identical within ⅜ inch."}},{"@type":"Question","name":"How long is the stair stringer?","acceptedAnswer":{"@type":"Answer","text":"Stringer length = √(total rise² + total run²). For 106 in of rise and 150 in of run, that is about 184 in, roughly 15.3 feet — buy 16-foot 2x12 stock."}},{"@type":"Question","name":"Why is there one fewer tread than risers?","acceptedAnswer":{"@type":"Answer","text":"The top riser lands on the upper floor level, which acts as the final tread. So 16 risers means 15 cut treads plus the floor itself."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -160,5 +161,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -68,6 +68,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Scientific Calculator","item":"https://toolaspect.com/scientific-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does a scientific calculator do that a basic one doesn't?","acceptedAnswer":{"@type":"Answer","text":"It evaluates functions beyond arithmetic: trigonometric and inverse trig functions, logarithms in any common base, exponentials, arbitrary powers and roots, factorials, and constants like pi and e — plus full support for parenthesized expressions evaluated in standard mathematical order."}},{"@type":"Question","name":"Does it follow order of operations?","acceptedAnswer":{"@type":"Answer","text":"Yes. Expressions are evaluated using the standard convention: parentheses first, then exponents and functions, then multiplication and division from left to right, then addition and subtraction. So 2 + 3 × 4 returns 14."}},{"@type":"Question","name":"Does the calculator use degrees or radians?","acceptedAnswer":{"@type":"Answer","text":"Trigonometric functions are evaluated in radians by default, the convention used in mathematical software. To work with degrees, multiply the angle by π/180 first (or divide the result of an inverse function by π/180 to convert back)."}},{"@type":"Question","name":"Why is 0.1 + 0.2 sometimes shown as 0.30000000000000004?","acceptedAnswer":{"@type":"Answer","text":"Because numbers are stored in binary floating point, and 0.1 and 0.2 have no exact binary representation. The tiny error appears in the 17th significant digit — far beyond the precision needed for classwork — and is a property of all standard calculators and software, not a bug."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/everyday-tools/" style="color:inherit;text-decoration:none">Everyday Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Scientific Calculator</span></nav>
@@ -184,5 +185,28 @@ function updateDisplay(val){document.getElementById("calcDisplay").textContent=v
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
 <div class="related" data-wave6a style="margin-top:24px"><strong>Reference tables:</strong> <a href="/reference/common-conversions-cheat-sheet/">Common Conversions Cheat Sheet</a> <a href="/reference/fraction-decimal-percent-chart/">Fraction Decimal Percent Chart</a> <a href="/reference/common-conversions-cheat-sheet/">All reference tables</a></div>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

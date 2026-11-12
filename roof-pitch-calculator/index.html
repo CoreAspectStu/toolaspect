@@ -56,6 +56,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Roof Pitch Calculator","item":"https://toolaspect.com/roof-pitch-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the multiplier for a 6/12 roof pitch?","acceptedAnswer":{"@type":"Answer","text":"The pitch multiplier is sqrt(12² + 6²) ÷ 12 = 1.118. Multiply the flat footprint by 1.118 to get sloped roof area — a 1,000 sq ft footprint becomes 1,118 sq ft of roof surface."}},{"@type":"Question","name":"What degree angle is a 6/12 pitch?","acceptedAnswer":{"@type":"Answer","text":"A 6/12 pitch is 26.6 degrees above horizontal (arctan(6/12)). For reference, 4/12 is 18.4°, 8/12 is 33.7°, and 12/12 is exactly 45°."}},{"@type":"Question","name":"What is the minimum pitch for asphalt shingles?","acceptedAnswer":{"@type":"Answer","text":"Manufacturer installation instructions generally require a minimum of 2/12 for asphalt shingles with reduced underlayment exposure, and standard double-coverage underlayment below 4/12. Standing-seam metal can handle about 1/12; slate and tile typically need 4/12 or steeper."}},{"@type":"Question","name":"How do I measure roof pitch from the ground?","acceptedAnswer":{"@type":"Answer","text":"Count exposed shingle courses on the gable end — three-tab shingles expose about 5 inches per course — and compute courses × 5 over a 12-inch run. A gable showing 14 courses is roughly (14 × 5 ÷ 12) ≈ a 5.8/12 pitch. Confirm with a level measurement before ordering."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -170,5 +171,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

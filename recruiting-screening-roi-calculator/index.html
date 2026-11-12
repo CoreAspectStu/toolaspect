@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Screening ROI Calculator","item":"https://toolaspect.com/recruiting-screening-roi-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does screening applicants cost per month?","acceptedAnswer":{"@type":"Answer","text":"At 100 applicants a month, 20 minutes each, and a $35/hour screener, screening consumes 33.3 hours and $1,166.67 a month — $14,000 a year. If half the pipeline is unqualified, $7,000 of that goes to applicants who never had a chance."}},{"@type":"Question","name":"What share of applicants is usually unqualified?","acceptedAnswer":{"@type":"Answer","text":"Routinely half or more. Job postings without knockout criteria (license, years, shift, location) pull in large volumes of applicants who were never viable, and every one of them costs the same 5-30 minutes of screener time as a strong candidate."}},{"@type":"Question","name":"Is automated screening worth it for small teams?","acceptedAnswer":{"@type":"Answer","text":"The arithmetic decides: at 25-50 applicants a month the manual cost is a few hundred dollars, and structure (written knockout criteria, consistent questions) may be enough. At 200-400 applicants a month, screening consumes most of a working week, and automating the first pass is usually cheaper than the screener time it replaces."}},{"@type":"Question","name":"Does this calculator include job-board fees or agency retainers?","acceptedAnswer":{"@type":"Answer","text":"No — it prices screener time only: applicants times minutes times hourly cost, split by unqualified share. Job-board subscriptions, agency fees, and background checks are separate budget lines that stack on top of the screening time this tool measures."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -150,5 +151,28 @@ document.getElementById('out').style.display='grid';
 <script src="/shared/result-actions.js"></script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

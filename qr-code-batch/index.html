@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Batch QR Code Generator","item":"https://toolaspect.com/qr-code-batch/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the WIFI QR code format?","acceptedAnswer":{"@type":"Answer","text":"WIFI:T:WPA;S:NetworkName;P:Password;; where T is the security type, S is the SSID and P is the password. It ends with a doubled semicolon. The five characters backslash, semicolon, comma, colon and double-quote are reserved and must be escaped with a backslash wherever they appear in the SSID or password."}},{"@type":"Question","name":"Which phones can scan a WiFi QR code?","acceptedAnswer":{"@type":"Answer","text":"iPhone (iOS 11+) via the Camera app, Android via Camera or Google Lens, and Windows 10+ via the camera or Settings network share. For open and WPA personal networks, effectively every phone made in the last decade joins from a scan. The enterprise (WPA2-EAP) extension is Android-only."}},{"@type":"Question","name":"Is it safe to put my WiFi password in a QR code?","acceptedAnswer":{"@type":"Answer","text":"As safe as writing it on the sign itself: anyone who scans or photographs the code reads the password in cleartext. For homes that is usually acceptable; for cafes and offices put the code on a guest network with client isolation, on a separate VLAN, and rotate it regularly."}},{"@type":"Question","name":"Why does my WiFi QR code say invalid or not connect?","acceptedAnswer":{"@type":"Answer","text":"Check escaping first (a semicolon in the password splits the string), then the SSID spelling including spaces and case, then the security type. A password shorter than 8 characters is not a valid WPA passphrase, and an SSID with a trailing space pasted from a router admin page fails silently."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -160,5 +161,28 @@ lines.forEach(line=>{
 
 <script src="/shared/result-actions.js"></script><script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

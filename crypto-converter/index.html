@@ -54,6 +54,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How accurate are the crypto conversion rates?","acceptedAnswer":{"@type":"Answer","text":"Rates come from CoinGecko, aggregating 700+ exchanges. Updated every 1-2 minutes. Minor differences between exchanges are normal due to separate order books."}},{"@type":"Question","name":"Is 1 USDT always equal to 1 USD?","acceptedAnswer":{"@type":"Answer","text":"Approximately yes. USDT maintains a 1:1 peg, fluctuating within $0.998-$1.002. Major deviations are rare and resolve quickly through arbitrage."}},{"@type":"Question","name":"What is the best time to convert crypto?","acceptedAnswer":{"@type":"Answer","text":"Markets are open 24/7. Liquidity is highest during US/European hours (8AM-5PM EST), which can mean better prices. No guaranteed best time."}},{"@type":"Question","name":"Do I need to pay fees to convert crypto?","acceptedAnswer":{"@type":"Answer","text":"This tool is free for checking rates. Actual exchange fees: centralized (0.1-1% per trade), DEXs (gas + swap fees), network transfers (vary by congestion)."}},{"@type":"Question","name":"Can I convert crypto directly to my bank account?","acceptedAnswer":{"@type":"Answer","text":"This tool is informational only. To cash out, use an exchange (Coinbase, Binance, Kraken) that supports fiat withdrawals to your bank."}},{"@type":"Question","name":"Which cryptocurrencies can I convert?","acceptedAnswer":{"@type":"Answer","text":"15+ major coins: BTC, ETH, USDT, BNB, XRP, SOL, ADA, DOGE, DOT, TRX, LINK, AVAX, MATIC, UNI, LTC — convertible to 15 fiat currencies."}},{"@type":"Question","name":"How many satoshis are in a bitcoin?","acceptedAnswer":{"@type":"Answer","text":"100,000,000. One satoshi is 0.00000001 BTC. At a bitcoin price of about $82,465, one satoshi is worth about $0.00082, and $10 buys roughly 12,126 sats."}},{"@type":"Question","name":"Do I pay tax when I convert crypto to dollars?","acceptedAnswer":{"@type":"Answer","text":"In the US, usually yes. Selling crypto for dollars, swapping it for another coin or spending it is a taxable event, and you owe tax on any gain over what you paid. Report it in US dollars at the value on the day of the transaction."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -263,5 +264,28 @@ fetchRates();
 <h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/finance-calculator/">Finance</a></li><li style="margin:4px 0"><a href="/currency-converter/">Currency Converter</a></li><li style="margin:4px 0"><a href="/percentage-calculator/">Percentage</a></li><li style="margin:4px 0"><a href="/percentage-change-calculator/">Percentage Change</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

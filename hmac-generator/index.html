@@ -88,6 +88,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is an HMAC?","acceptedAnswer":{"@type":"Answer","text":"An HMAC (hash-based message authentication code) is a signature computed from a message AND a secret key. Anyone can recompute a plain SHA-256 digest, but only someone holding the key can produce or verify the matching HMAC. That key is what turns a hash into proof that a message came from you and wasn't tampered with."}},{"@type":"Question","name":"How do I compute HMAC-SHA256?","acceptedAnswer":{"@type":"Answer","text":"Take your message bytes and key, and run them through the HMAC construction with SHA-256 as the inner hash. In Node: crypto.createHmac('sha256', key).update(message).digest('hex'). In Python: hmac.new(key, message.encode(), hashlib.sha256).hexdigest(). In the browser, WebCrypto's crypto.subtle.sign with an imported HMAC key does it natively — no libraries."}},{"@type":"Question","name":"What is HMAC-SHA256 of a known test vector?","acceptedAnswer":{"@type":"Answer","text":"HMAC-SHA256 with key \"key\" over the message \"The quick brown fox jumps over the lazy dog\" equals f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8 in hex. RFC 4231 and RFC 2202 publish more test vectors for every SHA family size."}},{"@type":"Question","name":"Where is HMAC used in practice?","acceptedAnswer":{"@type":"Answer","text":"Everywhere signatures are needed without public-key machinery: Stripe and GitHub webhook signatures, AWS Signature Version 4, JWTs signed with HS256, TLS record protection, and cookie session integrity. If a service hands you a signing secret, HMAC is almost certainly behind it."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -288,5 +289,28 @@ run();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -37,6 +37,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Creator Tools","item":"https://toolaspect.com/creator-tools/"},{"@type":"ListItem","position":3,"name":"YouTube Watch Time Calculator","item":"https://toolaspect.com/youtube-watch-time-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I check my YouTube watch hours?","acceptedAnswer":{"@type":"Answer","text":"Open YouTube Studio, go to the Earn/Monetization tab, and the eligibility card shows your public watch hours in the trailing 12 months alongside subscriber count. The Analytics tab breaks the same data down by video and date range."}},{"@type":"Question","name":"Do Shorts views count toward the 4,000 hours?","acceptedAnswer":{"@type":"Answer","text":"No. Shorts views count only toward the separate Shorts path of 10 million views in 90 days. Long-form watch hours come from your regular public videos; the calculator on this page projects that long-form path."}},{"@type":"Question","name":"Do deleted videos remove watch hours?","acceptedAnswer":{"@type":"Answer","text":"Yes. Watch time from deleted or private videos drops out of your rolling total, which can push a channel back under 4,000 hours. Unlisted videos continue to count."}},{"@type":"Question","name":"Can watch hours go down over time?","acceptedAnswer":{"@type":"Answer","text":"Yes. The 4,000 hours are measured over a rolling 12-month window, so hours earned more than a year ago expire out of the total even if you keep publishing. Consistent output keeps the window full."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/creator-tools/" style="color:inherit;text-decoration:none">Creator Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">YouTube Watch Time Calculator</span></nav><div class="wrap">
@@ -89,5 +90,28 @@
 <script>function calc(){var current=+document.getElementById("current").value;var views=+document.getElementById("views").value;var avgMin=+document.getElementById("avgMin").value;var vpw=+document.getElementById("vpw").value;var hpv=views*avgMin/60;var weekly=hpv*vpw;var remaining=Math.max(0,4000-current);var weeks=weekly>0?Math.ceil(remaining/weekly):Infinity;document.getElementById("hpv").textContent=hpv.toFixed(1)+" hrs";document.getElementById("weekly").textContent=weekly.toFixed(1)+" hrs/wk";document.getElementById("remaining").textContent=remaining.toFixed(0)+" hrs";document.getElementById("weeks").textContent=isFinite(weeks)?weeks+" weeks":"N/A";var d=new Date(Date.now()+weeks*7*86400000);document.getElementById("date").textContent=isFinite(weeks)?d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"N/A";document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

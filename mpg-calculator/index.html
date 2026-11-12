@@ -86,6 +86,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I calculate my car's MPG?", "acceptedAnswer": {"@type": "Answer", "text": "Fill the tank, reset the trip odometer, drive normally, then refill and note the gallons it took. MPG is miles on the trip odometer divided by gallons to refill. 312 miles on 11.9 gallons is 26.2 mpg. For a reliable number, average three or more fill-ups, since single tanks vary with driving mix and pump shutoff."}}, {"@type": "Question", "name": "How do I convert MPG to L/100km?", "acceptedAnswer": {"@type": "Answer", "text": "Divide 235.215 by the MPG figure. A 26.2 mpg car burns 235.215 ÷ 26.2 = 8.98 L/100km. The constant comes from converting gallons to liters (3.785) and miles to kilometers (1.609). Note the scale inverts: a lower L/100km number is better, and doubling efficiency cuts L/100km in half but does not double mpg savings linearly."}}, {"@type": "Question", "name": "What is considered good gas mileage?", "acceptedAnswer": {"@type": "Answer", "text": "For a gasoline vehicle, anything above 30 mpg combined is solid for a modern car, 40-plus is excellent, and hybrids run 45 to 58. Full-size pickups sit around 17 to 24 combined, three-row SUVs around 19 to 24. At $3.50 a gallon and 12,000 miles a year, moving from a 20 mpg truck to a 30 mpg sedan saves $700 a year."}}, {"@type": "Question", "name": "Why does my real MPG differ from the EPA estimate?", "acceptedAnswer": {"@type": "Answer", "text": "EPA figures come from lab tests on a dynamometer; your number reflects your right foot, your climate, and your cargo. Cold weather alone can knock 10% to 20% off winter mileage because engines run richer and take longer to warm up. Highway driving usually beats the city figure, and speed above 60 mph drags mileage down as aerodynamic drag climbs."}}, {"@type": "Question", "name": "How can I improve my gas mileage without a new car?", "acceptedAnswer": {"@type": "Answer", "text": "Cheap wins first: keep tires at the placard pressure (underinflation costs roughly 0.2% per psi), drop highway speed toward 65, take the roof rack off when unused, and replace a clogged air filter on an older engine. Combined, sensible habits and maintenance are commonly worth 5% to 10%, which on a 25 mpg car at $3.50 is about $150 a year at 12,000 miles."}}, {"@type": "Question", "name": "How many fill-ups do I need for an accurate MPG reading?", "acceptedAnswer": {"@type": "Answer", "text": "Three is a good minimum. With the full-to-full method, pump shutoff error only affects the first and last fill, so it shrinks as you add tanks. On a 312-mile, 11.9-gallon tank, a 0.3-gallon shutoff difference swings one tank by about 2.5% but three tanks by about 0.8%. Divide total miles by total gallons rather than averaging the mpg figures."}}, {"@type": "Question", "name": "Does a bigger MPG improvement always save more money?", "acceptedAnswer": {"@type": "Answer", "text": "No. Fuel use depends on gallons per mile, so gains at the low end are worth more. At 13,500 miles a year and $3.45 a gallon, going from 10 to 12 mpg saves about $776 a year, while going from 30 to 40 mpg saves about $388."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -282,5 +283,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

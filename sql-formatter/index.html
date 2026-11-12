@@ -54,6 +54,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"SQL Formatter","item":"https://toolaspect.com/sql-formatter/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does formatting change what my query does?","acceptedAnswer":{"@type":"Answer","text":"No. A SQL formatter only inserts and normalize whitespace, which the SQL parser ignores outside string literals and comments. Execution plans, results, and semantics are identical before and after."}},{"@type":"Question","name":"What SQL dialects does the formatter support?","acceptedAnswer":{"@type":"Answer","text":"It handles the common core — SELECT/INSERT/UPDATE/DELETE, JOINs, CTEs (WITH clauses), window functions, and CASE expressions — shared by MySQL, PostgreSQL, SQL Server, SQLite, and Oracle. Dialect-specific extensions are formatted reasonably but may not be recognized as keywords."}},{"@type":"Question","name":"Why do keywords get uppercased?","acceptedAnswer":{"@type":"Answer","text":"Uppercase keywords visually separate the query structure from table and column names. It is purely convention — SQL is case-insensitive for keywords in virtually every dialect — and the formatter lets you choose lowercase or capitalized instead."}},{"@type":"Question","name":"Will it reformat text inside strings or comments?","acceptedAnswer":{"@type":"Answer","text":"No. A syntax-aware formatter preserves string literals, quoted identifiers, and comment contents exactly as written, since changing them could alter data comparisons or documentation."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -156,5 +157,28 @@ function clr(){document.getElementById('sql').value='';document.getElementById('
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

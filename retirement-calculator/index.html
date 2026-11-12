@@ -37,6 +37,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"Retirement Calculator","item":"https://toolaspect.com/retirement-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much do I need to retire?","acceptedAnswer":{"@type":"Answer","text":"A common guideline is 25× your expected annual spending — from the 4% safe-withdrawal research — minus guaranteed income like Social Security. Spending 40,000 dollars a year beyond Social Security implies roughly 1,000,000 dollars in savings."}},{"@type":"Question","name":"What is the 4 percent rule?","acceptedAnswer":{"@type":"Answer","text":"Drawing 4% of your starting portfolio balance in year one, then adjusting that dollar amount for inflation each year, historically lasted 30 years across most US market periods (Bengen 1994; Trinity study). Treat it as a planning heuristic, not a guarantee — flexible spending improves outcomes."}},{"@type":"Question","name":"How does compound growth actually work?","acceptedAnswer":{"@type":"Answer","text":"Growth earns growth: 10,000 dollars at 7% becomes 10,700, then 11,449 — the second year's gain includes gains on gains. After 20 years at 7%, 10,000 dollars reaches 38,697. More time matters more than a higher rate."}},{"@type":"Question","name":"When should I claim Social Security?","acceptedAnswer":{"@type":"Answer","text":"Claiming before full retirement age permanently reduces monthly benefits; delaying to age 70 increases them by 8% per year for those with a full retirement age of 67. The break-even age is typically around 80 to 82, so longevity expectations and health coverage should drive the choice."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/finance-tools/" style="color:inherit;text-decoration:none">Finance Calculators</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Retirement Calculator</span></nav><div class="wrap">
@@ -90,5 +91,28 @@
 <script>function calc(){var age=+document.getElementById("age").value;var retAge=+document.getElementById("retAge").value;var sav=+document.getElementById("savings").value;var monthly=+document.getElementById("monthly").value;var ret=+document.getElementById("return").value/100/12;var needed=+document.getElementById("needed").value;var years=retAge-age;var balance=sav;var totalContrib=sav;for(var i=0;i<years*12;i++){balance=balance*(1+ret)+monthly;totalContrib+=monthly;}var growth=balance-totalContrib;var monthlyIncome=balance*0.04/12;var yearsOfIncome=balance/needed;document.getElementById("balance").textContent="$"+balance.toLocaleString(undefined,{maximumFractionDigits:0});document.getElementById("contrib").textContent="$"+totalContrib.toLocaleString(undefined,{maximumFractionDigits:0});document.getElementById("growth").textContent="$"+growth.toLocaleString(undefined,{maximumFractionDigits:0});document.getElementById("years").textContent=yearsOfIncome.toFixed(1)+" years";document.getElementById("income").textContent="$"+monthlyIncome.toFixed(0)+"/mo";document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

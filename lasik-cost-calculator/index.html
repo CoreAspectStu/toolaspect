@@ -84,6 +84,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does LASIK cost per eye in 2026?","acceptedAnswer":{"@type":"Answer","text":"Most-quoted national averages run about $2,250 to $2,632 per eye, roughly $4,500 to $5,300 for both eyes. National chains typically land at $1,500 to $2,500 per eye, independent surgeons at $2,000 to $3,200, and premium or academic centers at $2,500 to $4,000 or more for custom and topography-guided treatment."}},{"@type":"Question","name":"Is the $490 per eye LASIK advertised on TV real?","acceptedAnswer":{"@type":"Answer","text":"The teaser price is real but almost nobody qualifies. It applies to the lowest correction tier on select prescriptions, usually conventional (not custom) treatment, and often one eye on a financing contract. Quotes for average prescriptions at the same chains run $1,500 to $2,500 per eye, so treat the ad as a foot-in-the-door price, not a menu price."}},{"@type":"Question","name":"Why do independent surgeons charge more than LASIK chains?","acceptedAnswer":{"@type":"Answer","text":"Chains run high patient volume with tiered pricing and heavy upsell paths, which pushes base prices down. Independent and premium-center pricing typically bundles custom wavefront or topography-guided technology, more surgeon time, and a longer post-op care window. Whether that's worth $500 to $1,500 more per eye depends on your prescription and how much you value surgeon continuity."}},{"@type":"Question","name":"Does insurance cover LASIK?","acceptedAnswer":{"@type":"Answer","text":"Almost never, because it's elective refractive surgery. Two real discounts exist: LASIK is FSA and HSA eligible, so you can pay with pre-tax dollars (a 22-35% effective discount at typical tax rates), and some vision plans negotiate 10-15% off at networked providers. A few employers offer voluntary LASIK benefits worth checking."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -254,5 +255,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

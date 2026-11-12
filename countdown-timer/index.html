@@ -60,6 +60,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Countdown Timer","item":"https://toolaspect.com/countdown-timer/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does the countdown keep running if I switch tabs?","acceptedAnswer":{"@type":"Answer","text":"Yes. The timer measures against a stored target time using your device clock, so when you return to the tab the display catches up to the correct remaining time rather than having drifted."}},{"@type":"Question","name":"Can I count down to a specific date like New Year?","acceptedAnswer":{"@type":"Answer","text":"Yes. Choose the target date and time and the timer will display days, hours, minutes, and seconds remaining until that moment in your local time zone."}},{"@type":"Question","name":"Why might my timer be slightly off?","acceptedAnswer":{"@type":"Answer","text":"Countdown accuracy depends on your device clock. Modern operating systems synchronize automatically over NTP, so drift is normally well under a second, but a manually set clock can be wrong."}},{"@type":"Question","name":"Is there a limit on how long a countdown can be?","acceptedAnswer":{"@type":"Answer","text":"No practical limit. You can count down days, weeks, or months to a future date, and the display will break the remaining time into days, hours, minutes, and seconds."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/everyday-tools/" style="color:inherit;text-decoration:none">Everyday Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Countdown Timer</span></nav>
@@ -169,5 +170,28 @@ tick();timerInt=setInterval(tick,1000);
 <h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/number-to-words/">Number To Words</a></li><li style="margin:4px 0"><a href="/roman-numeral-converter/">Roman Numeral Converter</a></li><li style="margin:4px 0"><a href="/military-time-converter/">Military Time Converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

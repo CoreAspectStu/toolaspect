@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Accelerometer Test","item":"https://toolaspect.com/accelerometer-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does an online accelerometer test work?","acceptedAnswer":{"@type":"Answer","text":"The page uses the browser's DeviceMotion and DeviceOrientation APIs to read your phone's motion sensors directly — no app install needed. On iOS you must tap a button to grant motion permission before the sensor readout starts. All processing happens locally in your browser, so nothing is uploaded."}},{"@type":"Question","name":"Why would my accelerometer need testing?","acceptedAnswer":{"@type":"Answer","text":"A failing accelerometer causes auto-rotate to stop working, screen orientation to stick, and fitness or game apps to track motion incorrectly. Comparing the live 3-axis readout against how you are actually moving the phone reveals dead, noisy, or stuck sensor axes. A flat-line value on one axis while shaking the phone indicates a hardware fault."}},{"@type":"Question","name":"Does the accelerometer test work on desktop computers?","acceptedAnswer":{"@type":"Answer","text":"Most desktops have no accelerometer or gyroscope, so the sensors report unavailable or zero values. The test is designed for phones and tablets, where motion sensors are standard. Opening it on a desktop is useful mainly to confirm the page loads, not to test sensors."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Accelerometer Test</span></nav><div class="wrap">
@@ -158,5 +159,28 @@ listen();
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

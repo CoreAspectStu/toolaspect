@@ -37,6 +37,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Creator Tools","item":"https://toolaspect.com/creator-tools/"},{"@type":"ListItem","position":3,"name":"Creator Earnings Calculator","item":"https://toolaspect.com/creator-earnings-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What percentage does Patreon take?","acceptedAnswer":{"@type":"Answer","text":"Patreon's creator fees have ranged from 5% to 12% depending on plan tier, plus payment processing. The company has restructured pricing more than once, so verify the current fee schedule on Patreon's official plans page."}},{"@type":"Question","name":"How do payment processing fees affect small pledges?","acceptedAnswer":{"@type":"Answer","text":"US card processing is commonly ~2.9% + 30¢ per transaction. On a $3 pledge the fixed 30¢ alone is 10%, so many small pledges cost proportionally more than large ones — batching or annual billing reduces this."}},{"@type":"Question","name":"Is creator income taxable?","acceptedAnswer":{"@type":"Answer","text":"Generally yes. In the US, platform creator income is usually self-employment income, and platforms issue Form 1099-K once statutory transaction thresholds are met. Set aside a portion of payouts for taxes."}},{"@type":"Question","name":"What is a realistic monthly growth rate for a creator?","acceptedAnswer":{"@type":"Answer","text":"There is no universal figure — growth depends on audience, posting cadence, and promotion. Model conservative net growth (e.g., a few percent) rather than early-launch rates, because churn typically offsets gross additions."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/creator-tools/" style="color:inherit;text-decoration:none">Creator Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Creator Earnings Calculator</span></nav><div class="wrap">
@@ -113,5 +114,28 @@
 <script>function calc(){var subs=+document.getElementById("subs").value;var price=+document.getElementById("price").value;var fee=+document.getElementById("fee").value/100;var ppv=+document.getElementById("ppv").value;var churn=+document.getElementById("churn").value/100;var newSubs=+document.getElementById("newSubs").value;var subRev=subs*price;var ppvRev=ppv;var gross=subRev+ppvRev;var feeAmt=gross*fee;var takeHome=gross-feeAmt;var currentSubs=subs;var total6=0;for(var i=0;i<6;i++){currentSubs=currentSubs*(1-churn)+newSubs;var rev=(currentSubs*price+ppv)*(1-fee);total6+=rev;}document.getElementById("subRev").textContent="$"+subRev.toFixed(0);document.getElementById("ppvRev").textContent="$"+ppvRev.toFixed(0);document.getElementById("feeAmt").textContent="$"+feeAmt.toFixed(0);document.getElementById("takeHome").textContent="$"+takeHome.toFixed(0);document.getElementById("projected").textContent="$"+total6.toFixed(0);document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

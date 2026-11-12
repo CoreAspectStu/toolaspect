@@ -54,6 +54,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Developer Tools","item":"https://toolaspect.com/developer-tools/"},{"@type":"ListItem","position":3,"name":"Placeholder Image Generator","item":"https://toolaspect.com/placeholder-image/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What size should a placeholder image be?","acceptedAnswer":{"@type":"Answer","text":"Match the exact pixel dimensions of the final asset slot: width, height, and aspect ratio should be identical so layout doesn't shift when real images arrive. Common slots include 1200×675 (16:9 hero) and 1200×630 (social preview)."}},{"@type":"Question","name":"What is the aspect ratio of 1920x1080?","acceptedAnswer":{"@type":"Answer","text":"1920 ÷ 1080 = 1.78, the 16:9 ratio — the standard for video and widescreen heroes. Other anchors: 4:3 = 1.33, 3:2 = 1.5, and 1:1 square."}},{"@type":"Question","name":"How do I calculate image dimensions from an aspect ratio?","acceptedAnswer":{"@type":"Answer","text":"Multiply the known side by the ratio: at 16:9 (1.778), height × 1.778 gives width, and width ÷ 1.778 gives height. A 400-pixel-tall hero at 16:9 is 711 pixels wide."}},{"@type":"Question","name":"Why include width and height attributes on images?","acceptedAnswer":{"@type":"Answer","text":"Browsers use them to reserve layout space before the image loads, preventing cumulative layout shift (CLS) — a Core Web Vitals metric that affects both UX and search ranking. This applies to placeholders and final images alike."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -160,5 +161,28 @@ gen();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

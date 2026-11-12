@@ -222,6 +222,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="howto1">{"@context":"https://schema.org","@type":"HowTo","name":"How to Use the Finance Calculator","description":"Step-by-step instructions for using the finance calculator on ToolAspect, with tips from our final grade calculator guide.","totalTime":"PT1M","step":[{"@type":"HowToStep","position":1,"name":"Enter your values","text":"Open the finance calculator and fill in the input fields with your own numbers or details."},{"@type":"HowToStep","position":2,"name":"Adjust the options","text":"Tune any optional settings (percentages, units, or split options) so they match your situation."},{"@type":"HowToStep","position":3,"name":"Read your result","text":"The result updates instantly as you type — read the calculated output below the inputs.","url":"https://toolaspect.com/guides/final-grade-calculator/"},{"@type":"HowToStep","position":4,"name":"Learn more","text":"For background, formulas, and worked examples, see our guide: https://toolaspect.com/guides/final-grade-calculator/","url":"https://toolaspect.com/guides/final-grade-calculator/"}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
     <script src="/shared/nav.js"></script>
@@ -648,5 +649,28 @@
 <script src="/shared/ratings.js" defer></script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -84,6 +84,7 @@
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="howto1">{"@context":"https://schema.org","@type":"HowTo","name":"How to Use the Mermaid Diagram Suite","description":"Step-by-step instructions for using the mermaid diagram suite on ToolAspect, with tips from our mermaid diagram syntax guide.","totalTime":"PT1M","step":[{"@type":"HowToStep","position":1,"name":"Pick an example or start typing","text":"Choose one of the six examples from the dropdown, or clear the editor and write Mermaid code, starting with the diagram type on the first line."},{"@type":"HowToStep","position":2,"name":"Watch it render","text":"The preview redraws about 400 ms after you stop typing, or when you click Render. If the code has a mistake, the status line under the editor shows Mermaid's error message."},{"@type":"HowToStep","position":3,"name":"Export or copy","text":"Click Download SVG or Download PNG to save the diagram, or Copy code to keep the source text, since the page doesn't save your work.","url":"https://toolaspect.com/guides/mermaid-diagram-syntax/"},{"@type":"HowToStep","position":4,"name":"Learn more","text":"For background, formulas, and worked examples, see our guide: https://toolaspect.com/guides/mermaid-diagram-syntax/","url":"https://toolaspect.com/guides/mermaid-diagram-syntax/"}]}</script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Mermaid free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. Mermaid is open-source JavaScript released under the MIT license, so it is free for personal and commercial use with no watermark. This page runs that same library entirely in your browser, and your diagram text is never uploaded anywhere."}},{"@type":"Question","name":"How do I turn text into a diagram?","acceptedAnswer":{"@type":"Answer","text":"Declare the diagram type on the first line (flowchart TD, sequenceDiagram, classDiagram, or erDiagram), then write one statement per line. Nodes are connected with arrows like A --> B. The renderer draws the picture as you type, so you see syntax mistakes immediately instead of after an export."}},{"@type":"Question","name":"Can I export the diagram as an image?","acceptedAnswer":{"@type":"Answer","text":"Yes. The buttons above the preview export the current diagram as an SVG file or a 2x-resolution PNG, both produced locally in your browser. The SVG stays crisp at any zoom for docs and wikis; the PNG drops straight into slides and chat apps."}},{"@type":"Question","name":"What diagrams can Mermaid draw?","acceptedAnswer":{"@type":"Answer","text":"Flowcharts, sequence diagrams, class diagrams, ER diagrams, state diagrams, gantt charts, pie charts, mind maps, timelines, user journeys, quadrant charts, git graphs, and more. This suite ships dedicated pages for the four most-used types and loads the full library, so most other types paste in and render too."}},{"@type":"Question","name":"Where is Mermaid natively supported?","acceptedAnswer":{"@type":"Answer","text":"GitHub, GitLab, and Notion all render Mermaid code blocks natively, and many documentation systems have plugins for it. That makes it a good format to keep in version control: the diagram is reviewable text, diffs show exactly which line changed, and anyone can regenerate the image."}},{"@type":"Question","name":"Is my diagram saved if I reload the page?","acceptedAnswer":{"@type":"Answer","text":"No. The editor doesn't write anything to your browser's storage or to a server, so a reload puts the CI pipeline example back. Click Copy code before you leave and keep the text somewhere safe, ideally next to the project it documents."}},{"@type":"Question","name":"Why does my PNG have a dark background?","acceptedAnswer":{"@type":"Answer","text":"The PNG export fills the canvas with the same dark colour as the preview, then draws the diagram at twice its natural size. That keeps the light text readable. If you need a transparent file, download the SVG instead, which has no background of its own."}},{"@type":"Question","name":"Why is the old diagram still showing after I made a mistake?","acceptedAnswer":{"@type":"Answer","text":"When the code fails to parse, the page leaves the last good render in the preview and shows the error in red under the editor. Both download buttons export that last good diagram, so fix the error first if you want your latest change in the file."}},{"@type":"Question","name":"Does the suite work offline?","acceptedAnswer":{"@type":"Answer","text":"Not on a first visit. The Mermaid library loads from the jsDelivr CDN when the page opens, and the status line warns you if that request is blocked. Once it's loaded, rendering and exporting happen in your browser and your diagram text isn't sent anywhere."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -325,5 +326,28 @@ loadLib(doRender);
 <script src="/shared/ratings.js" defer></script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

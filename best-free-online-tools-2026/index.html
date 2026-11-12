@@ -64,6 +64,7 @@ h1{font-size:2.5rem;margin-bottom:0.5rem;background:linear-gradient(135deg,#60a5
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Best Free Online Tools 2026","item":"https://toolaspect.com/best-free-online-tools-2026/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are all these online tools really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every tool listed on this page and on ToolAspect is free to use with no account, no trial period, and no paywalled features. The tools run in your browser, so there is also nothing to install."}},{"@type":"Question","name":"Do I need to sign up or install anything to use these tools?","acceptedAnswer":{"@type":"Answer","text":"No. There is no signup and no installation. Every calculator, converter, and generator runs directly in the browser on any device, including phones and tablets."}},{"@type":"Question","name":"How were the tools on this page chosen?","acceptedAnswer":{"@type":"Answer","text":"Each tool was tested for correctness, speed, mobile behavior, and privacy — working inputs, clear outputs, no data leaving the browser. Only tools we use ourselves are listed."}},{"@type":"Question","name":"Is my data safe when using online tools?","acceptedAnswer":{"@type":"Answer","text":"The tools on ToolAspect perform their calculations locally in your browser with JavaScript. Your inputs — financial figures, text, tokens — are not transmitted to a server for processing."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <div class="container">
@@ -188,5 +189,28 @@ h1{font-size:2.5rem;margin-bottom:0.5rem;background:linear-gradient(135deg,#60a5
 <script src="/shared/share.js" defer></script>
 
 <script src="/shared/result-actions.js"></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

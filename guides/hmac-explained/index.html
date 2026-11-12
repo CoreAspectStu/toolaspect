@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
   <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is an HMAC the same as a hash?","acceptedAnswer":{"@type":"Answer","text":"No. A hash like SHA-256 is a one-way fingerprint anyone can compute from the message. An HMAC folds a secret key into that computation, so the output depends on both the message and a key only the sender and receiver share. That key is what makes it an authentication code rather than a checksum."}},{"@type":"Question","name":"Why not just hash the key and message together?","acceptedAnswer":{"@type":"Answer","text":"Naive constructions like SHA-256(key + message) fall to length-extension attacks: because of how Merkle-Damgård hashes process blocks, an attacker who sees one valid digest can forge a valid digest for the message plus arbitrary suffix data without knowing the key. HMAC's nested construction (hash of an inner hash, with two different padded keys) provably blocks this."}},{"@type":"Question","name":"Can an HMAC be reversed or decrypted?","acceptedAnswer":{"@type":"Answer","text":"No — there is nothing to decrypt. An HMAC is a fixed-size fingerprint of the message under the key. The only way to 'break' it is to guess the key, and a random 256-bit key makes brute force infeasible. You verify an HMAC by recomputing it, never by decoding it."}},{"@type":"Question","name":"How do I verify a webhook HMAC signature?","acceptedAnswer":{"@type":"Answer","text":"Read the signature header the service sends (e.g. Stripe-Signature), rebuild the exact signed payload — often timestamp + '.' + raw request body — compute HMAC-SHA256 with your endpoint secret, and compare in constant time: crypto.timingSafeEqual in Node, hmac.compare_digest in Python. Always verify the raw bytes, not a re-serialized JSON object, since key order and whitespace change the signature."}},{"@type":"Question","name":"What key size should I use for HMAC?","acceptedAnswer":{"@type":"Answer","text":"Match the hash: 32 random bytes for HMAC-SHA256, 48 for SHA-384, 64 for SHA-512. Anything beyond the hash's output size adds no security. Generate keys from a CSPRNG (crypto.randomBytes in Node, secrets.token_bytes in Python) — never from a password, timestamp, or dictionary word."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -109,5 +110,28 @@ ok = hmac.compare_digest(expected, received_hex)</code></pre>
 </div></div>
 </div>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\\/[^\\/]/.test(a.getAttribute('href')) && !/^(\\/guides\\/|\\/all-tools\\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

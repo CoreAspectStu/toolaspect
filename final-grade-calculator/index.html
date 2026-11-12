@@ -88,6 +88,7 @@
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="howto1">{"@context":"https://schema.org","@type":"HowTo","name":"How to Use the Final Grade Calculator","description":"Step-by-step instructions for using the final grade calculator on ToolAspect, with tips from our final grade calculator guide.","totalTime":"PT1M","step":[{"@type":"HowToStep","position":1,"name":"Enter your values","text":"Open the final grade calculator and fill in the input fields with your own numbers or details."},{"@type":"HowToStep","position":2,"name":"Adjust the options","text":"Tune any optional settings (percentages, units, or split options) so they match your situation."},{"@type":"HowToStep","position":3,"name":"Read your result","text":"The result updates instantly as you type — read the calculated output below the inputs.","url":"https://toolaspect.com/guides/final-grade-calculator/"},{"@type":"HowToStep","position":4,"name":"Learn more","text":"For background, formulas, and worked examples, see our guide: https://toolaspect.com/guides/final-grade-calculator/","url":"https://toolaspect.com/guides/final-grade-calculator/"}]}</script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I calculate what I need on my final exam?", "acceptedAnswer": {"@type": "Answer", "text": "Subtract your current grade times its share of the course from your target grade, then divide by the final's weight. If the final is 25% of the grade, your current grade is the other 75%: needed score = (target − current × 0.75) ÷ 0.25. Sitting at 78% and wanting an 80%? (80 − 58.5) ÷ 0.25 = 86. You need an 86 on the final."}}, {"@type": "Question", "name": "What if the score I need is over 100%?", "acceptedAnswer": {"@type": "Answer", "text": "Then the target grade is mathematically out of reach. With an 85% current grade and a final worth 20%, even a perfect 100 leaves you at 88%, short of a 90. The calculator tells you the highest grade still possible so you can aim for the letter you can actually get."}}, {"@type": "Question", "name": "What if the score I need is zero or less?", "acceptedAnswer": {"@type": "Answer", "text": "You've already locked in the target. If you're at 90% and need a 70 to pass with the final worth 20%, the required score works out to −10% — even a zero on the final leaves you at 72%. A strong final still matters for borderline cases, but the target itself is safe."}}, {"@type": "Question", "name": "Does my current grade include everything before the final?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — homework, quizzes, midterms, labs, participation, all of it. Your current grade is whatever the gradebook shows going into the final, and the final's weight is whatever's left. If your course weights categories instead (homework 20%, midterms 30%, final 50%), compute the weighted current grade first, then run the same formula."}}, {"@type": "Question", "name": "What do I need on my final to pass the class?", "acceptedAnswer": {"@type": "Answer", "text": "Set the target to your class's passing line — usually 60% or 70%. At a 70% pass line with a 30% final, a student at 60% needs a 93.3, and a student at 65% needs an 81.7. At a 60% pass line, someone at 50% with a 30% final needs an 83.3. The gap closes fast as the final gets heavier."}}, {"@type": "Question", "name": "How much will a zero on the final hurt my grade?", "acceptedAnswer": {"@type": "Answer", "text": "Multiply your current grade by one minus the final's weight. An 85% average with a 20% final drops to 68% (85 × 0.80), usually a D+. A 78% average with a 25% final drops to 58.5%, failing. The what-if mode runs this math for any exam score you enter."}}, {"@type": "Question", "name": "Will my teacher round up my final grade?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on the class. Some teachers round an 89.5 to a 90, and others treat 89.99 as an 89. Check the syllabus, and ask before the final if it isn't there. To be safe, plan on hitting the cutoff itself and not on a rounding rule."}}, {"@type": "Question", "name": "How do I work out what I need if my class uses points?", "acceptedAnswer": {"@type": "Answer", "text": "Divide your points so far by the points possible for your current percentage, and divide the final's points by the course total for its weight. With 640 of 800 points and a 200-point final, you're at 80% and the final is worth 20%. An 80% finish takes 160 of 200."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -322,5 +323,28 @@ calc();
 <script src="/shared/ratings.js" defer></script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -59,6 +59,7 @@ textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgb
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Online Notepad","item":"https://toolaspect.com/notepad/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Where are my notes stored in an online notepad?","acceptedAnswer":{"@type":"Answer","text":"This notepad saves your text locally in your browser (localStorage), so notes survive page reloads and browser restarts on the same device. Nothing is transmitted or stored on a server, which also means notes do not sync between devices. Clearing site data in your browser will erase them, so export anything important."}},{"@type":"Question","name":"Is an online notepad private?","acceptedAnswer":{"@type":"Answer","text":"Yes — because all text stays in your browser and is never uploaded, there is no server-side copy to leak. It is a good scratchpad for drafts and sensitive snippets you would not paste into a cloud service. The usual caveat applies on shared computers, where the next user of the same browser profile can see your notes."}},{"@type":"Question","name":"Can I use a browser notepad offline?","acceptedAnswer":{"@type":"Answer","text":"Once the page is loaded it keeps working without a connection, since typing and saving happen entirely client-side. Depending on caching, you may need to load it once while online before offline use. For heavy offline writing, pair it with periodic export to a file."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Online Notepad</span></nav>
@@ -147,5 +148,28 @@ function clearNote(){if(confirm('Clear all text?')){note.value='';localStorage.r
 <h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/number-to-words/">Number To Words</a></li><li style="margin:4px 0"><a href="/roman-numeral-converter/">Roman Numeral Converter</a></li><li style="margin:4px 0"><a href="/military-time-converter/">Military Time Converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

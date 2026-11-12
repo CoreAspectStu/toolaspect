@@ -96,6 +96,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I password protect a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Open the PDF below, type a password, and hit Encrypt. The tool applies AES-256 encryption (the current PDF standard) locally in your browser and hands back a file that asks for that password on every reader. Free, no signup, no watermark, and the PDF never uploads — which is the point when the document is the sensitive thing."}},{"@type":"Question","name":"What is the difference between a user password and an owner password?","acceptedAnswer":{"@type":"Answer","text":"The user password (open password) is what someone must type to open the file. The owner password is a separate master key for changing permissions. Encrypting with only an owner password produces a file that opens freely but blocks printing or copying — restrictions, not secrecy. This tool sets a user password by default and lets you set a different owner password for permissions management."}},{"@type":"Question","name":"Can I stop people from printing or copying my PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes — open the restrictions section before encrypting and uncheck printing, copying, or modifying. The output carries those flags, and honest readers (Acrobat, Preview, browsers) respect them. Be aware that restrictions are enforced by software cooperation, not mathematics: screen readers keep accessibility, and a determined user with free tools can strip flags. The open password is the cryptographically strong protection."}},{"@type":"Question","name":"How strong is AES-256 PDF encryption?","acceptedAnswer":{"@type":"Answer","text":"Strong. AES-256 is the same cipher used for government-grade data, and modern readers from Acrobat 10 onward open it natively. In a verified test, this tool's engine (qpdf) encrypted a 1,852-byte PDF into a 2,665-byte AESv3/256-bit file that reported 'invalid password' on a wrong attempt and opened correctly on the right one. The realistic risk isn't the cipher — it's a weak password, so use a long passphrase."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -184,5 +185,28 @@
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

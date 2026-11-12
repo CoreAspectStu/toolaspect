@@ -58,6 +58,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"CSS Gradient Generator","item":"https://toolaspect.com/gradient-generator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between linear, radial, and conic gradients?","acceptedAnswer":{"@type":"Answer","text":"Linear gradients blend along a straight line at a chosen angle. Radial gradients blend outward from a center point. Conic gradients blend around a circle like a pie or radar sweep. All three are set as values of the CSS background property."}},{"@type":"Question","name":"How do I set a gradient's angle in CSS?","acceptedAnswer":{"@type":"Answer","text":"Add an angle before the color list: linear-gradient(135deg, color1, color2). Zero degrees points up and angles increase clockwise, so 90deg points right and 180deg points down."}},{"@type":"Question","name":"Can I use more than two colors in a CSS gradient?","acceptedAnswer":{"@type":"Answer","text":"Yes. List as many colors as you like, optionally with percentage stops such as #6366f1 20% to control where each color begins its transition. This generator supports up to three colors; you can hand-edit the copied CSS to add more."}},{"@type":"Question","name":"Do CSS gradients work in all browsers?","acceptedAnswer":{"@type":"Answer","text":"Linear, radial, and conic gradients are supported by all modern browsers. Very old browsers ignore the gradient and fall back to a declared background-color, so include one as a fallback when the surface needs color regardless."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -180,5 +181,28 @@ gen();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

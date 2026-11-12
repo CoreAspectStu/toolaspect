@@ -86,6 +86,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I remove metadata from a Word document?","acceptedAnswer":{"@type":"Answer","text":"In Word you can run File > Info > Check for Issues > Inspect Document and remove the properties it finds, but many versions keep some fields. This tool takes the surer route: it opens the .docx package, rewrites docProps/core.xml and docProps/app.xml with clean minimal versions, deletes docProps/custom.xml and any preview thumbnail, and fixes the package manifest. Your visible text, tables and formatting are untouched, and nothing is uploaded."}},{"@type":"Question","name":"What metadata does an Office file carry?","acceptedAnswer":{"@type":"Answer","text":"More than most people expect. A typical Word file stores the author (from the Office account that created it), last modified by, created and modified timestamps, revision number, total editing time, the company name and manager from app.xml, the template it came from, hyperlink bases, up to dozens of custom properties, and sometimes a preview thumbnail. In testing, a routine HR document carried 18 separate identifying items."}},{"@type":"Question","name":"Does saving as PDF remove the metadata?","acceptedAnswer":{"@type":"Answer","text":"No, and this surprises people. A PDF carries its own Info dictionary with author, title, subject, keywords, producer and creator app, plus an XMP metadata block. Exporting a dirty Word file to PDF copies the author and title straight over. The PDF path in this tool empties the Info dictionary and removes the XMP stream so both copies are clean."}},{"@type":"Question","name":"Does this remove tracked changes and comments?","acceptedAnswer":{"@type":"Answer","text":"No, and that separation matters. Metadata is the file's description of itself; tracked changes, comments and hidden text are document content. This tool deliberately never touches content, so formatting and revisions survive intact. To remove revisions, accept or reject them in Word first, or rasterize the final file. For redacting visible material from a PDF, use a redaction tool that destroys the underlying text."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -388,5 +389,28 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

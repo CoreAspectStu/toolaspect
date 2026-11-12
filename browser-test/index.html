@@ -36,6 +36,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Browser Test","item":"https://toolaspect.com/browser-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does a browser test check?","acceptedAnswer":{"@type":"Answer","text":"A browser test detects which features your current browser supports — WebGL, WebAssembly, WebRTC camera and microphone access, clipboard, notifications, service workers, localStorage, and more. It runs entirely on your device using feature-detection APIs, so nothing is uploaded to a server."}},{"@type":"Question","name":"Why does my browser say a feature is unsupported?","acceptedAnswer":{"@type":"Answer","text":"Unsupported usually means the browser is outdated, the feature is behind a flag, or the page is not served over HTTPS. Many sensitive APIs like camera, microphone, and geolocation only work on secure (https://) origins. Update the browser and reload the page on HTTPS before concluding the feature is missing."}},{"@type":"Question","name":"Do I need to allow camera and microphone permissions?","acceptedAnswer":{"@type":"Answer","text":"Yes. WebRTC camera and microphone tests only work after you grant permission when the browser prompts you. If you accidentally blocked access, click the lock or tune icon in the address bar, reset the permission, and reload the page."}},{"@type":"Question","name":"Does this test work on mobile browsers?","acceptedAnswer":{"@type":"Answer","text":"Yes — modern mobile Chrome and Safari support nearly all tested features, including WebGL and WebAssembly. Some desktop-only features like full keyboard detection behave differently on touch devices, and iOS Safari places extra restrictions on background audio and storage."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Browser Test</span></nav><div class="wrap">
@@ -159,5 +160,28 @@ up();b.addEventListener('levelchange',up);b.addEventListener('chargingchange',up
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

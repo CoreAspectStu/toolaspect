@@ -56,6 +56,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Sod Calculator","item":"https://toolaspect.com/sod-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many square feet is a pallet of sod?","acceptedAnswer":{"@type":"Answer","text":"Standard pallets commonly hold 450 or 500 square feet of sod, depending on the farm and region. Mini pallets and big rolls also exist, so confirm the coverage with your supplier before ordering."}},{"@type":"Question","name":"How many sod rolls do I need for 1,000 square feet?","acceptedAnswer":{"@type":"Answer","text":"At the common 10 square foot roll, 1,000 square feet is exactly 100 rolls — 2 pallets at 500 square feet each. Add 5 to 10 percent extra if your lawn has curved borders."}},{"@type":"Question","name":"How much does a pallet of sod weigh?","acceptedAnswer":{"@type":"Answer","text":"A full pallet typically weighs between 1,500 and 3,000 pounds depending on soil moisture, sod thickness, and roll size. Plan for equipment to move it; it is not a one-person carry."}},{"@type":"Question","name":"How much extra sod should I order for waste?","acceptedAnswer":{"@type":"Answer","text":"Add 5 percent for simple rectangular lawns and up to 10 percent for curved edges, slopes, or first-time installers. Offcuts along borders are unavoidable, and sod is cut fresh per order so returns usually aren't accepted."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -177,5 +178,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

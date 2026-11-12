@@ -103,6 +103,7 @@ textarea#ibans:focus{outline:none;border-color:var(--primary)}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I check if an IBAN is valid?","acceptedAnswer":{"@type":"Answer","text":"Four checks, in order: the country code must be in the official IBAN registry (97 countries participate), the total length must match that country's rule (22 characters for the UK, 22 for Germany, 27 for France), the BBAN must fit the country's structure (letters vs digits in the right slots), and the mod-97 checksum must land on exactly 1. A single mistyped digit anywhere breaks the checksum, which is why the checksum is the check that catches real-world typos."}},{"@type":"Question","name":"What do the first four characters of an IBAN mean?","acceptedAnswer":{"@type":"Answer","text":"The first two letters are the ISO country code (GB for the United Kingdom, DE for Germany, FR for France). The next two digits are check digits computed from the rest of the number using mod-97 arithmetic, so any typo in the account portion makes them mismatch. In GB82 WEST 1234 5698 7654 32, the GB is the country and the 82 is the checksum that validates everything after it."}},{"@type":"Question","name":"Does a valid IBAN mean the account exists?","acceptedAnswer":{"@type":"Answer","text":"No. Valid means well-formed: the checksum, length, and structure all check out, which rules out typos before you send money. It says nothing about whether the account is open, who owns it, or whether it can receive your currency. Only the receiving bank can confirm an account exists, either directly or when the payment is attempted. Treat a green result as \"safe to hand to your bank,\" not as proof the account is live."}},{"@type":"Question","name":"Why is there no IBAN for US bank accounts?","acceptedAnswer":{"@type":"Answer","text":"The United States, along with Canada, Australia, Japan, China, India, and Mexico, does not participate in the IBAN system; those domestic account numbers simply have no IBAN form. US accounts use a 9-digit routing number plus an account number, and international wires to them go by SWIFT/BIC code. Trying to validate a \"US\" IBAN returns an unknown-country error, which is exactly what should happen."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -313,5 +314,28 @@ el('ibans').addEventListener('keydown',function(e){
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

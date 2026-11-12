@@ -92,6 +92,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I validate JSON against a JSON Schema?","acceptedAnswer":{"@type":"Answer","text":"Paste your schema into the first box and the document you're testing into the second, then hit Validate. The validator checks the document against every applicable keyword (type, required, properties, minimum, pattern and so on) and reports each violation with its exact location, like /age must be >= 18. If the schema itself is malformed, you get a schema error instead."}},{"@type":"Question","name":"Which JSON Schema draft does this validator support?","acceptedAnswer":{"@type":"Answer","text":"Draft-07, 2019-09, and 2020-12, the three dialects you'll meet in practice. The tool reads your $schema declaration and picks the matching engine automatically; if there's no $schema, it assumes draft-07, which is still the most widely deployed dialect in APIs and configs."}},{"@type":"Question","name":"Is my JSON sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Parsing and validation happen entirely in your browser with Ajv compiled to JavaScript. Nothing is uploaded, logged, or stored, which is why the page works even for payloads you couldn't paste into a shared paste-bin."}},{"@type":"Question","name":"What does instancePath mean in an error?","acceptedAnswer":{"@type":"Answer","text":"instancePath is a JSON Pointer to the exact spot that failed: an empty path means the document root, /items/2/price points at the price field of the third array item. Read it right-to-left as a breadcrumb from your document to the failing value."}},{"@type":"Question","name":"Why is my format keyword ignored?","acceptedAnswer":{"@type":"Answer","text":"In JSON Schema, format is annotation-only by default, so many validators skip it unless configured for assertions. This validator enables format checking for the common ones (email, date, date-time, uri, uuid) so bad values are caught, and rejects schemas that use formats it doesn't know about rather than silently ignoring them."}},{"@type":"Question","name":"Can I validate YAML against a schema?","acceptedAnswer":{"@type":"Answer","text":"Not directly here, since the validator expects JSON. Convert first: our YAML validator converts YAML to JSON, and most pipelines keep a JSON export step anyway. The schema itself must be JSON as well, though $ref can point at YAML files in other tools."}},{"@type":"Question","name":"What's the difference between JSON syntax validation and schema validation?","acceptedAnswer":{"@type":"Answer","text":"Syntax validation only asks whether the text is legal JSON: matched braces, quoted keys, no trailing commas. Schema validation starts after that and asks whether the parsed data has the right shape, such as required fields, types, ranges and allowed values. A document can be perfectly valid JSON and still fail its schema. This tool does both, and tells you which one failed."}},{"@type":"Question","name":"Why does additionalProperties: false reject properties defined in allOf?","acceptedAnswer":{"@type":"Answer","text":"Because additionalProperties only looks at properties and patternProperties in its own subschema. It can't see into allOf branches, so anything declared there counts as extra. In 2019-09 or 2020-12, swap it for unevaluatedProperties: false, which does see properties validated by subschemas. On draft-07, redeclare the inherited properties next to additionalProperties."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -346,5 +347,28 @@ status('Compile error — check keywords like format and $ref for your dialect.'
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

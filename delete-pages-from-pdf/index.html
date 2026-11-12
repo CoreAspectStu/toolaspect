@@ -93,6 +93,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I delete pages from a PDF for free?", "acceptedAnswer": {"@type": "Answer", "text": "Open the file in a thumbnail-based page tool, click the × on each page you want removed, and download the rebuilt PDF. This one runs entirely in your browser — no account, no watermark, and no upload of the document to anyone's server."}}, {"@type": "Question", "name": "Are deleted pages really removed from the file?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The download is a new PDF assembled by copying only the pages you kept, so the deleted pages — their text, images, and form fields — are not present in the output at all. They're not hidden, commented out, or recoverable from the downloaded copy; keep your original if you might need them back."}}, {"@type": "Question", "name": "Can I undo a deletion after downloading?", "acceptedAnswer": {"@type": "Answer", "text": "Not from the downloaded file — once pages are left out, rebuilding them means returning to the original document. Inside the tool, though, every deleted page sits in a restore strip until you download, so a mis-click costs you one click, not the file."}}, {"@type": "Question", "name": "Why did my file size barely change after deleting pages?", "acceptedAnswer": {"@type": "Answer", "text": "Usually because the pages you removed were text-only while the remaining pages carry images, embedded fonts, or scanned content that dominates the file's size. The output only contains the kept pages' resources, so deleting the heavy pages is what visibly shrinks the file."}}, {"@type": "Question", "name": "Can I delete pages from a password-protected PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Usually not directly. Encrypted PDFs generally fail at the export step because the file has to be decrypted before pages can be copied into a new document. Open it in a reader where you know the password, save or print an unprotected copy, and delete pages from that."}}, {"@type": "Question", "name": "Does deleting pages keep bookmarks and fillable forms?", "acceptedAnswer": {"@type": "Answer", "text": "Bookmarks don't carry over, because they belong to the document rather than to any page. Fillable fields travel with their pages but can stop being editable once they're separated from the original document-level form, so test a form before sending it on."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -374,5 +375,28 @@ el('btnSave').addEventListener('click',function(){
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

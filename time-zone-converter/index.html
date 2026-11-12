@@ -65,6 +65,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Everyday Tools","item":"https://toolaspect.com/everyday-tools/"},{"@type":"ListItem","position":3,"name":"Time Zone Converter","item":"https://toolaspect.com/time-zone-converter/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert between two time zones?","acceptedAnswer":{"@type":"Answer","text":"Convert the source time to UTC by subtracting its offset, then add the destination's offset. Example: 9:00 AM New York (UTC−5) = 14:00 UTC = 22:30 in Mumbai (UTC+5:30)."}},{"@type":"Question","name":"What is UTC?","acceptedAnswer":{"@type":"Answer","text":"Coordinated Universal Time — the global reference time scale derived from atomic clocks, equivalent to GMT for everyday purposes. Every civil zone is defined as an offset from UTC, from UTC−12 to UTC+14."}},{"@type":"Question","name":"Why do time zone offsets change during the year?","acceptedAnswer":{"@type":"Answer","text":"Zones that observe daylight saving time shift their offset by an hour in summer. Since regions switch on different dates (US in March/November, EU in March/October), offsets between two cities can vary through the year."}},{"@type":"Question","name":"Which countries use half-hour time zones?","acceptedAnswer":{"@type":"Answer","text":"India (UTC+5:30), Nepal (UTC+5:45), parts of Australia including Adelaide (UTC+9:30), Newfoundland in Canada (UTC−3:30), and Iran historically. Always use the exact offset — assuming whole hours gives the wrong answer for these zones."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/everyday-tools/" style="color:inherit;text-decoration:none">Everyday Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Time Zone Converter</span></nav>
@@ -209,5 +210,28 @@ return (asUTC-dt.getTime())/3600000;
 <h2>Related tools</h2><div class="table-wrap"><ul style="columns:2;list-style:none;padding:0"><li style="margin:4px 0"><a href="/number-to-words/">Number To Words</a></li><li style="margin:4px 0"><a href="/roman-numeral-converter/">Roman Numeral Converter</a></li><li style="margin:4px 0"><a href="/military-time-converter/">Military Time Converter</a></li></ul></div><p style="font-size:.85rem"><a href="/guides/">Read our guides</a> · <a href="/all-tools/">Browse all tools</a></p></div></div>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

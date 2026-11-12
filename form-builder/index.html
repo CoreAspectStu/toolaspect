@@ -99,6 +99,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does this free form builder work?","acceptedAnswer":{"@type":"Answer","text":"You design fields visually — labels, input types, placeholders, required flags — and the builder generates clean standalone HTML you can copy into any website. The output is a plain HTML form with no inline styles or CSS, so it picks up your site's own stylesheet and works with any backend or static host. Everything is generated in your browser with no account or upload."}},{"@type":"Question","name":"Can an HTML form generator connect to my backend?","acceptedAnswer":{"@type":"Answer","text":"Yes — the generated form is standard HTML, so you point its action attribute at your own endpoint or wire it to a handler with JavaScript. Common approaches are a POST to your server, a serverless function, or a form service. The builder just produces the markup; submission handling stays under your control."}},{"@type":"Question","name":"What input types can I add with a form builder?","acceptedAnswer":{"@type":"Answer","text":"Nine: short text, email, number, password, date, long text (textarea), dropdown, radio group and checkbox. File upload, hidden, tel and url fields aren't in the palette, so add a short text field and change its type in the exported HTML. Email and number fields give you free browser-side validation. Generated markup uses proper label associations so forms stay accessible."}},{"@type":"Question","name":"Why doesn't my required dropdown stop the form submitting?","acceptedAnswer":{"@type":"Answer","text":"When you tick Required on a dropdown, the builder removes the blank Choose option, so the first real option is already selected and the browser counts the field as answered. Add <option value=\"\">Choose…</option> as the first option in the exported HTML and the browser will ask visitors to pick one."}},{"@type":"Question","name":"Is the JSON export a standard JSON Schema?","acceptedAnswer":{"@type":"Answer","text":"No. It's a simple field list in the builder's own format: the form's action and method, then each field's type, label, name, required flag, placeholder and options. That makes it easy to read and to loop over in code, but it won't validate as a JSON Schema document without converting it."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -402,5 +403,28 @@
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

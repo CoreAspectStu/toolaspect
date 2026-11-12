@@ -54,6 +54,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Text Tools","item":"https://toolaspect.com/text-tools/"},{"@type":"ListItem","position":3,"name":"Text Case Converter","item":"https://toolaspect.com/case-converter/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between camelCase and PascalCase?","acceptedAnswer":{"@type":"Answer","text":"Both join words without delimiters. camelCase starts with a lowercase first word (caseConverterTool), while PascalCase capitalizes every word including the first (CaseConverterTool)."}},{"@type":"Question","name":"When should I use snake_case vs kebab-case?","acceptedAnswer":{"@type":"Answer","text":"Use snake_case for Python and Ruby identifiers and database column names per PEP 8 and common convention. Use kebab-case for URLs, CSS classes, and file names, where hyphens are the conventional delimiter."}},{"@type":"Question","name":"Does the converter handle accented or non-English letters?","acceptedAnswer":{"@type":"Answer","text":"Yes. Conversions use JavaScript's built-in toUpperCase and toLowerCase, which handle accented Latin letters like é → É. Some scripts without letter case, such as Chinese or Japanese, are unchanged."}},{"@type":"Question","name":"Is Title Case the same as capitalizing every word?","acceptedAnswer":{"@type":"Answer","text":"No. Full style guides like The Chicago Manual of Style lowercase short articles, prepositions, and conjunctions (e.g., \"a\", \"of\", \"and\") in Title Case. This converter capitalizes each word for a simple, predictable result."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -152,5 +153,28 @@ convert();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

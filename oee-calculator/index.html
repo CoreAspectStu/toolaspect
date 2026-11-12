@@ -86,6 +86,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a good OEE score?", "acceptedAnswer": {"@type": "Answer", "text": "The long-standing benchmark set popularized by OEE.com calls 85% world class, built from roughly 90% availability, 95% performance, and 99.9% quality. Most plants that start measuring honestly land near 60%, and sites with unreliable data or unmeasured changeovers often show 40%. Chasing 85% everywhere is the wrong move; a bottleneck line justifies aggressive targets, while a low-utilization backup line may not justify the effort."}}, {"@type": "Question", "name": "Why is OEE the product of three factors instead of an average?", "acceptedAnswer": {"@type": "Answer", "text": "Because losses compound. Three factors at 90% each multiply to 72.9% overall, not 90%. A 10% loss in availability, another in performance, and another in quality leaves you with 27% of perfect production gone. That multiplicative structure is exactly why OEE is useful: it makes small compounding losses visible in a single number."}}, {"@type": "Question", "name": "What is the difference between OEE and TEEP?", "acceptedAnswer": {"@type": "Answer", "text": "Both measure the same three factors, but against different denominators. OEE divides by planned production time, so scheduled downtime, holidays, and shifts you never planned to run don't count against it. TEEP (total effective equipment performance) divides by all calendar time, exposing the capacity you're choosing not to schedule. A line can run 85% OEE on two shifts and still show a modest TEEP because 16 hours a day are unplanned."}}, {"@type": "Question", "name": "Should changeovers count as downtime in OEE?", "acceptedAnswer": {"@type": "Answer", "text": "If the shift was planned as production time, yes: a changeover during a planned run reduces availability, which is the point of tracking SMED improvements. Only time formally removed from the planned schedule, like a plant-wide shutdown week, belongs outside the denominator. Fudging changeovers out of the calculation is one of the fastest ways to make OEE lie."}}, {"@type": "Question", "name": "Can I calculate OEE from part counts alone?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and it's the cleanest method: OEE = (good parts × ideal cycle time) ÷ planned production time. The three-factor breakdown is diagnostic, but the shortcut collapses it correctly, because performance and quality losses both show up as missing good parts. The shortcut only needs an honest ideal cycle time, real counts, and real planned time."}}, {"@type": "Question", "name": "Why does our OEE drop when we start measuring it?", "acceptedAnswer": {"@type": "Answer", "text": "Because the first weeks of data replace assumptions with measurements. Unlogged minor stops, slow cycles the schedule absorbed, and startup scrap that never hit the yield report all show up at once. The drop isn't the plant getting worse; it's the plant becoming visible. Baseline after about a month of clean data, then trend from there."}}, {"@type": "Question", "name": "How do I find the ideal cycle time?", "acceptedAnswer": {"@type": "Answer", "text": "Use the machine's rated speed from the manufacturer, or the fastest rate it has sustained over a full run if that's higher. Don't use today's average or the speed the line usually runs at; that hides the reduced-speed loss inside the target and inflates performance."}}, {"@type": "Question", "name": "How do I calculate OEE for several machines together?", "acceptedAnswer": {"@type": "Answer", "text": "Don't average the percentages, because a machine that ran 2 hours would count as much as one that ran 16. Add up good parts times ideal cycle time for every machine, divide by their total planned time, and you get a properly weighted OEE. For a line of machines in sequence, track the bottleneck's OEE, since it sets the line's output."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -275,5 +276,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

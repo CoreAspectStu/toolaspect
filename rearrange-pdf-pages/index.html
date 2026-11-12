@@ -93,6 +93,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I rearrange pages in a PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Open the PDF in a thumbnail organizer and drag each page card to its new position — or nudge pages with the left/right arrow buttons, which is easier on touch screens. The download is rebuilt with the pages copied in exactly the order shown, so what you see in the grid is what you get in the file."}}, {"@type": "Question", "name": "Does reordering pages change the pages themselves?", "acceptedAnswer": {"@type": "Answer", "text": "No. The exporter copies each page's content stream untouched into a new document — text stays selectable, images stay sharp — and only the sequence changes. Rotation applied here is written as the page's rotation value, not a re-render."}}, {"@type": "Question", "name": "Why is the last page first after I scan a document?", "acceptedAnswer": {"@type": "Answer", "text": "Duplex scans often do this: single-sided originals fed through a feeder come out reversed, or odd/even passes stack in opposite directions. A thumbnail reorder fixes it in seconds — drag (or arrow) the pages into reading order and download."}}, {"@type": "Question", "name": "Will reordering break the document's bookmarks?", "acceptedAnswer": {"@type": "Answer", "text": "Bookmarks don't carry over at all. The download is a brand-new PDF built from copies of your pages, and bookmarks belong to the original document rather than to any page. If readers rely on the outline, re-add it in a desktop editor after reordering."}}, {"@type": "Question", "name": "Can I rearrange pages in a password-protected PDF?", "acceptedAnswer": {"@type": "Answer", "text": "Usually not. An encrypted PDF has to be unlocked before its pages can be copied into a new file, so the export fails. Open it with the password in your PDF reader, save or print an unprotected copy, and reorder that instead."}}, {"@type": "Question", "name": "Is my PDF uploaded to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. Thumbnails are rendered and the new file is built in your browser with JavaScript, so the document never leaves your device. That makes it safe for contracts, medical forms and anything else you wouldn't want on someone else's server."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -390,5 +391,28 @@ el('btnSave').addEventListener('click',function(){
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

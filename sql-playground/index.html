@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I practice SQL online without installing anything?","acceptedAnswer":{"@type":"Answer","text":"Yes. This playground runs a complete SQLite database engine compiled to WebAssembly inside your browser tab. There's no server holding your queries and no signup — the sample database loads locally, your SQL runs locally, and resetting just rebuilds it in memory."}},{"@type":"Question","name":"Which SQL dialect does this playground use?","acceptedAnswer":{"@type":"Answer","text":"SQLite 3.49. The core vocabulary — SELECT, JOIN, GROUP BY, subqueries, window functions, CTEs — is shared with every major database, so it's ideal for learning. A few things differ from PostgreSQL or MySQL: INTEGER PRIMARY KEY is SQLite's row-id alias, types are flexible rather than strict, and functions like STRING_AGG spell differently. Your query logic transfers; occasional syntax doesn't."}},{"@type":"Question","name":"Can I create my own tables?","acceptedAnswer":{"@type":"Answer","text":"Yes. The editor accepts any mix of statements — CREATE TABLE, INSERT, UPDATE, DELETE, DROP — followed by a SELECT. Everything runs in order against the in-memory database, and the results grid shows the output of your last SELECT. Hit Reset sample DB to restore the original four tables."}},{"@type":"Question","name":"How big is the download?","acceptedAnswer":{"@type":"Answer","text":"The WebAssembly build of SQLite is about 650 KB, fetched once from a CDN when you first run a query. After that, everything happens in memory — queries on the sample database return in well under a millisecond, and no query or result ever leaves your machine."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -314,5 +315,28 @@ ensureEngine(function(){run();});
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -56,6 +56,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Paint Calculator","item":"https://toolaspect.com/paint-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much paint do I need for a 12x12 room?","acceptedAnswer":{"@type":"Answer","text":"A 12x12 room with 8-foot ceilings has about 384 square feet of wall. Two coats at a standard 350 sq ft/gal spread rate need 2.19 gallons, so buy 3 gallons. Subtract roughly 15 sq ft per window and 21 sq ft per door for a more precise figure."}},{"@type":"Question","name":"How many square feet does one gallon of paint cover?","acceptedAnswer":{"@type":"Answer","text":"One gallon of typical interior latex paint covers 350 to 400 square feet per coat on smooth, primed drywall, per manufacturer spread rates. Primers cover less — about 200 to 300 square feet per gallon — and rough or textured surfaces can drop coverage to 250 square feet or less."}},{"@type":"Question","name":"Do I need to count each coat separately?","acceptedAnswer":{"@type":"Answer","text":"Yes. Two coats double the paint used: multiply your paintable area by the number of coats before dividing by the coverage rate. Most manufacturers recommend two topcoats over primer for even color and durability."}},{"@type":"Question","name":"How do I calculate wall area for painting?","acceptedAnswer":{"@type":"Answer","text":"Measure the perimeter of the room, multiply by wall height, then subtract doors (about 21 sq ft each) and windows (about 15 sq ft each). Ceiling area equals length × width. Add all paintable surfaces together before applying the coverage formula."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -178,5 +179,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

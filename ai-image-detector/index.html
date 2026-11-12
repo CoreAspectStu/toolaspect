@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"AI Image Detector","item":"https://toolaspect.com/ai-image-detector/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can this tool prove an image is AI generated?", "acceptedAnswer": {"@type": "Answer", "text": "No, and no metadata tool can on its own. It reads the EXIF and XMP data in your browser and reports camera make and model, software tags, capture time, GPS and how many fields are present. Rich camera data points toward a real photo; missing data is inconclusive."}}, {"@type": "Question", "name": "Why does my image show no metadata at all?", "acceptedAnswer": {"@type": "Answer", "text": "Screenshots, social media uploads, messaging apps and many editors strip metadata, so most images shared online have none. An empty result fits an AI image, but it fits an ordinary downloaded photo just as well. Try to get the original file from whoever made it."}}, {"@type": "Question", "name": "Does the tool check C2PA Content Credentials or SynthID?", "acceptedAnswer": {"@type": "Answer", "text": "It doesn't validate C2PA signatures or read invisible watermarks. For Content Credentials, use a dedicated C2PA verifier. SynthID can only be read by Google's own checkers. Both are worth running when you have the original file."}}, {"@type": "Question", "name": "Is my image uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. The file is parsed locally with JavaScript in your browser. Nothing is sent to a server, so you can check private or sensitive images safely."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -145,5 +146,28 @@ out.innerHTML=h;
 
 <script src="/shared/result-actions.js"></script><script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

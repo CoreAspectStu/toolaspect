@@ -91,6 +91,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is molar mass?","acceptedAnswer":{"@type":"Answer","text":"Molar mass is the mass of one mole of a substance, in grams per mole (g/mol). Numerically it equals the sum of the atomic weights of every atom in the chemical formula: water (H2O) is 2 × 1.008 + 15.999 = 18.015 g/mol, and glucose (C6H12O6) is 6 × 12.011 + 12 × 1.008 + 6 × 15.999 = 180.156 g/mol. One mole always contains 6.022 × 10²³ particles, so molar mass is the bridge between grams on a scale and molecules in a flask."}},{"@type":"Question","name":"How do you calculate molar mass from a formula?","acceptedAnswer":{"@type":"Answer","text":"Write out the formula, list each element with its count (multiplying through any parentheses), look up each element's atomic weight, multiply by the count, and add the subtotals. For Ca(OH)2: calcium 40.078, plus 2 × oxygen (15.999), plus 2 × hydrogen (1.008), which totals 74.092 g/mol. The calculator automates exactly this, including nested groups like Al2(SO4)3 (342.132 g/mol)."}},{"@type":"Question","name":"What is the molar mass of water?","acceptedAnswer":{"@type":"Answer","text":"18.015 g/mol. Two hydrogens at 1.008 each plus one oxygen at 15.999 sum to 18.015 grams per mole, so one mole of water weighs 18.015 grams, about 18 milliliters."}},{"@type":"Question","name":"How do you handle hydrates like CuSO4·5H2O?","acceptedAnswer":{"@type":"Answer","text":"Multiply the water count through the whole H2O unit and add it to the anhydrous salt. Copper(II) sulfate pentahydrate is CuSO4 (159.602 g/mol) plus 5 × H2O (5 × 18.015 = 90.075), totaling 249.677 g/mol. The calculator accepts the dot written as ·, ., *, or ~."}},{"@type":"Question","name":"How do you convert grams to moles?","acceptedAnswer":{"@type":"Answer","text":"Divide mass by molar mass: moles = grams ÷ g/mol. For 25.0 g of glucose, 25.0 ÷ 180.156 = 0.1388 mol. Going the other way, grams = moles × molar mass, so 0.75 mol of NaCl weighs 0.75 × 58.440 = 43.83 g. Multiply moles by 6.022 × 10²³ if you need particle counts."}},{"@type":"Question","name":"How do I find percent composition from molar mass?","acceptedAnswer":{"@type":"Answer","text":"Divide each element's subtotal by the total molar mass and multiply by 100. Water's two hydrogens weigh 2.016 g/mol out of 18.015, so it's 11.19% hydrogen and 88.81% oxygen. Glucose is 40.00% carbon, 6.71% hydrogen and 53.28% oxygen. The breakdown table gives you every subtotal you need."}},{"@type":"Question","name":"Why does the calculator say \"Unexpected character\" or \"Unknown element\"?","acceptedAnswer":{"@type":"Answer","text":"\"Unexpected character\" means the formula has something the parser can't read: a lowercase first letter (h2o), square brackets, a charge like ^2-, a fraction symbol, or a number right after an opening parenthesis. \"Unknown element\" means the symbol isn't in its table of elements H through U, which often happens with a capitalization slip like No or Cn. Fix the symbol and the result appears straight away."}},{"@type":"Question","name":"Can I enter square brackets, charges or decimal subscripts?","acceptedAnswer":{"@type":"Answer","text":"No. Swap square brackets for parentheses, so [Cu(NH3)4]SO4 becomes Cu(NH3)4SO4 (227.726 g/mol), and leave charges off. Decimal subscripts don't work because a period is read as a hydrate dot. For a half-hydrate like CaSO4·½H2O, enter (CaSO4)2·H2O (290.283 g/mol) and divide by 2 to get 145.14 g/mol."}},{"@type":"Question","name":"Why is my answer slightly different from my textbook?","acceptedAnswer":{"@type":"Answer","text":"Different atomic weight tables round differently. This calculator uses IUPAC abridged values such as Cl 35.45 and S 32.06, while some books use 35.453 and 32.065, or round to H 1.01 and O 16.00. The gap is usually in the second or third decimal place, which is smaller than most lab balances can measure."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -382,5 +383,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -59,6 +59,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Excavation Calculator","item":"https://toolaspect.com/excavation-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert cubic feet to cubic yards for excavation?","acceptedAnswer":{"@type":"Answer","text":"Divide cubic feet by 27. A 20 × 10 × 4 ft pit is 800 ft³ = 29.6 bank cubic yards. Then multiply by (1 + swell) to get loose yards, because soil expands 10–35% when dug depending on type."}},{"@type":"Question","name":"What is a swell factor?","acceptedAnswer":{"@type":"Answer","text":"The percentage by which soil increases in volume when excavated from its compacted in-ground state. Loam runs 20–25%, clay 25–35%, blasted rock 50%+. Loose (hauled) yards = bank yards × (1 + swell). This calculator's default is 25% for mixed soil."}},{"@type":"Question","name":"How much does a cubic yard of excavated soil weigh?","acceptedAnswer":{"@type":"Answer","text":"Mixed loose soil averages about 2,400 lb (1.2 short tons) per cubic yard; wet clay can reach 3,200 lb. The calculator estimates haul weight at 1.2 tons per loose yard — for wet material, assume heavier loads or fewer yards per truck."}},{"@type":"Question","name":"How many truck loads will my excavation need?","acceptedAnswer":{"@type":"Answer","text":"Divide loose cubic yards by truck capacity and round up. The 83 loose yards from a 30×12×5 ft dig fills ceil(83 ÷ 10) = 9 ten-yard single-axle trucks, or 6 fifteen-yard tandems."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -183,5 +184,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -309,6 +309,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long should my password be?","acceptedAnswer":{"@type":"Answer","text":"Use at least 16 randomly generated characters, or a 5-to-6 word passphrase. NIST SP 800-63B emphasizes length over composition rules; every extra random character multiplies the search space by the alphabet size."}},{"@type":"Question","name":"Are random passwords really stronger than human ones?","acceptedAnswer":{"@type":"Answer","text":"Yes. Random generation achieves its full mathematical entropy, while human-chosen passwords cluster around predictable patterns (names, dates, substitutions) that attackers guess first with dictionaries — often cracking 'complex-looking' 10-character passwords faster than a random 8-character one."}},{"@type":"Question","name":"Is it safe to generate passwords in my browser?","acceptedAnswer":{"@type":"Answer","text":"This tool uses the Web Crypto API's cryptographically secure random generator locally — no password ever leaves your device. That's the same security primitive protecting HTTPS connections. Avoid generators that create passwords on a server and transmit them."}},{"@type":"Question","name":"What is password entropy?","acceptedAnswer":{"@type":"Answer","text":"Entropy measures randomness in bits: length × log2(alphabet size). A 12-character full-ASCII password has 12 × 6.57 = 78.8 bits. Each additional bit doubles the work an attacker must do; 70+ bits is considered very strong against offline attacks."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -749,5 +750,28 @@
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

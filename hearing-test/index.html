@@ -41,6 +41,7 @@ input[type=range]{width:100%;accent-color:var(--primary)}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"Hearing Test","item":"https://toolaspect.com/hearing-test/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a hearing age and how does the hearing test estimate it?","acceptedAnswer":{"@type":"Answer","text":"The hearing test measures the highest audio frequency your ears can detect and compares it with typical ranges for different age groups. Healthy ears in their teens and twenties generally pick up tones up to about 17-20 kHz, while average hearing often tops out near 12-15 kHz by age 50. The frequency where your hearing cuts off is what the test maps to a 'hearing age'."}},{"@type":"Question","name":"How accurate is an online hearing test?","acceptedAnswer":{"@type":"Answer","text":"It is a useful screening tool, not a clinical diagnosis. Results depend heavily on your headphones, volume setting, and background noise, so run it in a quiet room and treat the pattern rather than any single tone as the signal. For a clinical result, see an audiologist for a calibrated audiogram."}},{"@type":"Question","name":"What frequencies should a young adult be able to hear in a hearing test?","acceptedAnswer":{"@type":"Answer","text":"Young, healthy ears typically detect roughly 20 Hz to 20,000 Hz. Everyday speech lives between about 250 Hz and 8,000 Hz, so high-frequency hearing above 8 kHz can fade noticeably before everyday conversation is affected. High frequencies are usually the first to go with age-related hearing loss."}},{"@type":"Question","name":"When should a hearing test result prompt a visit to an audiologist?","acceptedAnswer":{"@type":"Answer","text":"Book a professional check if you struggle to follow conversations, notice ringing (tinnitus), hear noticeably differently in each ear, or your cutoff frequency sits well outside the typical band for your age. Sudden hearing loss in particular warrants prompt medical attention. Annual screening is wise if you work around loud noise."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/all-tools/" style="color:inherit;text-decoration:none">All Tools</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Hearing Test</span></nav>
@@ -135,5 +136,28 @@ if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){alert('
 </script>
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

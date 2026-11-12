@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert HTML to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Paste your HTML into the left box on this page and the Markdown appears on the right instantly. The converter reads your markup with the browser's own HTML parser and rewrites each element as GitHub-Flavored Markdown: h1 becomes #, strong becomes **, a tags become [text](url), tables become pipe tables, and pre blocks become fenced code blocks. Nothing is uploaded; the conversion happens in your browser."}},{"@type":"Question","name":"Which HTML tags does this convert to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Headings h1-h6, paragraphs, bold and italic, strikethrough, inline code, links with titles, images inside text, ordered and unordered lists (nested too), task list checkboxes when they're wrapped in a label or paragraph, blockquotes, horizontal rules, and GFM pipe tables. Code blocks keep their language when the source has a class like language-python. Tags with no Markdown equivalent, like span or div, pass their content through."}},{"@type":"Question","name":"What can't be converted to Markdown?","acceptedAnswer":{"@type":"Answer","text":"Markdown has no representation for scripts, styles, forms, iframes, or inline styling, so those are dropped. Table cell spans (colspan, rowspan) and alignment attributes have no GFM equivalent either, so they're ignored. The converter never falls back to raw HTML, which means tags like u, mark, sup and sub keep their text but lose their formatting."}},{"@type":"Question","name":"Is this a Turndown alternative?","acceptedAnswer":{"@type":"Answer","text":"It does the same job as Turndown, the MIT-licensed library many pipelines use, but it's a single self-contained script with no install. Turndown is the right call inside a build pipeline; this page is the right call when you just need to paste a chunk of HTML and copy Markdown out once, or when you can't add dependencies."}},{"@type":"Question","name":"Does my HTML get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The converter uses the DOMParser built into your browser, and its code never sends your input anywhere. That makes it safe for drafts, private docs, and client content. The page itself still loads the same analytics and ad scripts as the rest of the site, but the conversion runs locally."}},{"@type":"Question","name":"How do I convert Markdown back to HTML?","acceptedAnswer":{"@type":"Answer","text":"Use the sister tool, the Markdown to HTML converter, which renders Markdown into styled HTML in the same paste-and-copy flow. Keeping both directions in one toolbox covers the two most common format-shuffling jobs in documentation work."}},{"@type":"Question","name":"Why did my image disappear from the Markdown?","acceptedAnswer":{"@type":"Answer","text":"Images only convert when they sit inside text, like a paragraph or a link. An img tag directly inside a div, a figure, or at the top level of what you paste produces no output. Wrap it in a p tag and paste again, and you'll get ![alt](src) as expected."}},{"@type":"Question","name":"Does it escape Markdown characters in my text?","acceptedAnswer":{"@type":"Answer","text":"No. Asterisks, underscores, pound signs and backticks in your text are copied as they are. Usually that's fine, but a phrase like *note* will render as italics. If the text has to show those characters literally, put a backslash in front of each one after converting."}},{"@type":"Question","name":"Why are my task list checkboxes missing?","acceptedAnswer":{"@type":"Answer","text":"The converter only picks up a checkbox when it's wrapped in another element, such as a label or a p inside the list item. A bare input sitting directly in the li is skipped, so you get - done instead of - [x] done. Wrapping the input and its text in a label fixes it."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -381,5 +382,28 @@ render();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -58,6 +58,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Text Tools","item":"https://toolaspect.com/text-tools/"},{"@type":"ListItem","position":3,"name":"Number to Words Converter","item":"https://toolaspect.com/number-to-words/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you write numbers in words on a check?","acceptedAnswer":{"@type":"Answer","text":"Write the integer amount in words, then the cents as a fraction over 100 — for example, 1234.56 becomes one thousand two hundred thirty-four and 56/100. This converter produces exactly that format, which is the standard for checks and many invoices."}},{"@type":"Question","name":"What is the largest number this converter supports?","acceptedAnswer":{"@type":"Answer","text":"It converts integers up to the trillions range — any whole number up to 999,999,999,999,999 reads out correctly. Beyond the supported scale words, the converter reports the limit rather than guessing."}},{"@type":"Question","name":"Does it handle decimals and negative numbers?","acceptedAnswer":{"@type":"Answer","text":"Yes. Decimal portions are rendered as cents-style fractions (x/100), matching check-writing conventions. Negative numbers are prefixed with the word Negative, which is the common convention in accounting printouts."}},{"@type":"Question","name":"Why do legal documents spell out numbers?","acceptedAnswer":{"@type":"Answer","text":"Spelled-out amounts are harder to alter unnoticed than digits — changing a 1 to a 7 is trivial, while words must be crossed out. Contracts and checks therefore state amounts in words, often with digits in parentheses for clarity."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -180,5 +181,28 @@ function clr(){document.getElementById('num').value='';document.getElementById('
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -56,6 +56,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Contractor Calculators","item":"https://toolaspect.com/contractor-tools/"},{"@type":"ListItem","position":3,"name":"Blow-In Insulation Calculator","item":"https://toolaspect.com/blow-in-insulation-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How many bags of insulation do I need for 1,000 sq ft at R-49?","acceptedAnswer":{"@type":"Answer","text":"Roughly 17–25 bags of cellulose, since coverage runs 40–67 sq ft per bag at R-49 depending on product. Check the coverage chart printed on the bag — it is legally required to state settled coverage."}},{"@type":"Question","name":"How deep is R-49 blown insulation?","acceptedAnswer":{"@type":"Answer","text":"About 13.2 inches of cellulose (49 ÷ 3.7) or 16–17 inches of loose fiberglass (R-2.9–3.1 per inch)."}},{"@type":"Question","name":"Does blown insulation settle?","acceptedAnswer":{"@type":"Answer","text":"Yes — cellulose settles about 20%, and the manufacturer's coverage chart already accounts for it. Blow to the chart's minimum thickness, marked on attic rulers stapled to the joists."}},{"@type":"Question","name":"Can I blow new insulation over existing?","acceptedAnswer":{"@type":"Answer","text":"Yes, if the existing layer is dry and unfaced (no vapor barrier in the middle). Subtract its R-value from your target and blow the difference on top."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -179,5 +180,28 @@ calc();
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

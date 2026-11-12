@@ -68,6 +68,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"All Tools","item":"https://toolaspect.com/all-tools/"},{"@type":"ListItem","position":3,"name":"QR Code Scanner","item":"https://toolaspect.com/qr-code-scanner/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does the QR code scanner work with my camera or an image?","acceptedAnswer":{"@type":"Answer","text":"Grant camera access and hold a QR code in frame, or upload a photo of a code — the scanner decodes it and shows the embedded link or text instantly. Decoding runs entirely in your browser using a JavaScript QR library, so nothing is uploaded to a server. The camera feed never leaves your device."}},{"@type":"Question","name":"What kinds of QR codes can this scanner read?","acceptedAnswer":{"@type":"Answer","text":"All standard QR codes up to version 40, including URLs, plain text, Wi-Fi credentials, contact details (vCard), calendar events, and UPI/payment codes. It handles both camera capture and static images in common formats like PNG and JPG. Damaged codes often still scan thanks to QR error correction."}},{"@type":"Question","name":"Why won't my QR code scan from the camera?","acceptedAnswer":{"@type":"Answer","text":"Check focus and distance first — small printed codes need to fill more of the frame, and glare or a cracked screen overlay blocks recognition. Poor lighting and dirty lenses are the next most common causes. If the camera fails, upload a clear photo of the code instead."}},{"@type":"Question","name":"Is it safe to scan unknown QR codes?","acceptedAnswer":{"@type":"Answer","text":"Treat them like unknown links: the scanner shows you the decoded URL before you open it, which is exactly the right moment to check for lookalike domains. Don't enter credentials or payment details on a site a random sticker or poster led you to. Because decoding is local, the scan itself reveals nothing about you."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -158,5 +159,28 @@ document.getElementById('reswrap').style.display='block';
 
 <script src="/shared/result-actions.js"></script><script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

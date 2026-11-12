@@ -89,6 +89,7 @@ textarea.ta-io:focus{outline:none;border-color:var(--primary)}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does a CSS minifier actually remove?", "acceptedAnswer": {"@type": "Answer", "text": "It strips comments, whitespace, trailing semicolons, and safe-to-remove formatting, and can shorten colors, zero values, and font-weight keywords where equivalent. The result is functionally equivalent CSS that browsers render the same way. The Restructure pass goes further and merges rules, but only where csso can prove the cascade and specificity come out unchanged."}}, {"@type": "Question", "name": "How much smaller does minified CSS get?", "acceptedAnswer": {"@type": "Answer", "text": "Typical stylesheets shrink 20–40%, more when the original is comment-heavy and generously formatted. Savings compound on large sites where CSS is fetched on every page load. Note that gzip already compresses whitespace well, so the post-gzip gain is smaller than the raw byte reduction."}}, {"@type": "Question", "name": "Why minify CSS in the browser instead of a build step?", "acceptedAnswer": {"@type": "Answer", "text": "An in-browser minifier using CSSO needs no Node toolchain, config, or command line — paste, click, copy. It is ideal for one-off files, quick patches, or environments where you cannot install build tools. For recurring production builds, a bundler pipeline is still the better long-term setup."}}, {"@type": "Question", "name": "Why is my minified CSS missing rules or empty?", "acceptedAnswer": {"@type": "Answer", "text": "csso is a forgiving parser, like browsers. When it hits CSS it can't parse, such as a missing closing brace, it drops that part and carries on instead of showing an error. If the output looks too short, check your input for unclosed braces or stray characters."}}, {"@type": "Question", "name": "Does csso change CSS custom properties or calc()?", "acceptedAnswer": {"@type": "Answer", "text": "Barely. It trims the spaces around custom property values but leaves the values themselves alone, so --surface: #ffffff stays six digits. Inside calc(), the spaces around plus and minus signs are kept because CSS requires them."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -268,5 +269,28 @@ window.TA_SAMPLE = `/* Product card styles for the ToolAspect demo store */
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

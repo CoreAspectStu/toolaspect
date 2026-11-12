@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I make a UML class diagram for free?", "acceptedAnswer": {"@type": "Answer", "text": "Open a file with classDiagram, declare classes with class Name { ... }, list attributes and methods inside the braces (visibility marker first: + public, - private, # protected), then connect classes with relationship arrows like Vehicle <|-- Car for inheritance. This maker renders live in your browser and exports SVG — no account, no watermark."}}, {"@type": "Question", "name": "What do the +, -, and # symbols mean in a class diagram?", "acceptedAnswer": {"@type": "Answer", "text": "They are UML visibility markers. + means public (any class can call it), - means private (only the class itself), and # means protected (the class and its subclasses). ~ marks package-private. You write them at the start of each member line, as in +String name or -balance() float, and Mermaid shows them as a gutter character next to each member."}}, {"@type": "Question", "name": "How do I show inheritance versus composition?", "acceptedAnswer": {"@type": "Answer", "text": "Inheritance is ClassA <|-- ClassB (a hollow triangle pointing at the parent). Composition, where the part dies with the whole, is Whole *-- Part. Aggregation, where parts survive, is Whole o-- Part. Plain association is --, dependency (uses-temporarily) is ..>, and realization of an interface is <|.. Implementer. The shape at the parent end and the line style carry the meaning."}}, {"@type": "Question", "name": "How do I label a relationship with cardinality?", "acceptedAnswer": {"@type": "Answer", "text": "Put the multiplicity on the relationship line with quotes: Customer \"1\" --> \"*\" Order : places. Read it as one customer places zero-or-more orders. Common values are 1, 0..1, *, and 1..*, and you can put a label after a colon to name the relationship in plain English."}}, {"@type": "Question", "name": "Can I mark a class as abstract or an interface?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Inside the class body, write <<abstract>> or <<interface>> on its own line and Mermaid adds the UML stereotype label. <<enumeration>> works the same way for enums, where you then list the allowed values as members. The stereotype appears as a label above the class name. To mark a single method as abstract, end it with an asterisk, as in draw()*, and Mermaid sets it in italics, following the UML convention."}}, {"@type": "Question", "name": "Is my class diagram saved?", "acceptedAnswer": {"@type": "Answer", "text": "No. Nothing is stored in your browser or sent to a server, so reloading the page brings back the example diagram. Click Copy code and keep the Mermaid source somewhere, ideally in the same repository as the code it describes, then paste it back in to edit later."}}, {"@type": "Question", "name": "How do I write generics like List<String> in a class diagram?", "acceptedAnswer": {"@type": "Answer", "text": "Wrap the type in tildes instead of angle brackets: List~String~. It works on class names too, as in class Box~T~, and Mermaid draws it with angle brackets. Nested generics are supported, but a generic with a comma, such as Map~K, V~, isn't yet."}}, {"@type": "Question", "name": "Why does my exported PNG have a dark background?", "acceptedAnswer": {"@type": "Answer", "text": "The PNG export paints the same dark background as the preview, then draws the diagram at twice its on-screen size, so it stays readable on slides. If you need a diagram for a light document, use the SVG, which has no background of its own, and check the text contrast after pasting."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -306,5 +307,28 @@ loadLib(doRender);
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

@@ -90,6 +90,7 @@ textarea.pane:focus{outline:none;border-color:var(--primary)}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert XML to JSON online?","acceptedAnswer":{"@type":"Answer","text":"Paste your XML into the left pane or drop an .xml file on the page. The xml-js engine streams it through the sax parser and builds JSON as you type, all inside your browser tab. Attributes go under an _attributes key, text under _text, and repeated elements become arrays. Pick Compact or Verbose structure and an indent, then copy or download the result."}},{"@type":"Question","name":"What gets lost when converting XML to JSON?","acceptedAnswer":{"@type":"Answer","text":"Less than you might expect: comments, CDATA sections, processing instructions, and the DOCTYPE are all kept as _comment, _cdata, _instruction, and _doctype keys. The XML declaration is dropped by default, but setting Ignore declaration to No keeps it as _declaration. What compact mode can't keep is the position of interleaved siblings, so mixed content like a paragraph with inline bold text gets split apart. Whitespace-only text nodes are also dropped. Verbose mode preserves ordering exactly."}},{"@type":"Question","name":"Can the converter go back from JSON to XML?","acceptedAnswer":{"@type":"Answer","text":"Yes. Flip the toggle to JSON → XML and the same engine rebuilds the markup. With data-style XML the round trip is exact: the sample catalog converts to 710 bytes of JSON and back to the same XML byte for byte, as long as you use the same indentation both ways. Keep the Structure setting the same as the JSON you paste, or the output will be empty or full of odd tags."}},{"@type":"Question","name":"Why is one element an object but two elements an array?","acceptedAnswer":{"@type":"Answer","text":"That's how compact mode works. A single <book> becomes \"book\": {…}, and as soon as a second <book> sibling appears, it becomes \"book\": [{…},{…}]. Code that reads data.catalog.book[0] will break on a file with only one book. Either normalize to an array in your own code, or use verbose mode, where children are always an elements array."}},{"@type":"Question","name":"Are numbers and booleans converted to JSON types?","acceptedAnswer":{"@type":"Answer","text":"No. Every text value and attribute stays a string, so <price>44.95<\/price> becomes {\"_text\":\"44.95\"} and <flag>true<\/flag> becomes {\"_text\":\"true\"}. XML has no types without a schema, and guessing can do damage, like turning a ZIP code of 02134 into 2134. Parse the values you need in your own code."}},{"@type":"Question","name":"Why do I get \"Converting circular structure to JSON\"?","acceptedAnswer":{"@type":"Answer","text":"That message almost always means an element was never closed, such as <a><b>1<\/b> with no <\/a>. The parser leaves the open element half-built, and the JSON step then trips over it. Other mistakes get clearer errors: a mismatched close tag reports Unexpected close tag, and an unquoted attribute reports Unquoted attribute value. Check the last few tags of the document first."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -379,5 +380,28 @@ textarea.pane:focus{outline:none;border-color:var(--primary)}
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

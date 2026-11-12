@@ -37,6 +37,7 @@
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://toolaspect.com/"},{"@type":"ListItem","position":2,"name":"Finance Calculators","item":"https://toolaspect.com/finance-tools/"},{"@type":"ListItem","position":3,"name":"Payroll Calculator","item":"https://toolaspect.com/payroll-calculator/"}]}
 </script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the FICA tax rate?","acceptedAnswer":{"@type":"Answer","text":"The employee share is 6.2% for Social Security (on wages up to the annual wage base — 176,100 dollars in 2025) plus 1.45% for Medicare (no wage cap), totaling 7.65%. Employers pay a matching 7.65%."}},{"@type":"Question","name":"How do I calculate net pay from gross pay?","acceptedAnswer":{"@type":"Answer","text":"Subtract pre-tax deductions, then FICA (7.65% employee share) and estimated income tax withholding, then post-tax deductions like Roth 401(k) contributions. What remains is net (take-home) pay. This calculator approximates each step."}},{"@type":"Question","name":"How much of my paycheck goes to Social Security?","acceptedAnswer":{"@type":"Answer","text":"6.2% of gross wages, up to the annual wage base of 176,100 dollars in 2025 — about 62 dollars per 1,000 dollars earned. Above the base, Social Security withholding stops for the year; Medicare's 1.45% continues."}},{"@type":"Question","name":"What's the difference between pre-tax and post-tax deductions?","acceptedAnswer":{"@type":"Answer","text":"Pre-tax deductions (traditional 401(k), health premiums, HSA/FSA) reduce taxable income for income tax withholding. Post-tax deductions (Roth 401(k), wage garnishments) come out after taxes are computed and don't lower your taxable wages."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <nav class="bc-trail" aria-label="Breadcrumb" data-ta-schema="bc1" style="font-size:.8rem;color:var(--text-secondary,#9ca3af);padding:10px 0 0;margin:0;line-height:1.4"><a href="/" style="color:inherit;text-decoration:none">Home</a> <span aria-hidden="true">›</span> <a href="/finance-tools/" style="color:inherit;text-decoration:none">Finance Calculators</a> <span aria-hidden="true">›</span> <span style="color:var(--text,#e4e4e7)">Payroll Calculator</span></nav><div class="wrap">
@@ -92,5 +93,28 @@
 <script>function calc(){var s=+document.getElementById("salary").value;var freq=+document.getElementById("freq").value;var k401Pct=+document.getElementById("k401").value/100;var statePct=+document.getElementById("stateTax").value/100;var gross=s/freq;var k401=gross*k401Pct;var taxable=gross-k401;var fedAnnual=(s-s*k401Pct);var deductions=15000;var taxIncome=Math.max(0,fedAnnual-deductions);var brackets=[[0,.10],[11925,.12],[48475,.22],[103350,.24],[197300,.32],[250525,.35],[626350,.37]];var fedAnnualTax=0;var prev=0;for(var i=0;i<brackets.length;i++){if(taxIncome>brackets[i][0]){var amt=Math.min(taxIncome,brackets[i][0])-prev;if(amt>0)fedAnnualTax+=amt*brackets[i][1];prev=brackets[i][0];}else break;}if(taxIncome>brackets[6][0])fedAnnualTax+=(taxIncome-brackets[6][0])*.37;var fed=fedAnnualTax/freq;var fica=gross*.0765;var state=taxable*statePct;var net=gross-fed-fica-state-k401;document.getElementById("gross").textContent="$"+gross.toFixed(2);document.getElementById("fed").textContent="$"+fed.toFixed(2);document.getElementById("fica").textContent="$"+fica.toFixed(2);document.getElementById("state").textContent="$"+state.toFixed(2);document.getElementById("k401val").textContent="$"+k401.toFixed(2);document.getElementById("net").textContent="$"+net.toFixed(2);document.getElementById("results").classList.add("show");}</script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

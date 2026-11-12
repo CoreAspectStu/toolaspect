@@ -85,6 +85,7 @@ textarea:focus{outline:none;border-color:var(--primary)}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I format XML?","acceptedAnswer":{"@type":"Answer","text":"Paste the XML and pick an indentation — 2 or 4 spaces, or tabs. The formatter parses the document and re-emits it with one element per line, children indented one level under their parents, and text content kept inline when collapse-content is on. It's a re-serialization of the parsed tree, so the structure is guaranteed identical."}},{"@type":"Question","name":"What's the difference between well-formed and valid XML?","acceptedAnswer":{"@type":"Answer","text":"Well-formed means the syntax parses: one root element, every tag closed, proper nesting, attributes quoted, entities escaped. Valid goes further — the document also obeys a schema (DTD, XSD, or RelaxNG) that defines which elements and attributes are allowed where. This tool checks well-formedness; schema validation needs your XSD, which usually lives next to your build pipeline."}},{"@type":"Question","name":"How much does minifying XML actually save?","acceptedAnswer":{"@type":"Answer","text":"It depends on how much indentation and whitespace the document carries. A realistic 20-line feed document drops from 563 bytes to 477 bytes — a 15.3% reduction. Machine-generated XML with deep indentation can shrink 40% or more; already-dense XML barely moves. Minified XML is functionally identical to the pretty version."}},{"@type":"Question","name":"Which characters must be escaped in XML?","acceptedAnswer":{"@type":"Answer","text":"Five characters have predefined entities: < becomes &lt;, > becomes &gt;, & becomes &amp;, \" becomes &quot;, and ' becomes &apos;. Strictly, < and & must be escaped everywhere; > \" and ' only need escaping in certain positions, but escaping all five is always safe. CDATA sections are the alternative for blocks of raw text like embedded code."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -276,5 +277,28 @@ textarea:focus{outline:none;border-color:var(--primary)}
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>

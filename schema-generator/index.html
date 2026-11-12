@@ -64,6 +64,7 @@ select{cursor:pointer}
 <link rel="stylesheet" href="/shared/ad-slots.css">
 <script defer src="/shared/ads.js?v=2"></script>
 <script type="application/ld+json" data-ta-schema="faq1">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this schema markup generator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It runs entirely in your browser with no signup, and nothing you type is sent to a server. You can generate as many JSON-LD blocks as you like."}}, {"@type": "Question", "name": "Where do I put JSON-LD schema on my page?", "acceptedAnswer": {"@type": "Answer", "text": "Paste the full script tag into the page's head or body. Google reads JSON-LD in either place. Put it on the page the markup describes: Organization on the home page, Product on each product page, Article on each post."}}, {"@type": "Question", "name": "Does schema markup improve rankings?", "acceptedAnswer": {"@type": "Answer", "text": "Not directly. Google has said structured data isn't a ranking factor. It helps search engines understand the page and can make it eligible for rich results, which often earn more clicks than a plain blue link."}}, {"@type": "Question", "name": "Do FAQ and HowTo schema still work?", "acceptedAnswer": {"@type": "Answer", "text": "Not for Google rich results. HowTo was deprecated in September 2023, and FAQ rich results were removed for all sites in May 2026. The markup is still valid Schema.org and won't hurt you, but it won't change how your listing looks in Google."}}, {"@type": "Question", "name": "How do I test my schema markup?", "acceptedAnswer": {"@type": "Answer", "text": "Use Google's Rich Results Test to see which rich results a page is eligible for, and the Schema Markup Validator at validator.schema.org to check general syntax. After launch, Search Console's Enhancements reports flag errors across your site."}}, {"@type": "Question", "name": "Can I have more than one schema type on a page?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A product page can carry Product, BreadcrumbList and Organization markup at once. Use separate script blocks or one @graph array, and make sure the details don't contradict each other."}}]}</script>
+<script async defer data-website-id="087c548b-708c-42bf-9d9a-5704df7880f2" src="https://analytics.coreaspectai.com/script.js"></script>
 </head>
 <body>
 <script src="/shared/nav.js"></script>
@@ -454,5 +455,28 @@ selectType('Organization');
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b0db80ba74de4e2bb01e994d17ee2c5b"}'></script><!-- End Cloudflare Web Analytics -->
 <script src="/shared/answer-first.js" defer></script>
 <script src="/shared/share.js" defer></script>
+<script>
+(function(){
+  function ev(n){ try{ window.umami && window.umami.track(n); }catch(e){} }
+  if (location.pathname.startsWith('/guides/')) {
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (a && /^\/[^\/]/.test(a.getAttribute('href')) && !/^(\/guides\/|\/all-tools\/?$)/.test(a.getAttribute('href')))
+        ev('guide-to-tool');
+    }, true);
+  } else {
+    var t = document.querySelector('.tool, .ta-tool, main form, #tool');
+    if (t) t.addEventListener('submit', function(){ ev('tool-used'); }, true);
+    var fired = false;
+    document.addEventListener('click', function(e){
+      if (fired) return;
+      var b = e.target.closest && e.target.closest('button, input[type=submit], input[type=button]');
+      if (b && (b.type === 'submit' || /calc|compute|calculate|convert|generate|run|check/i.test(b.textContent || b.value || ''))) {
+        fired = true; ev('tool-used');
+      }
+    }, true);
+  }
+})();
+</script>
 </body>
 </html>
