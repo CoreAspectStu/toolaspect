@@ -84,7 +84,7 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 <div class="card">
     <div class="form-group">
       <label>Input Text</label>
-      <textarea id="input" placeholder="Enter text to hash..." oninput="generate()"></textarea>
+      <textarea id="input" placeholder="Enter text to hash..." oninput="fileBytes=null;fileLabel='';generate()"></textarea>
     </div>
     <div class="btn-row">
       <button class="btn" onclick="loadFile()">Load File</button>
@@ -145,12 +145,15 @@ h1{font-size:1.65rem;font-weight:700;text-align:center;margin-bottom:6px}
 
   </div>
 <script>
+var fileBytes=null,fileLabel='';
 async function generate(){
   var t=document.getElementById('input').value;
-  if(!t){document.getElementById('hashGrid').innerHTML='';return;}
+  var hasData=fileBytes||t;
+  if(!hasData){document.getElementById('hashGrid').innerHTML='';return;}
   var grid=document.getElementById('hashGrid');
-  grid.innerHTML='';
-  var enc=new TextEncoder().encode(t);
+  grid.innerHTML='<div style="grid-column:1/-1;font-size:.8rem;color:#666" id="hashSrc"></div>';
+  if(fileBytes){document.getElementById('hashSrc').textContent='Hashing file: '+fileLabel+' (raw bytes)';}
+  var enc=fileBytes?new Uint8Array(fileBytes):new TextEncoder().encode(t);
   var algos=[{name:'SHA-256',id:1},{name:'SHA-384',id:2},{name:'SHA-512',id:3},{name:'SHA-1',id:4}];
   for(var i=0;i<algos.length;i++){
     var h=await crypto.subtle.digest(algos[i].name,enc);
@@ -160,8 +163,8 @@ async function generate(){
 }
 function copyHash(i){navigator.clipboard.writeText(document.getElementById('val_'+i).textContent);}
 function loadFile(){document.getElementById('fileInput').click();}
-function handleFile(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){document.getElementById('input').value=r.result;generate();};r.readAsText(f);}
-function clearAll(){document.getElementById('input').value='';document.getElementById('hashGrid').innerHTML='';}
+function handleFile(e){var f=e.target.files[0];if(!f)return;fileLabel=f.name;var r=new FileReader();r.onload=function(){fileBytes=r.result;document.getElementById('input').value='';generate();};r.onerror=function(){fileBytes=null;};r.readAsArrayBuffer(f);}
+function clearAll(){fileBytes=null;fileLabel='';document.getElementById('input').value='';document.getElementById('hashGrid').innerHTML='';}
 </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-20E2JPEZ4Z"></script>
